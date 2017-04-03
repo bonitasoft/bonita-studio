@@ -14,17 +14,33 @@
  */
 package org.bonitasoft.studio.ui.viewer;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.bonitasoft.studio.ui.ColorConstants;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 public class LabelProviderBuilder<T> {
 
     private Optional<Function<T, String>> textFunction = Optional.empty();
     private Optional<Function<T, Image>> imageFunction = Optional.empty();
+    private Optional<Function<T, IStatus>> statusProvider = Optional.empty();
+    private boolean refreshAll;
 
     public LabelProviderBuilder<T> withTextProvider(Function<T, String> textFunction) {
         this.textFunction = Optional.ofNullable(textFunction);
@@ -36,8 +52,85 @@ public class LabelProviderBuilder<T> {
         return this;
     }
 
+    public LabelProviderBuilder<T> withStatusProvider(Function<T, IStatus> statusProvider) {
+        this.statusProvider = Optional.ofNullable(statusProvider);
+        return this;
+    }
+
+    public LabelProviderBuilder<T> shouldRefreshAllLabels() {
+        this.refreshAll = true;
+        return this;
+    }
+
     public ColumnLabelProvider createColumnLabelProvider() {
         return new ColumnLabelProvider() {
+
+            private Color errorColor;
+            private Color warningColor;
+
+            @Override
+            protected void initialize(ColumnViewer viewer, ViewerColumn column) {
+                super.initialize(viewer, column);
+                errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
+                warningColor = new Color(Display.getDefault(), ColorConstants.WARNING_RGB);
+                if (refreshAll) {
+                    viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit(viewer));
+                }
+            }
+
+            private ColumnViewerEditorActivationListener refreshAllAfterEdit(ColumnViewer viewer) {
+                return new ColumnViewerEditorActivationListener() {
+
+                    @Override
+                    public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+                    }
+
+                    @Override
+                    public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
+                    }
+
+                    @Override
+                    public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+                        if (viewer.getInput() instanceof Collection) {
+                            viewer.getControl().getDisplay().asyncExec(
+                                    () -> viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null));
+                        }
+                    }
+
+                    @Override
+                    public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
+                    }
+                };
+            }
+
+            @Override
+            public void dispose() {
+                errorColor.dispose();
+                warningColor.dispose();
+                super.dispose();
+            }
+
+            @Override
+            public void update(ViewerCell cell) {
+                super.update(cell);
+                statusProvider.ifPresent(provider -> {
+                    final T element = (T) cell.getElement();
+                    final IStatus status = provider.apply(element);
+                    cell.setImage(statusImage(status, element));
+                    cell.setForeground(statusColor(status));
+                });
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                if (statusProvider.isPresent()) {
+                    final IStatus status = statusProvider.get().apply((T) element);
+                    if (!status.isOK()) {
+                        return status.getMessage();
+                    }
+                }
+                return super.getToolTipText(element);
+            }
 
             /*
              * (non-Javadoc)
@@ -61,9 +154,31 @@ public class LabelProviderBuilder<T> {
             public Image getImage(Object element) {
                 try {
                     final T e = (T) element;
-                    return imageFunction.map(function -> function.apply(e)).orElse(super.getImage(element));
+                    return imageFunction.map(function -> function.apply(e)).orElse(super.getImage(e));
                 } catch (final ClassCastException e) {
                     return super.getImage(element);
+                }
+            }
+
+            private Color statusColor(IStatus status) {
+                switch (status.getSeverity()) {
+                    case IStatus.ERROR:
+                        return errorColor;
+                    case IStatus.WARNING:
+                        return warningColor;
+                    default:
+                        return Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+                }
+            }
+
+            private Image statusImage(IStatus status, T element) {
+                switch (status.getSeverity()) {
+                    case IStatus.ERROR:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+                    case IStatus.WARNING:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                    default:
+                        return imageFunction.map(function -> function.apply(element)).orElse(super.getImage(element));
                 }
             }
         };
