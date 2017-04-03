@@ -311,7 +311,6 @@ public class CreateDeployExportBusinessObjectIT {
 
         attributeTable.click(attributeIndex, 1);
         bot.ccomboBoxInGroup(boName).setSelection(type);
-        keyboard.pressShortcut(Keystrokes.CR);
     }
 
     protected void addConstraint(final String boName, final String constraintName, final String[] selectFields,

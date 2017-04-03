@@ -19,6 +19,6 @@ public interface DateTypeLabels {
     public static final String DATE_ONLY = "DATE ONLY";
     public static final String DATE_AND_TIME = "DATE-TIME (NO TZ)";
     public static final String DATE_TIME_WITH_TIMEZONE = "DATE-TIME (TZ)";
-    public static final String DATE_DEPRECATED = "DATE (DEPRECATED)";
+    public static final String DATE_DEPRECATED = "DATE (NOT RECOMMENDED)";
 
 }

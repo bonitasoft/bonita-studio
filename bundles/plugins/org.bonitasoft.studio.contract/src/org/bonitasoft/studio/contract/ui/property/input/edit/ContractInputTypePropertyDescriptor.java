@@ -112,6 +112,8 @@ public class ContractInputTypePropertyDescriptor extends CustomAdapterFactoryCon
 
         };
         extendedComboBoxCellEditor.setActivationStyle(ExtendedComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        extendedComboBoxCellEditor.getControl().addListener(SWT.Selection,
+                e -> extendedComboBoxCellEditor.getControl().getParent().setFocus());
         return extendedComboBoxCellEditor;
     }
 
