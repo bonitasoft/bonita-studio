@@ -36,6 +36,7 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -225,17 +226,17 @@ public class TextWidget extends EditableControlWidget {
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
         text.addListener(SWT.Paint, event -> {
-
             if (!text.isEnabled()) {
                 final GC gc = event.gc;
 
                 final String textString = text.getText();
                 final Rectangle bounds = text.getBounds();
+                final Point caretLocation = text.getCaretLocation();
 
                 gc.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
                 gc.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
                 gc.fillRectangle(0, 0, bounds.width, bounds.height);
-                gc.drawText(textString, 3, 2);
+                gc.drawText(textString, bounds.x + 1, caretLocation.y);
             }
 
         });
@@ -280,7 +281,7 @@ public class TextWidget extends EditableControlWidget {
 
     protected void createEditItem(final ToolBar toolBar) {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
-        editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "pencil.png").createImage());
+        editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
         editButton.addListener(SWT.Selection, editListener(toolBar));
