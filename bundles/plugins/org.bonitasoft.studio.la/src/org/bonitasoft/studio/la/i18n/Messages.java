@@ -66,6 +66,9 @@ public class Messages extends NLS {
     public static String deleteDescriptor;
     public static String deleteDescriptorDone;
     public static String deleteContainer;
+    public static String applicationInfo;
+    public static String doNotShowMeAgain;
+    public static String applicationDetails;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

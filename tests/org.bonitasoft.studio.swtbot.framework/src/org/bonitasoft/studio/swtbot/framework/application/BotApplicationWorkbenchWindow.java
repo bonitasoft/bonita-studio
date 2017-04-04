@@ -28,18 +28,19 @@ import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
-import org.bonitasoft.studio.swtbot.framework.la.NewApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.ui.IEditorReference;
 
 /**
  * Application workbench.
@@ -171,9 +172,9 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
-    public NewApplicationWizardBot newApplicationContainer() {
+    public void newApplicationContainer() {
         bot.menu("Development").menu("Application Descriptor").menu("New...").click();
-        return new NewApplicationWizardBot(bot, Messages.newApplicationDescriptorTitle);
+        bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
