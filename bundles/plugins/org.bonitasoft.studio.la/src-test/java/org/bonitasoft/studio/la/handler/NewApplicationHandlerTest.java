@@ -15,67 +15,31 @@
 package org.bonitasoft.studio.la.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.ui.wizard.FinishHandler;
-import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
-import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
 
 public class NewApplicationHandlerTest {
 
     @Test
-    public void should_open_a_new_application_wizard() throws Exception {
-        final NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
-        final WizardBuilder<ApplicationFileStore> wizardBuilder = mock(WizardBuilder.class);
-        doReturn(wizardBuilder).when(newApplicationHandler).createWizard(notNull(WizardBuilder.class),
-                any(RepositoryAccessor.class));
-        when(wizardBuilder.open(any(Shell.class), eq(Messages.create))).thenReturn(Optional.of(applicationFileStore));
-
-        newApplicationHandler.openNewApplicationWizard(mock(Shell.class), repositoryAccessor);
-
-        verify(wizardBuilder).open(notNull(Shell.class), eq(Messages.create));
-    }
-
-    @Test
-    public void should_create_a_new_application_wizard() throws Exception {
-        final NewApplicationHandler newApplicationHandler = spy(new NewApplicationHandler());
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final WizardBuilder<ApplicationFileStore> builder = spy(WizardBuilder.newWizard());
-        newApplicationHandler.createWizard(builder, repositoryAccessor);
-
-        verify(builder).withTitle(Messages.newApplicationDescriptorTitle);
-        verify(builder).havingPage(notNull(WizardPageBuilder.class));
-        verify(builder).onFinish(notNull(FinishHandler.class));
-    }
-
-    @Test
-    public void should_create_an_applicationFileStore_onFinish() throws Exception {
+    public void should_create_an_applicationFileStore() throws Exception {
         final NewApplicationHandler newApplicationHandler = new NewApplicationHandler();
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         final ApplicationRepositoryStore applicationStore = mock(ApplicationRepositoryStore.class);
         final ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
-        when(applicationStore.createRepositoryFileStore("testAppToken.xml")).thenReturn(applicationFileStore);
+        when(applicationStore.createRepositoryFileStore(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml"))
+                .thenReturn(applicationFileStore);
         when(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)).thenReturn(applicationStore);
 
-        final Optional<ApplicationFileStore> fileStore = newApplicationHandler.createApplicationFileStore(repositoryAccessor,
-                "testAppToken");
+        final Optional<ApplicationFileStore> fileStore = Optional
+                .ofNullable(newApplicationHandler.createApplicationFileStore(repositoryAccessor,
+                        NewApplicationHandler.DEFAULT_FILE_NAME + ".xml"));
 
         assertThat(fileStore).isPresent();
     }

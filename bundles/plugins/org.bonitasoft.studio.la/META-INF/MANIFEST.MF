@@ -26,7 +26,9 @@ Import-Package: org.bonitasoft.engine.business.application,
  org.bonitasoft.engine.business.application.exporter,
  org.bonitasoft.engine.business.application.xml
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.la.core,
+Export-Package: org.bonitasoft.studio.la,
+ org.bonitasoft.studio.la.core,
+ org.bonitasoft.studio.la.handler,
  org.bonitasoft.studio.la.i18n,
  org.bonitasoft.studio.la.repository,
  org.bonitasoft.studio.la.ui.validator
