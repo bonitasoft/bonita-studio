@@ -16,12 +16,16 @@ package org.bonitasoft.studio.tests.applicationDescriptor;
 
 import static org.junit.Assert.assertEquals;
 
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
+import org.bonitasoft.studio.la.handler.NewApplicationHandler;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,22 +34,37 @@ import org.junit.runner.RunWith;
 public class OpenExistingApplicationIT {
 
     private final SWTGefBot bot = new SWTGefBot();
+    private boolean initPref;
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
+
+    @Before
+    public void init() {
+        initPref = LivingApplicationPlugin.getDefault().getPreferenceStore()
+                .getBoolean(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG);
+        LivingApplicationPlugin.getDefault().getPreferenceStore()
+                .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, true);
+    }
+
+    @After
+    public void resetPreference() {
+        LivingApplicationPlugin.getDefault().getPreferenceStore()
+                .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, initPref);
+    }
 
     @Test
     public void should_create_and_open_applications() {
         final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
         createApplications(workBenchBot);
 
-        workBenchBot.openApplication().select("file1.xml").finish();
+        workBenchBot.openApplication().select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml").finish();
         final SWTBotEditor app1Editor = bot.activeEditor();
-        assertEquals("file1.xml", app1Editor.getTitle());
+        assertEquals(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", app1Editor.getTitle());
         app1Editor.close();
 
         workBenchBot.openApplication()
-                .select("file1.xml", "file2.xml")
+                .select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", NewApplicationHandler.DEFAULT_FILE_NAME + "1.xml")
                 .finish();
         assertEquals(2, bot.editors().size());
 
@@ -54,19 +73,16 @@ public class OpenExistingApplicationIT {
 
     private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
         final DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
-        deleteApplicationBot.select("file1.xml", "file2.xml")
+        deleteApplicationBot
+                .select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", NewApplicationHandler.DEFAULT_FILE_NAME + "1.xml")
                 .delete();
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        workBenchBot.newApplicationContainer()
-                .withFilename("file1")
-                .finish();
+        workBenchBot.newApplicationContainer();
         bot.activeEditor().close();
 
-        workBenchBot.newApplicationContainer()
-                .withFilename("file2")
-                .finish();
+        workBenchBot.newApplicationContainer();
         bot.activeEditor().close();
     }
 }

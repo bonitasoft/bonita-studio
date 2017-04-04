@@ -57,7 +57,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
         this.currentToken = Optional.ofNullable(currentToken);
     }
 
-    private List<String> getTokenList() {
+    public List<String> getTokenList() {
         final List<String> allTokens = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren()
                 .stream()
                 .map(fStore -> {
