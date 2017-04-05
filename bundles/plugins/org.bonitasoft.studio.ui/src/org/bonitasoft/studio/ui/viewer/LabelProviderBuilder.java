@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -40,6 +41,7 @@ public class LabelProviderBuilder<T> {
     private Optional<Function<T, String>> textFunction = Optional.empty();
     private Optional<Function<T, Image>> imageFunction = Optional.empty();
     private Optional<Function<T, IStatus>> statusProvider = Optional.empty();
+    private Optional<Function<T, Font>> fontProvider = Optional.empty();
     private boolean refreshAll;
 
     public LabelProviderBuilder<T> withTextProvider(Function<T, String> textFunction) {
@@ -59,6 +61,11 @@ public class LabelProviderBuilder<T> {
 
     public LabelProviderBuilder<T> shouldRefreshAllLabels() {
         this.refreshAll = true;
+        return this;
+    }
+
+    public LabelProviderBuilder<T> withFontProvider(Function<T, Font> fontProvider) {
+        this.fontProvider = Optional.ofNullable(fontProvider);
         return this;
     }
 
@@ -113,11 +120,14 @@ public class LabelProviderBuilder<T> {
             @Override
             public void update(ViewerCell cell) {
                 super.update(cell);
+                final T element = (T) cell.getElement();
                 statusProvider.ifPresent(provider -> {
-                    final T element = (T) cell.getElement();
                     final IStatus status = provider.apply(element);
                     cell.setImage(statusImage(status, element));
                     cell.setForeground(statusColor(status));
+                });
+                fontProvider.ifPresent(provider -> {
+                    cell.setFont(provider.apply(element));
                 });
             }
 
