@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
@@ -102,11 +103,11 @@ public class GroovyUtil {
     public static List<ScriptVariable> createScriptVariablesFromSimulationElement(
             final Element elem) {
         if (elem == null) {
-            return new ArrayList<ScriptVariable>();
+            return new ArrayList<>();
         }
 
         final AbstractProcess process = ModelHelper.getParentProcess(elem);
-        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        final List<ScriptVariable> result = new ArrayList<>();
 
         for (final SimulationData d : process.getSimulationData()) {
             final ScriptVariable field = createScriptVariable(d);
@@ -151,28 +152,28 @@ public class GroovyUtil {
                     .equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS);
         }
         Element currentObject = elem;
-        final ArrayList<Data> pageFlowTransientData = new ArrayList<Data>();
+        final ArrayList<Data> pageFlowTransientData = new ArrayList<>();
 
         while (currentObject != null) {
             if (isInEntryPageFlow && currentObject instanceof PageFlow) {
                 pageFlowTransientData
-                .addAll((List<Data>) currentObject
-                        .eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
+                        .addAll((List<Data>) currentObject
+                                .eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
             }
             if (isInViewPageFlow && currentObject instanceof ViewPageFlow) {
                 pageFlowTransientData
-                .addAll((List<Data>) currentObject
-                        .eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
+                        .addAll((List<Data>) currentObject
+                                .eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
             }
             if (isInOverviewPageFlow && currentObject instanceof RecapFlow) {
                 pageFlowTransientData
-                .addAll((List<Data>) currentObject
-                        .eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
+                        .addAll((List<Data>) currentObject
+                                .eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
             }
             currentObject = (Element) currentObject.eContainer();
         }
 
-        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        final List<ScriptVariable> result = new ArrayList<>();
         final Element eContainer = (Element) form.eContainer();
         if (eContainer != null) {
             final List<Data> datas = ModelHelper.getAccessibleData(eContainer);
@@ -236,7 +237,7 @@ public class GroovyUtil {
 
     private static List<ExpressionConstants> getBonitaConstantsFor(
             EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
-        final List<ExpressionConstants> result = new ArrayList<ExpressionConstants>();
+        final List<ExpressionConstants> result = new ArrayList<>();
         DisplayEngineExpressionWithName engineFilter = null;
         if (filters != null) {
             for (final ViewerFilter f : filters) {
@@ -252,22 +253,26 @@ public class GroovyUtil {
         result.add(ExpressionConstants.PROCESS_INSTANCE_ID);
         result.add(ExpressionConstants.ACTIVITY_INSTANCE_ID);
 
-        if (context instanceof Expression) {
+        if (context instanceof Expression || context instanceof Operation) {
             context = context.eContainer();
         }
         if (isPageFlowContext) {
             result.add(ExpressionConstants.LOGGED_USER_ID);
         }
         if (context instanceof Activity) {
-            if (((Activity) context).getType() == MultiInstanceType.PARALLEL || ((Activity) context).getType() == MultiInstanceType.SEQUENTIAL) {
+            if (((Activity) context).getType() == MultiInstanceType.PARALLEL
+                    || ((Activity) context).getType() == MultiInstanceType.SEQUENTIAL) {
                 if (engineFilter != null) {
-                    if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineConstantName())) {
+                    if (engineFilter.select(null, null,
+                            ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
                     }
-                    if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineConstantName())) {
+                    if (engineFilter.select(null, null,
+                            ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES);
                     }
-                    if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineConstantName())) {
+                    if (engineFilter.select(null, null,
+                            ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES);
                     }
                     if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName())) {
@@ -275,7 +280,8 @@ public class GroovyUtil {
                     }
                 }
             } else if (((Activity) context).getType() == MultiInstanceType.STANDARD) {
-                if (engineFilter != null && engineFilter.select(null, null, ExpressionConstants.LOOP_COUNTER.getEngineConstantName())) {
+                if (engineFilter != null
+                        && engineFilter.select(null, null, ExpressionConstants.LOOP_COUNTER.getEngineConstantName())) {
                     result.add(ExpressionConstants.LOOP_COUNTER);
                 }
             }
@@ -299,9 +305,10 @@ public class GroovyUtil {
         return result;
     }
 
-    public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
+    public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters,
+            final boolean isPageFlowContext) {
         final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context, filters, isPageFlowContext);
-        final ArrayList<String> result = new ArrayList<String>(
+        final ArrayList<String> result = new ArrayList<>(
                 bonitaConstantsFor.size());
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             result.add(expressionConstants.getEngineConstantName());
@@ -339,7 +346,7 @@ public class GroovyUtil {
     public static Expression getEngineConstantExpression(final String name) {
         if (expressions == null) {
             final ExpressionConstants[] values = ExpressionConstants.values();
-            expressions = new HashMap<String, Expression>(values.length);
+            expressions = new HashMap<>(values.length);
             for (final ExpressionConstants constant : values) {
                 expressions.put(constant.getEngineConstantName(),
                         createExpression(constant));
@@ -383,8 +390,9 @@ public class GroovyUtil {
         }
     }
 
-    public static List<ScriptVariable> getBonitaVariables(final EObject element, final ViewerFilter[] filters, final boolean isPageFlowContext) {
-        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+    public static List<ScriptVariable> getBonitaVariables(final EObject element, final ViewerFilter[] filters,
+            final boolean isPageFlowContext) {
+        final List<ScriptVariable> result = new ArrayList<>();
         addBonitaVariables(result, element, filters, isPageFlowContext);
         return result;
     }
@@ -397,7 +405,7 @@ public class GroovyUtil {
      */
     public static List<String> getTypeValues(final String className) {
 
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         try {
             final IType t = getType(className);
             if (t == null) {
@@ -444,8 +452,8 @@ public class GroovyUtil {
                 if (d.getName().equals(inputScript)) {
                     if (d.isMultiple()
                             || d instanceof JavaObjectData
-                            && ((JavaObjectData) d).getClassName().equals(
-                                    "java.util.List")) {
+                                    && ((JavaObjectData) d).getClassName().equals(
+                                            "java.util.List")) {
                         return true;
                     }
                 }
@@ -497,7 +505,7 @@ public class GroovyUtil {
     public static List<ScriptVariable> createScriptVariablesFromFormElement(
             final Element elem) {
         if (elem == null || elem instanceof StartTimerEvent) {
-            return new ArrayList<ScriptVariable>();
+            return new ArrayList<>();
         }
 
         if (elem instanceof Form || elem instanceof Widget) {
@@ -505,10 +513,10 @@ public class GroovyUtil {
                     elem instanceof SubmitFormButton || elem instanceof Form);
         }
 
-        final List<Data> datas = new ArrayList<Data>();
+        final List<Data> datas = new ArrayList<>();
 
         final AbstractProcess process = ModelHelper.getParentProcess(elem);
-        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        final List<ScriptVariable> result = new ArrayList<>();
 
         if (elem instanceof Connection) {
             final SourceElement flowElem = ((SequenceFlow) elem).getSource();
@@ -520,7 +528,7 @@ public class GroovyUtil {
             datas.addAll(((DataAware) elem).getData());
         }
 
-        final List<String> dataNames = new ArrayList<String>();
+        final List<String> dataNames = new ArrayList<>();
 
         for (final Data d : datas) {
             dataNames.add(d.getName());
@@ -623,7 +631,8 @@ public class GroovyUtil {
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
                 .equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), getEngineExpressionReturnType(e.getName()));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(),
+                    getEngineExpressionReturnType(e.getName()));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
