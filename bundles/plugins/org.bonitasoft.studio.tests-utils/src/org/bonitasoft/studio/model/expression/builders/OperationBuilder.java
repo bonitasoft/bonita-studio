@@ -55,7 +55,7 @@ public class OperationBuilder implements Buildable<Operation> {
         return this;
     }
 
-    public OperationBuilder in(final Buildable<OperationContainer> buildable) {
+    public OperationBuilder in(final Buildable<? extends OperationContainer> buildable) {
         buildable.build().getOperations().add(operation);
         return this;
     }
