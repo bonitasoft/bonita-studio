@@ -57,10 +57,14 @@ public class TextAreaWidget extends TextWidget {
 
     protected TextAreaWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
+            int labelWidth,
+            boolean readOnly,
+            String label,
+            String message,
+            Optional<String> labelButton,
             Optional<FormToolkit> toolkit) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, labelButton, false, null, toolkit);
+                message, labelButton, false, null, toolkit, Optional.empty());
     }
 
     /*
