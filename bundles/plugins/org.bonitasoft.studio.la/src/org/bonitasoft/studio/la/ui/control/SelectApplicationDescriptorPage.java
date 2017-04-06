@@ -31,6 +31,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -65,6 +66,8 @@ public class SelectApplicationDescriptorPage implements ControlSupplier {
         applicationsTableViewer
                 .setInput(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren());
         applicationsTableViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
+
+        ColumnViewerToolTipSupport.enableFor(applicationsTableViewer);
 
         IViewerObservableList multiSelection = ViewersObservables.observeMultiSelection(applicationsTableViewer);
         ctx.addValidationStatusProvider(new MultiValidator() {
