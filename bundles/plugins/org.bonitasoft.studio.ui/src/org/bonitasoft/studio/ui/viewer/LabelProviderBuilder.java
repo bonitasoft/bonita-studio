@@ -150,7 +150,7 @@ public class LabelProviderBuilder<T> {
             public String getText(Object element) {
                 try {
                     final T e = (T) element;
-                    return textFunction.map(function -> function.apply(e)).orElse(super.getText(element));
+                    return textFunction.map(function -> function.apply(e)).orElse("");
                 } catch (final ClassCastException e) {
                     return super.getText(element);
                 }
@@ -205,7 +205,7 @@ public class LabelProviderBuilder<T> {
             public String getText(Object element) {
                 try {
                     final T e = (T) element;
-                    return textFunction.map(function -> function.apply(e)).orElse(super.getText(element));
+                    return textFunction.map(function -> function.apply(e)).orElse("");
                 } catch (final ClassCastException e) {
                     return super.getText(element);
                 }
