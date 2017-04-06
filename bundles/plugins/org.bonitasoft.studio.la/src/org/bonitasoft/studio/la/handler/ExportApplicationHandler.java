@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.ui.OverwriteFileFilter;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.core.ExportApplicationRunnable;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
@@ -34,6 +36,7 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -41,6 +44,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class ExportApplicationHandler {
+
+    public static final String DO_NOT_SHOW_EXPORT_MESSAGE_DIALOG = "DO_NOT_SHOW_EXPORT_MESSAGE_DIALOG";
 
     @Execute
     public void exportApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
@@ -68,6 +73,18 @@ public class ExportApplicationHandler {
                     .resolveConflicts(exportApplicationDescriptorPage.getSelection().collect(Collectors.toList()));
             if (resolveConflicts.isEmpty()) {
                 return Optional.empty();
+            }
+            final IPreferenceStore preferenceStore = LivingApplicationPlugin.getDefault().getPreferenceStore();
+            if (!preferenceStore.getBoolean(DO_NOT_SHOW_EXPORT_MESSAGE_DIALOG)) {
+                MessageDialogWithPrompt.open(MessageDialog.WARNING,
+                        container.getShell(),
+                        Messages.exportApplicationDescriptorTitle,
+                        Messages.exportApplicationDescriptorMessage,
+                        Messages.doNotShowMeAgain,
+                        false,
+                        preferenceStore,
+                        DO_NOT_SHOW_EXPORT_MESSAGE_DIALOG,
+                        SWT.NONE);
             }
             final ExportApplicationRunnable operation = new ExportApplicationRunnable(optionalPath.get(), resolveConflicts);
             try {

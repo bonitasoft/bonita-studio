@@ -69,6 +69,8 @@ public class Messages extends NLS {
     public static String applicationInfo;
     public static String doNotShowMeAgain;
     public static String applicationDetails;
+    public static String exportApplicationDescriptorTitle;
+    public static String exportApplicationDescriptorMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
