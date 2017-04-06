@@ -74,4 +74,26 @@ public class LivingApplicationPlugin extends AbstractUIPlugin {
         return result;
     }
 
+    public static ImageDescriptor getImageDescriptor(String imageName) {
+        final ImageRegistry reg = getDefault().getImageRegistry();
+
+        ImageDescriptor result = reg.getDescriptor(imageName);
+
+        if (result != null) {
+            return result;
+        }
+
+        final ImageDescriptor descriptor = ImageDescriptor.createFromURL(getDefault().getBundle().getResource(imageName));
+        if (descriptor != null) {
+            result = descriptor;
+        }
+
+        reg.remove(imageName);
+        if (result != null) {
+            reg.put(imageName, result);
+        }
+
+        return result;
+    }
+
 }

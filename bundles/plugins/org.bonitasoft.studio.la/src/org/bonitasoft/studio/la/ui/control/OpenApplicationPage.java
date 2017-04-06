@@ -26,6 +26,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
@@ -56,6 +57,8 @@ public class OpenApplicationPage implements ControlSupplier {
         applicationsTableViewer.setLabelProvider(new ApplicationLabelProvider());
         applicationsTableViewer
                 .setInput(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren());
+
+        ColumnViewerToolTipSupport.enableFor(applicationsTableViewer);
 
         ctx.bindList(ViewersObservables.observeMultiSelection(applicationsTableViewer), applicationFileStoreObservable);
         ctx.addValidationStatusProvider(new org.eclipse.core.databinding.validation.MultiValidator() {

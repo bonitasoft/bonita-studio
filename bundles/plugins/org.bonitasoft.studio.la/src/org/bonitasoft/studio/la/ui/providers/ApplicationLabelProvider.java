@@ -15,7 +15,11 @@
 package org.bonitasoft.studio.la.ui.providers;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
+import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -31,14 +35,18 @@ public class ApplicationLabelProvider extends StyledCellLabelProvider implements
             final StyledString styledString = new StyledString();
             styledString.append(fileStore.getName());
             cell.setText(styledString.getString());
+            cell.setImage(getImage(cell.getElement()));
             try {
                 if (!fileStore.getContent().getApplications().isEmpty()) {
                     cell.setText(appendAppTokens(fileStore, styledString));
                 }
             } catch (ReadFileStoreException e) {
-                throw new RuntimeException("Impossible to read application descriptor", e);
+                //Do not display app descriptors
+                cell.setImage(new DecorationOverlayIcon(getImage(cell.getElement()),
+                        LivingApplicationPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
+                                .createImage());
             }
-            cell.setImage(getImage(cell.getElement()));
+
             cell.setStyleRanges(styledString.getStyleRanges());
         }
     }
@@ -50,6 +58,20 @@ public class ApplicationLabelProvider extends StyledCellLabelProvider implements
                 .forEach(
                         app -> styledString.append("../apps/" + app.getToken() + ", ", StyledString.COUNTER_STYLER));
         return styledString.getString().substring(0, styledString.getString().length() - 2);
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+     */
+    @Override
+    public String getToolTipText(Object element) {
+        final ApplicationFileStore fileStore = (ApplicationFileStore) element;
+        try {
+            fileStore.getContent();
+        } catch (ReadFileStoreException e) {
+            return Messages.unparsableApplicationFile;
+        }
+        return super.getToolTipText(element);
     }
 
     @Override
