@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
+import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
@@ -20,7 +21,9 @@ public class ApplicationTokenUnicityValidatorTest {
     @Test
     public void should_validate_uniqueness_without_current_token() throws Exception {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
-        final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor);
+        ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
+        final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
+                nodeContainer, "filename.xml");
 
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("token2")).isNotOK();
@@ -30,8 +33,9 @@ public class ApplicationTokenUnicityValidatorTest {
     @Test
     public void should_validate_uniqueness_with_current_token() throws Exception {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
+        ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                "token2");
+                nodeContainer, "filename.xml", "token2");
 
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("token2")).isOK();
@@ -41,10 +45,30 @@ public class ApplicationTokenUnicityValidatorTest {
     @Test
     public void should_validation_fails_with_current_token() throws Exception {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
+        ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                "token4");
+                nodeContainer, "filename.xml", "token4");
 
         assertThat(validator.validate("token4")).isNotOK();
+    }
+
+    @Test
+    public void sould_take_into_account_working_copy() throws Exception {
+        final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
+        ApplicationNodeContainer workingCopy = new ApplicationNodeContainer();
+        workingCopy.addApplication(ApplicationNodeBuilder.newApplication("workingcpy_token1", "name1", "1.0").create());
+        workingCopy.addApplication(ApplicationNodeBuilder.newApplication("workingcpy_token2", "name2", "1.0").create());
+        workingCopy.addApplication(ApplicationNodeBuilder.newApplication("token1", "name3", "1.0").create());
+
+        ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
+                workingCopy, "filename.xml", "workingcpy_token2");
+        assertThat(validator.validate("token1")).isNotOK();
+        assertThat(validator.validate("workingcpy_token1")).isNotOK();
+        assertThat(validator.validate("workingcpy_token2")).isOK();
+
+        validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
+                workingCopy, "myApp.xml");
+        assertThat(validator.validate("token2")).isOK();
     }
 
     private RepositoryAccessor initRepositoryAccessor() throws Exception {
@@ -59,6 +83,7 @@ public class ApplicationTokenUnicityValidatorTest {
 
         final ApplicationFileStore applicationFileStore = mock(ApplicationFileStore.class);
         when(applicationFileStore.getContent()).thenReturn(applicationNodeContainer);
+        when(applicationFileStore.getName()).thenReturn("myApp.xml");
 
         final List<ApplicationFileStore> applicationFileStores = new ArrayList<>();
         applicationFileStores.add(applicationFileStore);
