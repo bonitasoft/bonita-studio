@@ -27,6 +27,9 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -57,6 +60,7 @@ public class TextWidget extends EditableControlWidget {
         protected Optional<Integer> delay = Optional.empty();
         protected boolean transactionalEdit = false;
         private BiConsumer<String, String> onEdit;
+        private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
 
         /**
          * Adds a placeholder to the resulting {@link Text}
@@ -98,6 +102,11 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
+        public Builder withProposalProvider(IContentProposalProvider proposalProvider) {
+            this.proposalProvider = Optional.of(proposalProvider);
+            return this;
+        }
+
         @Override
         public TextWidget createIn(Composite container) {
             if (transactionalEdit && targetToModelStrategy == null) {
@@ -108,9 +117,20 @@ public class TextWidget extends EditableControlWidget {
                 throw new IllegalStateException(
                         "Target to model strategy must have a POLICY_CONVERT strategy with transactionalEdit");
             }
-            final TextWidget control = new TextWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label,
-                    message, labelButton, transactionalEdit, onEdit, toolkit);
+            final TextWidget control = new TextWidget(container,
+                    id,
+                    labelAbove,
+                    horizontalLabelAlignment,
+                    verticalLabelAlignment,
+                    labelWidth,
+                    readOnly,
+                    label,
+                    message,
+                    labelButton,
+                    transactionalEdit,
+                    onEdit,
+                    toolkit,
+                    proposalProvider);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
@@ -123,6 +143,10 @@ public class TextWidget extends EditableControlWidget {
                         modelObservable,
                         targetToModelStrategy,
                         modelToTargetStrategy);
+                validator.ifPresent(v -> control.bindValidator(ctx, delay.map(time -> control.observeText(time, SWT.Modify))
+                        .orElse(control.observeText(SWT.Modify)),
+                        modelObservable,
+                        v));
             }
             return control;
         }
@@ -136,18 +160,21 @@ public class TextWidget extends EditableControlWidget {
     private boolean editing = false;
     private final Color editingColor;
     private ToolItem okButton;
+    private final Optional<IContentProposalProvider> proposalProvider;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
-            boolean transactionalEdit, BiConsumer<String, String> onEdit, Optional<FormToolkit> toolkit) {
+            boolean transactionalEdit, BiConsumer<String, String> onEdit, Optional<FormToolkit> toolkit,
+            Optional<IContentProposalProvider> proposalProvider) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message,
                 labelButton,
                 toolkit);
         this.transactionalEdit = transactionalEdit;
         this.onEdit = Optional.ofNullable(onEdit);
-        editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
+        this.proposalProvider = proposalProvider;
+        this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
     }
 
     @Override
@@ -222,6 +249,17 @@ public class TextWidget extends EditableControlWidget {
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);
         configureBackground(text);
+        proposalProvider.ifPresent(provider -> {
+            final TextContentAdapter controlContentAdapter = new TextContentAdapter();
+            final ContentProposalAdapter proposalAdapter = new ContentProposalAdapter(text,
+                    controlContentAdapter,
+                    provider,
+                    null,
+                    null);
+            proposalAdapter.setPropagateKeys(true);
+            proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+            proposalAdapter.setAutoActivationDelay(0);
+        });
 
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));

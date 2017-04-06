@@ -20,6 +20,7 @@ import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
@@ -45,6 +46,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected DataBindingContext ctx;
     protected String id;
     protected Optional<FormToolkit> toolkit = Optional.empty();
+    protected Optional<IValidator> validator = Optional.empty();
 
     /**
      * Adds a text label next to the control.
@@ -273,6 +275,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
      */
     public T bindTo(IObservableValue modelObservable) {
         this.modelObservable = modelObservable;
+        return (T) this;
+    }
+
+    public T withValidator(IValidator validator) {
+        this.validator = Optional.ofNullable(validator);
         return (T) this;
     }
 

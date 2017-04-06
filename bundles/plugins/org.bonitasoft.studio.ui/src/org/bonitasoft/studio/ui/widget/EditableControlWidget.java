@@ -18,12 +18,15 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.databinding.ControlMessageSupport;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -148,6 +151,21 @@ public abstract class EditableControlWidget extends ControlWidget {
         valueBinding = ctx.bindValue(controlObservable, modelObservable,
                 targetToModel, modelToTarget);
         return new ControlMessageSupport(valueBinding) {
+
+            @Override
+            protected void statusChanged(IStatus status) {
+                EditableControlWidget.this.statusChanged(status);
+            }
+
+        };
+    }
+
+    protected ControlMessageSupport bindValidator(DataBindingContext ctx, ISWTObservableValue controlObservable,
+            IObservableValue modelObservable, IValidator validator) {
+        final UpdateValueStrategy validateOnlyStrategy = UpdateStrategyFactory.convertUpdateValueStrategy()
+                .withValidator(validator).create();
+        return new ControlMessageSupport(ctx.bindValue(controlObservable, modelObservable,
+                validateOnlyStrategy, validateOnlyStrategy)) {
 
             @Override
             protected void statusChanged(IStatus status) {
