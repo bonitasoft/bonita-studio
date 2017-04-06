@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
+import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -33,33 +34,47 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     public static class Builder implements ValidatorBuilder<UniqueValidator> {
 
         private final RepositoryAccessor repositoryAccessor;
+        private ApplicationNodeContainer applicationWorkingCopy;
+        private String filename;
 
-        public Builder(RepositoryAccessor repositoryAccessor) {
+        public Builder(RepositoryAccessor repositoryAccessor, ApplicationNodeContainer applicationWorkingCopy,
+                String filename) {
+            Objects.requireNonNull(repositoryAccessor);
+            Objects.requireNonNull(applicationWorkingCopy);
             this.repositoryAccessor = repositoryAccessor;
+            this.applicationWorkingCopy = applicationWorkingCopy;
+            this.filename = filename;
         }
 
         @Override
         public ApplicationTokenUnicityValidator create() {
-            return new ApplicationTokenUnicityValidator(repositoryAccessor);
+            return new ApplicationTokenUnicityValidator(repositoryAccessor, applicationWorkingCopy, filename);
         }
 
     }
 
     private final RepositoryAccessor repositoryAccessor;
     private Optional<String> currentToken;
+    private ApplicationNodeContainer applicationWorkingCopy;
+    private String filename;
 
-    public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor) {
-        this(repositoryAccessor, null);
+    public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor,
+            ApplicationNodeContainer applicationWorkingCopy, String fileName) {
+        this(repositoryAccessor, applicationWorkingCopy, fileName, null);
     }
 
-    public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor, String currentToken) {
+    public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor,
+            ApplicationNodeContainer applicationWorkingCopy, String filename, String currentToken) {
         this.repositoryAccessor = repositoryAccessor;
+        this.applicationWorkingCopy = applicationWorkingCopy;
         this.currentToken = Optional.ofNullable(currentToken);
+        this.filename = filename;
     }
 
     public List<String> getTokenList() {
         final List<String> allTokens = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren()
                 .stream()
+                .filter(fStore -> !Objects.equals(fStore.getName(), filename))
                 .map(fStore -> {
                     try {
                         return fStore.getContent();
@@ -73,6 +88,11 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                 .flatMap(container -> container.getApplications().stream())
                 .map(ApplicationNode::getToken)
                 .collect(Collectors.toList());
+        applicationWorkingCopy.getApplications().stream()
+                .filter(application -> !Objects.equals(currentToken.orElse(""), application.getToken()))
+                .map(ApplicationNode::getToken)
+                .forEach(allTokens::add);
+
         currentToken.ifPresent(allTokens::remove);
         return allTokens;
     }
