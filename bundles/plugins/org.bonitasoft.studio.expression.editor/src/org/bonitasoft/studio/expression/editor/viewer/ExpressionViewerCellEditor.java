@@ -67,7 +67,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
     private final Composite parent;
 
     public ExpressionViewerCellEditor(final ColumnViewer columnViewer,
-            final Composite parent, final EditingDomain editingDomain, final int colIndex,
+            final Composite parent, final EditingDomain editingDomain,
             final SelectionListener removeRowListener) {
         super(parent);
         this.editingDomain = editingDomain;
