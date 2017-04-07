@@ -48,8 +48,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -108,9 +106,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                     && currentExpressionEditor != null
                     && currentExpressionEditor.provideDialogTray()
                     && getTray() == null) {
-                final DialogTray tray = currentExpressionEditor.createDialogTray();
-                openTray(tray);
-
+                openTray(currentExpressionEditor.createDialogTray());
             } else {
                 closeTray();
             }
@@ -179,9 +175,30 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         final IExpressionProvider currentProvider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(expressionType);
         if (currentProvider != null && expressionTypeViewer != null) {
-            expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
+            final StructuredSelection selection = new StructuredSelection(currentProvider);
+            expressionTypeViewer.setSelection(selection);
+            oldSelection = selection;
+            expressionTypeViewer.getSelection();
+            showContent(currentProvider.getExpressionType());
+            updateOKButton();
+        }
+        if (expressionTypeViewer != null) {
+            expressionTypeViewer.addSelectionChangedListener(event -> {
+                if (!event.getSelection().equals(oldSelection)) {
+                    oldSelection = event.getSelection();
+                    expressionTypeChanged(event.getSelection());
+                    updateOKButton();
+                }
+            });
         }
         return content;
+    }
+
+    protected void updateOKButton() {
+        final Button okButton = getButton(OK);
+        if (okButton != null && !okButton.isDisposed()) {
+            okButton.setEnabled(currentExpressionEditor != null ? currentExpressionEditor.canFinish() : false);
+        }
     }
 
     private void configureContext() {
@@ -225,9 +242,29 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         return composite;
     }
 
+    @Override
+    protected void initializeBounds() {
+        super.initializeBounds();
+        updateTrayVisibility();
+    }
+
+    protected void updateTrayVisibility() {
+        if (helpControl != null) {
+            helpControl.setVisible(false);
+            if (currentExpressionEditor != null && currentExpressionEditor.provideDialogTray()) {
+                final ToolItem item = ((ToolBar) helpControl).getItem(0);
+                item.setSelection(true);
+                openTrayListener.handleEvent(new Event());
+            } else if (getTray() != null) {
+                closeTray();
+            }
+        }
+    }
+
     protected void createExpressionContentPanel(final Composite parentForm) {
         contentComposite = new Composite(parentForm, SWT.NONE);
-        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        contentComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(WIDTH - 50, SWT.DEFAULT).create());
         contentComposite.setLayout(GridLayoutFactory.fillDefaults().create());
     }
 
@@ -263,30 +300,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         }
         ColumnViewerToolTipSupport.enableFor(expressionTypeViewer, ToolTip.NO_RECREATE);
         expressionTypeViewer.setInput(expressionViewer.getInput());
-        expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                if (!event.getSelection().equals(oldSelection)) {
-                    oldSelection = event.getSelection();
-                    expressionTypeChanged(event.getSelection());
-                    final Button okButton = getButton(OK);
-                    if (okButton != null && !okButton.isDisposed() && currentExpressionEditor != null) {
-                        okButton.setEnabled(currentExpressionEditor.canFinish());
-                    } else if (currentExpressionEditor == null) {
-                        okButton.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        expressionTypeViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                getShell().layout(true, true);
-            }
-        });
     }
 
     private ViewerFilter filterEditor() {
@@ -294,12 +307,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
             @Override
             public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                if (element instanceof IExpressionProvider) {
-                    if (filteredEditor.contains(((IExpressionProvider) element).getExpressionType())) {
-                        return false;
-                    }
-                }
-                return true;
+                return !(element instanceof IExpressionProvider
+                        && filteredEditor.contains(((IExpressionProvider) element).getExpressionType()));
             }
         };
     }
@@ -312,14 +321,11 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     protected void expressionTypeChanged(final ISelection selection) {
         if (!selection.isEmpty()) {
             final IExpressionProvider provider = (IExpressionProvider) ((StructuredSelection) selection).getFirstElement();
-            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-                @Override
-                public void run() {
-                    showContent(provider.getExpressionType());
-                }
+            BusyIndicator.showWhile(Display.getDefault(), () -> {
+                showContent(provider.getExpressionType());
+                updateTrayVisibility();
+                contentComposite.layout(true, true);
             });
-
         }
     }
 
@@ -351,21 +357,11 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             dataBindingContext.dispose();
         }
         currentExpressionEditor = provider.getExpressionEditor(inputExpression, context);
-        currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
         if (currentExpressionEditor != null) {
+            currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
             dataBindingContext = new EMFDataBindingContext();
 
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
-            if (helpControl != null) {
-                helpControl.setVisible(false);
-                if (currentExpressionEditor.provideDialogTray()) {
-                    final ToolItem item = ((ToolBar) helpControl).getItem(0);
-                    item.setSelection(true);
-                    openTrayListener.handleEvent(new Event());
-                } else if (getTray() != null) {
-                    closeTray();
-                }
-            }
 
             final UpdateValueStrategy selectionToExpressionType = new UpdateValueStrategy();
             final IConverter convert = new Converter(IExpressionProvider.class, String.class) {
@@ -383,26 +379,25 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             } else {
                 inputExpression.setType(type);
             }
-            if (!ExpressionConstants.SCRIPT_TYPE.equals(inputExpression.getType())) {
-                inputExpression.setName("");
-            }
+            inputExpression.setName(shouldClearName() ? "" : inputExpression.getName());
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
             currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters,
                     expressionViewer);
-            currentExpressionEditor.addListener(new Listener() {
-
-                @Override
-                public void handleEvent(final Event event) {
-                    final Button okButton = getButton(OK);
-                    if (okButton != null && !okButton.isDisposed()) {
-                        okButton.setEnabled(currentExpressionEditor.canFinish());
-                    }
+            currentExpressionEditor.addListener(event -> {
+                final Button okButton = getButton(OK);
+                if (okButton != null && !okButton.isDisposed()) {
+                    okButton.setEnabled(currentExpressionEditor.canFinish());
                 }
             });
             DialogSupport.create(this, dataBindingContext);
         }
+    }
+
+    private boolean shouldClearName() {
+        final String type = inputExpression.getType();
+        return !(ExpressionConstants.SCRIPT_TYPE.equals(type) || ExpressionConstants.QUERY_TYPE.equals(type));
     }
 
     @Override
@@ -450,10 +445,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             }
         }
         item.addListener(SWT.Selection, openTrayListener);
-        if (currentExpressionEditor != null) {
-            // helpControl.setVisible(currentExpressionEditor.provideDialogTray());
-            helpControl.setVisible(false);
-        }
+        helpControl.setVisible(currentExpressionEditor == null);
         return helpControl;
     }
 
