@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.swtbot.framework.la;
 
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -23,6 +24,15 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
 
     public OpenApplicationWizardBot(SWTGefBot bot, String dialogTitle) {
         super(bot, dialogTitle);
+    }
+
+    public OpenApplicationWizardBot rename(String newName) {
+        bot.button(Messages.rename).click();
+        bot.text().setText(newName);
+        final SWTBotShell activeShell = bot.activeShell();
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+        return this;
     }
 
     /**

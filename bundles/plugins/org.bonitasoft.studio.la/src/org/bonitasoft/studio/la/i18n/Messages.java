@@ -71,6 +71,8 @@ public class Messages extends NLS {
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
     public static String unparsableApplicationFile;
+    public static String rename;
+    public static String renameFile;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
