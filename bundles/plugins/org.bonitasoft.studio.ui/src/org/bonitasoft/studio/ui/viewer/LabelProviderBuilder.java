@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.ui.viewer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -42,7 +45,7 @@ public class LabelProviderBuilder<T> {
     private Optional<Function<T, Image>> imageFunction = Optional.empty();
     private Optional<Function<T, IStatus>> statusProvider = Optional.empty();
     private Optional<Function<T, Font>> fontProvider = Optional.empty();
-    private boolean refreshAll;
+    private List<ColumnViewer> viewersToUpdate = new ArrayList<>();
 
     public LabelProviderBuilder<T> withTextProvider(Function<T, String> textFunction) {
         this.textFunction = Optional.ofNullable(textFunction);
@@ -59,8 +62,8 @@ public class LabelProviderBuilder<T> {
         return this;
     }
 
-    public LabelProviderBuilder<T> shouldRefreshAllLabels() {
-        this.refreshAll = true;
+    public LabelProviderBuilder<T> shouldRefreshAllLabels(ColumnViewer... viewers) {
+        this.viewersToUpdate = Arrays.asList(viewers);
         return this;
     }
 
@@ -80,12 +83,10 @@ public class LabelProviderBuilder<T> {
                 super.initialize(viewer, column);
                 errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
                 warningColor = new Color(Display.getDefault(), ColorConstants.WARNING_RGB);
-                if (refreshAll) {
-                    viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit(viewer));
-                }
+                viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit());
             }
 
-            private ColumnViewerEditorActivationListener refreshAllAfterEdit(ColumnViewer viewer) {
+            private ColumnViewerEditorActivationListener refreshAllAfterEdit() {
                 return new ColumnViewerEditorActivationListener() {
 
                     @Override
@@ -98,10 +99,13 @@ public class LabelProviderBuilder<T> {
 
                     @Override
                     public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
-                        if (viewer.getInput() instanceof Collection) {
-                            viewer.getControl().getDisplay().asyncExec(
-                                    () -> viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null));
-                        }
+                        viewersToUpdate.forEach(viewer -> {
+                            if (viewer.getInput() instanceof Collection) {
+                                viewer.getControl().getDisplay().asyncExec(
+                                        () -> viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null));
+                            }
+                        });
+
                     }
 
                     @Override
@@ -226,4 +230,5 @@ public class LabelProviderBuilder<T> {
             }
         };
     }
+
 }
