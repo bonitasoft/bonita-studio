@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.ui.control.SelectApplicationDescriptorPage;
+import org.bonitasoft.studio.la.ui.control.SelectRenameApplicationDescriptorPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -42,7 +42,7 @@ public class OpenApplicationHandler {
 
     private WizardBuilder<Stream<ApplicationFileStore>> createWizard(WizardBuilder<Stream<ApplicationFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
-        SelectApplicationDescriptorPage selectApplicationDescriptorPage = new SelectApplicationDescriptorPage(
+        SelectRenameApplicationDescriptorPage selectApplicationDescriptorPage = new SelectRenameApplicationDescriptorPage(
                 repositoryAccessor);
         return builder.withTitle(Messages.openExistingApplication)
                 .havingPage(newPage()

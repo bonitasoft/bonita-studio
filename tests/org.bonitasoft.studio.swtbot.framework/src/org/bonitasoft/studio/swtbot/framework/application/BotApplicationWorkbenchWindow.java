@@ -172,7 +172,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
-    public void newApplicationContainer() {
+    public void newApplicationDescriptorFile() {
         bot.menu("Development").menu("Application Descriptor").menu("New...").click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }

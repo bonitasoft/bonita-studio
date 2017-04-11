@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.handler.NewApplicationHandler;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
+import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -71,18 +71,29 @@ public class OpenExistingApplicationIT {
         deleteApplications(workBenchBot);
     }
 
+    @Test
+    public void should_rename_file_using_open_menu() {
+        final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
+        workBenchBot.newApplicationDescriptorFile();
+        OpenApplicationWizardBot openApplicationWizardBot = workBenchBot.openApplication();
+        openApplicationWizardBot.select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml");
+        openApplicationWizardBot.rename("custom_name").select("custom_name.xml").finish();
+        workBenchBot.deleteApplicationDescriptor()
+                .select("custom_name.xml")
+                .delete();
+    }
+
     private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        final DeleteApplicationWizardBot deleteApplicationBot = workBenchBot.deleteApplicationDescriptor();
-        deleteApplicationBot
+        workBenchBot.deleteApplicationDescriptor()
                 .select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", NewApplicationHandler.DEFAULT_FILE_NAME + "1.xml")
                 .delete();
     }
 
     private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
-        workBenchBot.newApplicationContainer();
+        workBenchBot.newApplicationDescriptorFile();
         bot.activeEditor().close();
 
-        workBenchBot.newApplicationContainer();
+        workBenchBot.newApplicationDescriptorFile();
         bot.activeEditor().close();
     }
 }

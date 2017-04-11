@@ -44,9 +44,9 @@ public class SelectApplicationDescriptorPage implements ControlSupplier {
 
     private static final int TABLE_WIDTH_HINT = 600;
 
-    private RepositoryAccessor repositoryAccessor;
+    protected RepositoryAccessor repositoryAccessor;
 
-    private TableViewer applicationsTableViewer;
+    protected TableViewer applicationsTableViewer;
 
     public SelectApplicationDescriptorPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
