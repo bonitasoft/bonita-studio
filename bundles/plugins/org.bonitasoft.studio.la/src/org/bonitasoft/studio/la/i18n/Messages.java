@@ -73,6 +73,7 @@ public class Messages extends NLS {
     public static String unparsableApplicationFile;
     public static String rename;
     public static String renameFile;
+    public static String menuLevelWarning;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

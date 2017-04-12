@@ -16,6 +16,7 @@ package org.bonitasoft.studio.fakes;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 
@@ -27,11 +28,15 @@ import org.eclipse.core.runtime.CoreException;
 public class IResourceFakesBuilder<T extends IResource> {
 
     public static IResourceFakesBuilder<IFile> anIFile() {
-        return new IResourceFakesBuilder<IFile>(mock(IFile.class));
+        final IFile mock = mock(IFile.class);
+        when(mock.getType()).thenReturn(IResource.FILE);
+        return new IResourceFakesBuilder<>(mock);
     }
 
     public static IResourceFakesBuilder<IFolder> anIFolder() {
-        return new IResourceFakesBuilder<IFolder>(mock(IFolder.class));
+        final IFolder mock = mock(IFolder.class);
+        when(mock.getType()).thenReturn(IResource.FOLDER);
+        return new IResourceFakesBuilder<>(mock);
     }
 
     private final IResource resourceFake;
@@ -60,7 +65,7 @@ public class IResourceFakesBuilder<T extends IResource> {
         }
         try {
             doReturn(resourceAsStream).when((IFile) resourceFake).getContents();
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             return (IResourceFakesBuilder<IFile>) this;
         }
         return (IResourceFakesBuilder<IFile>) this;
