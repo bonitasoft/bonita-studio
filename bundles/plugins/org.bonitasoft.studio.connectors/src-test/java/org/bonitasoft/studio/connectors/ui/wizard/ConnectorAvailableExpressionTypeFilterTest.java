@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.connectors.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -33,7 +35,6 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.Viewer;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,20 +52,25 @@ public class ConnectorAvailableExpressionTypeFilterTest {
     @Mock
     private Viewer expressionViewer;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         connectorAvailableExpressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+    @Test
+    public void should_accept_default_types()
+            throws Exception {
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createConstantExpression("", ""))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createDocumentExpressionWithDependency("doc"))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createVariableExpression(aData().build()))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createParameterExpression(aParameter().build()))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createGroovyScriptExpression("", ""))).isTrue();
     }
 
     @Test
@@ -79,7 +85,8 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("myInput");
         input.setType(ContractInputType.TEXT);
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createContractInputExpression(input))).isTrue();
     }
 
     @Test
@@ -93,7 +100,8 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("myInput");
         input.setType(ContractInputType.TEXT);
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createContractInputExpression(input))).isFalse();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createContractInputExpression(input))).isFalse();
     }
 
     @Test
@@ -102,7 +110,9 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         final Data data = ProcessFactory.eINSTANCE.createData();
         data.setName("myData");
         data.setDataType(ModelHelper.createStringDataType());
-        assertThat(connectorAvailableExpressionTypeFilter.select(null, null, ExpressionHelper.createVariableExpression(data))).isTrue();
+        assertThat(
+                connectorAvailableExpressionTypeFilter.select(null, null, ExpressionHelper.createVariableExpression(data)))
+                        .isTrue();
     }
 
     @Test
@@ -113,7 +123,8 @@ public class ConnectorAvailableExpressionTypeFilterTest {
 
         final TextFormField field = FormFactory.eINSTANCE.createTextFormField();
         field.setName("myData");
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createWidgetExpression(field))).isFalse();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createWidgetExpression(field))).isFalse();
     }
 
     @Test
@@ -124,7 +135,8 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         final Parameter param = ParameterFactory.eINSTANCE.createParameter();
         param.setName("myParam");
         param.setTypeClassname(String.class.getName());
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null, ExpressionHelper.createParameterExpression(param))).isTrue();
+        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
+                ExpressionHelper.createParameterExpression(param))).isTrue();
     }
 
 }
