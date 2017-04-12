@@ -13,7 +13,7 @@
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
-      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.endorsed.dirs=../../../endorsed
+      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Djava.endorsed.dirs=../../../endorsed
       </vmArgsMac>
       <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
       </vmArgsWin>
