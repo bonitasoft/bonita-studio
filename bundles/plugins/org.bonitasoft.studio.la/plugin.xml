@@ -67,5 +67,35 @@
             name="%ApplicationPerspective">
       </perspective>
    </extension>
+   <extension
+         id="id1"
+         name="name"
+         point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            class="org.bonitasoft.studio.la.ui.validator.MenuLevelValidator">
+         <include>
+            <rules>
+               <contentType
+                     exactMatch="true"
+                     id="org.bonitasoft.studio.la.applicationDescriptor">
+               </contentType>
+            </rules>
+         </include>
+      </validator>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            file-extensions="xml"
+            id="org.bonitasoft.studio.la.applicationDescriptor"
+            name="Application Descriptor"
+            priority="normal">
+         <describer
+               class="org.bonitasoft.studio.la.core.ApplicationContentDescriber">
+         </describer>
+      </content-type>
+   </extension>
 
 </plugin>
