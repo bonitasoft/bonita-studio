@@ -40,6 +40,7 @@ public class ConnectorAvailableExpressionTypeFilter extends
     public ConnectorAvailableExpressionTypeFilter() {
         super(new String[] { ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.DOCUMENT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE });
     }
