@@ -63,7 +63,7 @@ public class WidgetMessageDecorator extends ExpandableComposite {
             return fontRegistry.get(WidgetMessageDecorator.class.getName());
         }
         fontRegistry.put(WidgetMessageDecorator.class.getName(),
-                new FontData[] { new FontData(WidgetMessageDecorator.class.getName(), 8, SWT.NORMAL) });
+                new FontData[] { new FontData(WidgetMessageDecorator.class.getName(), 10, SWT.NORMAL) });
         return fontRegistry.get(WidgetMessageDecorator.class.getName());
     }
 
