@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
@@ -319,6 +320,7 @@ public class TextWidget extends EditableControlWidget {
 
     protected void createEditItem(final ToolBar toolBar) {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
+        editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.ui.widget.textWidget.editButton");
         editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
@@ -340,6 +342,7 @@ public class TextWidget extends EditableControlWidget {
         cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
 
         okButton = new ToolItem(toolBar, SWT.FLAT);
+        okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
         okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));
