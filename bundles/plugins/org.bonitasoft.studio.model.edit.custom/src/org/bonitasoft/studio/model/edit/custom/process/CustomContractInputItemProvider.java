@@ -53,7 +53,7 @@ public class CustomContractInputItemProvider
                         ProcessPackage.Literals.CONTRACT_INPUT__TYPE,
                         true,
                         false,
-                        true,
+                        false,
                         ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
                         null,
                         null) {
@@ -112,7 +112,8 @@ public class CustomContractInputItemProvider
                                 ContractInputType.FILE,
                                 ContractInputType.INTEGER,
                                 ContractInputType.LONG,
-                                ContractInputType.TEXT);
+                                ContractInputType.TEXT,
+                                ContractInputType.DATE);
                         if (getContractContainer((EObject) object) instanceof Task) {
                             comboBoxObjects.remove(ContractInputType.LONG);
                         }
