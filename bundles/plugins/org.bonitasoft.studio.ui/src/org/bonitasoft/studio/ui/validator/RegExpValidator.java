@@ -72,7 +72,7 @@ public class RegExpValidator extends StringValidator {
      */
     @Override
     protected boolean isValid(Optional<String> value) {
-        return value.filter(v -> Pattern.matches(regex, v)).isPresent();
+        return Pattern.matches(regex, value.orElse(""));
     }
 
 }
