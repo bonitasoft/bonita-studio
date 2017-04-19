@@ -33,6 +33,9 @@ import com.google.common.collect.Sets;
 
 public class PatternExpressionModelBuilder implements IDocumentListener {
 
+    private static final String GROOVY_START_TAG = "${";
+    private static final String GROOVY_END_TAG = "}";
+
     private List<Expression> scope;
     private Expression expression;
 
@@ -58,13 +61,14 @@ public class PatternExpressionModelBuilder implements IDocumentListener {
     }
 
     private String strip(String expression) {
-        if (expression.startsWith("${")) {
-            expression = expression.substring(2);
+        String strippedExpression = expression;
+        if (strippedExpression.startsWith(GROOVY_START_TAG)) {
+            strippedExpression = strippedExpression.substring(2);
         }
-        if (expression.endsWith("}")) {
-            expression = expression.substring(0, expression.length() - 1);
+        if (strippedExpression.endsWith(GROOVY_END_TAG)) {
+            strippedExpression = strippedExpression.substring(0, strippedExpression.length() - 1);
         }
-        return expression;
+        return strippedExpression;
     }
 
     /*
@@ -90,14 +94,16 @@ public class PatternExpressionModelBuilder implements IDocumentListener {
             try {
                 final String expressionContent = strip(document.get(region.getOffset(), region.getLength()));
                 if (expressionContent != null && !parsedExpressions.contains(expressionContent)) {
-                    final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(expressionContent, String.class.getName());
+                    final Expression groovyScriptExpression = ExpressionHelper
+                            .createGroovyScriptExpression(expressionContent, String.class.getName());
                     groovyScriptExpression.setName(expressionContent);
                     final Document expDoc = new Document();
                     expDoc.set(expressionContent);
                     final FindReplaceDocumentAdapter expDocFinder = new FindReplaceDocumentAdapter(expDoc);
                     for (final Expression exp : scope) {
                         if (expDocFinder.find(0, exp.getName(), true, true, true, false) != null) {
-                            groovyScriptExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(exp));
+                            groovyScriptExpression.getReferencedElements()
+                                    .add(ExpressionHelper.createDependencyFromEObject(exp));
                         }
                     }
                     expression.getReferencedElements().add(groovyScriptExpression);
