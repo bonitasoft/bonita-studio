@@ -47,6 +47,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextListener;
@@ -73,8 +74,6 @@ import com.google.common.collect.Sets;
  */
 public class PatternExpressionViewer extends Composite {
 
-    private static final String GROOVY_START_TAG = "${";
-    private static final String GROOVY_END_TAG = "}";
     public static final String GROOVY_EXPRESSION_CONTENT_TYPE = "__groovy_partition_content_type";
     private static final int UNDO_REDO_HISTORY_SIZE = 25;
     private TextViewer viewer;
@@ -125,7 +124,8 @@ public class PatternExpressionViewer extends Composite {
             mc.hide(expressionViewer.getControl());
             mc.show(getViewerControl());
             helpDecoration.show();
-            mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+            mc.setLayout(
+                    GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
             bindPatternExpression();
         } else {
             mc.hide(getViewerControl());
@@ -210,11 +210,16 @@ public class PatternExpressionViewer extends Composite {
         configurePatternExpressionModelBuilder();
         patternBinding = context.bindValue(SWTObservables.observeText(viewer.getTextWidget(), SWT.Modify),
                 EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT), startegy, null);
+        fireDocumentChanged();
+    }
 
+    protected void fireDocumentChanged() {
+        final DocumentEvent event = new DocumentEvent();
+        event.fDocument = viewer.getDocument();
+        patternExpressionModelBuilder.documentChanged(event);
     }
 
     protected void configurePatternExpressionModelBuilder() {
-        expression.getReferencedElements().clear();
         patternExpressionModelBuilder.setExpression(expression);
     }
 
@@ -294,18 +299,17 @@ public class PatternExpressionViewer extends Composite {
         document.setDocumentPartitioner(partitioner);
     }
 
-
     protected TextViewer createViewer(final Composite parent) {
         return new TextViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
     }
-
 
     public void setContextInput(final EObject input) {
         contextInput = input;
         final List<Expression> filteredExpressions = getFilteredExpressions();
         patternExpressionModelBuilder.setScope(filteredExpressions);
         final ContentAssistant assistant = new ContentAssistant();
-        final PatternExpressionCompletionProcessor javaCompletionProcessor = new PatternExpressionCompletionProcessor(new FakeEditorPart(),
+        final PatternExpressionCompletionProcessor javaCompletionProcessor = new PatternExpressionCompletionProcessor(
+                new FakeEditorPart(),
                 filteredExpressions);
         javaCompletionProcessor.setCompletionProposalAutoActivationCharacters(new char[] { '.' });
         assistant.setContentAssistProcessor(javaCompletionProcessor, GROOVY_EXPRESSION_CONTENT_TYPE);
