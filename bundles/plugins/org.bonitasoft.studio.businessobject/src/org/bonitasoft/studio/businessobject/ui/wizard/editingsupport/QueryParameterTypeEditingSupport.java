@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +49,8 @@ public class QueryParameterTypeEditingSupport extends ObservableValueEditingSupp
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
+        final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
+                SWT.READ_ONLY);
         cellEditor.setLabelProvider(new LabelProvider());
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
         cellEditor.setInput(getAvailableClassnames());
@@ -67,7 +71,8 @@ public class QueryParameterTypeEditingSupport extends ObservableValueEditingSupp
     }
 
     protected List<String> getAvailableClassnames() {
-        return Arrays.asList(String.class.getName(), Boolean.class.getName(), Integer.class.getName(), Long.class.getName(), Double.class.getName(),
-                Date.class.getName());
+        return Arrays.asList(String.class.getName(), Boolean.class.getName(), Integer.class.getName(), Long.class.getName(),
+                Double.class.getName(), LocalDate.class.getName(), LocalDateTime.class.getName(),
+                OffsetDateTime.class.getName(), Date.class.getName());
     }
 }
