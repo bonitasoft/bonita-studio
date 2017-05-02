@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.SelectApplicationDescriptorPage;
+import org.bonitasoft.studio.la.ui.control.SelectMultiApplicationDescriptorPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -47,9 +48,9 @@ public class DeleteApplicationHandler {
                 });
     }
 
-    private WizardBuilder<Stream<ApplicationFileStore>> createWizard(WizardBuilder<Stream<ApplicationFileStore>> builder,
+    private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
-        SelectApplicationDescriptorPage selectApplicationDescriptorPage = new SelectApplicationDescriptorPage(
+        SelectApplicationDescriptorPage selectApplicationDescriptorPage = new SelectMultiApplicationDescriptorPage(
                 repositoryAccessor);
         return builder.withTitle(Messages.deleteExistingApplication)
                 .havingPage(newPage()
@@ -59,7 +60,7 @@ public class DeleteApplicationHandler {
                 .onFinish(container -> deleteFinish(selectApplicationDescriptorPage, activeShell));
     }
 
-    private Optional<Stream<ApplicationFileStore>> deleteFinish(
+    private Optional<Stream<IRepositoryFileStore>> deleteFinish(
             SelectApplicationDescriptorPage selectApplicationDescriptorPage, Shell activeShell) {
         return MessageDialog.openConfirm(activeShell, Messages.deleteConfirmation,
                 String.format(Messages.deleteConfirmationMessage, getListAppToDelete(selectApplicationDescriptorPage)))

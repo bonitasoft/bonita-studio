@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.la.ui.control;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.validator.ApplicationDescriptorFileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
@@ -28,7 +28,7 @@ import com.google.common.base.Objects;
 public class RenameApplicationDescriptorFileDialog {
 
     public static boolean open(Shell shell, ApplicationRepositoryStore applicationRepositoryStore,
-            ApplicationFileStore applicationFileStore) {
+            IRepositoryFileStore applicationFileStore) {
         String currentFileName = applicationFileStore.getDisplayName();
         final InputDialog dialog = new InputDialog(shell, Messages.rename, Messages.renameFile,
                 currentFileName, new InputValidatorWrapper(

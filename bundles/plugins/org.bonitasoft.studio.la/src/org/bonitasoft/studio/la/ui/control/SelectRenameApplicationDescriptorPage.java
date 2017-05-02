@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
-public class SelectRenameApplicationDescriptorPage extends SelectApplicationDescriptorPage {
+public class SelectRenameApplicationDescriptorPage extends SelectMultiApplicationDescriptorPage {
 
     Shell currentShell;
 
