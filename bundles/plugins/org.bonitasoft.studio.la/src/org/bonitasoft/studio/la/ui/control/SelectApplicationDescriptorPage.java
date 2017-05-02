@@ -17,7 +17,7 @@ package org.bonitasoft.studio.la.ui.control;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.la.repository.ApplicationFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.providers.ApplicationLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -40,7 +40,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class SelectApplicationDescriptorPage implements ControlSupplier {
+public abstract class SelectApplicationDescriptorPage implements ControlSupplier {
 
     private static final int TABLE_WIDTH_HINT = 600;
 
@@ -58,7 +58,7 @@ public class SelectApplicationDescriptorPage implements ControlSupplier {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        applicationsTableViewer = new TableViewer(mainComposite);
+        applicationsTableViewer = createTableViewer(mainComposite);
         applicationsTableViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).hint(TABLE_WIDTH_HINT, SWT.DEFAULT).create());
         applicationsTableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -82,7 +82,9 @@ public class SelectApplicationDescriptorPage implements ControlSupplier {
         return mainComposite;
     }
 
-    public Stream<ApplicationFileStore> getSelection() {
+    protected abstract TableViewer createTableViewer(Composite mainComposite);
+
+    public Stream<IRepositoryFileStore> getSelection() {
         return ((IStructuredSelection) applicationsTableViewer.getSelection()).toList().stream();
     }
 
