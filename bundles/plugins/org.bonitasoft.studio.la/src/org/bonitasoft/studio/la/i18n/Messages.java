@@ -74,6 +74,7 @@ public class Messages extends NLS {
     public static String rename;
     public static String renameFile;
     public static String menuLevelWarning;
+    public static String failToDeleteFile;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
