@@ -125,4 +125,6 @@ public class Messages extends NLS {
     public static String longConversionWarning;
     public static String creatingMappingOperation;
     public static String saving;
+    public static String taskBdmTips;
+    public static String poolBdmTips;
 }
