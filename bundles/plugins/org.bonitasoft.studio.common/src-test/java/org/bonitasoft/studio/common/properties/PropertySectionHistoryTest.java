@@ -75,7 +75,8 @@ public class PropertySectionHistoryTest {
     }
 
     @Test
-    public void should_description_be_visible_by_default_for_section_with_EntryFormMappingPropertySection_id() throws Exception {
+    public void should_description_be_visible_by_default_for_section_with_EntryFormMappingPropertySection_id()
+            throws Exception {
         propertySectionHistory = new PropertySectionHistory("EntryFormMappingPropertySection");
 
         propertySectionHistory.load();
@@ -84,7 +85,8 @@ public class PropertySectionHistoryTest {
     }
 
     @Test
-    public void should_description_be_visible_by_default_for_section_with_CaseStartFormMappingPropertySection_id() throws Exception {
+    public void should_description_be_visible_by_default_for_section_with_CaseStartFormMappingPropertySection_id()
+            throws Exception {
         propertySectionHistory = new PropertySectionHistory("CaseStartFormMappingPropertySection");
 
         propertySectionHistory.load();
@@ -93,7 +95,8 @@ public class PropertySectionHistoryTest {
     }
 
     @Test
-    public void should_description_be_visible_by_default_for_section_with_CaseOverviewFormMappingPropertySection_id() throws Exception {
+    public void should_description_be_visible_by_default_for_section_with_CaseOverviewFormMappingPropertySection_id()
+            throws Exception {
         propertySectionHistory = new PropertySectionHistory("CaseOverviewFormMappingPropertySection");
 
         propertySectionHistory.load();
@@ -102,12 +105,12 @@ public class PropertySectionHistoryTest {
     }
 
     @Test
-    public void should_description_be_visible_by_default_for_section_with_ContractPropertySection_id() throws Exception {
+    public void should_description_be_hidden_by_default_for_section_with_ContractPropertySection_id() throws Exception {
         propertySectionHistory = new PropertySectionHistory("ContractPropertySection");
 
         propertySectionHistory.load();
 
-        assertThat(propertySectionHistory.isDescriptionVisible()).isTrue();
+        assertThat(propertySectionHistory.isDescriptionVisible()).isFalse();
     }
 
     @Test

@@ -19,9 +19,11 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.businessobject.ui.expression.CreateBusinessDataProposalListener;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -39,6 +41,7 @@ import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizard;
 import org.bonitasoft.studio.contract.ui.wizard.ContractInputGenerationWizardPagesFactory;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
+import org.bonitasoft.studio.document.ui.DocumentProposalListener;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
@@ -72,6 +75,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -82,8 +86,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -140,7 +146,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     public String getSectionTitle() {
-        return selectionProvider.getAdapter(EObject.class) instanceof Task ? Messages.taskInputs : Messages.processInstantiationInputs;
+        return selectionProvider.getAdapter(EObject.class) instanceof Task ? Messages.taskInputs
+                : Messages.processInstantiationInputs;
     }
 
     protected void init(final IObservableValue observeContractValue) {
@@ -151,7 +158,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     protected void updateToolbar(final IToolBarManager toolbarManager) {
-        final CreateAndEditFormContributionItem newFormContributionItem = newContributionItem(CreateAndEditFormContributionItem.class);
+        final CreateAndEditFormContributionItem newFormContributionItem = newContributionItem(
+                CreateAndEditFormContributionItem.class);
         newFormContributionItem.setSelectionProvider(selectionProvider);
         toolbarManager.add(newFormContributionItem);
     }
@@ -183,7 +191,9 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).extendedMargins(15, 0, 10, 5).create());
+        inputComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 0, 10, 5)
+                        .spacing(LayoutConstants.getSpacing().x, 15).create());
 
         createInputTabContent(inputComposite, observeContractValue);
 
@@ -208,8 +218,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button downButton = createButton(buttonsComposite, Messages.down);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
-        final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent, getWidgetFactory());
-        constraintsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
+        final ContractConstraintsTableViewer constraintsTableViewer = new ContractConstraintsTableViewer(parent,
+                getWidgetFactory());
+        constraintsTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         constraintsTableViewer.initialize(constraintController, getMessageManager(), context);
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
@@ -226,6 +238,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
+        createBdmTipsSection(parent);
+
         final Composite buttonsComposite = createButtonContainer(parent);
 
         final Button generateButton = createGenerateButton(buttonsComposite);
@@ -233,8 +247,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final Button addChildButton = createButton(buttonsComposite, Messages.addChild);
         final Button removeButton = createButton(buttonsComposite, Messages.remove);
 
-        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(), progressService, sharedImages);
-        inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
+        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(),
+                progressService, sharedImages);
+        inputsTableViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
 
@@ -245,6 +261,37 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         bindRemoveButtonEnablement(removeButton, inputsTableViewer);
         bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
         bindGenerateButtonEnablement(generateButton);
+
+    }
+
+    private void createBdmTipsSection(Composite parent) {
+        final Section bdmTipsSection = getWidgetFactory().createSection(parent, Section.NO_TITLE);
+        bdmTipsSection.setLayout(GridLayoutFactory.fillDefaults().create());
+        bdmTipsSection.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+
+        CreateBusinessDataProposalListener createBusinessDataProposalListener = new CreateBusinessDataProposalListener();
+        DocumentProposalListener documentProposalListener = new DocumentProposalListener();
+
+        Link tips = new Link(bdmTipsSection, SWT.None);
+        tips.setText(getBdmTipsMessage());
+        getWidgetFactory().adapt(tips, true, true);
+        tips.addListener(SWT.Selection, e -> {
+            if (Objects.equals(e.text, "documents")) {
+                documentProposalListener.handleEvent((EObject) poolSelectionProvider.getAdapter(EObject.class),
+                        "");
+            } else {
+                createBusinessDataProposalListener.handleEvent((EObject) poolSelectionProvider.getAdapter(EObject.class),
+                        "");
+            }
+        });
+        selectionProvider.addSelectionChangedListener(e -> tips.setText(getBdmTipsMessage()));
+
+        bdmTipsSection.setClient(tips);
+    }
+
+    private String getBdmTipsMessage() {
+        return selectionProvider.getAdapter(EObject.class) instanceof Task ? Messages.taskBdmTips
+                : Messages.poolBdmTips;
     }
 
     private Button createGenerateButton(final Composite buttonsComposite) {
@@ -265,7 +312,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     public void openAddInputWizardDialog() {
-        final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(Display.getCurrent().getActiveShell(),
+        final AddInputContractFromDataWizardDialog dialog = new AddInputContractFromDataWizardDialog(
+                Display.getCurrent().getActiveShell(),
                 new ContractInputGenerationWizard(
                         (ContractContainer) selectionProvider.getAdapter(EObject.class),
                         getEditingDomain(),
@@ -273,7 +321,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                         fieldToContractInputMappingOperationBuilder,
                         fieldToContractInputMappingExpressionBuilder,
                         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
-                        sharedImages, new ContractInputGenerationInfoDialogFactory(), new ContractInputGenerationWizardPagesFactory(),
+                        sharedImages, new ContractInputGenerationInfoDialogFactory(),
+                        new ContractInputGenerationWizardPagesFactory(),
                         new GroovySourceViewerFactory()),
                 this, true);
         dialog.open();
@@ -281,7 +330,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private Button createButton(final Composite buttonsComposite, final String label) {
         final Button button = getWidgetFactory().createButton(buttonsComposite, label, SWT.PUSH);
-        button.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        button.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         return button;
     }
 
@@ -294,6 +344,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     protected void bindGenerateButtonEnablement(final Button button) {
         final ISWTObservableValue observeEnabled = SWTObservables.observeEnabled(button);
+
         final IObservableValue observeVariables = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(poolSelectionProvider),
                 ProcessPackage.Literals.DATA_AWARE__DATA);
@@ -301,9 +352,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                 ViewersObservables.observeSingleSelection(poolSelectionProvider),
                 ProcessPackage.Literals.POOL__DOCUMENTS);
         context.bindValue(observeEnabled, observeVariables, null,
-                UpdateStrategyFactory.updateValueStrategy().withConverter(createObserveVariableToEnableButtonConverter(observeDocuments)).create());
+                UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(createObserveVariableToEnableButtonConverter(observeDocuments)).create());
         context.bindValue(observeEnabled, observeDocuments, null,
-                UpdateStrategyFactory.updateValueStrategy().withConverter(createObserveDocumentToEnableButtonConverter(observeVariables)).create());
+                UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(createObserveDocumentToEnableButtonConverter(observeVariables)).create());
     }
 
     private IConverter createObserveDocumentToEnableButtonConverter(final IObservableValue observeData) {
@@ -311,7 +364,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
             @Override
             public Object convert(final Object fromObject) {
-                final List<Data> dataList = newArrayList(filter((List<Data>) observeData.getValue(), instanceOf(BusinessObjectData.class)));
+                final List<Data> dataList = newArrayList(
+                        filter((List<Data>) observeData.getValue(), instanceOf(BusinessObjectData.class)));
                 final List<EObject> documentList = (List<EObject>) fromObject;
                 return !dataList.isEmpty() || documentList != null && !documentList.isEmpty();
             }
@@ -323,7 +377,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
             @Override
             public Object convert(final Object fromObject) {
-                final List<Data> fromObjectList = newArrayList(filter((List<Data>) fromObject, instanceOf(BusinessObjectData.class)));
+                final List<Data> fromObjectList = newArrayList(
+                        filter((List<Data>) fromObject, instanceOf(BusinessObjectData.class)));
                 final List<EObject> documentList = (List<EObject>) observeData.getValue();
                 return !fromObjectList.isEmpty() || !documentList.isEmpty();
             }
@@ -332,7 +387,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     protected void bindAddConstraintButtonEnablement(final Button button, final IObservableValue contractObservable) {
         final ISWTObservableValue observeEnabled = SWTObservables.observeEnabled(button);
-        final IObservableList observeDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), contractObservable,
+        final IObservableList observeDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(),
+                contractObservable,
                 ProcessPackage.Literals.CONTRACT__INPUTS);
         observeDetailList.addListChangeListener(new IListChangeListener() {
 

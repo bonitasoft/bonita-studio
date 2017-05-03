@@ -10,6 +10,7 @@ Export-Package: org.bonitasoft.studio.businessobject.core.operation,
  org.bonitasoft.studio.businessobject.core.repository,
  org.bonitasoft.studio.businessobject.i18n;x-friends:="org.bonitasoft.studio.tests",
  org.bonitasoft.studio.businessobject.ui,
+ org.bonitasoft.studio.businessobject.ui.expression,
  org.bonitasoft.studio.businessobject.ui.wizard
 Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.model;bundle-version="1.0.0",

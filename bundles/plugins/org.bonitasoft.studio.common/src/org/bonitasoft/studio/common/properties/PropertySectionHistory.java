@@ -34,7 +34,6 @@ public class PropertySectionHistory {
                 "EntryFormMappingPropertySection",
                 "CaseStartFormMappingPropertySection",
                 "CaseOverviewFormMappingPropertySection",
-                "ContractPropertySection",
                 "ResourcePropertySection",
                 "LookAndFeelPropertySection",
                 "ConfirmationPropertySection",
