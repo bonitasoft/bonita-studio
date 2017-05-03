@@ -6,6 +6,9 @@
       <repositoryStore
             class="org.bonitasoft.studio.la.repository.ApplicationRepositoryStore">
       </repositoryStore>
+      <repositoryStore
+            class="org.bonitasoft.studio.la.repository.ApplicationProfileRepositoryStore">
+      </repositoryStore>
    </extension>
    <extension
          id="org.bonitasoft.studio.la.fragment"

@@ -7,6 +7,7 @@ Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.bonitasoft.studio.assertions,
  org.bonitasoft.studio.fakes,
+ org.bonitasoft.studio.junit.rules,
  org.bonitasoft.studio.model.businessObject,
  org.bonitasoft.studio.model.configuration.builders,
  org.bonitasoft.studio.model.connectorconfiguration.builders,
