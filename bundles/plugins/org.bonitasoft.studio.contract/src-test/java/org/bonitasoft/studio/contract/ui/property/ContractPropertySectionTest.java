@@ -116,7 +116,8 @@ public class ContractPropertySectionTest {
     @Before
     public void setUp() throws Exception {
         parent = realm.createComposite();
-        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, poolSelectionProvider, repositoryAccessor, operationBuilder,
+        section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, poolSelectionProvider,
+                repositoryAccessor, operationBuilder,
                 expressionBuilder,
                 progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());

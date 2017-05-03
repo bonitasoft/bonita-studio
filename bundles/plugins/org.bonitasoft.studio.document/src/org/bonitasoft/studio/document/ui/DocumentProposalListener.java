@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 public class DocumentProposalListener implements IProposalListener {
 
@@ -46,7 +47,12 @@ public class DocumentProposalListener implements IProposalListener {
     }
 
     protected DocumentWizardDialog createDocumentWizardDialog(final DocumentWizard documentWizard) {
-        return new DocumentWizardDialog(Display.getCurrent().getActiveShell().getParent().getShell(),
+        Shell activeShell = Display
+                .getDefault().getActiveShell();
+        if (activeShell.getParent() != null) {
+            activeShell = activeShell.getParent().getShell();
+        }
+        return new DocumentWizardDialog(activeShell,
                 documentWizard, false);
     }
 

@@ -55,7 +55,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.codehaus.groovy.eclipse.refactoring,
  org.bonitasoft.studio.groovy,
  org.eclipse.e4.ui.workbench;bundle-version="1.2.1",
- org.bonitasoft.studio.businessobject
+ org.bonitasoft.studio.businessobject,
+ org.bonitasoft.studio.document
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
