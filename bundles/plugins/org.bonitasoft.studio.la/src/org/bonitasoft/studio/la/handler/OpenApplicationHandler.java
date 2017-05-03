@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.ui.control.SelectRenameApplicationDescriptorPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -40,7 +39,7 @@ public class OpenApplicationHandler {
                 .ifPresent(selection -> selection.forEach(IRepositoryFileStore::open));
     }
 
-    private WizardBuilder<Stream<ApplicationFileStore>> createWizard(WizardBuilder<Stream<ApplicationFileStore>> builder,
+    private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
         SelectRenameApplicationDescriptorPage selectApplicationDescriptorPage = new SelectRenameApplicationDescriptorPage(
                 repositoryAccessor);
