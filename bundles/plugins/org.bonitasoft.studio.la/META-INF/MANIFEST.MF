@@ -28,6 +28,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.business.application,
  org.bonitasoft.engine.business.application.exporter,
  org.bonitasoft.engine.business.application.xml,
+ org.bonitasoft.engine.profile,
+ org.bonitasoft.engine.profile.xml,
  org.eclipse.ui.forms.editor
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.la,
