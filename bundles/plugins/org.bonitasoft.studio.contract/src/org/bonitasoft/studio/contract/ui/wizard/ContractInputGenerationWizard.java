@@ -261,7 +261,7 @@ public class ContractInputGenerationWizard extends Wizard {
                 final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
                 input.setType(ContractInputType.FILE);
                 input.setMultiple(document.isMultiple());
-                input.setName((String) rootNameObservable.getValue());
+                input.setName(selectBusinessDataWizardPage.getRootName());
                 final CompoundCommand cc = new CompoundCommand();
                 cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
                         ProcessPackage.Literals.CONTRACT__INPUTS,
