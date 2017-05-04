@@ -4,10 +4,10 @@
    <extension
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore
-            class="org.bonitasoft.studio.la.repository.ApplicationRepositoryStore">
+            class="org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore">
       </repositoryStore>
       <repositoryStore
-            class="org.bonitasoft.studio.la.repository.ApplicationProfileRepositoryStore">
+            class="org.bonitasoft.studio.la.profile.repository.ApplicationProfileRepositoryStore">
       </repositoryStore>
    </extension>
    <extension
@@ -65,7 +65,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.bonitasoft.studio.la.ui.ApplicationPerspectiveFactory"
+            class="org.bonitasoft.studio.la.application.ui.ApplicationPerspectiveFactory"
             id="org.bonitasoft.studio.la.perspective"
             name="%ApplicationPerspective">
       </perspective>
@@ -75,7 +75,7 @@
          name="name"
          point="org.eclipse.wst.validation.validatorV2">
       <validator
-            class="org.bonitasoft.studio.la.ui.validator.MenuLevelValidator">
+            class="org.bonitasoft.studio.la.application.ui.validator.MenuLevelValidator">
          <include>
             <rules>
                <contentType
@@ -96,7 +96,7 @@
             name="Application Descriptor"
             priority="normal">
          <describer
-               class="org.bonitasoft.studio.la.core.ApplicationContentDescriber">
+               class="org.bonitasoft.studio.la.application.core.ApplicationContentDescriber">
          </describer>
       </content-type>
    </extension>
