@@ -17,7 +17,7 @@ package org.bonitasoft.studio.tests.applicationDescriptor;
 import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
-import org.bonitasoft.studio.la.handler.NewApplicationHandler;
+import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
