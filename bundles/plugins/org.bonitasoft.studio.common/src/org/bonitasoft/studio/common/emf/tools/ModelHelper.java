@@ -259,7 +259,8 @@ public class ModelHelper {
      * @param elementProcessor
      */
     @SuppressWarnings("unchecked")
-    public static <T extends EObject> void applyTo(final EObject model, final EClass eClass, final ElementProcessor<T> elementProcessor) {
+    public static <T extends EObject> void applyTo(final EObject model, final EClass eClass,
+            final ElementProcessor<T> elementProcessor) {
         if (eClass.isSuperTypeOf(model.eClass())) {
             elementProcessor.apply((T) model);
         }
@@ -310,7 +311,8 @@ public class ModelHelper {
         }
     }
 
-    public static List<Data> getAccessibleDataInFormsWithNoRestriction(final EObject pageflow, final EStructuralFeature feature) {
+    public static List<Data> getAccessibleDataInFormsWithNoRestriction(final EObject pageflow,
+            final EStructuralFeature feature) {
         final List<Data> accessibleData = getAccessibleData(pageflow, null);
         if (feature != null) {
             EReference trFeature;
@@ -352,8 +354,10 @@ public class ModelHelper {
         boolean containsResources = false;
         if (element instanceof AbstractProcess) {
             final AbstractProcess process = (AbstractProcess) element;
-            containsResources = process.getResourceFolders().size() > 0 || process.getResourceFiles().size() > 0 || process.getLogInPage() != null
-                    || process.getProcessTemplate() != null || process.getConfirmationTemplate() != null || process.getErrorTemplate() != null
+            containsResources = process.getResourceFolders().size() > 0 || process.getResourceFiles().size() > 0
+                    || process.getLogInPage() != null
+                    || process.getProcessTemplate() != null || process.getConfirmationTemplate() != null
+                    || process.getErrorTemplate() != null
                     || process.getWelcomePage() != null && !process.getWelcomePageInternal();
             if (containsResources) {
                 return true;
@@ -476,7 +480,8 @@ public class ModelHelper {
         if (returnTypeClassname.equals(Boolean.class.getName())) {
             return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
         } else if (returnTypeClassname.equals(String.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))), null);
+            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))),
+                    null);
         } else if (returnTypeClassname.equals(Double.class.getName())) {
             return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
         } else if (returnTypeClassname.equals(Long.class.getName())) {
@@ -689,7 +694,8 @@ public class ModelHelper {
     /**
      * @param subProcessName
      */
-    public static AbstractProcess findProcess(final String subProcessName, final String version, final List<? extends Element> elements) {
+    public static AbstractProcess findProcess(final String subProcessName, final String version,
+            final List<? extends Element> elements) {
         if (version == null || version.trim().isEmpty()) {// it's the latest version
             final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
             findProcessRecursivly(subProcessName, version, elements, processes);
@@ -728,7 +734,8 @@ public class ModelHelper {
      * @param elements
      * @param processes
      */
-    private static void findProcessRecursivly(final String subProcessName, final String version, final List<? extends Element> elements,
+    private static void findProcessRecursivly(final String subProcessName, final String version,
+            final List<? extends Element> elements,
             final List<AbstractProcess> processes) {
         // TODO : use the version argument
         for (final Element item : elements) {
@@ -805,9 +812,11 @@ public class ModelHelper {
                     container = container.eContainer();
                 }
                 if (y >= ((Widget) element).getWidgetLayoutInfo().getLine() + dy
-                        && y < ((Widget) element).getWidgetLayoutInfo().getLine() + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
+                        && y < ((Widget) element).getWidgetLayoutInfo().getLine()
+                                + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
                         && x >= ((Widget) element).getWidgetLayoutInfo().getColumn() + dx
-                        && x < ((Widget) element).getWidgetLayoutInfo().getColumn() + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
+                        && x < ((Widget) element).getWidgetLayoutInfo().getColumn()
+                                + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
                     return (Widget) element;
                 }
             }
@@ -823,9 +832,11 @@ public class ModelHelper {
                 container = container.eContainer();
             }
             if (y >= ((Widget) element).getWidgetLayoutInfo().getLine() + dy
-                    && y < ((Widget) element).getWidgetLayoutInfo().getLine() + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
+                    && y < ((Widget) element).getWidgetLayoutInfo().getLine()
+                            + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
                     && x >= ((Widget) element).getWidgetLayoutInfo().getColumn() + dx
-                    && x < ((Widget) element).getWidgetLayoutInfo().getColumn() + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
+                    && x < ((Widget) element).getWidgetLayoutInfo().getColumn()
+                            + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
                 return (Widget) element;
             }
         }
@@ -991,7 +1002,8 @@ public class ModelHelper {
      * @param relativeWidget
      * @return
      */
-    public static List<Widget> getAllAccessibleFieldsInsidePageFlow(final Element pageFlow, final EReference eContainmentFeature, final Element relativeWidget) {
+    public static List<Widget> getAllAccessibleFieldsInsidePageFlow(final Element pageFlow,
+            final EReference eContainmentFeature, final Element relativeWidget) {
         final ArrayList<Widget> res = new ArrayList<Widget>();
         if (pageFlow != null) {
             for (final Form form : (List<Form>) pageFlow.eGet(eContainmentFeature)) {
@@ -1138,17 +1150,19 @@ public class ModelHelper {
         if (element == null) {
             return null;
         }
-        Resource resource = null;
-        if (domain == null) {
-            domain = TransactionUtil.getEditingDomain(element);
-            if (domain != null) {
+        Resource resource = element.eResource();
+        if (resource == null) {
+            if (domain == null) {
+                domain = TransactionUtil.getEditingDomain(element);
+                if (domain != null) {
+                    resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+                }
+            } else if (domain.getResourceSet() != null) {
                 resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
-            } else {
-                resource = element.eResource();
             }
-
-        } else {
-            resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+        }
+        if (resource == null) {
+            throw new IllegalStateException(String.format("No resource attached to EObject %s", element));
         }
         return getDiagramFor(element, resource);
     }
@@ -1386,7 +1400,8 @@ public class ModelHelper {
         }
     }
 
-    public static void findAllElementsByNature(final Element element, final List<Element> foundElement, final List<EClass> supertypes) {
+    public static void findAllElementsByNature(final Element element, final List<Element> foundElement,
+            final List<EClass> supertypes) {
 
         for (final EClass eClass : supertypes) {
             if (eClass.isSuperTypeOf(element.eClass())) {
@@ -1430,7 +1445,8 @@ public class ModelHelper {
         return res;
     }
 
-    private static <T extends EObject> void addAllElementOfContainer(final EObject container, final List<T> res, final EClass eClass) {
+    private static <T extends EObject> void addAllElementOfContainer(final EObject container, final List<T> res,
+            final EClass eClass) {
         if (container != null) {
             if (eClass.isSuperTypeOf(container.eClass())) {
                 res.add((T) container);
@@ -1463,7 +1479,8 @@ public class ModelHelper {
         return tempPart instanceof SubProcessEvent;
     }
 
-    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(final MainProcess mainProcess, final String eventName) {
+    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(final MainProcess mainProcess,
+            final String eventName) {
         final List<AbstractCatchMessageEvent> result = new ArrayList<AbstractCatchMessageEvent>();
         for (final AbstractCatchMessageEvent ev : getAllCatchEvent(mainProcess)) {
             if (ev.getEvent() != null && ev.getEvent().equals(eventName)) {
@@ -1502,7 +1519,8 @@ public class ModelHelper {
         if (includeTransientData) {
             final Form parentForm = getParentForm(element);
             if (parentForm != null) {
-                result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(), parentForm.eContainingFeature()));
+                result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(),
+                        parentForm.eContainingFeature()));
             }
             for (final Data d : ModelHelper.getAccessibleData(element)) {
                 if (!result.contains(d)) {
@@ -1555,7 +1573,8 @@ public class ModelHelper {
      * @return
      */
     public static boolean formIsCustomized(final Form form) {
-        return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty();
+        return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null
+                && !form.getHtmlTemplate().getPath().isEmpty();
     }
 
     public static Document getDocumentReferencedInExpression(final Expression expr) {
@@ -1593,7 +1612,8 @@ public class ModelHelper {
 
         } else if (context instanceof SimulationTransition) {
             if (((Connection) context).eContainer() instanceof SimulationDataContainer) {
-                for (final SimulationData d : ((SimulationDataContainer) ((Connection) context).eContainer()).getSimulationData()) {
+                for (final SimulationData d : ((SimulationDataContainer) ((Connection) context).eContainer())
+                        .getSimulationData()) {
                     result.add(d);
                 }
             }
@@ -1701,11 +1721,13 @@ public class ModelHelper {
             }
 
             if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex
-                    && ((SearchIndex) referencedElement).getName().getName().equals(((SearchIndex) elementToDisplay).getName().getName())) {
+                    && ((SearchIndex) referencedElement).getName().getName()
+                            .equals(((SearchIndex) elementToDisplay).getName().getName())) {
                 return true;
             }
 
-            if (referencedElement instanceof Element && elementToDisplay instanceof Element && isSameElement((Element) elementToDisplay, referencedElement)) {
+            if (referencedElement instanceof Element && elementToDisplay instanceof Element
+                    && isSameElement((Element) elementToDisplay, referencedElement)) {
                 return true;
             }
         }
@@ -1822,7 +1844,8 @@ public class ModelHelper {
         return res;
     }
 
-    private static <T extends EObject> void addAllItemsOfContainer(final EObject container, final List<T> res, final Class<T> type) {
+    private static <T extends EObject> void addAllItemsOfContainer(final EObject container, final List<T> res,
+            final Class<T> type) {
         if (container != null) {
             if (type.isAssignableFrom(container.getClass())) {
                 res.add((T) container);
