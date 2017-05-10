@@ -42,10 +42,10 @@ public class RemoveDanglingReferences {
 
     public void execute() {
         removeDanglingReferences(root);
-        removeSequenceFlowWithoutSourceAndTarget(root);
+        //  removeSequenceFlowWithoutSourceAndTarget(root);
     }
 
-    public void removeSequenceFlowWithoutSourceAndTarget(EObject element) {
+    private void removeSequenceFlowWithoutSourceAndTarget(EObject element) {
         if (element.eResource() != null && element.eResource().getResourceSet() != null) {
             final List<EObject> toRemove = new ArrayList<>();
             element.eAllContents().forEachRemaining(eObject -> {
