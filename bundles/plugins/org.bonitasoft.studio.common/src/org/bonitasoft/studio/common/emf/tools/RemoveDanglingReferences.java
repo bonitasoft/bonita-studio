@@ -15,11 +15,14 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.Activator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.process.Connection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -39,6 +42,20 @@ public class RemoveDanglingReferences {
 
     public void execute() {
         removeDanglingReferences(root);
+        //  removeSequenceFlowWithoutSourceAndTarget(root);
+    }
+
+    private void removeSequenceFlowWithoutSourceAndTarget(EObject element) {
+        if (element.eResource() != null && element.eResource().getResourceSet() != null) {
+            final List<EObject> toRemove = new ArrayList<>();
+            element.eAllContents().forEachRemaining(eObject -> {
+                if (eObject instanceof Connection &&
+                        (((Connection) eObject).getTarget() == null || ((Connection) eObject).getSource() == null)) {
+                    toRemove.add(eObject);
+                }
+            });
+            toRemove.forEach(EcoreUtil::remove);
+        }
     }
 
     /**
@@ -70,8 +87,8 @@ public class RemoveDanglingReferences {
      *        the referencer
      */
     private void removeDanglingReferences(CrossReferencer referencer) {
-        for (Map.Entry<EObject, Collection<Setting>> entry : referencer.entrySet()) {
-            for (EStructuralFeature.Setting value : entry.getValue()) {
+        for (final Map.Entry<EObject, Collection<Setting>> entry : referencer.entrySet()) {
+            for (final EStructuralFeature.Setting value : entry.getValue()) {
                 try {
                     EcoreUtil.remove(value, entry.getKey());
                     BonitaStudioLog.warning(
