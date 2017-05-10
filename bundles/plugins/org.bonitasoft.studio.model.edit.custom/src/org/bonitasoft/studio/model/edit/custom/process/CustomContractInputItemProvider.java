@@ -86,9 +86,9 @@ public class CustomContractInputItemProvider
                                     case LOCALDATE:
                                         return "DATE ONLY";
                                     case LOCALDATETIME:
-                                        return "DATE-TIME (NO TZ)";
+                                        return "DATE-TIME (NO TIME ZONE)";
                                     case OFFSETDATETIME:
-                                        return "DATE-TIME (TZ)";
+                                        return "DATE-TIME (TIME ZONE)";
                                     default:
                                         return super.getText(type);
                                 }
