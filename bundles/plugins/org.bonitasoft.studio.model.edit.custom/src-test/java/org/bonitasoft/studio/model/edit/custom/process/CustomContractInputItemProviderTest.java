@@ -109,7 +109,7 @@ public class CustomContractInputItemProviderTest {
                 .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
-        assertThat(label).isEqualTo(String.format("DATE-TIME (NO TZ) - %s", LocalDateTime.class.getName()));
+        assertThat(label).isEqualTo(String.format("DATE-TIME (NO TIME ZONE) - %s", LocalDateTime.class.getName()));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class CustomContractInputItemProviderTest {
                 .getLabelProvider(contractInput)
                 .getText(contractInput.getType());
 
-        assertThat(label).isEqualTo(String.format("DATE-TIME (TZ) - %s", OffsetDateTime.class.getName()));
+        assertThat(label).isEqualTo(String.format("DATE-TIME (TIME ZONE) - %s", OffsetDateTime.class.getName()));
     }
 
     @Test

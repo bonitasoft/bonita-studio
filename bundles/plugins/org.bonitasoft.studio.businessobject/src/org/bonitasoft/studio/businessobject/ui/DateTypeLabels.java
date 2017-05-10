@@ -17,8 +17,8 @@ package org.bonitasoft.studio.businessobject.ui;
 public interface DateTypeLabels {
 
     public static final String DATE_ONLY = "DATE ONLY";
-    public static final String DATE_AND_TIME = "DATE-TIME (NO TZ)";
-    public static final String DATE_TIME_WITH_TIMEZONE = "DATE-TIME (TZ)";
+    public static final String DATE_AND_TIME = "DATE-TIME (NO TIME ZONE)";
+    public static final String DATE_TIME_WITH_TIMEZONE = "DATE-TIME (TIME ZONE)";
     public static final String DATE_DEPRECATED = "DATE (NOT RECOMMENDED)";
 
 }
