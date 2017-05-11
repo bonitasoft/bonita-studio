@@ -95,23 +95,27 @@ public class BarExporter {
         return INSTANCE;
     }
 
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration, final Set<EObject> excludedObject)
+    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration,
+            final Set<EObject> excludedObject)
             throws BarCreationException {
         return createBusinessArchive(process, configuration, excludedObject, true);
     }
 
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration, final Set<EObject> excludedObject,
+    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration,
+            final Set<EObject> excludedObject,
             final boolean addProcessImage) throws BarCreationException {
 
         checkArgument(configuration != null);
-        BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...", EnginePlugin.PLUGIN_ID);
+        BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...",
+                EnginePlugin.PLUGIN_ID);
         final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
         procBuilder.seteObjectNotExported(excludedObject);
         DesignProcessDefinition def;
         try {
             def = procBuilder.createDefinition(process);
         } catch (final InvalidProcessDefinitionException e1) {
-            throw new BarCreationException(String.format("Failed to create process definition for %s (%s)", process.getName(), process.getVersion()), e1);
+            throw new BarCreationException(String.format("Failed to create process definition for %s (%s)\n\n%s",
+                    process.getName(), process.getVersion(), e1.getMessage()), e1);
         }
 
         if (def == null) {
@@ -119,7 +123,8 @@ public class BarExporter {
         }
 
         final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive();
-        builder.setProcessDefinition(def).setParameters(getParameters(configuration)).setActorMapping(getActorMapping(configuration));
+        builder.setProcessDefinition(def).setParameters(getParameters(configuration))
+                .setActorMapping(getActorMapping(configuration));
 
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
             try {
@@ -157,7 +162,8 @@ public class BarExporter {
 
         try {
             final BusinessArchive archive = builder.done();
-            BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).", EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).",
+                    EnginePlugin.PLUGIN_ID);
             return archive;
         } catch (final InvalidBusinessArchiveFormatException e) {
             throw new BarCreationException("Failed to create Business Archive.", e);
@@ -176,7 +182,8 @@ public class BarExporter {
     }
 
     private org.bonitasoft.engine.bpm.bar.actorMapping.Actor toEngineActor(ActorMapping mapping) {
-        final org.bonitasoft.engine.bpm.bar.actorMapping.Actor actor = new org.bonitasoft.engine.bpm.bar.actorMapping.Actor(mapping.getName());
+        final org.bonitasoft.engine.bpm.bar.actorMapping.Actor actor = new org.bonitasoft.engine.bpm.bar.actorMapping.Actor(
+                mapping.getName());
         actor.addUsers(mapping.getUsers().getUser());
         actor.addGroups(mapping.getGroups().getGroup());
         actor.addRoles(mapping.getRoles().getRole());
@@ -203,7 +210,8 @@ public class BarExporter {
      * @param configurationId
      * @param excludedObject elements of the process not exported in process definition
      */
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId, final Set<EObject> excludedObject)
+    public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId,
+            final Set<EObject> excludedObject)
             throws BarCreationException {
         return createBusinessArchive(process, getConfiguration(process, configurationId), excludedObject);
     }
@@ -213,7 +221,8 @@ public class BarExporter {
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
                 ProcessConfigurationRepositoryStore.class);
         if (configurationId == null) {
-            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
+                    .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
         if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
             final String id = ModelHelper.getEObjectID(process);
@@ -250,7 +259,8 @@ public class BarExporter {
     }
 
     protected Map<String, String> getParameters(final Configuration configuration) {
-        return Maps.newHashMap(transformValues(uniqueIndex(configuration.getParameters(), toParameterKeys()), toParameterValues()));
+        return Maps.newHashMap(
+                transformValues(uniqueIndex(configuration.getParameters(), toParameterKeys()), toParameterValues()));
     }
 
     private Function<Parameter, String> toParameterValues() {
@@ -276,8 +286,9 @@ public class BarExporter {
     protected BARResourcesProvider getBARApplicationResourcesProvider() {
         BARResourcesProvider result = null;
         int maxPriority = -1;
-        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT);
+        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
 
             try {
@@ -296,8 +307,9 @@ public class BarExporter {
 
     public List<BARResourcesProvider> getBARResourcesProvider() {
         final List<BARResourcesProvider> res = new ArrayList<>();
-        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
+        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
         for (final IConfigurationElement extension : extensions) {
             try {
                 res.add(extensionContextInjectionFactory.make(extension, "providerClass", BARResourcesProvider.class));
@@ -308,7 +320,8 @@ public class BarExporter {
         return res;
     }
 
-    protected void addProcessImage(final BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
+    protected void addProcessImage(final BusinessArchiveBuilder builder, final AbstractProcess process)
+            throws CoreException {
         if (PlatformUI.isWorkbenchRunning()) {
             final String processName = process.getName() + "_" + process.getVersion();
             final String path = processName + ".png"; //$NON-NLS-1$
@@ -319,7 +332,8 @@ public class BarExporter {
                     return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
                 }
                 final ResourceSet resourceSet = new ResourceSetImpl();
-                final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
+                final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance()
+                        .createEditingDomain(resourceSet);
                 final Resource resource = resourceSet.createResource(diagram.eResource().getURI());
                 try {
                     resource.load(resourceSet.getLoadOptions());
@@ -330,7 +344,8 @@ public class BarExporter {
                 final CopyToImageUtilEx copyToImageUtil = new CopyToImageUtilEx();
                 byte[] imageBytes = null;
                 try {
-                    imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG, Repository.NULL_PROGRESS_MONITOR,
+                    imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG,
+                            Repository.NULL_PROGRESS_MONITOR,
                             new PreferencesHint("exportToImage"), true);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
