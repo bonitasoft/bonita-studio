@@ -71,10 +71,15 @@ public class OpenH2ConsoleHandler {
         }
     }
 
-    protected String javaBinaryLocation() {
-        String binaryName = Platform.getOS().toLowerCase().contains("win") ? "java.exe" : "java";
-        return Paths.get(JavaRuntime.getDefaultVMInstall().getInstallLocation().getAbsolutePath(), "bin", binaryName)
-                .toString();
+    protected String javaBinaryLocation() throws FileNotFoundException {
+        final String binaryName = Platform.getOS().toLowerCase().contains("win") ? "java.exe" : "java";
+        final Path javaBinaryPath = Paths.get(JavaRuntime.getDefaultVMInstall().getInstallLocation().getAbsolutePath(),
+                "bin", binaryName);
+        if (!javaBinaryPath.toFile().exists()) {
+            throw new FileNotFoundException(
+                    String.format("Java binary not found at '%s'", javaBinaryPath.toFile().getAbsolutePath()));
+        }
+        return javaBinaryPath.toString();
     }
 
     protected ILaunchManager getLaunchManager() {
