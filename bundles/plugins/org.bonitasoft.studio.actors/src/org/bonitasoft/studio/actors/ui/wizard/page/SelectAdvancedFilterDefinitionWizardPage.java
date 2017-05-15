@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
@@ -32,36 +30,38 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class SelectAdvancedFilterDefinitionWizardPage extends SelectAdvancedConnectorDefinitionWizardPage {
 
+    public SelectAdvancedFilterDefinitionWizardPage(Connector workingCopy,
+            List<ConnectorImplementation> existingImpl,
+            List<ConnectorDefinition> definitions, String pageTitle,
+            String pageDescription, DefinitionResourceProvider messageProvider) {
+        super(workingCopy, existingImpl, definitions, pageTitle, pageDescription, messageProvider);
+    }
 
-	public SelectAdvancedFilterDefinitionWizardPage(Connector workingCopy,
-			List<ConnectorImplementation> existingImpl,
-			List<ConnectorDefinition> definitions, String pageTitle,
-			String pageDescription, DefinitionResourceProvider messageProvider) {
-		super(workingCopy,existingImpl, definitions, pageTitle, pageDescription, messageProvider);
-	}
+    @Override
+    protected ITreeContentProvider getContentProvider() {
+        return new FilterUniqueDefinitionContentProvider();
+    }
 
-	@Override
-	protected ITreeContentProvider getContentProvider() {
-		return new FilterUniqueDefinitionContentProvider();
-	}
+    @Override
+    protected ITreeContentProvider getCustomContentProvider() {
+        return new FilterUniqueDefinitionContentProvider(true);
+    }
 
-	@Override
-	protected ITreeContentProvider getCustomContentProvider() {
-		return new FilterUniqueDefinitionContentProvider(true);
-	}
+    @Override
+    protected IStatus validateSelection(Object value) {
+        if (value == null || value instanceof Category) {
+            return new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, Messages.selectAFilterDefWarning);
+        }
+        return Status.OK_STATUS;
 
+    }
 
-	@Override
-	protected IStatus validateSelection(Object value) {
-		if(value == null || value instanceof Category){
-			return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAFilterDefWarning);
-		}
-		return Status.OK_STATUS;
-
-	}
+    @Override
+    protected String getRightHeaderMessage() {
+        return Messages.filterDefRepositoryName;
+    }
 
 }
