@@ -20,7 +20,7 @@ import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
-public abstract class UpdateConnectorVersionMigration extends CustomMigration {
+public abstract class UpdateConnectorDefinitionMigration extends CustomMigration {
 
     protected static final String VERSION_FEATURE_NAME = "version";
     protected static final String DEFINITION_VERSION_FEATURE_NAME = "definitionVersion";
@@ -30,14 +30,31 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         for (final Instance connectorInstance : model.getAllInstances("process.Connector")) {
             final String defId = connectorInstance.get(DEFINITION_ID_FEATURE_NAME);
+            if (shouldUpdateId(defId)) {
+                final String newDefinitionId = getNewDefinitionId();
+                if (newDefinitionId == null) {
+                    throw new IllegalStateException(
+                            String.format("A new definition id must be provided to migrate '%s'", defId));
+                }
+                connectorInstance.set(DEFINITION_ID_FEATURE_NAME, newDefinitionId);
+            }
             if (shouldUpdateVersion(defId)) {
                 updateVersion(connectorInstance);
             }
         }
-        for (final Instance connectorInstance : model.getAllInstances("connectorconfiguration.ConnectorConfiguration")) {
-            final String defId = connectorInstance.get(DEFINITION_ID_FEATURE_NAME);
+        for (final Instance connectorConfigInstance : model
+                .getAllInstances("connectorconfiguration.ConnectorConfiguration")) {
+            final String defId = connectorConfigInstance.get(DEFINITION_ID_FEATURE_NAME);
+            if (shouldUpdateId(defId)) {
+                final String newDefinitionId = getNewDefinitionId();
+                if (newDefinitionId == null) {
+                    throw new IllegalStateException(
+                            String.format("A new definition id must be provided to migrate '%s'", defId));
+                }
+                connectorConfigInstance.set(DEFINITION_ID_FEATURE_NAME, newDefinitionId);
+            }
             if (shouldUpdateVersion(defId)) {
-                updateConfigVersion(connectorInstance);
+                updateConfigVersion(connectorConfigInstance);
             }
         }
     }
@@ -56,6 +73,14 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
         if (defVersion.equals(previousDefinitionVersion)) {
             connectorConfigInstance.set(VERSION_FEATURE_NAME, getNewDefinitionVersion());
         }
+    }
+
+    protected boolean shouldUpdateId(String defId) {
+        return false;
+    }
+
+    protected String getNewDefinitionId() {
+        return null;
     }
 
     protected abstract boolean shouldUpdateVersion(final String defId);

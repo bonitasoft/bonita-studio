@@ -17,7 +17,7 @@ package org.bonitasoft.studio.migration.custom.migration.connector;
 /**
  * @author Romain Bioteau
  */
-public class UpdateGroovyConnectorVersionTo101 extends UpdateConnectorVersionMigration {
+public class UpdateGroovyConnectorVersionTo101 extends UpdateConnectorDefinitionMigration {
 
     private static final String GROOVY_DEF_ID = "scripting-groovy";
 

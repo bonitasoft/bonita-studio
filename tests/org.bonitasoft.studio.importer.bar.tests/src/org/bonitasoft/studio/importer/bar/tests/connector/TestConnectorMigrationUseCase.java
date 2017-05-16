@@ -169,7 +169,7 @@ public class TestConnectorMigrationUseCase {
         final MainProcess mainProc = importBar("DatabaseConnectorsUseCase--1.0.bar");
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(
                 mainProc, ProcessPackage.Literals.CONNECTOR);
-        assertEquals("Invalid number of connector", 18, connectors.size());
+        assertEquals("Invalid number of connector", 17, connectors.size());
     }
 
     @Test
