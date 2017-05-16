@@ -41,6 +41,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -57,7 +58,7 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
     private FilteredTree diagramTree;
 
     private DataBindingContext context;
-    private List<DiagramFileStore> selectedDiagrams = new ArrayList<DiagramFileStore>();
+    private List<DiagramFileStore> selectedDiagrams = new ArrayList<>();
 
     private final DiagramRepositoryStore diagramRepositoryStore;
 
@@ -87,9 +88,11 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
         diagramTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.BORDER, new PatternFilter(), false);
         final TreeViewer treeViewer = diagramTree.getViewer();
         treeViewer.getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_OPEN_DIAGRAM_TREE_ID);
-        diagramTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
+        diagramTree
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
 
-        treeViewer.setContentProvider(new ObservableListTreeContentProvider(diagramListObservableFactory(), diagramTreeStructure()));
+        treeViewer.setContentProvider(
+                new ObservableListTreeContentProvider(diagramListObservableFactory(), diagramTreeStructure()));
         treeViewer.setLabelProvider(new DiagramLabelProvider(new FileStoreLabelProvider()));
 
         final IObservableList selectionObservable = PojoObservables.observeList(this, "selectedDiagrams");
@@ -99,19 +102,18 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
 
             @Override
             protected IStatus validate() {
-                return selectionObservable.isEmpty() ? ValidationStatus.error(Messages.noDiagramSelected) : ValidationStatus.ok();
+                return selectionObservable.isEmpty() ? ValidationStatus.error(Messages.noDiagramSelected)
+                        : ValidationStatus.ok();
             }
         });
         treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 
             @Override
             public void doubleClick(final DoubleClickEvent arg0) {
-                if (getWizard().canFinish()) {
-                    if (getWizard().performFinish()) {
-                        ((WizardDialog) getContainer()).close();
-                    }
+                final IWizard wizard = getWizard();
+                if (wizard.canFinish() && wizard.performFinish() && wizard.getContainer() instanceof WizardDialog) {
+                    ((WizardDialog) wizard.getContainer()).close();
                 }
-
             }
         });
         treeViewer.setInput(diagramRepositoryStore);
