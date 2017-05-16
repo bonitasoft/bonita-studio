@@ -51,11 +51,30 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+			allPopups="false"
+         	locationURI="menu:org.bonitasoft.studio.actor.organizationMenu">
+         	<separator
+                  name="org.bonitasoft.studio.la.separator.profileMenu"
+                  visible="true">
+            </separator>
+			<menu id="org.bonitasoft.studio.la.profileMenu" icon="icons/appProfile_16.png" label="%profileMenuLabel">
+				<command
+					id="org.bonitasoft.studio.la.profile.open.command"
+                    commandId="org.bonitasoft.studio.la.profile.open.command"
+                    style="push">
+             	</command>
+			</menu>
+       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.wst.xml.core.catalogContributions">
       <catalogContribution
-            id="application-xsd">
+            id="la-xsd">
+         <public
+               publicId="http://www.bonitasoft.org/ns/profile/6.1"
+               uri="schema/profiles.xsd">
+         </public>
          <public
                publicId="http://documentation.bonitasoft.com/application-xml-schema/1.0"
                uri="schema/application.xsd">
@@ -68,6 +87,11 @@
             class="org.bonitasoft.studio.la.application.ui.ApplicationPerspectiveFactory"
             id="org.bonitasoft.studio.la.perspective"
             name="%ApplicationPerspective">
+      </perspective>
+      <perspective
+            class="org.bonitasoft.studio.la.profile.ui.ProfilePerspectiveFactory"
+            id="org.bonitasoft.studio.la.profile.perspective"
+            name="%ProfilePerspective">
       </perspective>
    </extension>
    <extension

@@ -12,32 +12,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.control;
+package org.bonitasoft.studio.la.ui.control;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.validator.ApplicationDescriptorFileNameValidator;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
+import org.bonitasoft.studio.ui.validator.TypedValidator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Objects;
 
-public class RenameApplicationDescriptorFileDialog {
+public class RenameFileDialog {
 
-    public static boolean open(Shell shell, ApplicationRepositoryStore applicationRepositoryStore,
-            IRepositoryFileStore applicationFileStore) {
-        String currentFileName = applicationFileStore.getDisplayName();
+    public static boolean open(Shell shell, IRepositoryFileStore fileStore, TypedValidator<String, IStatus> validator) {
+        String currentFileName = fileStore.getDisplayName();
         final InputDialog dialog = new InputDialog(shell, Messages.rename, Messages.renameFile,
-                currentFileName, new InputValidatorWrapper(
-                        new ApplicationDescriptorFileNameValidator(applicationRepositoryStore, currentFileName)));
+                currentFileName, new InputValidatorWrapper(validator));
         if (dialog.open() == Dialog.OK && !currentFileName.equals(stripXmlExtension(dialog.getValue()))) {
-            applicationFileStore.rename(stripXmlExtension(dialog.getValue()) + ".xml");
+            fileStore.rename(stripXmlExtension(dialog.getValue()) + ".xml");
         }
 
-        return !Objects.equal(currentFileName, applicationFileStore.getDisplayName());
+        return !Objects.equal(currentFileName, fileStore.getDisplayName());
     }
 
     private static String stripXmlExtension(String name) {
