@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.validator;
+package org.bonitasoft.studio.la.ui.validator;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,27 +20,32 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidatorFactory;
-import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
-import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.TypedValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class ApplicationDescriptorFileNameValidator extends TypedValidator<String, IStatus> {
+public class FileNameValidator extends TypedValidator<String, IStatus> {
 
     private static final String[] reservedChars = new String[] { "/", "\\", ":", "*", "?", "\"", "<", ">", ";", "|" };
+    private static final String XML_EXTENSION = ".xml";
 
-    private final ApplicationRepositoryStore store;
+    private final IRepositoryStore<? extends IRepositoryFileStore> store;
 
-    private final Optional<String> currentFileName;
+    private Optional<String> currentFileName;
 
-    public ApplicationDescriptorFileNameValidator(ApplicationRepositoryStore store) {
+    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store) {
         this(store, null);
     }
 
-    public ApplicationDescriptorFileNameValidator(ApplicationRepositoryStore store, String currentFileName) {
+    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store, String currentFileName) {
         this.store = store;
+        this.currentFileName = Optional.ofNullable(currentFileName);
+    }
+
+    public void setCurrentFileName(String currentFileName) {
         this.currentFileName = Optional.ofNullable(currentFileName);
     }
 
@@ -54,7 +59,7 @@ public class ApplicationDescriptorFileNameValidator extends TypedValidator<Strin
         if (fileName.isEmpty()) {
             return ValidationStatus.error(Messages.required);
         }
-        if (Objects.equals(fileName, NewApplicationHandler.XML_EXTENSION)) {
+        if (Objects.equals(fileName, XML_EXTENSION)) {
             return ValidationStatus.error(String.format(Messages.invalidFileName, fileName));
         }
 
@@ -76,8 +81,8 @@ public class ApplicationDescriptorFileNameValidator extends TypedValidator<Strin
 
     private List<String> getExistingFileNames() {
         return store.getChildren().stream()
-                .map(applicationDescriptor -> applicationDescriptor.getName().substring(0,
-                        applicationDescriptor.getName().length() - NewApplicationHandler.XML_EXTENSION.length()))
+                .map(file -> file.getName().substring(0,
+                        file.getName().length() - XML_EXTENSION.length()))
                 .filter(filename -> !currentFileName.filter(filename::equals).isPresent())
                 .collect(Collectors.toList());
     }

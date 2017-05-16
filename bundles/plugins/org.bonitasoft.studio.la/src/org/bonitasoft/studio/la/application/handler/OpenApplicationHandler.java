@@ -23,8 +23,9 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.control.SelectRenameApplicationDescriptorPage;
+import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.ui.control.SelectionRenamePage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -41,8 +42,8 @@ public class OpenApplicationHandler {
 
     private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
-        SelectRenameApplicationDescriptorPage selectApplicationDescriptorPage = new SelectRenameApplicationDescriptorPage(
-                repositoryAccessor);
+        SelectionRenamePage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionRenamePage<>(
+                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
         return builder.withTitle(Messages.openExistingApplication)
                 .havingPage(newPage()
                         .withTitle(Messages.openExistingApplication)

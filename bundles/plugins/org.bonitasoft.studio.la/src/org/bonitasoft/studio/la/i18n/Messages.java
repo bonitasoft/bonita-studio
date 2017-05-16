@@ -70,12 +70,13 @@ public class Messages extends NLS {
     public static String applicationDetails;
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
-    public static String unparsableApplicationFile;
+    public static String unparsableXmlFile;
     public static String rename;
     public static String renameFile;
     public static String menuLevelWarning;
-    public static String ApplicationProfileStoreName;
-    public static String failToDeleteFile;
+    public static String openExistingProfile;
+    public static String openExistingProfileDescription;
+    public static String applicationProfileStoreName;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

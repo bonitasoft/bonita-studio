@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.la.application.ui.validator;
+package org.bonitasoft.studio.la.ui.validator;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -9,10 +9,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.validator.ApplicationDescriptorFileNameValidator;
 import org.junit.Test;
 
-public class ApplicationDescriptorFileNameValidatorTest {
+public class FileNameValidatorTest {
 
     @Test
     public void should_validate_name_uniqueness() {
@@ -30,7 +29,7 @@ public class ApplicationDescriptorFileNameValidatorTest {
         final ApplicationRepositoryStore applicationRepositoryStore = mock(ApplicationRepositoryStore.class);
         when(applicationRepositoryStore.getChildren()).thenReturn(children);
 
-        final ApplicationDescriptorFileNameValidator validator = new ApplicationDescriptorFileNameValidator(
+        final FileNameValidator validator = new FileNameValidator(
                 applicationRepositoryStore);
 
         assertThat(validator.validate("fileName1")).isNotOK();
@@ -44,7 +43,7 @@ public class ApplicationDescriptorFileNameValidatorTest {
         final ApplicationRepositoryStore applicationRepositoryStore = mock(ApplicationRepositoryStore.class);
         when(applicationRepositoryStore.getChildren()).thenReturn(new ArrayList<ApplicationFileStore>());
 
-        final ApplicationDescriptorFileNameValidator validator = new ApplicationDescriptorFileNameValidator(
+        final FileNameValidator validator = new FileNameValidator(
                 applicationRepositoryStore);
 
         assertThat(validator.validate("fileName1/")).isNotOK();
@@ -57,7 +56,7 @@ public class ApplicationDescriptorFileNameValidatorTest {
         final ApplicationRepositoryStore applicationRepositoryStore = mock(ApplicationRepositoryStore.class);
         when(applicationRepositoryStore.getChildren()).thenReturn(new ArrayList<ApplicationFileStore>());
 
-        final ApplicationDescriptorFileNameValidator validator = new ApplicationDescriptorFileNameValidator(
+        final FileNameValidator validator = new FileNameValidator(
                 applicationRepositoryStore);
 
         assertThat(validator.validate(null)).isNotOK();
