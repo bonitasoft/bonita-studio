@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.junit.Test;
@@ -38,8 +38,8 @@ public class NewApplicationHandlerTest {
                 .thenReturn(applicationFileStore);
         when(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)).thenReturn(applicationStore);
 
-        final Optional<ApplicationFileStore> fileStore = Optional
-                .ofNullable(newApplicationHandler.createApplicationFileStore(repositoryAccessor,
+        final Optional<IRepositoryFileStore> fileStore = Optional
+                .ofNullable(newApplicationHandler.createFileStore(repositoryAccessor,
                         NewApplicationHandler.DEFAULT_FILE_NAME + ".xml"));
 
         assertThat(fileStore).isPresent();

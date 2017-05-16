@@ -20,8 +20,9 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.control.SelectSingleApplicationDescriptorPage;
+import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.ui.control.SelectionSinglePage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -37,8 +38,8 @@ public class ExportApplicationHandler {
 
     private WizardBuilder<IRepositoryFileStore> createWizard(WizardBuilder<IRepositoryFileStore> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
-        final SelectSingleApplicationDescriptorPage exportApplicationDescriptorPage = new SelectSingleApplicationDescriptorPage(
-                repositoryAccessor);
+        final SelectionSinglePage<ApplicationRepositoryStore> exportApplicationDescriptorPage = new SelectionSinglePage<>(
+                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
         ExportApplicationFileAction exportApplicationFileAction = new ExportApplicationFileAction();
         return builder.withTitle(Messages.exportApplicationDescriptor)
                 .havingPage(newPage()

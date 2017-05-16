@@ -12,14 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.control;
+package org.bonitasoft.studio.la.ui.control;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.provider.ApplicationLabelProvider;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -40,16 +41,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public abstract class SelectApplicationDescriptorPage implements ControlSupplier {
+public abstract class SelectionPage<T extends IRepositoryStore<? extends IRepositoryFileStore>> implements ControlSupplier {
 
     private static final int TABLE_WIDTH_HINT = 600;
 
     protected RepositoryAccessor repositoryAccessor;
 
-    protected TableViewer applicationsTableViewer;
+    protected TableViewer tableViewer;
 
-    public SelectApplicationDescriptorPage(RepositoryAccessor repositoryAccessor) {
+    protected Class<T> type;
+
+    private FileStoreLabelProvider labelProvider;
+
+    public SelectionPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider labelProvider) {
         this.repositoryAccessor = repositoryAccessor;
+        this.type = type;
+        this.labelProvider = labelProvider;
     }
 
     @Override
@@ -58,18 +65,17 @@ public abstract class SelectApplicationDescriptorPage implements ControlSupplier
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        applicationsTableViewer = createTableViewer(mainComposite);
-        applicationsTableViewer.getControl().setLayoutData(
+        tableViewer = createTableViewer(mainComposite);
+        tableViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).hint(TABLE_WIDTH_HINT, SWT.DEFAULT).create());
-        applicationsTableViewer.setContentProvider(ArrayContentProvider.getInstance());
-        applicationsTableViewer.setLabelProvider(new ApplicationLabelProvider());
-        applicationsTableViewer
-                .setInput(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren());
-        applicationsTableViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
+        tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+        tableViewer.setLabelProvider(labelProvider);
+        tableViewer.setInput(getInput());
+        tableViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
 
-        ColumnViewerToolTipSupport.enableFor(applicationsTableViewer);
+        ColumnViewerToolTipSupport.enableFor(tableViewer);
 
-        IViewerObservableList multiSelection = ViewersObservables.observeMultiSelection(applicationsTableViewer);
+        IViewerObservableList multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
         ctx.addValidationStatusProvider(new MultiValidator() {
 
             @Override
@@ -82,10 +88,15 @@ public abstract class SelectApplicationDescriptorPage implements ControlSupplier
         return mainComposite;
     }
 
+    @SuppressWarnings("unchecked")
+    protected List<T> getInput() {
+        return (List<T>) repositoryAccessor.getRepositoryStore(type).getChildren();
+    }
+
     protected abstract TableViewer createTableViewer(Composite mainComposite);
 
     public Stream<IRepositoryFileStore> getSelection() {
-        return ((IStructuredSelection) applicationsTableViewer.getSelection()).toList().stream();
+        return ((IStructuredSelection) tableViewer.getSelection()).toList().stream();
     }
 
 }

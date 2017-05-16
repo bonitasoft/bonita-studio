@@ -35,7 +35,7 @@ public class ApplicationProfileRepositoryStore extends AbstractRepositoryStore<A
 
     @Override
     public String getDisplayName() {
-        return Messages.ApplicationProfileStoreName;
+        return Messages.applicationProfileStoreName;
     }
 
     @Override

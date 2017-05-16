@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui;
+package org.bonitasoft.studio.la.profile.ui;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.ui.editors.FilteredXMLEditor;
@@ -20,12 +20,12 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 
-public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
+public class ProfilePerspectiveFactory extends AbstractPerspectiveFactory {
 
-    public static final String APPLICATION_PERSPECTIVE_ID = "org.bonitasoft.studio.la.perspective";
+    public static final String PROFILE_PERSPECTIVE_ID = "org.bonitasoft.studio.la.profile.perspective";
 
     @Override
-    public void createInitialLayout(final IPageLayout layout) {
+    public void createInitialLayout(IPageLayout layout) {
         final String editorArea = layout.getEditorArea();
 
         final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
@@ -33,13 +33,13 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
     }
 
     @Override
-    public boolean isRelevantFor(final IEditorPart part) {
+    public boolean isRelevantFor(IEditorPart part) {
         return part instanceof FilteredXMLEditor;
     }
 
     @Override
     public String getID() {
-        return APPLICATION_PERSPECTIVE_ID;
+        return PROFILE_PERSPECTIVE_ID;
     }
 
 }

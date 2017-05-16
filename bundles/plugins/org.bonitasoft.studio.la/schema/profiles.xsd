@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://www.bonitasoft.org/ns/profile/6.1" xmlns:tns="http://www.bonitasoft.org/ns/profile/6.1" xmlns:profiles="http://www.bonitasoft.org/ns/profile/6.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="profiles" type="tns:exportedProfiles"/>
+
+  <xs:complexType name="exportedProfiles">
+    <xs:sequence>
+      <xs:element name="profile" type="tns:exportedProfile" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="exportedProfile">
+    <xs:all>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="profileEntries" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="parentProfileEntry" type="tns:exportedParentProfileEntry" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="profileMapping" type="tns:exportedProfileMapping" minOccurs="0"/>
+    </xs:all>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="isDefault" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="exportedParentProfileEntry">
+    <xs:complexContent>
+      <xs:extension base="tns:exportedProfileEntry">
+        <xs:sequence>
+          <xs:element name="childrenEntries" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="profileEntry" type="tns:exportedProfileEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="exportedProfileEntry">
+    <xs:sequence>
+      <xs:element name="parentName" type="xs:string" minOccurs="0"/>
+      <xs:element name="index" type="xs:long" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+      <xs:element name="page" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="isCustom" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="exportedProfileMapping">
+    <xs:all>
+      <xs:element name="users" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="user" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="groups" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="group" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="memberships" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="membership" type="tns:exportedMembership" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="roles" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="role" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="exportedMembership">
+    <xs:all>
+      <xs:element name="group" type="xs:string" minOccurs="0"/>
+      <xs:element name="role" type="xs:string" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>
+

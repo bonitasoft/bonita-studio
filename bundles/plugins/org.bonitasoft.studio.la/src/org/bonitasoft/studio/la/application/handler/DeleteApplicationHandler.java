@@ -14,63 +14,34 @@
  */
 package org.bonitasoft.studio.la.application.handler;
 
-import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.control.SelectApplicationDescriptorPage;
-import org.bonitasoft.studio.la.application.ui.control.SelectMultiApplicationDescriptorPage;
+import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
+import org.bonitasoft.studio.la.handler.DeleteFileHandler;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.ui.control.SelectionMultiPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class DeleteApplicationHandler {
+public class DeleteApplicationHandler extends DeleteFileHandler {
 
-    @Execute
-    public void deleteExistingApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
-        createWizard(newWizard(), repositoryAccessor, activeShell)
-                .open(activeShell, Messages.delete)
-                .ifPresent(selection -> {
-                    selection.forEach(applicationFileStore -> {
-                        applicationFileStore.close();
-                        applicationFileStore.delete();
-                    });
-                    MessageDialog.openInformation(activeShell, Messages.deleteDoneTitle, Messages.deleteDoneMessage);
-                });
-    }
-
-    private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
+    @Override
+    protected WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
-        SelectApplicationDescriptorPage selectApplicationDescriptorPage = new SelectMultiApplicationDescriptorPage(
-                repositoryAccessor);
+        SelectionMultiPage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionMultiPage<>(
+                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
         return builder.withTitle(Messages.deleteExistingApplication)
                 .havingPage(newPage()
                         .withTitle(Messages.deleteExistingApplication)
                         .withDescription(Messages.deleteExistingApplicationDescription)
                         .withControl(selectApplicationDescriptorPage))
                 .onFinish(container -> deleteFinish(selectApplicationDescriptorPage, activeShell));
-    }
-
-    private Optional<Stream<IRepositoryFileStore>> deleteFinish(
-            SelectApplicationDescriptorPage selectApplicationDescriptorPage, Shell activeShell) {
-        return MessageDialog.openConfirm(activeShell, Messages.deleteConfirmation,
-                String.format(Messages.deleteConfirmationMessage, getListAppToDelete(selectApplicationDescriptorPage)))
-                        ? Optional.ofNullable(selectApplicationDescriptorPage.getSelection()) : Optional.empty();
-    }
-
-    private String getListAppToDelete(SelectApplicationDescriptorPage selectApplicationDescriptorPage) {
-        return selectApplicationDescriptorPage.getSelection()
-                .map(application -> "\n" + application.getName())
-                .collect(Collectors.joining());
     }
 
     @CanExecute

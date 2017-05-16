@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Bonitasoft S.A.
+ * Copyright (C) 2017 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,33 +16,28 @@ package org.bonitasoft.studio.la.application.handler;
 
 import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplicationContainer;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.la.LivingApplicationPlugin;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.handler.NewFileHandler;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.ui.util.StringIncrementer;
-import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-public class NewApplicationHandler {
+public class NewApplicationHandler extends NewFileHandler {
 
     public static final String XML_EXTENSION = ".xml";
     public static final String DEFAULT_FILE_NAME = "applicationDescriptorFile";
     public static final String DO_NOT_SHOW_HELP_MESSAGE_DIALOG = "DO_NOT_SHOW_HELP_MESSAGE_DIALOG";
 
-    @Execute
-    public void openNewApplicationWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
-
-        final IPreferenceStore preferenceStore = LivingApplicationPlugin.getDefault().getPreferenceStore();
+    @Override
+    protected void openHelpDialog(Shell activeShell, IPreferenceStore preferenceStore) {
         if (!preferenceStore.getBoolean(DO_NOT_SHOW_HELP_MESSAGE_DIALOG)) {
             MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
                     activeShell,
@@ -55,14 +50,10 @@ public class NewApplicationHandler {
                     DO_NOT_SHOW_HELP_MESSAGE_DIALOG,
                     SWT.NONE);
         }
-        List<String> existingFileNameList = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
-                .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
-        createApplicationFileStore(repositoryAccessor,
-                StringIncrementer.getIncrementedString(DEFAULT_FILE_NAME, existingFileNameList)).open();
     }
 
-    protected ApplicationFileStore createApplicationFileStore(RepositoryAccessor repositoryAccessor,
-            String fileName) {
+    @Override
+    protected IRepositoryFileStore createFileStore(RepositoryAccessor repositoryAccessor, String fileName) {
         final ApplicationRepositoryStore repositoryStore = repositoryAccessor
                 .getRepositoryStore(ApplicationRepositoryStore.class);
 
@@ -73,6 +64,16 @@ public class NewApplicationHandler {
         final ApplicationNodeContainer nodeContainer = newApplicationContainer().create();
         fileStore.save(nodeContainer);
         return fileStore;
+    }
+
+    @Override
+    protected IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class);
+    }
+
+    @Override
+    protected String getDefaultFileName() {
+        return DEFAULT_FILE_NAME;
     }
 
 }

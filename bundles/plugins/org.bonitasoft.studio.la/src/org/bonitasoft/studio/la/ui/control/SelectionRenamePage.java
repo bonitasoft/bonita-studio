@@ -12,11 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.control;
+package org.bonitasoft.studio.la.ui.control;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.la.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -28,12 +31,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
-public class SelectRenameApplicationDescriptorPage extends SelectMultiApplicationDescriptorPage {
+public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositoryFileStore>>
+        extends SelectionMultiPage<T> {
 
-    Shell currentShell;
+    private FileNameValidator nameValidator;
+    private Shell currentShell;
 
-    public SelectRenameApplicationDescriptorPage(RepositoryAccessor repositoryAccessor) {
-        super(repositoryAccessor);
+    public SelectionRenamePage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider provider) {
+        super(repositoryAccessor, type, provider);
+        this.nameValidator = new FileNameValidator(repositoryAccessor.getRepositoryStore(type));
     }
 
     @Override
@@ -51,7 +57,7 @@ public class SelectRenameApplicationDescriptorPage extends SelectMultiApplicatio
                 .createIn(mainComposite);
         renameButton.disable();
 
-        applicationsTableViewer.addSelectionChangedListener(e -> {
+        tableViewer.addSelectionChangedListener(e -> {
             if (getSelection().count() == 1) {
                 renameButton.enable();
             } else {
@@ -63,9 +69,10 @@ public class SelectRenameApplicationDescriptorPage extends SelectMultiApplicatio
     }
 
     public void rename(Event e) {
-        if (RenameApplicationDescriptorFileDialog.open(currentShell,
-                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class), getSelection().findFirst().get())) {
-            applicationsTableViewer.refresh();
+        nameValidator.setCurrentFileName(getSelection().findFirst().get().getDisplayName());
+        if (RenameFileDialog.open(currentShell, getSelection().findFirst().get(), nameValidator)) {
+            tableViewer.refresh();
         }
     }
+
 }

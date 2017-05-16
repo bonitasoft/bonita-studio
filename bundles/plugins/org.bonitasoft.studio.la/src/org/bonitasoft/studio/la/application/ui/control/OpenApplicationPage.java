@@ -16,7 +16,7 @@ package org.bonitasoft.studio.la.application.ui.control;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.provider.ApplicationLabelProvider;
+import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -54,7 +54,7 @@ public class OpenApplicationPage implements ControlSupplier {
         applicationsTableViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).hint(TABLE_WIDTH_HINT, SWT.DEFAULT).create());
         applicationsTableViewer.setContentProvider(ArrayContentProvider.getInstance());
-        applicationsTableViewer.setLabelProvider(new ApplicationLabelProvider());
+        applicationsTableViewer.setLabelProvider(new ApplicationFileStoreLabelProvider());
         applicationsTableViewer
                 .setInput(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren());
 
