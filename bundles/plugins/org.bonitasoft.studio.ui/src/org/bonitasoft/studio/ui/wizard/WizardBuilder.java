@@ -43,6 +43,7 @@ public class WizardBuilder<T> {
     private boolean needProgress = false;
     private int width = SWT.DEFAULT;
     private int height = SWT.DEFAULT;
+    private int nbLine = 0;
 
     private WizardBuilder() {
     }
@@ -115,8 +116,10 @@ public class WizardBuilder<T> {
             @Override
             protected Point getInitialSize() {
                 final Point initialSize = super.getInitialSize();
-                return new Point(width == SWT.DEFAULT ? initialSize.x : width,
+                final Point size = new Point(width == SWT.DEFAULT ? initialSize.x : width,
                         height == SWT.DEFAULT ? initialSize.y : height);
+                size.y = size.y + convertHeightInCharsToPixels(nbLine);
+                return size;
             }
         }.open();
         return finishResult;
@@ -133,6 +136,16 @@ public class WizardBuilder<T> {
     public WizardBuilder<T> withSize(int width, int height) {
         this.width = width;
         this.height = height;
+        return this;
+    }
+
+    /**
+     * Use to compute additional vertical space for the given number of line
+     * 
+     * @param nbLine, the number of line to add to the initial size of the dialog
+     */
+    public WizardBuilder<T> verticalHeightAdjustment(int nbLine) {
+        this.nbLine = nbLine;
         return this;
     }
 }
