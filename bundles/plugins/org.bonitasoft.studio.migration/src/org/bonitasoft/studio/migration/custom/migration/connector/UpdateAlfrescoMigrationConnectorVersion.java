@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.migration.custom.migration.connector;
 
 
-public abstract class UpdateAlfrescoMigrationConnectorVersion extends UpdateConnectorVersionMigration {
+public abstract class UpdateAlfrescoMigrationConnectorVersion extends UpdateConnectorDefinitionMigration {
 
     public UpdateAlfrescoMigrationConnectorVersion() {
         super();

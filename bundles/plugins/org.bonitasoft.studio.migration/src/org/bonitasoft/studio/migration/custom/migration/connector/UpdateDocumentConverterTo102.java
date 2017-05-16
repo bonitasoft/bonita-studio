@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * @author Romain Bioteau
  */
-public class UpdateDocumentConverterTo102 extends UpdateConnectorVersionMigration {
+public class UpdateDocumentConverterTo102 extends UpdateConnectorDefinitionMigration {
 
     private static final String DOCUEMENT_CONVERTER_DEF_ID = "document-converter";
 

@@ -40,7 +40,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class UpdateConnectorVersionMigrationTest {
+public class UpdateConnectorDefinitionMigrationTest {
 
     @Mock
     private Model model;
@@ -49,7 +49,7 @@ public class UpdateConnectorVersionMigrationTest {
     private Metamodel metamodel;
 
     @Mock
-    private UpdateConnectorVersionMigration updateConnectorVersionMigration;
+    private UpdateConnectorDefinitionMigration updateConnectorVersionMigration;
 
     /**
      * @throws java.lang.Exception
@@ -85,9 +85,9 @@ public class UpdateConnectorVersionMigrationTest {
         //Then
         final Instance id1Connector = connectorInstanceList.get(0);
         final Instance id2Connector = connectorInstanceList.get(1);
-        verify(id1Connector).set(UpdateConnectorVersionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
-        verify(id2Connector, never()).set(UpdateConnectorVersionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
-        verify(oldConnectorInstance, never()).set(UpdateConnectorVersionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
+        verify(id1Connector).set(UpdateConnectorDefinitionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
+        verify(id2Connector, never()).set(UpdateConnectorDefinitionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
+        verify(oldConnectorInstance, never()).set(UpdateConnectorDefinitionMigration.DEFINITION_VERSION_FEATURE_NAME, "2.0");
     }
 
     @Test
@@ -109,9 +109,9 @@ public class UpdateConnectorVersionMigrationTest {
         //Then
         final Instance id1ConnectorConf = connectorConfigInstanceList.get(0);
         final Instance id2ConnectorConf = connectorConfigInstanceList.get(1);
-        verify(id1ConnectorConf).set(UpdateConnectorVersionMigration.VERSION_FEATURE_NAME, "2.0");
-        verify(id2ConnectorConf, never()).set(UpdateConnectorVersionMigration.VERSION_FEATURE_NAME, "2.0");
-        verify(oldConnectorConfInstance, never()).set(UpdateConnectorVersionMigration.VERSION_FEATURE_NAME, "2.0");
+        verify(id1ConnectorConf).set(UpdateConnectorDefinitionMigration.VERSION_FEATURE_NAME, "2.0");
+        verify(id2ConnectorConf, never()).set(UpdateConnectorDefinitionMigration.VERSION_FEATURE_NAME, "2.0");
+        verify(oldConnectorConfInstance, never()).set(UpdateConnectorDefinitionMigration.VERSION_FEATURE_NAME, "2.0");
     }
 
     private EList<Instance> connectorInstanceList(final String... defIds) {
@@ -132,15 +132,15 @@ public class UpdateConnectorVersionMigrationTest {
 
     private Instance aConnectorConfigurationInstance(final String definitionId, final String definitionVersion) {
         final Instance instance = mock(Instance.class);
-        when(instance.get(UpdateConnectorVersionMigration.DEFINITION_ID_FEATURE_NAME)).thenReturn(definitionId);
-        when(instance.get(UpdateConnectorVersionMigration.VERSION_FEATURE_NAME)).thenReturn(definitionVersion);
+        when(instance.get(UpdateConnectorDefinitionMigration.DEFINITION_ID_FEATURE_NAME)).thenReturn(definitionId);
+        when(instance.get(UpdateConnectorDefinitionMigration.VERSION_FEATURE_NAME)).thenReturn(definitionVersion);
         return instance;
     }
 
     private Instance aConnectorInstance(final String definitionId, final String definitionVersion) {
         final Instance instance = mock(Instance.class);
-        when(instance.get(UpdateConnectorVersionMigration.DEFINITION_ID_FEATURE_NAME)).thenReturn(definitionId);
-        when(instance.get(UpdateConnectorVersionMigration.DEFINITION_VERSION_FEATURE_NAME)).thenReturn(definitionVersion);
+        when(instance.get(UpdateConnectorDefinitionMigration.DEFINITION_ID_FEATURE_NAME)).thenReturn(definitionId);
+        when(instance.get(UpdateConnectorDefinitionMigration.DEFINITION_VERSION_FEATURE_NAME)).thenReturn(definitionVersion);
         return instance;
     }
 }

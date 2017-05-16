@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
 /**
  * @author Romain Bioteau
  */
-public class UpdateRestConnectorVersionTo100 extends UpdateConnectorVersionMigration {
+public class UpdateRestConnectorVersionTo100 extends UpdateConnectorDefinitionMigration {
 
     private static final Set<String> REST_CONNECTOR_DEFINITIONS = Sets.newHashSet("rest-get", "rest-delete", "rest-post", "rest-put");
 

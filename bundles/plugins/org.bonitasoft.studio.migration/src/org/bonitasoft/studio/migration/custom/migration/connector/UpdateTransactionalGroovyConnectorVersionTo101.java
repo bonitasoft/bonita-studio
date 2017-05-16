@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * @author Romain Bioteau
  */
-public class UpdateTransactionalGroovyConnectorVersionTo101 extends UpdateConnectorVersionMigration {
+public class UpdateTransactionalGroovyConnectorVersionTo101 extends UpdateConnectorDefinitionMigration {
 
     private static final String GROOVY_DEF_ID = "scripting-groovy-script";
 
