@@ -17,7 +17,7 @@ package org.bonitasoft.studio.migration.custom.migration.connector;
 /**
  * @author Romain Bioteau
  */
-public class UpdateTalendConnectorVersionTo101 extends UpdateConnectorVersionMigration {
+public class UpdateTalendConnectorVersionTo101 extends UpdateConnectorDefinitionMigration {
 
     private static final String TALEND_JOB_DEFINITION_ID = "talend-job-launcher";
 
