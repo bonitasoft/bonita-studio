@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 
 public class DefaultProfileContribution implements IFileStoreContribution {
 
-    private static final String DEFAULT_PROFILE_FILENAME = "default_profile.xml";
+    public static final String DEFAULT_PROFILE_FILENAME = "default_profile.xml";
     private static final String DEFAULT_USER_ID = "User";
     private static final String DEFAULT_ADMINISTRATOR_ID = "Administrator";
     private static final String DEFAULT_PROCESS_MANAGER_ID = "Process manager";
@@ -45,22 +45,22 @@ public class DefaultProfileContribution implements IFileStoreContribution {
     @Override
     public void execute(IRepositoryStore<? extends IRepositoryFileStore> repository) {
         if (Objects.isNull(repository.getChild(DEFAULT_PROFILE_FILENAME))) {
-            IRepositoryFileStore file = repository.createRepositoryFileStore(DEFAULT_PROFILE_FILENAME);
-            ProfilesNode defaultProfile = new ProfilesNode(Arrays.asList(createProfile(DEFAULT_USER_ID),
+            final IRepositoryFileStore file = repository.createRepositoryFileStore(DEFAULT_PROFILE_FILENAME);
+            final ProfilesNode defaultProfile = new ProfilesNode(Arrays.asList(createProfile(DEFAULT_USER_ID),
                     createProfile(DEFAULT_ADMINISTRATOR_ID), createProfile(DEFAULT_PROCESS_MANAGER_ID)));
             file.save(defaultProfile);
         }
     }
 
     private ProfileNode createProfile(String profileName) {
-        ProfileNode profileNode = new ProfileNode(profileName, true);
+        final ProfileNode profileNode = new ProfileNode(profileName, true);
         profileNode.setParentProfileEntries(null); // so tag won't be visible in xml
         addAllUsers(profileNode);
         return profileNode;
     }
 
     protected void addAllUsers(ProfileNode profile) {
-        ProfileMappingNode mappingNode = new ProfileMappingNode();
+        final ProfileMappingNode mappingNode = new ProfileMappingNode();
         mappingNode.setUsers(getDefaultUsers()
                 .stream()
                 .map(User::getUserName)

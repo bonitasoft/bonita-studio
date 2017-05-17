@@ -87,7 +87,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         }
     }
 
-    private void processDefaultContribution() {
+    protected void processDefaultContribution() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.repository.fileContribution");
         for (final IConfigurationElement element : elements) {
