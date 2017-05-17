@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Browser Support Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.browser
-Bundle-Version: 7.5.0.qualifier
+Bundle-Version: 7.5.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.browser.BrowserSupportPlugin
 Bundle-Vendor: Bonitasoft S.A.
 Require-Bundle: org.eclipse.ui,
