@@ -124,5 +124,11 @@
          </describer>
       </content-type>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.repository.fileContribution">
+      <fileContribution
+            class="org.bonitasoft.studio.la.profile.repository.DefaultProfileContribution">
+      </fileContribution>
+   </extension>
 
 </plugin>

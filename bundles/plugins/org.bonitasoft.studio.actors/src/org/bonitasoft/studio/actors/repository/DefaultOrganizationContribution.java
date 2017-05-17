@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.actors.repository;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -73,7 +75,8 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         organization.setMemberships(memberships);
 
         final IRepositoryFileStore file = repository
-                .createRepositoryFileStore(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                .createRepositoryFileStore(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME + "."
+                        + OrganizationRepositoryStore.ORGANIZATION_EXT);
         file.save(organization);
     }
 
@@ -119,42 +122,73 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
     protected Users createUsers() {
         final Users users = OrganizationFactory.eINSTANCE.createUsers();
         final EList<User> userList = users.getUser();
+        userList.addAll(getDefaultUsers());
+        return users;
+    }
+
+    public List<User> getDefaultUsers() {
+        List<User> defaultUsers = new ArrayList<>();
         final String mr = "Mr";
         final String mrs = "Mrs";
 
-        userList.add(createUser(mr, "william.jobs", "William", "Jobs", "bpm", "WilliamJobs@acme.com", null, "Chief Executive Officer"));
+        defaultUsers.add(createUser(mr, "william.jobs", "William", "Jobs", "bpm", "WilliamJobs@acme.com", null,
+                "Chief Executive Officer"));
+        defaultUsers.add(createUser(mrs, "april.sanchez", "April", "Sanchez", "bpm", "AprilGSanchez@acme.com", "helen.kelly",
+                "Compensation specialist"));
+        defaultUsers.add(createUser(mrs, "helen.kelly", "Helen", "Kelly", "bpm", "HelenKelly@acme.com", "william.jobs",
+                "Human resource manager"));
+        defaultUsers.add(createUser(mr, "walter.bates", "Walter", "Bates", "bpm", "WalterRBates@acme.com", "helen.kelly",
+                "Human resources benefits"));
 
-        userList.add(createUser(mrs, "april.sanchez", "April", "Sanchez", "bpm", "AprilGSanchez@acme.com", "helen.kelly", "Compensation specialist"));
-        userList.add(createUser(mrs, "helen.kelly", "Helen", "Kelly", "bpm", "HelenKelly@acme.com", "william.jobs", "Human resource manager"));
-        userList.add(createUser(mr, "walter.bates", "Walter", "Bates", "bpm", "WalterRBates@acme.com", "helen.kelly", "Human resources benefits"));
-
-        userList.add(
-                createUser(mr, "zachary.williamson", "Zachary", "Williamson", "bpm", "ZacharyWilliamson@acme.com", "william.jobs", "Chief Financial Officer"));
-        userList.add(
-                createUser(mr, "patrick.gardenier", "Patrick", "Gardenier", "bpm", "PatrickGardenier@acme.com", "zachary.williamson", "Financial controller"));
-        userList.add(createUser(mrs, "virginie.jomphe", "Virgine", "Jomphe", "bpm", "VirginieJomphe@acme.com", "zachary.williamson", "Accountant"));
-        userList.add(createUser(mr, "thorsten.hartmann", "Thorsten", "Hartmann", "bpm", "ThorstenHartmann@acme.com", "zachary.williamson",
+        defaultUsers.add(
+                createUser(mr, "zachary.williamson", "Zachary", "Williamson", "bpm", "ZacharyWilliamson@acme.com",
+                        "william.jobs", "Chief Financial Officer"));
+        defaultUsers.add(
+                createUser(mr, "patrick.gardenier", "Patrick", "Gardenier", "bpm", "PatrickGardenier@acme.com",
+                        "zachary.williamson", "Financial controller"));
+        defaultUsers.add(createUser(mrs, "virginie.jomphe", "Virgine", "Jomphe", "bpm", "VirginieJomphe@acme.com",
+                "zachary.williamson", "Accountant"));
+        defaultUsers.add(createUser(mr, "thorsten.hartmann", "Thorsten", "Hartmann", "bpm", "ThorstenHartmann@acme.com",
+                "zachary.williamson",
                 "Financial planning manager"));
 
-        userList.add(createUser(mr, "jan.fisher", "Jan", "Fisher", "bpm", "JanFisher@acme.com", "favio.riviera", "Infrastucture specialist"));
+        defaultUsers.add(createUser(mr, "jan.fisher", "Jan", "Fisher", "bpm", "JanFisher@acme.com", "favio.riviera",
+                "Infrastucture specialist"));
 
-        userList.add(
-                createUser(mrs, "isabel.bleasdale", "Isabel", "Bleasdale", "bpm", "IsabelBleasdale@acme.com", "favio.riviera", "Product marketing manager"));
-        userList.add(createUser(mr, "favio.riviera", "Favio", "Riviera", "bpm", "FavioRiviera@acme.com", "william.jobs", "Vice President of Marketing"));
+        defaultUsers.add(
+                createUser(mrs, "isabel.bleasdale", "Isabel", "Bleasdale", "bpm", "IsabelBleasdale@acme.com",
+                        "favio.riviera", "Product marketing manager"));
+        defaultUsers.add(createUser(mr, "favio.riviera", "Favio", "Riviera", "bpm", "FavioRiviera@acme.com", "william.jobs",
+                "Vice President of Marketing"));
 
-        userList.add(createUser(mr, "michael.morrison", "Michael", "Morrison", "bpm", "MichaelMorrison@acme.com", "william.jobs", "Chief Technical Officer"));
-        userList.add(createUser(mr, "marc.marseau", "Marc", "Marseau", "bpm", "MarcMarseau@acme.com", "michael.morrison", "Engineer"));
-        userList.add(createUser(mr, "joseph.hovell", "Joseph", "Hovell", "bpm", "JosephHovell@acme.com", "michael.morrison", "Engineer"));
+        defaultUsers.add(createUser(mr, "michael.morrison", "Michael", "Morrison", "bpm", "MichaelMorrison@acme.com",
+                "william.jobs", "Chief Technical Officer"));
+        defaultUsers.add(createUser(mr, "marc.marseau", "Marc", "Marseau", "bpm", "MarcMarseau@acme.com", "michael.morrison",
+                "Engineer"));
+        defaultUsers
+                .add(createUser(mr, "joseph.hovell", "Joseph", "Hovell", "bpm", "JosephHovell@acme.com", "michael.morrison",
+                        "Engineer"));
 
-        userList.add(createUser(mr, "mauro.zetticci", "Mauro", "Zetticci", "bpm", "MauroZetticci@acme.com", "michael.morrison", "Consultant"));
-        userList.add(createUser(mr, "thomas.wallis", "Thomas", "Wallis", "bpm", "ThomasWallis@acme.com", "michael.morrison", "Consultant"));
+        defaultUsers.add(createUser(mr, "mauro.zetticci", "Mauro", "Zetticci", "bpm", "MauroZetticci@acme.com",
+                "michael.morrison", "Consultant"));
+        defaultUsers
+                .add(createUser(mr, "thomas.wallis", "Thomas", "Wallis", "bpm", "ThomasWallis@acme.com", "michael.morrison",
+                        "Consultant"));
 
-        userList.add(createUser(mrs, "daniela.angelo", "Daniela", "Angelo", "bpm", "DanielaAngelo@acme.com", "william.jobs", "Vice President of Sales"));
-        userList.add(createUser(mr, "anthony.nichols", "Anthony", "Nichols", "bpm", "AnthonyNicholls@acme.com", "daniela.angelo", "Account manager"));
-        userList.add(createUser(mrs, "misa.kumagai", "Misa", "Kumagai", "bpm", "MisaKumagai@acme.com", "daniela.angelo", "Account manager"));
-        userList.add(createUser(mr, "norio.yamazaki", "Norio", "Yamazaki", "bpm", "NorioYamazaki@acme.com", "daniela.angelo", "Account manager"));
-        userList.add(createUser(mrs, "giovanna.almeida", "Giovanna", "Almeida", "bpm", "GiovannaRochaAlmeida@acme.com", "daniela.angelo", "Account manager"));
-        return users;
+        defaultUsers
+                .add(createUser(mrs, "daniela.angelo", "Daniela", "Angelo", "bpm", "DanielaAngelo@acme.com", "william.jobs",
+                        "Vice President of Sales"));
+        defaultUsers.add(createUser(mr, "anthony.nichols", "Anthony", "Nichols", "bpm", "AnthonyNicholls@acme.com",
+                "daniela.angelo", "Account manager"));
+        defaultUsers.add(createUser(mrs, "misa.kumagai", "Misa", "Kumagai", "bpm", "MisaKumagai@acme.com", "daniela.angelo",
+                "Account manager"));
+        defaultUsers
+                .add(createUser(mr, "norio.yamazaki", "Norio", "Yamazaki", "bpm", "NorioYamazaki@acme.com", "daniela.angelo",
+                        "Account manager"));
+        defaultUsers.add(createUser(mrs, "giovanna.almeida", "Giovanna", "Almeida", "bpm", "GiovannaRochaAlmeida@acme.com",
+                "daniela.angelo", "Account manager"));
+
+        return defaultUsers;
     }
 
     protected Groups createGroups() {
@@ -185,7 +219,8 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         return r;
     }
 
-    private Membership createMembership(final String username, final String parentGroupPath, final String groupName, final String roleName) {
+    private Membership createMembership(final String username, final String parentGroupPath, final String groupName,
+            final String roleName) {
         final Membership membership = OrganizationFactory.eINSTANCE.createMembership();
         membership.setGroupParentPath(parentGroupPath);
         membership.setGroupName(groupName);
@@ -198,12 +233,14 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         final Group group = OrganizationFactory.eINSTANCE.createGroup();
         group.setName(name);
         group.setParentPath(parentPath);
-        group.setDescription("This group represents the " + displayName.toLowerCase() + " department of the ACME organization");
+        group.setDescription(
+                "This group represents the " + displayName.toLowerCase() + " department of the ACME organization");
         group.setDisplayName(displayName);
         return group;
     }
 
-    private User createUser(final String title, final String username, final String firstname, final String lastname, final String password, final String email,
+    private User createUser(final String title, final String username, final String firstname, final String lastname,
+            final String password, final String email,
             final String manager, final String jobTitle) {
         final User user = OrganizationFactory.eINSTANCE.createUser();
         user.setTitle(title);
