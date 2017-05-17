@@ -23,7 +23,8 @@ Require-Bundle: org.bonitasoft.studio.common.repository;bundle-version="7.5.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  assertj-core;bundle-version="3.6.1";resolution:=optional,
  org.mockito;bundle-version="1.10.19";resolution:=optional,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ org.bonitasoft.studio.actors
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.business.application,
  org.bonitasoft.engine.business.application.exporter,
