@@ -64,6 +64,15 @@
                     commandId="org.bonitasoft.studio.la.profile.open.command"
                     style="push">
              	</command>
+    <separator
+          name="org.bonitasoft.studio.la.profile.separator"
+          visible="true">
+    </separator>
+    <command
+          commandId="org.bonitasoft.studio.la.profile.export.command"
+          id="org.bonitasoft.studio.la.profile.export.command"
+          style="push">
+    </command>
 			</menu>
        </menuContribution>
    </extension>

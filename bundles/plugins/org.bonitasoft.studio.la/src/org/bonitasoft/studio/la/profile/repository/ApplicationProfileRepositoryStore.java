@@ -19,6 +19,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.util.Collections;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
@@ -27,6 +28,17 @@ import org.eclipse.swt.graphics.Image;
 public class ApplicationProfileRepositoryStore extends AbstractRepositoryStore<ApplicationProfileFileStore> {
 
     private static final String XML_EXTENSION = "xml";
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#createRepositoryStore(org.bonitasoft.studio.common.repository.model.IRepository)
+     */
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        super.createRepositoryStore(repository);
+        processDefaultContribution();
+    }
 
     @Override
     public String getName() {

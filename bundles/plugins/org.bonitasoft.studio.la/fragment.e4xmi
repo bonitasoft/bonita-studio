@@ -9,7 +9,7 @@
     <elements xsi:type="commands:Command" xmi:id="_g4OJ8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.import.command" commandName="%importApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_ykXSMDZLEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.open.command" commandName="%openProfile"/>
     <elements xsi:type="commands:Command" xmi:id="_4G0OIDZLEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.import.command" commandName="%importProfile"/>
-    <elements xsi:type="commands:Command" xmi:id="_4ctloDZLEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.export.command." commandName="%exportProfile"/>
+    <elements xsi:type="commands:Command" xmi:id="_4ctloDZLEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.export.command" commandName="%exportProfile"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>
@@ -18,7 +18,7 @@
     <elements xsi:type="commands:Handler" xmi:id="_cIN9cAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.exportHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.ExportApplicationHandler" command="_YHf6AAomEeekfeZYiUbzLg"/>
     <elements xsi:type="commands:Handler" xmi:id="_kWFX8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.importHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.ImportApplicationhandler" command="_g4OJ8ApAEeekfeZYiUbzLg"/>
     <elements xsi:type="commands:Handler" xmi:id="_--f3oDZLEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.openHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.profile.handler.OpenProfileHandler" command="_ykXSMDZLEeeIpNhwNuTHew"/>
-    <elements xsi:type="commands:Handler" xmi:id="_DjdQkDZMEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.exportHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.profile.handler.ExportProfileHandler" command="_4ctloDZLEeeIpNhwNuTHew"/>
+    <elements xsi:type="commands:Handler" xmi:id="_DjdQkDZMEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.exportHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.profile.handler.ExportDefaultProfilesHandler" command="_4ctloDZLEeeIpNhwNuTHew"/>
     <elements xsi:type="commands:Handler" xmi:id="_D9QQoDZMEeeIpNhwNuTHew" elementId="org.bonitasoft.studio.la.profile.importHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.profile.handler.ImportProfileHandler" command="_4G0OIDZLEeeIpNhwNuTHew"/>
   </fragments>
 </fragment:ModelFragments>
