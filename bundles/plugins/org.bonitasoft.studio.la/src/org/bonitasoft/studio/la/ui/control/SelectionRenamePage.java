@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.la.ui.control;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -36,6 +39,7 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
 
     private FileNameValidator nameValidator;
     private Shell currentShell;
+    private Optional<String> unRenamableFile = Optional.empty();
 
     public SelectionRenamePage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider provider) {
         super(repositoryAccessor, type, provider);
@@ -58,7 +62,8 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
         renameButton.disable();
 
         tableViewer.addSelectionChangedListener(e -> {
-            if (getSelection().count() == 1) {
+            if (getSelection().count() == 1
+                    && !Objects.equals(getSelection().findFirst().get().getName(), unRenamableFile.orElse(""))) {
                 renameButton.enable();
             } else {
                 renameButton.disable();
@@ -73,6 +78,10 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
         if (RenameFileDialog.open(currentShell, getSelection().findFirst().get(), nameValidator)) {
             tableViewer.refresh();
         }
+    }
+
+    public void setUnRenamableFile(String unRenamableFile) {
+        this.unRenamableFile = Optional.ofNullable(unRenamableFile);
     }
 
 }
