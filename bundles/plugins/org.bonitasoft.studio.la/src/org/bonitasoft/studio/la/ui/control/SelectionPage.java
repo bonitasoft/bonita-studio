@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.la.ui.control;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -35,6 +36,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -52,6 +54,8 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
     protected Class<T> type;
 
     private FileStoreLabelProvider labelProvider;
+
+    private Optional<ViewerFilter> filter = Optional.empty();
 
     public SelectionPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider labelProvider) {
         this.repositoryAccessor = repositoryAccessor;
@@ -72,6 +76,7 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
         tableViewer.setLabelProvider(labelProvider);
         tableViewer.setInput(getInput());
         tableViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
+        filter.ifPresent(tableViewer::addFilter);
 
         ColumnViewerToolTipSupport.enableFor(tableViewer);
 
@@ -97,6 +102,10 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
 
     public Stream<IRepositoryFileStore> getSelection() {
         return ((IStructuredSelection) tableViewer.getSelection()).toList().stream();
+    }
+
+    public void addFilter(ViewerFilter filter) {
+        this.filter = Optional.ofNullable(filter);
     }
 
 }
