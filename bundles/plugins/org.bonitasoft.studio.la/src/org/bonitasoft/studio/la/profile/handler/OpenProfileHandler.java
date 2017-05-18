@@ -25,7 +25,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.profile.repository.ApplicationProfileRepositoryStore;
 import org.bonitasoft.studio.la.profile.ui.provider.ProfileFileStoreLabelProvider;
-import org.bonitasoft.studio.la.ui.control.SelectionRenamePage;
+import org.bonitasoft.studio.la.ui.control.SelectionPage;
+import org.bonitasoft.studio.la.ui.control.SelectionSinglePage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -43,8 +44,8 @@ public class OpenProfileHandler {
     private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
             RepositoryAccessor repositoryAccessor) {
 
-        SelectionRenamePage<ApplicationProfileRepositoryStore> selectApplicationDescriptorPage = new SelectionRenamePage<>(
-                repositoryAccessor, ApplicationProfileRepositoryStore.class, new ProfileFileStoreLabelProvider());
+        SelectionPage<ApplicationProfileRepositoryStore> selectApplicationDescriptorPage = getSelectionpage(
+                repositoryAccessor);
         return builder.withTitle(Messages.openExistingProfile)
                 .havingPage(newPage()
                         .withTitle(Messages.openExistingProfile)
@@ -57,6 +58,11 @@ public class OpenProfileHandler {
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getCurrentRepository().isLoaded()
                 && !repositoryAccessor.getRepositoryStore(ApplicationProfileRepositoryStore.class).getChildren().isEmpty();
+    }
+
+    protected SelectionPage<ApplicationProfileRepositoryStore> getSelectionpage(RepositoryAccessor repositoryAccessor) {
+        return new SelectionSinglePage<>(
+                repositoryAccessor, ApplicationProfileRepositoryStore.class, new ProfileFileStoreLabelProvider());
     }
 
 }
