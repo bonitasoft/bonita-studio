@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Collections;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
@@ -27,15 +30,24 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class TestBugSave {
 
-/**
- * @author Mickael Istria
- */
-public class TestBugSave extends TestCase {
+    @After
+    public void closeEditors() throws Exception {
+        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                page.closeAllEditors(false);
+            }
+        }
+    }
 
+    @Test
     public void testCrashingSave() throws Exception {
         new NewDiagramCommandHandler().newDiagram().open();
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -70,12 +82,13 @@ public class TestBugSave extends TestCase {
         assertEquals("There should be only one resource", 1,
                 processEditor.getEditingDomain().getResourceSet().getResources().size());
         mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
-        final SetCommand touchProcessCommand = new SetCommand(processEditor.getEditingDomain(), mainProcess,
-                ProcessPackage.Literals.ELEMENT__DOCUMENTATION, "descProc");
-        processEditor.getEditingDomain().getCommandStack().execute(touchProcessCommand);
+        processEditor.getEditingDomain().getCommandStack().execute(SetCommand.create(processEditor.getEditingDomain(),
+                mainProcess, ProcessPackage.Literals.ELEMENT__DOCUMENTATION, "descProc"));
         assertEquals("There should be only one resource", 1,
                 processEditor.getEditingDomain().getResourceSet().getResources().size());
-        FormsUtils.openDiagram(mainProcess.getForm().get(0), processEditor.getEditingDomain());
+        Form form2 = mainProcess.getForm().get(0);
+        assertNotNull("Form is not attached to a eResource", form2.eResource());
+        FormsUtils.openDiagram(form2, processEditor.getEditingDomain());
         assertEquals("There should be only one resource", 1,
                 processEditor.getEditingDomain().getResourceSet().getResources().size());
         // form
