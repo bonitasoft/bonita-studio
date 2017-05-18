@@ -5,17 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.util;
-
 
 public interface DriverConstants {
 
@@ -28,9 +25,8 @@ public interface DriverConstants {
     public static final String POSTGRES_DEFINITION_ID = "database-postgresql92";
     public static final String POSTGRES_DRIVER_JARNAME = "postgresql-9.2-1002.jdbc4.jar";
 
-    public static final String SQLSERVER_2008_DEFINITION_ID = "database-mssqlserver2008";
+    public static final String SQLSERVER_DEFINITION_ID = "database-mssqlserver";
     public static final String SQLSERVER_DRIVER_JARNAME = "sqljdbc4.jar";
-    public static final String SQLSERVER_2012_DEFINITION_ID = "database-mssqlserver2012";
 
     public static final String ORACLE_11G_DEFINITION_ID = "database-oracle11g";
     public static final String ORACLE_10G_DEFINITION_ID = "database-oracle10g";
