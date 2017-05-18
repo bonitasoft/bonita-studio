@@ -3,15 +3,23 @@ package org.bonitasoft.studio.importer.bos.operation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
+import java.util.zip.ZipEntry;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
@@ -50,10 +58,58 @@ public class ImportConflictsChecker {
                 .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(), importedStore.getFolderName()))
                 .findFirst()
                 .ifPresent(storeInCurrentRepo -> {
-                    final File file = storeInCurrentRepo.getResource().getLocation().toFile();
-                    compareFolders(bosArchive, file.listFiles(), importedStore.getFolders());
-                    compareFiles(bosArchive, file.listFiles(), importedStore.getFiles());
+                    if (Objects.equals(storeInCurrentRepo.getName(),
+                            DatabaseConnectorPropertiesRepositoryStore.STORE_NAME)) {
+                        compareDatabaseConnectorProperties(storeInCurrentRepo, importedStore, bosArchive);
+                    } else {
+                        final File file = storeInCurrentRepo.getResource().getLocation().toFile();
+                        compareFolders(bosArchive, file.listFiles(), importedStore.getFolders());
+                        compareFiles(bosArchive, file.listFiles(), importedStore.getFiles());
+                    }
                 });
+    }
+
+    // We can't use checksum to compare .properties file because there is always a comment with the creation date at the top of the .properties file -> always conflicting. 
+    protected void compareDatabaseConnectorProperties(IRepositoryStore<? extends IRepositoryFileStore> storeInCurrentRepo,
+            AbstractFolderModel importedStore, BosArchive bosArchive) {
+        List<DatabaseConnectorPropertiesFileStore> currentPropertiesFiles = (List<DatabaseConnectorPropertiesFileStore>) storeInCurrentRepo
+                .getChildren();
+        importedStore.getFiles().stream()
+                .forEach(importedPropertiesFile -> {
+                    findConflinctingDatabaseConnectorPropertiesInCurrentRepo(importedPropertiesFile, currentPropertiesFiles,
+                            bosArchive).ifPresent(currentPropertiesFile -> {
+                                compareConflinctingDatabaseConnectorPropertiesfiles(bosArchive, importedPropertiesFile,
+                                        currentPropertiesFile);
+                            });
+                });
+    }
+
+    private Optional<DatabaseConnectorPropertiesFileStore> findConflinctingDatabaseConnectorPropertiesInCurrentRepo(
+            AbstractFileModel importedPropertiesFile,
+            List<DatabaseConnectorPropertiesFileStore> currentPropertiesFiles, BosArchive bosArchive) {
+        return currentPropertiesFiles.stream()
+                .filter(currentPropertiesFile -> Objects.equals(currentPropertiesFile.getName(),
+                        importedPropertiesFile.getFileName()))
+                .findFirst();
+    }
+
+    private void compareConflinctingDatabaseConnectorPropertiesfiles(BosArchive bosArchive,
+            AbstractFileModel importedPropertiesFile, DatabaseConnectorPropertiesFileStore currentPropertiesFile) {
+        ZipEntry entry = bosArchive.getEntry(importedPropertiesFile.getPath());
+        try (InputStream inputStream = bosArchive.getZipFile().getInputStream(entry)) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            importedPropertiesFile.setStatus(properties.equals(currentPropertiesFile.getContent())
+                    ? ConflictStatus.SAME_CONTENT
+                    : ConflictStatus.CONFLICTING);
+            importedPropertiesFile.setImportAction(importedPropertiesFile.isConflicting()
+                    ? ImportAction.KEEP
+                    : ImportAction.OVERWRITE);
+        } catch (IOException e) {
+            BonitaStudioLog.error(
+                    "An error occured while comparing databaseConnectorProperties during import", e);
+            importedPropertiesFile.setStatus(ConflictStatus.CONFLICTING);
+        } ;
     }
 
     private void compareFolders(BosArchive bosArchive, File[] foldersFromCurrentRepo,
