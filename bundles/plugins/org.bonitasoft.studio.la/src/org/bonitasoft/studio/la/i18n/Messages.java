@@ -74,12 +74,6 @@ public class Messages extends NLS {
     public static String rename;
     public static String renameFile;
     public static String menuLevelWarning;
-    public static String openExistingProfile;
-    public static String openExistingProfileDescription;
-    public static String applicationProfileStoreName;
-    public static String exportProfileDoneMessage;
-    public static String exportProfileTitle;
-    public static String exportProfileDescription;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
