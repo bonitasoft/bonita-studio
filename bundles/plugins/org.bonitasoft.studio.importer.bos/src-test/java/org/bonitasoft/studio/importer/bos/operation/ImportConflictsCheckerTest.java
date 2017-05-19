@@ -1,27 +1,38 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
+import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
+import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
@@ -52,6 +63,19 @@ public class ImportConflictsCheckerTest {
                 .as("File with same checksum should not be in conflict").isFalse();
         assertThat(findFile(diagramsStore, "Customer Support - Set Up-2.0.proc").getImportAction())
                 .as("File with same checksum should have KEEP import policy").isEqualTo(ImportAction.KEEP);
+    }
+
+    @Test
+    public void should_not_find_conflicts_on_databaseConnectors() throws Exception {
+        final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(createRepository());
+        DatabaseConnectorPropertiesRepositoryStore repositoryStore = createDatabaseConnectorPropertiesRepositoryStore();
+        AbstractFolderModel folderModel = createAbstractFolderModelWithDatabaseConnectorProperties();
+        try (InputStream inputstream = new FileInputStream(loadFile("/database-h2_bis.properties"))) {
+            conflictsChecker.compareDatabaseConnectorProperties(repositoryStore,
+                    folderModel, createBosArchiveWithdatabaseConnectorProperties(inputstream));
+        }
+        AbstractFileModel importedPropertiesFile = folderModel.getFiles().get(0);
+        verify(importedPropertiesFile).setStatus(ConflictStatus.SAME_CONTENT);
     }
 
     private boolean isConflicting(Optional<ImportStoreModel> store) throws Exception {
@@ -93,6 +117,46 @@ public class ImportConflictsCheckerTest {
         when(repo.getRepositoryStoreByName("lib")).thenReturn(Optional.of(libStore));
 
         return repo;
+    }
+
+    private DatabaseConnectorPropertiesRepositoryStore createDatabaseConnectorPropertiesRepositoryStore() throws Exception {
+
+        Properties properties = new Properties();
+        File propertiesFile = loadFile("/database-h2.properties");
+        try (InputStream is = new FileInputStream(propertiesFile)) {
+            properties.load(is);
+        }
+        final DatabaseConnectorPropertiesFileStore fileStore = mock(DatabaseConnectorPropertiesFileStore.class);
+        when(fileStore.getName()).thenReturn("database-h2.properties");
+        when(fileStore.getContent()).thenReturn(properties);
+
+        final DatabaseConnectorPropertiesRepositoryStore repo = mock(DatabaseConnectorPropertiesRepositoryStore.class);
+        when(repo.getChildren()).thenReturn(Arrays.asList(fileStore));
+        return repo;
+    }
+
+    private AbstractFolderModel createAbstractFolderModelWithDatabaseConnectorProperties() {
+
+        AbstractFileModel fileModel = mock(AbstractFileModel.class);
+        when(fileModel.getPath()).thenReturn("path");
+        when(fileModel.getFileName()).thenReturn("database-h2.properties");
+
+        AbstractFolderModel folderModel = mock(AbstractFolderModel.class);
+        when(folderModel.getFiles()).thenReturn(Arrays.asList(fileModel));
+
+        return folderModel;
+    }
+
+    private BosArchive createBosArchiveWithdatabaseConnectorProperties(InputStream inputStream) throws Exception {
+        ZipEntry entry = mock(ZipEntry.class);
+        ZipFile zipFile = mock(ZipFile.class);
+        when(zipFile.getInputStream(any())).thenReturn(inputStream);
+
+        BosArchive bosArchive = mock(BosArchive.class);
+        when(bosArchive.getEntry("path")).thenReturn(entry);
+        when(bosArchive.getZipFile()).thenReturn(zipFile);
+
+        return bosArchive;
     }
 
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
