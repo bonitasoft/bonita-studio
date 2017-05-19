@@ -14,10 +14,8 @@
  */
 package org.bonitasoft.studio.actors.repository;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.ContactData;
@@ -127,7 +125,7 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
     }
 
     public List<User> getDefaultUsers() {
-        List<User> defaultUsers = new ArrayList<>();
+        final List<User> defaultUsers = new ArrayList<>();
         final String mr = "Mr";
         final String mrs = "Mrs";
 
@@ -257,13 +255,8 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         data.setBuilding("70");
         data.setCity("Philadelphia");
 
-        final Random r = new Random(System.currentTimeMillis());
-        final NumberFormat format = NumberFormat.getIntegerInstance();
-        format.setMaximumIntegerDigits(3);
-        format.setMinimumIntegerDigits(3);
-        final String lastDigits = format.format(Math.abs(r.nextLong()));
-        data.setPhoneNumber("484-302-5" + lastDigits);
-        data.setFaxNumber("484-302-0" + lastDigits);
+        data.setPhoneNumber("484-302-5000");
+        data.setFaxNumber("484-302-0000");
         data.setZipCode("19108");
         data.setCountry("United States");
         data.setState("PA");
