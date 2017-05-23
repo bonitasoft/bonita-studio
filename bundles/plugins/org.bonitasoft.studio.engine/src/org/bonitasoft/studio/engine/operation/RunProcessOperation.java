@@ -77,6 +77,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         final String configurationId = executionContext.getConfigurationId();
         deployOperation.setConfigurationId(configurationId);
         deployOperation.setObjectToExclude(executionContext.getExcludedObject());
+        deployOperation.setDisablePopup(executionContext.synchronousExecution());
         for (final AbstractProcess process : processSelector.getExecutableProcesses()) {
             deployOperation.addProcessToDeploy(process);
         }
@@ -91,7 +92,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
 
                     @Override
                     public void run() {
-                        StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
+                        final StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
                         sb.append(":\n");
                         sb.append(status.getMessage());
                         new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
@@ -111,7 +112,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         }
     }
 
-    protected void openBrowserForSelectedProcess(final IProgressMonitor monitor, final DeployProcessOperation deployOperation, final String configurationId) {
+    protected void openBrowserForSelectedProcess(final IProgressMonitor monitor,
+            final DeployProcessOperation deployOperation, final String configurationId) {
         final boolean hasInitiator = hasInitiator(processToRun);
         try {
             if (!executionContext.synchronousExecution()) {
@@ -125,10 +127,12 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                             url = deployOperation.getUrlFor(processToRun, monitor);
                             redirectToPortalTaskListWhenContractAndNoFormAndInitiator();
                         } else {
-                            final APISession session = BOSEngineManager.getInstance().createSession(processToRun, configurationId,
+                            final APISession session = BOSEngineManager.getInstance().createSession(processToRun,
+                                    configurationId,
                                     monitor);
                             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-                            final Long caseId = processApi.startProcess(deployOperation.getProcessDefId(processToRun)).getId();
+                            final Long caseId = processApi.startProcess(deployOperation.getProcessDefId(processToRun))
+                                    .getId();
                             url = new CaseDetailURLBuilder(processToRun, configurationId, caseId).toURL(monitor);
                             new OpenBrowserOperation(url).execute();
                         }
@@ -156,14 +160,16 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         redirectToPortalTaskList(
                 EnginePreferenceConstants.TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR,
                 Messages.contractButNoFormTitle,
-                Messages.bind(Messages.contractButNoFormMessage, processToRun.getName(), org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+                Messages.bind(Messages.contractButNoFormMessage, processToRun.getName(),
+                        org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
     }
 
     protected void redirectToPortalTaskListWhenNoInitiator() {
         redirectToPortalTaskList(
                 EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR,
                 Messages.noInitiatorDefinedTitle,
-                Messages.bind(Messages.noInitiatorDefinedMessage, processToRun.getName(), org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+                Messages.bind(Messages.noInitiatorDefinedMessage, processToRun.getName(),
+                        org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
     }
 
     private void redirectToPortalTaskList(final String togglePreference, final String shellTitle, final String message) {
