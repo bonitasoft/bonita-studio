@@ -18,12 +18,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -41,9 +38,6 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
@@ -99,7 +93,6 @@ public class TestFullScenario {
         createProcess();
         editAndSave();
         reopenEditedProcess();
-        reopenEditedProcess();
         execute();
     }
 
@@ -116,7 +109,7 @@ public class TestFullScenario {
     /**
      * @throws ExecutionException
      */
-    public void editAndSave() throws ExecutionException {
+    public void editAndSave() throws Exception {
         processEditor = getTheOnlyOneEditor();
         processEditor.getEditingDomain().getCommandStack().execute(
                 new SetCommand(processEditor.getEditingDomain(),
@@ -129,15 +122,7 @@ public class TestFullScenario {
         final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
         final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null,
                 handlerService.getClass());
-        try {
-            saveCommand.executeWithChecks(executionEvent);
-        } catch (final NotDefinedException e) {
-            e.printStackTrace();
-        } catch (final NotEnabledException e) {
-            e.printStackTrace();
-        } catch (final NotHandledException e) {
-            e.printStackTrace();
-        }
+        saveCommand.executeWithChecks(executionEvent);
     }
 
     public void reopenEditedProcess() {
@@ -151,7 +136,7 @@ public class TestFullScenario {
      * @throws CoreException
      * @throws ExecutionException
      */
-    public void renameProcess() throws CoreException, ExecutionException {
+    public void renameProcess() throws Exception {
         processEditor = getTheOnlyOneEditor();
         process = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
         final MainProcess oldProc = EcoreUtil.copy(process);
@@ -172,15 +157,8 @@ public class TestFullScenario {
         final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
         final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null,
                 handlerService.getClass());
-        try {
-            saveCommand.executeWithChecks(executionEvent);
-        } catch (final NotDefinedException e) {
-            e.printStackTrace();
-        } catch (final NotEnabledException e) {
-            e.printStackTrace();
-        } catch (final NotHandledException e) {
-            e.printStackTrace();
-        }
+
+        saveCommand.executeWithChecks(executionEvent);
 
         assertFalse("Old input should not exist any more after rename", input.exists());
     }
@@ -191,20 +169,13 @@ public class TestFullScenario {
      * @throws InterruptedException
      * @throws IOException
      */
-    public void execute() throws ExecutionException, Exception, InterruptedException, IOException {
+    public void execute() throws Exception {
         BOSEngineManager.getInstance().start();
         final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
         deployProcessCommand.execute(new ExecutionEvent());
-        final BufferedReader reader = new BufferedReader(
-                new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            if (line.toLowerCase().contains("bonita")) {
-                return; // OK
-            }
-        }
-        fail("A line in application should contain \"Bonita\"...");
+        final URL url = deployProcessCommand.getUrl();
+        assertTrue(url.toString().contains("/bonita/"));
     }
 
     /**
