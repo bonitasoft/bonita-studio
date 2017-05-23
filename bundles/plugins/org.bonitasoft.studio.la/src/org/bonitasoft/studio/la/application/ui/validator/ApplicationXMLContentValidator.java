@@ -21,45 +21,20 @@ import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
-import org.bonitasoft.studio.ui.validator.ValidatorBuilder;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
+import org.bonitasoft.studio.la.ui.validator.XMLContentValidator;
 import org.xml.sax.SAXException;
 
-public class ApplicationXMLContentValidator implements IValidator {
+public class ApplicationXMLContentValidator extends XMLContentValidator {
 
-    public static class Builder implements ValidatorBuilder<ApplicationXMLContentValidator> {
-
-        private String message;
-
-        public Builder withMessage(String message) {
-            this.message = message;
-            return this;
-        }
-
-        @Override
-        public ApplicationXMLContentValidator create() {
-            return new ApplicationXMLContentValidator(message);
-        }
-
-    }
-
-    private String message;
     private ApplicationNodeContainerConverter applicationNodeContainerConverter;
 
-    public ApplicationXMLContentValidator(String message) {
-        this.message = message;
+    public ApplicationXMLContentValidator(String errorMessage) {
+        super(errorMessage);
         this.applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
     }
 
     @Override
-    public IStatus validate(Object value) {
-        try {
-            applicationNodeContainerConverter.unmarshallFromXML(Files.readAllBytes(Paths.get((String) value)));
-        } catch (JAXBException | IOException | SAXException e) {
-            return ValidationStatus.error(message);
-        }
-        return ValidationStatus.ok();
+    protected void validateModel(String value) throws JAXBException, IOException, SAXException {
+        applicationNodeContainerConverter.unmarshallFromXML(Files.readAllBytes(Paths.get(value)));
     }
 }
