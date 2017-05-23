@@ -69,15 +69,17 @@ import com.google.common.base.Predicate;
  */
 public class DeployProcessOperation {
 
-    private Set<EObject> excludedObject = new HashSet<EObject>();
+    private Set<EObject> excludedObject = new HashSet<>();
 
     private String configurationId;
 
-    private final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+    private final List<AbstractProcess> processes = new ArrayList<>();
 
-    private final Map<AbstractProcess, Long> processIdsMap = new HashMap<AbstractProcess, Long>();
+    private final Map<AbstractProcess, Long> processIdsMap = new HashMap<>();
 
     private int problemResolutionResult;
+
+    private boolean disablePopup;
 
     public void setObjectToExclude(final Set<EObject> excludedObject) {
         this.excludedObject = excludedObject;
@@ -172,10 +174,12 @@ public class DeployProcessOperation {
         monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
         BusinessArchive bar;
         try {
-            bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId, excludedObject);
-        } catch (BarCreationException bce) {
+            bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId,
+                    excludedObject);
+        } catch (final BarCreationException bce) {
             if (process != null) {
-                BonitaStudioLog.log(String.format("Error when trying to create bar for process %s (%s)",process.getName(),process.getVersion()));
+                BonitaStudioLog.log(String.format("Error when trying to create bar for process %s (%s)", process.getName(),
+                        process.getVersion()));
                 BonitaStudioLog.error(bce, EnginePlugin.PLUGIN_ID);
             }
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, bce.getDetails(), bce);
@@ -188,13 +192,15 @@ public class DeployProcessOperation {
             def = processApi.deploy(bar);
         } catch (final ProcessDeployException e) {
             if (process != null) {
-                BonitaStudioLog.log(String.format("Error when trying to deploy process %s (%s)",process.getName(),process.getVersion()));
+                BonitaStudioLog.log(String.format("Error when trying to deploy process %s (%s)", process.getName(),
+                        process.getVersion()));
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
         } catch (final Exception e1) {
             if (process != null) {
-                BonitaStudioLog.error("Error when trying to deploy the process named: " + process.getName(), EnginePlugin.PLUGIN_ID);
+                BonitaStudioLog.error("Error when trying to deploy the process named: " + process.getName(),
+                        EnginePlugin.PLUGIN_ID);
             }
             BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e1.getMessage(), e1);
@@ -209,7 +215,8 @@ public class DeployProcessOperation {
     }
 
     private AbstractProcess addDefaultFormMapping(final AbstractProcess process) {
-        for (final FormMapping mapping : filter(ModelHelper.getAllElementOfTypeIn(process, FormMapping.class), emptyDesignerFormMapping())) {
+        for (final FormMapping mapping : filter(ModelHelper.getAllElementOfTypeIn(process, FormMapping.class),
+                emptyDesignerFormMapping())) {
             try {
                 mapping.eSetDeliver(false);
                 mapping.setTargetForm(ExpressionHelper.createFormReferenceExpression(defaultCustomPage(mapping), null));
@@ -221,7 +228,8 @@ public class DeployProcessOperation {
     }
 
     private AbstractProcess removeDefaultFormMapping(final AbstractProcess process) {
-        for (final FormMapping mapping : filter(ModelHelper.getAllElementOfTypeIn(process, FormMapping.class), emptyDesignerFormMapping())) {
+        for (final FormMapping mapping : filter(ModelHelper.getAllElementOfTypeIn(process, FormMapping.class),
+                emptyDesignerFormMapping())) {
             try {
                 mapping.eSetDeliver(false);
                 mapping.setTargetForm(ExpressionHelper.createFormReferenceExpression("", ""));
@@ -255,7 +263,9 @@ public class DeployProcessOperation {
         try {
             processApi.enableProcess(processDefinitionId);
         } catch (final ProcessEnablementException e) {
-            return handleProcessEnablementException(process, monitor, processApi, processDefinitionId, e);
+            return disablePopup ? new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
+                    String.format("Failed to enable process '%s (%s)'", process.getName(), process.getVersion()), e)
+                    : handleProcessEnablementException(process, monitor, processApi, processDefinitionId, e);
         } finally {
             if (session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
@@ -264,8 +274,10 @@ public class DeployProcessOperation {
         return Status.OK_STATUS;
     }
 
-    protected IStatus handleProcessEnablementException(final AbstractProcess process, final IProgressMonitor monitor, final ProcessAPI processApi,
-            final Long processDefinitionId, final ProcessEnablementException e) throws ProcessDefinitionNotFoundException, Exception {
+    protected IStatus handleProcessEnablementException(final AbstractProcess process, final IProgressMonitor monitor,
+            final ProcessAPI processApi,
+            final Long processDefinitionId, final ProcessEnablementException e)
+            throws ProcessDefinitionNotFoundException, Exception {
         final List<Problem> processResolutionProblems = processApi.getProcessResolutionProblems(processDefinitionId);
         if (processResolutionProblems.isEmpty()) {
             BonitaStudioLog.error(e);
@@ -284,7 +296,8 @@ public class DeployProcessOperation {
     }
 
     protected IStatus undeploy(final List<AbstractProcess> processes, final IProgressMonitor monitor) throws Exception {
-        final UndeployProcessOperation undeployProcessOperation = new UndeployProcessOperation(BOSEngineManager.getInstance());
+        final UndeployProcessOperation undeployProcessOperation = new UndeployProcessOperation(
+                BOSEngineManager.getInstance());
         for (final AbstractProcess process : processes) {
             undeployProcessOperation.addProcessToUndeploy(process);
         }
@@ -295,7 +308,8 @@ public class DeployProcessOperation {
         return process.getName() + " (" + process.getVersion() + ")";
     }
 
-    protected IStatus openProcessEnablementProblemsDialog(final AbstractProcess process, final List<Problem> processResolutionProblems) {
+    protected IStatus openProcessEnablementProblemsDialog(final AbstractProcess process,
+            final List<Problem> processResolutionProblems) {
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
@@ -310,12 +324,17 @@ public class DeployProcessOperation {
 
     protected ProcessEnablementProblemsDialog createProcessEnablementProblemsDialog(final AbstractProcess process,
             final List<Problem> processResolutionProblems) {
-        return new ProcessEnablementProblemsDialog(Display.getDefault().getActiveShell(), Messages.processEnableFailedMessage,
+        return new ProcessEnablementProblemsDialog(Display.getDefault().getActiveShell(),
+                Messages.processEnableFailedMessage,
                 process, processResolutionProblems);
     }
 
     public long getProcessDefId(final AbstractProcess process) {
         return processIdsMap.get(process);
+    }
+
+    public void setDisablePopup(boolean synchronousExecution) {
+        this.disablePopup = synchronousExecution;
     }
 
 }
