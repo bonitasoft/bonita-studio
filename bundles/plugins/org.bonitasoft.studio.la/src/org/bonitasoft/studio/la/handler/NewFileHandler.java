@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class NewFileHandler {
 
     @Execute
-    public void newProfile(Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void execute(Shell activeShell, RepositoryAccessor repositoryAccessor) {
         final IPreferenceStore preferenceStore = LivingApplicationPlugin.getDefault().getPreferenceStore();
         openHelpDialog(activeShell, preferenceStore);
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
