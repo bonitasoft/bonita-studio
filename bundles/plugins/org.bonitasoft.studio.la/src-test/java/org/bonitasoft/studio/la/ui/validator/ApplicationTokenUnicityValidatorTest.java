@@ -34,11 +34,19 @@ public class ApplicationTokenUnicityValidatorTest {
     public void should_validate_uniqueness_with_current_token() throws Exception {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
         ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
-        final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
+        nodeContainer.addApplication(ApplicationNodeBuilder.newApplication("token3", "appName", "1.0").create());
+        ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
                 nodeContainer, "filename.xml", "token2");
 
         assertThat(validator.validate("token1")).isNotOK();
-        assertThat(validator.validate("token2")).isOK();
+        assertThat(validator.validate("token2")).isNotOK();
+        assertThat(validator.validate("token3")).isNotOK();
+
+        validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
+                nodeContainer, "filename.xml", "token3");
+
+        assertThat(validator.validate("token1")).isNotOK();
+        assertThat(validator.validate("token2")).isNotOK();
         assertThat(validator.validate("token3")).isOK();
     }
 

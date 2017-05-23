@@ -93,7 +93,6 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                 .map(ApplicationNode::getToken)
                 .forEach(allTokens::add);
 
-        currentToken.ifPresent(allTokens::remove);
         return allTokens;
     }
 
