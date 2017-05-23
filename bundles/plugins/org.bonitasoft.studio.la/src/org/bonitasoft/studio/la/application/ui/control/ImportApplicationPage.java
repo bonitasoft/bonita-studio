@@ -21,8 +21,8 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationXMLContentValidator;
-import org.bonitasoft.studio.la.application.ui.validator.ImportApplicationConflictsValidator;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.la.ui.validator.ImportFileStoreConflictsValidator;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
@@ -84,8 +84,8 @@ public class ImportApplicationPage implements ControlSupplier {
                 .withValidator(new MultiValidator.Builder().havingValidators(
                         new EmptyInputValidator.Builder().withMessage(Messages.filePathNotEmpty).create(),
                         new PathValidator.Builder().withMessage(Messages.fileDoesntExist).create(),
-                        new ApplicationXMLContentValidator.Builder().withMessage(Messages.notAnApplicationError).create(),
-                        new ImportApplicationConflictsValidator(
+                        new ApplicationXMLContentValidator(Messages.notAnApplicationError),
+                        new ImportFileStoreConflictsValidator(
                                 repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class))));
     }
 
