@@ -1,0 +1,155 @@
+/**
+ * Copyright (C) 2017 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.ui.editors.xmlEditors;
+
+import java.util.Optional;
+
+import org.bonitasoft.studio.ui.i18n.Messages;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
+
+public abstract class AbstractEditor<T> extends FormEditor implements IResourceChangeListener {
+
+    protected AbstractFormPage<T> formPage;
+    protected StructuredTextEditor fSourceEditor;
+    protected T workingCopy;
+
+    @Override
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+        super.init(site, input);
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+    }
+
+    @Override
+    protected void addPages() {
+        createFormPage();
+        formPage.initialize(this);
+        formPage.setActive(true);
+
+        try {
+            setPageText(addPage(formPage), Messages.editor);
+            setPageText(addPage(createSourceEditor(), getEditorInput()), Messages.source);
+            initVariablesAndListeners();
+            addPageChangedListener(e -> formPage.reflow());
+        } catch (final PartInitException e) {
+            throw new RuntimeException("fail to create editor", e);
+        }
+    }
+
+    @Override
+    public String getPartName() {
+        return getEditorInput().getName();
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        fSourceEditor.doSave(monitor);
+    }
+
+    @Override
+    public void doSaveAs() {
+        fSourceEditor.doSaveAs();
+    }
+
+    @Override
+    public boolean isDirty() {
+        return fSourceEditor.isDirty();
+    }
+
+    @Override
+    public boolean isSaveAsAllowed() {
+        return fSourceEditor.isSaveAsAllowed();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.forms.editor.FormEditor#pageChange(int)
+     */
+    @Override
+    protected void pageChange(int newPageIndex) {
+        if (newPageIndex == formPage.getIndex()) {
+            final Optional<T> newModel = xmlToModel(
+                    fSourceEditor.getDocumentProvider().getDocument(getEditorInput()).get().getBytes());
+            newModel.ifPresent(model -> {
+                updateWorkingCopy(model);
+                formPage.setErrorState(false);
+                formPage.update();
+            });
+        }
+        super.pageChange(newPageIndex);
+    }
+
+    @Override
+    public void resourceChanged(IResourceChangeEvent e) {
+        IResourceDelta delta = e.getDelta();
+        final FileEditorInput fInput = (FileEditorInput) getEditorInput();
+        final IFile file = fInput.getFile();
+        if (delta != null) {
+            delta = delta.findMember(file.getFullPath());
+        }
+        if (delta != null) {
+            final int flags = delta.getFlags();
+            if (delta.getKind() == IResourceDelta.REMOVED && (IResourceDelta.MOVED_TO & flags) != 0) {
+                updateEditorInput(
+                        new FileEditorInput(file.getWorkspace().getRoot().getFile(delta.getMovedToPath())));
+            }
+        }
+    }
+
+    public void updateEditorInput(IEditorInput input) {
+        fSourceEditor.setInput(input);
+        setInputWithNotify(input);
+        setPartName(input.getName());
+        initVariablesAndListeners();
+        formPage.update();
+        formPage.reflow();
+    }
+
+    protected abstract void createFormPage();
+
+    protected abstract void initVariablesAndListeners();
+
+    protected abstract Optional<T> xmlToModel(byte[] xml);
+
+    protected abstract void updateWorkingCopy(T newModel);
+
+    private IEditorPart createSourceEditor() {
+        fSourceEditor = new StructuredTextEditor();
+        fSourceEditor.setEditorPart(this);
+        return fSourceEditor;
+    }
+
+    public StructuredTextEditor getSourceEditor() {
+        return fSourceEditor;
+    }
+
+}

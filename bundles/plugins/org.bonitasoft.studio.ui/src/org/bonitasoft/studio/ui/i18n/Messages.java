@@ -27,5 +27,8 @@ public class Messages extends NLS {
     public static String revertEdit;
     public static String applyEdit;
     public static String edit;
+    public static String editor;
+    public static String source;
+    public static String parseError;
 
 }
