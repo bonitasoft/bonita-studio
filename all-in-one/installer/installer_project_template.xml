@@ -273,7 +273,7 @@
         </runProgram>
         <substitute>
             <encoding>utf-8</encoding>
-            <files>${installdir}/BonitaBPMCommunity.app/Contents/MacOS/BonitaBPMCommunity.ini</files>
+            <files>${installdir}/@product.short.name@.app/Contents/MacOS/@product.short.name@.ini</files>
             <type>exact</type>
             <substitutionList>
                 <substitution>

@@ -22,7 +22,7 @@
     </dependencies>
 
     <properties>
-        <product.short.name>BonitaBPMCommunity</product.short.name>
+        <product.short.name>BonitaStudioCommunity</product.short.name>
         <repositoryId>studio-repository</repositoryId>
         <productId>org.bonitasoft.studio.product</productId>
         <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
@@ -236,7 +236,7 @@
                     <argLine>-Xmx512m -Xms256m</argLine>
                     <repositories>
                         <repository>
-                            <id>BonitaBPM P2 Repository</id>
+                            <id>Bonita Studio P2 Repository</id>
                             <layout>p2</layout>
                             <url>${p2MirrorUrl}</url>
                         </repository>

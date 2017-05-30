@@ -108,7 +108,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     private static final String CONNECTOR_ID = "ConnectorId";
     private static final String DESCRIPTION = "Description";
     private static final String BASE_VERSION = "1.0.0";
-    private static final String MIGRATION_COMMENT = "	//Following code has been retrieved from a v5 connector. Please adapt this code with Bonita BPM 6 API";
+    private static final String MIGRATION_COMMENT = "	//Following code has been retrieved from a v5 connector. Please adapt this code with Bonita 6 API";
     private static final String DEFAULT_PACKAGE = "com.mycompany.connector.";
 
     private final ConnectorDescription v5Descriptor;

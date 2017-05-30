@@ -77,7 +77,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     }
 
     /**
-     * Choose "From Bonita BPM" radio button.
+     * Choose "From Bonita" radio button.
      */
     public void chooseInternalInitialContent() {
         bot.radio(Messages.initialValueButtonInternal).click();

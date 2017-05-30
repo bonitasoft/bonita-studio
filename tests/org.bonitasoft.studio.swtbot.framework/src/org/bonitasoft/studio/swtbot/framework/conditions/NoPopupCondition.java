@@ -18,7 +18,7 @@ public class NoPopupCondition extends DefaultCondition {
     @Override
     public boolean test() throws Exception {
         shellText = swtGefBot.activeShell().getText();
-        return shellText != null && shellText.startsWith("Bonita BPM");
+        return shellText != null && shellText.startsWith("Bonita Studio");
     }
 
     @Override
