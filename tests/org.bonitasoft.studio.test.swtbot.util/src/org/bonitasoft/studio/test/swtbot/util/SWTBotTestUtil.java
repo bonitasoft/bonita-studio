@@ -236,16 +236,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot) {
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM"), 40000);
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
     }
 
     public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot, String repoName) {
         if (repoName == null || Objects.equals(repoName, "default")) {
             waitUntilBonitaBPmShellIsActive(bot);
-            bot.shell("Bonita BPM").setFocus();
+            bot.shell("Bonita Studio").setFocus();
         } else {
-            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM - " + repoName), 40000);
-            bot.shell("Bonita BPM - " + repoName).setFocus();
+            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio - " + repoName), 40000);
+            bot.shell("Bonita Studio - " + repoName).setFocus();
         }
 
     }

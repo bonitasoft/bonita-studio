@@ -168,7 +168,7 @@ public class TestLifeCycleWidget {
             }
         }
 
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+        bot.waitUntil(Conditions.shellIsActive("Bonita Studio"));
 
     }
 }
