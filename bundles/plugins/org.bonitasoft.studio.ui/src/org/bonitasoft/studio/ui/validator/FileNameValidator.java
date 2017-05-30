@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.ui.validator;
+package org.bonitasoft.studio.ui.validator;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,8 +22,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidatorFactory;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.ui.validator.TypedValidator;
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
