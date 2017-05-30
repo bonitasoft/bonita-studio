@@ -20,9 +20,9 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
-import org.bonitasoft.studio.la.ui.validator.FileNameValidator;
+import org.bonitasoft.studio.ui.dialog.RenameXMLFileDialog;
+import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -56,7 +56,7 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
 
         ButtonWidget renameButton = new ButtonWidget.Builder()
                 .alignLeft()
-                .withLabel(Messages.rename)
+                .withLabel(org.bonitasoft.studio.ui.i18n.Messages.rename)
                 .onClick(this::rename)
                 .createIn(mainComposite);
         renameButton.disable();
@@ -75,7 +75,7 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
 
     public void rename(Event e) {
         nameValidator.setCurrentFileName(getSelection().findFirst().get().getDisplayName());
-        if (RenameFileDialog.open(currentShell, getSelection().findFirst().get(), nameValidator)) {
+        if (RenameXMLFileDialog.open(currentShell, getSelection().findFirst().get(), nameValidator)) {
             tableViewer.refresh();
         }
     }

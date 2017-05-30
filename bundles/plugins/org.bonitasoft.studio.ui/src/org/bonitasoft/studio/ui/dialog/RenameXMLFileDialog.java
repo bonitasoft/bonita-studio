@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.ui.control;
+package org.bonitasoft.studio.ui.dialog;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.bonitasoft.studio.ui.validator.TypedValidator;
 import org.eclipse.core.runtime.IStatus;
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Objects;
 
-public class RenameFileDialog {
+public class RenameXMLFileDialog {
 
     public static boolean open(Shell shell, IRepositoryFileStore fileStore, TypedValidator<String, IStatus> validator) {
         String currentFileName = fileStore.getDisplayName();
