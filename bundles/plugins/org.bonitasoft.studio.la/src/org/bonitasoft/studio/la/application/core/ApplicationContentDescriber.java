@@ -55,6 +55,9 @@ public class ApplicationContentDescriber extends XMLContentDescriber implements 
     }
 
     private int validApplicationXML(final String stringContent) throws IOException {
+        if (stringContent == null || stringContent.isEmpty()) {
+            return INVALID;
+        }
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         try (InputStream is = new ByteArrayInputStream(stringContent.getBytes())) {
