@@ -57,8 +57,6 @@ public class Messages extends NLS {
     public static String notAnApplicationError;
     public static String importApplicationDescriptorDesc;
     public static String fileName;
-    public static String invalidCharFileName;
-    public static String invalidFileName;
     public static String exportFailedTitle;
     public static String exportOperation;
     public static String exporting;
@@ -71,8 +69,6 @@ public class Messages extends NLS {
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
     public static String unparsableXmlFile;
-    public static String rename;
-    public static String renameFile;
     public static String menuLevelWarning;
     public static String exportProfile;
     public static String exportProfileDescription;

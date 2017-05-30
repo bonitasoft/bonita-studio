@@ -30,5 +30,10 @@ public class Messages extends NLS {
     public static String editor;
     public static String source;
     public static String parseError;
+    public static String rename;
+    public static String renameFile;
+    public static String required;
+    public static String invalidFileName;
+    public static String invalidCharFileName;
 
 }

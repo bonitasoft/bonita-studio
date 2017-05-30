@@ -27,7 +27,7 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
     }
 
     public OpenApplicationWizardBot rename(String newName) {
-        bot.button(Messages.rename).click();
+        bot.button(org.bonitasoft.studio.ui.i18n.Messages.rename).click();
         bot.text().setText(newName);
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
