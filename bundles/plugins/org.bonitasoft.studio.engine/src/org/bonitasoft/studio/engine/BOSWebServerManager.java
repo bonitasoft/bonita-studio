@@ -103,7 +103,6 @@ public class BOSWebServerManager {
                     .getAbsolutePath();
     private static final String TOMCAT_LOG_FILE = "tomcat.log";
 
-    private static final int MAX_SERVER_START_TIME = 300000;
     private static final int MAX_LOGGING_TRY = 50;
 
     private static BOSWebServerManager INSTANCE;
