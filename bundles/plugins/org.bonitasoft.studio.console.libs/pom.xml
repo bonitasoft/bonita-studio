@@ -252,7 +252,7 @@
 								<!-- Configure tomcat bundle resoruce -->
 								<move todir="${tomcat.bundle.dir}">
 									<fileset
-										dir="${tomcat.bundle.dir}/BonitaBPMCommunity-${bundle.version}-Tomcat-${tomcat.version}/" />
+										dir="${tomcat.bundle.dir}/BonitaCommunity-${bundle.version}-Tomcat-${tomcat.version}/" />
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
@@ -310,7 +310,7 @@
 						</_exportcontents>
 						<_nouses>true</_nouses>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
-						<Bundle-Name>BonitaBPM Community Tomcat Bundle</Bundle-Name>
+						<Bundle-Name>Bonita Community Tomcat Bundle</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
 						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.qualifier</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
