@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.operation;
 
@@ -57,10 +55,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class PublishOrganizationOperation implements IRunnableWithProgress {
 
@@ -68,53 +64,61 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     private APISession session;
     private boolean flushSession;
 
-    public PublishOrganizationOperation(final Organization organization){
-        this.organization =  organization;
+    public PublishOrganizationOperation(final Organization organization) {
+        this.organization = organization;
     }
 
-    public void setSession(final APISession session){
+    public void setSession(final APISession session) {
         this.session = session;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
         flushSession = false;
-        BonitaStudioLog.info("Loading organization "+organization.getName()+" in portal...",ActorsPlugin.PLUGIN_ID) ;
+        BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", ActorsPlugin.PLUGIN_ID);
         try {
-            if(session == null){
-                session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+            if (session == null) {
+                session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
                 flushSession = true;
             }
             final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-            final SearchResult<ProcessDeploymentInfo> result = processApi.searchProcessDeploymentInfos(new SearchOptionsBuilder(0,Integer.MAX_VALUE).done());
-            for(final ProcessDeploymentInfo info : result.getResult()){
+            final SearchResult<ProcessDeploymentInfo> result = processApi
+                    .searchProcessDeploymentInfos(new SearchOptionsBuilder(0, Integer.MAX_VALUE).done());
+            for (final ProcessDeploymentInfo info : result.getResult()) {
                 processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
             importOrganization(identityAPI);
-            final ProfileAPI profileAPI =  BOSEngineManager.getInstance().getProfileAPI(session) ;
-            applyAllProfileToUsers(identityAPI,profileAPI) ;
-        }catch(final Exception e){
+            if (shouldApplyAllProfileToUsers()) {
+                applyAllProfileToUsers(identityAPI, BOSEngineManager.getInstance().getProfileAPI(session));
+            }
+        } catch (final Exception e) {
             throw new InvocationTargetException(e);
-        }finally{
-            if(flushSession && session != null){
+        } finally {
+            if (flushSession && session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
                 session = null;
             }
         }
     }
-    
-    protected abstract void importOrganization(IdentityAPI identityAPI) throws IOException, DeletionException, OrganizationImportException;
+
+    protected boolean shouldApplyAllProfileToUsers() {
+        return true;
+    }
+
+    protected abstract void importOrganization(IdentityAPI identityAPI)
+            throws IOException, DeletionException, OrganizationImportException;
 
     protected String toString(final Organization organization) throws IOException {
         final XMLResource resource = createResourceFromOrganization(organization);
         final XMLProcessor processor = new OrganizationXMLProcessor();
-        final Map<String, Object> options = new HashMap<String, Object>();
+        final Map<String, Object> options = new HashMap<>();
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         options.put(XMLResource.OPTION_XML_VERSION, "1.0");
         options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
@@ -122,12 +126,12 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     }
 
     private XMLResource createResourceFromOrganization(final Organization organization) {
-        final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-        final Organization exportedCopy = EcoreUtil.copy(organization)  ;
-        exportedCopy.setName(null) ;
-        exportedCopy.setDescription(null) ;
+        final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
+        final Organization exportedCopy = EcoreUtil.copy(organization);
+        exportedCopy.setName(null);
+        exportedCopy.setDescription(null);
         addStudioTechnicalUser(exportedCopy);
-        root.setOrganization(exportedCopy) ;
+        root.setOrganization(exportedCopy);
         final XMLResource resource = new XMLResourceImpl();
         resource.setEncoding("UTF-8");
         resource.getContents().add(root);
@@ -149,27 +153,24 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
         exportedCopy.getUsers().getUser().add(user);
     }
 
-    protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI) throws SearchException {
-        final List<Long> profiles = new ArrayList<Long>() ;
+    protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI)
+            throws SearchException {
+        final List<Long> profiles = new ArrayList<>();
         final SearchOptions options = new SearchOptionsBuilder(0, Integer.MAX_VALUE).sort("name", Order.DESC).done();
         final SearchResult<Profile> searchedProfiles = profileAPI.searchProfiles(options);
-        for(final Profile profile : searchedProfiles.getResult()){
-            final long profileId = profile.getId();
-            profiles.add(profileId) ;
-        }
+        searchedProfiles.getResult().stream()
+                .map(Profile::getId)
+                .forEach(profiles::add);
 
-        final List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
-        for(final User u : users){
-            final long id =  u.getId() ;
-            for(final Long profile : profiles){
-                try {
-                    profileAPI.createProfileMember(profile, id, -1L, -1L);
-                } catch (final CreationException e) {
-                    BonitaStudioLog.debug("Failed to map a profile to user", e, ActorsPlugin.PLUGIN_ID);
-                }
-            }
-        }
+        identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC).stream()
+                .map(User::getId)
+                .forEach(userId -> profiles.stream().forEach(profileId -> {
+                    try {
+                        profileAPI.createProfileMember(profileId, userId, -1L, -1L);
+                    } catch (final CreationException e) {
+                        BonitaStudioLog.debug("Failed to map a profile to user", e, ActorsPlugin.PLUGIN_ID);
+                    }
+                }));
     }
-
 
 }
