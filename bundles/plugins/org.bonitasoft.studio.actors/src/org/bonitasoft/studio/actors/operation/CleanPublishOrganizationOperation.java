@@ -21,7 +21,6 @@ import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.identity.OrganizationImportException;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 
-
 public class CleanPublishOrganizationOperation extends PublishOrganizationOperation {
 
     public CleanPublishOrganizationOperation(Organization organization) {
@@ -29,12 +28,10 @@ public class CleanPublishOrganizationOperation extends PublishOrganizationOperat
     }
 
     @Override
-    protected void importOrganization(IdentityAPI identityAPI) throws IOException, DeletionException, OrganizationImportException {
+    protected void importOrganization(IdentityAPI identityAPI)
+            throws IOException, DeletionException, OrganizationImportException {
         identityAPI.deleteOrganization();
-        final String content = toString(organization);
-        identityAPI.importOrganization(content);
+        identityAPI.importOrganization(toString(organization));
     }
-
-
 
 }

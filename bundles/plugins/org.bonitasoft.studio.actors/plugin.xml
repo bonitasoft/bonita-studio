@@ -158,7 +158,6 @@
              name="%newFilterImpl">
        </command>
          <command
-       		  defaultHandler="org.bonitasoft.studio.actors.ui.handler.InstallOrganizationHandler"
              id="org.bonitasoft.studio.engine.installOrganization"
              name="%installOrganization">
             <commandParameter
@@ -319,6 +318,18 @@
                 page="org.bonitasoft.studio.actors.ui.wizard.connector.CustomUserInfoConnectorConfigurationWizardPage">
           </configurationPage>
        </connectorWizard>
+    </extension>
+    <extension
+          point="org.eclipse.ui.handlers">
+       <handler
+             class="org.bonitasoft.studio.actors.ui.handler.InstallOrganizationHandler"
+             commandId="org.bonitasoft.studio.engine.installOrganization">
+          <activeWhen>
+             <reference
+                   definitionId="isABonitaProduct">
+             </reference>
+          </activeWhen>
+       </handler>
     </extension>
 
 </plugin>

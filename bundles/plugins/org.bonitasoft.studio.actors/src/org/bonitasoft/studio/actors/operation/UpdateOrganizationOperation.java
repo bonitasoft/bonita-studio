@@ -17,11 +17,9 @@ package org.bonitasoft.studio.actors.operation;
 import java.io.IOException;
 
 import org.bonitasoft.engine.api.IdentityAPI;
-import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.identity.ImportPolicy;
 import org.bonitasoft.engine.identity.OrganizationImportException;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-
 
 public class UpdateOrganizationOperation extends PublishOrganizationOperation {
 
@@ -30,11 +28,8 @@ public class UpdateOrganizationOperation extends PublishOrganizationOperation {
     }
 
     @Override
-    protected void importOrganization(IdentityAPI identityAPI) throws IOException, DeletionException, OrganizationImportException {
-        final String content = toString(organization);
-        identityAPI.importOrganization(content, ImportPolicy.MERGE_DUPLICATES);
+    protected void importOrganization(IdentityAPI identityAPI) throws IOException, OrganizationImportException {
+        identityAPI.importOrganization(toString(organization), ImportPolicy.MERGE_DUPLICATES);
     }
-
-
 
 }

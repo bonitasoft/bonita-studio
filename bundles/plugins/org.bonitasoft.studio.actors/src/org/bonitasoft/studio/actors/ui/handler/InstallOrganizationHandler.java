@@ -50,7 +50,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         if (event != null) {
             final String id = event.getParameter("artifact");
-            final IRepositoryStore<?> organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+            final IRepositoryStore<?> organizationStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(OrganizationRepositoryStore.class);
             IRepositoryFileStore file = organizationStore.getChild(id);
             if (file == null) {
                 BonitaStudioLog.warning("Organization : " + id + " not found !", ActorsPlugin.PLUGIN_ID);
@@ -79,7 +80,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
                         @Override
                         public void run() {
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open();
+                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error",
+                                    "An error occured during synchronization", e).open();
                         }
 
                     });
@@ -91,7 +93,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
         return null;
     }
 
-    private PublishOrganizationOperation publishOperation(Organization organization) {
+    protected PublishOrganizationOperation publishOperation(Organization organization) {
         final String activeOrganization = new ActiveOrganizationProvider().getActiveOrganization();
         return Objects.equals(organization.getName(), activeOrganization) ? new UpdateOrganizationOperation(organization)
                 : new CleanPublishOrganizationOperation(organization);
