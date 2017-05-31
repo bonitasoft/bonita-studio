@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -41,6 +42,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -173,8 +175,11 @@ public class TestFullScenario {
         BOSEngineManager.getInstance().start();
         final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
-        deployProcessCommand.execute(new ExecutionEvent());
+        final IStatus status = (IStatus) deployProcessCommand.execute(new ExecutionEvent());
+        assertNotNull(status);
+        StatusAssert.assertThat(status).overridingErrorMessage(status.getMessage()).isOK();
         final URL url = deployProcessCommand.getUrl();
+        assertNotNull(url);
         assertTrue(url.toString().contains("/bonita/"));
     }
 
