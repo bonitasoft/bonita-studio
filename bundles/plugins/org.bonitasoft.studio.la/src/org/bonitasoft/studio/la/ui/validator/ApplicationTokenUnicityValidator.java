@@ -89,10 +89,13 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                 .map(ApplicationNode::getToken)
                 .collect(Collectors.toList());
         applicationWorkingCopy.getApplications().stream()
-                .filter(application -> !Objects.equals(currentToken.orElse(""), application.getToken()))
                 .map(ApplicationNode::getToken)
                 .forEach(allTokens::add);
 
+        applicationWorkingCopy.getApplications().stream()
+                .filter(application -> Objects.equals(currentToken.orElse(""), application.getToken()))
+                .map(ApplicationNode::getToken)
+                .findFirst().ifPresent(allTokens::remove);
         return allTokens;
     }
 

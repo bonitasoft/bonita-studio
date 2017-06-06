@@ -67,6 +67,8 @@ public class ApplicationTokenUnicityValidatorTest {
         workingCopy.addApplication(ApplicationNodeBuilder.newApplication("workingcpy_token1", "name1", "1.0").create());
         workingCopy.addApplication(ApplicationNodeBuilder.newApplication("workingcpy_token2", "name2", "1.0").create());
         workingCopy.addApplication(ApplicationNodeBuilder.newApplication("token1", "name3", "1.0").create());
+        workingCopy.addApplication(ApplicationNodeBuilder.newApplication("duplicatedToken", "name4", "1.0").create());
+        workingCopy.addApplication(ApplicationNodeBuilder.newApplication("duplicatedToken", "name5", "1.0").create());
 
         ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
                 workingCopy, "filename.xml", "workingcpy_token2");
@@ -74,9 +76,11 @@ public class ApplicationTokenUnicityValidatorTest {
         assertThat(validator.validate("workingcpy_token1")).isNotOK();
         assertThat(validator.validate("workingcpy_token2")).isOK();
 
-        validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                workingCopy, "myApp.xml");
+        validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml");
         assertThat(validator.validate("token2")).isOK();
+
+        validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml", "duplicatedToken");
+        assertThat(validator.validate("duplicatedToken")).isNotOK();
     }
 
     private RepositoryAccessor initRepositoryAccessor() throws Exception {

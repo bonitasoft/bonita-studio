@@ -17,7 +17,6 @@
 		<ui.designer.version>1.6.2</ui.designer.version>
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
-
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/7.2</p2MirrorUrl>
