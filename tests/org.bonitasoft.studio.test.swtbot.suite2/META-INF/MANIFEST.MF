@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SWTBot Test Suite
 Bundle-SymbolicName: org.bonitasoft.studio.test.swtbot.suite2
-Bundle-Version: 7.5.1.qualifier
+Bundle-Version: 7.5.2.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.tests;bundle-version="1.0.0",
