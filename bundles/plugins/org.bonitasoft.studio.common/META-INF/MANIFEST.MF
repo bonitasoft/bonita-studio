@@ -65,6 +65,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.forms.client.model
 Export-Package: org.bonitasoft.studio.common,
  org.bonitasoft.studio.common.api,
+ org.bonitasoft.studio.common.core,
  org.bonitasoft.studio.common.dialog,
  org.bonitasoft.studio.common.editingdomain,
  org.bonitasoft.studio.common.editor,
