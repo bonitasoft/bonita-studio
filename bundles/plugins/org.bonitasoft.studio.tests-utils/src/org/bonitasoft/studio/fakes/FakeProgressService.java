@@ -52,7 +52,8 @@ public class FakeProgressService implements IProgressService {
      * org.eclipse.core.runtime.jobs.ISchedulingRule)
      */
     @Override
-    public void runInUI(final IRunnableContext context, final IRunnableWithProgress runnable, final ISchedulingRule rule) throws InvocationTargetException,
+    public void runInUI(final IRunnableContext context, final IRunnableWithProgress runnable, final ISchedulingRule rule)
+            throws InvocationTargetException,
             InterruptedException {
 
     }
@@ -71,8 +72,9 @@ public class FakeProgressService implements IProgressService {
      * @see org.eclipse.ui.progress.IProgressService#busyCursorWhile(org.eclipse.jface.operation.IRunnableWithProgress)
      */
     @Override
-    public void busyCursorWhile(final IRunnableWithProgress runnable) throws InvocationTargetException, InterruptedException {
-
+    public void busyCursorWhile(final IRunnableWithProgress runnable)
+            throws InvocationTargetException, InterruptedException {
+        runnable.run(new NullProgressMonitor());
     }
 
     /*
@@ -80,7 +82,8 @@ public class FakeProgressService implements IProgressService {
      * @see org.eclipse.ui.progress.IProgressService#run(boolean, boolean, org.eclipse.jface.operation.IRunnableWithProgress)
      */
     @Override
-    public void run(final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable) throws InvocationTargetException, InterruptedException {
+    public void run(final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable)
+            throws InvocationTargetException, InterruptedException {
         runnable.run(new NullProgressMonitor());
     }
 

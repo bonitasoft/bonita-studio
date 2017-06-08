@@ -36,7 +36,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author Romain Bioteau
  */
 
-public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ? extends EObject>> implements IWorkbenchWindowActionDelegate {
+public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ? extends EObject>>
+        implements IWorkbenchWindowActionDelegate {
 
     private final List<ScriptContainer<?>> scriptExpressions;
     private final CompoundCommand compoundCommand;
@@ -107,12 +108,19 @@ public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ?
 
     protected void doRefactor() {
         for (final ScriptContainer<?> scriptContainer : scriptExpressions) {
-            compoundCommand.append(scriptContainer.applyUpdate(domain));
+            final CompoundCommand applyUpdate = scriptContainer.applyUpdate(domain);
+            if (!applyUpdate.isEmpty()) {
+                compoundCommand.append(applyUpdate);
+            }
+
             if (operationType == RefactoringOperationType.REMOVE) {
                 compoundCommand.append(scriptContainer.removeDependencies(domain, pairsToRefactor));
             }
             if (operationType == RefactoringOperationType.UPDATE) {
-                compoundCommand.append(scriptContainer.updateDependencies(domain, pairsToRefactor));
+                final CompoundCommand updateDependencies = scriptContainer.updateDependencies(domain, pairsToRefactor);
+                if (!updateDependencies.isEmpty()) {
+                    compoundCommand.append(updateDependencies);
+                }
             }
         }
     }
