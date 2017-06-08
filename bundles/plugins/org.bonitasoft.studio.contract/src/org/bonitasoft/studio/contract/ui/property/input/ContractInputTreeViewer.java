@@ -34,6 +34,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
@@ -192,7 +193,9 @@ public class ContractInputTreeViewer extends TreeViewer {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
         typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider());
         typeColumnViewer
-                .setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
+                .setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController,
+                        new ContractInputRefactorOperationFactory(), progressService,
+                        TransactionalEditingDomain.Factory.INSTANCE));
     }
 
     protected void createMultipleColumn() {
