@@ -19,6 +19,7 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.containingReferencedElement;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withReferencedElement;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
@@ -27,7 +28,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -53,7 +56,8 @@ import com.google.common.collect.Sets;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EObject, T extends RefactorPair<Y, Z>> implements IRunnableWithProgress {
+public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EObject, T extends RefactorPair<Y, Z>>
+        implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
     private EditingDomain domain;
@@ -62,7 +66,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
     private boolean isCancelled = false;
     protected RefactoringOperationType operationType;
     private boolean askConfirmation;
-    protected List<T> pairsToRefactor = new ArrayList<T>();
+    protected List<T> pairsToRefactor = new ArrayList<>();
     private final DependencyFeatureNameResolver dependencyFeatureNameResolver;
 
     public AbstractRefactorOperation(final RefactoringOperationType operationType) {
@@ -71,7 +75,8 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         dependencyFeatureNameResolver = new DependencyFeatureNameResolver();
     }
 
-    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
+    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor)
+            throws InterruptedException, InvocationTargetException {
         if (canExecute()) {
             updateReferencesInScripts(monitor);
         }
@@ -120,7 +125,8 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
 
     protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
-    protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException, InvocationTargetException {
+    protected void updateReferencesInScripts(final IProgressMonitor monitor)
+            throws InterruptedException, InvocationTargetException {
         final Set<ScriptContainer<?>> scriptExpressionsSetToRefactor = newHashSet();
         for (final RefactorPair<Y, Z> pairRefactor : pairsToRefactor) {
             if (shouldUpdateReferencesInScripts(pairRefactor)) {
@@ -161,28 +167,37 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         return result;
     }
 
-    private Collection<? extends ScriptContainer<?>> allPatternScriptWithReferencedElement(final EObject container, final Z referencedElement) {
+    private Collection<? extends ScriptContainer<?>> allPatternScriptWithReferencedElement(final EObject container,
+            final Z referencedElement) {
         return Sets.newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
                         and(withExpressionType(ExpressionConstants.PATTERN_TYPE), withReferencedElement(referencedElement))),
-                toTextExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+                toTextExpressionScriptContainer(
+                        dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
-    private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container, final Z referencedElement) {
+    private Collection<? extends ScriptContainer<?>> allConditionExpressionWithReferencedElement(final EObject container,
+            final Z referencedElement) {
         return Sets.newHashSet(transform(
                 filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
-                        and(withExpressionType(ExpressionConstants.CONDITION_TYPE), withReferencedElement(referencedElement))),
-                toConditionExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+                        and(withExpressionType(ExpressionConstants.CONDITION_TYPE),
+                                withReferencedElement(referencedElement))),
+                toConditionExpressionScriptContainer(
+                        dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
     }
 
-    private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container, final Z referencedElement) {
-        return newHashSet(transform(
-                filter(ModelHelper.getAllElementOfTypeIn(container, Expression.class),
-                        and(withExpressionType(ExpressionConstants.SCRIPT_TYPE), withReferencedElement(referencedElement))),
-                toGroovyExpressionScriptContainer(dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement))));
+    private Collection<? extends ScriptContainer<?>> allGroovyScriptWithReferencedElement(final EObject container,
+            final Z referencedElement) {
+        return ModelHelper.getAllElementOfTypeIn(container, Expression.class).stream()
+                .filter(exp -> Objects.equals(exp.getType(), ExpressionConstants.SCRIPT_TYPE))
+                .filter(containingReferencedElement(referencedElement))
+                .map(toGroovyExpressionScriptContainer(
+                        dependencyFeatureNameResolver.resolveNameDependencyFeatureFor(referencedElement)))
+                .collect(Collectors.toSet());
     }
 
-    private Function<Expression, TextExpressionScriptContainer> toTextExpressionScriptContainer(final EAttribute dependencyNameFeature) {
+    private Function<Expression, TextExpressionScriptContainer> toTextExpressionScriptContainer(
+            final EAttribute dependencyNameFeature) {
         return new Function<Expression, TextExpressionScriptContainer>() {
 
             @Override
@@ -192,7 +207,8 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         };
     }
 
-    private Function<Expression, ConditionExpressionScriptContrainer> toConditionExpressionScriptContainer(final EAttribute dependencyNameFeature) {
+    private Function<Expression, ConditionExpressionScriptContrainer> toConditionExpressionScriptContainer(
+            final EAttribute dependencyNameFeature) {
         return new Function<Expression, ConditionExpressionScriptContrainer>() {
 
             @Override
@@ -202,30 +218,29 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         };
     }
 
-    private Function<Expression, GroovyExpressionScriptContrainer> toGroovyExpressionScriptContainer(final EAttribute dependencyNameFeature) {
-        return new Function<Expression, GroovyExpressionScriptContrainer>() {
-
-            @Override
-            public GroovyExpressionScriptContrainer apply(final Expression expression) {
-                return new GroovyExpressionScriptContrainer(expression, dependencyNameFeature, new GroovyScriptRefactoringOperationFactory());
-            }
-        };
+    private java.util.function.Function<Expression, GroovyExpressionScriptContrainer> toGroovyExpressionScriptContainer(
+            final EAttribute dependencyNameFeature) {
+        return expression -> new GroovyExpressionScriptContrainer(expression, dependencyNameFeature,
+                new GroovyScriptRefactoringOperationFactory());
     }
 
     protected ScriptRefactoringAction<T> createScriptExpressionRefactoringAction(final List<T> pairsToRefactor,
-            final List<ScriptContainer<?>> scriptExpressions, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final List<ScriptContainer<?>> scriptExpressions, final CompoundCommand compoundCommand,
+            final EditingDomain domain,
             final RefactoringOperationType operationType) {
-        return new ScriptRefactoringAction<T>(pairsToRefactor, scriptExpressions, compoundCommand, domain, operationType);
+        return new ScriptRefactoringAction<>(pairsToRefactor, scriptExpressions, compoundCommand, domain, operationType);
     }
 
-    protected void performRefactoringForAllScripts(final List<ScriptContainer<?>> groovyScriptExpressions, final IProgressMonitor monitor)
+    protected void performRefactoringForAllScripts(final List<ScriptContainer<?>> groovyScriptExpressions,
+            final IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         for (final ScriptContainer<?> expr : groovyScriptExpressions) {
             if (groovyScriptExpressions.size() > MIN_MONITOR_WORK) {
                 if (monitor.isCanceled()) {
                     throw new InterruptedException("Monitor cancelled by user");
                 }
-                monitor.subTask(String.format("Searching '%s' references in script expressions... [%s/%s]", pairsToRefactor.get(0).getOldValueName(),
+                monitor.subTask(String.format("Searching '%s' references in script expressions... [%s/%s]",
+                        pairsToRefactor.get(0).getOldValueName(),
                         groovyScriptExpressions.indexOf(expr) + 1,
                         groovyScriptExpressions.size()));
             }

@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.contract.core.refactoring;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Objects.requireNonNull;
 import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
@@ -46,16 +46,17 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public class RefactorContractInputOperation extends AbstractRefactorOperation<ContractInput, ContractInput, ContractInputRefactorPair> {
+public class RefactorContractInputOperation
+        extends AbstractRefactorOperation<ContractInput, ContractInput, ContractInputRefactorPair> {
 
     private final ContractContainer container;
     private final IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
 
-    public RefactorContractInputOperation(final ContractContainer container, final IScriptRefactoringOperationFactory scriptRefactorOperationFactory,
+    public RefactorContractInputOperation(final ContractContainer container,
+            final IScriptRefactoringOperationFactory scriptRefactorOperationFactory,
             final RefactoringOperationType operationType) {
         super(operationType);
-        checkArgument(container != null);
-        this.container = container;
+        this.container = requireNonNull(container);
         this.scriptRefactorOperationFactory = scriptRefactorOperationFactory;
     }
 
@@ -68,14 +69,30 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
     /*
      * (non-Javadoc)
+     * @see
+     * org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#shouldUpdateReferencesInScripts(org.bonitasoft.studio.refactoring.core.RefactorPair)
+     */
+    @Override
+    protected boolean shouldUpdateReferencesInScripts(RefactorPair<ContractInput, ContractInput> pairRefactor) {
+        return super.shouldUpdateReferencesInScripts(pairRefactor) || hasContractInputTypeChanged(pairRefactor);
+    }
+
+    private boolean hasContractInputTypeChanged(RefactorPair<ContractInput, ContractInput> pairRefactor) {
+        return pairRefactor.getOldValue().getType() != pairRefactor.getNewValue().getType();
+    }
+
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#allScriptWithReferencedElement(org.bonitasoft.studio.refactoring.core.RefactorPair)
      */
     @Override
-    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(final RefactorPair<ContractInput, ContractInput> pairRefactor) {
+    protected Set<ScriptContainer<?>> allScriptWithReferencedElement(
+            final RefactorPair<ContractInput, ContractInput> pairRefactor) {
         final Set<ScriptContainer<?>> allScriptWithReferencedElement = newHashSet(
                 filter(super.allScriptWithReferencedElement(pairRefactor), inContractContainer(
                         ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), ContractContainer.class))));
-        allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
+        allScriptWithReferencedElement.addAll(constraintExpressionsReferencing(
+                ModelHelper.getFirstContainerOfType(pairRefactor.getOldValue(), Contract.class),
                 pairRefactor.getOldValue()));
         return allScriptWithReferencedElement;
     }
@@ -85,12 +102,14 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
 
             @Override
             public boolean apply(ScriptContainer<?> sc) {
-                return EcoreUtil.equals(ModelHelper.getFirstContainerOfType(sc.getModelElement(), ContractContainer.class), contractContainer);
+                return EcoreUtil.equals(ModelHelper.getFirstContainerOfType(sc.getModelElement(), ContractContainer.class),
+                        contractContainer);
             }
         };
     }
 
-    private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract, final ContractInput contractInput) {
+    private Collection<? extends ScriptContainer<?>> constraintExpressionsReferencing(final Contract contract,
+            final ContractInput contractInput) {
         return newHashSet(transform(
                 filter(contract.getConstraints(),
                         constraintReferencing(contractInput)),
@@ -118,18 +137,21 @@ public class RefactorContractInputOperation extends AbstractRefactorOperation<Co
     }
 
     private void updateContractInputExpressions(final CompoundCommand cc) {
-        for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class), withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
+        for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class),
+                withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
             for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matches(exp))) {
                 final ContractInput newValue = pairToRefactor.getNewValue();
-                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp, newValue != null ? createContractInputExpression(newValue)
-                        : createDefaultExpression(exp)));
+                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp,
+                        newValue != null ? createContractInputExpression(newValue)
+                                : createDefaultExpression(exp)));
             }
         }
 
     }
 
     private Expression createDefaultExpression(final Expression exp) {
-        return ExpressionHelper.createConstantExpression("", exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
+        return ExpressionHelper.createConstantExpression("",
+                exp.isReturnTypeFixed() ? exp.getReturnType() : String.class.getName());
     }
 
     private Predicate<ContractInputRefactorPair> matches(final Expression expression) {
