@@ -14,14 +14,25 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
+import org.bonitasoft.studio.refactoring.core.RefactorPair;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain.Factory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
@@ -32,11 +43,19 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
 
     private final ContractInputController controller;
     private ContractInput contractInput;
+    private final ContractInputRefactorOperationFactory contractInputRefactorOperationFactory;
+    private final IProgressService progressService;
+    private final Factory transactionalEditingDomainFactory;
 
     public ContractInputTypeEditingSupport(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider,
-            final ContractInputController controller) {
+            final ContractInputController controller, ContractInputRefactorOperationFactory refactorOperationFactory,
+            IProgressService progressService,
+            TransactionalEditingDomain.Factory transactionalEditingDomainFactory) {
         super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName());
         this.controller = controller;
+        this.contractInputRefactorOperationFactory = refactorOperationFactory;
+        this.progressService = progressService;
+        this.transactionalEditingDomainFactory = transactionalEditingDomainFactory;
     }
 
     /*
@@ -60,7 +79,12 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
     @Override
     protected void setValue(final Object object, final Object value) {
         setContractInput((ContractInput) object);
-        super.setValue(object, value);
+        if (contractInput != null && contractInput.getType() != value) {
+            refactorContractInputType(contractInput, value);
+        } else {
+            super.setValue(object, value);
+        }
+
         getViewer().refresh(true);
     }
 
@@ -88,6 +112,20 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
 
     public void setContractInput(final ContractInput contractInput) {
         this.contractInput = contractInput;
+    }
+
+    protected void refactorContractInputType(ContractInput contractInput, Object value) {
+        final TransactionalEditingDomain editingDomain = transactionalEditingDomainFactory
+                .getEditingDomain(contractInput.eResource().getResourceSet());
+        final AbstractRefactorOperation<? extends EObject, ? extends EObject, ? extends RefactorPair<? extends EObject, ? extends EObject>> refactorOperation = contractInputRefactorOperationFactory
+                .createRefactorOperation(editingDomain, contractInput, value);
+        refactorOperation.getCompoundCommand().append(
+                SetCommand.create(editingDomain, contractInput, ProcessPackage.Literals.CONTRACT_INPUT__TYPE, value));
+        try {
+            progressService.busyCursorWhile(refactorOperation);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(String.format("Failed to refactor %s into %s", contractInput.getType(), value), e);
+        }
     }
 
 }

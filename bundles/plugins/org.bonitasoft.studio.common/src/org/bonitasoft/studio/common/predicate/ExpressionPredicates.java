@@ -61,21 +61,31 @@ public class ExpressionPredicates {
         };
     }
 
+    public static java.util.function.Predicate<Expression> containingReferencedElement(final EObject referencedElement) {
+        return exp -> isElementIsReferencedInScript(exp, referencedElement);
+    }
+
     private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
-        if (!expr.getReferencedElements().isEmpty()) {
-            for (final EObject o : expr.getReferencedElements()) {
-                if (element instanceof ContractInput && o instanceof ContractInput) {
-                    return java.util.Objects.equals(((ContractInput) o).getName(), ((ContractInput) element).getName());
-                }
-                if (EcoreUtil.equals(element, o)) {
-                    return true;
-                }
-                if (element instanceof Element && o instanceof Element && ModelHelper.isSameElement(element, o)) {
+        if (element instanceof ContractInput && expr.getReferencedElements().stream()
+                .filter(ContractInput.class::isInstance)
+                .map(ContractInput.class::cast)
+                .map(ContractInput::getName)
+                .anyMatch(((ContractInput) element).getName()::equals)) {
+            return true;
+        }
+
+        if (expr.getReferencedElements().stream()
+                .anyMatch(dep -> EcoreUtil.equals(element, dep))) {
+            return true;
+        }
+
+        for (final EObject o : expr.getReferencedElements()) {
+            if (element instanceof Element && o instanceof Element && ModelHelper.isSameElement(element, o)) {
+                return !ModelHelper.isReferencedElementIsInExpression(expr);
+            } else {
+                if (element instanceof Parameter && o instanceof Parameter
+                        && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
                     return !ModelHelper.isReferencedElementIsInExpression(expr);
-                } else {
-                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
-                        return !ModelHelper.isReferencedElementIsInExpression(expr);
-                    }
                 }
             }
         }
