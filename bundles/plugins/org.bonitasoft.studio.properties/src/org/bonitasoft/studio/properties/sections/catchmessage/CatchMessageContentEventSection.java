@@ -109,10 +109,9 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
                             final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
                             if (col.size() == 2) {
                                 final String throwMessageContentExpressionName = col.get(0).getName();
-                                if (throwMessageContentExpressionName != null) {
-                                    if (!isMappingAlreadyExists(throwMessageContentExpressionName)) {
-                                        createNewMessageContentLine(throwMessageContentExpressionName);
-                                    }
+                                if (throwMessageContentExpressionName != null
+                                        && !isMappingAlreadyExists(throwMessageContentExpressionName)) {
+                                    createNewMessageContentLine(throwMessageContentExpressionName);
                                 }
                             }
                         }
@@ -168,6 +167,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
                         ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT, newActionMessageContent);
                 getEditingDomain().getCommandStack().execute(addCommand);
             }
+
         });
     }
 
