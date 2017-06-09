@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
@@ -148,7 +149,8 @@ public class ExpressionHelper {
         return exp;
     }
 
-    public static Expression createConstantExpression(final String name, final String content, final String returnClassName) {
+    public static Expression createConstantExpression(final String name, final String content,
+            final String returnClassName) {
         final Expression exp = createConstantExpression(content, returnClassName);
         exp.setName(name);
         return exp;
@@ -167,7 +169,18 @@ public class ExpressionHelper {
         if (dependency instanceof SearchIndex) {
             return createSearchIndexDependency(dependency);
         }
+        if (dependency instanceof ContractInput) {
+            return createContractInputependency(dependency);
+        }
         return EcoreUtil.copy(dependency);
+    }
+
+    private static EObject createContractInputependency(EObject dependency) {
+        final ContractInput contractInputDependency = (ContractInput) EcoreUtil.copy(dependency);
+        if (contractInputDependency.getType() == ContractInputType.COMPLEX) {
+            contractInputDependency.getInputs().clear();
+        }
+        return contractInputDependency;
     }
 
     private static EObject createSearchIndexDependency(final EObject dependency) {
@@ -212,13 +225,17 @@ public class ExpressionHelper {
             }
             final CompoundCommand cc = new CompoundCommand("Clear Expression");
             if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
-                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE,
+                        ExpressionConstants.CONSTANT_TYPE));
             }
             cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
             cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
-            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, expr.getReferencedElements()));
-            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
+            cc.append(
+                    SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,
+                    expr.getConnectors()));
             return cc;
         } else {
             clearExpression(expr);
@@ -260,7 +277,8 @@ public class ExpressionHelper {
         return expression;
     }
 
-    public static Expression createExpression(final String name, final String content, final String type, final String returnType, final boolean fixedReturnType) {
+    public static Expression createExpression(final String name, final String content, final String type,
+            final String returnType, final boolean fixedReturnType) {
         final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
         expression.setType(type);
         expression.setReturnType(returnType);
@@ -403,7 +421,8 @@ public class ExpressionHelper {
     public static Operation createDefaultConnectorOutputOperation(final Output output) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(isDocumentValue(output) ? ExpressionConstants.SET_DOCUMENT_OPERATOR : ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assignment.setType(isDocumentValue(output) ? ExpressionConstants.SET_DOCUMENT_OPERATOR
+                : ExpressionConstants.ASSIGNMENT_OPERATOR);
         operation.setOperator(assignment);
 
         final Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression();
@@ -423,7 +442,8 @@ public class ExpressionHelper {
         return Objects.equals(DocumentValue.class.getName(), output.getType());
     }
 
-    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression, final MainProcess mainProcess) {
+    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement,
+            final Expression iteratorExpression, final MainProcess mainProcess) {
         final String returnType = iteratorExpression.getReturnType();
         Data d = null;
         if (returnType != null) {
@@ -443,7 +463,8 @@ public class ExpressionHelper {
         return d;
     }
 
-    private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess, final MultiInstantiable parentFlowElement) {
+    private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess,
+            final MultiInstantiable parentFlowElement) {
         if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
             return find(mainProcess.getDatatypes(), instanceOf(BusinessObjectType.class), null);
         } else {
