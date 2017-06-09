@@ -83,7 +83,6 @@ import org.junit.runners.Suite;
         TestExtensionProject.class,
         TestFunctionRepository.class,
         EngineConfigurationIT.class,
-        TestBugSave.class,
         TestFullScenario.class,
         TestSubprocess.class,
         TestConditions.class,
@@ -112,7 +111,8 @@ import org.junit.runners.Suite;
         TestShowEngineLog.class,
         TestAutoLogin.class,
         DriverAssociationContributionIT.class,
-        CloseAllEditors.class
+        CloseAllEditors.class,
+        TestBugSave.class
 })
 public class AllTests {
 
