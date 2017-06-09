@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -30,7 +33,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.Lane;
@@ -41,8 +43,7 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
@@ -251,10 +252,10 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientFloatData() throws IOException {
+    public void testStepTransientDoubleData() throws IOException {
         final Data data = createDoubleDataSample();
         data.setTransient(true);
-        final String dataType = DataTypeLabels.floatDataType;
+        final String dataType = DataTypeLabels.doubleDataType;
 
         final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
         checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
@@ -508,47 +509,43 @@ public class BPMNDataExportImportTest {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         newDiagramFileStore.open();
+        final TransactionalEditingDomain editingDomain = newDiagramFileStore.getOpenedEditor().getEditingDomain();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        for (final Element element : abstractProcess.getElements()) {
-            if (element instanceof Lane) {
-                for (final Element child : ((Lane) element).getElements()) {
-                    if (child instanceof Task) {
-                        final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(child);
-                        editingDomain.getCommandStack().execute(
-                                AddCommand.create(editingDomain, child, ProcessPackage.Literals.DATA_AWARE__DATA, data));
-                    }
-                }
-            }
-        }
-        dataType = NamingUtils.convertToId(dataType);
-        for (final DataType dt : newDiagramFileStore.getContent().getDatatypes()) {
-            if (dataType.equals(dt.getName())) {
-                final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(data);
-                editingDomain.getCommandStack()
-                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
-                break;
-            }
-        }
+        abstractProcess.getElements().stream()
+                .filter(Lane.class::isInstance)
+                .map(Lane.class::cast)
+                .map(Lane::getElements)
+                .flatMap(Collection::stream)
+                .filter(Task.class::isInstance)
+                .findFirst()
+                .ifPresent(task -> editingDomain.getCommandStack().execute(
+                        AddCommand.create(editingDomain, task, ProcessPackage.Literals.DATA_AWARE__DATA, data)));
+        newDiagramFileStore.getContent().getDatatypes().stream()
+                .filter(dt -> Objects.equals(NamingUtils.convertToId(NamingUtils.convertToId(dataType)), dt.getName()))
+                .findFirst()
+                .ifPresent(dt -> editingDomain.getCommandStack()
+                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt)));
+        assertThat(data.getDataType())
+                .overridingErrorMessage("No datatype '%s' set on data %s", NamingUtils.convertToId(dataType), data)
+                .isNotNull();
         newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
 
-    protected DocumentRoot exportToBPMNProcessWithData(final Data data, String dataType) throws IOException {
+    protected DocumentRoot exportToBPMNProcessWithData(final Data data, final String dataType) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         newDiagramFileStore.open();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(abstractProcess);
+        final TransactionalEditingDomain editingDomain = newDiagramFileStore.getOpenedEditor().getEditingDomain();
         editingDomain.getCommandStack()
                 .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
-        dataType = NamingUtils.convertToId(dataType);
-        for (final DataType dt : newDiagramFileStore.getContent().getDatatypes()) {
-            if (dataType.equals(dt.getName())) {
-                editingDomain.getCommandStack()
-                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt));
-                break;
-            }
-        }
+        newDiagramFileStore.getContent().getDatatypes().stream()
+                .filter(dt -> Objects.equals(NamingUtils.convertToId(dataType), dt.getName()))
+                .findFirst()
+                .ifPresent(dt -> editingDomain.getCommandStack()
+                        .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt)));
+        assertThat(data.getDataType()).isNotNull();
         newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
