@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -140,6 +141,12 @@ public class LabelProviderBuilder<T> {
                 if (statusProvider.isPresent()) {
                     final IStatus status = statusProvider.get().apply((T) element);
                     if (!status.isOK()) {
+                        if (status.isMultiStatus()) {
+                            return Arrays.asList(((MultiStatus) status).getChildren()).stream()
+                                    .filter(s -> !s.isOK())
+                                    .map(IStatus::getMessage)
+                                    .reduce((message1, message2) -> String.format("%s\n%s", message1, message2)).orElse("");
+                        }
                         return status.getMessage();
                     }
                 }
