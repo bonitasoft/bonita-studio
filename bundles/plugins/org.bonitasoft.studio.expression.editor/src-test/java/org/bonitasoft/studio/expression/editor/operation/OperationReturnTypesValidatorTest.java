@@ -17,7 +17,9 @@ package org.bonitasoft.studio.expression.editor.operation;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.JavaObjectDataBuilder.aJavaObjectData;
+import static org.bonitasoft.studio.model.process.builders.LongDataTypeBuilder.aLongDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,14 +113,16 @@ public class OperationReturnTypesValidatorTest {
         final IStatus status = validator.validate(expr);
 
         Assertions.assertThat(status.isOK()).isFalse();
-        Assertions.assertThat(status.getMessage()).isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
+        Assertions.assertThat(status.getMessage())
+                .isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
 
         final Task task = ProcessFactory.eINSTANCE.createTask();
         task.getOperations().add(operation);
 
         final IStatus taskStatus = validator.validate(expr);
         Assertions.assertThat(taskStatus.isOK()).isFalse();
-        Assertions.assertThat(taskStatus.getMessage()).isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
+        Assertions.assertThat(taskStatus.getMessage())
+                .isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
 
     }
 
@@ -126,7 +130,8 @@ public class OperationReturnTypesValidatorTest {
     public void should_not_fail_for_SetDocument_Operation_with_DocumentValue() {
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
 
-        final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myDocumentValue", DocumentValue.class.getName());
+        final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myDocumentValue",
+                DocumentValue.class.getName());
         rightOperand.setContent("new DocumentValue()");
 
         createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
@@ -139,8 +144,9 @@ public class OperationReturnTypesValidatorTest {
     @Test
     public void should_not_fail_for_SetDocument_Operation_with_FileInputValue() {
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
-        final Expression rightOperand = ExpressionHelper.createContractInputExpression(aContractInput().withType(ContractInputType.FILE).withName("myFile")
-                .build());
+        final Expression rightOperand = ExpressionHelper
+                .createContractInputExpression(aContractInput().withType(ContractInputType.FILE).withName("myFile")
+                        .build());
         createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
         final IStatus status = new OperationReturnTypesValidator().validate(rightOperand);
@@ -179,10 +185,12 @@ public class OperationReturnTypesValidatorTest {
     }
 
     @Test
-    public void shouldValidateSetDocumentListOperation_add_error_message_when_right_operand_is_String_in_Operation_of_Task_Or_Form() throws Exception {
+    public void shouldValidateSetDocumentListOperation_add_error_message_when_right_operand_is_String_in_Operation_of_Task_Or_Form()
+            throws Exception {
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
         final Expression rightOperand = ExpressionHelper.createConstantExpression("toto", "toto", String.class.getName());
-        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        final Operation operation = createOperation(leftOperand, rightOperand,
+                ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
 
         // test in a task operation
@@ -191,14 +199,17 @@ public class OperationReturnTypesValidatorTest {
 
         final IStatus status = validator.validate(rightOperand);
         Assertions.assertThat(status.isOK()).isFalse();
-        Assertions.assertThat(status.getMessage()).isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+        Assertions.assertThat(status.getMessage())
+                .isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
     }
 
     @Test
-    public void shouldValidateSetListDocumentOperation_add_info_message_when_expression_is_empty_in_Operation_of_Task_Or_Form() throws Exception {
+    public void shouldValidateSetListDocumentOperation_add_info_message_when_expression_is_empty_in_Operation_of_Task_Or_Form()
+            throws Exception {
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
         final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
-        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        final Operation operation = createOperation(leftOperand, rightOperand,
+                ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
 
         // Test task Action
@@ -220,7 +231,8 @@ public class OperationReturnTypesValidatorTest {
     }
 
     @Test
-    public void shouldValidateSetDocumentOperation_add_info_message_when_rightOperandExpression_is_empty_in_Operation_of_Task_Or_Form() throws Exception {
+    public void shouldValidateSetDocumentOperation_add_info_message_when_rightOperandExpression_is_empty_in_Operation_of_Task_Or_Form()
+            throws Exception {
         // set left operand
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
         // set right operand
@@ -249,9 +261,11 @@ public class OperationReturnTypesValidatorTest {
 
     @Test
     public void should_fail_when_assigning_a_business_object_in_a_process_data() throws Exception {
-        final Expression leftOperand = ExpressionHelper.createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
-                .build());
-        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE).withName("Employee.findById")
+        final Expression leftOperand = ExpressionHelper
+                .createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
+                        .build());
+        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE)
+                .withName("Employee.findById")
                 .withContent("SELECT AN EMPLOYEE").withReturnType("org.test.Employee").build();
         final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.ASSIGNMENT_OPERATOR);
 
@@ -262,10 +276,13 @@ public class OperationReturnTypesValidatorTest {
     }
 
     @Test
-    public void should_fail_when_assigning_a_business_object_in_a_process_data_using_java_method_operator() throws Exception {
-        final Expression leftOperand = ExpressionHelper.createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
-                .build());
-        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE).withName("Employee.findById")
+    public void should_fail_when_assigning_a_business_object_in_a_process_data_using_java_method_operator()
+            throws Exception {
+        final Expression leftOperand = ExpressionHelper
+                .createVariableExpression(aJavaObjectData().withName("employee").withClassname("org.test.Employee")
+                        .build());
+        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE)
+                .withName("Employee.findById")
                 .withContent("SELECT AN EMPLOYEE").withReturnType("org.test.Employee").build();
         final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.JAVA_METHOD_OPERATOR);
 
@@ -273,5 +290,20 @@ public class OperationReturnTypesValidatorTest {
         final IStatus status = validator.validate(operation.getRightOperand());
 
         StatusAssert.assertThat(status).isNotOK().hasMessage(Messages.cannotStoreBusinessObjectInProcessVariable);
+    }
+
+    @Test
+    public void should_not_fail_when_assigning_a_primitive_query_result_in_a_process_data() throws Exception {
+        final Expression leftOperand = ExpressionHelper
+                .createVariableExpression(aData().havingDataType(aLongDataType()).withName("nbEmployee").build());
+        final Expression rightOperand = anExpression().withExpressionType(ExpressionConstants.QUERY_TYPE)
+                .withName("Employee.countForfind")
+                .withContent("SELECT AN EMPLOYEE").withReturnType(Long.class.getName()).build();
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.ASSIGNMENT_OPERATOR);
+
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final IStatus status = validator.validate(operation.getRightOperand());
+
+        StatusAssert.assertThat(status).isOK();
     }
 }
