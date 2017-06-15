@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -75,15 +76,10 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class InputParametersMappingSection extends AbstractBonitaDescriptionSection {
 
-    @Inject
     private FetchContractOperation fetchContractOperation;
-    @Inject
     private IProgressService progressService;
-    @Inject
     private ISharedImages sharedImages;
-    @Inject
     private CallActivitySelectionProvider selectionProvider;
-    @Inject
     private CallActivityHelper callActivityHelper;
 
     private MagicComposite inputMappingControl;
@@ -91,6 +87,19 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
     private Composite mainComposite;
 
     private EMFDataBindingContext dbc;
+
+    @Inject
+    public InputParametersMappingSection(RepositoryAccessor repositoryAccessor,
+            FetchContractOperation fetchContractOperation,
+            IProgressService progressService,
+            ISharedImages sharedImages,
+            CallActivitySelectionProvider selectionProvider) {
+        this.fetchContractOperation = fetchContractOperation;
+        this.progressService = progressService;
+        this.sharedImages = sharedImages;
+        this.selectionProvider = selectionProvider;
+        this.callActivityHelper = new CallActivityHelper(repositoryAccessor, selectionProvider);
+    }
 
     @Override
     public void refresh() {
@@ -138,7 +147,8 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
                         createInputMapping(null, InputMappingAssignationType.CONTRACT_INPUT, input.getName());
                     }
                 } catch (final InvocationTargetException ex) {
-                    MessageDialogWithLink.openWarning(mainComposite.getShell(), Messages.fetchContract, ex.getCause().getMessage());
+                    MessageDialogWithLink.openWarning(mainComposite.getShell(), Messages.fetchContract,
+                            ex.getCause().getMessage());
                 } catch (final InterruptedException e1) {
                     BonitaStudioLog.error(e1);
                 }
@@ -202,8 +212,10 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(hideIfEmpty()).create());
 
         final Button addLineButton = getWidgetFactory().createButton(composite, Messages.Add, SWT.FLAT);
-        addLineButton.setLayoutData(GridDataFactory.swtDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).indent(15, 0).create());
-        addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_INPUT);
+        addLineButton.setLayoutData(
+                GridDataFactory.swtDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).indent(15, 0).create());
+        addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_INPUT);
         addLineButton.addListener(SWT.Selection, new Listener() {
 
             @Override
@@ -228,16 +240,19 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
         };
     }
 
-    protected void createInputMapping(final Data source, final InputMappingAssignationType assignationType, final String target) {
+    protected void createInputMapping(final Data source, final InputMappingAssignationType assignationType,
+            final String target) {
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
         mapping.setProcessSource(
-                source == null ? ExpressionHelper.createConstantExpression("", String.class.getName()) : ExpressionHelper.createVariableExpression(source));
+                source == null ? ExpressionHelper.createConstantExpression("", String.class.getName())
+                        : ExpressionHelper.createVariableExpression(source));
         if (target != null) {
             mapping.setSubprocessTarget(target);
         }
         mapping.setAssignationType(assignationType);
         final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
-        getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), callActivity.getInputMappings(), mapping));
+        getEditingDomain().getCommandStack()
+                .execute(new AddCommand(getEditingDomain(), callActivity.getInputMappings(), mapping));
         addInputMappingLine(inputMappingControl, mapping);
     }
 
@@ -258,7 +273,8 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
                 }
                 if (newValue != mapping.getAssignationType()) {
                     getEditingDomain().getCommandStack().execute(
-                            new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__ASSIGNATION_TYPE, newValue));
+                            new SetCommand(getEditingDomain(), mapping,
+                                    ProcessPackage.Literals.INPUT_MAPPING__ASSIGNATION_TYPE, newValue));
                     targetCombo.removeAll();
                     updateAvailableValuesInputMappingTargetCombo(targetCombo, newValue);
                 }
@@ -266,14 +282,16 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
         });
 
         final Button deleteButton = getWidgetFactory().createButton(outputMappingControl, null, SWT.FLAT);
-        deleteButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_INPUT);
+        deleteButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_INPUT);
         deleteButton.setImage(sharedImages.getImage(ISharedImages.IMG_TOOL_DELETE));
         deleteButton.addListener(SWT.Selection, new Listener() {
 
             @Override
             public void handleEvent(final Event event) {
                 final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
-                final RemoveCommand command = new RemoveCommand(getEditingDomain(), callActivity.getInputMappings(), mapping);
+                final RemoveCommand command = new RemoveCommand(getEditingDomain(), callActivity.getInputMappings(),
+                        mapping);
                 getEditingDomain().getCommandStack().execute(command);
                 srcCombo.getControl().setData(MagicComposite.HIDDEN, true);
                 srcCombo.getControl().setVisible(false);
@@ -300,17 +318,20 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
             @Override
             public void handleEvent(final Event event) {
                 getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__SUBPROCESS_TARGET, targetCombo.getText()));
+                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__SUBPROCESS_TARGET,
+                                targetCombo.getText()));
             }
         });
         if (mapping.getSubprocessTarget() != null) {
             targetCombo.setText(mapping.getSubprocessTarget());
         }
-        targetCombo.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET);
+        targetCombo.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_CALLEDTARGET);
         return targetCombo;
     }
 
-    protected void updateAvailableValuesInputMappingTargetCombo(final CCombo targetCombo, final InputMappingAssignationType assignationType) {
+    protected void updateAvailableValuesInputMappingTargetCombo(final CCombo targetCombo,
+            final InputMappingAssignationType assignationType) {
         if (InputMappingAssignationType.DATA == assignationType) {
             for (final String subprocessData : callActivityHelper.getCallActivityData()) {
                 targetCombo.add(subprocessData);
@@ -338,21 +359,27 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
                 break;
         }
         assignationTypeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-        assignationTypeCombo.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE);
+        assignationTypeCombo.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE);
         return assignationTypeCombo;
     }
 
-    private ExpressionViewer createInputMappingExpressionViewer(final Composite outputMappingControl, final InputMapping mapping) {
+    private ExpressionViewer createInputMappingExpressionViewer(final Composite outputMappingControl,
+            final InputMapping mapping) {
         final ExpressionViewer srcCombo = new ExpressionViewer(outputMappingControl, SWT.BORDER, getWidgetFactory());
-        srcCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(250, SWT.DEFAULT).create());
-        srcCombo.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.DOCUMENT_TYPE));
+        srcCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false)
+                .hint(250, SWT.DEFAULT).create());
+        srcCombo.addFilter(
+                new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+                        ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE,
+                        ExpressionConstants.DOCUMENT_TYPE));
 
         dbc.bindValue(ViewersObservables.observeInput(srcCombo),
                 ViewersObservables.observeSingleSelection(selectionProvider));
         if (mapping.getProcessSource() == null) {
-            getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE,
-                    ExpressionHelper.createConstantExpression("", String.class.getName())));
+            getEditingDomain().getCommandStack().execute(
+                    SetCommand.create(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE,
+                            ExpressionHelper.createConstantExpression("", String.class.getName())));
         }
         dbc.bindValue(ViewersObservables.observeSingleSelection(srcCombo),
                 EMFObservables.observeValue(mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE));

@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.properties.sections.callActivity;
 
-import javax.inject.Singleton;
-
 import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.eclipse.core.runtime.IAdaptable;
@@ -23,7 +21,6 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
 
 @Creatable
-@Singleton
 public class CallActivitySelectionProvider extends EObjectAdaptableSelectionProvider {
 
     /*
@@ -37,8 +34,9 @@ public class CallActivitySelectionProvider extends EObjectAdaptableSelectionProv
             final Object object = unwrap(selection);
             if (object instanceof EObject) {
                 return asCallActivity((EObject) object);
+            } else if (object != null) {
+                return asCallActivity((EObject) ((IAdaptable) object).getAdapter(EObject.class));
             }
-            return asCallActivity((EObject) ((IAdaptable) object).getAdapter(EObject.class));
         }
         return null;
     }
