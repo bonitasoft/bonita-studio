@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -30,17 +28,14 @@ import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
 
-@Creatable
 public class CallActivityHelper {
 
     private final RepositoryAccessor repositoryAccessor;
 
     private final CallActivitySelectionProvider selectionProvider;
 
-    @Inject
     public CallActivityHelper(RepositoryAccessor repositoryAccessor, CallActivitySelectionProvider selectionProvider) {
         this.repositoryAccessor = repositoryAccessor;
         this.selectionProvider = selectionProvider;

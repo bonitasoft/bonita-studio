@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Data;
@@ -70,11 +71,10 @@ import org.eclipse.ui.IWorkbenchPart;
 
 public class OutputParametersMappingSection extends AbstractBonitaDescriptionSection {
 
-    @Inject
     private ISharedImages sharedImages;
-    @Inject
+
     private CallActivitySelectionProvider selectionProvider;
-    @Inject
+
     private CallActivityHelper callActivityHelper;
 
     private MagicComposite outputMappingControl;
@@ -83,6 +83,13 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
 
     private EMFDataBindingContext dbc;
 
+    @Inject
+    public OutputParametersMappingSection(RepositoryAccessor repositoryAccessor,
+            CallActivitySelectionProvider selectionProvider, ISharedImages sharedImages) {
+        this.selectionProvider = selectionProvider;
+        this.callActivityHelper = new CallActivityHelper(repositoryAccessor, selectionProvider);
+        this.sharedImages = sharedImages;
+    }
 
     /*
      * (non-Javadoc)
@@ -130,6 +137,7 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
         mainComposite = getWidgetFactory().createComposite(parent);
         doCreateControls(mainComposite);
     }
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.properties.sections.subprocess.ParametersMappingSection#doCreateControls(org.eclipse.swt.widgets.Composite)
@@ -151,9 +159,11 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
         getWidgetFactory().adapt(outputMappingControl);
         outputMappingControl.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create());
 
-        final Label targetParameterLabel = getWidgetFactory().createLabel(outputMappingControl, Messages.dataFromCalledProcess);
+        final Label targetParameterLabel = getWidgetFactory().createLabel(outputMappingControl,
+                Messages.dataFromCalledProcess);
         targetParameterLabel.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).indent(15, 0).create());
-        final Control sourceParameterLabel = getWidgetFactory().createLabel(outputMappingControl, Messages.dataInRootProcess);
+        final Control sourceParameterLabel = getWidgetFactory().createLabel(outputMappingControl,
+                Messages.dataInRootProcess);
         sourceParameterLabel.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 
         final IObservableValue inputMappibngsObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
@@ -163,10 +173,12 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(hideIfEmpty()).create());
         dbc.bindValue(SWTObservables.observeVisible(targetParameterLabel), inputMappibngsObservable,
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(hideIfEmpty()).create());
-        
+
         final Button addLineButton = getWidgetFactory().createButton(composite, Messages.Add, SWT.FLAT);
-        addLineButton.setLayoutData(GridDataFactory.swtDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).indent(15, 0).create());
-        addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_OUTPUT);
+        addLineButton.setLayoutData(
+                GridDataFactory.swtDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).indent(15, 0).create());
+        addLineButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_ADD_OUTPUT);
         addLineButton.addListener(SWT.Selection, new Listener() {
 
             @Override
@@ -200,10 +212,10 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
             outputMapping.setSubprocessSource(source);
         }
         final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
-        getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), callActivity.getOutputMappings(), outputMapping));
+        getEditingDomain().getCommandStack()
+                .execute(new AddCommand(getEditingDomain(), callActivity.getOutputMappings(), outputMapping));
         addOutputMappingLine(outputMappingControl, outputMapping);
     }
-
 
     protected void addOutputMappingLine(final Composite outputMappingControl, final OutputMapping mapping) {
         final CCombo subprocessSourceCombo = createSubprocessSourceCombo(outputMappingControl, mapping);
@@ -217,7 +229,8 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
             @Override
             public void handleEvent(final Event event) {
                 final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
-                final RemoveCommand command = new RemoveCommand(getEditingDomain(), callActivity.getOutputMappings(), mapping);
+                final RemoveCommand command = new RemoveCommand(getEditingDomain(), callActivity.getOutputMappings(),
+                        mapping);
                 getEditingDomain().getCommandStack().execute(command);
                 processTargetCombo.getControl().setData(MagicComposite.HIDDEN, true);
                 processTargetCombo.getControl().setVisible(false);
@@ -245,8 +258,9 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
             public void handleEvent(final Event event) {
                 getEditingDomain().getCommandStack()
                         .execute(
-                                new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.OUTPUT_MAPPING__SUBPROCESS_SOURCE, subprocessSourceCombo
-                                        .getText()));
+                                new SetCommand(getEditingDomain(), mapping,
+                                        ProcessPackage.Literals.OUTPUT_MAPPING__SUBPROCESS_SOURCE, subprocessSourceCombo
+                                                .getText()));
             }
         });
         if (mapping.getSubprocessSource() != null) {
@@ -256,7 +270,8 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
     }
 
     private ComboViewer createProcessTargetCombo(final Composite outputMappingControl, final OutputMapping mapping) {
-        final ComboViewer processTargetCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+        final ComboViewer processTargetCombo = new ComboViewer(
+                getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
         processTargetCombo.setContentProvider(new IStructuredContentProvider() {
 
             @Override
@@ -279,8 +294,9 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.OUTPUT_MAPPING__PROCESS_TARGET, ((IStructuredSelection) event
-                                .getSelection()).getFirstElement()));
+                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.OUTPUT_MAPPING__PROCESS_TARGET,
+                                ((IStructuredSelection) event
+                                        .getSelection()).getFirstElement()));
             }
         });
         final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
