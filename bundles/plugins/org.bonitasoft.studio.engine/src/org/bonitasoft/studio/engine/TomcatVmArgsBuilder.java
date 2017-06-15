@@ -31,7 +31,6 @@ public class TomcatVmArgsBuilder {
     protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
 
-
     private final RepositoryAccessor repositoryAccessor;
 
     public TomcatVmArgsBuilder(final RepositoryAccessor repositoryAccessor) {
@@ -54,13 +53,18 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
         addSystemProperty(args, "java.endorsed.dirs", "\"" + tomcatInstanceLocation + File.separatorChar + "endorsed\"");
         addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
-        addSystemProperty(args, "org.bonitasoft.platform.setup.folder", "\"" + bundleLocation + File.separatorChar + "setup\"");
+        addSystemProperty(args, "org.bonitasoft.platform.setup.folder",
+                "\"" + bundleLocation + File.separatorChar + "setup\"");
+        addSystemProperty(args, "org.bonitasoft.engine.incident.folder",
+                "\"" + tomcatInstanceLocation + File.separatorChar + "logs\"");
         addSystemProperty(args, "bitronix.tm.configuration",
-                "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "bitronix-config.properties\"");
+                "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
+                        + "bitronix-config.properties\"");
         addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
         if (tomcatExtraParams == null || !tomcatExtraParams.contains("-Djava.util.logging.config.file=")) {
             addSystemProperty(args, "java.util.logging.config.file",
-                    "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "logging.properties\"");
+                    "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
+                            + "logging.properties\"");
         }
         addSystemProperty(args, "file.encoding", "UTF-8");
         addWatchDogProperties(args);
@@ -91,7 +95,6 @@ public class TomcatVmArgsBuilder {
         repositoryAccessor.getCurrentRepository().getDatabaseHandler().createBitronixConfFile();
     }
 
-
     public String getProductApplicationId() {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
@@ -106,7 +109,8 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
+        addSystemProperty(args,
+                workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
         addSystemProperty(args, workspaceSystemProperties.activateSpringProfile("studio"));
     }
 
