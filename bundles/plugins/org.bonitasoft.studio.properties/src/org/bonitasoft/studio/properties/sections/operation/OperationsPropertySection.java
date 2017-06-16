@@ -24,6 +24,7 @@ import org.bonitasoft.studio.expression.editor.operation.OperationGroupViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -56,11 +57,12 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
         operationComposite = createViewer(mainComposite);
         operationComposite.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         operationComposite.setContext(context);
+        IObservableValue diagramSelectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
         operationComposite.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider), ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS));
-        
-        context.bindValue(ViewersObservables.observeSingleSelection(selectionProvider), ViewersObservables.observeSingleSelection(operationComposite));
-        
+                diagramSelectionObservable, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS));
+
+        context.bindValue(diagramSelectionObservable, ViewersObservables.observeSingleSelection(operationComposite));
+
     }
 
     protected OperationGroupViewer createViewer(final Composite parent) {
