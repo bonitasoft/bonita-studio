@@ -49,8 +49,8 @@ public class ExportBarOperation implements IRunnableWithProgress {
     public IStatus status = Status.OK_STATUS;
 
     public ExportBarOperation() {
-        processes = new ArrayList<AbstractProcess>();
-        generatedBars = new ArrayList<File>();
+        processes = new ArrayList<>();
+        generatedBars = new ArrayList<>();
     }
 
     public void addProcessToDeploy(final AbstractProcess process) {
@@ -108,14 +108,20 @@ public class ExportBarOperation implements IRunnableWithProgress {
     }
 
     protected IStatus exportBar(final AbstractProcess process, final File outputFile, final IProgressMonitor monitor) {
-        monitor.beginTask(Messages.bind(Messages.buildingBar, process.getName(), process.getVersion()), IProgressMonitor.UNKNOWN);
+        monitor.beginTask(Messages.bind(Messages.buildingBar, process.getName(), process.getVersion()),
+                IProgressMonitor.UNKNOWN);
         try {
-            final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId, Collections.<EObject> emptySet());
+            final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId,
+                    Collections.<EObject> emptySet());
             writeBusinessArchiveToFile(outputFile, bar);
             generatedBars.add(outputFile);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
-            status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, ex.getMessage(), ex);
+            Throwable cause = ex;
+            if (ex.getCause() != null) {
+                cause = ex.getCause();
+            }
+            status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, cause.getMessage(), cause);
             return status;
         } finally {
             monitor.done();
