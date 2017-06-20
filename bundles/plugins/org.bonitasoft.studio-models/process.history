@@ -14437,6 +14437,9 @@
       </changes>
     </changes>
   </releases>
+  <releases xmi:id="_zVbFAEzvEee-aqxzWrdt2g" date="2017-06-09T11:43:27.494+0200" label="7.5.2-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_2bs5cEzvEee-aqxzWrdt2g" migration="org.bonitasoft.studio.migration.custom.migration.DependenciesCopyCustomMigration"/>
+  </releases>
   <releases xmi:id="_bSK0MDoTEeeGMZ8Q55whqg" date="2017-05-16T11:43:27.494+0200" label="7.6.0-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_gCo5kDoTEeeGMZ8Q55whqg" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateSQLServerConnectorVersionTo121"/>
   </releases>
