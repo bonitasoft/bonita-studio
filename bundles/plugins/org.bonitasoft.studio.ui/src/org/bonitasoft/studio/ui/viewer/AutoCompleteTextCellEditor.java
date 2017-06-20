@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.viewer;
 
 import java.util.stream.Stream;
 
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -24,6 +25,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 
 public class AutoCompleteTextCellEditor extends TextCellEditor {
 
@@ -35,10 +37,21 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
 
     @Override
     protected Control createControl(Composite parent) {
-        Control control = super.createControl(parent);
+        final Control control = super.createControl(parent);
         Stream.of(control.getListeners(SWT.FocusIn)).forEach(l -> control.removeListener(SWT.FocusIn, l));
         Stream.of(control.getListeners(SWT.FocusIn)).forEach(l -> control.removeListener(SWT.FocusOut, l));
+        control.addListener(SWT.Modify, e -> fireControlSpaceEvent());
         return control;
+    }
+
+    private void fireControlSpaceEvent() {
+        if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
+                && (getValue() == null || getValue().toString().isEmpty())) {
+            final Event ctrlSpaceEvent = new Event();
+            ctrlSpaceEvent.keyCode = SWT.SPACE;
+            ctrlSpaceEvent.stateMask = SWT.MOD1;
+            getControl().getDisplay().asyncExec(() -> getControl().notifyListeners(SWT.KeyDown, ctrlSpaceEvent));
+        }
     }
 
     @Override
@@ -51,7 +64,7 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     public void setProposalProvider(IContentProposalProvider proposalProvider) {
         final TextContentAdapter controlContentAdapter = new TextContentAdapter();
         proposalAdapter = new ContentProposalAdapter(getControl(), controlContentAdapter,
-                proposalProvider, null, null);
+                proposalProvider, KeyStroke.getInstance(SWT.MOD1, SWT.SPACE), null);
         proposalAdapter.setPropagateKeys(true);
         proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
         proposalAdapter.setAutoActivationDelay(0);
