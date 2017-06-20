@@ -26,6 +26,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -45,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -250,19 +252,29 @@ public class TextWidget extends EditableControlWidget {
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);
         configureBackground(text);
+
         proposalProvider.ifPresent(provider -> {
             final TextContentAdapter controlContentAdapter = new TextContentAdapter();
+            final KeyStroke keyStroke = KeyStroke.getInstance(SWT.MOD1, SWT.SPACE);
             final ContentProposalAdapter proposalAdapter = new ContentProposalAdapter(text,
                     controlContentAdapter,
                     provider,
-                    null,
+                    keyStroke,
                     null);
             proposalAdapter.setPropagateKeys(true);
             proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
             proposalAdapter.setAutoActivationDelay(0);
+            text.addListener(SWT.FocusIn, e -> fireControlSpaceEvent(proposalAdapter));
+            text.addListener(SWT.Modify, e -> {
+                if (text.isFocusControl()) {
+                    fireControlSpaceEvent(proposalAdapter);
+                }
+            });
         });
 
-        text.addListener(SWT.FocusIn, event -> redraw(textContainer));
+        text.addListener(SWT.FocusIn, event ->
+
+        redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
         text.addListener(SWT.Paint, event -> {
             if (!text.isEnabled()) {
@@ -308,6 +320,16 @@ public class TextWidget extends EditableControlWidget {
         });
         button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())::applyTo);
         return textContainer;
+    }
+
+    private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter) {
+        if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
+                && (text.getText() == null || text.getText().isEmpty())) {
+            final Event ctrlSpaceEvent = new Event();
+            ctrlSpaceEvent.keyCode = SWT.SPACE;
+            ctrlSpaceEvent.stateMask = SWT.MOD1;
+            text.getDisplay().asyncExec(() -> text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent));
+        }
     }
 
     protected int verticalAlignment() {
