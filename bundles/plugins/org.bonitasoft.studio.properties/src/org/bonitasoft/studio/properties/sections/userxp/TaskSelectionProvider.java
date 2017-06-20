@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.properties.sections.userxp;
 
-import javax.inject.Singleton;
-
 import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.IAdaptable;
@@ -23,7 +21,6 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
 
 @Creatable
-@Singleton
 public class TaskSelectionProvider extends EObjectAdaptableSelectionProvider {
 
     /*

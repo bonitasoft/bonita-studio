@@ -66,7 +66,8 @@ public class RefactorContractInputOperationTest {
     public void should_update_contract_input_reference_in_contract_input_expressions() throws Exception {
         final Task aTaskWithContractAndOperations = aTaskWithContractAndOperations();
         final Expression contractInputExpression = aTaskWithContractAndOperations.getOperations().get(0).getRightOperand();
-        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(aTaskWithContractAndOperations,
+        final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(
+                aTaskWithContractAndOperations,
                 scriptRefactorOperationFactory, RefactoringOperationType.UPDATE);
 
         final ContractInput oldItem = aTaskWithContractAndOperations.getContract().getInputs().get(0);
@@ -89,12 +90,14 @@ public class RefactorContractInputOperationTest {
 
         final ContractInput contractInput = aTaskWithContract.getContract().getInputs()
                 .get(0);
-        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
-                EcoreUtil.copy(contractInput),
-                contractInput));
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation
+                .allScriptWithReferencedElement(new ContractInputRefactorPair(
+                        EcoreUtil.copy(contractInput),
+                        contractInput));
 
         assertThat(allScriptWithReferencedElement).extracting("script", "modelElement").contains(
-                tuple("firstName.length > 0 && lastName.length > 0", aTaskWithContract.getContract().getConstraints().get(0)));
+                tuple("firstName.length > 0 && lastName.length > 0",
+                        aTaskWithContract.getContract().getConstraints().get(0)));
     }
 
     @Test
@@ -108,9 +111,10 @@ public class RefactorContractInputOperationTest {
                 .get(0);
         final ContractInput newProcessInput = EcoreUtil.copy(contractInput);
         newProcessInput.setName("newInputName");
-        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation.allScriptWithReferencedElement(new ContractInputRefactorPair(
-                newProcessInput,
-                contractInput));
+        final Set<ScriptContainer<?>> allScriptWithReferencedElement = refactorOperation
+                .allScriptWithReferencedElement(new ContractInputRefactorPair(
+                        newProcessInput,
+                        contractInput));
 
         assertThat(allScriptWithReferencedElement.iterator().next().getModelElement().eContainer()).isNotNull();
     }
@@ -119,11 +123,14 @@ public class RefactorContractInputOperationTest {
     public void should_not_refactor_input_with_same_name_in_another_contract_container() throws Exception {
         final Pool process = aPool().havingContract(aContract().havingInput(aContractInput().withName("myInput")))
                 .havingData(aData().withName("aTextData")
-                        .havingDefaultValue(ExpressionHelper.createContractInputExpression(aContractInput().withName("myInput").build())))
-                .havingElements(aTask().havingContract(aContract().havingInput(aContractInput().withName("myInput"))).havingData(aData().withName("aTextData")
-                        .havingDefaultValue(ExpressionHelper.createContractInputExpression(aContractInput().withName("myInput").build()))))
+                        .havingDefaultValue(ExpressionHelper
+                                .createContractInputExpression(aContractInput().withName("myInput").build())))
+                .havingElements(aTask().havingContract(aContract().havingInput(aContractInput().withName("myInput")))
+                        .havingData(aData().withName("aTextData")
+                                .havingDefaultValue(ExpressionHelper
+                                        .createContractInputExpression(aContractInput().withName("myInput").build()))))
                 .build();
-        
+
         final RefactorContractInputOperation refactorOperation = new RefactorContractInputOperation(process,
                 scriptRefactorOperationFactory,
                 RefactoringOperationType.UPDATE);
@@ -132,16 +139,11 @@ public class RefactorContractInputOperationTest {
         final ContractInput newInput = EcoreUtil.copy(processInput);
         newInput.setName("newName");
         refactorOperation.addItemToRefactor(newInput, processInput);
-        
+
         CompoundCommand cc = new CompoundCommand();
         cc = refactorOperation.doBuildCompoundCommand(cc, monitor);
 
         assertThat(cc.getCommandList()).hasSize(1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_have_a_container() throws Exception {
-        new RefactorContractInputOperation(null, scriptRefactorOperationFactory, RefactoringOperationType.UPDATE);
     }
 
     private TransactionalEditingDomainImpl transactionalEditingDomain() {
@@ -152,7 +154,8 @@ public class RefactorContractInputOperationTest {
         return aTask().havingContract(aContract()
                 .havingInput(aContractInput().withName("firstName"))
                 .havingInput(aContractInput().withName("lastName"))
-                .havingConstraint(aContractConstraint().withExpression("firstName.length > 0 && lastName.length > 0").havingInput("firstName", "lastName")))
+                .havingConstraint(aContractConstraint().withExpression("firstName.length > 0 && lastName.length > 0")
+                        .havingInput("firstName", "lastName")))
                 .build();
     }
 
@@ -160,8 +163,10 @@ public class RefactorContractInputOperationTest {
         return aTask().havingContract(aContract()
                 .havingInput(aContractInput().withName("firstName")))
                 .havingOperations(anOperation()
-                        .havingLeftOperand(anExpression().withExpressionType(ExpressionConstants.VARIABLE_TYPE).withName("storedData"))
-                        .havingRightOperand(ExpressionHelper.createContractInputExpression(aContractInput().withName("firstName").build())))
+                        .havingLeftOperand(
+                                anExpression().withExpressionType(ExpressionConstants.VARIABLE_TYPE).withName("storedData"))
+                        .havingRightOperand(ExpressionHelper
+                                .createContractInputExpression(aContractInput().withName("firstName").build())))
                 .build();
     }
 }
