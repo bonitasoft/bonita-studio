@@ -757,28 +757,6 @@
       </excludeSources>
    </extension>
    <extension
-         id="org.bonitasoft.studio.application.InitializerApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            thread="main"
-            visible="true">
-         <run
-               class="org.bonitasoft.studio.application.BonitaStudioInitializerApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
-         id="org.bonitasoft.studio.application.WorkspaceRecovery"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            thread="main"
-            visible="true">
-         <run
-               class="org.bonitasoft.studio.application.RecoverWorkspaceApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
          point="org.eclipse.ui.splashHandlers">
       <splashHandlerProductBinding
             productId="org.bonitasoft.studio.product"
@@ -945,40 +923,6 @@
             priority="0"
             toolbarPosition="15">
       </coolbarItem>
-   </extension>
-   <extension
-         id="org.bonitasoft.studio.initializer"
-         name="Initializer"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.bonitasoft.studio.application.InitializerApplication"
-            name="Initializer">
-         <property
-               name="rendererFactoryUri"
-               value="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.renderer.NullWorkbenchRendererFactory">
-         </property>
-         <property
-               name="applicationXMI"
-               value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
-         </property>
-      </product>
-   </extension>
-   <extension
-         id="org.bonitasoft.studio.workspaceRecovery"
-         name="Workspace Recovery"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.bonitasoft.studio.application.WorkspaceRecovery"
-            name="WorkspaceRecovery">
-         <property
-               name="rendererFactoryUri"
-               value="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.renderer.NullWorkbenchRendererFactory">
-         </property>
-         <property
-               name="applicationXMI"
-               value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
-         </property>
-      </product>
    </extension>
    <extension
          point="org.eclipse.ui.startup">
