@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -38,9 +37,7 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -294,13 +291,13 @@ public class ExportRepositoryWizardPage extends WizardPage {
     protected ExportBosArchiveOperation createExportBOSOperation() {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(getDetinationPath());
-        final Set<IResource> resourcesToExport = computeResourcesToExport();
+        operation.setFileStores(getSelectedFileStores());
         try {
             final Set<IResource> toOpen = new HashSet<>();
             for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getEditorReferences()) {
                 final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
-                if (resourcesToExport.contains(file)) {
+                if (operation.getResources().contains(file)) {
                     toOpen.add(file);
                 }
             }
@@ -309,42 +306,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
             BonitaStudioLog.error(e);
         }
 
-        operation.setResources(resourcesToExport);
         return operation;
-    }
-
-    protected Set<IResource> computeResourcesToExport() {
-        final Set<IResource> resourcesToExport = new HashSet<>();
-        for (final IRepositoryFileStore file : getSelectedFileStores()) {
-            final IResource resource = file.getResource();
-            if (resource != null && resource.exists()) {
-                try {
-                    addChildrenFile(resource, resourcesToExport);
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-                resourcesToExport.addAll(file.getRelatedResources());
-            }
-        }
-        return resourcesToExport;
-    }
-
-    private void addChildrenFile(IResource resource, Set<IResource> resourcesToExport) throws CoreException {
-        if (resource instanceof IFile) {
-            resourcesToExport.add(resource);
-        } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isTargetFolder(resource)) {
-            for (final IResource r : ((IFolder) resource).members()) {
-                addChildrenFile(r, resourcesToExport);
-            }
-        }
-    }
-
-    private boolean isTargetFolder(IResource resource) {
-        return Pattern.matches("target", resource.getName());
-    }
-
-    private boolean isMetadataFolder(IResource resource) {
-        return Pattern.matches(".metadata", resource.getName());
     }
 
     protected void createDestination(final Composite group) {

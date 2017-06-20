@@ -63,6 +63,7 @@ public class ProductVersion {
         if (version == null) {
             return true;
         }
+        final Version initialVersion = new Version("6.0.0");
         Version current = new Version("0.0.0");
         try {
             current = Version.parseVersion(version);
@@ -70,7 +71,7 @@ public class ProductVersion {
             return false;
         }
         final Version productVersion = new Version(CURRENT_VERSION);
-        return current.compareTo(productVersion) <= 0;
+        return current.compareTo(productVersion) <= 0 && current.compareTo(initialVersion) >= 0;
     }
 
     public static String majorVersion() {
