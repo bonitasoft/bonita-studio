@@ -215,8 +215,9 @@
                         Type=Application
                     </text>
                 </writeFile>
-                <changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
-                <addFilesToUninstaller files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
+                <changePermissions permissions="0755"
+                    files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
+                <addFilesToUninstaller files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
             </actionList>
             <conditionRuleList>
                 <platformTest>
@@ -279,8 +280,9 @@
                 <substitution>
                     <pattern>-clearPersistedState</pattern>
                     <value>-clearPersistedState
--vm
-../../../jre/Contents/Home/bin/java</value>
+                        -vm
+                        ../../../jre/Contents/Home/bin/java
+                    </value>
                 </substitution>
             </substitutionList>
             <ruleList>
@@ -320,7 +322,8 @@
                 </copyFile>
                 <runProgram>
                     <program>genisoimage</program>
-                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output</programArguments>
+                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
+                    </programArguments>
                 </runProgram>
                 <deleteFile>
                     <path>${tempDir}</path>
@@ -381,7 +384,8 @@
         </runProgram>
         <launchBrowser>
             <show>0</show>
-            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community</url>
+            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community
+            </url>
         </launchBrowser>
     </finalPageActionList>
 
@@ -459,187 +463,7 @@
         </component>
     </componentList>
     <parameterList>
-        <choiceParameter>
-            <name>retrieveWorksapce</name>
-            <title>${msg(retrieve.workspace.title)}</title>
-            <explanation>${msg(retrieve.workspace.message)}
 
-                ${msg(retrieve.workspace.message.warning)}
-            </explanation>
-            <value></value>
-            <default>false</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <displayType>radiobuttons</displayType>
-            <insertBefore>installationFinished</insertBefore>
-            <ordering>default</ordering>
-            <width></width>
-            <optionList>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>${msg(no.thanks)}</text>
-                    <value>false</value>
-                </option>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>${msg(yes.import)}</text>
-                    <value>true</value>
-                </option>
-            </optionList>
-            <postShowPageActionList>
-                <setInstallerVariable>
-                    <name>java_executable</name>
-                    <value>${installdir}/jre/bin/java.exe</value>
-                    <ruleList>
-                        <isFalse value="${java_autodetected}" />
-                        <platformTest>
-                            <type>windows</type>
-                        </platformTest>
-                    </ruleList>
-                </setInstallerVariable>
-                <setInstallerVariable>
-                    <name>java_executable</name>
-                    <value>${installdir}/jre/bin/java</value>
-                    <ruleList>
-                        <isFalse value="${java_autodetected}" />
-                        <platformTest>
-                            <type>linux</type>
-                        </platformTest>
-                    </ruleList>
-                </setInstallerVariable>
-                <setInstallerVariable>
-                    <name>java_executable</name>
-                    <value>${installdir}/jre/Contents/Home/bin/java</value>
-                    <ruleList>
-                        <isFalse value="${java_autodetected}" />
-                        <platformTest>
-                            <type>osx</type>
-                        </platformTest>
-                    </ruleList>
-                </setInstallerVariable>
-                <showProgressDialog>
-                    <title>${msg(workspace.setup)}</title>
-                    <height>100</height>
-                    <width>400</width>
-                    <actionList>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
-                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-                            <ruleList>
-                                <isFalse>
-                                    <value>${retrieveWorksapce}</value>
-                                </isFalse>
-                                <platformTest>
-                                    <negate>1</negate>
-                                    <type>osx</type>
-                                </platformTest>
-                            </ruleList>
-                        </runProgram>
-                    </actionList>
-                    <ruleList>
-                        <isFalse>
-                            <value>${retrieveWorksapce}</value>
-                        </isFalse>
-                    </ruleList>
-                </showProgressDialog>
-            </postShowPageActionList>
-        </choiceParameter>
-        <directoryParameter>
-            <name>Oldworkspace</name>
-            <title>${msg(workspace.location.title)}</title>
-            <description>${msg(workspace.location.description)}</description>
-            <explanation>${msg(workspace.location.explanation)}
-                ${msg(workspace.location.explanation.choice1)}
-                ${msg(workspace.location.explanation.choice2)}
-
-                ${msg(workspace.location.explanation.end)}
-            </explanation>
-            <value></value>
-            <default>${platform_install_prefix}/</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <insertAfter>retrieveWorksapce</insertAfter>
-            <mustBeWritable>1</mustBeWritable>
-            <mustExist>1</mustExist>
-            <ruleList>
-                <!-- <isFalse> -->
-                <!-- <value>true</value> -->
-                <!-- </isFalse> -->
-                <compareValues>
-                    <logic>equals</logic>
-                    <value1>${retrieveWorksapce}</value1>
-                    <value2>true</value2>
-                </compareValues>
-            </ruleList>
-            <validationActionList>
-                <findFile>
-                    <baseDirectory>${Oldworkspace}</baseDirectory>
-                    <showMessageOnError>1</showMessageOnError>
-                    <customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
-                    <pattern>workspace</pattern>
-                    <variable>workspaceFound</variable>
-                </findFile>
-            </validationActionList>
-            <postShowPageActionList>
-                <showProgressDialog>
-                    <title>${msg(workspace.setup)}</title>
-                    <height>100</height>
-                    <width>400</width>
-                    <actionList>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
-                            <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
-                            <ruleList>
-                                <platformTest>
-                                    <negate>1</negate>
-                                    <type>osx</type>
-                                </platformTest>
-                                <isTrue>
-                                    <value>${retrieveWorksapce}</value>
-                                </isTrue>
-                            </ruleList>
-                        </runProgram>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
-                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-                            <ruleList>
-                                <platformTest>
-                                    <negate>1</negate>
-                                    <type>osx</type>
-                                </platformTest>
-                            </ruleList>
-                        </runProgram>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
-                            <progressText>${msg(workspace.recovery.progressMessage)}</progressText>
-                            <ruleList>
-                                <platformTest>
-                                    <type>osx</type>
-                                </platformTest>
-                                <isTrue>
-                                    <value>${retrieveWorksapce}</value>
-                                </isTrue>
-                            </ruleList>
-                        </runProgram>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <!-- Change bundle version when Equinox version change -->
-                            <programArguments>-Xmx512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
-                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-                            <ruleList>
-                                <platformTest>
-                                    <type>osx</type>
-                                </platformTest>
-                            </ruleList>
-                        </runProgram>
-                    </actionList>
-                </showProgressDialog>
-            </postShowPageActionList>
-        </directoryParameter>
         <directoryParameter>
             <name>installdir</name>
             <description>Installer.Parameter.installdir.description</description>
