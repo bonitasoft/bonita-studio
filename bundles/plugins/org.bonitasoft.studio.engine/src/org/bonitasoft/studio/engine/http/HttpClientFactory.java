@@ -56,6 +56,10 @@ public class HttpClientFactory {
         return new AddCustomPageRequest(uploadedFileToken, this);
     }
 
+    public HttpRequest<String> newBonitaPagesRequest() {
+        return new BonitaPagesRequest(this);
+    }
+
     public CookieStore getCookieStore() {
         return context.getCookieStore();
     }
