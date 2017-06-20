@@ -75,8 +75,9 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
 
     private final List<ScriptContainer<?>> scripts;
 
-    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(
-            ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
+            new ComposedAdapterFactory(
+                    ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 
     public BonitaCompareEditorInput(final CompareConfiguration configuration, final List<ScriptContainer<?>> scripts,
             final RefactoringOperationType operationType,
@@ -113,9 +114,17 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
     @Override
     public Control createContents(final Composite parent) {
         final CLabel label = new CLabel(parent, SWT.NONE);
-        final String lastArgumentWithConditionOrNot = canBeContainedInScript ? " " + Messages.reviewChangesMessageWithConditionPlace : "";
+        final String lastArgumentWithConditionOrNot = canBeContainedInScript
+                ? " " + Messages.reviewChangesMessageWithConditionPlace : "";
         if (operationType == RefactoringOperationType.UPDATE) {
-            label.setText(Messages.bind(Messages.reviewChangesMessageRefactoring, new String[] { elementName, newName, lastArgumentWithConditionOrNot }));
+            if (elementName.equals(newName)) {
+                label.setText(Messages.bind(Messages.reviewTypeChangesMessageRefactoring,
+                        new String[] { elementName, lastArgumentWithConditionOrNot }));
+            } else {
+                label.setText(Messages.bind(Messages.reviewChangesMessageRefactoring,
+                        new String[] { elementName, newName, lastArgumentWithConditionOrNot }));
+            }
+
         } else {
             label.setText(Messages.bind(Messages.reviewChangesMessageRemoving, elementName, lastArgumentWithConditionOrNot));
         }
@@ -242,7 +251,8 @@ public class BonitaCompareEditorInput extends CompareEditorInput {
         getAllNodes(nodes, root);
         for (final DiffNode node : nodes) {
             if (node.getAncestor() != null
-                    && ((EObjectNode) node.getAncestor()).getElement().equals(((EObjectNode) nodeToInsert.getAncestor()).getElement())) {
+                    && ((EObjectNode) node.getAncestor()).getElement()
+                            .equals(((EObjectNode) nodeToInsert.getAncestor()).getElement())) {
                 addChildrenToParent(node, nodeToInsert.getChildren());
                 return true;
             }

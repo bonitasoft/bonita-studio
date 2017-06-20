@@ -42,7 +42,7 @@ public class RemoveDanglingReferences {
 
     public void execute() {
         removeDanglingReferences(root);
-        //  removeSequenceFlowWithoutSourceAndTarget(root);
+        removeSequenceFlowWithoutSourceAndTarget(root);
     }
 
     private void removeSequenceFlowWithoutSourceAndTarget(EObject element) {

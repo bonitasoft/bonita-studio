@@ -63,7 +63,8 @@ public class EngineExpressionUtil {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
     }
 
-    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation, final LeftOperand leftOperand) {
+    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,
+            final LeftOperand leftOperand) {
         final OperationBuilder builder = new OperationBuilder();
         builder.createNewInstance();
         builder.setType(getEngineOperator(operation));
@@ -111,7 +112,8 @@ public class EngineExpressionUtil {
         return OperatorType.valueOf(type);
     }
 
-    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation, final boolean isExternal) {
+    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,
+            final boolean isExternal) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand(), isExternal));
     }
 
@@ -149,17 +151,24 @@ public class EngineExpressionUtil {
         }
         final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
         rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
-        rightOperand.setReturnType(operation.getLeftOperand().getReturnType());//use return type of the left operand
+        if (!operatorInputTypes.isEmpty()) {
+            rightOperand.setReturnType(operatorInputTypes.get(0));
+        } else {
+            rightOperand.setReturnType(operation.getLeftOperand().getReturnType());//use return type of the left operand
+        }
 
         builder.setRightOperand(createExpression(rightOperand));
         builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
         return builder.done();
     }
 
-    public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression) throws InvalidExpressionException {
+    public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression)
+            throws InvalidExpressionException {
         final List<Expression> result = new ArrayList<Expression>();
-        if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)
-                || expression.getType().equals(ExpressionConstants.JAVA_TYPE) || expression.getType().equals(ExpressionConstants.XPATH_TYPE)) {
+        if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE)
+                || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)
+                || expression.getType().equals(ExpressionConstants.JAVA_TYPE)
+                || expression.getType().equals(ExpressionConstants.XPATH_TYPE)) {
             final ExpressionBuilder expBuilder = new ExpressionBuilder();
             for (final EObject element : expression.getReferencedElements()) {
                 if (element instanceof Data) {
@@ -245,7 +254,8 @@ public class EngineExpressionUtil {
         return createLeftOperand(leftOperand, false);
     }
 
-    public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean isExternal) {
+    public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand,
+            final boolean isExternal) {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
         builder.setName(leftOperand.getName());
@@ -253,12 +263,14 @@ public class EngineExpressionUtil {
         return builder.done();
     }
 
-    public static String getLeftOperandType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+    public static String getLeftOperandType(final org.bonitasoft.studio.model.expression.Expression leftOperand,
+            final boolean external) {
         if (external) {
             return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
         }
         final String leftOperandType = leftOperand.getType();
-        if (ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType)) {
+        if (ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType)
+                || ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType)) {
             return getLeftOperandDocumentType(leftOperand);
         }
         if (ExpressionConstants.VARIABLE_TYPE.equals(leftOperandType)) {
@@ -284,7 +296,8 @@ public class EngineExpressionUtil {
         return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
     }
 
-    private static String getLeftOperandVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+    private static String getLeftOperandVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand,
+            final boolean external) {
         final EList<EObject> referencedElements = leftOperand.getReferencedElements();
         if (referencedElements != null && !referencedElements.isEmpty()) {
             final EObject referencedElement = referencedElements.get(0);
@@ -315,7 +328,8 @@ public class EngineExpressionUtil {
             return null;
         }
         if (expression instanceof org.bonitasoft.studio.model.expression.Expression) {
-            return buildSimpleEngineExpressionWithName(((org.bonitasoft.studio.model.expression.Expression) expression).getName(),
+            return buildSimpleEngineExpressionWithName(
+                    ((org.bonitasoft.studio.model.expression.Expression) expression).getName(),
                     (org.bonitasoft.studio.model.expression.Expression) expression);
         } else if (expression instanceof ListExpression) {
             return buildListEngineExpression(expression);
@@ -325,14 +339,17 @@ public class EngineExpressionUtil {
         throw new IllegalArgumentException("Unsupported expression convertion");
     }
 
-    protected static Expression buildTableEngineExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
+    protected static Expression buildTableEngineExpression(
+            final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
         final ExpressionBuilder exp = new ExpressionBuilder();
         final List<List<Expression>> expressions = new ArrayList<List<Expression>>();
-        final StringBuilder expressionNames = new StringBuilder("Table of expression containing the following expressions: [");
+        final StringBuilder expressionNames = new StringBuilder(
+                "Table of expression containing the following expressions: [");
         for (final ListExpression listExpression : ((TableExpression) expression).getExpressions()) {
             final List<Expression> engineExpressionList = new ArrayList<Expression>();
             expressionNames.append("(");
-            for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : listExpression.getExpressions()) {
+            for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : listExpression
+                    .getExpressions()) {
                 final Expression createExpression = createExpression(simpleExpression);
                 if (createExpression != null) {
                     engineExpressionList.add(createExpression);
@@ -352,11 +369,14 @@ public class EngineExpressionUtil {
         }
     }
 
-    protected static Expression buildListEngineExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
+    protected static Expression buildListEngineExpression(
+            final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
         final ExpressionBuilder exp = new ExpressionBuilder();
         final List<Expression> expressions = new ArrayList<Expression>();
-        final StringBuilder expressionNames = new StringBuilder("List of expression containing the following expressions: (");
-        for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : ((ListExpression) expression).getExpressions()) {
+        final StringBuilder expressionNames = new StringBuilder(
+                "List of expression containing the following expressions: (");
+        for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : ((ListExpression) expression)
+                .getExpressions()) {
             final Expression createExpression = createExpression(simpleExpression);
             if (createExpression != null) {
                 expressions.add(createExpression);
@@ -378,7 +398,8 @@ public class EngineExpressionUtil {
         }
     }
 
-    protected static Expression buildSimpleEngineExpressionWithName(String name, final org.bonitasoft.studio.model.expression.Expression expression) {
+    protected static Expression buildSimpleEngineExpressionWithName(String name,
+            final org.bonitasoft.studio.model.expression.Expression expression) {
         final ExpressionBuilder expressionBuilder = new ExpressionBuilder();
         if (name == null || name.isEmpty()) {
             name = expression.getName();
@@ -432,7 +453,8 @@ public class EngineExpressionUtil {
             expressionBuilder.setContent(expression.getContent().replace("\r", "\n"));
             final ExpressionType engineExpressionType = toEngineExpressionType(expression);
             expressionBuilder.setExpressionType(engineExpressionType);
-            expressionBuilder.setInterpreter(ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
+            expressionBuilder.setInterpreter(
+                    ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType) ? expression.getInterpreter() : "");
             expressionBuilder.setReturnType(expression.getReturnType());
             try {
                 expressionBuilder.setDependencies(createDependenciesList(expression));
@@ -448,8 +470,9 @@ public class EngineExpressionUtil {
         if (converters == null) {
             converters = new ArrayList<IExpressionConverter>();
             if (ConditionModelActivator.getInstance() != null) {
-                converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
-                        ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
+                converters.add(new ComparisonExpressionConverter(
+                        new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
+                                ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
             }
         }
         for (final IExpressionConverter converter : converters) {
@@ -480,7 +503,8 @@ public class EngineExpressionUtil {
         final List<Expression> dependencies = new ArrayList<Expression>();
         for (final EObject param : simpleExpression.getReferencedElements()) {
             if (param instanceof org.bonitasoft.studio.model.expression.Expression) {
-                final EList<EObject> referencedElements = ((org.bonitasoft.studio.model.expression.Expression) param).getReferencedElements();
+                final EList<EObject> referencedElements = ((org.bonitasoft.studio.model.expression.Expression) param)
+                        .getReferencedElements();
                 if (!referencedElements.isEmpty()) {
                     final Expression paramExpression = buildSimpleEngineExpressionWithName(
                             ((org.bonitasoft.studio.model.expression.Expression) param).getName(),
@@ -492,7 +516,8 @@ public class EngineExpressionUtil {
             }
         }
         try {
-            return expressionBuilder.createQueryBusinessDataExpression(simpleExpression.getName(), simpleExpression.getName(),
+            return expressionBuilder.createQueryBusinessDataExpression(simpleExpression.getName(),
+                    simpleExpression.getName(),
                     simpleExpression.getReturnType(),
                     dependencies.toArray(new Expression[dependencies.size()]));
         } catch (final InvalidExpressionException e) {
@@ -503,7 +528,8 @@ public class EngineExpressionUtil {
 
     private static Expression createNullExpression() {
         try {
-            return new ExpressionBuilder().createGroovyScriptExpression("ExpressionNotDefinedSetAsNull", "null", Object.class.getName());
+            return new ExpressionBuilder().createGroovyScriptExpression("ExpressionNotDefinedSetAsNull", "null",
+                    Object.class.getName());
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             throw new RuntimeException(e);
@@ -594,7 +620,8 @@ public class EngineExpressionUtil {
         return ExpressionType.valueOf(expression.getType());
     }
 
-    private static ExpressionType toEngineExpressionTypeFoDocumentRef(final org.bonitasoft.studio.model.expression.Expression expression) {
+    private static ExpressionType toEngineExpressionTypeFoDocumentRef(
+            final org.bonitasoft.studio.model.expression.Expression expression) {
         if (!expression.getReferencedElements().isEmpty()) {
             final EObject referencedElement = expression.getReferencedElements().get(0);
             if (referencedElement instanceof Document) {
@@ -621,9 +648,11 @@ public class EngineExpressionUtil {
         }
     }
 
-    public static Expression createXPATHExpression(final ExpressionBuilder exp, final org.bonitasoft.studio.model.expression.Expression expression) {
+    public static Expression createXPATHExpression(final ExpressionBuilder exp,
+            final org.bonitasoft.studio.model.expression.Expression expression) {
         try {
-            exp.createNewInstance(expression.getName()).setExpressionType(ExpressionType.TYPE_XPATH_READ).setContent(expression.getContent());
+            exp.createNewInstance(expression.getName()).setExpressionType(ExpressionType.TYPE_XPATH_READ)
+                    .setContent(expression.getContent());
             exp.setReturnType(expression.getReturnType());
             exp.setDependencies(createDependenciesList(expression));
             return exp.done();

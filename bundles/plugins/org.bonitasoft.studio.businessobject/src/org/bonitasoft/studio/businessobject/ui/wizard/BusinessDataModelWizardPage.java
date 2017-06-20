@@ -162,7 +162,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         createDescription(ctx, viewerObservableValue, businessObjectDescriptionGroup);
 
         final TabFolder tabFolder = new TabFolder(businessObjectDescriptionGroup, SWT.NONE);
-        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        tabFolder.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 350).span(2, 1).create());
         fieldsList = PojoObservables.observeDetailList(viewerObservableValue, "fields", null);
         createAttributeTabItem(ctx, viewerObservableValue, tabFolder);
         createConstraintsTabItem(ctx, viewerObservableValue, tabFolder);
