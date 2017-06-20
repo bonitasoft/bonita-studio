@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
@@ -65,7 +66,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     Image getIcon();
 
-    void exportToArchive(String file);
+    IStatus exportToArchive(String file);
 
     IRepositoryFileStore getFileStore(IResource resource);
 

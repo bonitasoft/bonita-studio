@@ -304,7 +304,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             return result;
         } catch (final CoreException e1) {
             BonitaStudioLog.error("Failed to retrieve store children", e1);
-            return Collections.emptyList();
+            return newArrayList();
         }
     }
 

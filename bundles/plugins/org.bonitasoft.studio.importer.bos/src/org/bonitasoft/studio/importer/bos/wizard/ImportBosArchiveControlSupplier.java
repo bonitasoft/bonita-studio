@@ -74,7 +74,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private static final int BUTTON_WIDTH = 80;
     private static final String BOS_EXTENSION = "*.bos";
-    private static final String LAST_IMPORT_PATH = null;
+    private static final String LAST_IMPORT_PATH = "last.bos.import.path";
 
     protected TreeViewer viewer;
     private String filePath;

@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class FileStoreCollector implements IResourceVisitor {
 
-    private final List<IResource> collectedResources = new ArrayList<IResource>();
+    private final List<IResource> collectedResources = new ArrayList<>();
     private final Set<String> fileExtensions;
     private final IResource root;
 

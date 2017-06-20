@@ -39,7 +39,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.di,
  org.json,
  org.eclipse.jface.databinding,
- org.bonitasoft.studio.connectors
+ org.bonitasoft.studio.connectors,
+ org.eclipse.debug.core,
+ org.eclipse.pde.launching;bundle-version="3.6.200",
+ org.bonitasoft.studio.connectors.model.edit,
+ org.codehaus.groovy.eclipse.dsl,
+ org.bonitasoft.studio.designer,
+ org.eclipse.jdt.launching
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,

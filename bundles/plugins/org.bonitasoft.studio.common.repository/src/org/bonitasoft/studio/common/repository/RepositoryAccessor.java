@@ -86,6 +86,10 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getRepository(targetRepository);
     }
 
+    public void setRepository(final String repositoryName) {
+        repositoryManagerInstance.setRepository(repositoryName, false, Repository.NULL_PROGRESS_MONITOR);
+    }
+
     public List<IRepository> getAllRepositories() {
         return repositoryManagerInstance.getAllRepositories();
     }
