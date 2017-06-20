@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
@@ -37,18 +38,25 @@ public class ContractInputRefactorOperationFactory implements IRefactorOperation
     public RefactorContractInputOperation createRefactorOperation(
             final EditingDomain domain, final EObject item, final Object newValue) {
         checkArgument(item instanceof ContractInput);
-        checkArgument(newValue instanceof String);
-        final RefactorContractInputOperation refactorContractInputOperation = new RefactorContractInputOperation(ModelHelper.getFirstContainerOfType(item,
-                ContractContainer.class), new GroovyScriptRefactoringOperationFactory(), RefactoringOperationType.UPDATE);
+        final RefactorContractInputOperation refactorContractInputOperation = new RefactorContractInputOperation(
+                ModelHelper.getFirstContainerOfType(item,
+                        ContractContainer.class),
+                new GroovyScriptRefactoringOperationFactory(), RefactoringOperationType.UPDATE);
         refactorContractInputOperation.setEditingDomain(domain);
         refactorContractInputOperation.setAskConfirmation(true);
-        refactorContractInputOperation.addItemToRefactor(inputWithNewName((ContractInput) item, newValue), (ContractInput) item);
+        refactorContractInputOperation.addItemToRefactor(inputWithNewName((ContractInput) item, newValue),
+                (ContractInput) item);
         return refactorContractInputOperation;
     }
 
     private ContractInput inputWithNewName(final ContractInput input, final Object newValue) {
         final ContractInput copy = EcoreUtil.copy(input);
-        copy.setName((String) newValue);
+        if (newValue instanceof String) {
+            copy.setName((String) newValue);
+        }
+        if (newValue instanceof ContractInputType) {
+            copy.setType((ContractInputType) newValue);
+        }
         return copy;
     }
 

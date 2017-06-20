@@ -283,5 +283,6 @@ public class Messages extends NLS {
     public static String invalidPath;
     public static String pathDoesNotExist;
     public static String moreDetails;
+    public static String reviewTypeChangesMessageRefactoring;
 
 }

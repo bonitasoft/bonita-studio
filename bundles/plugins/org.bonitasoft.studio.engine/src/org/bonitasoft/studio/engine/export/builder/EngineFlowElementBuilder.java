@@ -123,15 +123,18 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     @Override
     public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
-        final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true).getSubProcessBuilder();
+        final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true)
+                .getSubProcessBuilder();
         final AbstractProcessBuilder subProcessSwitch = new EngineFlowElementBuilder(subProcessBuilder, eObjectNotExported);
-        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
+        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent,
+                ProcessPackage.Literals.FLOW_ELEMENT);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
                 subProcessSwitch.doSwitch(flowElement);
             }
         }
-        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.SOURCE_ELEMENT);
+        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent,
+                ProcessPackage.Literals.SOURCE_ELEMENT);
         final EngineSequenceFlowBuilder sequenceFlowSwitch = new EngineSequenceFlowBuilder(subProcessBuilder);
         for (final SourceElement sourceElement : sourceElements) {
             for (final Connection connection : sourceElement.getOutgoing()) {
@@ -156,7 +159,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             message = senTask.getEvents().get(0);
             targetProcess = EngineExpressionUtil.createExpression(message.getTargetProcessExpression());
         }
-        final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder) builder).addSendTask(senTask.getName(), message.getName(), targetProcess);
+        final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder) builder).addSendTask(senTask.getName(),
+                message.getName(), targetProcess);
         if (message != null) {
             taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
@@ -253,13 +257,15 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         return object;
     }
 
-    private void addMessageContent(final AbstractCatchMessageEvent messageEvent, final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+    private void addMessageContent(final AbstractCatchMessageEvent messageEvent,
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         for (final Operation operation : messageEvent.getMessageContent()) {
             triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
         }
     }
 
-    protected void addMessageCorrelation(final AbstractCatchMessageEvent messageEvent, final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+    protected void addMessageCorrelation(final AbstractCatchMessageEvent messageEvent,
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         if (messageEvent.getCorrelation() != null) {
             for (final ListExpression row : messageEvent.getCorrelation().getExpressions()) {
                 final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
@@ -435,11 +441,14 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         }
     }
 
-    private void exportInputMappingAssignedToContractInputForCallActivity(final CallActivityBuilder activityBuilder, final InputMapping mapping) {
-        activityBuilder.addProcessStartContractInput(mapping.getSubprocessTarget(), EngineExpressionUtil.createExpression(mapping.getProcessSource()));
+    private void exportInputMappingAssignedToContractInputForCallActivity(final CallActivityBuilder activityBuilder,
+            final InputMapping mapping) {
+        activityBuilder.addProcessStartContractInput(mapping.getSubprocessTarget(),
+                EngineExpressionUtil.createExpression(mapping.getProcessSource()));
     }
 
-    private void exportInputMappingAssignedToDataForCallActivity(final CallActivityBuilder activityBuilder, final InputMapping mapping) {
+    private void exportInputMappingAssignedToDataForCallActivity(final CallActivityBuilder activityBuilder,
+            final InputMapping mapping) {
         final OperationBuilder opBuilder = new OperationBuilder();
         opBuilder.createNewInstance();
         opBuilder.setRightOperand(EngineExpressionUtil.createExpression(mapping.getProcessSource()));
@@ -449,7 +458,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final EList<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
         String type = LeftOperand.TYPE_DATA;
         if (!referencedElements.isEmpty()) {
-            type = getLeftOperandTypeForData((Data) referencedElements.get(0));
+            type = getLeftOperandTypeForData(referencedElements.get(0));
         }
         builder.setType(type);
         opBuilder.setLeftOperand(builder.done());
@@ -457,7 +466,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         activityBuilder.addDataInputOperation(opBuilder.done());
     }
 
-    protected void exportOutputMappingForCallActivities(final CallActivity object, final CallActivityBuilder activityBuilder) {
+    protected void exportOutputMappingForCallActivities(final CallActivity object,
+            final CallActivityBuilder activityBuilder) {
         for (final OutputMapping mapping : object.getOutputMappings()) {
             final OperationBuilder opBuilder = new OperationBuilder();
             opBuilder.createNewInstance();
@@ -474,7 +484,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         }
     }
 
-    private String getLeftOperandTypeForData(final Data data) {
+    private String getLeftOperandTypeForData(final EObject data) {
         if (data instanceof BusinessObjectData) {
             return LeftOperand.TYPE_BUSINESS_DATA;
         }
@@ -513,12 +523,15 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         return task;
     }
 
-    protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {
+    protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor,
+            final ActorFilter filter) {
         if (filter != null) {
-            final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
+            final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(),
+                    filter.getDefinitionId(),
                     filter.getDefinitionVersion());
             for (final ConnectorParameter parameter : filter.getConfiguration().getParameters()) {
-                final org.bonitasoft.engine.expression.Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
+                final org.bonitasoft.engine.expression.Expression inputExpression = EngineExpressionUtil
+                        .createExpression(parameter.getExpression());
                 if (inputExpression != null) {
                     filterBuilder.addInput(parameter.getKey(), inputExpression);
                 }
@@ -536,7 +549,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     @Override
     public FlowElement caseStartTimerEvent(final StartTimerEvent startTimer) {
         final StartEventDefinitionBuilder startTimerBuilder = builder.addStartEvent(startTimer.getName());
-        final org.bonitasoft.engine.expression.Expression startConditionExpression = EngineExpressionUtil.createExpression(startTimer.getCondition());
+        final org.bonitasoft.engine.expression.Expression startConditionExpression = EngineExpressionUtil
+                .createExpression(startTimer.getCondition());
         if (ModelHelper.isInEvenementialSubProcessPool(startTimer)) {
             final TimerType timerType = getTimerType(startTimer);
             if (timerType != null) {
@@ -551,8 +565,9 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             } else if (startConditionExpression.getReturnType().equals(Long.class.getName())) {
                 type = TimerType.DURATION;
             } else {
-                throw new RuntimeException("Unsupported return type " + startConditionExpression.getReturnType() + " for Start timer condition "
-                        + startTimer.getName());
+                throw new RuntimeException(
+                        "Unsupported return type " + startConditionExpression.getReturnType() + " for Start timer condition "
+                                + startTimer.getName());
             }
             startTimerBuilder.addTimerEventTriggerDefinition(type, startConditionExpression);
         }
@@ -566,7 +581,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
         final TimerType timerType = getTimerType(timer);
         if (timerType != null) {
-            timerBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(timer.getCondition()));
+            timerBuilder.addTimerEventTriggerDefinition(timerType,
+                    EngineExpressionUtil.createExpression(timer.getCondition()));
         }
         addDescription(timerBuilder, timer.getDocumentation());
         return timer;
@@ -587,7 +603,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 BonitaStudioLog.error(e);
             }
         }
-        BonitaStudioLog.error("Timer type can't be defined for timer " + timer.getName() + ". You might use a wrong return type. ",
+        BonitaStudioLog.error(
+                "Timer type can't be defined for timer " + timer.getName() + ". You might use a wrong return type. ",
                 "org.bonitasoft.studio.engine");
         return null;
     }
@@ -725,42 +742,50 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     protected void addDisplayDescription(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getDynamicDescription());
         if (exp != null) {
             builder.addDisplayDescription(exp);
         }
     }
 
-    protected void addDisplayDescriptionAfterCompletion(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
+    protected void addDisplayDescriptionAfterCompletion(final ActivityDefinitionBuilder builder,
+            final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getStepSummary());
         if (exp != null) {
             builder.addDisplayDescriptionAfterCompletion(exp);
         }
     }
 
     protected void addDisplayTitle(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getDynamicLabel());
         if (exp != null) {
             builder.addDisplayName(exp);
         }
     }
 
     protected void addDisplayDescription(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getDynamicDescription());
         if (exp != null) {
             builder.addDisplayDescription(exp);
         }
     }
 
     protected void addDisplayTitle(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getDynamicLabel());
         if (exp != null) {
             builder.addDisplayName(exp);
         }
     }
 
-    protected void addDisplayDescriptionAfterCompletion(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
-        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
+    protected void addDisplayDescriptionAfterCompletion(final GatewayDefinitionBuilder builder,
+            final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil
+                .createExpression(flowElement.getStepSummary());
         if (exp != null) {
             builder.addDisplayDescriptionAfterCompletion(exp);
         }
@@ -781,7 +806,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                         pool = (Pool) activity.eContainer().eContainer();
                     }
                     // get the searchIndex list
-                    List<SearchIndex> searchIndexList = new ArrayList<SearchIndex>();
+                    List<SearchIndex> searchIndexList = new ArrayList<>();
                     if (pool != null) {
                         searchIndexList = pool.getSearchIndexes();
                     }
@@ -789,7 +814,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                     for (final SearchIndex searchIdx : searchIndexList) {
                         // get the related searchIndex to set the operation
                         if (searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())) {
-                            builder.addOperation(EngineExpressionUtil.createOperation(operation, EngineExpressionUtil.createLeftOperandIndex(idx)));
+                            builder.addOperation(EngineExpressionUtil.createOperation(operation,
+                                    EngineExpressionUtil.createLeftOperandIndex(idx)));
                             break;
                         }
                         idx++;
@@ -802,11 +828,13 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     protected void addStandardLoop(final ActivityDefinitionBuilder builder, final MultiInstantiable multiInstantiable) {
-        builder.addLoop(multiInstantiable.getTestBefore(), EngineExpressionUtil.createExpression(multiInstantiable.getLoopCondition()),
+        builder.addLoop(multiInstantiable.getTestBefore(),
+                EngineExpressionUtil.createExpression(multiInstantiable.getLoopCondition()),
                 EngineExpressionUtil.createExpression(multiInstantiable.getLoopMaximum()));
     }
 
-    protected void configureMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final MultiInstantiable activity) {
+    protected void configureMultiInstantiation(final ActivityDefinitionBuilder taskBuilder,
+            final MultiInstantiable activity) {
         final Expression completionCondition = activity.getCompletionCondition();
         if (activity.isUseCardinality()) {
             final Expression cardinality = activity.getCardinalityExpression();
@@ -849,7 +877,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                     multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
                 }
 
-                if (iteratorExpression != null && iteratorExpression.getName() != null && !iteratorExpression.getName().isEmpty()) {
+                if (iteratorExpression != null && iteratorExpression.getName() != null
+                        && !iteratorExpression.getName().isEmpty()) {
                     multiInstanceBuilder.addDataInputItemRef(iteratorExpression.getName());
                 }
                 if (activity.isStoreOutput()) {
@@ -867,13 +896,15 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         }
     }
 
-    protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
+    protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder,
+            final Expression iteratorExpression,
             final Data collectionDataToMultiInstantiate) {
         if (collectionDataToMultiInstantiate instanceof BusinessObjectData) {
             taskBuilder.addBusinessData(iteratorExpression.getName(), iteratorExpression.getReturnType());
         } else {
             final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
-            if (parentFlowElement instanceof DataAware && !isDataAlreadyExists(iteratorExpression, (DataAware) parentFlowElement)) {
+            if (parentFlowElement instanceof DataAware
+                    && !isDataAlreadyExists(iteratorExpression, (DataAware) parentFlowElement)) {
                 taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
             }
         }
@@ -882,7 +913,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     protected boolean isDataAlreadyExists(final Expression iteratorExpression, final DataAware parentFlowElement) {
         boolean dataAlreadyExists = false;
         for (final Data d : parentFlowElement.getData()) {
-            if (d.getName().equals(iteratorExpression.getName()) && DataUtil.getTechnicalTypeFor(d).equals(iteratorExpression.getReturnType())) {
+            if (d.getName().equals(iteratorExpression.getName())
+                    && DataUtil.getTechnicalTypeFor(d).equals(iteratorExpression.getReturnType())) {
                 dataAlreadyExists = true;
             }
         }

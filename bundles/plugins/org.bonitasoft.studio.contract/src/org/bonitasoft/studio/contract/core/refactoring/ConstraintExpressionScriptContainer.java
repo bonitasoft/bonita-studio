@@ -35,7 +35,8 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
 
     private final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory;
 
-    public ConstraintExpressionScriptContainer(final ContractConstraint constraint, final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory) {
+    public ConstraintExpressionScriptContainer(final ContractConstraint constraint,
+            final IScriptRefactoringOperationFactory scriptRefactoringOperationFactory) {
         super(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION, null);
         this.scriptRefactoringOperationFactory = scriptRefactoringOperationFactory;
     }
@@ -54,9 +55,11 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateScript(java.util.List, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public void updateScript(final List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final IScriptRefactoringOperation scriptRefactoringOperation = scriptRefactoringOperationFactory.createScriptOperationFactory(getScript(),
-                referenceDiffs);
+    public void updateScript(final List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
+        final IScriptRefactoringOperation scriptRefactoringOperation = scriptRefactoringOperationFactory
+                .createScriptOperationFactory(getScript(),
+                        referenceDiffs);
         scriptRefactoringOperation.run(monitor);
         setNewScript(scriptRefactoringOperation.getRefactoredScript());
     }
@@ -73,11 +76,12 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
         for (final String inputName : constraint.getInputNames()) {
             for (final RefactorPair<? extends EObject, ? extends EObject> pair : pairsToRefactor) {
                 final String oldValueName = pair.getOldValueName();
-                if (oldValueName.equals(inputName)) {
+                if (oldValueName.equals(inputName) && !oldValueName.equals(pair.getNewValueName())) {
                     compoundCommand.append(RemoveCommand.create(editingDomain, constraint,
                             ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
                             inputName));
-                    compoundCommand.append(AddCommand.create(editingDomain, constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
+                    compoundCommand.append(AddCommand.create(editingDomain, constraint,
+                            ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
                             pair.getNewValueName()));
                 }
             }
