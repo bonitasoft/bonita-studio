@@ -70,6 +70,7 @@ public class Messages extends NLS {
     public static String exportApplicationDescriptorMessage;
     public static String unparsableXmlFile;
     public static String menuLevelWarning;
+    public static String unknownResourceDeployStatus;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
