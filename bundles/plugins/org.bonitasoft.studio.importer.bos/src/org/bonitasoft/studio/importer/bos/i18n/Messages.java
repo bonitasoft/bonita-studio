@@ -56,5 +56,18 @@ public class Messages extends NLS {
     public static String skipped;
     public static String alreadyPresent;
     public static String errorOccuredWhileParsingBosArchive;
+    public static String importWorkspaceTitle;
+    public static String importWorkspaceDescription;
+    public static String selectABonitaStudioWorkspace;
+    public static String cannotImportWorkspaceWithVersion;
+    public static String scanningWorkspace;
+    public static String cannotImportWorkspaceWithEdition;
+    public static String noRepositoryFoundAtLocation;
+    public static String validRepository;
+    public static String validRepositoryOverwritten;
+    public static String noValidRepositoryFoundAtLocation;
+    public static String importingWorkspace;
+    public static String repositoryImported;
+    public static String exportingWorkspace;
 
 }

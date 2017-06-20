@@ -36,7 +36,6 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -103,14 +102,14 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final MainProcess mainProcess = diagramFileStore.getContent();
         assertThat(mainProcess.eResource()).isNotNull();
         final Set<Object> allDiagramRelatedFiles = ExportBosArchiveHandler.getAllDiagramRelatedFiles(mainProcess);
-        final Set<IResource> resources = new HashSet<IResource>();
+        final Set<IRepositoryFileStore> fileStores = new HashSet<>();
         for (final Object filestore : allDiagramRelatedFiles) {
             if (filestore instanceof IRepositoryFileStore) {
-                resources.add(((IRepositoryFileStore) filestore).getResource());
+                fileStores.add((IRepositoryFileStore) filestore);
             }
         }
-        assertThat(resources).isNotEmpty();
-        exportBosArchiveOperation.setResources(resources);
+        assertThat(fileStores).isNotEmpty();
+        exportBosArchiveOperation.setFileStores(fileStores);
         assertThat(bosFile.exists()).isFalse();
         exportBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
         assertThat(bosFile.exists()).isTrue();

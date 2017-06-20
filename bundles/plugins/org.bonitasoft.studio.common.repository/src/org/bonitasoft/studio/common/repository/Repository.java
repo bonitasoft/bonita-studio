@@ -499,23 +499,18 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public void exportToArchive(final String fileName) {
+    public IStatus exportToArchive(final String fileName) {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);
-        final Set<IResource> allResources = new HashSet<>();
+        final Set<IRepositoryFileStore> fileStores = new HashSet<>();
         for (final IRepositoryStore<?> store : getAllExportableStores()) {
             for (final IRepositoryFileStore fs : store.getChildren()) {
                 if (fs.canBeExported()) {
-                    allResources.add(fs.getResource());
-                    for (final IRepositoryFileStore relatedFs : fs.getRelatedFileStore()) {
-                        if (relatedFs.canBeExported()) {
-                            allResources.add(relatedFs.getResource());
-                        }
-                    }
+                    fileStores.add(fs);
                 }
             }
         }
-        operation.setResources(allResources);
+        operation.setFileStores(fileStores);
         final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
         if (!status.isOK()) {
             logErrorStatus(status);
@@ -523,6 +518,7 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.info(String.format("%s archive exported successfully.", fileName),
                     CommonRepositoryPlugin.PLUGIN_ID);
         }
+        return status;
     }
 
     protected void logErrorStatus(final IStatus status) {

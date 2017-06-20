@@ -126,6 +126,10 @@
                      style="push">
                </command>
                <command
+                     commandId="org.bonitasoft.studio.importer.workspace.command"
+                     style="push">
+               </command>
+               <command
                      commandId="org.bonitasoft.studio.importer.other.command"
                      style="push">
                </command>
