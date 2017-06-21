@@ -272,9 +272,7 @@ public class TextWidget extends EditableControlWidget {
             });
         });
 
-        text.addListener(SWT.FocusIn, event ->
-
-        redraw(textContainer));
+        text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
         text.addListener(SWT.Paint, event -> {
             if (!text.isEnabled()) {
@@ -323,13 +321,15 @@ public class TextWidget extends EditableControlWidget {
     }
 
     private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter) {
-        if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
-                && (text.getText() == null || text.getText().isEmpty())) {
-            final Event ctrlSpaceEvent = new Event();
-            ctrlSpaceEvent.keyCode = SWT.SPACE;
-            ctrlSpaceEvent.stateMask = SWT.MOD1;
-            text.getDisplay().asyncExec(() -> text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent));
-        }
+        text.getDisplay().asyncExec(() -> {
+            if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
+                    && (text.getText() == null || text.getText().isEmpty())) {
+                final Event ctrlSpaceEvent = new Event();
+                ctrlSpaceEvent.keyCode = SWT.SPACE;
+                ctrlSpaceEvent.stateMask = SWT.MOD1;
+                text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent);
+            }
+        });
     }
 
     protected int verticalAlignment() {
