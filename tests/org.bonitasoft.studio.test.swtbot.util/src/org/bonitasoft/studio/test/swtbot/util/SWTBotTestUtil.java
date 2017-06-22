@@ -107,9 +107,9 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final int nbEditorsBefore = wBot.editors().size();
         wBot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_MAIN_SHELL)), 40000);
         wBot.waitUntil(Conditions.shellIsActive(wBot.shellWithId(SWTBOT_ID_MAIN_SHELL).getText()), 40000);
-        wBot.waitUntil(Conditions.widgetIsEnabled(wBot.menu("Diagram")), 40000);
-        final SWTBotMenu menu = wBot.menu("Diagram");
-        menu.menu("New").click();
+        wBot.waitUntil(Conditions.widgetIsEnabled(wBot.menu("File")), 40000);
+        final SWTBotMenu menu = wBot.menu("File");
+        menu.menu("New diagram").click();
         wBot.waitUntil(new DefaultCondition() {
 
             @Override

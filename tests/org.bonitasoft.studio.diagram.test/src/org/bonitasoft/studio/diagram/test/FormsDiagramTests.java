@@ -39,11 +39,10 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class FormsDiagramTests {
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
 
     @Test
     public void testFormsDiagramTest() throws ExecutionException, InterruptedException {
-
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -59,13 +58,13 @@ public class FormsDiagramTests {
         gmfEditor.click(500, 100);
         gmfEditor.clickContextMenu("Paste");
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
 
-        IGraphicalEditPart mainEditPart = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
+        final IGraphicalEditPart mainEditPart = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
         int count = 0;
-        for (Object o : mainEditPart.getChildren()) {
+        for (final Object o : mainEditPart.getChildren()) {
             if (o instanceof IGraphicalEditPart) {
-                EObject eObject = ((IGraphicalEditPart) o).resolveSemanticElement();
+                final EObject eObject = ((IGraphicalEditPart) o).resolveSemanticElement();
                 if (eObject instanceof CheckBoxSingleFormField) {
                     count++;
                 }
@@ -90,37 +89,36 @@ public class FormsDiagramTests {
         gmfEditor.activateTool("Checkbox");
         /* move depends on which tool we used, it seems that it begins from its. */
         gmfEditor.click(200, 200);
-        //FIXME workaround for the empty properties the first time we open it (remove it if it's fixed) 
         gmfEditor.getEditPart("Submit1").parent().select();
-        SWTBotGefEditPart ep = gmfEditor.getEditPart("Checkbox1");
+        final SWTBotGefEditPart ep = gmfEditor.getEditPart("Checkbox1");
         if (ep != null && ep.parent() != null) {
             ep.parent().select();
         }
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
         /* Search the Combo for switch type */
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-        SWTBotView generalProperties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
+        final SWTBotView generalProperties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
 
         SWTBotCombo combo = null;
         try {
             combo = generalProperties.bot().comboBox("Checkbox");
             /* Change type to duration */
             combo.setSelection("Duration");
-        } catch (Exception e) {
+        } catch (final Exception e) {
 
         }
         /* Search the duration Editpart */
         //TODO : search directly the Editpart
-        SWTBotGefEditPart mainPart = gmfEditor.mainEditPart();
+        final SWTBotGefEditPart mainPart = gmfEditor.mainEditPart();
         boolean found = false;
-        for (SWTBotGefEditPart p : mainPart.children()) {
+        for (final SWTBotGefEditPart p : mainPart.children()) {
             if (p.part() instanceof DurationFormFieldEditPart) {
                 found = true;
                 break;
             }
         }
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
 
         bot.activeEditor().close();
         Assert.assertTrue("The convert is not working on form diagram.", found);
@@ -132,7 +130,6 @@ public class FormsDiagramTests {
      */
     @Test
     public void testGridSizeSetTo0() throws InterruptedException {
-
         /* Create a new form */
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
@@ -145,19 +142,18 @@ public class FormsDiagramTests {
         gmfEditor.activateTool("Checkbox");
         /* move depends on which tool we used, it seems that it begins from its. */
         gmfEditor.click(200, 200);
-        //FIXME workaround for the empty properties the first time we open it (remove it if it's fixed)
         gmfEditor.getEditPart("Submit1").parent().select();
-        SWTBotGefEditPart ep = gmfEditor.getEditPart("Checkbox1");
+        final SWTBotGefEditPart ep = gmfEditor.getEditPart("Checkbox1");
         if (ep != null && ep.parent() != null) {
             ep.parent().select();
         }
 
-        SWTBotView viewByTitle = bot.viewByTitle("Appearance");
+        final SWTBotView viewByTitle = bot.viewByTitle("Appearance");
         viewByTitle.show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Grid");
         bot.saveAllEditors();
-        SWTBotText widthTextBox = viewByTitle.bot().textWithLabel(Messages.AppearanceSection_ColumnWidth);
-        String text = widthTextBox.getText();
+        final SWTBotText widthTextBox = viewByTitle.bot().textWithLabel(Messages.AppearanceSection_ColumnWidth);
+        final String text = widthTextBox.getText();
         assertEquals("", text);
         Form form = (Form) ((IGraphicalEditPart) (gmfEditor.mainEditPart().part())).resolveSemanticElement();
         assertEquals(0, form.getColumns().size());

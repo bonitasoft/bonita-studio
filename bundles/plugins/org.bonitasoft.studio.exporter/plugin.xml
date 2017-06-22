@@ -67,7 +67,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.application.separator5">
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator5">
          <menu
                id="org.bonitasoft.studio.exporter.exportAs"
                label="%exportAs">
@@ -84,7 +84,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.menu.import">
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.menu.import">
          <command
                commandId="org.bonitasoft.studio.exportBosArchive"
                icon="icons/export.png"

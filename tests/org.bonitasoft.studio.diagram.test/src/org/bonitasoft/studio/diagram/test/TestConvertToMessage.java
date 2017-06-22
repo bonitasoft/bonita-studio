@@ -37,13 +37,13 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestConvertToMessage {
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
 
     @Test
     public void testConvertToMessage() throws InterruptedException {
         //bug 1983
         /* Create a new form */
-        final SWTBotMenu menu = bot.menu("Diagram");
+        final SWTBotMenu menu = bot.menu("File");
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

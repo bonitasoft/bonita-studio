@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2010-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.test;
 
@@ -36,17 +33,19 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestMenus {
 
-    private SWTGefBot bot = new SWTGefBot();
-    
+    private final SWTGefBot bot = new SWTGefBot();
+
     @Rule
     public LegacySWTGefBotRule rule = new LegacySWTGefBotRule(bot);
 
     @Test
     public void should_have_only_valid_menus() {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository().getName());
-        final SWTBotMenu mainMenu = bot.menu("Diagram");
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
+                RepositoryManager.getInstance().getCurrentRepository().getName());
+        final SWTBotMenu mainMenu = bot.menu("File");
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 final Menu parent = mainMenu.widget.getParent();
                 String menus = "";

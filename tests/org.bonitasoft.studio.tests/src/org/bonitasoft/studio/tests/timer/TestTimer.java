@@ -114,7 +114,7 @@ public class TestTimer implements SWTBotConstants {
         assertEquals("Error: Wrong Timer Condition", "0 0/5 * 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
     }
@@ -147,7 +147,7 @@ public class TestTimer implements SWTBotConstants {
         assertEquals("Error: Wrong Timer Condition", "0 30 8 ? 4 MON#2 *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -178,7 +178,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", "0 0 12 ? 1/1 TUE#2 *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -210,7 +210,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", "0 15 9 ? * WED *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -241,7 +241,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", "0 0 14 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -272,7 +272,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", "0 0 0/1 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -309,7 +309,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", conditionRes,
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -339,7 +339,7 @@ public class TestTimer implements SWTBotConstants {
 
         Assert.assertFalse("Error: Wrong Timer Condition", bot.textWithLabel(Messages.timerCondition).getText().isEmpty());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -389,7 +389,7 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals("Error: Wrong Timer Condition", "00:02:00",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
     }
@@ -440,7 +440,7 @@ public class TestTimer implements SWTBotConstants {
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
         Assert.assertTrue("Error: Wrong Timer Condition", bot.radio(Messages.durationLabel).isSelected());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
 

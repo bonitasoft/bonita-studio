@@ -159,7 +159,7 @@ public class DataWizardIT {
         bot.button(IDialogConstants.OK_LABEL).click();
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram");
+        bot.menu("File");
         final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         applicationWorkbenchWindow.save();
 
@@ -188,7 +188,7 @@ public class DataWizardIT {
         bot.tree().getTreeItem("Pool " + pool.getName()).getNode("Lane " + lane.getName()).select("Task Step1");
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         bot.waitUntil(new DefaultCondition() {
 
             @Override
@@ -374,7 +374,7 @@ public class DataWizardIT {
     public void testDatacantBeInitializeByItself() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
         activeProcessDiagramEditor.selectDiagram();
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("DataInit");
 
