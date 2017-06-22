@@ -7,13 +7,13 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.XXMaxPermSize512m -clearPersistedState
+      <programArgs>--launcher.XXMaxPermSize512m
       </programArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8 -Xmx512m -Xms128m
+      <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8  -Dtomcat.extra.params=&quot;-DnoCacheCustomPage=true&quot;
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
-      <vmArgsMac>-Xdock:name=Bonita Studio -XstartOnFirstThread -Djava.endorsed.dirs=../../../endorsed
+      <vmArgsMac>-XstartOnFirstThread -Djava.endorsed.dirs=../../../endorsed
       </vmArgsMac>
       <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
       </vmArgsWin>
