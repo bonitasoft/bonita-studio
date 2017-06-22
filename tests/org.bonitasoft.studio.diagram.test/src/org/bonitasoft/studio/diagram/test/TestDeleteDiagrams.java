@@ -49,7 +49,7 @@ public class TestDeleteDiagrams {
     // Before and After
     private static boolean disablePopup;
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -75,8 +75,8 @@ public class TestDeleteDiagrams {
 
         final int nbDiagramsInRepository = diagramStore.getChildren().size();
 
-        final SWTBotMenu diagramMenu = bot.menu("Diagram");
-        final List<String> newDiagramsName = new ArrayList<String>();
+        final SWTBotMenu diagramMenu = bot.menu("File");
+        final List<String> newDiagramsName = new ArrayList<>();
         for (int i = 0; i < nbDiagrams; i++) {
             SWTBotTestUtil.createNewDiagram(bot);
             bot.waitUntil(Conditions.widgetIsEnabled(diagramMenu), 40000);
@@ -86,8 +86,8 @@ public class TestDeleteDiagrams {
 
         final int nbEditors = bot.editors().size();
         final String currentDiagramName = bot.activeEditor().getTitle();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 10000);
-        bot.menu("Diagram").menu("Delete...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 10000);
+        bot.menu("File").menu("Delete diagram...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.DeleteDiagramWizardPage_title), 10000);
 
         final SWTBotTree tree = bot.tree();

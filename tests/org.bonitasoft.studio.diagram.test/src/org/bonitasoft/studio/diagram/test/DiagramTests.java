@@ -211,7 +211,7 @@ public class DiagramTests {
             }
 
         }
-        bot.menu("Diagram").menu("Save");
+        bot.menu("File").menu("Save");
 
         // check the gmfEditor has 4 human tasks
         final IGraphicalEditPart ig = (IGraphicalEditPart) gmfEditor.mainEditPart().part();

@@ -44,7 +44,7 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestRenameDiagram {
 
-    private SWTGefBot bot = new SWTGefBot();
+    private final SWTGefBot bot = new SWTGefBot();
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
@@ -58,7 +58,7 @@ public class TestRenameDiagram {
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement();
         String originalName = diagram.getName();
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
 
@@ -93,7 +93,7 @@ public class TestRenameDiagram {
         gmfEditor = bot.gefEditor(botEditor.getTitle());
         diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement();
         originalName = diagram.getName();
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
 
@@ -103,7 +103,7 @@ public class TestRenameDiagram {
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
 
         SWTBotTestUtil.createNewDiagram(bot);
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         bot.waitWhile(Conditions.shellIsActive("Progress Information"));
         assertFalse(bot.activeShell().getText().equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
@@ -113,14 +113,14 @@ public class TestRenameDiagram {
     public void testRenameMenu() {
         SWTBotTestUtil.createNewDiagram(bot);
 
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         final MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part())
                 .resolveSemanticElement();
         final String originalName = diagram.getName();
-        bot.menu("Diagram").menu("Rename...").click();
+        bot.menu("File").menu("Rename diagram...").click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
         assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());

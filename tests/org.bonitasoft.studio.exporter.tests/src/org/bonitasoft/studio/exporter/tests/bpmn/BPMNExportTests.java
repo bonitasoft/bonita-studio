@@ -145,7 +145,7 @@ public class BPMNExportTests {
 
     @Test
     public void testBPMN2MenuPresent() {
-        final SWTBotMenu processMenu = bot.menu("Diagram");
+        final SWTBotMenu processMenu = bot.menu("File");
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
         final MenuItem mi = exportAsMenu.widget;
         Display.getDefault().syncExec(() -> {
@@ -183,7 +183,7 @@ public class BPMNExportTests {
         final SWTBotEditor activeEditor = bot.activeEditor();
         assertEquals("org.eclipse.jdt.ui.CompilationUnitEditor", activeEditor.getReference().getId());
 
-        final SWTBotMenu processMenu = bot.menu("Diagram");
+        final SWTBotMenu processMenu = bot.menu("File");
 
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
         final MenuItem mi = exportAsMenu.widget;

@@ -57,9 +57,9 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
         bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
-        final SWTBotMenu menu = bot.menu("Diagram");
-        menu.menu("New").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
+        final SWTBotMenu menu = bot.menu("File");
+        menu.menu("New diagram").click();
         bot.waitUntil(new ICondition() {
 
             @Override
@@ -104,8 +104,8 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotApplicationWorkbenchWindow close() {
         final int nbEditorsBefore = bot.editors().size();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
-        final SWTBotMenu menu = bot.menu("Diagram");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
+        final SWTBotMenu menu = bot.menu("File");
         menu.menu("Close").click();
         bot.waitUntil(new ICondition() {
 
@@ -163,7 +163,14 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     public BotImportOtherDialog importOther() {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
                 RepositoryManager.getInstance().getCurrentRepository().getName());
-        bot.menu("Diagram").menu("Import").menu("Other...").click();
+        bot.menu("File").menu("Import").menu("Other...").click();
+        return new BotImportOtherDialog(bot);
+    }
+
+    public BotImportOtherDialog importFromOtherWorkspace() {
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
+                RepositoryManager.getInstance().getCurrentRepository().getName());
+        bot.menu("File").menu("Import").menu("From another Workspace...").click();
         return new BotImportOtherDialog(bot);
     }
 
