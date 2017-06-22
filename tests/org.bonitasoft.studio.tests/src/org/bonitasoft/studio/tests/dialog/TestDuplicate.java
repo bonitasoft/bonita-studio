@@ -51,7 +51,7 @@ public class TestDuplicate {
     public void testDuplicateWithSeveralPool() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final int nbEditorBefore = bot.editors().size();
-        bot.menu("Diagram").menu("Duplicate...").click();
+        bot.menu("File").menu("Duplicate diagram...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Name").setText("DuplicatedTestDuplicateWithSeveralPool");
         bot.textWithLabel("Version").setText("2.0");
@@ -103,7 +103,7 @@ public class TestDuplicate {
                 .finish();
 
         final int nbEditorBefore = bot.editors().size();
-        bot.menu("Diagram").menu("Duplicate...").click();
+        bot.menu("File").menu("Duplicate diagram...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Version", 0).setText("2.0");
         bot.textWithLabel("Version", 1).setText("2.0");

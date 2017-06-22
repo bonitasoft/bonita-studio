@@ -1411,7 +1411,7 @@
       <extension
             point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.application.separator2">
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator2">
             <command
                   commandId="org.bonitasoft.studio.validation.batchValidation"
                   style="push">

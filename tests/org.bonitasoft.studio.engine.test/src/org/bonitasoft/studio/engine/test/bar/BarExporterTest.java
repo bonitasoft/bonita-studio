@@ -83,7 +83,7 @@ public class BarExporterTest {
         new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
 
         // Save Diagram
-        bot.menu("Diagram").menu("Save").click();
+        bot.menu("File").menu("Save").click();
         bot.waitUntil(BonitaBPMConditions.noPopupActive());
 
         // Menu Server > Build...
@@ -110,7 +110,7 @@ public class BarExporterTest {
         diagramTreeItem.getNode(0).select();
         diagramTreeItem.getNode(0).uncheck();
 
-        final List<String> poolTitleList = new ArrayList<String>(3);
+        final List<String> poolTitleList = new ArrayList<>(3);
         final int poolTitleListSize = poolTitleList.size();
 
         // check the selected pools

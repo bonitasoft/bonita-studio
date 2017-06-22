@@ -52,7 +52,7 @@
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
-               id="org.bonitasoft.studio.processusMenu"
+               id="org.bonitasoft.studio.fileMenu"
                label="%fileMenu_Label">
             <command
                   commandId="org.bonitasoft.studio.diagram.command.newDiagram"

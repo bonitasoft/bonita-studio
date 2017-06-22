@@ -49,7 +49,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.processusMenu?before=org.bonitasoft.studio.validation.batchValidation">
+            locationURI="menu:org.bonitasoft.studio.fileMenu?before=org.bonitasoft.studio.validation.batchValidation">
          <command
                commandId="org.bonitasoft.studio.application.preview"
                icon="icons/preview.png"

@@ -80,7 +80,7 @@ public class DuplicateCommandTest {
             alterDiagram(botEditor);
         }
 
-        bot.menu("Diagram").menu("Duplicate...").click();
+        bot.menu("File").menu("Duplicate diagram...").click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         bot.text(0).setText(processName);
         bot.text(1).setText(processVersion);
