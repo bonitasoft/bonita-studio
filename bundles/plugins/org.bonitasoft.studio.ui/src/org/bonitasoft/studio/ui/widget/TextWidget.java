@@ -454,7 +454,7 @@ public class TextWidget extends EditableControlWidget {
         text.addListener(eventType, listener);
     }
 
-    private void configureBackground(Control control) {
+    protected void configureBackground(Control control) {
         final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
         final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
         if (toolkit.isPresent()) {
