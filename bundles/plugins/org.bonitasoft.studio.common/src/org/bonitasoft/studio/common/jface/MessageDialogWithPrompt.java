@@ -93,7 +93,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         this.detailsMessage = detailsMessage;
     }
 
-    private static String[] getButtonLabelsFor(int kind) {
+    protected static String[] getButtonLabelsFor(int kind) {
         String[] dialogButtonLabels;
         switch (kind) {
             case ERROR:
