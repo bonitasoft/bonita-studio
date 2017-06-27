@@ -64,6 +64,11 @@ public class Messages extends NLS {
 
     public static String exitWarningMessage;
 
+    public static String startDialogTitle;
+    public static String doNotShowMeAgain;
+    public static String startDialogMsg;
+    public static String importWorkFromAnotherWorkspace;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

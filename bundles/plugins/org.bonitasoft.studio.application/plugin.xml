@@ -780,6 +780,9 @@
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
       </contribution>
+      <contribution
+            class="org.bonitasoft.studio.application.contribution.StartupDialogContribution">
+      </contribution>
    </extension>
    <extension
          id="id1"

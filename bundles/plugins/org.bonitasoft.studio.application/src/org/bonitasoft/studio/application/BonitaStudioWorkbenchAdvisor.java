@@ -64,12 +64,15 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -85,12 +88,14 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
@@ -110,8 +115,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         private void executePreShutdownContribution() {
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                    "org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(
+                            "org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
             IPreShutdownContribution contrib = null;
             for (final IConfigurationElement elem : elements) {
                 try {
@@ -193,7 +199,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC, PATH_ETOOL
-                        + "build_exec.png", false); //$NON-NLS-1$
+                        + "build_exec.png", //$NON-NLS-1$
+                false);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC_HOVER,
                 PATH_ETOOL + "build_exec.png", false); //$NON-NLS-1$
@@ -203,7 +210,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_SEARCH_SRC, PATH_ETOOL
-                        + "search_src.png", false); //$NON-NLS-1$
+                        + "search_src.png", //$NON-NLS-1$
+                false);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_SEARCH_SRC_HOVER,
                 PATH_ETOOL + "search_src.png", false); //$NON-NLS-1$
@@ -213,21 +221,25 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_NEXT_NAV, PATH_ETOOL
-                        + "next_nav.png", false); //$NON-NLS-1$
+                        + "next_nav.png", //$NON-NLS-1$
+                false);
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_PREVIOUS_NAV, PATH_ETOOL
-                        + "prev_nav.png", false); //$NON-NLS-1$
+                        + "prev_nav.png", //$NON-NLS-1$
+                false);
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_WIZBAN_NEWPRJ_WIZ, PATH_WIZBAN
-                        + "newprj_wiz.png", false); //$NON-NLS-1$
+                        + "newprj_wiz.png", //$NON-NLS-1$
+                false);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_WIZBAN_NEWFOLDER_WIZ,
                 PATH_WIZBAN + "newfolder_wiz.png", false); //$NON-NLS-1$
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_WIZBAN_NEWFILE_WIZ, PATH_WIZBAN
-                        + "newfile_wiz.png", false); //$NON-NLS-1$
+                        + "newfile_wiz.png", //$NON-NLS-1$
+                false);
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_WIZBAN_IMPORTDIR_WIZ,
@@ -249,17 +261,20 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG, PATH_WIZBAN
-                        + "saveas_wiz.png", false); //$NON-NLS-1$
+                        + "saveas_wiz.png", //$NON-NLS-1$
+                false);
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_DLGBAN_QUICKFIX_DLG, PATH_WIZBAN
-                        + "quick_fix.png", false); //$NON-NLS-1$
+                        + "quick_fix.png", //$NON-NLS-1$
+                false);
 
         declareWorkbenchImage(ideBundle, IDE.SharedImages.IMG_OBJ_PROJECT,
                 PATH_OBJECT + "prj_obj.png", true); //$NON-NLS-1$
         declareWorkbenchImage(ideBundle,
                 IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED, PATH_OBJECT
-                        + "cprj_obj.png", true); //$NON-NLS-1$
+                        + "cprj_obj.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle, IDE.SharedImages.IMG_OPEN_MARKER,
                 PATH_ELOCALTOOL + "gotoobj_tsk.png", true); //$NON-NLS-1$
 
@@ -294,29 +309,37 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_COMPLETE_TSK, PATH_OBJECT
-                        + "complete_tsk.png", true); //$NON-NLS-1$
+                        + "complete_tsk.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_INCOMPLETE_TSK, PATH_OBJECT
-                        + "incomplete_tsk.png", true); //$NON-NLS-1$
+                        + "incomplete_tsk.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM, PATH_OBJECT
-                        + "welcome_item.png", true); //$NON-NLS-1$
+                        + "welcome_item.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_BANNER, PATH_OBJECT
-                        + "welcome_banner.png", true); //$NON-NLS-1$
+                        + "welcome_banner.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH, PATH_OBJECT
-                        + "error_tsk.png", true); //$NON-NLS-1$
+                        + "error_tsk.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH, PATH_OBJECT
-                        + "warn_tsk.png", true); //$NON-NLS-1$
+                        + "warn_tsk.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH, PATH_OBJECT
-                        + "info_tsk.png", true); //$NON-NLS-1$
+                        + "info_tsk.png", //$NON-NLS-1$
+                true);
 
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_LCL_FLAT_LAYOUT, PATH_ELOCALTOOL
-                        + "flatLayout.png", true); //$NON-NLS-1$
+                        + "flatLayout.png", //$NON-NLS-1$
+                true);
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_LCL_HIERARCHICAL_LAYOUT,
                 PATH_ELOCALTOOL + "hierarchicalLayout.png", true); //$NON-NLS-1$
@@ -433,11 +456,14 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private void checkCurrentRepository(final IProgressMonitor monitor) {
         final IPreferenceStore preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
         final String current = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-        if (!RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(current) && !ResourcesPlugin.getWorkspace().getRoot().getProject(current).exists()) {
-            preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+        if (!RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(current)
+                && !ResourcesPlugin.getWorkspace().getRoot().getProject(current).exists()) {
+            preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,
+                    RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
         }
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
-        if (repository.getProject().exists() && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
+        if (repository.getProject().exists()
+                && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
             if (!repository.getProject().isOpen()) {
                 repository.open(monitor);
             }
@@ -452,8 +478,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 MessageDialog.openWarning(
                         Display.getDefault().getActiveShell(),
                         Messages.badWorkspaceVersionTitle,
-                        Messages.bind(Messages.badWorkspaceVersionMessage, new Object[] { current, version, bonitaStudioModuleName,
-                                ProductVersion.CURRENT_VERSION, bosProductName }));
+                        Messages.bind(Messages.badWorkspaceVersionMessage,
+                                new Object[] { current, version, bonitaStudioModuleName,
+                                        ProductVersion.CURRENT_VERSION, bosProductName }));
                 resetToDefaultRepository(monitor);
             }
 
@@ -600,7 +627,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         job.schedule();
     }
 
-
     @Override
     public void postShutdown() {
         super.postShutdown();
@@ -615,10 +641,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             try {
                 if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                         && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                    final boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
+                    final boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .closeAllEditors(true);
                     if (closeEditor) {
                         PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false, true);
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false,
+                                true);
                     }
                     return closeEditor;
                 }
@@ -636,20 +664,24 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
-        IPostStartupContribution contrib = null;
         for (final IConfigurationElement elem : elements) {
+
+            final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
             try {
-                contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (final CoreException e) {
+                IPostStartupContribution contrib = (IPostStartupContribution) ContextInjectionFactory
+                        .make(Platform.getBundle(elem.getDeclaringExtension().getNamespaceIdentifier())
+                                .loadClass(elem.getAttribute("class")), workbench.getContext());
+                Display.getDefault().asyncExec(contrib::execute);
+            } catch (InjectionException | ClassNotFoundException | InvalidRegistryObjectException e) {
                 BonitaStudioLog.error(e);
             }
-            contrib.execute();
         }
 
         preLoad();
 
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
-        BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration), ApplicationPlugin.PLUGIN_ID);
+        BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
+                ApplicationPlugin.PLUGIN_ID);
     }
 
     private void preLoad() {
@@ -661,7 +693,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private void preLoadSVG() {
         final SVGFigure svgFigure = new SVGFigure();
         try {
-            final File iconsFolder = new File(FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons")).getFile());
+            final File iconsFolder = new File(
+                    FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons")).getFile());
             initSVGFigure(svgFigure, iconsFolder, "figures");
             initSVGFigure(svgFigure, iconsFolder, "decoration", "svg");
         } catch (final IOException e) {
@@ -672,7 +705,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private void initSVGFigure(final SVGFigure svgFigure, final File iconsFolder, final String... pathToFolder) {
         for (final String filename : new File(iconsFolder, Joiner.on(File.separatorChar).join(pathToFolder)).list()) {
             if (filename.endsWith(".svgz")) {
-                svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder) + "/" + filename);
+                svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder)
+                        + "/" + filename);
             }
         }
     }
