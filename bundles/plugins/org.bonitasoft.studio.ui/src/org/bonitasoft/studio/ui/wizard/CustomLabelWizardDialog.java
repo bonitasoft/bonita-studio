@@ -26,12 +26,10 @@ public class CustomLabelWizardDialog extends WizardDialog {
     private String finishLabel = IDialogConstants.FINISH_LABEL;
     private String cancelLabel = IDialogConstants.CANCEL_LABEL;
 
-
     public CustomLabelWizardDialog(Shell parentShell, IWizard newWizard, String finishLabel) {
         super(parentShell, newWizard);
         this.finishLabel = finishLabel;
     }
-
 
     public CustomLabelWizardDialog(Shell parentShell, IWizard newWizard, String finishLabel, boolean isModal) {
         super(parentShell, newWizard);
@@ -46,7 +44,8 @@ public class CustomLabelWizardDialog extends WizardDialog {
         this.cancelLabel = cancelLabel;
     }
 
-    public CustomLabelWizardDialog(Shell parentShell, IWizard newWizard, String finishLabel, String cancelLabel, boolean isModal) {
+    public CustomLabelWizardDialog(Shell parentShell, IWizard newWizard, String finishLabel, String cancelLabel,
+            boolean isModal) {
         this(parentShell, newWizard, finishLabel, isModal);
         this.cancelLabel = cancelLabel;
     }
@@ -55,8 +54,10 @@ public class CustomLabelWizardDialog extends WizardDialog {
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.FINISH_ID).setText(finishLabel);
+        getButton(IDialogConstants.FINISH_ID).forceFocus();
         if (cancelLabel != null) {
             getButton(IDialogConstants.CANCEL_ID).setText(cancelLabel);
+            getButton(IDialogConstants.CANCEL_ID).forceFocus();
         }
     }
 
