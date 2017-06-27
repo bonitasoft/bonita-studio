@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Bonitasoft S.A.
+ * Copyright (C) 2016 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,23 @@ import java.util.Optional;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class TextAreaWidget extends TextWidget {
+public class SearchWidget extends TextWidget {
 
     public static class Builder extends TextWidget.Builder {
 
         @Override
-        public TextAreaWidget createIn(Composite container) {
-            final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
+        public SearchWidget createIn(Composite container) {
+            final SearchWidget control = new SearchWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, labelButton, toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
+            placeholder.ifPresent(control::setPlaceholder);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))
@@ -45,9 +45,10 @@ public class TextAreaWidget extends TextWidget {
             }
             return control;
         }
+
     }
 
-    protected TextAreaWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
+    protected SearchWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth,
             boolean readOnly,
@@ -61,40 +62,31 @@ public class TextAreaWidget extends TextWidget {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#grabVerticalSpace()
+     * @see org.bonitasoft.studio.ui.widget.TextWidget#newText(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected boolean grabVerticalSpace() {
-        return true;
+    protected Text newText(Composite textContainer) {
+        final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL);
+        newText.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
+        return newText;
     }
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#verticalAlignment()
+     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite, org.eclipse.swt.widgets.Event)
      */
     @Override
-    protected int verticalAlignment() {
-        return SWT.FILL;
+    protected void drawBorder(Composite container, Event e) {
+
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.TextWidget#configureBackground(org.eclipse.swt.widgets.Control)
+     */
     @Override
-    protected Text newText(final Composite textContainer) {
-        final Text text = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Listener scrollBarListener = event -> {
-            final Text t = (Text) event.widget;
-            final Rectangle r1 = t.getClientArea();
-            final Rectangle r2 = t.computeTrim(r1.x, r1.y, r1.width, r1.height);
-            final Point p = t.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-            t.getVerticalBar().setVisible(r2.height <= p.y);
-            if (event.type == SWT.Modify) {
-                t.getParent().layout(true);
-                t.showSelection();
-            }
-        };
-        text.addListener(SWT.Resize, scrollBarListener);
-        text.addListener(SWT.Modify, scrollBarListener);
-        return text;
+    protected void configureBackground(Control control) {
     }
 
 }
