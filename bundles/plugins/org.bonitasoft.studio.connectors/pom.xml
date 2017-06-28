@@ -184,56 +184,6 @@
                                     <type>zip</type>
                                 </artifactItem>
                                 <!--GOOGLE CALENDAR CONNECTOR -->
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-createevent-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-createeventwithwebcontent-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-deleteevents-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-deleteeventbylink-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-retrieveevent-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-retrieveeventsbydaterange-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-googlecalendar-updateevent-impl</artifactId>
-                                    <version>2.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <!-- GOOGLE CALENDAR V3 -->
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-create-event-impl</artifactId>
