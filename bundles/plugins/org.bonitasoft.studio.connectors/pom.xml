@@ -301,56 +301,6 @@
                                     <classifier>connector</classifier>
                                     <type>zip</type>
                                 </artifactItem>
-                                <!--SUGARCRM CONNECTORS -->
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-createobject-impl</artifactId>
-                                    <version>1.0.1</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-deleteobject-impl</artifactId>
-                                    <version>1.0.1</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-deleteseveralobjects-impl</artifactId>
-                                    <version>1.0.3</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-queryobjects-impl</artifactId>
-                                    <version>1.0.2</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-retrieveobject-impl</artifactId>
-                                    <version>1.0.2</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-retrieveseveralobjects-impl</artifactId>
-                                    <version>1.0.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-sugarcrm-updateobject-impl</artifactId>
-                                    <version>1.0.2</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
                                 <!--TWITTER CONNECTORS -->
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
