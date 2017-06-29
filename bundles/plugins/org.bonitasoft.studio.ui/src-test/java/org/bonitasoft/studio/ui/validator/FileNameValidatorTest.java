@@ -32,6 +32,8 @@ public class FileNameValidatorTest {
         final FileNameValidator validator = new FileNameValidator(repositoryStore);
 
         assertThat(validator.validate("fileName1")).isNotOK();
+        assertThat(validator.validate("fileName1.xml")).isNotOK();
+        assertThat(validator.validate("FiLeNaMe1")).isNotOK();
         assertThat(validator.validate("fileName2")).isNotOK();
         assertThat(validator.validate("fileName3")).isOK();
     }

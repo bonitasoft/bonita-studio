@@ -66,7 +66,8 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
         if (invalidChar.isPresent()) {
             return ValidationStatus.error(String.format(Messages.invalidCharFileName, invalidChar.get()));
         }
-        return UniqueValidatorFactory.uniqueValidator().in(getExistingFileNames()).create().validate(fileName);
+        return UniqueValidatorFactory.uniqueValidator().in(getExistingFileNames()).create()
+                .validate((fileName.endsWith(XML_EXTENSION) ? fileName.replace(XML_EXTENSION, "") : fileName).toLowerCase());
     }
 
     protected Optional<String> isValidFileName(final String fileName) {
@@ -83,6 +84,7 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
                 .map(file -> file.getName().substring(0,
                         file.getName().length() - XML_EXTENSION.length()))
                 .filter(filename -> !currentFileName.filter(filename::equals).isPresent())
+                .map(String::toLowerCase)
                 .collect(Collectors.toList());
     }
 
