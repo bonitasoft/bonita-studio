@@ -45,7 +45,6 @@ import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.AfterClass;
@@ -148,11 +147,7 @@ public class TestConnectorMigrationUseCase {
 
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(
                 mainProc, ProcessPackage.Literals.CONNECTOR);
-        if ("org.bonitasoft.studio.product".equals(Platform.getProduct().getId())) {
-            assertEquals("Invalid number of connector", 1, connectors.size());
-        } else {
-            assertEquals("Invalid number of connector", 2, connectors.size());
-        }
+        assertEquals("Invalid number of connector", 0, connectors.size());
     }
 
     @Test
@@ -250,7 +245,7 @@ public class TestConnectorMigrationUseCase {
         final MainProcess mainProc = importBar("CMISCreateFolderMigrationUseCase--1.0.bar");
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
         assertEquals("Invalid number of connector", 1, connectors.size());
-        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<>();
         expectedParameterCOnfiguration.put("username",
                 ExpressionHelper.createConstantExpression("admin", String.class.getName()));
         expectedParameterCOnfiguration.put("url",
@@ -269,7 +264,7 @@ public class TestConnectorMigrationUseCase {
         final MainProcess mainProc = importBar("CMISDeleteFolderMigrationUseCase--1.0.bar");
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
         assertEquals("Invalid number of connector", 1, connectors.size());
-        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<>();
         expectedParameterCOnfiguration.put("username",
                 ExpressionHelper.createConstantExpression("admin", String.class.getName()));
         expectedParameterCOnfiguration.put("url",
@@ -288,7 +283,7 @@ public class TestConnectorMigrationUseCase {
         final MainProcess mainProc = importBar("CMISUploadDocumentMigrationUseCase--1.0.bar");
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
         assertEquals("Invalid number of connector", 1, connectors.size());
-        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<>();
         expectedParameterCOnfiguration.put("username",
                 ExpressionHelper.createConstantExpression("admin", String.class.getName()));
         expectedParameterCOnfiguration.put("url",
@@ -311,7 +306,7 @@ public class TestConnectorMigrationUseCase {
         final MainProcess mainProc = importBar("CMISDeleteObjectMigrationUseCase--1.0.bar");
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
         assertEquals("Invalid number of connector", 1, connectors.size());
-        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+        final Map<String, AbstractExpression> expectedParameterCOnfiguration = new HashMap<>();
         expectedParameterCOnfiguration.put("username",
                 ExpressionHelper.createConstantExpression("admin", String.class.getName()));
         expectedParameterCOnfiguration.put("url",

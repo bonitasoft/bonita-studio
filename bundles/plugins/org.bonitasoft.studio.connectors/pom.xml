@@ -351,14 +351,6 @@
                                     <classifier>connector</classifier>
                                     <type>zip</type>
                                 </artifactItem>
-                                <!--TALEND CONNECTORS -->
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-talend-joblauncher-impl</artifactId>
-                                    <version>1.0.3</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
                                 <!--TWITTER CONNECTORS -->
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
