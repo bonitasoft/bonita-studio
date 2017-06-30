@@ -16,6 +16,8 @@ package org.bonitasoft.studio.assertions;
 
 import static java.lang.String.format;
 
+import java.util.Objects;
+
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.eclipse.core.runtime.IStatus;
@@ -247,6 +249,24 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         }
 
         // return the current assertion for method chaining
+        return this;
+    }
+
+    public StatusAssert isWarning() {
+        isNotNull();
+        final String errorMessage = format("Expected actual IStatus to be Warning but was.", actual);
+        if (!Objects.equals(actual.getSeverity(), IStatus.WARNING)) {
+            throw new AssertionError(errorMessage);
+        }
+        return this;
+    }
+
+    public StatusAssert isError() {
+        isNotNull();
+        final String errorMessage = format("Expected actual IStatus to be Error but was.", actual);
+        if (!Objects.equals(actual.getSeverity(), IStatus.ERROR)) {
+            throw new AssertionError(errorMessage);
+        }
         return this;
     }
 
