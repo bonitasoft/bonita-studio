@@ -432,7 +432,7 @@ public class TextWidget extends EditableControlWidget {
     protected void statusChanged(IStatus status) {
         super.statusChanged(status);
         if (transactionalEdit && editing && okButton != null && !okButton.isDisposed()) {
-            okButton.setEnabled(status.isOK());
+            okButton.setEnabled(!Objects.equals(status.getSeverity(), IStatus.ERROR));
         }
     }
 
