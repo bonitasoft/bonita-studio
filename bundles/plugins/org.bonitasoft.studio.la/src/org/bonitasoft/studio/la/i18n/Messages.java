@@ -56,7 +56,6 @@ public class Messages extends NLS {
     public static String importLabel;
     public static String notAnApplicationError;
     public static String importApplicationDescriptorDesc;
-    public static String fileName;
     public static String exportFailedTitle;
     public static String exportOperation;
     public static String exporting;
