@@ -23,12 +23,7 @@ public class Messages extends NLS {
     public static String create;
     public static String newApplicationDescriptorTitle;
     public static String newApplicationDescription;
-    public static String applicationToken;
     public static String applicationTokenMessage;
-    public static String version;
-    public static String displayName;
-    public static String displayNameMessage;
-    public static String required;
     public static String alphaNumericOnly;
     public static String deployingLivingApplication;
     public static String deletingApplication;
