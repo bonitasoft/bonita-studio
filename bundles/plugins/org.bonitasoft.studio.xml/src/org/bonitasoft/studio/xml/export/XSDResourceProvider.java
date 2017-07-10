@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -49,6 +50,9 @@ public class XSDResourceProvider implements IBOSArchiveFileStoreProvider {
         for (EObject item : xmlData) {
             XMLData data = (XMLData)item;
             XSDFileStore artifact = store.findArtifactWithNamespace(data.getNamespace());
+            Assert.isNotNull(
+              artifact, 
+              "XSD file has not been found for given namespace " + data.getNamespace());
             files.add(artifact) ;
         }
 
