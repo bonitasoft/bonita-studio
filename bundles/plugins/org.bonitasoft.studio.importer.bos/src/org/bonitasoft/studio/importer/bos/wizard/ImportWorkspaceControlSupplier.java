@@ -86,9 +86,16 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 25).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        doCreateWorkspaceTips(mainComposite);
         doCreateFileBrowser(mainComposite, ctx);
         statusSection = createStatusSection(mainComposite);
         return mainComposite;
+    }
+
+    private void doCreateWorkspaceTips(Composite mainComposite) {
+        Label workspaceTips = new Label(mainComposite, SWT.NONE);
+        workspaceTips.setLayoutData(GridDataFactory.fillDefaults().create());
+        workspaceTips.setText(Messages.workspaceTips);
     }
 
     private Section createStatusSection(Composite parent) {
