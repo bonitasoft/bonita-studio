@@ -69,5 +69,6 @@ public class Messages extends NLS {
     public static String importingWorkspace;
     public static String repositoryImported;
     public static String exportingWorkspace;
+    public static String workspaceTips;
 
 }
