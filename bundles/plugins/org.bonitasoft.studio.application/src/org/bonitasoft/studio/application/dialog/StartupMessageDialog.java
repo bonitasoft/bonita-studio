@@ -29,6 +29,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -42,6 +43,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class StartupMessageDialog extends MessageDialogWithPrompt {
@@ -100,8 +104,39 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
                     Display.getDefault().asyncExec(this::openImportWorkspaceDialog);
                 }
             });
+
+            createDetailsSection(composite);
         }
         return composite;
+    }
+
+    private void createDetailsSection(Composite parent) {
+
+        Label filer = new Label(parent, SWT.NONE);
+        filer.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        Section detailsSection = new Section(parent, Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
+        detailsSection.setLayout(GridLayoutFactory.fillDefaults().create());
+        detailsSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        detailsSection.setText(org.bonitasoft.studio.common.Messages.moreDetails);
+
+        Composite detailsComposite = new Composite(detailsSection, SWT.NONE);
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        Label details = new Label(detailsComposite, SWT.NONE);
+        details.setLayoutData(GridDataFactory.fillDefaults().create());
+        details.setText(Messages.startDialogDetails);
+
+        detailsSection.setClient(detailsComposite);
+
+        detailsSection.addExpansionListener(new ExpansionAdapter() {
+
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                parent.getShell().pack();
+            }
+        });
     }
 
     private void openImportWorkspaceDialog() {
