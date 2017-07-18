@@ -69,6 +69,8 @@ public class Messages extends NLS {
     public static String startDialogMsg;
     public static String importWorkFromAnotherWorkspace;
 
+    public static String startDialogDetails;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
