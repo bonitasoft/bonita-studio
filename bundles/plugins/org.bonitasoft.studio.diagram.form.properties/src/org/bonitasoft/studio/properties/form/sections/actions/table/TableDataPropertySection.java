@@ -117,7 +117,7 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
                     .setConverter(new Converter(Boolean.class, Boolean.class) {
 
                         public Object convert(final Object fromObject) {
-                            return !((Boolean) fromObject);
+                            return fromObject != null && !((Boolean) fromObject);
                         }
                     });
             dataBindingContext.bindValue(SWTObservables.observeSelection(allowSelectionButton), EMFEditObservables

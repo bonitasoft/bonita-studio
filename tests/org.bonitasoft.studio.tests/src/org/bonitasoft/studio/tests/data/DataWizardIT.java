@@ -67,6 +67,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -268,11 +269,12 @@ public class DataWizardIT {
         bot.textWithLabel(Messages.defaultValueLabel).setText(defaultValue);
         bot.sleep(500);
 
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON).click();
         assertEquals("Expression return type should be " + String.class.getName(), String.class.getName(),
                 bot.comboBoxWithLabel(Messages.returnType).getText());
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        activeShell.setFocus();
         bot.comboBoxWithLabel(Messages.datatypeLabel).setSelection(DataTypeLabels.integerDataType);
 
         defaultValue = "50";
@@ -284,7 +286,7 @@ public class DataWizardIT {
                         .getText());
 
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        activeShell.setFocus();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
@@ -323,7 +325,9 @@ public class DataWizardIT {
         final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
                 .selectPoolDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
+        SWTBotShell activeShell = bot.activeShell();
         addData.editDefaultValueExpression().selectContractInputType().selectContractInput("input1 -- TEXT").ok();
+        activeShell.setFocus();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
@@ -361,12 +365,14 @@ public class DataWizardIT {
         final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
                 .selectLocalDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
+        SWTBotShell activeShell = bot.activeShell();
         final BotExpressionEditorDialog editDefaultValueExpression = addData.editDefaultValueExpression();
         Assertions
                 .assertThat(editDefaultValueExpression.listAvailableTypes()
                         .containsItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
                 .isFalse();
         editDefaultValueExpression.cancel();
+        activeShell.setFocus();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
@@ -438,6 +444,8 @@ public class DataWizardIT {
         // Test on var varS1_2
         botDataPropertySection.processDataList().select("varS1_2" + " -- " + "Integer");
         editDataWizardPage = botDataPropertySection.edit();
+        SWTBotShell activeShell = bot.activeShell();
+        
         editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
         variableList = editDefaultValueExpression.selectVariableTab().variableList();
 
@@ -457,6 +465,7 @@ public class DataWizardIT {
                 "Error:  Task data sould be initialized by Process data").isTrue();
 
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 

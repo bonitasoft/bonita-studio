@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -64,7 +62,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor {
@@ -109,7 +106,8 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
 
         viewer.getTable().setHeaderVisible(true);
         viewer.setContentProvider(new ArrayContentProvider());
-        viewer.setLabelProvider(new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) {
+        viewer.setLabelProvider(new AdapterFactoryLabelProvider(
+                new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) {
 
             @Override
             public String getColumnText(final Object object, final int columnIndex) {
@@ -162,8 +160,10 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         viewer.setInput(input);
     }
 
-    private void retrieveAndFillDocumentSet(final EObject context, final Set<Document> simpleDocuments, final Set<Document> multipleDocuments) {
-        final IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
+    private void retrieveAndFillDocumentSet(final EObject context, final Set<Document> simpleDocuments,
+            final Set<Document> multipleDocuments) {
+        final IExpressionProvider provider = ExpressionProviderService.getInstance()
+                .getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
         final Set<Expression> expressions = provider.getExpressions(context);
         for (final Expression e1 : expressions) {
             final Document document = (Document) e1.getReferencedElements().get(0);
@@ -195,7 +195,8 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
 
     @Override
     public void bindExpression(final EMFDataBindingContext dataBindingContext,
-            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters,
+            final ExpressionViewer expressionViewer) {
         editorInputExpression = inputExpression;
         fillViewerDocument(context, filters);
 
@@ -215,7 +216,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
 
             @Override
             public Object convert(final Object data) {
-                return ((Data) data).getName();
+                return data != null ? ((Data) data).getName() : null;
             }
 
         };

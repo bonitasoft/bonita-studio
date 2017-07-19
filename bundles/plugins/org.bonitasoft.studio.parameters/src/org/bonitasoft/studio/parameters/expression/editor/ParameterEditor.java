@@ -235,7 +235,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
             @Override
             public Object convert(final Object parameter) {
-                return ((Parameter) parameter).getName();
+                return parameter != null ? ((Parameter) parameter).getName() : null;
             }
 
         };
@@ -247,7 +247,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
             @Override
             public Object convert(final Object parameter) {
-                return ((Parameter) parameter).getName();
+                return parameter != null ? ((Parameter) parameter).getName() : null;
             }
 
         };
@@ -259,7 +259,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
             @Override
             public Object convert(final Object parameter) {
-                return ((Parameter) parameter).getTypeClassname();
+                return parameter != null ? ((Parameter) parameter).getTypeClassname() : null;
             }
 
         };
@@ -271,7 +271,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
             @Override
             public Object convert(final Object parameter) {
-                return Collections.singletonList(parameter);
+                return parameter != null ? Collections.singletonList(parameter) : Collections.emptyList();
             }
 
         };
@@ -284,15 +284,17 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object parameterList) {
-                if (!((List<Parameter>) parameterList).isEmpty()) {
-                    final Parameter p = ((List<Parameter>) parameterList).get(0);
-                    final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
-                            .getInput();
-                    for (final Parameter param : inputParameters) {
-                        if (param.getName().equals(p.getName())
-                                && param.getTypeClassname().equals(
-                                        p.getTypeClassname())) {
-                            return param;
+                if (parameterList instanceof List && !((List) parameterList).isEmpty()) {
+                    if (!((List<Parameter>) parameterList).isEmpty()) {
+                        final Parameter p = ((List<Parameter>) parameterList).get(0);
+                        final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
+                                .getInput();
+                        for (final Parameter param : inputParameters) {
+                            if (param.getName().equals(p.getName())
+                                    && param.getTypeClassname().equals(
+                                            p.getTypeClassname())) {
+                                return param;
+                            }
                         }
                     }
                 }

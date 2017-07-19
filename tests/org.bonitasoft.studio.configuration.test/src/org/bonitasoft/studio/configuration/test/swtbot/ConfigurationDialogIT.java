@@ -36,6 +36,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
@@ -170,6 +171,7 @@ public class ConfigurationDialogIT {
         clickOnConfigure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().getTableItem("Actor mapping").select();
+        SWTBotShell activeShell = bot.activeShell();
 
         //Remove default mapping
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).select();
@@ -177,11 +179,15 @@ public class ConfigurationDialogIT {
         bot.table().getTableItem(0).uncheck();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
+        activeShell.setFocus();
+
         //Map to a group
         bot.tree().getTreeItem(EMPLOYEE_ACTOR + " -- Not mapped").select();
         bot.button("Groups...").click();
         bot.table().getTableItem(0).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+
+        activeShell.setFocus();
 
         //Map to a role
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).select();
@@ -189,11 +195,15 @@ public class ConfigurationDialogIT {
         bot.table().getTableItem(0).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
+        activeShell.setFocus();
+
         //Map to a user
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).select();
         bot.button("Users...").click();
         bot.table().getTableItem(0).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+
+        activeShell.setFocus();
 
         //Map to a membership
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).select();
@@ -205,6 +215,8 @@ public class ConfigurationDialogIT {
         bot.comboBoxWithLabel("Role").setSelection(1);
         assertTrue("Finish button should be enabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
+
+        activeShell.setFocus();
 
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).getNode("Groups").expand();
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).getNode("Roles").expand();

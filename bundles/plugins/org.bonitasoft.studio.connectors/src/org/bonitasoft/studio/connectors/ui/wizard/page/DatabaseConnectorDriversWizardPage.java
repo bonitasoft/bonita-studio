@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.connectors.ui.wizard.page;
@@ -51,249 +49,256 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author Aurelie Zara
- *
  */
 public class DatabaseConnectorDriversWizardPage extends WizardPage {
-	
-	private static final int DEFAULT_BUTTON_WIDTH_HINT = 85;
 
-	private String connectorId;
-	private TableViewer driverManagerViewer;
-	private DatabaseDriversLabelProvider driversLabelProvider;
-	private DatabaseConnectorPropertiesRepositoryStore store;
-	private Button automaticallyAddDriver;
-	private DataBindingContext context;
+    private static final int DEFAULT_BUTTON_WIDTH_HINT = 85;
 
-	/**
-	 * @param pageName
-	 */
-	public DatabaseConnectorDriversWizardPage( String connectorId) {
-		super(DatabaseConnectorDriversWizardPage.class.getName());
-		setTitle(Messages.databaseConnectorDriversWizardPageTitle);
-		setDescription(Messages.databaseConnectorDriversWizardPageDescription);
-		this.connectorId=connectorId;
-		store= (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
-		context = new DataBindingContext();
-		driversLabelProvider = new DatabaseDriversLabelProvider();
-		String defaultDriver = getDefaultDriver(connectorId);
-		if (defaultDriver!=null){
-			driversLabelProvider.setDefaultDriver(defaultDriver);
-		}
-		
-	}
+    private String connectorId;
+    private TableViewer driverManagerViewer;
+    private DatabaseDriversLabelProvider driversLabelProvider;
+    private DatabaseConnectorPropertiesRepositoryStore store;
+    private Button automaticallyAddDriver;
+    private DataBindingContext context;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(Composite parent) {
-		setControl(createDriverManager(parent));
-		
-	}
-	
+    /**
+     * @param pageName
+     */
+    public DatabaseConnectorDriversWizardPage(String connectorId) {
+        super(DatabaseConnectorDriversWizardPage.class.getName());
+        setTitle(Messages.databaseConnectorDriversWizardPageTitle);
+        setDescription(Messages.databaseConnectorDriversWizardPageDescription);
+        this.connectorId = connectorId;
+        store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+        context = new DataBindingContext();
+        driversLabelProvider = new DatabaseDriversLabelProvider();
+        String defaultDriver = getDefaultDriver(connectorId);
+        if (defaultDriver != null) {
+            driversLabelProvider.setDefaultDriver(defaultDriver);
+        }
 
-	protected String getDBPrefFilename(String connectorId) {
-		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
-	}
-	
-	private Composite createDriverManager(Composite parent){
-		final Composite driverManagerComposite = new Composite(parent,SWT.NONE);
-		driverManagerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-		driverManagerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    }
 
-		driverManagerViewer = new TableViewer(driverManagerComposite,SWT.BORDER | SWT.FULL_SELECTION);
-		TableLayout tableLayout=new TableLayout();
-		tableLayout.addColumnData(new ColumnWeightData(1));
-		driverManagerViewer.getTable().setLayout(tableLayout);
-		driverManagerViewer.getTable().setLinesVisible(true);
-		driverManagerViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		driverManagerViewer.setContentProvider(new DatabaseDriversContentProvider());
-		TableViewerColumn column = new TableViewerColumn(driverManagerViewer, SWT.FILL);
-		column.setLabelProvider(driversLabelProvider);
-		driverManagerViewer.setInput(connectorId);
-		createButtonsPart(driverManagerComposite);
-		createAutomaticallyAddDriverButton(driverManagerComposite);
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(Composite parent) {
+        setControl(createDriverManager(parent));
 
-		return driverManagerComposite;
-	}
+    }
 
+    protected String getDBPrefFilename(String connectorId) {
+        return connectorId + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
+    }
 
-	private void createButtonsPart(Composite parent){
-		final Composite buttonsComposite = new Composite(parent,SWT.NONE);
-		buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
-		buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create()) ;
+    private Composite createDriverManager(Composite parent) {
+        final Composite driverManagerComposite = new Composite(parent, SWT.NONE);
+        driverManagerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        driverManagerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		createAddbutton(buttonsComposite);
-		createRemoveButton(buttonsComposite);
-		createActivateButton(buttonsComposite);
-	}
+        driverManagerViewer = new TableViewer(driverManagerComposite, SWT.BORDER | SWT.FULL_SELECTION);
+        TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        driverManagerViewer.getTable().setLayout(tableLayout);
+        driverManagerViewer.getTable().setLinesVisible(true);
+        driverManagerViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        driverManagerViewer.setContentProvider(new DatabaseDriversContentProvider());
+        TableViewerColumn column = new TableViewerColumn(driverManagerViewer, SWT.FILL);
+        column.setLabelProvider(driversLabelProvider);
+        driverManagerViewer.setInput(connectorId);
+        createButtonsPart(driverManagerComposite);
+        createAutomaticallyAddDriverButton(driverManagerComposite);
 
+        return driverManagerComposite;
+    }
 
-	private void createAddbutton(Composite parent){
-		final Button add = new Button(parent,SWT.FLAT);
-		add.setText(Messages.add);
+    private void createButtonsPart(Composite parent) {
+        final Composite buttonsComposite = new Composite(parent, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
 
-		add.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
+        createAddbutton(buttonsComposite);
+        createRemoveButton(buttonsComposite);
+        createActivateButton(buttonsComposite);
+    }
 
-		add.addSelectionListener(new SelectionAdapter() {
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				SelectJarsDialog dialog = new SelectJarsDialog(getShell());
-				if (dialog.open()==Window.OK ){
-					List<String> jars = getJars();
-					int size = jars.size();
-					List<IRepositoryFileStore> selectedJars=dialog.getSelectedJars();
-					for (IRepositoryFileStore jar:selectedJars){
-						jars.add(jar.getName());
-					}
-					if (size==0  && !jars.isEmpty()){
-						driversLabelProvider.setDefaultDriver( jars.get(0));
-						setDefaultDriver(connectorId, jars.get(0));
-					}
-					setJars(connectorId,jars);
-					if(jars.size() == 1){
-						setDefaultDriver(connectorId, jars.get(0));
-					}
-					driverManagerViewer.setInput(connectorId);
-				}
+    private void createAddbutton(Composite parent) {
+        final Button add = new Button(parent, SWT.FLAT);
+        add.setText(Messages.add);
 
-			}
-		});
-	}
+        add.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
 
+        add.addSelectionListener(new SelectionAdapter() {
 
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                SelectJarsDialog dialog = new SelectJarsDialog(getShell());
+                if (dialog.open() == Window.OK) {
+                    List<String> jars = getJars();
+                    int size = jars.size();
+                    List<IRepositoryFileStore> selectedJars = dialog.getSelectedJars();
+                    for (IRepositoryFileStore jar : selectedJars) {
+                        jars.add(jar.getName());
+                    }
+                    if (size == 0 && !jars.isEmpty()) {
+                        driversLabelProvider.setDefaultDriver(jars.get(0));
+                        setDefaultDriver(connectorId, jars.get(0));
+                    }
+                    setJars(connectorId, jars);
+                    if (jars.size() == 1) {
+                        setDefaultDriver(connectorId, jars.get(0));
+                    }
+                    driverManagerViewer.setInput(connectorId);
+                }
 
-	private void createRemoveButton(Composite parent){
-		final Button remove = new Button(parent,SWT.FLAT);
-		remove.setText(Messages.remove);
-		remove.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-		remove.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeDriver();
-				driverManagerViewer.setInput(connectorId);
-			}
-		});
-		bindButtonWithViewer(remove, driverManagerViewer);
-	}
+            }
+        });
+    }
 
+    private void createRemoveButton(Composite parent) {
+        final Button remove = new Button(parent, SWT.FLAT);
+        remove.setText(Messages.remove);
+        remove.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        remove.addSelectionListener(new SelectionAdapter() {
 
-	private void createActivateButton(Composite parent){
-		final Button activate = new Button(parent,SWT.FLAT);
-		activate.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-		activate.setText(Messages.activate);
-		activate.addSelectionListener(new SelectionAdapter(){
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				driversLabelProvider.setDefaultDriver(getSelectedDriver());
-				setDefaultDriver(connectorId, getSelectedDriver());
-				driverManagerViewer.setInput(connectorId);
-			}
-		});
-		bindButtonWithViewer(activate, driverManagerViewer);
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                removeDriver();
+                driverManagerViewer.setInput(connectorId);
+            }
+        });
+        bindButtonWithViewer(remove, driverManagerViewer);
+    }
 
-	private void createAutomaticallyAddDriverButton(Composite parent){
-		automaticallyAddDriver = new Button(parent,SWT.CHECK);
-		automaticallyAddDriver.setText(Messages.automaticallyAddDriver);
-		automaticallyAddDriver.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
-	//	automaticallyAddDriver.setSelection(true);
-		automaticallyAddDriver.setSelection(getAutoAddDriverProperty(connectorId));
-		automaticallyAddDriver.addSelectionListener(new SelectionAdapter(){
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setAutoAddDriverProperty(connectorId);
-			}
-		});
-	}
-	
-	private void bindButtonWithViewer(Button button,TableViewer viewer){
-		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-		modelToTarget.setConverter(new Converter(Object.class,Boolean.class){
+    private void createActivateButton(Composite parent) {
+        final Button activate = new Button(parent, SWT.FLAT);
+        activate.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        activate.setText(Messages.activate);
+        activate.addSelectionListener(new SelectionAdapter() {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if (fromObject !=null) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                driversLabelProvider.setDefaultDriver(getSelectedDriver());
+                setDefaultDriver(connectorId, getSelectedDriver());
+                driverManagerViewer.setInput(connectorId);
+            }
+        });
+        bindButtonWithViewer(activate, driverManagerViewer);
+    }
 
-		});
-		context.bindValue(SWTObservables.observeEnabled(button), ViewersObservables.observeSingleSelection(viewer),null,modelToTarget);
-	}
-	
-	private void removeDriver(){
-		String driver = getSelectedDriver();
-		if (driver.equals(getDefaultDriver(connectorId))){
-			setDefaultDriver(connectorId, null);
-		}
-		List<String> jars = getJars();
-		jars.remove(driver);
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(getDBPrefFilename(connectorId));
-		fileStore.setJarList(jars);
-	}
-	
-	
-	private String getSelectedDriver(){
-		IStructuredSelection driverSelection =(IStructuredSelection) driverManagerViewer.getSelection();
-		return (String)driverSelection.getFirstElement();
-	}
-	
-	private List<String> getJars(){
-		List<String> jars = new ArrayList<String>();
-		TableItem[] items=driverManagerViewer.getTable().getItems();
-		for (TableItem item : items){
-			jars.add((String)item.getData());
-		}
-		return jars;
-	}
-	
-	private void setJars(String connectorId, List<String> jars){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
-		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId) );
-		}
-		fileStore.setJarList(jars);
-	}
+    private void createAutomaticallyAddDriverButton(Composite parent) {
+        automaticallyAddDriver = new Button(parent, SWT.CHECK);
+        automaticallyAddDriver.setText(Messages.automaticallyAddDriver);
+        automaticallyAddDriver.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
+        //	automaticallyAddDriver.setSelection(true);
+        automaticallyAddDriver.setSelection(getAutoAddDriverProperty(connectorId));
+        automaticallyAddDriver.addSelectionListener(new SelectionAdapter() {
 
-	private String getDefaultDriver(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
-		if (fileStore !=null){
-			return fileStore.getDefault();
-		}
-		return null;
-	}
-	
-	private boolean getAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
-		if (fileStore !=null){
-			return fileStore.getAutoAddDriver();
-		} 
-			return true;
-		
-	}
-	
-	private void setDefaultDriver(String connectorId, String defaultDriver){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
-		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId) );
-		}
-		fileStore.setDefault(defaultDriver);
-	}
-	
-	private void setAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
-		if (fileStore!=null){
-			fileStore.setAutoAddDriver(new Boolean(automaticallyAddDriver.getSelection()));
-		} else {
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
-		}
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setAutoAddDriverProperty(connectorId);
+            }
+        });
+    }
+
+    private void bindButtonWithViewer(Button button, TableViewer viewer) {
+        UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+        modelToTarget.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(Object fromObject) {
+                return fromObject != null;
+            }
+
+        });
+        context.bindValue(SWTObservables.observeEnabled(button), ViewersObservables.observeSingleSelection(viewer), null,
+                modelToTarget);
+    }
+
+    private void removeDriver() {
+        String driver = getSelectedDriver();
+        if (driver.equals(getDefaultDriver(connectorId))) {
+            setDefaultDriver(connectorId, null);
+        }
+        List<String> jars = getJars();
+        jars.remove(driver);
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .createRepositoryFileStore(getDBPrefFilename(connectorId));
+        fileStore.setJarList(jars);
+    }
+
+    private String getSelectedDriver() {
+        IStructuredSelection driverSelection = (IStructuredSelection) driverManagerViewer.getSelection();
+        return (String) driverSelection.getFirstElement();
+    }
+
+    private List<String> getJars() {
+        List<String> jars = new ArrayList<String>();
+        TableItem[] items = driverManagerViewer.getTable().getItems();
+        for (TableItem item : items) {
+            jars.add((String) item.getData());
+        }
+        return jars;
+    }
+
+    private void setJars(String connectorId, List<String> jars) {
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .getChild(getDBPrefFilename(connectorId));
+        if (fileStore == null) {
+            fileStore = (DatabaseConnectorPropertiesFileStore) store
+                    .createRepositoryFileStore(getDBPrefFilename(connectorId));
+        }
+        fileStore.setJarList(jars);
+    }
+
+    private String getDefaultDriver(String connectorId) {
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .getChild(getDBPrefFilename(connectorId));
+        if (fileStore != null) {
+            return fileStore.getDefault();
+        }
+        return null;
+    }
+
+    private boolean getAutoAddDriverProperty(String connectorId) {
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .getChild(getDBPrefFilename(connectorId));
+        if (fileStore != null) {
+            return fileStore.getAutoAddDriver();
+        }
+        return true;
+
+    }
+
+    private void setDefaultDriver(String connectorId, String defaultDriver) {
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .getChild(getDBPrefFilename(connectorId));
+        if (fileStore == null) {
+            fileStore = (DatabaseConnectorPropertiesFileStore) store
+                    .createRepositoryFileStore(getDBPrefFilename(connectorId));
+        }
+        fileStore.setDefault(defaultDriver);
+    }
+
+    private void setAutoAddDriverProperty(String connectorId) {
+        DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
+                .getChild(getDBPrefFilename(connectorId));
+        if (fileStore != null) {
+            fileStore.setAutoAddDriver(new Boolean(automaticallyAddDriver.getSelection()));
+        } else {
+            fileStore = (DatabaseConnectorPropertiesFileStore) store
+                    .createRepositoryFileStore(getDBPrefFilename(connectorId));
+        }
+    }
 
 }

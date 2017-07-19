@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.swtbot.framework.la;
 
+import org.bonitasoft.studio.la.ui.control.SelectionMultiPage;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
 public abstract class SelectApplicationWizardEditorBot extends BotDialog {
@@ -39,8 +39,6 @@ public abstract class SelectApplicationWizardEditorBot extends BotDialog {
     public abstract void finish();
 
     public SWTBotTable table() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.table()));
-        final SWTBotTable table = bot.table();
-        return table;
+        return bot.tableWithId(SelectionMultiPage.TABLE_ID);
     }
 }

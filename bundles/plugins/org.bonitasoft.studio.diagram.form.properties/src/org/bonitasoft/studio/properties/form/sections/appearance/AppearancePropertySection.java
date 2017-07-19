@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -66,14 +63,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
- * 
  * @author Aurelien Pupier
  * @author Baptiste Mesta
  * @author Mickael Istria (Refactoring tabs, added databinding)
- * 
  *         The class responsible for appearance property section of form
  *         diagram.
- * 
  */
 public class AppearancePropertySection extends AbstractModelerPropertySection {
 
@@ -146,65 +140,79 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
         }
         databindingContext = new EMFDataBindingContext();
 
-        UpdateValueStrategy rightToEnum = new UpdateValueStrategy().setConverter(new Converter(Boolean.class, LabelPosition.class) {
+        UpdateValueStrategy rightToEnum = new UpdateValueStrategy()
+                .setConverter(new Converter(Boolean.class, LabelPosition.class) {
 
-            public Object convert(Object fromObject) {
-                return LabelPosition.RIGHT;
-            }
-        });
-        UpdateValueStrategy enumToRight = new UpdateValueStrategy().setConverter(new Converter(LabelPosition.class, Boolean.class) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.RIGHT;
+                    }
+                });
+        UpdateValueStrategy enumToRight = new UpdateValueStrategy()
+                .setConverter(new Converter(LabelPosition.class, Boolean.class) {
 
-            public Object convert(Object fromObject) {
-                return fromObject.equals(LabelPosition.RIGHT);
-            }
-        });
-        UpdateValueStrategy leftToEnum = new UpdateValueStrategy().setConverter(new Converter(Boolean.class, LabelPosition.class) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.RIGHT.equals(fromObject);
+                    }
+                });
+        UpdateValueStrategy leftToEnum = new UpdateValueStrategy()
+                .setConverter(new Converter(Boolean.class, LabelPosition.class) {
 
-            public Object convert(Object fromObject) {
-                return LabelPosition.LEFT;
-            }
-        });
-        UpdateValueStrategy enumToLeft = new UpdateValueStrategy().setConverter(new Converter(LabelPosition.class, Boolean.class) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.LEFT;
+                    }
+                });
+        UpdateValueStrategy enumToLeft = new UpdateValueStrategy()
+                .setConverter(new Converter(LabelPosition.class, Boolean.class) {
 
-            public Object convert(Object fromObject) {
-                return fromObject.equals(LabelPosition.LEFT);
-            }
-        });
-        UpdateValueStrategy upToEnum = new UpdateValueStrategy().setConverter(new Converter(Boolean.class, LabelPosition.class) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.LEFT.equals(fromObject);
+                    }
+                });
+        UpdateValueStrategy upToEnum = new UpdateValueStrategy()
+                .setConverter(new Converter(Boolean.class, LabelPosition.class) {
 
-            public Object convert(Object fromObject) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.UP;
+                    }
+                });
+        UpdateValueStrategy enumToUp = new UpdateValueStrategy()
+                .setConverter(new Converter(LabelPosition.class, Boolean.class) {
 
-                return LabelPosition.UP;
-            }
-        });
-        UpdateValueStrategy enumToUp = new UpdateValueStrategy().setConverter(new Converter(LabelPosition.class, Boolean.class) {
+                    public Object convert(Object fromObject) {
+                        return fromObject.equals(LabelPosition.UP);
+                    }
+                });
+        UpdateValueStrategy downToEnum = new UpdateValueStrategy()
+                .setConverter(new Converter(Boolean.class, LabelPosition.class) {
 
-            public Object convert(Object fromObject) {
-                return fromObject.equals(LabelPosition.UP);
-            }
-        });
-        UpdateValueStrategy downToEnum = new UpdateValueStrategy().setConverter(new Converter(Boolean.class, LabelPosition.class) {
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.DOWN;
+                    }
+                });
+        UpdateValueStrategy enumToDown = new UpdateValueStrategy()
+                .setConverter(new Converter(LabelPosition.class, Boolean.class) {
 
-            public Object convert(Object fromObject) {
-
-                return LabelPosition.DOWN;
-            }
-        });
-        UpdateValueStrategy enumToDown = new UpdateValueStrategy().setConverter(new Converter(LabelPosition.class, Boolean.class) {
-
-            public Object convert(Object fromObject) {
-                return fromObject.equals(LabelPosition.DOWN);
-            }
-        });
+                    public Object convert(Object fromObject) {
+                        return LabelPosition.DOWN.equals(fromObject);
+                    }
+                });
 
         databindingContext.bindValue(SWTObservables.observeSelection(right),
-                EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.WIDGET__LABEL_POSITION), rightToEnum, enumToRight);
+                EMFEditObservables.observeValue(getEditingDomain(), getEObject(),
+                        FormPackage.Literals.WIDGET__LABEL_POSITION),
+                rightToEnum, enumToRight);
         databindingContext.bindValue(SWTObservables.observeSelection(left),
-                EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.WIDGET__LABEL_POSITION), leftToEnum, enumToLeft);
+                EMFEditObservables.observeValue(getEditingDomain(), getEObject(),
+                        FormPackage.Literals.WIDGET__LABEL_POSITION),
+                leftToEnum, enumToLeft);
         databindingContext.bindValue(SWTObservables.observeSelection(up),
-                EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.WIDGET__LABEL_POSITION), upToEnum, enumToUp);
+                EMFEditObservables.observeValue(getEditingDomain(), getEObject(),
+                        FormPackage.Literals.WIDGET__LABEL_POSITION),
+                upToEnum, enumToUp);
         databindingContext.bindValue(SWTObservables.observeSelection(down),
-                EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.WIDGET__LABEL_POSITION), downToEnum, enumToDown);
+                EMFEditObservables.observeValue(getEditingDomain(), getEObject(),
+                        FormPackage.Literals.WIDGET__LABEL_POSITION),
+                downToEnum, enumToDown);
     }
 
     /**
@@ -252,9 +260,9 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
      * add properties on the size
      * 
      * @param mainComposite2
-     *            where to put the composite
+     *        where to put the composite
      * @param prefix
-     *            wich part of the widget it affect (prefix properties name)
+     *        wich part of the widget it affect (prefix properties name)
      * @param vs
      * @param hs
      */
@@ -288,13 +296,12 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
     }
 
     /**
-     * 
      * group that contains properties on text
      * 
      * @param mainComposite2
-     *            where to put the composite
+     *        where to put the composite
      * @param prefix
-     *            wich part of the widget it affect (prefix properties name)
+     *        wich part of the widget it affect (prefix properties name)
      * @param vs
      * @param hs
      */
@@ -459,7 +466,6 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
     }
 
     /**
-     * 
      * @return the widget of this section
      */
     protected Widget getWidget() {
@@ -467,7 +473,6 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
     }
 
     /**
-     * 
      * get text of the widget (if possible)
      * 
      * @param widget
@@ -487,13 +492,12 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
     }
 
     /**
-     * 
      * set the text of the widget with the string value
      * 
      * @param widget
-     *            SWT widget on which set the text
+     *        SWT widget on which set the text
      * @param string
-     *            the string to set the widget with
+     *        the string to set the widget with
      */
     private void setWidgetText(org.eclipse.swt.widgets.Widget widget, String string) {
         if (widget instanceof Text) {
@@ -546,13 +550,16 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
 
         if (widgets_others.containsKey(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXHEIGHT)) {
             if (w instanceof ListFormField) {
-                setWidgetText(widgets_others.get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXHEIGHT), "" + ((ListFormField) w).getMaxHeigth()); //$NON-NLS-1$
+                setWidgetText(widgets_others.get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXHEIGHT),
+                        "" + ((ListFormField) w).getMaxHeigth()); //$NON-NLS-1$
             } else if (w instanceof TextAreaFormField) {
-                setWidgetText(widgets_others.get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXHEIGHT), "" + ((TextAreaFormField) w).getMaxHeigth()); //$NON-NLS-1$
+                setWidgetText(widgets_others.get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXHEIGHT),
+                        "" + ((TextAreaFormField) w).getMaxHeigth()); //$NON-NLS-1$
             }
         }
         if (widgets_others.containsKey(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXLENGTH)) {
-            org.eclipse.swt.widgets.Widget widgetText = widgets_others.get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXLENGTH);
+            org.eclipse.swt.widgets.Widget widgetText = widgets_others
+                    .get(ExporterTools.PREFIX_INPUT + ExporterTools.ATTR_MAXLENGTH);
             if (w instanceof PasswordFormField) {
                 int maxLength = ((PasswordFormField) w).getMaxLength();
                 if (maxLength > 0) {
@@ -593,22 +600,26 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
                 done = true;
                 if (getWidgetText(widgets.get(attr)).length() > 0) {
                     if (!map.containsKey(attr)) {
-                        EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl) EcoreUtil.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+                        EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl) EcoreUtil
+                                .create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
                         entry.setKey(attr);
                         entry.setValue(getWidgetText(widgets.get(attr)));
                         getEditingDomain().getCommandStack().execute(
-                                new AddCommand(getEditingDomain(), getWidget(), FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES, entry));
+                                new AddCommand(getEditingDomain(), getWidget(),
+                                        FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES, entry));
                     } else {
                         getEditingDomain().getCommandStack().execute(
                                 new SetCommand(getEditingDomain(), (EObject) map.get(map.indexOfKey(attr)),
-                                        EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY__VALUE, getWidgetText(widgets.get(attr))));
+                                        EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY__VALUE,
+                                        getWidgetText(widgets.get(attr))));
                     }
                 } else {
                     if (map.containsKey(attr)) {
                         int index = map.indexOfKey(attr);
                         Entry<String, String> entry = map.get(index);
                         getEditingDomain().getCommandStack().execute(
-                                new RemoveCommand(getEditingDomain(), getWidget(), FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES, entry));
+                                new RemoveCommand(getEditingDomain(), getWidget(),
+                                        FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES, entry));
                     }
                 }
                 break;
@@ -628,10 +639,12 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
                 int value = Integer.valueOf(text);
                 if (w instanceof ListFormField) {
                     getEditingDomain().getCommandStack()
-                            .execute(new SetCommand(getEditingDomain(), w, FormPackage.Literals.LIST_FORM_FIELD__MAX_HEIGTH, value));
+                            .execute(new SetCommand(getEditingDomain(), w, FormPackage.Literals.LIST_FORM_FIELD__MAX_HEIGTH,
+                                    value));
                 } else if (w instanceof TextAreaFormField) {
                     getEditingDomain().getCommandStack().execute(
-                            new SetCommand(getEditingDomain(), w, FormPackage.Literals.TEXT_AREA_FORM_FIELD__MAX_HEIGTH, value));
+                            new SetCommand(getEditingDomain(), w, FormPackage.Literals.TEXT_AREA_FORM_FIELD__MAX_HEIGTH,
+                                    value));
                 }
             } catch (NumberFormatException e) {
 
@@ -656,7 +669,8 @@ public class AppearancePropertySection extends AbstractModelerPropertySection {
 
             } else if (w instanceof TextFormField) {
                 getEditingDomain().getCommandStack()
-                        .execute(new SetCommand(getEditingDomain(), w, FormPackage.Literals.TEXT_FORM_FIELD__MAX_LENGTH, value));
+                        .execute(new SetCommand(getEditingDomain(), w, FormPackage.Literals.TEXT_FORM_FIELD__MAX_LENGTH,
+                                value));
 
             }
 

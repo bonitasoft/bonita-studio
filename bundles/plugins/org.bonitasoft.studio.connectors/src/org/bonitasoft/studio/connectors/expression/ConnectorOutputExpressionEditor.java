@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -64,7 +62,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -158,11 +155,13 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
      * org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.emf.edit.domain.EditingDomain)
      */
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression, ViewerFilter[] filters,
+    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression,
+            ViewerFilter[] filters,
             ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
         Set<Output> input = new HashSet<Output>();
-        IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        IExpressionProvider provider = ExpressionProviderService.getInstance()
+                .getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
         for (Expression e : provider.getExpressions(context)) {
             if (inputExpression.isReturnTypeFixed()) {
                 if (e.getReturnType().equals(inputExpression.getReturnType())) {
@@ -174,10 +173,14 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
         }
         viewer.setInput(input);
 
-        IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        IObservableValue nameObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+        IObservableValue contentObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        IObservableValue nameObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__NAME);
+        IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
         UpdateValueStrategy selectionToName = new UpdateValueStrategy();
 
@@ -185,7 +188,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
             @Override
             public Object convert(Object output) {
-                return ((Output) output).getName();
+                return output != null ? ((Output) output).getName() : null;
             }
 
         };
@@ -196,7 +199,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
             @Override
             public Object convert(Object output) {
-                return ((Output) output).getName();
+                return output != null ? ((Output) output).getName() : null;
             }
 
         };
@@ -207,7 +210,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
             @Override
             public Object convert(Object output) {
-                return ((Output) output).getType();
+                return output != null ? ((Output) output).getType() : null;
             }
 
         };
@@ -218,7 +221,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
             @Override
             public Object convert(Object output) {
-                return Collections.singletonList(output);
+                return output != null ? Collections.singletonList(output) : Collections.emptyList();
             }
 
         };
@@ -243,13 +246,17 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
         };
         referencedDataToSelection.setConverter(modelReferenceToTarget);
         dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable, selectionToName, new UpdateValueStrategy(
-                UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), contentObservable, selectionToContent, new UpdateValueStrategy(
-                UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), returnTypeObservable, selectionToReturnType, new UpdateValueStrategy(
-                UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable, selectionToReferencedData,
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable, selectionToName,
+                new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), contentObservable,
+                selectionToContent, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), returnTypeObservable,
+                selectionToReturnType, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable,
+                selectionToReferencedData,
                 referencedDataToSelection);
     }
 

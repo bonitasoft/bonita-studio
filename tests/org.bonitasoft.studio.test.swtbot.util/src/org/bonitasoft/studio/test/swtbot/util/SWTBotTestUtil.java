@@ -190,7 +190,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         return Platform.getBundle("org.bonitasoft.studioEx.console.libs") != null;
     }
 
-    public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabeText) {
+    public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabText) {
         viewerBot.sleep(1000);
         UIThreadRunnable.syncExec(new VoidResult() {
 
@@ -217,7 +217,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
                                 .getElementAt(i);
                         if (currentTab != null) {
                             final String label = currentTab.getTabItem().getText();
-                            if (label.equals(tabeText)) {
+                            if (label.equals(tabText)) {
                                 found = true;
                                 selectMethod.invoke(tabbedPropertyList, i);
                             }
@@ -225,11 +225,11 @@ public class SWTBotTestUtil implements SWTBotConstants {
                         i++;
                     } while (currentTab != null && !found);
                     if (!found) {
-                        throw new WidgetNotFoundException("Can't find a tab item with " + tabeText + " label");
+                        throw new WidgetNotFoundException("Can't find a tab item with " + tabText + " label");
                     }
                 } catch (final Exception ex) {
                     BonitaStudioLog.error(ex);
-                    throw new WidgetNotFoundException("Can't find a tab item with " + tabeText + " label");
+                    throw new WidgetNotFoundException("Can't find a tab item with " + tabText + " label");
                 }
             }
         });
@@ -492,6 +492,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.waitUntil(Conditions.shellIsActive("New variable"));
         bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name + " *").setText(name);
         bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(type);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("List of options...").click();
         bot.waitUntil(Conditions.shellIsActive("List of options"));
         int i = 0;
@@ -509,6 +510,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             i++;
         }
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
         if (isMultiple) {
             bot.checkBox("Is multiple").select();
         }
@@ -941,11 +943,13 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 3th page
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON).click();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
         bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(scriptText);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
         // 4th page
@@ -1004,7 +1008,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         // 5th page
         bot.textWithLabel("Subject *").setText(subject);
         if (message != null && !message.isEmpty()) {
-            bot.textWithLabel("Message").setText(message);
+            bot.styledTextWithLabel("Message").setText(message);
         }
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
         Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.",
@@ -1059,7 +1063,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             throw new WidgetNotFoundException(storageExpressionName + " not found in proposals");
         }
         proposalTAble.select(row);
-        SWTBotTestUtil.pressEnter();
+        proposalTAble.pressShortcut(Keystrokes.CR);
         bot.waitUntil(Conditions.shellCloses(proposalShell));
     }
 

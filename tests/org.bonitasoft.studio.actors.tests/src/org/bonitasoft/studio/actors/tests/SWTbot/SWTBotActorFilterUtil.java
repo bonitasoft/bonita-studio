@@ -25,6 +25,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 
@@ -130,7 +131,7 @@ public class SWTBotActorFilterUtil {
     }
 
     /**
-     * use it when the wizard "New  definition" is active. (menu
+     * use it when the wizard "New definition" is active. (menu
      * development>Actor filters>New definition...)
      *
      * @param bot
@@ -184,7 +185,7 @@ public class SWTBotActorFilterUtil {
     }
 
     /**
-     * use it when the wizard "New  definition" is active. (menu
+     * use it when the wizard "New definition" is active. (menu
      * development>Actors filters>New definition...)
      *
      * @param bot
@@ -194,16 +195,18 @@ public class SWTBotActorFilterUtil {
     public static void createNewCategory(final SWTBot bot, final String categoryId)
             throws Exception {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button("New...")), 10000);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("New...").click();
         Assert.assertFalse("ok button should be desabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Id").setText(categoryId);
         bot.textWithLabel("Display name").setText(categoryId);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     /**
-     * use it when the wizard "New  definition" is active. (menu
+     * use it when the wizard "New definition" is active. (menu
      * development>Actors filters>New definition...)
      *
      * @param bot

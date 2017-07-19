@@ -15,6 +15,11 @@
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.studio.model.process.builders.DoubleDataTypeBuilder.aDoubleDataType;
+import static org.bonitasoft.studio.model.process.builders.XMLDataBuilder.anXMLData;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -41,9 +46,12 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.studio.model.process.builders.XMLDataTypeBuilder;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.ui.PlatformUI;
+import org.junit.After;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
@@ -56,6 +64,11 @@ import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
 
 public class BPMNDataExportImportTest {
+
+    @After
+    public void closeEditor() throws Exception {
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+    }
 
     @Test
     public void testProcessTextData() throws IOException {
@@ -96,14 +109,12 @@ public class BPMNDataExportImportTest {
     }
 
     protected Data createDoubleDataSample() {
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
-        textDefaultValue.setName("Double data sample");
-        textDefaultValue.setReturnType(Double.class.getName());
-        textDefaultValue.setContent("12.3");
-        textDefaultValue.setType(ExpressionConstants.CONSTANT_TYPE);
-        data.setDefaultValue(textDefaultValue);
-        return data;
+        return aData().havingDataType(aDoubleDataType())
+                .havingDefaultValue(aConstantExpression()
+                        .withName("12.3")
+                        .withContent("12.3")
+                        .withReturnType(Double.class.getName()))
+                .build();
     }
 
     @Test
@@ -200,26 +211,24 @@ public class BPMNDataExportImportTest {
 
     @Test
     public void testStepTransientXMLData() throws IOException {
-        final String structureRef = "java.util.List";
-        final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
-        final Expression xmlDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
-        final String nameSpace = "http://aa";
-        data.setNamespace(nameSpace);
-        data.setName("zzz");
-        data.setType("xmlDataTestType");
-        data.setTransient(true);
-        xmlDefaultValue.setName("xml data sample");
-        xmlDefaultValue.setReturnType(structureRef);
-        xmlDefaultValue.setContent("myXPath");
-        xmlDefaultValue.setType(ExpressionConstants.XPATH_TYPE);
-        data.setDefaultValue(xmlDefaultValue);
-        final String dataType = DataTypeLabels.xmlDataType;
+        XMLData data = anXMLData()
+                .havingDataType(XMLDataTypeBuilder.create())
+                .withName("zzz")
+                .withNamespace("http://aa")
+                .isTransient()
+                .withElementType("xmlDataTestType")
+                .havingDefaultValue(anExpression()
+                        .withName("xml data sample")
+                        .withContent("myXPath")
+                        .withReturnType("java.util.List")
+                        .withExpressionType(ExpressionConstants.XPATH_TYPE))
+                .build();
 
-        final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, dataType);
+        final DocumentRoot model2 = exportToBPMNProcessWithStepData(data, DataTypeLabels.xmlDataType);
         checkPropertyExistWithGoodStructure(data.getDefaultValue(), model2);
         for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
             if (rootElement instanceof TItemDefinition && rootElement.getId().equals("zzz")) {
-                assertEquals("Namespace has been lost", nameSpace,
+                assertEquals("Namespace has been lost", "http://aa",
                         ((TItemDefinition) rootElement).getStructureRef().getNamespaceURI());
             }
         }
@@ -520,7 +529,8 @@ public class BPMNDataExportImportTest {
                 .findFirst()
                 .ifPresent(task -> editingDomain.getCommandStack().execute(
                         AddCommand.create(editingDomain, task, ProcessPackage.Literals.DATA_AWARE__DATA, data)));
-        newDiagramFileStore.getContent().getDatatypes().stream()
+        MainProcess mainProcess = newDiagramFileStore.getContent();
+        mainProcess.getDatatypes().stream()
                 .filter(dt -> Objects.equals(NamingUtils.convertToId(NamingUtils.convertToId(dataType)), dt.getName()))
                 .findFirst()
                 .ifPresent(dt -> editingDomain.getCommandStack()
@@ -529,6 +539,13 @@ public class BPMNDataExportImportTest {
                 .overridingErrorMessage("No datatype '%s' set on data %s", NamingUtils.convertToId(dataType), data)
                 .isNotNull();
         newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+        while (newDiagramFileStore.getOpenedEditor().isDirty()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+
+            }
+        }
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
 
@@ -536,17 +553,25 @@ public class BPMNDataExportImportTest {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         newDiagramFileStore.open();
+        MainProcess mainProcess = newDiagramFileStore.getContent();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         final TransactionalEditingDomain editingDomain = newDiagramFileStore.getOpenedEditor().getEditingDomain();
         editingDomain.getCommandStack()
                 .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
-        newDiagramFileStore.getContent().getDatatypes().stream()
+        mainProcess.getDatatypes().stream()
                 .filter(dt -> Objects.equals(NamingUtils.convertToId(dataType), dt.getName()))
                 .findFirst()
                 .ifPresent(dt -> editingDomain.getCommandStack()
                         .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt)));
         assertThat(data.getDataType()).isNotNull();
         newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+        while (newDiagramFileStore.getOpenedEditor().isDirty()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+
+            }
+        }
         return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
     }
 

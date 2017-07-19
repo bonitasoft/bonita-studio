@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -171,7 +172,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         if (file != null) {
             final File to = new File(targetAbsoluteFilePath);
             to.mkdirs();
-            final File target = new File(to,ZIP_FILENAME);
+            final File target = new File(to, ZIP_FILENAME);
             if (target.exists()) {
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
                     PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
@@ -179,7 +180,9 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
                     return;
                 }
             }
-            Files.copy(ByteStreams.newInputStreamSupplier(toByteArray()), target);
+            try (InputStream inputStream = ByteSource.wrap(toByteArray()).openBufferedStream();) {
+                Files.copy(inputStream, target.toPath());
+            }
         }
     }
 

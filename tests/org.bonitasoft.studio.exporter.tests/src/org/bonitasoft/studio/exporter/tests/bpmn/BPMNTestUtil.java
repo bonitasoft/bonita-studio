@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
@@ -25,7 +24,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -82,19 +80,8 @@ public class BPMNTestUtil {
     }
 
     public static DocumentRoot exportToBpmn(final DiagramFileStore newDiagramFileStore) throws IOException {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(newDiagramFileStore.getContent());
-        final ResourceSet rSet = diagramFor.eResource().getResourceSet();
-        CustomDiagramEditingDomainFactory.getInstance().createEditingDomain(rSet);
-        DiagramEditPart dep;
-        try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
-                    newDiagramFileStore.getOpenedEditor().getSite().getShell());
-        } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
-                    newDiagramFileStore.getOpenedEditor().getSite().getShell());
-        }
-        final MainProcessEditPart mped = (MainProcessEditPart) dep;
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        DiagramEditPart part = newDiagramFileStore.getOpenedEditor().getDiagramEditPart();
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl((MainProcessEditPart) part);
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         bpmnFileExported.deleteOnExit();
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());

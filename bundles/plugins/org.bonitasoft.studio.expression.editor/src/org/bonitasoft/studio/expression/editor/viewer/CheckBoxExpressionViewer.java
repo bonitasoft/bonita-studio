@@ -177,7 +177,10 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    final String input = ((Boolean) fromObject).toString();
+                    String input = Boolean.FALSE.toString();
+                    if (fromObject != null) {
+                        input = ((Boolean) fromObject).toString();
+                    }
                     updateContentType(ExpressionConstants.CONSTANT_TYPE);
                     updateContent(getContentFromInput(input));
                     refresh();

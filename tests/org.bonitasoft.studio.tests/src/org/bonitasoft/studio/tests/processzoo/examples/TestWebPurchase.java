@@ -255,6 +255,7 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Pay");
         bot.sleep(1000);
+        gmfEditor.getEditPart("Pay").click();
         bot.comboBoxWithLabel("Task type").setSelection("Human");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
@@ -369,10 +370,12 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().getTableItem("Actor mapping").select();
         bot.tree().getTreeItem("Actor1 -- Not mapped").select();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("Groups...").click();
         bot.table().getTableItem(1).check();
         bot.sleep(1000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 

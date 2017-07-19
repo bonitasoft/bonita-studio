@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -26,8 +27,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
-
-import com.google.common.io.Files;
 
 public class DatabaseHandler {
 
@@ -45,7 +44,8 @@ public class DatabaseHandler {
     }
 
     protected Properties readDatabaseProperties() throws IOException {
-        final URL databasePropertiesURL = FileLocator.toFileURL(ProjectUtil.getConsoleLibsBundle().getResource("tomcat/setup/database.properties"));
+        final URL databasePropertiesURL = FileLocator
+                .toFileURL(ProjectUtil.getConsoleLibsBundle().getResource("tomcat/setup/database.properties"));
         final File file = new File(databasePropertiesURL.getFile());
         final Properties properties = new Properties();
         try (FileInputStream inStream = new FileInputStream(file)) {
@@ -95,16 +95,17 @@ public class DatabaseHandler {
         final Properties bitronixResources = new Properties();
         bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
         final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
-        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
+        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar
+                + databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
         bitronixResources.putAll(engineDS.toMap("ds1"));
 
         final BitronixDatasourceConfiguration businessDataDS = new BitronixDatasourceConfiguration("jdbc/BusinessDataDSXA");
-        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar + databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
+        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar
+                + databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
         businessDataDS.setMinPoolSize(0);
         businessDataDS.setMaxPoolSize(5);
         bitronixResources.putAll(businessDataDS.toMap("ds2"));
-
-        bitronixResources.store(Files.newOutputStreamSupplier(confFile).getOutput(), null);
+        bitronixResources.store(java.nio.file.Files.newOutputStream(confFile.toPath(), StandardOpenOption.CREATE), null);
 
         return confFile;
     }

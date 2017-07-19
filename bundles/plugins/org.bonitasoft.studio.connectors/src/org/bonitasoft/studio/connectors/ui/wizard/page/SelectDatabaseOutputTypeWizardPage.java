@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
@@ -54,452 +52,460 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigurationWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
+public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigurationWizardPage
+        implements DatabaseConnectorConstants, IValueChangeListener {
 
-	protected Expression outputTypeExpression;
-	protected IPreferenceStore preferenceStore;
-	protected Expression scriptExpression;
-	protected Button gModeRadio;
-	protected Button alwaysUseScriptCheckbox;
-	protected SelectObservableValue radioGroupObservable;
-	protected ISWTObservableValue graphicalModeSelectionValue;
-	protected boolean editing;
-	protected ISWTObservableValue singleModeRadioObserveEnabled;
-	protected ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
-	protected ISWTObservableValue oneRowNColModeRadioObserveEnabled;
-	protected IWizardPage previousPageBackup;
-	private ISWTObservableValue scriptValue;
-	private ISWTObservableValue tableObserveEnabled;
+    protected Expression outputTypeExpression;
+    protected IPreferenceStore preferenceStore;
+    protected Expression scriptExpression;
+    protected Button gModeRadio;
+    protected Button alwaysUseScriptCheckbox;
+    protected SelectObservableValue radioGroupObservable;
+    protected ISWTObservableValue graphicalModeSelectionValue;
+    protected boolean editing;
+    protected ISWTObservableValue singleModeRadioObserveEnabled;
+    protected ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
+    protected ISWTObservableValue oneRowNColModeRadioObserveEnabled;
+    protected IWizardPage previousPageBackup;
+    private ISWTObservableValue scriptValue;
+    private ISWTObservableValue tableObserveEnabled;
 
-	public SelectDatabaseOutputTypeWizardPage(boolean editing) {
-		super(SelectDatabaseOutputTypeWizardPage.class.getName());
-		setTitle(Messages.outputOperationsDefinitionTitle);
-		setDescription(Messages.outputOperationsDefinitionDesc);
-		this.editing = editing;
-		preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-	}
+    public SelectDatabaseOutputTypeWizardPage(boolean editing) {
+        super(SelectDatabaseOutputTypeWizardPage.class.getName());
+        setTitle(Messages.outputOperationsDefinitionTitle);
+        setDescription(Messages.outputOperationsDefinitionDesc);
+        this.editing = editing;
+        preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+    }
 
+    @Override
+    protected Control doCreateControl(Composite parent, EMFDataBindingContext context) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, 0).create());
 
-	@Override
-	protected Control doCreateControl(Composite parent,	EMFDataBindingContext context) {
-		final Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, 0).create());
+        createSelectModeLabelControl(mainComposite);
 
-		createSelectModeLabelControl(mainComposite);
+        scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
+        final IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression,
+                ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        scriptContentValue.addValueChangeListener(this);
+        outputTypeExpression = (Expression) getConnectorParameter(getInput(OUTPUT_TYPE_KEY)).getExpression();
+        outputTypeExpression.setName(OUTPUT_TYPE_KEY);
 
-		scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
-		final IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-		scriptContentValue.addValueChangeListener(this);
-		outputTypeExpression = (Expression) getConnectorParameter(getInput(OUTPUT_TYPE_KEY)).getExpression();
-		outputTypeExpression.setName(OUTPUT_TYPE_KEY);
+        final Composite choicesComposite = createGraphicalModeControl(mainComposite, context);
+        final Button singleModeRadio = createSingleChoice(choicesComposite, context);
+        final Button oneRowModeRadio = createOneRowNColsChoice(choicesComposite, context);
+        final Button nRowModeRadio = createNRowsOneColChoice(choicesComposite, context);
+        final Button tableModeRadio = createTableChoice(choicesComposite, context);
+        final Button scriptModeRadio = createScriptModeControl(mainComposite);
 
-		final Composite choicesComposite = createGraphicalModeControl(mainComposite,context);
-		final Button singleModeRadio = createSingleChoice(choicesComposite,context);
-		final Button oneRowModeRadio = createOneRowNColsChoice(choicesComposite,context);
-		final Button nRowModeRadio = createNRowsOneColChoice(choicesComposite,context);
-		final Button tableModeRadio = createTableChoice(choicesComposite,context);
-		final Button scriptModeRadio = createScriptModeControl(mainComposite);
+        final IObservableValue singleValue = SWTObservables.observeSelection(singleModeRadio);
+        final IObservableValue oneRowValue = SWTObservables.observeSelection(oneRowModeRadio);
+        final IObservableValue oneColValue = SWTObservables.observeSelection(nRowModeRadio);
+        final IObservableValue tableValue = SWTObservables.observeSelection(tableModeRadio);
+        scriptValue = SWTObservables.observeSelection(scriptModeRadio);
+        graphicalModeSelectionValue = SWTObservables.observeSelection(gModeRadio);
 
-		final IObservableValue singleValue = SWTObservables.observeSelection(singleModeRadio);
-		final IObservableValue oneRowValue = SWTObservables.observeSelection(oneRowModeRadio);
-		final IObservableValue oneColValue = SWTObservables.observeSelection(nRowModeRadio);
-		final IObservableValue tableValue = SWTObservables.observeSelection(tableModeRadio);
-		scriptValue = SWTObservables.observeSelection(scriptModeRadio);
-		graphicalModeSelectionValue = SWTObservables.observeSelection(gModeRadio);
+        radioGroupObservable = new SelectObservableValue(String.class);
+        radioGroupObservable.addOption(SINGLE, singleValue);
+        radioGroupObservable.addOption(ONE_ROW, oneRowValue);
+        radioGroupObservable.addOption(N_ROW, oneColValue);
+        radioGroupObservable.addOption(TABLE, tableValue);
+        radioGroupObservable.addOption(null, scriptValue);
 
-		radioGroupObservable = new SelectObservableValue(String.class);
-		radioGroupObservable.addOption(SINGLE, singleValue);
-		radioGroupObservable.addOption(ONE_ROW, oneRowValue);
-		radioGroupObservable.addOption(N_ROW, oneColValue);
-		radioGroupObservable.addOption(TABLE, tableValue);
-		radioGroupObservable.addOption(null, scriptValue);
+        context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox), scriptValue);
+        final UpdateValueStrategy deselectStrategy = new UpdateValueStrategy();
+        deselectStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-		context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox),scriptValue);
-		final UpdateValueStrategy deselectStrategy = new UpdateValueStrategy();
-		deselectStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
+            @Override
+            public Object convert(Object fromObject) {
+                return false;
+            }
+        });
 
-			@Override
-			public Object convert(Object fromObject) {
-				return false;
-			}
-		});
+        context.bindValue(graphicalModeSelectionValue, SWTObservables.observeSelection(alwaysUseScriptCheckbox),
+                deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+        context.bindValue(graphicalModeSelectionValue, SWTObservables.observeEnabled(choicesComposite));
 
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeSelection(alwaysUseScriptCheckbox),deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(choicesComposite));
+        final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
+        disabledStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
+            @Override
+            public Object convert(Object fromObject) {
+                if ((outputTypeExpression.getContent() == null && fromObject != null && !(Boolean) fromObject)
+                        || SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1
+                                && !SQLQueryUtil.useWildcard(scriptExpression)) {
+                    return false;
+                }
+                return fromObject;
+            }
+        });
 
-		final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
-		disabledStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
+        final UpdateValueStrategy disabledStrategy2 = new UpdateValueStrategy();
+        disabledStrategy2.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
-					return false;
-				}
-				return fromObject;
-			}
-		});
+            @Override
+            public Object convert(Object fromObject) {
+                if ((outputTypeExpression.getContent() == null && fromObject != null && !(Boolean) fromObject)
+                        || SQLQueryUtil.useWildcard(scriptExpression)) {
+                    return false;
+                }
+                return fromObject;
+            }
+        });
 
-		final UpdateValueStrategy disabledStrategy2 = new UpdateValueStrategy();
-		disabledStrategy2.setConverter(new Converter(Boolean.class,Boolean.class) {
+        radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.useWildcard(scriptExpression)){
-					return false;
-				}
-				return fromObject;
-			}
-		});
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                final IWizardPage p = getNextPage();
+                if (p instanceof DatabaseConnectorOutputWizardPage) {
+                    ((DatabaseConnectorOutputWizardPage) p).updateOutputs((String) event.getObservableValue().getValue());
+                }
+            }
+        });
 
+        context.bindValue(radioGroupObservable,
+                EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
+        graphicalModeSelectionValue.addValueChangeListener(new IValueChangeListener() {
 
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                if ((Boolean) event.getObservableValue().getValue()) {
+                    if (singleModeRadio.getSelection()) {
+                        radioGroupObservable.setValue(SINGLE);
+                    } else if (oneRowModeRadio.getSelection()) {
+                        radioGroupObservable.setValue(ONE_ROW);
+                    } else if (nRowModeRadio.getSelection()) {
+                        radioGroupObservable.setValue(N_ROW);
+                    } else {
+                        radioGroupObservable.setValue(TABLE);
+                    }
+                    updateEnabledChoices();
+                } else {
+                    singleModeRadioObserveEnabled.setValue(false);
+                    nRowsOneColModeRadioObserveEnabled.setValue(false);
+                    oneRowNColModeRadioObserveEnabled.setValue(false);
+                    tableObserveEnabled.setValue(false);
+                }
 
-		radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
+            }
+        });
 
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				final IWizardPage p = getNextPage();
-				if(p instanceof DatabaseConnectorOutputWizardPage){
-					((DatabaseConnectorOutputWizardPage)p).updateOutputs((String) event.getObservableValue().getValue());
-				}
-			}
-		});
+        parseQuery();
 
-		context.bindValue(radioGroupObservable, EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
-		graphicalModeSelectionValue.addValueChangeListener(new IValueChangeListener() {
+        return mainComposite;
+    }
 
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {	
-				if((Boolean)event.getObservableValue().getValue()){
-					if(singleModeRadio.getSelection()){
-						radioGroupObservable.setValue(SINGLE);
-					}else if(oneRowModeRadio.getSelection()){
-						radioGroupObservable.setValue(ONE_ROW);
-					}else if(nRowModeRadio.getSelection()){
-						radioGroupObservable.setValue(N_ROW);
-					}else{
-						radioGroupObservable.setValue(TABLE);
-					}
-					updateEnabledChoices();
-				}else{
-					singleModeRadioObserveEnabled.setValue(false);
-					nRowsOneColModeRadioObserveEnabled.setValue(false);
-					oneRowNColModeRadioObserveEnabled.setValue(false);
-					tableObserveEnabled.setValue(false);
-				}
+    protected void createSelectModeLabelControl(final Composite mainComposite) {
+        final Label selectLabel = new Label(mainComposite, SWT.NONE);
+        selectLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        selectLabel.setText(Messages.selectConnectorOutputMode);
+        selectLabel.setFont(BonitaStudioFontRegistry.getHighlightedFont());
+    }
 
-			}
-		});
+    protected void parseQuery() {
+        if (graphicalModeSelectionValue != null) {
+            final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+            if (SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)) {
+                enableGraphicalMode.setValue(true);
+                if (!editing) {
+                    graphicalModeSelectionValue.setValue(true);
+                    if (outputTypeExpression.getContent() != null) {
+                        radioGroupObservable.setValue(outputTypeExpression.getContent());
+                    } else {
+                        radioGroupObservable.setValue(TABLE);
+                    }
+                } else if (outputTypeExpression.getContent() == null) {
+                    graphicalModeSelectionValue.setValue(false);
+                }
+                updateEnabledChoices();
+            } else {
+                enableGraphicalMode.setValue(false);
+                graphicalModeSelectionValue.setValue(false);
+                scriptValue.setValue(true);
+                radioGroupObservable.setValue(null);
+            }
+        }
+    }
 
-		parseQuery();
+    protected void updateEnabledChoices() {
+        final String content = outputTypeExpression.getContent();
+        if (content != null) {
+            if (SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1
+                    && !SQLQueryUtil.useWildcard(scriptExpression)) {
+                singleModeRadioObserveEnabled.setValue(false);
+                nRowsOneColModeRadioObserveEnabled.setValue(false);
+                tableObserveEnabled.setValue(true);
+                oneRowNColModeRadioObserveEnabled.setValue(true);
+                if (SINGLE.equals(content)
+                        || N_ROW.equals(content)) {
+                    radioGroupObservable.setValue(TABLE);
+                }
+            } else if (SQLQueryUtil.useWildcard(scriptExpression)) {
+                singleModeRadioObserveEnabled.setValue(false);
+                nRowsOneColModeRadioObserveEnabled.setValue(false);
+                oneRowNColModeRadioObserveEnabled.setValue(false);
+                tableObserveEnabled.setValue(true);
+                if (SINGLE.equals(content)
+                        || N_ROW.equals(content)
+                        || ONE_ROW.equals(content)) {
+                    radioGroupObservable.setValue(TABLE);
+                }
+            } else {
+                oneRowNColModeRadioObserveEnabled.setValue(true);
+                singleModeRadioObserveEnabled.setValue(true);
+                nRowsOneColModeRadioObserveEnabled.setValue(true);
+                tableObserveEnabled.setValue(true);
+            }
+        }
+    }
 
-		return mainComposite;
-	}
+    protected void updateQuery() {
+        if (graphicalModeSelectionValue != null) {
+            final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+            if (SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)) {
+                enableGraphicalMode.setValue(true);
+                updateEnabledChoices();
+            } else {
+                enableGraphicalMode.setValue(false);
+                graphicalModeSelectionValue.setValue(false);
+                scriptValue.setValue(true);
+                radioGroupObservable.setValue(null);
+            }
+        }
+    }
 
+    protected Button createScriptModeControl(Composite parent) {
+        final Button scriptModeRadio = new Button(parent, SWT.RADIO);
+        scriptModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 20).create());
+        scriptModeRadio.setText(Messages.scriptMode);
+        scriptModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
 
-	protected void createSelectModeLabelControl(final Composite mainComposite) {
-		final Label selectLabel = new Label(mainComposite, SWT.NONE);
-		selectLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		selectLabel.setText(Messages.selectConnectorOutputMode);
-		selectLabel.setFont(BonitaStudioFontRegistry.getHighlightedFont());
-	}
+        final Composite descriptionComposite = new Composite(parent, SWT.NONE);
+        descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
+        descriptionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-	protected void parseQuery() {
-		if(graphicalModeSelectionValue != null){
-			final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
-			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
-				enableGraphicalMode.setValue(true);
-				if(!editing){
-					graphicalModeSelectionValue.setValue(true);
-					if(outputTypeExpression.getContent() != null){
-						radioGroupObservable.setValue(outputTypeExpression.getContent());
-					}else{
-						radioGroupObservable.setValue(TABLE);
-					}
-				}else if(outputTypeExpression.getContent() == null){
-					graphicalModeSelectionValue.setValue(false);
-				}
-				updateEnabledChoices();
-			}else{
-				enableGraphicalMode.setValue(false);
-				graphicalModeSelectionValue.setValue(false);
-				scriptValue.setValue(true);
-				radioGroupObservable.setValue(null);
-			}
-		}
-	}
+        final Label scriptingDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
+        scriptingDescriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        scriptingDescriptionLabel.setText(Messages.scriptModeDescription);
 
+        alwaysUseScriptCheckbox = new Button(descriptionComposite, SWT.CHECK);
+        alwaysUseScriptCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        alwaysUseScriptCheckbox.setText(Messages.alwaysUseScriptingMode);
+        alwaysUseScriptCheckbox.addSelectionListener(new SelectionAdapter() {
 
-	protected void updateEnabledChoices() {
-		final String content = outputTypeExpression.getContent();
-		if(content != null){
-			if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
-				singleModeRadioObserveEnabled.setValue(false);
-				nRowsOneColModeRadioObserveEnabled.setValue(false);
-				tableObserveEnabled.setValue(true);
-				oneRowNColModeRadioObserveEnabled.setValue(true);
-				if(SINGLE.equals(content) 
-						|| N_ROW.equals(content)){
-					radioGroupObservable.setValue(TABLE);
-				}
-			}else if(SQLQueryUtil.useWildcard(scriptExpression)){
-				singleModeRadioObserveEnabled.setValue(false);
-				nRowsOneColModeRadioObserveEnabled.setValue(false);
-				oneRowNColModeRadioObserveEnabled.setValue(false);
-				tableObserveEnabled.setValue(true);
-				if(SINGLE.equals(content) 
-						|| N_ROW.equals(content)
-						|| ONE_ROW.equals(content)){
-					radioGroupObservable.setValue(TABLE);
-				}
-			}else{
-				oneRowNColModeRadioObserveEnabled.setValue(true);
-				singleModeRadioObserveEnabled.setValue(true);
-				nRowsOneColModeRadioObserveEnabled.setValue(true);
-				tableObserveEnabled.setValue(true);
-			}
-		}
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                preferenceStore.setValue(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE,
+                        alwaysUseScriptCheckbox.getSelection());
+            }
+        });
 
-	protected void updateQuery() {
-		if(graphicalModeSelectionValue != null){
-			final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
-			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
-				enableGraphicalMode.setValue(true);
-				updateEnabledChoices();
-			}else{
-				enableGraphicalMode.setValue(false);
-				graphicalModeSelectionValue.setValue(false);
-				scriptValue.setValue(true);
-				radioGroupObservable.setValue(null);
-			}
-		}
-	}
+        return scriptModeRadio;
+    }
 
-	protected Button createScriptModeControl(Composite parent) {
-		final Button scriptModeRadio = new Button(parent, SWT.RADIO);
-		scriptModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 20).create());
-		scriptModeRadio.setText(Messages.scriptMode);
-		scriptModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
+    protected Composite createGraphicalModeControl(Composite parent,
+            EMFDataBindingContext context) {
+        gModeRadio = new Button(parent, SWT.RADIO);
+        gModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
+        gModeRadio.setText(getAdvancedModeLabel());
+        gModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
 
-		final Composite descriptionComposite = new Composite(parent, SWT.NONE);
-		descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
-		descriptionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        final Composite choicesComposite = new Composite(parent, SWT.NONE);
+        choicesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
+        choicesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-		final Label scriptingDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
-		scriptingDescriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		scriptingDescriptionLabel.setText(Messages.scriptModeDescription);
+        createAdvancedModeDescriptionControl(choicesComposite);
 
-		alwaysUseScriptCheckbox = new Button(descriptionComposite, SWT.CHECK);
-		alwaysUseScriptCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		alwaysUseScriptCheckbox.setText(Messages.alwaysUseScriptingMode);
-		alwaysUseScriptCheckbox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				preferenceStore.setValue(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE, alwaysUseScriptCheckbox.getSelection());
-			}
-		});
+        return choicesComposite;
+    }
 
-		return scriptModeRadio;
-	}
+    protected void createAdvancedModeDescriptionControl(
+            final Composite choicesComposite) {
+        final Label choiceDescriptionLabel = new Label(choicesComposite, SWT.WRAP);
+        choiceDescriptionLabel
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(160, SWT.DEFAULT).span(2, 1).create());
+        choiceDescriptionLabel.setText(Messages.graphicalModeDescription);
+    }
 
-	protected Composite createGraphicalModeControl(Composite parent,
-			EMFDataBindingContext context) {
-		gModeRadio = new Button(parent, SWT.RADIO);
-		gModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
-		gModeRadio.setText(getAdvancedModeLabel());
-		gModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
+    protected String getAdvancedModeLabel() {
+        return Messages.graphicalMode;
+    }
 
-		final Composite choicesComposite = new Composite(parent, SWT.NONE);
-		choicesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
-		choicesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+    protected Button createSingleChoice(final Composite choicesComposite, EMFDataBindingContext context) {
+        final Button singleRadio = new Button(choicesComposite, SWT.RADIO);
+        singleRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        singleRadio.setText(Messages.singleValue);
 
-		createAdvancedModeDescriptionControl(choicesComposite);
+        final Label singleIcon = new Label(choicesComposite, SWT.NONE);
+        singleIcon.setLayoutData(
+                GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
 
-		return choicesComposite;
-	}
+        final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
+        selectImageStrategy.setConverter(new Converter(Boolean.class, Image.class) {
 
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject != null && (Boolean) fromObject) {
+                    return Pics.getImage("single_placeholder.png", ConnectorPlugin.getDefault());
+                } else {
+                    return Pics.getImage("single_placeholder_disabled.png", ConnectorPlugin.getDefault());
+                }
 
-	protected void createAdvancedModeDescriptionControl(
-			final Composite choicesComposite) {
-		final Label choiceDescriptionLabel = new Label(choicesComposite, SWT.WRAP);
-		choiceDescriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(160, SWT.DEFAULT).span(2, 1).create());
-		choiceDescriptionLabel.setText(Messages.graphicalModeDescription);
-	}
+            }
 
+        });
+        singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleRadio);
+        context.bindValue(SWTObservables.observeImage(singleIcon), singleModeRadioObserveEnabled, null, selectImageStrategy);
 
-	protected String getAdvancedModeLabel() {
-		return Messages.graphicalMode;
-	}
+        return singleRadio;
+    }
 
-	protected Button createSingleChoice(final Composite choicesComposite, EMFDataBindingContext context) {
-		final Button singleRadio = new Button(choicesComposite, SWT.RADIO);
-		singleRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		singleRadio.setText(Messages.singleValue);
-
-		final Label singleIcon = new Label(choicesComposite, SWT.NONE);
-		singleIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
-
-		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
-		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
-
-			@Override
-			public Object convert(Object fromObject) {
-				if((Boolean)fromObject){
-					return Pics.getImage("single_placeholder.png",ConnectorPlugin.getDefault());
-				}else{
-					return Pics.getImage("single_placeholder_disabled.png",ConnectorPlugin.getDefault());
-				}
-
-			}
-
-		});
-		singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleRadio);
-		context.bindValue(SWTObservables.observeImage(singleIcon), singleModeRadioObserveEnabled,null,selectImageStrategy);
-
-		return singleRadio;
-	}
-
-	protected Button createOneRowNColsChoice(final Composite choicesComposite, EMFDataBindingContext context) {
-		final Button oneRowRadio = new Button(choicesComposite, SWT.RADIO);
-		oneRowRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		oneRowRadio.setText(Messages.oneRowNCol);
+    protected Button createOneRowNColsChoice(final Composite choicesComposite, EMFDataBindingContext context) {
+        final Button oneRowRadio = new Button(choicesComposite, SWT.RADIO);
+        oneRowRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        oneRowRadio.setText(Messages.oneRowNCol);
 
         final ControlDecoration oneRowDeco = new ControlDecoration(oneRowRadio, SWT.RIGHT, choicesComposite);
-		oneRowDeco.setImage(Pics.getImage(PicsConstants.hint));
-		oneRowDeco.setDescriptionText(Messages.oneRowHint);
+        oneRowDeco.setImage(Pics.getImage(PicsConstants.hint));
+        oneRowDeco.setDescriptionText(Messages.oneRowHint);
 
-		final Label oneRowIcon = new Label(choicesComposite, SWT.NONE);
-		oneRowIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
+        final Label oneRowIcon = new Label(choicesComposite, SWT.NONE);
+        oneRowIcon.setLayoutData(
+                GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
 
-		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
-		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
+        final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
+        selectImageStrategy.setConverter(new Converter(Boolean.class, Image.class) {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if((Boolean)fromObject){
-					return Pics.getImage("row_placeholder.png",ConnectorPlugin.getDefault());
-				}else{
-					return Pics.getImage("row_placeholder_disabled.png",ConnectorPlugin.getDefault());
-				}
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject != null && (Boolean) fromObject) {
+                    return Pics.getImage("row_placeholder.png", ConnectorPlugin.getDefault());
+                } else {
+                    return Pics.getImage("row_placeholder_disabled.png", ConnectorPlugin.getDefault());
+                }
 
-			}
+            }
 
-		});
-		oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowRadio);
-		context.bindValue(SWTObservables.observeImage(oneRowIcon), oneRowNColModeRadioObserveEnabled,null,selectImageStrategy);
+        });
+        oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowRadio);
+        context.bindValue(SWTObservables.observeImage(oneRowIcon), oneRowNColModeRadioObserveEnabled, null,
+                selectImageStrategy);
 
-		return oneRowRadio;
-	}
+        return oneRowRadio;
+    }
 
-	protected Button createNRowsOneColChoice(final Composite choicesComposite, EMFDataBindingContext context) {
-		final Button oneColRadio = new Button(choicesComposite, SWT.RADIO);
-		oneColRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		oneColRadio.setText(Messages.nRowOneCol);
+    protected Button createNRowsOneColChoice(final Composite choicesComposite, EMFDataBindingContext context) {
+        final Button oneColRadio = new Button(choicesComposite, SWT.RADIO);
+        oneColRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        oneColRadio.setText(Messages.nRowOneCol);
 
         final ControlDecoration oneColDeco = new ControlDecoration(oneColRadio, SWT.RIGHT, choicesComposite);
-		oneColDeco.setImage(Pics.getImage(PicsConstants.hint));
-		oneColDeco.setDescriptionText(Messages.oneColHint);
+        oneColDeco.setImage(Pics.getImage(PicsConstants.hint));
+        oneColDeco.setDescriptionText(Messages.oneColHint);
 
-		final Label oneColIcon = new Label(choicesComposite, SWT.NONE);
-		oneColIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
+        final Label oneColIcon = new Label(choicesComposite, SWT.NONE);
+        oneColIcon.setLayoutData(
+                GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
 
-		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
-		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
+        final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
+        selectImageStrategy.setConverter(new Converter(Boolean.class, Image.class) {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if((Boolean)fromObject){
-					return Pics.getImage("column_placeholder.png",ConnectorPlugin.getDefault());
-				}else{
-					return Pics.getImage("column_placeholder_disabled.png",ConnectorPlugin.getDefault());
-				}
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject != null && (Boolean) fromObject) {
+                    return Pics.getImage("column_placeholder.png", ConnectorPlugin.getDefault());
+                } else {
+                    return Pics.getImage("column_placeholder_disabled.png", ConnectorPlugin.getDefault());
+                }
 
-			}
+            }
 
-		});
+        });
 
-		nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneColRadio);
-		context.bindValue(SWTObservables.observeImage(oneColIcon), nRowsOneColModeRadioObserveEnabled,null,selectImageStrategy);
+        nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneColRadio);
+        context.bindValue(SWTObservables.observeImage(oneColIcon), nRowsOneColModeRadioObserveEnabled, null,
+                selectImageStrategy);
 
-		return oneColRadio;
+        return oneColRadio;
 
-	}
+    }
 
-	protected Button createTableChoice(final Composite choicesComposite, EMFDataBindingContext context) {
-		final Button tableRadio = new Button(choicesComposite, SWT.RADIO);
-		tableRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		tableRadio.setText(Messages.nRowsNcolumns);
+    protected Button createTableChoice(final Composite choicesComposite, EMFDataBindingContext context) {
+        final Button tableRadio = new Button(choicesComposite, SWT.RADIO);
+        tableRadio.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        tableRadio.setText(Messages.nRowsNcolumns);
 
         final ControlDecoration tableDeco = new ControlDecoration(tableRadio, SWT.RIGHT, choicesComposite);
-		tableDeco.setImage(Pics.getImage(PicsConstants.hint));
-		tableDeco.setDescriptionText(Messages.tableHint);
+        tableDeco.setImage(Pics.getImage(PicsConstants.hint));
+        tableDeco.setDescriptionText(Messages.tableHint);
 
-		final Label tableIcon = new Label(choicesComposite, SWT.NONE);
-		tableIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
+        final Label tableIcon = new Label(choicesComposite, SWT.NONE);
+        tableIcon.setLayoutData(
+                GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
 
-		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
-		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
+        final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
+        selectImageStrategy.setConverter(new Converter(Boolean.class, Image.class) {
 
-			@Override
-			public Object convert(Object fromObject) {
-				if((Boolean)fromObject){
-					return Pics.getImage("table_placeholder.png",ConnectorPlugin.getDefault());
-				}else{
-					return Pics.getImage("table_placeholder_disabled.png",ConnectorPlugin.getDefault());
-				}
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject != null && (Boolean) fromObject) {
+                    return Pics.getImage("table_placeholder.png", ConnectorPlugin.getDefault());
+                } else {
+                    return Pics.getImage("table_placeholder_disabled.png", ConnectorPlugin.getDefault());
+                }
 
-			}
+            }
 
-		});
-		tableObserveEnabled = SWTObservables.observeEnabled(tableRadio);
-		context.bindValue(SWTObservables.observeImage(tableIcon), tableObserveEnabled,null,selectImageStrategy);
+        });
+        tableObserveEnabled = SWTObservables.observeEnabled(tableRadio);
+        context.bindValue(SWTObservables.observeImage(tableIcon), tableObserveEnabled, null, selectImageStrategy);
 
-		return tableRadio;
-	}
+        return tableRadio;
+    }
 
-	@Override
-	public void handleValueChange(ValueChangeEvent event) {
-		updateQuery();
-	}
+    @Override
+    public void handleValueChange(ValueChangeEvent event) {
+        updateQuery();
+    }
 
-	@Override
-	public void setPreviousPage(IWizardPage page) {
-		this.previousPageBackup = page;
-		super.setPreviousPage(page);
-	}
+    @Override
+    public void setPreviousPage(IWizardPage page) {
+        this.previousPageBackup = page;
+        super.setPreviousPage(page);
+    }
 
-	@Override
-	public IWizardPage getPreviousPage() {
-		if(previousPageBackup != null){
-			return previousPageBackup;
-		}
+    @Override
+    public IWizardPage getPreviousPage() {
+        if (previousPageBackup != null) {
+            return previousPageBackup;
+        }
 
-		final IWizard wizard = getWizard();
-		if(wizard != null){
-			return wizard.getPreviousPage(this);
-		}
-		return super.getPreviousPage();
-	}
+        final IWizard wizard = getWizard();
+        if (wizard != null) {
+            return wizard.getPreviousPage(this);
+        }
+        return super.getPreviousPage();
+    }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
-
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 
 }

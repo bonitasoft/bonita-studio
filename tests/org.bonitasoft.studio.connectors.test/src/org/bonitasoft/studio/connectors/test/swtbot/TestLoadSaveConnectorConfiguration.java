@@ -30,6 +30,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +53,7 @@ public class TestLoadSaveConnectorConfiguration {
         final String widgetId = "textWidget";
         final String pageId = "connectorDefPageId";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
+        SWTBotShell activeShell = bot.activeShell();
         bot.textWithLabel("Definition id *").setText(connectorDefinitionId);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
@@ -64,6 +66,7 @@ public class TestLoadSaveConnectorConfiguration {
         bot.comboBoxWithLabel("Widget type").setSelection("Text");
         bot.comboBoxWithLabel("Input *").setSelection(0);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
         bot.button("Apply").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
@@ -103,9 +106,11 @@ public class TestLoadSaveConnectorConfiguration {
         bot.table().select(name + " -- " + connectorDefId + " (" + version + ") -- ON_FINISH");
         bot.button("Edit...").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButton("Save").click();
         bot.textWithLabel("Name *").setText(saveName);
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         //add a new connector and load previous configuration connector
         SWTBotTestUtil.selectTabbedPropertyView(bot, SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION_CONNECTORS_OUT);
@@ -115,6 +120,7 @@ public class TestLoadSaveConnectorConfiguration {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.textWithLabel("Name *").setText(name2);
         bot.button(IDialogConstants.NEXT_LABEL).click();
+        activeShell = bot.activeShell();
         bot.toolbarButton("Load").click();
         final SWTBotTree wizardTree = bot.treeWithId(SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
         wizardTree.setFocus();
@@ -139,14 +145,15 @@ public class TestLoadSaveConnectorConfiguration {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
         bot.button(IDialogConstants.OK_LABEL).click();
 
+        activeShell.setFocus();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
         bot.button(IDialogConstants.NEXT_LABEL).click();
         assertEquals("text field should be completed with hello world", bot.textWithLabel("text").getText(), "hello world");
         //remove configuration
+        activeShell = bot.activeShell();
         bot.toolbarButton("Load").click();
         assertTrue("remove button should be enabled", bot.button("Remove").isEnabled());
         bot.tree().setFocus();
@@ -187,6 +194,7 @@ public class TestLoadSaveConnectorConfiguration {
             }
         });
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
         bot.saveAllEditors();
         assertEquals("invalid number of configuration", initialSize, store.getChildren().size());

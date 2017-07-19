@@ -150,7 +150,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     private IStatus returnTypeIs(final String expectedReturnType) {
         final String actualReturnType = (String) defaultValueReturnTypeObservable.getValue();
         return expectedReturnType.equals(actualReturnType) ? ValidationStatus.ok() : ValidationStatus
-                .error(Messages.bind(Messages.defaultValueReturnTypeValidationMessage, actualReturnType, expectedReturnType));
+                .error(Messages.bind(Messages.defaultValueReturnTypeValidationMessage, actualReturnType,
+                        expectedReturnType));
     }
 
     protected ExpressionViewer createDefaultValueControl(final Composite mainComposite, final EMFDataBindingContext ctx) {
@@ -160,10 +161,13 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
         final ExpressionViewer defaultValueExpressionViewer = new ExpressionViewer(mainComposite, SWT.BORDER);
         defaultValueExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        defaultValueExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.QUERY_TYPE,
-                ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE));
-        defaultValueExpressionViewer.addEditorFilter(ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE);
-        defaultValueExpressionViewer.setExpressionNameResolver(new DataDefaultValueExpressionNameResolver(businessObjectData));
+        defaultValueExpressionViewer
+                .addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.QUERY_TYPE,
+                        ExpressionConstants.CONTRACT_INPUT_TYPE, ExpressionConstants.PARAMETER_TYPE));
+        defaultValueExpressionViewer.addEditorFilter(ExpressionConstants.CONTRACT_INPUT_TYPE,
+                ExpressionConstants.PARAMETER_TYPE);
+        defaultValueExpressionViewer
+                .setExpressionNameResolver(new DataDefaultValueExpressionNameResolver(businessObjectData));
         final ControlDecoration hint = new ControlDecoration(defaultValueExpressionViewer.getTextControl(), SWT.LEFT);//TODO: remove me for 7.0.0 GA
         hint.setShowOnlyOnFocus(false);
         hint.setImage(imageProvider.getHintImage());
@@ -200,7 +204,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
             @Override
             public Object convert(final Object fromObject) {
-                if ((boolean) fromObject) {
+                if (fromObject != null && (boolean) fromObject) {
                     return List.class.getName();
                 }
                 return classNameObservable.getValue();
@@ -237,14 +241,17 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
         final WritableList businessObjectsObservableList = new WritableList(getAllBusinessObjects(), BusinessObject.class);
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(businessObjectComboViewer);
+        final IViewerObservableValue observeSingleSelection = ViewersObservables
+                .observeSingleSelection(businessObjectComboViewer);
         createNewBusinessObjectLink(comboComposite, businessObjectsObservableList, observeSingleSelection);
         businessObjectComboViewer.setInput(businessObjectsObservableList);
 
-        classNameObservable = EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME);
+        classNameObservable = EMFObservables.observeValue(businessObjectData,
+                ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME);
         ctx.bindValue(observeSingleSelection,
                 classNameObservable,
-                updateValueStrategy().withConverter(businessObjectToFQN()).withValidator(mandatoryValidator(Messages.businessObject))
+                updateValueStrategy().withConverter(businessObjectToFQN())
+                        .withValidator(mandatoryValidator(Messages.businessObject))
                         .create(),
                 updateValueStrategy().withConverter(fqnToBusinessObject())
                         .create());
@@ -271,7 +278,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         };
     }
 
-    private void createNewBusinessObjectLink(final Composite comboComposite, final WritableList businessObjectsObservableList,
+    private void createNewBusinessObjectLink(final Composite comboComposite,
+            final WritableList businessObjectsObservableList,
             final IViewerObservableValue observeSingleSelection) {
         final Link createBusinessObjectLink = new Link(comboComposite, SWT.NO_FOCUS);
         createBusinessObjectLink.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
@@ -301,7 +309,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
             public Object convert(final Object fromObject) {
                 if (fromObject instanceof String) {
                     final String qualifiedName = fromObject.toString();
-                    final BusinessObjectModelFileStore childByQualifiedName = businessObjectModelStore.getChildByQualifiedName(qualifiedName);
+                    final BusinessObjectModelFileStore childByQualifiedName = businessObjectModelStore
+                            .getChildByQualifiedName(qualifiedName);
                     if (childByQualifiedName != null) {
                         return childByQualifiedName.getBusinessObject(qualifiedName);
                     }

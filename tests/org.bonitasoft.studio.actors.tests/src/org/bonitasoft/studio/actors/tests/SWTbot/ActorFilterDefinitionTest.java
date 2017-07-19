@@ -32,6 +32,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Before;
 import org.junit.Test;
@@ -140,12 +141,14 @@ public class ActorFilterDefinitionTest {
         final String categoryId = "category3";
         SWTBotActorFilterUtil.createActorFilterDefinition(bot, id, version);
         SWTBotActorFilterUtil.createNewCategory(bot, categoryId);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("New...").click();
         bot.textWithLabel("Id").setText(categoryId);
         assertFalse(
                 "Ok button should be disabled when trying to create an existing category",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+        activeShell.setFocus();
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
