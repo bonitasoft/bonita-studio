@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-        <version>7.6.0-SNAPSHOT</version>
+		<version>7.6.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio.tests</groupId>
@@ -15,7 +15,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-        <module>org.bonitasoft.studio.swtbot.framework</module>
+		<module>org.bonitasoft.studio.swtbot.framework</module>
 		<module>org.bonitasoft.studio.jre.extension</module>
 		<module>org.bonitasoft.studio.actors.tests</module>
 		<module>org.bonitasoft.studio.application.test</module>
@@ -45,11 +45,29 @@
 		<module>org.bonitasoft.studio.tests</module>
 		<module>tests-feature</module>
 		<module>tests-common-feature</module>
-		<module>org.bonitasoft.studio.test.suite</module>
-        <module>org.bonitasoft.studio.test.suite2</module>
-		<module>org.bonitasoft.studio.test.swtbot.suite</module>
-		<module>org.bonitasoft.studio.test.swtbot.suite2</module>
 	</modules>
 
-	
+	<profiles>
+		<profile>
+			<id>all-tests</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.bonitasoft.studio.test.suite</module>
+				<module>org.bonitasoft.studio.test.suite2</module>
+				<module>org.bonitasoft.studio.test.swtbot.suite</module>
+				<module>org.bonitasoft.studio.test.swtbot.suite2</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>swtbot-tests</id>
+			<modules>
+				<module>org.bonitasoft.studio.test.swtbot.suite</module>
+				<module>org.bonitasoft.studio.test.swtbot.suite2</module>
+			</modules>
+		</profile>
+	</profiles>
+
+
 </project>

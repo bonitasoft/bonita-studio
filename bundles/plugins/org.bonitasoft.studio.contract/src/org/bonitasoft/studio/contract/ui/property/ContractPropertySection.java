@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.businessobject.ui.expression.CreateBusinessDataProposalListener;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
@@ -70,7 +69,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -343,7 +342,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     protected void bindGenerateButtonEnablement(final Button button) {
-        final ISWTObservableValue observeEnabled = SWTObservables.observeEnabled(button);
+        final ISWTObservableValue observeEnabled = WidgetProperties.enabled().observe(button);
 
         final IObservableValue observeVariables = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(poolSelectionProvider),
@@ -351,11 +350,12 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final IObservableValue observeDocuments = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(poolSelectionProvider),
                 ProcessPackage.Literals.POOL__DOCUMENTS);
-        context.bindValue(observeEnabled, observeVariables, null,
-                UpdateStrategyFactory.updateValueStrategy()
+        context.bindValue(observeEnabled, observeVariables,
+                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy().create(),
+                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(createObserveVariableToEnableButtonConverter(observeDocuments)).create());
         context.bindValue(observeEnabled, observeDocuments, null,
-                UpdateStrategyFactory.updateValueStrategy()
+                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(createObserveDocumentToEnableButtonConverter(observeVariables)).create());
     }
 
@@ -364,10 +364,13 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
             @Override
             public Object convert(final Object fromObject) {
-                final List<Data> dataList = newArrayList(
-                        filter((List<Data>) observeData.getValue(), instanceOf(BusinessObjectData.class)));
-                final List<EObject> documentList = (List<EObject>) fromObject;
-                return !dataList.isEmpty() || documentList != null && !documentList.isEmpty();
+                if (fromObject != null) {
+                    final List<Data> dataList = newArrayList(
+                            filter((List<Data>) observeData.getValue(), instanceOf(BusinessObjectData.class)));
+                    final List<EObject> documentList = (List<EObject>) fromObject;
+                    return !dataList.isEmpty() || documentList != null && !documentList.isEmpty();
+                }
+                return false;
             }
         };
     }
@@ -377,16 +380,19 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
             @Override
             public Object convert(final Object fromObject) {
-                final List<Data> fromObjectList = newArrayList(
-                        filter((List<Data>) fromObject, instanceOf(BusinessObjectData.class)));
-                final List<EObject> documentList = (List<EObject>) observeData.getValue();
-                return !fromObjectList.isEmpty() || !documentList.isEmpty();
+                if (fromObject != null) {
+                    final List<Data> fromObjectList = newArrayList(
+                            filter((List<Data>) fromObject, instanceOf(BusinessObjectData.class)));
+                    final List<EObject> documentList = (List<EObject>) observeData.getValue();
+                    return !fromObjectList.isEmpty() || (documentList != null && !documentList.isEmpty());
+                }
+                return false;
             }
         };
     }
 
     protected void bindAddConstraintButtonEnablement(final Button button, final IObservableValue contractObservable) {
-        final ISWTObservableValue observeEnabled = SWTObservables.observeEnabled(button);
+        final ISWTObservableValue observeEnabled = WidgetProperties.enabled().observe(button);
         final IObservableList observeDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(),
                 contractObservable,
                 ProcessPackage.Literals.CONTRACT__INPUTS);
@@ -402,34 +408,34 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
-        context.bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(WidgetProperties.enabled().observe(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionToBooleanStrategy());
     }
 
     protected void bindUpButtonEnablement(final Button button, final Viewer viewer) {
-        context.bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(WidgetProperties.enabled().observe(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isFirstElementToBooleanStrategy());
     }
 
     protected void bindDownButtonEnablement(final Button button, final Viewer viewer) {
-        context.bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(WidgetProperties.enabled().observe(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isLastElementToBooleanStrategy());
     }
 
     protected void bindAddChildButtonEnablement(final Button button, final Viewer viewer) {
-        context.bindValue(SWTObservables.observeEnabled(button),
+        context.bindValue(WidgetProperties.enabled().observe(button),
                 ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionAndComplexTypeToBooleanStrategy());
 
         context.bindValue(
-                SWTObservables.observeEnabled(button),
+                WidgetProperties.enabled().observe(button),
                 EMFObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(viewer),
                         ProcessPackage.Literals.CONTRACT_INPUT__TYPE),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),

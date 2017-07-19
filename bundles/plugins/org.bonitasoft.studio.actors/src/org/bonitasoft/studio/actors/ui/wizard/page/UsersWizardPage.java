@@ -177,8 +177,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                         c.dispose();
                     }
                     refreshMembershipTab();
-                } else
-                if (item.equals(customTab)) {
+                } else if (item.equals(customTab)) {
                     for (final Control c : tab.getChildren()) {
                         c.dispose();
                     }
@@ -260,9 +259,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             getViewer().setInput(userList);
             if (customUserInfoTable != null) {
                 if (organization.getCustomUserInfoDefinitions() == null) {
-                    organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
+                    organization
+                            .setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
                 }
-                customUserInfoObservableList = EMFProperties.list(OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION)
+                customUserInfoObservableList = EMFProperties
+                        .list(OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION)
                         .observe(organization.getCustomUserInfoDefinitions());
                 customUserInfoTable.setInput(customUserInfoObservableList);
                 customUserInfoObservableList.addListChangeListener(new IListChangeListener() {
@@ -289,7 +290,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite detailsComposite = new Composite(group, SWT.NONE);
         detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create());
+        detailsComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create());
 
         createUserNameField(detailsComposite);
 
@@ -393,7 +395,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         managerName.setText(Messages.manager);
 
         managerNameComboViewer = new ComboViewer(rightColumnComposite, SWT.BORDER | SWT.READ_ONLY);
-        managerNameComboViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).indent(5, 0).create());
+        managerNameComboViewer.getControl().setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).indent(5, 0).create());
         managerNameComboViewer.setLabelProvider(new LabelProvider());
         managerNameComboViewer.setContentProvider(new ObservableListContentProvider());
 
@@ -447,12 +450,15 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
 
         final UpdateValueStrategy mandatoryStrategy = new UpdateValueStrategy();
-        mandatoryStrategy.setAfterGetValidator(new UserEmptyInputValidator(Messages.password, userSingleSelectionObservable));
+        mandatoryStrategy
+                .setAfterGetValidator(new UserEmptyInputValidator(Messages.password, userSingleSelectionObservable));
 
-        final IObservableValue userPasswordObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue userPasswordObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__PASSWORD);
 
-        final IObservableValue passwordValueObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userPasswordObservableValue,
+        final IObservableValue passwordValueObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userPasswordObservableValue,
                 OrganizationPackage.Literals.PASSWORD_TYPE__VALUE);
         passwordValueObservableValue.addValueChangeListener(new IValueChangeListener() {
 
@@ -466,7 +472,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             }
         });
 
-        final Binding binding = context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), passwordValueObservableValue, mandatoryStrategy, null);
+        final Binding binding = context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify),
+                passwordValueObservableValue, mandatoryStrategy, null);
         ControlDecorationSupport.create(binding, SWT.LEFT, rightColumnComposite, new ControlDecorationUpdater() {
 
             @Override
@@ -493,7 +500,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public Object convert(final Object from) {
-                if (userSingleSelectionObservable != null && userSingleSelectionObservable.getValue() != null) {
+                if (from != null && userSingleSelectionObservable != null
+                        && userSingleSelectionObservable.getValue() != null) {
                     final User user = (User) userSingleSelectionObservable.getValue();
                     updateDelegueeMembership(user.getUserName(), from.toString());
                 }
@@ -529,9 +537,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             }
         });
 
-        final IObservableValue userNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue userNameValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__USER_NAME);
-        final Binding binding = context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), userNameValue, stategy, null);
+        final Binding binding = context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), userNameValue,
+                stategy, null);
         ControlDecorationSupport.create(binding, SWT.LEFT, rightColumnComposite, new ControlDecorationUpdater() {
 
             @Override
@@ -619,8 +629,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     protected Control createCustomControl(final Composite parent) {
 
         final Composite otherInfoComposite = new Composite(parent, SWT.NONE);
-        otherInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
-        otherInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
+        otherInfoComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
+        otherInfoComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
 
         final User selectedUser = (User) userSingleSelectionObservable.getValue();
         if (selectedUser != null) {
@@ -629,10 +641,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 selectedUser.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType());
             }
 
-            final IObservableValue customUserInfoValuesValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+            final IObservableValue customUserInfoValuesValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                    userSingleSelectionObservable,
                     OrganizationPackage.Literals.USER__CUSTOM_USER_INFO_VALUES);
 
-            final IObservableList customUserInfoListValue = EMFObservables.observeDetailList(Realm.getDefault(), customUserInfoValuesValue,
+            final IObservableList customUserInfoListValue = EMFObservables.observeDetailList(Realm.getDefault(),
+                    customUserInfoValuesValue,
                     OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE);
 
             final EList<CustomUserInfoValue> customUserInfoValueList = sortCustomUserInfoValues(selectedUser);
@@ -659,7 +673,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 textValue.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
                 context.bindValue(SWTObservables.observeText(textValue, SWT.Modify),
-                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE), strategy, null);
+                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE),
+                        strategy, null);
 
             }
         }
@@ -682,7 +697,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
     private EList<CustomUserInfoValue> sortCustomUserInfoValues(final User selectedUser) {
-        final EList<CustomUserInfoValue> customUserInfoValueList = selectedUser.getCustomUserInfoValues().getCustomUserInfoValue();
+        final EList<CustomUserInfoValue> customUserInfoValueList = selectedUser.getCustomUserInfoValues()
+                .getCustomUserInfoValue();
         ECollections.sort(customUserInfoValueList, new Comparator<CustomUserInfoValue>() {
 
             @Override
@@ -697,7 +713,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite detailsInfoComposite = new Composite(parent, SWT.NONE);
         detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(5).margins(5, 5).equalWidth(false).create());
+        detailsInfoComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(5).margins(5, 5).equalWidth(false).create());
 
         final User selectedUser = (User) userSingleSelectionObservable.getValue();
         if (selectedUser != null) {
@@ -729,7 +746,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         }
 
         final Button addMembershipButton = new Button(detailsInfoComposite, SWT.PUSH);
-        addMembershipButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(5, 1).align(SWT.END, SWT.CENTER).create());
+        addMembershipButton.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).span(5, 1).align(SWT.END, SWT.CENTER).create());
         addMembershipButton.setText(Messages.addMembership);
         addMembershipButton.addSelectionListener(new SelectionAdapter() {
 
@@ -753,7 +771,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
     private void removeMembershipAction(final Membership membership) {
-        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteMembershipTitle, Messages.deleteMembershipMsg)) {
+        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteMembershipTitle,
+                Messages.deleteMembershipMsg)) {
             membershipList.remove(membership);
             final Event ev = new Event();
             ev.item = tab.getSelection()[0];
@@ -777,8 +796,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
         targetStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.emtpyMembershipValue));
 
-        final IObservableValue membershipRoleValue = EMFObservables.observeValue(membership, OrganizationPackage.Literals.MEMBERSHIP__ROLE_NAME);
-        final Binding binding = context.bindValue(SWTObservables.observeText(roleNameCombo), membershipRoleValue, targetStrategy, null);
+        final IObservableValue membershipRoleValue = EMFObservables.observeValue(membership,
+                OrganizationPackage.Literals.MEMBERSHIP__ROLE_NAME);
+        final Binding binding = context.bindValue(SWTObservables.observeText(roleNameCombo), membershipRoleValue,
+                targetStrategy, null);
         ControlDecorationSupport.create(binding, SWT.LEFT, detailsInfoComposite);
     }
 
@@ -790,34 +811,37 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         groupName.setText(Messages.groupName);
 
         final ComboViewer groupNameCombo = new ComboViewer(detailsInfoComposite, SWT.BORDER | SWT.READ_ONLY);
-        groupNameCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create());
+        groupNameCombo.getCombo()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create());
         groupNameCombo.setContentProvider(new ObservableListContentProvider());
         groupNameCombo.setLabelProvider(new OrganizationGroupLabelProvider());
         //        for(final org.bonitasoft.studio.actors.model.organization.Group g : groupList){
         //            groupNameCombo.add(GroupContentProvider.getGroupPath(g)) ;
         //        }
 
-        final IObservableList observeGroupList = EMFObservables.observeList(organization.getGroups(), OrganizationPackage.Literals.GROUPS__GROUP);
+        final IObservableList observeGroupList = EMFObservables.observeList(organization.getGroups(),
+                OrganizationPackage.Literals.GROUPS__GROUP);
 
         final UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
         targetStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.emtpyMembershipValue));
-        targetStrategy.setConverter(new Converter(org.bonitasoft.studio.actors.model.organization.Group.class, String.class) {
+        targetStrategy
+                .setConverter(new Converter(org.bonitasoft.studio.actors.model.organization.Group.class, String.class) {
 
-            @Override
-            public Object convert(final Object from) {
-                final org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) from;
-                if (group != null) {
-                    if (group.getParentPath() == null || group.getParentPath().isEmpty()) {
-                        membership.setGroupParentPath(null);
-                    } else {
-                        membership.setGroupParentPath(group.getParentPath());
+                    @Override
+                    public Object convert(final Object from) {
+                        final org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) from;
+                        if (group != null) {
+                            if (group.getParentPath() == null || group.getParentPath().isEmpty()) {
+                                membership.setGroupParentPath(null);
+                            } else {
+                                membership.setGroupParentPath(group.getParentPath());
+                            }
+                            return group.getName();
+                        } else {
+                            return "";
+                        }
                     }
-                    return group.getName();
-                } else {
-                    return "";
-                }
-            }
-        });
+                });
 
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
         modelStrategy.setConverter(new Converter(String.class, org.bonitasoft.studio.actors.model.organization.Group.class) {
@@ -843,8 +867,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         });
 
         groupNameCombo.setInput(observeGroupList);
-        final IObservableValue membershipValue = EMFObservables.observeValue(membership, OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME);
-        final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(groupNameCombo), membershipValue, targetStrategy, modelStrategy);
+        final IObservableValue membershipValue = EMFObservables.observeValue(membership,
+                OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME);
+        final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(groupNameCombo), membershipValue,
+                targetStrategy, modelStrategy);
         ControlDecorationSupport.create(binding, SWT.LEFT, detailsInfoComposite);
     }
 
@@ -876,8 +902,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text faxText = new Text(detailsInfoComposite, SWT.BORDER);
         faxText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         faxText.setMessage(Messages.faxHint);
-        bindTextToUserAttribute(faxText, reference, OrganizationPackage.Literals.CONTACT_DATA__FAX_NUMBER, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.faxLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(faxText, reference, OrganizationPackage.Literals.CONTACT_DATA__FAX_NUMBER,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.faxLabel, SHORT_FIELD_MAX_LENGTH)).create());
     }
 
     private void createMobileField(final Composite detailsInfoComposite, final EReference reference) {
@@ -888,8 +915,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text mobileText = new Text(detailsInfoComposite, SWT.BORDER);
         mobileText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         mobileText.setMessage(Messages.mobileHint);
-        bindTextToUserAttribute(mobileText, reference, OrganizationPackage.Literals.CONTACT_DATA__MOBILE_NUMBER, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.mobileLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(mobileText, reference, OrganizationPackage.Literals.CONTACT_DATA__MOBILE_NUMBER,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.mobileLabel, SHORT_FIELD_MAX_LENGTH)).create());
     }
 
     private void createPhoneField(final Composite detailsInfoComposite, final EReference reference) {
@@ -900,8 +928,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text phoneText = new Text(detailsInfoComposite, SWT.BORDER);
         phoneText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         phoneText.setMessage(Messages.phoneHint);
-        bindTextToUserAttribute(phoneText, reference, OrganizationPackage.Literals.CONTACT_DATA__PHONE_NUMBER, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.phoneLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(phoneText, reference, OrganizationPackage.Literals.CONTACT_DATA__PHONE_NUMBER,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.phoneLabel, SHORT_FIELD_MAX_LENGTH)).create());
     }
 
     private void createWebSiteField(final Composite detailsInfoComposite, final EReference reference) {
@@ -912,8 +941,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text websiteText = new Text(detailsInfoComposite, SWT.BORDER);
         websiteText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         websiteText.setMessage(Messages.websiteHint);
-        bindTextToUserAttribute(websiteText, reference, OrganizationPackage.Literals.CONTACT_DATA__WEBSITE, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.websiteLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(websiteText, reference, OrganizationPackage.Literals.CONTACT_DATA__WEBSITE,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.websiteLabel, LONG_FIELD_MAX_LENGTH)).create());
     }
 
     private void createBuildingInfoFields(final Composite detailsInfoComposite, final EReference reference) {
@@ -923,13 +953,15 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite buildingInfo = new Composite(detailsInfoComposite, SWT.NONE);
         buildingInfo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        buildingInfo.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).spacing(2, 0).equalWidth(false).create());
+        buildingInfo.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).spacing(2, 0).equalWidth(false).create());
 
         final Text buildingText = new Text(buildingInfo, SWT.BORDER);
         buildingText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         buildingText.setMessage(Messages.buildingHint);
-        bindTextToUserAttribute(buildingText, reference, OrganizationPackage.Literals.CONTACT_DATA__BUILDING, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.buildingLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(buildingText, reference, OrganizationPackage.Literals.CONTACT_DATA__BUILDING,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.buildingLabel, SHORT_FIELD_MAX_LENGTH)).create());
 
         createPersonalRoomField(buildingInfo, reference);
     }
@@ -954,8 +986,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text adressText = new Text(detailsInfoComposite, SWT.BORDER);
         adressText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         adressText.setMessage(Messages.addressHint);
-        bindTextToUserAttribute(adressText, reference, OrganizationPackage.Literals.CONTACT_DATA__ADDRESS, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.addressLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(adressText, reference, OrganizationPackage.Literals.CONTACT_DATA__ADDRESS,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.addressLabel, LONG_FIELD_MAX_LENGTH)).create());
     }
 
     private void createAddressInfoFields(final Composite detailsInfoComposite, final EReference reference) {
@@ -965,7 +998,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite addressInfo = new Composite(detailsInfoComposite, SWT.NONE);
         addressInfo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        addressInfo.setLayout(GridLayoutFactory.fillDefaults().numColumns(5).margins(0, 0).spacing(2, 0).equalWidth(false).create());
+        addressInfo.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(5).margins(0, 0).spacing(2, 0).equalWidth(false).create());
 
         final Text cityText = new Text(addressInfo, SWT.BORDER);
         cityText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -998,8 +1032,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text zipCodeText = new Text(addressInfo, SWT.BORDER);
         zipCodeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         zipCodeText.setMessage(Messages.zipCodeHint);
-        bindTextToUserAttribute(zipCodeText, reference, OrganizationPackage.Literals.CONTACT_DATA__ZIP_CODE, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.zipCodeLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(zipCodeText, reference, OrganizationPackage.Literals.CONTACT_DATA__ZIP_CODE,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.zipCodeLabel, SHORT_FIELD_MAX_LENGTH)).create());
     }
 
     private void createEmailField(final Composite detailsInfoComposite, final EReference reference) {
@@ -1025,22 +1060,27 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         countryText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         countryText.setMessage(Messages.coutryHint);
 
-        bindTextToUserAttribute(countryText, reference, OrganizationPackage.Literals.CONTACT_DATA__COUNTRY, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.countryLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(countryText, reference, OrganizationPackage.Literals.CONTACT_DATA__COUNTRY,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.countryLabel, LONG_FIELD_MAX_LENGTH)).create());
     }
 
     private Binding bindTextToUserAttribute(final Text text, final EReference reference, final EAttribute attribute,
             final UpdateValueStrategy targetUpdateValueStrategy) {
-        final IObservableValue personalDataValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, reference);
-        final IObservableValue propertyUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), personalDataValue, attribute);
-        return context.bindValue(SWTObservables.observeText(text, SWT.Modify), propertyUserValue, targetUpdateValueStrategy, null);
+        final IObservableValue personalDataValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable, reference);
+        final IObservableValue propertyUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), personalDataValue,
+                attribute);
+        return context.bindValue(SWTObservables.observeText(text, SWT.Modify), propertyUserValue, targetUpdateValueStrategy,
+                null);
     }
 
     protected Control createGeneralControl(final Composite parent) {
 
         final Composite detailsInfoComposite = new Composite(parent, SWT.NONE);
         detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        detailsInfoComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
+        detailsInfoComposite
+                .setLayout(GridLayoutFactory.swtDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
 
         createGeneralTitleField(detailsInfoComposite);
 
@@ -1061,7 +1101,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text jobText = new Text(detailsInfoComposite, SWT.BORDER);
         jobText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         jobText.setMessage(Messages.jobHint);
-        final IObservableValue jobUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue jobUserValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__JOB_TITLE);
         context.bindValue(SWTObservables.observeText(jobText, SWT.Modify), jobUserValue);
 
@@ -1076,7 +1117,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         lastNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         lastNameText.setMessage(Messages.lastNameHint);
 
-        final IObservableValue lastNameUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue lastNameUserValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__LAST_NAME);
         context.bindValue(SWTObservables.observeText(lastNameText, SWT.Modify), lastNameUserValue);
 
@@ -1098,7 +1140,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         firstNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         firstNameText.setMessage(Messages.firstNameHint);
 
-        final IObservableValue firstNameUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue firstNameUserValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__FIRST_NAME);
         context.bindValue(SWTObservables.observeText(firstNameText, SWT.Modify), firstNameUserValue);
 
@@ -1121,7 +1164,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         titleText.setMessage(Messages.titleHint);
         //		widgetMap.put(OrganizationPackage.Literals.USER__TITLE, titleText) ;
 
-        final IObservableValue titleUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable,
+        final IObservableValue titleUserValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                userSingleSelectionObservable,
                 OrganizationPackage.Literals.USER__TITLE);
         context.bindValue(SWTObservables.observeText(titleText, SWT.Modify), titleUserValue);
 
@@ -1133,7 +1177,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         user.setUserName(generateUsername());
         user.setPassword(createPassword(DEFAULT_USER_PASSWORD));
         user.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType());
-        for (final CustomUserInfoDefinition definitions : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()) {
+        for (final CustomUserInfoDefinition definitions : organization.getCustomUserInfoDefinitions()
+                .getCustomUserInfoDefinition()) {
             final CustomUserInfoValue newValue = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
             newValue.setName(definitions.getName());
             newValue.setValue("");
@@ -1187,9 +1232,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     @Override
     protected boolean viewerSelect(final Object element, final String searchQuery) {
         if (searchQuery == null || searchQuery.isEmpty()
-                || ((User) element).getUserName() != null && ((User) element).getUserName().toLowerCase().contains(searchQuery.toLowerCase())
-                || ((User) element).getFirstName() != null && ((User) element).getFirstName().toLowerCase().contains(searchQuery.toLowerCase())
-                || ((User) element).getLastName() != null && ((User) element).getLastName().toLowerCase().contains(searchQuery.toLowerCase())) {
+                || ((User) element).getUserName() != null
+                        && ((User) element).getUserName().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((User) element).getFirstName() != null
+                        && ((User) element).getFirstName().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((User) element).getLastName() != null
+                        && ((User) element).getLastName().toLowerCase().contains(searchQuery.toLowerCase())) {
             return true;
         }
         return false;
@@ -1294,7 +1342,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite otherGroupComposite = new Composite(otherGroup, SWT.NONE);
         otherGroupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        otherGroupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
+        otherGroupComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
 
         createCustomUserInfoTableButtonComposite(otherGroupComposite);
 
@@ -1329,7 +1378,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public void handleEvent(final Event arg0) {
-                final List<CustomUserInfoDefinition> definitions = ((IStructuredSelection) customUserInfoTable.getSelection()).toList();
+                final List<CustomUserInfoDefinition> definitions = ((IStructuredSelection) customUserInfoTable
+                        .getSelection()).toList();
                 String listDef = "";
                 for (final CustomUserInfoDefinition def : definitions) {
                     listDef = listDef + def.getName() + "\n";
@@ -1337,7 +1387,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                 listDef += "\n\n" + Messages.otherInformationGroupRemoveDialogTextWarning;
                 if (!definitions.isEmpty()
-                        && MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.otherInformationGroupRemoveDialogTitle,
+                        && MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                                Messages.otherInformationGroupRemoveDialogTitle,
                                 Messages.bind(Messages.otherInformationGroupRemoveDialogText, listDef))) {
 
                     customUserInfoObservableList.removeAll(definitions);
@@ -1377,7 +1428,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         sorter.setColumn(nameColumn.getColumn());
         nameColumn.getColumn().setText(Messages.customUserInfoName + " *");
         nameColumn.getColumn().setWidth(100);
-        customUserInformationDefinitionNameEditingSupport = new CustomUserInformationDefinitionNameEditingSupport(nameColumn.getViewer(), context);
+        customUserInformationDefinitionNameEditingSupport = new CustomUserInformationDefinitionNameEditingSupport(
+                nameColumn.getViewer(), context);
         nameColumn.setEditingSupport(customUserInformationDefinitionNameEditingSupport);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
 
@@ -1390,7 +1442,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final TableViewerColumn descriptionColumn = new TableViewerColumn(customUserInfoTable, SWT.NONE);
         descriptionColumn.getColumn().setText(Messages.customUserInfoDescription);
         descriptionColumn.getColumn().setWidth(100);
-        descriptionColumn.setEditingSupport(new CustomerUserInformationDefinitionDescriptionEditingSupport(nameColumn.getViewer(), context));
+        descriptionColumn.setEditingSupport(
+                new CustomerUserInformationDefinitionDescriptionEditingSupport(nameColumn.getViewer(), context));
         descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
@@ -1407,7 +1460,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     public void addCustomUserInfoDefinitionAction() {
 
-        final String customUserInfoName = NamingUtils.generateNewNameCaseInsensitive(getLowerCaseExistingCustomerUserInfoName(),
+        final String customUserInfoName = NamingUtils.generateNewNameCaseInsensitive(
+                getLowerCaseExistingCustomerUserInfoName(),
                 Messages.defaultCustomUserInformationName);
         final String customUserInfoDescription = "";
 
@@ -1437,7 +1491,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             if (organization.getCustomUserInfoDefinitions() == null) {
                 organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
             }
-            for (final CustomUserInfoDefinition custom : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()) {
+            for (final CustomUserInfoDefinition custom : organization.getCustomUserInfoDefinitions()
+                    .getCustomUserInfoDefinition()) {
                 existingCustomUserInfoNames.add(custom.getName().toLowerCase());
             }
         }

@@ -1,11 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * Contributors:
  * IBM Corporation - initial API and implementation
+ * Patrik Suzzi <psuzzi@gmail.com> - Bug 489250
  *******************************************************************************/
 package org.eclipse.ui.internal.views.properties.tabbed.view;
 
@@ -57,11 +58,11 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
 
     private static final String ELEMENT_INPUT = "input"; //$NON-NLS-1$
 
-    private final String id;
+    private String id;
 
-    private final String targetTab;
+    private String targetTab;
 
-    private final String afterSection;
+    private String afterSection;
 
     private ArrayList inputTypes;
 
@@ -69,7 +70,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
 
     private int enablesFor = ENABLES_FOR_ANY;
 
-    private final IConfigurationElement configurationElement;
+    private IConfigurationElement configurationElement;
 
     /**
      * Constructor for the section descriptor.
@@ -79,8 +80,8 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      * @param typeMapper
      *        The type mapper.
      */
-    protected SectionDescriptor(final IConfigurationElement configurationElement,
-            final ITypeMapper typeMapper) {
+    protected SectionDescriptor(IConfigurationElement configurationElement,
+            ITypeMapper typeMapper) {
         super(typeMapper);
         this.configurationElement = configurationElement;
 
@@ -89,9 +90,9 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
         afterSection = getConfigurationElement()
                 .getAttribute(ATT_AFTER_SECTION);
         if (getConfigurationElement().getAttribute(ATT_SECTION_ENABLES_FOR) != null) {
-            final String enablesForStr = getConfigurationElement().getAttribute(
+            String enablesForStr = getConfigurationElement().getAttribute(
                     ATT_SECTION_ENABLES_FOR);
-            final int enablesForTest = Integer.parseInt(enablesForStr);
+            int enablesForTest = Integer.parseInt(enablesForStr);
             if (enablesForTest > 0) {
                 enablesFor = enablesForTest;
             }
@@ -110,21 +111,16 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      * @param exception
      *        an optional CoreException
      */
-    private void handleSectionError(final Exception exception) {
-        final String pluginId = getConfigurationElement().getDeclaringExtension()
+    private void handleSectionError(Throwable exception) {
+        String pluginId = getConfigurationElement().getDeclaringExtension()
                 .getNamespaceIdentifier();
         String message = TabbedPropertyMessages.SectionDescriptor_Section_error;
         if (exception == null) {
-            message = MessageFormat.format(
-                    TabbedPropertyMessages.SectionDescriptor_Section_error,
-                    new Object[] { pluginId });
+            message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_Section_error, pluginId);
         } else {
-            message = MessageFormat
-                    .format(
-                            TabbedPropertyMessages.SectionDescriptor_class_not_found_error,
-                            new Object[] { pluginId });
+            message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_class_not_found_error, pluginId);
         }
-        final IStatus status = new Status(IStatus.ERROR, pluginId,
+        IStatus status = new Status(IStatus.ERROR, pluginId,
                 TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
         TabbedPropertyViewPlugin.getPlugin().getLog().log(status);
     }
@@ -139,7 +135,6 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
     /**
      * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getFilter()
      */
-    @Override
     public IFilter getFilter() {
         if (filter == null) {
             try {
@@ -147,7 +142,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
                     filter = (IFilter) configurationElement
                             .createExecutableExtension(ATT_SECTION_FILTER);
                 }
-            } catch (final CoreException exception) {
+            } catch (CoreException exception) {
                 handleSectionError(exception);
             }
         }
@@ -161,7 +156,6 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      *
      * @return the value for section enablement.
      */
-    @Override
     public int getEnablesFor() {
         return enablesFor;
     }
@@ -176,7 +170,6 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
     /**
      * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getAfterSection()
      */
-    @Override
     public String getAfterSection() {
         if (afterSection == null) {
             return super.getAfterSection();
@@ -191,12 +184,13 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      */
     public ISection getSectionClass() {
         ISection section = null;
-
         final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
         try {
-            section = (ISection) ContextInjectionFactory.make(Platform.getBundle(getConfigurationElement().getDeclaringExtension().getNamespaceIdentifier())
-                    .loadClass(
-                            getConfigurationElement().getAttribute(ATT_CLASS)), workbench.getContext());
+            section = (ISection) ContextInjectionFactory
+                    .make(Platform.getBundle(getConfigurationElement().getDeclaringExtension().getNamespaceIdentifier())
+                            .loadClass(
+                                    getConfigurationElement().getAttribute(ATT_CLASS)),
+                            workbench.getContext());
         } catch (final InjectionException e) {
             handleSectionError(e);
         } catch (final ClassNotFoundException e) {
@@ -213,14 +207,12 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      *
      * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getInputTypes()
      */
-    @Override
     public List getInputTypes() {
         if (inputTypes == null) {
             inputTypes = new ArrayList();
-            final IConfigurationElement[] elements = getConfigurationElement()
+            IConfigurationElement[] elements = getConfigurationElement()
                     .getChildren(ELEMENT_INPUT);
-            for (int i = 0; i < elements.length; i++) {
-                final IConfigurationElement element = elements[i];
+            for (IConfigurationElement element : elements) {
                 inputTypes.add(element.getAttribute(ATT_INPUT_TYPE));
             }
         }
@@ -231,7 +223,6 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
     /**
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         return getId();
     }

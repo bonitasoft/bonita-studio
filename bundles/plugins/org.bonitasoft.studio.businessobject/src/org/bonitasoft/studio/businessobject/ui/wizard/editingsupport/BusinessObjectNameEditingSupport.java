@@ -135,7 +135,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
 
             @Override
             public Object convert(Object fromObject) {
-                return packageNameObservableValue.getValue() + "." + fromObject.toString();
+                return fromObject != null ? packageNameObservableValue.getValue() + "." + fromObject.toString() : null;
             }
         });
         final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();

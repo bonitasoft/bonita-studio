@@ -80,7 +80,8 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        new Label(mainComposite, SWT.NONE).setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y + 1).create()); // Filler
+        new Label(mainComposite, SWT.NONE)
+                .setLayoutData(GridDataFactory.fillDefaults().indent(0, -LayoutConstants.getSpacing().y + 1).create()); // Filler
 
         viewer = new ContractInputTableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
@@ -145,7 +146,8 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
 
     @Override
     public void bindExpression(final EMFDataBindingContext dataBindingContext,
-            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters,
+            final ExpressionViewer expressionViewer) {
         editorInputExpression = inputExpression;
         updateViewerInput(context);
 
@@ -209,7 +211,8 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object inputList) {
-                final List<ContractInput> list = (List<ContractInput>) inputList;
+                final List<ContractInput> list = inputList != null ? (List<ContractInput>) inputList
+                        : Collections.emptyList();
                 if (!list.isEmpty()) {
                     final ContractInput contractInput = list.get(0);
                     final Collection<ContractInput> inputs = (Collection<ContractInput>) viewer.getInput();
@@ -251,7 +254,7 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
 
             @Override
             public Object convert(final Object input) {
-                return ExpressionHelper.getContractInputReturnType((ContractInput) input);
+                return input != null ? ExpressionHelper.getContractInputReturnType((ContractInput) input) : null;
             }
 
         };
@@ -264,8 +267,8 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         final IConverter nameConverter = new Converter(ContractInput.class, String.class) {
 
             @Override
-            public Object convert(final Object data) {
-                return ((ContractInput) data).getName();
+            public Object convert(final Object input) {
+                return input != null ? ((ContractInput) input).getName() : null;
             }
 
         };

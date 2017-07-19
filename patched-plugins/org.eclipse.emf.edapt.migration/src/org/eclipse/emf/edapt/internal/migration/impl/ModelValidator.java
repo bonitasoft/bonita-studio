@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     BMW Car IT - Initial API and implementation
- *     Technische Universitaet Muenchen - Major refactoring and extension
+ * BMW Car IT - Initial API and implementation
+ * Technische Universitaet Muenchen - Major refactoring and extension
  *******************************************************************************/
 package org.eclipse.emf.edapt.internal.migration.impl;
 
@@ -35,7 +35,7 @@ import org.eclipse.ocl.helper.OCLHelper;
 
 /**
  * A validator to validate OCL constraints.
- * 
+ *
  * @author herrmama
  * @author $Author$
  * @version $Rev$
@@ -44,7 +44,7 @@ import org.eclipse.ocl.helper.OCLHelper;
 public class ModelValidator extends EObjectValidator {
 
 	/** Source URI for OCL annotations. */
-	private static final String OCL_SOURCE_URI = "http://www.eclipse.org/ocl/examples/OCL";
+	private static final String OCL_SOURCE_URI = "http://www.eclipse.org/ocl/examples/OCL"; //$NON-NLS-1$
 
 	/** OCL helper class. */
 	private final OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
@@ -59,13 +59,13 @@ public class ModelValidator extends EObjectValidator {
 	/** {@inheritDoc} */
 	@Override
 	public boolean validate_EveryDefaultConstraint(EObject object,
-			DiagnosticChain diagnostics, Map<Object, Object> context) {
+		DiagnosticChain diagnostics, Map<Object, Object> context) {
 		boolean result = super.validate_EveryDefaultConstraint(object,
-				diagnostics, context);
+			diagnostics, context);
 		if (object instanceof Instance) {
 			if (result || diagnostics != null) {
 				result &= validate_EveryInvariant((Instance) object,
-						diagnostics, context);
+					diagnostics, context);
 			}
 		}
 		return result;
@@ -76,29 +76,29 @@ public class ModelValidator extends EObjectValidator {
 	 * otherwise.
 	 */
 	private boolean validate_EveryInvariant(Instance instance,
-			DiagnosticChain diagnostics, Map<Object, Object> context) {
-		EClass eClass = instance.getEClass();
-		EAnnotation annotation = eClass.getEAnnotation(OCL_SOURCE_URI);
+		DiagnosticChain diagnostics, Map<Object, Object> context) {
+		final EClass eClass = instance.getEClass();
+		final EAnnotation annotation = eClass.getEAnnotation(OCL_SOURCE_URI);
 		if (annotation != null) {
-			for (Entry<String, String> entry : annotation.getDetails()) {
+			for (final Entry<String, String> entry : annotation.getDetails()) {
 				try {
-					String expression = entry.getValue();
+					final String expression = entry.getValue();
 					if (!(Boolean) evaluate(instance, expression)) {
 						if (diagnostics != null) {
 							diagnostics.add(new BasicDiagnostic(
-									Diagnostic.ERROR, DIAGNOSTIC_SOURCE, 0,
-									EcorePlugin.INSTANCE.getString(
-											"_UI_GenericConstraint_diagnostic",
-											new Object[] {
-													entry.getKey(),
-													getObjectLabel(
-															(EObject) instance,
-															context) }),
-									new Object[] { instance }));
+								Diagnostic.ERROR, DIAGNOSTIC_SOURCE, 0,
+								EcorePlugin.INSTANCE.getString(
+									"_UI_GenericConstraint_diagnostic", //$NON-NLS-1$
+									new Object[] {
+										entry.getKey(),
+										getObjectLabel(
+											(EObject) instance,
+											context) }),
+								new Object[] { instance }));
 						}
 						return false;
 					}
-				} catch (ParserException e) {
+				} catch (final ParserException e) {
 					System.out.println(e);
 				}
 			}
@@ -108,15 +108,15 @@ public class ModelValidator extends EObjectValidator {
 
 	/** Evaluate an OCL expression. */
 	private Object evaluate(Instance instance, String expression)
-			throws ParserException {
-		OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
+		throws ParserException {
+		final OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
 
 		helper.setContext(((EObject) instance).eClass());
-		OCLExpression<EClassifier> query = helper.createQuery(expression);
+		final OCLExpression<EClassifier> query = helper.createQuery(expression);
 
 		// create a Query to evaluate our query expression
-		Query<EClassifier, EClass, EObject> queryEval = ocl.createQuery(query);
-		Object result = queryEval.evaluate(instance);
+		final Query<EClassifier, EClass, EObject> queryEval = ocl.createQuery(query);
+		final Object result = queryEval.evaluate(instance);
 
 		return result;
 	}

@@ -40,6 +40,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
@@ -358,7 +359,7 @@ public class TestTimer implements SWTBotConstants {
 
         // Set Timer1
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
-
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
         // wait for "Edit Expression" shell
@@ -382,6 +383,8 @@ public class TestTimer implements SWTBotConstants {
         // in the shell editor for 'Every hour'
         bot.button(IDialogConstants.OK_LABEL).click();
 
+        activeShell.setFocus();
+        
         assertEquals("xpression not created correctly", "myScript", bot.text().getText());
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -408,6 +411,7 @@ public class TestTimer implements SWTBotConstants {
         // Set Timer1
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
 
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
         // wait for "Edit Expression" shell
@@ -431,7 +435,8 @@ public class TestTimer implements SWTBotConstants {
 
         // in the shell editor for 'Every hour'
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        activeShell.setFocus();
+        
         Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());
         bot.button(IDialogConstants.FINISH_LABEL).click();
 

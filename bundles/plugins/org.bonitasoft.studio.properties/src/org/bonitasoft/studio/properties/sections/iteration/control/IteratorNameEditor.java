@@ -55,28 +55,33 @@ public class IteratorNameEditor extends TableViewer {
         tableLayout.addColumnData(new ColumnWeightData(1));
         getTable().setLayout(tableLayout);
         tableViewerColumn = new TableViewerColumn(this, SWT.FILL);
-        tableViewerColumn.setLabelProvider(new IteratorNameCellLabelProvider(new AdapterFactoryContentProvider(new ComposedAdapterFactory(
-                ComposedAdapterFactory.Descriptor.Registry.INSTANCE)), provider.getKnownElements()));
+        tableViewerColumn.setLabelProvider(
+                new IteratorNameCellLabelProvider(new AdapterFactoryContentProvider(new ComposedAdapterFactory(
+                        ComposedAdapterFactory.Descriptor.Registry.INSTANCE)), provider.getKnownElements()));
 
         widgetFactory.adapt(getTable());
 
     }
 
-    public void bindControl(final EMFDataBindingContext context, final MultiInstantiableAdaptableSelectionProvider selectionProvider,
+    public void bindControl(final EMFDataBindingContext context,
+            final MultiInstantiableAdaptableSelectionProvider selectionProvider,
             final IProgressService progressService, final IMessageManager messageManager) {
-        final IteratorNameObservableEditingSupport editingSupport = new IteratorNameObservableEditingSupport(this, messageManager, context,
+        final IteratorNameObservableEditingSupport editingSupport = new IteratorNameObservableEditingSupport(this,
+                messageManager, context,
                 new IteratorRefactorOperationFactory(), progressService);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_EDITOR);
         tableViewerColumn.setEditingSupport(editingSupport);
         context.bindValue(ViewersObservables.observeInput(this),
-                EMFObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(selectionProvider),
+                EMFObservables.observeDetailValue(Realm.getDefault(),
+                        ViewersObservables.observeSingleSelection(selectionProvider),
                         ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION),
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(new Converter(Expression.class, IObservableList.class) {
 
                     @Override
                     public Object convert(final Object fromObject) {
-                        return new WritableList(newArrayList(fromObject), Expression.class);
+                        return fromObject != null ? new WritableList(newArrayList(fromObject), Expression.class)
+                                : new WritableList();
                     }
                 }).create());
     }

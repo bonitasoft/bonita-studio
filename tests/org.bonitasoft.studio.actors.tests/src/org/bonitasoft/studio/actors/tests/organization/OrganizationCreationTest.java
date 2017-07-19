@@ -108,8 +108,12 @@ public class OrganizationCreationTest {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
+        SWTBotShell activeShell = bot.activeShell();
+
         bot.waitUntil(Conditions.shellIsActive(Messages.organizationValidationFailed), 10000);
         bot.button(IDialogConstants.OK_LABEL).click();
+
+        activeShell.setFocus();
 
         bot.table().select(0);
         bot.comboBoxWithLabel(Messages.manager).setSelection("");

@@ -24,8 +24,8 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.util.regex.Pattern.compile;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllItemsOfType;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +59,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.ByteSource;
 
 /**
  * @author Romain Bioteau
@@ -117,10 +117,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private Set<String> zipEntries(final byte[] zipContent) throws IOException {
         final Set<String> entries = new HashSet<String>();
-        final ByteArrayInputStream inputStream = ByteStreams.newInputStreamSupplier(zipContent).getInput();
-        try (final ZipInputStream stream = new ZipInputStream(inputStream)) {
+        try (final ZipInputStream stream = new ZipInputStream(ByteSource.wrap(zipContent).openBufferedStream())) {
             ZipEntry entry;
-
             while ((entry = stream.getNextEntry()) != null) {
                 entries.add(entry.getName());
             }
@@ -180,8 +178,9 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
             public WebPageFileStore apply(final FormMapping mapping) {
                 final String formUUID = mapping.getTargetForm().getContent();
                 final WebPageFileStore store = fileStoreFromFormUUID(formUUID);
-                if(store == null){
-                    BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID), UIDesignerPlugin.PLUGIN_ID);
+                if (store == null) {
+                    BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID),
+                            UIDesignerPlugin.PLUGIN_ID);
                 }
                 return store;
             }

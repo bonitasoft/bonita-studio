@@ -37,6 +37,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Before;
 import org.junit.Test;
@@ -207,6 +208,7 @@ public class ConnectorDefinitionTranslationsTest {
 
     private void createWidget(String widgetId, String widgetType, int inputIndex)
             throws Exception {
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
@@ -221,6 +223,7 @@ public class ConnectorDefinitionTranslationsTest {
         assertTrue("button ok should be enabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
 }

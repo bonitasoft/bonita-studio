@@ -27,6 +27,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldTypeLabelProvider;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -42,7 +43,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class FieldTypeEditingSupport extends EditingSupport {
 
-    private final BusinessObjectModel bom;
+    public static final String TYPE_COMBO_EDITOR_ID = "FieldTypeEditingSupport.Combo";
+
+	private final BusinessObjectModel bom;
 
     private final IObservableList fieldsList;
 
@@ -61,6 +64,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
                 SWT.READ_ONLY);
+        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,TYPE_COMBO_EDITOR_ID);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
         cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().getParent().setFocus());

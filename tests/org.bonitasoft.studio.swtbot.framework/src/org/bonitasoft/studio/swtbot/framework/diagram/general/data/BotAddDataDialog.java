@@ -14,6 +14,7 @@ import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * Add data dialog.
@@ -66,8 +67,9 @@ public class BotAddDataDialog extends BotWizardDialog {
     }
 
     public BotExpressionEditorDialog editDefaultValueExpression() {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 
     public BotAddDataDialog setAutoGenerateForm(final boolean pAutoGenerate) {

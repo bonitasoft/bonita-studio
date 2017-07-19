@@ -37,7 +37,8 @@ Require-Bundle: org.eclipse.core.runtime,
  assertj-core;bundle-version="1.5.0",
  org.bonitasoft.studio.swtbot.framework;bundle-version="7.4.0",
  org.bonitasoft.studio.designer;bundle-version="7.4.0",
- org.bonitasoft.studio.preferences
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.tests-utils;bundle-version="7.6.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.bonitasoft.studio.exporter.tests,

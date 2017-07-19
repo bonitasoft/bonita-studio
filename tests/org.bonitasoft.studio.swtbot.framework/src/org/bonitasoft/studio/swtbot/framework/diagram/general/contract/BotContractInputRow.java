@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotList;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -83,7 +84,7 @@ public class BotContractInputRow extends BotBase {
         swtBotTreeItem.click(TYPE_COLUMN);
         final SWTBotList comboBox = bot.list();
         comboBox.select(type);
-        pressEnter();
+        comboBox.pressShortcut(Keystrokes.CR);
         return this;
     }
 

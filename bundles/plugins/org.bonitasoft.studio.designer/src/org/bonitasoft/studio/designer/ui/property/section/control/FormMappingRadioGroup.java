@@ -53,8 +53,10 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
     private final InfoMessageComposite legacyComposite;
     private final InfoMessageComposite noneComposite;
 
-    public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore,
-            final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator,
+    public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final IEclipsePreferences preferenceStore,
+            final RepositoryAccessor repositoryAccessor,
+            final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.swtDefaults().numColumns(4).extendedMargins(10, 10, 10, 10).create());
@@ -86,7 +88,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
         legacyComposite = new InfoMessageComposite(stackedComposite, widgetFactory);
         noneComposite = new InfoMessageComposite(stackedComposite, widgetFactory);
-        pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore, repositoryAccessor,
+        pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore,
+                repositoryAccessor,
                 formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
         widgetFactory.adapt(this);
@@ -107,7 +110,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
-        context.bindValue(PojoObservables.observeValue(stackLayout, "topControl"), mappingTypeObservable, neverUpdateValueStrategy().create(),
+        context.bindValue(PojoObservables.observeValue(stackLayout, "topControl"), mappingTypeObservable,
+                neverUpdateValueStrategy().create(),
                 updateValueStrategy()
                         .withConverter(mappingTypeToCompositeConverter()).create());
         context.bindValue(mappingTypeObservable,
@@ -126,7 +130,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
             @Override
             public Object convert(final Object mappingType) {
-                return compositeFor((FormMappingType) mappingType);
+                return mappingType != null ? compositeFor((FormMappingType) mappingType) : noneComposite;
             }
         };
     }

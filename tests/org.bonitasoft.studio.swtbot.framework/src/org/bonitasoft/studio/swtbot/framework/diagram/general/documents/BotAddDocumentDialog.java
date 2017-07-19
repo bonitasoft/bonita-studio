@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * Add document dialog.
@@ -119,8 +120,9 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @param pURL
      */
     public void setURLWithExpressionEditor(final String pURL) {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        final BotExpressionEditorDialog editor = new BotExpressionEditorDialog(bot);
+        final BotExpressionEditorDialog editor = new BotExpressionEditorDialog(bot,activeShell);
         editor.selectConstantType().setValue(pURL);
         editor.ok();
     }
@@ -147,8 +149,9 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @param initialContentsScript
      */
     public void setInitialContents(final String scriptName, final String initialContentsScript) {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        final BotExpressionEditorDialog expressionDialog = new BotExpressionEditorDialog(bot);
+        final BotExpressionEditorDialog expressionDialog = new BotExpressionEditorDialog(bot,activeShell);
         final BotScriptExpressionEditor scriptEditor = new BotScriptExpressionEditor(bot, expressionDialog);
         scriptEditor.setName(scriptName);
         scriptEditor.setScriptContent(initialContentsScript);

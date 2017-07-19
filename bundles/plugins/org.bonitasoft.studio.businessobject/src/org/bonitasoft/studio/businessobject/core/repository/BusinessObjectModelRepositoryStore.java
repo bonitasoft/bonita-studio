@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterators.forArray;
 import static com.google.common.collect.Lists.newArrayList;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,10 +59,9 @@ import org.eclipse.swt.graphics.Image;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
+import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 
 /**
  * @author Romain Bioteau
@@ -77,6 +75,8 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
     private static final Set<String> extensions = new HashSet<>();
 
     private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
+
+    private BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
 
     static {
         extensions.add(BDM_TYPE_EXTENSION);
@@ -155,8 +155,9 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
             try {
                 final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
                 final BusinessObjectModel businessObjectModel = converter.unzip(ByteStreams.toByteArray(inputStream));
-                final InputSupplier<ByteArrayInputStream> inputSupplier = ByteStreams.newInputStreamSupplier(converter.marshall(businessObjectModel));
-                fileStore = superDoImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, inputSupplier.getInput());
+                try (InputStream is = ByteSource.wrap(converter.marshall(businessObjectModel)).openBufferedStream()) {
+                    fileStore = superDoImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, is);
+                }
             } catch (IOException | JAXBException | SAXException e) {
                 BonitaStudioLog.error("Failed to import Business data model", e);
             }
@@ -169,21 +170,25 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         }
         return fileStore;
     }
-    
+
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
         final BusinessObjectModelFileStore fStore = getChild(BusinessObjectModelFileStore.ZIP_FILENAME);
-        if(fStore != null){
+        if (fStore != null) {
             final File legacyBDM = fStore.getResource().getLocation().toFile();
+            BusinessObjectModel businessObjectModel;
             try {
-                final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
-                final BusinessObjectModel businessObjectModel = converter.unzip( Files.toByteArray(legacyBDM) );
-                final InputSupplier<ByteArrayInputStream> inputSupplier = ByteStreams.newInputStreamSupplier(converter.marshall(businessObjectModel));
-                doImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, inputSupplier.getInput());
-            } catch (IOException | JAXBException | SAXException e) {
-                throw new MigrationException("Failed to migrate Business data model", e);
+                businessObjectModel = converter.unzip(Files.toByteArray(legacyBDM));
+                try (InputStream is = ByteSource.wrap(converter.marshall(businessObjectModel)).openBufferedStream()) {
+                    doImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, is);
+                } catch (IOException e) {
+                    throw new MigrationException("Failed to migrate Business data model", e);
+                }
+            } catch (IOException | JAXBException | SAXException e1) {
+                throw new MigrationException("Failed to migrate Business data model", e1);
             }
+
             fStore.getResource().delete(true, monitor);
         }
     }
@@ -242,11 +247,19 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
 
     protected IRegion regionWithBDM(final IJavaProject javaProject) throws JavaModelException {
         final IRegion newRegion = JavaCore.newRegion();
-        final IClasspathEntry repositoryDependenciesClasspathEntry = find(asIterable(javaProject.getRawClasspath()), repositoryDependenciesEntry(), null);
-        final IPackageFragmentRoot[] fragmentRoots = javaProject.findPackageFragmentRoots(repositoryDependenciesClasspathEntry);
-        final IPackageFragmentRoot packageFragmentRoot = find(asIterable(fragmentRoots), withElementName(BDM_CLIENT_POJO_JAR_NAME), null);
-        if (packageFragmentRoot != null) {
-            newRegion.add(packageFragmentRoot);
+        IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
+        if (rawClasspath != null) {
+            final IClasspathEntry repositoryDependenciesClasspathEntry = find(asIterable(rawClasspath),
+                    repositoryDependenciesEntry(), null);
+            final IPackageFragmentRoot[] fragmentRoots = javaProject
+                    .findPackageFragmentRoots(repositoryDependenciesClasspathEntry);
+            if (fragmentRoots != null) {
+                final IPackageFragmentRoot packageFragmentRoot = find(asIterable(fragmentRoots),
+                        withElementName(BDM_CLIENT_POJO_JAR_NAME), null);
+                if (packageFragmentRoot != null) {
+                    newRegion.add(packageFragmentRoot);
+                }
+            }
         }
         return newRegion;
     }
@@ -266,9 +279,6 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
 
             @Override
             public Iterator<T> iterator() {
-                if (elements == null) {
-                    return Iterators.emptyIterator();
-                }
                 return forArray(elements);
             }
         };

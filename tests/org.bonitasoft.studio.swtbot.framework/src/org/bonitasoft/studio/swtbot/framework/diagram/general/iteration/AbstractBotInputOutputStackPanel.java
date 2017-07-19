@@ -20,6 +20,7 @@ import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * @author Romain Bioteau
@@ -51,7 +52,8 @@ public abstract class AbstractBotInputOutputStackPanel extends BotBase {
     }
 
     public BotExpressionEditorDialog editEarlyCompletionCondition() {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 }

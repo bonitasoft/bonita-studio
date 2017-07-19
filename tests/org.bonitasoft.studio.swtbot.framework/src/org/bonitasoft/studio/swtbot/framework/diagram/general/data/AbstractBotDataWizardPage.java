@@ -12,9 +12,14 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 
 /**
  * Add data dialog.
@@ -23,7 +28,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
  */
 public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
 
-    public AbstractBotDataWizardPage(final SWTGefBot bot) {
+    private SWTBotShell activeShell;
+
+	public AbstractBotDataWizardPage(final SWTGefBot bot) {
         super(bot);
     }
 
@@ -58,15 +65,21 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
     }
 
     public AbstractBotDataWizardPage setClassname(final String pClass) {
-        bot.textWithLabel(Messages.classLabel).setText(pClass);
+        SWTBotText classNameText = bot.textWithLabel(Messages.classLabel);
+        Display.getDefault().syncExec(()->{
+        	 Text text = classNameText.widget;
+             text.setText(pClass);
+        });
         return this;
     }
 
     public BotExpressionEditorDialog editDefaultValueExpression() {
+    	activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
-
+    
+    
     public AbstractBotDataWizardPage setAutoGenerateForm(final boolean pAutoGenerate) {
         final SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
         if (cb.isChecked() && !pAutoGenerate) {

@@ -19,28 +19,22 @@
 		<filters.version>${project.version}</filters.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
-		<p2MirrorUrl>http://repositories.rd.lan/p2/7.2</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/7.6</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
-		<module>platform</module>
-		<module>tests-dependencies</module>
 		<module>patched-plugins</module>
-		<module>bundles</module>
-		<module>all-in-one</module>
-		<module>tests</module>
 	</modules>
-
 
 	<build>
 		<pluginManagement>
 			<plugins>
-                <plugin>
-                    <groupId>org.bonitasoft.maven</groupId>
-                    <artifactId>image-overlay-plugin</artifactId>
-                    <version>1.0.2</version>
-                </plugin>
+				<plugin>
+					<groupId>org.bonitasoft.maven</groupId>
+					<artifactId>image-overlay-plugin</artifactId>
+					<version>1.0.2</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -73,109 +67,109 @@
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<strictVersions>false</strictVersions>
-                        <archive>
-                           <addMavenDescriptor>false</addMavenDescriptor>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.tycho</groupId>
-                    <artifactId>maven-osgi-compiler-plugin</artifactId>
-                    <inherited>true</inherited>
-                    <version>${tychoVersion}</version>
-                    <configuration>
+						<archive>
+							<addMavenDescriptor>false</addMavenDescriptor>
+						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.tycho</groupId>
+					<artifactId>maven-osgi-compiler-plugin</artifactId>
+					<inherited>true</inherited>
+					<version>${tychoVersion}</version>
+					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>tycho-surefire-plugin</artifactId>
-                    <version>${tycho.version}</version>
-                    <configuration>
-                        <useUIHarness>false</useUIHarness>
-                    </configuration>
-                </plugin>
-                <plugin>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<useUIHarness>false</useUIHarness>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
 					<version>1.12</version>
-                </plugin>
-                <plugin>
+				</plugin>
+				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
 					<version>1.5.3</version>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>target-platform-configuration</artifactId>
-                <version>${tychoVersion}</version>
-                <configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>target-platform-configuration</artifactId>
+					<version>${tychoVersion}</version>
+					<configuration>
 						<executionEnvironment>JavaSE-1.8</executionEnvironment>
-                    <environments>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86</arch>
-                        </environment>
-                        <environment>
-                            <os>macosx</os>
-                            <ws>cocoa</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86</arch>
-                        </environment>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                    </environments>
-                    <target>
-                        <artifact>
-                            <groupId>org.bonitasoft.studio</groupId>
-                            <artifactId>platform</artifactId>
+						<environments>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>macosx</os>
+								<ws>cocoa</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86_64</arch>
+							</environment>
+						</environments>
+						<target>
+							<artifact>
+								<groupId>org.bonitasoft.studio</groupId>
+								<artifactId>platform</artifactId>
 								<version>7.6.0-SNAPSHOT</version>
-                        </artifact>
-                    </target>
-                    <filters>
-                        <filter>
-                            <type>eclipse-plugin</type>
-                            <id>org.bonitasoft.studioEx.console.libs</id>
-                            <removeAll />
-                        </filter>
-                    </filters>
-                </configuration>
-            </plugin>
-        </plugins>
+							</artifact>
+						</target>
+						<filters>
+							<filter>
+								<type>eclipse-plugin</type>
+								<id>org.bonitasoft.studioEx.console.libs</id>
+								<removeAll />
+							</filter>
+						</filters>
+					</configuration>
+				</plugin>
+			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
@@ -202,7 +196,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 			</plugin>
 		</plugins>
-    </build>
+	</build>
 
 	<repositories>
 		<repository>
@@ -214,6 +208,24 @@
 
 	<profiles>
 		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>platform</module>
+				<module>tests-dependencies</module>
+				<module>bundles</module>
+				<module>all-in-one</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>it</id>
+			<modules>
+				<module>tests</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>macosx-jvm-flags</id>
 			<activation>
 				<os>
@@ -223,7 +235,7 @@
 			<properties>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
-		</profile>		
+		</profile>
 		<profile>
 			<id>tag-trunk</id>
 			<build>

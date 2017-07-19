@@ -17,6 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * @author Romain Bioteau
@@ -28,14 +29,16 @@ public class BotNumberBasedStackPanel extends AbstractBotInputOutputStackPanel {
     }
 
     public BotExpressionEditorDialog editNumberOfInstances() {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 
     @Override
     public BotExpressionEditorDialog editEarlyCompletionCondition() {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 
 }

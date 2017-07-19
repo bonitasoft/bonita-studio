@@ -39,10 +39,11 @@ public class ImporterRegistry {
     }
 
     /**
-	 *
-	 */
+     *
+     */
     private void processExtensionPoint() {
-        for (final IConfigurationElement ext : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(EXTENSION_POINT)) {
+        for (final IConfigurationElement ext : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(EXTENSION_POINT)) {
             try {
                 final ImporterFactory factory = (ImporterFactory) ext.createExecutableExtension(CLASS_FIELD);
                 factory.configure(ext);

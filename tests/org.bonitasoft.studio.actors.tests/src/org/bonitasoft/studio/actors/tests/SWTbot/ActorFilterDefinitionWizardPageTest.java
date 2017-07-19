@@ -36,6 +36,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,6 +170,7 @@ public class ActorFilterDefinitionWizardPageTest {
 
     private void createWidget(String widgetId, String widgetType, int inputIndex)
             throws Exception {
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
@@ -184,6 +186,7 @@ public class ActorFilterDefinitionWizardPageTest {
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)), 5000);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
 
     }
 

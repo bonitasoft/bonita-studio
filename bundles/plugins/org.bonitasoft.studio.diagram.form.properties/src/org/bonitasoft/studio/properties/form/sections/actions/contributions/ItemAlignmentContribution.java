@@ -22,88 +22,96 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class ItemAlignmentContribution implements IExtensibleGridPropertySectionContribution {
 
-	private EMFDataBindingContext dataBindingContext;
-	private Button horizontal;
-	private Button vertical;
-	private ItemContainer itemContainer;
-	private TransactionalEditingDomain editingDomain;
+    private EMFDataBindingContext dataBindingContext;
+    private Button horizontal;
+    private Button vertical;
+    private ItemContainer itemContainer;
+    private TransactionalEditingDomain editingDomain;
 
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
-			ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+            ExtensibleGridPropertySection extensibleGridPropertySection) {
 
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginHeight = InitialValueContribution.MARGIN_HEIGHT;
-		layout.marginWidth = InitialValueContribution.MARGIN_WIDTH;
-		composite.setLayout(layout);
-		vertical = widgetFactory.createButton(composite, Messages.Vertical, SWT.RADIO);
-		horizontal = widgetFactory.createButton(composite, Messages.Horizontal, SWT.RADIO);
-		if(dataBindingContext != null){
-			dataBindingContext.dispose();
-		}
-		dataBindingContext = new EMFDataBindingContext();
+        GridLayout layout = new GridLayout(2, false);
+        layout.marginHeight = InitialValueContribution.MARGIN_HEIGHT;
+        layout.marginWidth = InitialValueContribution.MARGIN_WIDTH;
+        composite.setLayout(layout);
+        vertical = widgetFactory.createButton(composite, Messages.Vertical, SWT.RADIO);
+        horizontal = widgetFactory.createButton(composite, Messages.Horizontal, SWT.RADIO);
+        if (dataBindingContext != null) {
+            dataBindingContext.dispose();
+        }
+        dataBindingContext = new EMFDataBindingContext();
 
-		UpdateValueStrategy selectionToString = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,String.class) {
-			public Object convert(Object fromObject) {
-				return (Boolean)fromObject ? "v":"h";
-			}
-		});
-		UpdateValueStrategy stringToSelection = new UpdateValueStrategy().setConverter(new Converter(String.class,Boolean.class) {
-			public Object convert(Object fromObject) {
-				if(fromObject == null || ((String)fromObject).length()==0){
-					return !(itemContainer instanceof DurationFormField);
-				}else{
-					return "v".equals((String)fromObject);
-				}
-			}
-		});
-		UpdateValueStrategy stringToNotSelection = new UpdateValueStrategy().setConverter(new Converter(String.class,Boolean.class) {
-			public Object convert(Object fromObject) {
-			if(fromObject == null || ((String)fromObject).length()==0){
-				return itemContainer instanceof DurationFormField;
-			}else{
-				return !"v".equals((String)fromObject);
-			}
-			}
-		});
-		
-		dataBindingContext.bindValue(SWTObservables.observeSelection(vertical),
-				EMFEditObservables.observeValue(editingDomain, itemContainer, FormPackage.Literals.ITEM_CONTAINER__ITEM_CLASS),
-				selectionToString,
-				stringToSelection);
-		
-		dataBindingContext.bindValue(SWTObservables.observeSelection(horizontal),
-				EMFEditObservables.observeValue(editingDomain, itemContainer, FormPackage.Literals.ITEM_CONTAINER__ITEM_CLASS),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
-				stringToNotSelection);
-		
-	}
+        UpdateValueStrategy selectionToString = new UpdateValueStrategy()
+                .setConverter(new Converter(Boolean.class, String.class) {
 
-	public void dispose() {
-		if (dataBindingContext != null)
-			dataBindingContext.dispose();
+                    public Object convert(Object fromObject) {
+                        return fromObject != null && (Boolean) fromObject ? "v" : "h";
+                    }
+                });
+        UpdateValueStrategy stringToSelection = new UpdateValueStrategy()
+                .setConverter(new Converter(String.class, Boolean.class) {
 
-	}
+                    public Object convert(Object fromObject) {
+                        if (fromObject == null || ((String) fromObject).length() == 0) {
+                            return !(itemContainer instanceof DurationFormField);
+                        } else {
+                            return "v".equals((String) fromObject);
+                        }
+                    }
+                });
+        UpdateValueStrategy stringToNotSelection = new UpdateValueStrategy()
+                .setConverter(new Converter(String.class, Boolean.class) {
 
-	public String getLabel() {
-		return Messages.Action_ItemAlign;
-	}
+                    public Object convert(Object fromObject) {
+                        if (fromObject == null || ((String) fromObject).length() == 0) {
+                            return itemContainer instanceof DurationFormField;
+                        } else {
+                            return !"v".equals((String) fromObject);
+                        }
+                    }
+                });
 
-	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof ItemContainer;
-	}
+        dataBindingContext.bindValue(SWTObservables.observeSelection(vertical),
+                EMFEditObservables.observeValue(editingDomain, itemContainer,
+                        FormPackage.Literals.ITEM_CONTAINER__ITEM_CLASS),
+                selectionToString,
+                stringToSelection);
 
-	public void refresh() {
-	}
+        dataBindingContext.bindValue(SWTObservables.observeSelection(horizontal),
+                EMFEditObservables.observeValue(editingDomain, itemContainer,
+                        FormPackage.Literals.ITEM_CONTAINER__ITEM_CLASS),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                stringToNotSelection);
 
-	public void setEObject(EObject object) {
-		this.itemContainer = (ItemContainer)object;
-	}
+    }
 
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-		this.editingDomain = editingDomain;
-	}
+    public void dispose() {
+        if (dataBindingContext != null)
+            dataBindingContext.dispose();
 
-	public void setSelection(ISelection selection) {
-	}
+    }
+
+    public String getLabel() {
+        return Messages.Action_ItemAlign;
+    }
+
+    public boolean isRelevantFor(EObject eObject) {
+        return eObject instanceof ItemContainer;
+    }
+
+    public void refresh() {
+    }
+
+    public void setEObject(EObject object) {
+        this.itemContainer = (ItemContainer) object;
+    }
+
+    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
+    }
+
+    public void setSelection(ISelection selection) {
+    }
 
 }

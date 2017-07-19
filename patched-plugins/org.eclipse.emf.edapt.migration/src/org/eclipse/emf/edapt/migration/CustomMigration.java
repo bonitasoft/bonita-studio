@@ -5,7 +5,7 @@ import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * Base class for custom migrations.
- * 
+ *
  * @author herrmama
  * @author $Author$
  * @version $Rev$
@@ -14,16 +14,14 @@ import org.eclipse.emf.edapt.spi.migration.Model;
 public abstract class CustomMigration {
 
 	/** Migration that needs to be performed before the metamodel change. */
-	@SuppressWarnings("unused")
 	public void migrateBefore(Model model, Metamodel metamodel)
-			throws MigrationException {
+		throws MigrationException {
 		// to be implemented by sub classes
 	}
 
 	/** Migration that needs to be performed after the metamodel change. */
-	@SuppressWarnings("unused")
 	public void migrateAfter(Model model, Metamodel metamodel)
-			throws MigrationException {
+		throws MigrationException {
 		// to be implemented by sub classes
 	}
 }

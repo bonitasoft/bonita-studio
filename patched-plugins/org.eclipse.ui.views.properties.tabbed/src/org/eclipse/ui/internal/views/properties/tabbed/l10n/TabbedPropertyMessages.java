@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,9 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Message Bundle class for the tabbed properties view plug-in.
- * 
+ *
  * @author Anthony Hunter
- * 
+ *
  */
 public final class TabbedPropertyMessages
 	extends NLS {
@@ -39,7 +39,7 @@ public final class TabbedPropertyMessages
      * Message when a property section extension causes a class not found exception.
      */
 	public static String SectionDescriptor_class_not_found_error;
-	
+
     /**
      * Message when a property tab extension is in error.
      */

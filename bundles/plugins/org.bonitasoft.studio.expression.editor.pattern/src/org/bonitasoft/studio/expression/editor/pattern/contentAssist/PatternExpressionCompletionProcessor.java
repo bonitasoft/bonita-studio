@@ -25,8 +25,8 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaContentAssistInvocationContext;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaFieldCompletionProposal;
 import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaGuessingCompletionProposal;
-import org.codehaus.groovy.eclipse.codeassist.proposals.GroovyJavaFieldCompletionProposal;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -50,7 +50,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-
 public class PatternExpressionCompletionProcessor implements IContentAssistProcessor {
 
     private final List<Expression> variableScope;
@@ -61,7 +60,7 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
 
     public PatternExpressionCompletionProcessor(IEditorPart editorPart, List<Expression> variableScope) {
         this.variableScope = variableScope;
-        this.editorPart = editorPart; 
+        this.editorPart = editorPart;
     }
 
     protected ExtendedJavaContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {
@@ -71,7 +70,7 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
         ICompilationUnit newCompilationUnit;
         try {
             final IDocument document = viewer.getDocument();
-            GroovyExpressionPartitioner groovyExpressionPartitioner = new GroovyExpressionPartitioner(); 
+            GroovyExpressionPartitioner groovyExpressionPartitioner = new GroovyExpressionPartitioner();
             groovyExpressionPartitioner.connect(document);
             ITypedRegion partition = groovyExpressionPartitioner.getPartition(offset);
             String script = document.get(partition.getOffset() + 2, partition.getLength() - 2);
@@ -81,8 +80,9 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
             }
             newCompilationUnit = gcuf.newCompilationUnit(script, new NullProgressMonitor());
             final Document tmpDocument = new Document(script);
-            editorPart.init(null,new FileEditorInput((IFile) newCompilationUnit.getResource()));
-            return new ExtendedJavaContentAssistInvocationContext(editorPart, viewer, offset, tmpDocument, offset - partition.getOffset() - 2,
+            editorPart.init(null, new FileEditorInput((IFile) newCompilationUnit.getResource()));
+            return new ExtendedJavaContentAssistInvocationContext(editorPart, viewer, offset, tmpDocument,
+                    offset - partition.getOffset() - 2,
                     variableScope);
         } catch (final JavaModelException | BadLocationException | PartInitException e) {
             BonitaStudioLog.error(e);
@@ -107,7 +107,7 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
         try {
             context.getCompilationUnit().delete(true, monitor);
         } catch (final JavaModelException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
 
         monitor.done();
@@ -124,8 +124,10 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
 
             @Override
             public boolean apply(ICompletionProposal proposal) {
-                return proposal instanceof GroovyJavaFieldCompletionProposal || proposal instanceof GroovyJavaGuessingCompletionProposal ||
-                        proposal instanceof AbstractJavaCompletionProposal && isAnExpressionReference((AbstractJavaCompletionProposal) proposal);
+                return proposal instanceof GroovyJavaFieldCompletionProposal
+                        || proposal instanceof GroovyJavaGuessingCompletionProposal ||
+                        proposal instanceof AbstractJavaCompletionProposal
+                                && isAnExpressionReference((AbstractJavaCompletionProposal) proposal);
             }
 
             private boolean isAnExpressionReference(AbstractJavaCompletionProposal proposal) {
@@ -170,7 +172,6 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
     public char[] getContextInformationAutoActivationCharacters() {
         return null;
     }
-
 
     /*
      * (non-Javadoc)

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
@@ -49,10 +47,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-
 /**
  * @author aurelie
- *
  */
 public class FileWidgetDocumentPickerContribution implements IExtensibleGridPropertySectionContribution {
 
@@ -64,6 +60,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private DataBindingContext dataBindingContext;
     private Composite mainComposite;
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
@@ -133,16 +130,19 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
     }
 
     private IObservableValue createResourceObservable() {
-        final IObservableValue resourceObservable = EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE);
+        final IObservableValue resourceObservable = EMFObservables.observeValue(fileWidget,
+                FormPackage.Literals.FILE_WIDGET__INPUT_TYPE);
         resourceObservable.addValueChangeListener(new IValueChangeListener() {
 
             public void handleValueChange(final ValueChangeEvent event) {
-                final FileWidgetInputType inputType = (FileWidgetInputType) ((IObservableValue) event.getSource()).getValue();
+                final FileWidgetInputType inputType = (FileWidgetInputType) ((IObservableValue) event.getSource())
+                        .getValue();
                 if (FileWidgetInputType.RESOURCE.equals(inputType) && url.getSelection()) {
                     browse.setSelection(true);
                     url.setSelection(false);
                     both.setSelection(false);
-                    final Command c = SetCommand.create(editingDomain, fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE,
+                    final Command c = SetCommand.create(editingDomain, fileWidget,
+                            FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE,
                             FileWidgetDownloadType.BROWSE);
                     if (c.canExecute()) {
                         editingDomain.getCommandStack().execute(c);
@@ -162,28 +162,33 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         downLoadTypeObservable.addOption(FileWidgetDownloadType.BOTH, SWTObservables
                 .observeSelection(both));
         dataBindingContext
-                .bindValue(downLoadTypeObservable, EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE));
+                .bindValue(downLoadTypeObservable,
+                        EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE));
     }
 
     private void bindEnableButtons() {
         final UpdateValueStrategy strategy = createEnabledStrategy();
         final UpdateValueStrategy strategyForUrl = createEnabledStrategyForDownloadOnlyURLCase();
         dataBindingContext.bindValue(SWTObservables.observeEnabled(url),
-                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategyForUrl, strategyForUrl);
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(url), EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE),
+                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategyForUrl,
+                strategyForUrl);
+        dataBindingContext.bindValue(SWTObservables.observeEnabled(url),
+                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE),
                 null, createEnabledUrlWhenInputIsResourceStrategyTargetToModel());
         dataBindingContext.bindValue(SWTObservables.observeEnabled(browse),
-                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
+                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy,
+                strategy);
         dataBindingContext.bindValue(SWTObservables.observeEnabled(both),
-                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
+                EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy,
+                strategy);
     }
 
     protected UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategyTargetToModel() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(FileWidgetInputType.class, Boolean.class) {
 
-            public Object convert(final Object arg0) {
-                if (FileWidgetInputType.RESOURCE.equals(arg0) || fileWidget.isDownloadOnly()) {
+            public Object convert(final Object from) {
+                if (FileWidgetInputType.RESOURCE.equals(from) || fileWidget.isDownloadOnly()) {
                     return false;
                 }
                 return true;
@@ -196,11 +201,11 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-            public Object convert(final Object arg0) {
+            public Object convert(final Object from) {
                 if (FileWidgetInputType.RESOURCE.equals(fileWidget.getInputType())) {
                     return false;
                 }
-                return !((Boolean) arg0);
+                return from == null || !((Boolean) from);
             }
         });
         return strategy;
@@ -231,7 +236,8 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain
+     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.
+     * TransactionalEditingDomain
      * )
      */
     public void setEditingDomain(final TransactionalEditingDomain editingDomain) {

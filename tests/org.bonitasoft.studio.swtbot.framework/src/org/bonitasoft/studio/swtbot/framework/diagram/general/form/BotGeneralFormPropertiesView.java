@@ -16,6 +16,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.form.validator.Bot
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * Form properties view.
@@ -72,7 +73,8 @@ public class BotGeneralFormPropertiesView extends BotPropertiesView {
      * @return the expression editor popup
      */
     public BotExpressionEditorDialog edit(final int pIndex) {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, pIndex).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 }

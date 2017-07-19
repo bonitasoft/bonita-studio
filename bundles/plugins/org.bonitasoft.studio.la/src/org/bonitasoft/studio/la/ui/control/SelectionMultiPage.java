@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.la.ui.control;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -23,13 +24,17 @@ import org.eclipse.swt.widgets.Composite;
 
 public class SelectionMultiPage<T extends IRepositoryStore<? extends IRepositoryFileStore>> extends SelectionPage<T> {
 
+    public static final String TABLE_ID = "org.bonitasoft.studio.la.ui.control.SelectionMultiPageTable";
+
     public SelectionMultiPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider provider) {
         super(repositoryAccessor, type, provider);
     }
 
     @Override
     protected TableViewer createTableViewer(Composite mainComposite) {
-        return new TableViewer(mainComposite);
+        TableViewer viewer = new TableViewer(mainComposite);
+        viewer.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, TABLE_ID);
+        return viewer;
     }
 
 }

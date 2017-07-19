@@ -1,0 +1,5000 @@
+diff -urN pom.xml pom.xml
+--- pom.xml	1970-01-01 01:00:00.000000000 +0100
++++ pom.xml	2017-06-30 15:47:26.067134472 +0200
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
++    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
++  <modelVersion>4.0.0</modelVersion>
++    <parent>
++    <groupId>org.bonitasoft.studio</groupId>
++    <artifactId>patched-plugins</artifactId>
++    <version>7.6.0-SNAPSHOT</version>
++    </parent>
++  <groupId>org.bonitasoft.studio.patched-plugins</groupId>
++  <artifactId>org.eclipse.ui.views.properties.tabbed</artifactId>
++  <version>3.8.0.v20170516-1617</version>
++  <packaging>eclipse-plugin</packaging>
++</project>
+diff -urN .project .project
+--- .project	2017-07-05 09:39:30.282527857 +0200
++++ .project	2017-06-30 12:06:18.257610276 +0200
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <projectDescription>
+-	<name>org.eclipse.ui.views.properties.tabbed_3.8.0.v20170516-1617</name>
++	<name>org.eclipse.ui.views.properties.tabbed</name>
+ 	<comment></comment>
+ 	<projects>
+ 	</projects>
+diff -urN src/org/eclipse/ui/internal/views/properties/tabbed/view/SectionDescriptor.java src/org/eclipse/ui/internal/views/properties/tabbed/view/SectionDescriptor.java
+--- src/org/eclipse/ui/internal/views/properties/tabbed/view/SectionDescriptor.java	2017-02-14 20:07:38.000000000 +0100
++++ src/org/eclipse/ui/internal/views/properties/tabbed/view/SectionDescriptor.java	2017-06-30 14:34:38.109022818 +0200
+@@ -4,10 +4,9 @@
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+  * http://www.eclipse.org/legal/epl-v10.html
+- *
+  * Contributors:
+- *     IBM Corporation - initial API and implementation
+- *     Patrik Suzzi <psuzzi@gmail.com> - Bug 489250
++ * IBM Corporation - initial API and implementation
++ * Patrik Suzzi <psuzzi@gmail.com> - Bug 489250
+  *******************************************************************************/
+ package org.eclipse.ui.internal.views.properties.tabbed.view;
+ 
+@@ -17,8 +16,14 @@
+ import org.eclipse.core.runtime.CoreException;
+ import org.eclipse.core.runtime.IConfigurationElement;
+ import org.eclipse.core.runtime.IStatus;
++import org.eclipse.core.runtime.InvalidRegistryObjectException;
++import org.eclipse.core.runtime.Platform;
+ import org.eclipse.core.runtime.Status;
++import org.eclipse.e4.core.contexts.ContextInjectionFactory;
++import org.eclipse.e4.core.di.InjectionException;
+ import org.eclipse.jface.viewers.IFilter;
++import org.eclipse.ui.PlatformUI;
++import org.eclipse.ui.internal.Workbench;
+ import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewPlugin;
+ import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewStatusCodes;
+ import org.eclipse.ui.internal.views.properties.tabbed.l10n.TabbedPropertyMessages;
+@@ -37,187 +42,195 @@
+  */
+ public class SectionDescriptor extends AbstractSectionDescriptor {
+ 
+-	private static final String ATT_ID = "id"; //$NON-NLS-1$
++    private static final String ATT_ID = "id"; //$NON-NLS-1$
+ 
+-	private static final String ATT_TARGET_TAB = "tab"; //$NON-NLS-1$
++    private static final String ATT_TARGET_TAB = "tab"; //$NON-NLS-1$
+ 
+-	private static final String ATT_AFTER_SECTION = "afterSection"; //$NON-NLS-1$
++    private static final String ATT_AFTER_SECTION = "afterSection"; //$NON-NLS-1$
+ 
+-	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
++    private static final String ATT_CLASS = "class"; //$NON-NLS-1$
+ 
+-	private static final String ATT_SECTION_FILTER = "filter"; //$NON-NLS-1$
+-
+-	private static final String ATT_SECTION_ENABLES_FOR = "enablesFor"; //$NON-NLS-1$
+-
+-	private static final String ATT_INPUT_TYPE = "type"; //$NON-NLS-1$
+-
+-	private static final String ELEMENT_INPUT = "input"; //$NON-NLS-1$
+-
+-	private String id;
+-
+-	private String targetTab;
+-
+-	private String afterSection;
+-
+-	private ArrayList inputTypes;
+-
+-	private IFilter filter;
+-
+-	private int enablesFor = ENABLES_FOR_ANY;
+-
+-	private IConfigurationElement configurationElement;
+-
+-	/**
+-	 * Constructor for the section descriptor.
+-	 *
+-	 * @param configurationElement
+-	 *            the configuration element for the section descriptor.
+-	 * @param typeMapper
+-	 *            The type mapper.
+-	 */
+-	protected SectionDescriptor(IConfigurationElement configurationElement,
+-			ITypeMapper typeMapper) {
+-		super(typeMapper);
+-		this.configurationElement = configurationElement;
+-
+-		id = getConfigurationElement().getAttribute(ATT_ID);
+-		targetTab = getConfigurationElement().getAttribute(ATT_TARGET_TAB);
+-		afterSection = getConfigurationElement()
+-				.getAttribute(ATT_AFTER_SECTION);
+-		if (getConfigurationElement().getAttribute(ATT_SECTION_ENABLES_FOR) != null) {
+-			String enablesForStr = getConfigurationElement().getAttribute(
+-					ATT_SECTION_ENABLES_FOR);
+-			int enablesForTest = Integer.parseInt(enablesForStr);
+-			if (enablesForTest > 0) {
+-				enablesFor = enablesForTest;
+-			}
+-		}
+-
+-		if (id == null || targetTab == null) {
+-			// the section id and tab are mandatory - log error
+-			handleSectionError(null);
+-		}
+-	}
+-
+-	/**
+-	 * Handle the section error when an issue is found loading from the
+-	 * configuration element.
+-	 *
+-	 * @param exception
+-	 *            an optional CoreException
+-	 */
+-	private void handleSectionError(CoreException exception) {
+-		String pluginId = getConfigurationElement().getDeclaringExtension()
+-				.getNamespaceIdentifier();
+-		String message = TabbedPropertyMessages.SectionDescriptor_Section_error;
+-		if (exception == null) {
+-			message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_Section_error, pluginId);
+-		} else {
+-			message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_class_not_found_error, pluginId);
+-		}
+-		IStatus status = new Status(IStatus.ERROR, pluginId,
+-				TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
+-		TabbedPropertyViewPlugin.getPlugin().getLog().log(status);
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getId()
+-	 */
+-	public String getId() {
+-		return id;
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getFilter()
+-	 */
+-	public IFilter getFilter() {
+-		if (filter == null) {
+-			try {
+-				if (getConfigurationElement().getAttribute(ATT_SECTION_FILTER) != null) {
+-					filter = (IFilter) configurationElement
+-							.createExecutableExtension(ATT_SECTION_FILTER);
+-				}
+-			} catch (CoreException exception) {
+-				handleSectionError(exception);
+-			}
+-		}
+-		return filter;
+-	}
+-
+-	/**
+-	 * Retrieves the value for section enablement which is a precise number of
+-	 * items selected. For example: enablesFor=" 4" enables the action only when
+-	 * 4 items are selected. If not specified, enable for all selections.
+-	 *
+-	 * @return the value for section enablement.
+-	 */
+-	public int getEnablesFor() {
+-		return enablesFor;
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getTargetTab()
+-	 */
+-	public String getTargetTab() {
+-		return targetTab;
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getAfterSection()
+-	 */
+-	public String getAfterSection() {
+-		if (afterSection == null) {
+-			return super.getAfterSection();
+-		}
+-		return afterSection;
+-	}
+-
+-	/**
+-	 * Creates an instance of a section described by this descriptor
+-	 *
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getSectionClass()
+-	 */
+-	public ISection getSectionClass() {
+-		ISection section = null;
+-		try {
+-			section = (ISection) getConfigurationElement()
+-					.createExecutableExtension(ATT_CLASS);
+-		} catch (CoreException exception) {
+-			handleSectionError(exception);
+-		}
+-
+-		return section;
+-	}
+-
+-	/**
+-	 * Gets the input types that are valid for this section.
+-	 *
+-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getInputTypes()
+-	 */
+-	public List getInputTypes() {
+-		if (inputTypes == null) {
+-			inputTypes = new ArrayList();
+-			IConfigurationElement[] elements = getConfigurationElement()
+-					.getChildren(ELEMENT_INPUT);
+-			for (IConfigurationElement element : elements) {
+-				inputTypes.add(element.getAttribute(ATT_INPUT_TYPE));
+-			}
+-		}
+-
+-		return inputTypes;
+-	}
+-
+-	/**
+-	 * @see java.lang.Object#toString()
+-	 */
+-	public String toString() {
+-		return getId();
+-	}
+-
+-	/**
+-	 * @return Returns the configurationElement.
+-	 */
+-	private IConfigurationElement getConfigurationElement() {
+-		return configurationElement;
+-	}
++    private static final String ATT_SECTION_FILTER = "filter"; //$NON-NLS-1$
++
++    private static final String ATT_SECTION_ENABLES_FOR = "enablesFor"; //$NON-NLS-1$
++
++    private static final String ATT_INPUT_TYPE = "type"; //$NON-NLS-1$
++
++    private static final String ELEMENT_INPUT = "input"; //$NON-NLS-1$
++
++    private String id;
++
++    private String targetTab;
++
++    private String afterSection;
++
++    private ArrayList inputTypes;
++
++    private IFilter filter;
++
++    private int enablesFor = ENABLES_FOR_ANY;
++
++    private IConfigurationElement configurationElement;
++
++    /**
++     * Constructor for the section descriptor.
++     *
++     * @param configurationElement
++     *        the configuration element for the section descriptor.
++     * @param typeMapper
++     *        The type mapper.
++     */
++    protected SectionDescriptor(IConfigurationElement configurationElement,
++            ITypeMapper typeMapper) {
++        super(typeMapper);
++        this.configurationElement = configurationElement;
++
++        id = getConfigurationElement().getAttribute(ATT_ID);
++        targetTab = getConfigurationElement().getAttribute(ATT_TARGET_TAB);
++        afterSection = getConfigurationElement()
++                .getAttribute(ATT_AFTER_SECTION);
++        if (getConfigurationElement().getAttribute(ATT_SECTION_ENABLES_FOR) != null) {
++            String enablesForStr = getConfigurationElement().getAttribute(
++                    ATT_SECTION_ENABLES_FOR);
++            int enablesForTest = Integer.parseInt(enablesForStr);
++            if (enablesForTest > 0) {
++                enablesFor = enablesForTest;
++            }
++        }
++
++        if (id == null || targetTab == null) {
++            // the section id and tab are mandatory - log error
++            handleSectionError(null);
++        }
++    }
++
++    /**
++     * Handle the section error when an issue is found loading from the
++     * configuration element.
++     *
++     * @param exception
++     *        an optional CoreException
++     */
++    private void handleSectionError(Throwable exception) {
++        String pluginId = getConfigurationElement().getDeclaringExtension()
++                .getNamespaceIdentifier();
++        String message = TabbedPropertyMessages.SectionDescriptor_Section_error;
++        if (exception == null) {
++            message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_Section_error, pluginId);
++        } else {
++            message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_class_not_found_error, pluginId);
++        }
++        IStatus status = new Status(IStatus.ERROR, pluginId,
++                TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
++        TabbedPropertyViewPlugin.getPlugin().getLog().log(status);
++    }
++
++    /**
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getId()
++     */
++    public String getId() {
++        return id;
++    }
++
++    /**
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getFilter()
++     */
++    public IFilter getFilter() {
++        if (filter == null) {
++            try {
++                if (getConfigurationElement().getAttribute(ATT_SECTION_FILTER) != null) {
++                    filter = (IFilter) configurationElement
++                            .createExecutableExtension(ATT_SECTION_FILTER);
++                }
++            } catch (CoreException exception) {
++                handleSectionError(exception);
++            }
++        }
++        return filter;
++    }
++
++    /**
++     * Retrieves the value for section enablement which is a precise number of
++     * items selected. For example: enablesFor=" 4" enables the action only when
++     * 4 items are selected. If not specified, enable for all selections.
++     *
++     * @return the value for section enablement.
++     */
++    public int getEnablesFor() {
++        return enablesFor;
++    }
++
++    /**
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getTargetTab()
++     */
++    public String getTargetTab() {
++        return targetTab;
++    }
++
++    /**
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getAfterSection()
++     */
++    public String getAfterSection() {
++        if (afterSection == null) {
++            return super.getAfterSection();
++        }
++        return afterSection;
++    }
++
++    /**
++     * Creates an instance of a section described by this descriptor
++     *
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getSectionClass()
++     */
++    public ISection getSectionClass() {
++        ISection section = null;
++        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
++        try {
++            section = (ISection) ContextInjectionFactory
++                    .make(Platform.getBundle(getConfigurationElement().getDeclaringExtension().getNamespaceIdentifier())
++                            .loadClass(
++                                    getConfigurationElement().getAttribute(ATT_CLASS)),
++                            workbench.getContext());
++        } catch (final InjectionException e) {
++            handleSectionError(e);
++        } catch (final ClassNotFoundException e) {
++            handleSectionError(e);
++        } catch (final InvalidRegistryObjectException e) {
++            handleSectionError(e);
++        }
++
++        return section;
++    }
++
++    /**
++     * Gets the input types that are valid for this section.
++     *
++     * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getInputTypes()
++     */
++    public List getInputTypes() {
++        if (inputTypes == null) {
++            inputTypes = new ArrayList();
++            IConfigurationElement[] elements = getConfigurationElement()
++                    .getChildren(ELEMENT_INPUT);
++            for (IConfigurationElement element : elements) {
++                inputTypes.add(element.getAttribute(ATT_INPUT_TYPE));
++            }
++        }
++
++        return inputTypes;
++    }
++
++    /**
++     * @see java.lang.Object#toString()
++     */
++    public String toString() {
++        return getId();
++    }
++
++    /**
++     * @return Returns the configurationElement.
++     */
++    private IConfigurationElement getConfigurationElement() {
++        return configurationElement;
++    }
+ }
+diff -urN src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyList.java src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyList.java
+--- src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyList.java	2017-05-16 20:06:00.000000000 +0200
++++ src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyList.java	2017-06-30 14:34:37.969024055 +0200
+@@ -4,11 +4,10 @@
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+  * http://www.eclipse.org/legal/epl-v10.html
+- *
+  * Contributors:
+- *     IBM Corporation - initial API and implementation
+- *     Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 259553
+- *     Amit Joglekar <joglekar@us.ibm.com> - Support for dynamic images (bug 385795)
++ * IBM Corporation - initial API and implementation
++ * Mariot Chauvin <mariot.chauvin@obeo.fr> - bug 259553
++ * Amit Joglekar <joglekar@us.ibm.com> - Support for dynamic images (bug 385795)
+  *******************************************************************************/
+ package org.eclipse.ui.internal.views.properties.tabbed.view;
+ 
+@@ -54,1179 +53,1188 @@
+ import org.eclipse.ui.views.properties.tabbed.ITabItem;
+ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+ 
+-
+ /**
+  * Shows the list of tabs in the tabbed property sheet page.
+  *
+  * @author Anthony Hunter
+  */
+ public class TabbedPropertyList
+-	extends Composite {
++        extends Composite {
+ 
+-	private static final ListElement[] ELEMENTS_EMPTY = new ListElement[0];
++    private static final ListElement[] ELEMENTS_EMPTY = new ListElement[0];
+ 
+-	protected static final int NONE = -1;
++    protected static final int NONE = -1;
+ 
+-	protected static final int INDENT = 7;
++    protected static final int INDENT = 7;
+ 
+-	private boolean focus = false;
+-
+-	private ListElement[] elements;
+-
+-	/**
+-	 * This map specifies the number of dynamic images for a tab. It has a
+-	 * ITabItem as key and number of dynamic images for the tab as value. It is
+-	 * set using the setDynamicImageCount() method. It is used to calculate the
+-	 * width of the widest tab by setting aside enough space for displaying the
+-	 * dynamic images. Individual dynamic images are displayed/removed from a
+-	 * tab by using the showDynamicImage() and hideDynamicImage() methods on the
+-	 * tab's ListElement object.
+-	 */
+-	private Map tabToDynamicImageCountMap;
+-
+-	private int selectedElementIndex = NONE;
+-
+-	private int topVisibleIndex = NONE;
+-
+-	private int bottomVisibleIndex = NONE;
+-
+-	private TopNavigationElement topNavigationElement;
+-
+-	private BottomNavigationElement bottomNavigationElement;
+-
+-	private int widestLabelIndex = NONE;
+-
+-	private int tabsThatFitInComposite = NONE;
+-
+-	private Color widgetForeground;
+-
+-	private Color widgetBackground;
+-
+-	private Color widgetNormalShadow;
+-
+-	private Color widgetDarkShadow;
+-
+-	private Color listBackground;
+-
+-	private Color hoverGradientStart;
+-
+-	private Color hoverGradientEnd;
+-
+-	private Color defaultGradientStart;
+-
+-	private Color defaultGradientEnd;
+-
+-	private Color indentedDefaultBackground;
+-
+-	private Color indentedHoverBackground;
+-
+-	private Color navigationElementShadowStroke;
+-
+-	private Color bottomNavigationElementShadowStroke1;
+-
+-	private Color bottomNavigationElementShadowStroke2;
+-
+-	private TabbedPropertySheetWidgetFactory factory;
+-
+-	/**
+-	 * One of the tabs in the tabbed property list.
+-	 */
+-	public class ListElement extends Canvas {
+-
+-		private ITabItem tab;
+-
+-		private int index;
+-
+-		private boolean selected;
+-
+-		private boolean hover;
+-
+-		private Image[] dynamicImages;
+-
+-		private Color textColor = widgetForeground;
+-
+-		/**
+-		 * Constructor for ListElement.
+-		 *
+-		 * @param parent
+-		 *            the parent Composite.
+-		 * @param tab
+-		 *            the tab item for the element.
+-		 * @param index
+-		 *            the index in the list.
+-		 */
+-		public ListElement(Composite parent, final ITabItem tab, int index) {
+-			super(parent, SWT.NO_FOCUS);
+-			this.tab = tab;
+-			hover = false;
+-			selected = false;
+-			this.index = index;
+-
+-			addPaintListener(new PaintListener() {
+-
+-				public void paintControl(PaintEvent e) {
+-					paint(e);
+-				}
+-			});
+-			addMouseListener(new MouseAdapter() {
+-
+-				public void mouseUp(MouseEvent e) {
+-					if (!selected) {
+-						select(getIndex(ListElement.this));
+-						/*
+-						 * We set focus to the tabbed property composite so that
+-						 * focus is moved to the appropriate widget in the
+-						 * section.
+-						 */
+-						Composite tabbedPropertyComposite = getParent();
+-						while (!(tabbedPropertyComposite instanceof TabbedPropertyComposite)) {
+-							tabbedPropertyComposite = tabbedPropertyComposite
+-								.getParent();
+-						}
+-						tabbedPropertyComposite.setFocus();
+-					}
+-				}
+-			});
+-			addMouseMoveListener(new MouseMoveListener() {
+-
+-				public void mouseMove(MouseEvent e) {
+-					if (!hover) {
+-						hover = true;
+-						redraw();
+-					}
+-				}
+-			});
+-			addMouseTrackListener(new MouseTrackAdapter() {
+-
+-				public void mouseExit(MouseEvent e) {
+-					hover = false;
+-					redraw();
+-				}
+-			});
+-		}
+-
+-		/**
+-		 * Constructor for ListElement.
+-		 *
+-		 * @param parent
+-		 *            the parent Composite.
+-		 * @param tab
+-		 *            the tab item for the element.
+-		 * @param dynamicImageCount
+-		 *            number of dynamic images for this element
+-		 * @param index
+-		 *            the index in the list.
+-		 */
+-		public ListElement(Composite parent, final ITabItem tab,
+-				int dynamicImageCount, int index) {
+-			this(parent, tab, index);
+-			/*
+-			 * Dynamic images are not displayed initially, set all of them to
+-			 * null. Clients should call showDynamicImage() method to display a
+-			 * dynamic image.
+-			 */
+-			this.dynamicImages = new Image[dynamicImageCount];
+-			for (int i = 0; i < dynamicImageCount; i++) {
+-				this.dynamicImages[i] = null;
+-			}
+-		}
+-
+-		/**
+-		 * Set selected value for this element.
+-		 *
+-		 * @param selected
+-		 *            the selected value.
+-		 */
+-		public void setSelected(boolean selected) {
+-			this.selected = selected;
+-			redraw();
+-		}
+-
+-		/**
+-		 * Show the dynamic image at specified index in dynamicImages array. The
+-		 * image width should not be more than 16 pixels. The caller is
+-		 * responsible for loading the image appropriately and managing it's
+-		 * resources.
+-		 *
+-		 * @param index
+-		 * @param image
+-		 */
+-		public void showDynamicImage(int index, Image image) {
+-			if (index >= 0 && index < dynamicImages.length) {
+-				if (dynamicImages[index] != image) {
+-					dynamicImages[index] = image;
+-					redraw();
+-				}
+-			}
+-		}
+-
+-		/**
+-		 * Hide the dynamic image at specified index in dynamicImages array. The
+-		 * caller is responsible for managing image resources and disposing it
+-		 * appropriately.
+-		 *
+-		 * @param index
+-		 */
+-		public void hideDynamicImage(int index) {
+-			if (index >= 0 && index < dynamicImages.length) {
+-				if (dynamicImages[index] != null) {
+-					dynamicImages[index] = null;
+-					redraw();
+-				}
+-			}
+-		}
+-
+-		/**
+-		 * Sets color to be used for drawing tab label text. The caller is
+-		 * responsible for managing the color's resources and disposing it
+-		 * appropriately after setDefaultTextColor() is later invoked.
+-		 *
+-		 * @param textColor
+-		 */
+-		public void setTextColor(Color textColor) {
+-			if (textColor != null && !this.textColor.equals(textColor)) {
+-				this.textColor = textColor;
+-				redraw();
+-			}
+-		}
+-
+-		/**
+-		 * Sets default color for tab label text
+-		 */
+-		public void setDefaultTextColor() {
+-			if (!this.textColor.equals(widgetForeground)) {
+-				this.textColor = widgetForeground;
+-				redraw();
+-			}
+-		}
+-
+-		/**
+-		 * Paint the element.
+-		 *
+-		 * @param e
+-		 *            the paint event.
+-		 */
+-		private void paint(PaintEvent e) {
+-			/*
+-			 * draw the top two lines of the tab, same for selected, hover and
+-			 * default
+-			 */
+-			Rectangle bounds = getBounds();
+-			e.gc.setForeground(widgetNormalShadow);
+-			e.gc.drawLine(0, 0, bounds.width - 1, 0);
+-			e.gc.setForeground(listBackground);
+-			e.gc.drawLine(0, 1, bounds.width - 1, 1);
+-
+-			/* draw the fill in the tab */
+-			if (selected) {
+-				e.gc.setBackground(listBackground);
+-				e.gc.fillRectangle(0, 2, bounds.width, bounds.height - 1);
+-			} else if (hover && tab.isIndented()) {
+-				e.gc.setBackground(indentedHoverBackground);
+-				e.gc.fillRectangle(0, 2, bounds.width - 1, bounds.height - 1);
+-			} else if (hover) {
+-				e.gc.setForeground(hoverGradientStart);
+-				e.gc.setBackground(hoverGradientEnd);
+-				e.gc.fillGradientRectangle(0, 2, bounds.width - 1,
+-						bounds.height - 1, true);
+-			} else if (tab.isIndented()) {
+-				e.gc.setBackground(indentedDefaultBackground);
+-				e.gc.fillRectangle(0, 2, bounds.width - 1, bounds.height - 1);
+-			} else {
+-				e.gc.setForeground(defaultGradientStart);
+-				e.gc.setBackground(defaultGradientEnd);
+-				e.gc.fillGradientRectangle(0, 2, bounds.width - 1,
+-						bounds.height - 1, true);
+-			}
+-
+-			if (!selected) {
+-				e.gc.setForeground(widgetNormalShadow);
+-				e.gc.drawLine(bounds.width - 1, 1, bounds.width - 1,
+-						bounds.height + 1);
+-			}
+-
+-			/*
+-			 * Add INDENT pixels to the left as a margin.
+-			 */
+-			int textIndent = INDENT;
+-			FontMetrics fm = e.gc.getFontMetrics();
+-			int height = fm.getHeight();
+-			int textMiddle = (bounds.height - height) / 2;
+-
+-			if (selected && tab.getImage() != null
+-				&& !tab.getImage().isDisposed()) {
+-				/* draw the icon for the selected tab */
+-				if (tab.isIndented()) {
+-					textIndent = textIndent + INDENT;
+-				} else {
+-					textIndent = textIndent - 3;
+-				}
+-				e.gc.drawImage(tab.getImage(), textIndent, textMiddle - 1);
+-				textIndent = textIndent + 16 + 4;
+-			} else if (tab.isIndented()) {
+-				textIndent = textIndent + INDENT;
+-			}
+-
+-			/* draw the text */
+-			e.gc.setForeground(textColor);
+-			if (selected) {
+-				/* selected tab is bold font */
+-				e.gc.setFont(JFaceResources.getFontRegistry().getBold(
+-						JFaceResources.DEFAULT_FONT));
+-			}
+-			e.gc.drawText(tab.getText(), textIndent, textMiddle, true);
+-			if (((TabbedPropertyList) getParent()).focus && selected) {
+-				/* draw a line if the tab has focus */
+-				Point point = e.gc.textExtent(tab.getText());
+-				e.gc.drawLine(textIndent, bounds.height - 4, textIndent
+-					+ point.x, bounds.height - 4);
+-			}
+-
+-			/* Draw dynamic images, if any */
+-			boolean hasDynamicImage = false;
+-			for (Image dynamicImage : dynamicImages) {
+-				if (dynamicImage != null && !dynamicImage.isDisposed()) {
+-					hasDynamicImage = true;
+-					break;
+-				}
+-			}
+-			if (hasDynamicImage) {
+-				int drawPosition = textIndent
+-						+ e.gc.textExtent(tab.getText()).x + 4;
+-				boolean addSpace = false;
+-				for (Image dynamicImage : dynamicImages) {
+-					if (dynamicImage != null && !dynamicImage.isDisposed()) {
+-						if (addSpace) {
+-							drawPosition = drawPosition + 3;
+-						}
+-						e.gc.drawImage(dynamicImage, drawPosition,
+-								textMiddle - 1);
+-						drawPosition = drawPosition + 16;
+-						addSpace = true;
+-					}
+-				}
+-			}
+-
+-			/* draw the bottom line on the tab for selected and default */
+-			if (!hover) {
+-				e.gc.setForeground(listBackground);
+-				e.gc.drawLine(0, bounds.height - 1, bounds.width - 2,
+-						bounds.height - 1);
+-			}
+-		}
+-
+-		/**
+-		 * Get the tab item.
+-		 *
+-		 * @return the tab item.
+-		 */
+-		public ITabItem getTabItem() {
+-			return tab;
+-		}
+-
+-		public String toString() {
+-			return tab.getText();
+-		}
+-	}
+-
+-	/**
+-	 * The top navigation element in the tabbed property list. It looks like a
+-	 * scroll button when scrolling is needed or is just a spacer when no
+-	 * scrolling is required.
+-	 */
+-	public class TopNavigationElement extends Canvas {
+-
+-		/**
+-		 * Constructor for TopNavigationElement.
+-		 *
+-		 * @param parent
+-		 *            the parent Composite.
+-		 */
+-		public TopNavigationElement(Composite parent) {
+-			super(parent, SWT.NO_FOCUS);
+-			addPaintListener(new PaintListener() {
+-
+-				public void paintControl(PaintEvent e) {
+-					paint(e);
+-				}
+-			});
+-			addMouseListener(new MouseAdapter() {
+-
+-				public void mouseUp(MouseEvent e) {
+-					if (isUpScrollRequired()) {
+-						bottomVisibleIndex--;
+-						if (topVisibleIndex != 0) {
+-							topVisibleIndex--;
+-						}
+-						layoutTabs();
+-						topNavigationElement.redraw();
+-						bottomNavigationElement.redraw();
+-					}
+-				}
+-			});
+-		}
+-
+-		/**
+-		 * Paint the element.
+-		 *
+-		 * @param e
+-		 *            the paint event.
+-		 */
+-		private void paint(PaintEvent e) {
+-			e.gc.setBackground(widgetBackground);
+-			e.gc.setForeground(widgetForeground);
+-			Rectangle bounds = getBounds();
+-
+-			if (elements.length != 0) {
+-				e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
+-				e.gc.setForeground(widgetNormalShadow);
+-				e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1,
+-					bounds.height - 1);
+-			} else {
+-				e.gc.setBackground(listBackground);
+-				e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
+-				int textIndent = INDENT;
+-				FontMetrics fm = e.gc.getFontMetrics();
+-				int height = fm.getHeight();
+-				int textMiddle = (bounds.height - height) / 2;
+-				e.gc.setForeground(widgetForeground);
+-				String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
+-				e.gc.drawText(properties_not_available, textIndent, textMiddle);
+-			}
+-
+-			if (isUpScrollRequired()) {
+-				e.gc.setForeground(widgetDarkShadow);
+-				int middle = bounds.width / 2;
+-				e.gc.drawLine(middle + 1, 3, middle + 5, 7);
+-				e.gc.drawLine(middle, 3, middle - 4, 7);
+-				e.gc.drawLine(middle - 3, 7, middle + 4, 7);
+-
+-				e.gc.setForeground(listBackground);
+-				e.gc.drawLine(middle, 4, middle + 1, 4);
+-				e.gc.drawLine(middle - 1, 5, middle + 2, 5);
+-				e.gc.drawLine(middle - 2, 6, middle + 3, 6);
+-
+-				e.gc.setForeground(widgetNormalShadow);
+-				e.gc.drawLine(0, 0, bounds.width - 2, 0);
+-				e.gc.setForeground(navigationElementShadowStroke);
+-				e.gc.drawLine(0, 1, bounds.width - 2, 1);
+-				e.gc.drawLine(0, bounds.height - 1, bounds.width - 2,
+-						bounds.height - 1);
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * The top navigation element in the tabbed property list. It looks like a
+-	 * scroll button when scrolling is needed or is just a spacer when no
+-	 * scrolling is required.
+-	 */
+-	public class BottomNavigationElement extends Canvas {
+-
+-		/**
+-		 * Constructor for BottomNavigationElement.
+-		 *
+-		 * @param parent
+-		 *            the parent Composite.
+-		 */
+-		public BottomNavigationElement(Composite parent) {
+-			super(parent, SWT.NO_FOCUS);
+-			addPaintListener(new PaintListener() {
+-
+-				public void paintControl(PaintEvent e) {
+-					paint(e);
+-				}
+-			});
+-			addMouseListener(new MouseAdapter() {
+-
+-				public void mouseUp(MouseEvent e) {
+-					if (isDownScrollRequired()) {
+-						topVisibleIndex++;
+-						if (bottomVisibleIndex != elements.length - 1) {
+-							bottomVisibleIndex++;
+-						}
+-						layoutTabs();
+-						topNavigationElement.redraw();
+-						bottomNavigationElement.redraw();
+-					}
+-				}
+-			});
+-		}
+-
+-		/**
+-		 * Paint the element.
+-		 *
+-		 * @param e
+-		 *            the paint event.
+-		 */
+-		private void paint(PaintEvent e) {
+-			e.gc.setBackground(widgetBackground);
+-			e.gc.setForeground(widgetForeground);
+-			Rectangle bounds = getBounds();
+-
+-			if (elements.length != 0) {
+-				e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
+-				e.gc.setForeground(widgetNormalShadow);
+-				e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1,
+-						bounds.height - 1);
+-				e.gc.drawLine(0, 0, bounds.width - 1, 0);
+-
+-				e.gc.setForeground(bottomNavigationElementShadowStroke1);
+-				e.gc.drawLine(0, 1, bounds.width - 2, 1);
+-				e.gc.setForeground(bottomNavigationElementShadowStroke2);
+-				e.gc.drawLine(0, 2, bounds.width - 2, 2);
+-			} else {
+-				e.gc.setBackground(listBackground);
+-				e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
+-			}
+-
+-			if (isDownScrollRequired()) {
+-				e.gc.setForeground(widgetDarkShadow);
+-				int middle = bounds.width / 2;
+-				int bottom = bounds.height - 3;
+-				e.gc.drawLine(middle + 1, bottom, middle + 5, bottom - 4);
+-				e.gc.drawLine(middle, bottom, middle - 4, bottom - 4);
+-				e.gc.drawLine(middle - 3, bottom - 4, middle + 4, bottom - 4);
+-
+-				e.gc.setForeground(listBackground);
+-				e.gc.drawLine(middle, bottom - 1, middle + 1, bottom - 1);
+-				e.gc.drawLine(middle - 1, bottom - 2, middle + 2, bottom - 2);
+-				e.gc.drawLine(middle - 2, bottom - 3, middle + 3, bottom - 3);
+-
+-				e.gc.setForeground(widgetNormalShadow);
+-				e.gc.drawLine(0, bottom - 7, bounds.width - 2, bottom - 7);
+-				e.gc.setForeground(navigationElementShadowStroke);
+-				e.gc.drawLine(0, bottom + 2, bounds.width - 2, bottom + 2);
+-				e.gc.drawLine(0, bottom - 6, bounds.width - 2, bottom - 6);
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * Constructor for TabbedPropertyList.
+-	 *
+-	 * @param parent
+-	 *            the parent widget.
+-	 * @param factory
+-	 *            the widget factory.
+-	 */
+-	public TabbedPropertyList(Composite parent,
+-			TabbedPropertySheetWidgetFactory factory) {
+-		super(parent, SWT.NO_FOCUS);
+-		this.factory = factory;
+-		removeAll();
+-		setLayout(new FormLayout());
+-		initColours();
+-		initAccessible();
+-		topNavigationElement = new TopNavigationElement(this);
+-		bottomNavigationElement = new BottomNavigationElement(this);
+-
+-		this.addFocusListener(new FocusListener() {
+-
+-			public void focusGained(FocusEvent e) {
+-				focus = true;
+-				int i = getSelectionIndex();
+-				if (i >= 0) {
+-					elements[i].redraw();
+-				}
+-			}
+-
+-			public void focusLost(FocusEvent e) {
+-				focus = false;
+-				int i = getSelectionIndex();
+-				if (i >= 0) {
+-					elements[i].redraw();
+-				}
+-			}
+-		});
+-		this.addControlListener(new ControlAdapter() {
+-
+-			public void controlResized(ControlEvent e) {
+-				computeTopAndBottomTab();
+-			}
+-		});
+-		this.addTraverseListener(new TraverseListener() {
+-
+-			public void keyTraversed(TraverseEvent e) {
+-				if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS
+-					|| e.detail == SWT.TRAVERSE_ARROW_NEXT) {
+-					int nMax = elements.length - 1;
+-					int nCurrent = getSelectionIndex();
+-					if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+-						nCurrent -= 1;
+-						nCurrent = Math.max(0, nCurrent);
+-					} else if (e.detail == SWT.TRAVERSE_ARROW_NEXT) {
+-						nCurrent += 1;
+-						nCurrent = Math.min(nCurrent, nMax);
+-					}
+-					select(nCurrent);
+-					redraw();
+-				} else {
+-					e.doit = true;
+-				}
+-			}
+-		});
+-	}
+-
+-	/**
+-	 * Calculate the number of tabs that will fit in the tab list composite.
+-	 */
+-	protected void computeTabsThatFitInComposite() {
+-		tabsThatFitInComposite = Math
+-			.round((getSize().y - 22) / getTabHeight());
+-		if (tabsThatFitInComposite <= 0) {
+-			tabsThatFitInComposite = 1;
+-		}
+-	}
+-
+-	/**
+-	 * Returns the number of elements in this list viewer.
+-	 *
+-	 * @return number of elements
+-	 */
+-	public int getNumberOfElements() {
+-		return elements.length;
+-	}
+-
+-	/**
+-	 * Returns the element with the given index from this list viewer. Returns
+-	 * <code>null</code> if the index is out of range.
+-	 *
+-	 * @param index
+-	 *            the zero-based index
+-	 * @return the element at the given index, or <code>null</code> if the
+-	 *         index is out of range
+-	 */
+-	public Object getElementAt(int index) {
+-		if (index >= 0 && index < elements.length) {
+-			return elements[index];
+-		}
+-		return null;
+-	}
+-
+-	/**
+-	 * Returns the zero-relative index of the item which is currently selected
+-	 * in the receiver, or -1 if no item is selected.
+-	 *
+-	 * @return the index of the selected item
+-	 */
+-	public int getSelectionIndex() {
+-		return selectedElementIndex;
+-	}
+-
+-	/**
+-	 * @return zero-relative index of the widest item, or -1 if this list is
+-	 *         empty.
+-	 */
+-	public int getWidestLabelIndex() {
+-		return widestLabelIndex;
+-	}
+-
+-	/**
+-	 * Removes all elements from this list.
+-	 */
+-	public void removeAll() {
+-		if (elements != null) {
+-			for (ListElement element : elements) {
+-				element.dispose();
+-			}
+-		}
+-		elements = ELEMENTS_EMPTY;
+-		selectedElementIndex = NONE;
+-		widestLabelIndex = NONE;
+-		topVisibleIndex = NONE;
+-		bottomVisibleIndex = NONE;
+-	}
+-
+-	/**
+-	 * Sets a map containing an ITabItem as key and number of dynamic images as
+-	 * value. It is used to calculate the width of the widest tab by setting
+-	 * aside enough space (16 pixels per image) for displaying the dynamic
+-	 * images. Individual dynamic images are displayed/removed from a tab by
+-	 * using the showDynamicImage() and hideDynamicImage() methods on the tab's
+-	 * ListElement object.
+-	 *
+-	 * @param tabToDynamicImageCountMap
+-	 */
+-	public void setDynamicImageCount(Map tabToDynamicImageCountMap) {
+-		this.tabToDynamicImageCountMap = tabToDynamicImageCountMap;
+-	}
+-
+-	/**
+-	 * Sets the new list elements.
+-	 *
+-	 * @param children
+-	 */
+-	public void setElements(Object[] children) {
+-		if (elements != ELEMENTS_EMPTY) {
+-			removeAll();
+-		}
+-		elements = new ListElement[children.length];
+-		if (children.length == 0) {
+-			widestLabelIndex = NONE;
+-		} else {
+-			widestLabelIndex = 0;
+-			for (int i = 0; i < children.length; i++) {
+-				int dynamicImageCount = 0;
+-				if (tabToDynamicImageCountMap != null
+-						&& tabToDynamicImageCountMap.containsKey(children[i])) {
+-					dynamicImageCount = ((Integer) tabToDynamicImageCountMap
+-							.get(children[i])).intValue();
+-				}
+-				elements[i] = new ListElement(this, (ITabItem) children[i],
+-						dynamicImageCount, i);
+-				elements[i].setVisible(false);
+-				elements[i].setLayoutData(null);
+-
+-				if (i != widestLabelIndex) {
+-					int width = getTabWidth((ITabItem) children[i]);
+-					if (width > getTabWidth((ITabItem) children[widestLabelIndex])) {
+-						widestLabelIndex = i;
+-					}
+-				}
+-			}
+-		}
+-
+-		computeTopAndBottomTab();
+-	}
+-
+-	private int getTabWidth(ITabItem tabItem) {
+-		int width = getTextDimension(tabItem.getText()).x;
+-		/*
+-		 * To anticipate for the icon placement we should always keep the
+-		 * space available after the label. So when the active tab includes
+-		 * an icon the width of the tab doesn't change.
+-		 */
+-		if (tabItem.getImage() != null) {
+-			width = width + 16 + 4;
+-		}
+-		if (tabItem.isIndented()) {
+-			width = width + INDENT;
+-		}
+-		if (tabToDynamicImageCountMap != null) {
+-			int dynamicImageCount = 0;
+-			if (tabToDynamicImageCountMap.containsKey(tabItem)) {
+-				dynamicImageCount = ((Integer) tabToDynamicImageCountMap
+-						.get(tabItem)).intValue();
+-			}
+-			if (dynamicImageCount > 0) {
+-				/*
+-				 * Keep some space between tab's text and first dynamic image
+-				 */
+-				width = width + 4;
+-				width = width + (dynamicImageCount * 16);
+-				/*
+-				 * Keep some space between consecutive dynamic images
+-				 */
+-				width = width + ((dynamicImageCount - 1) * 3);
+-			}
+-		}
+-		return width;
+-	}
+-
+-	/**
+-	 * Selects one of the elements in the list.
+-	 *
+-	 * @param index
+-	 *            the index of the element to select.
+-	 */
+-	protected void select(int index) {
+-		if (getSelectionIndex() == index) {
+-			/*
+-			 * this index is already selected.
+-			 */
+-			return;
+-		}
+-		if (index >= 0 && index < elements.length) {
+-			int lastSelected = getSelectionIndex();
+-			elements[index].setSelected(true);
+-			selectedElementIndex = index;
+-			if (lastSelected != NONE) {
+-				elements[lastSelected].setSelected(false);
+-				if (getSelectionIndex() != elements.length - 1) {
+-					/*
+-					 * redraw the next tab to fix the border by calling
+-					 * setSelected()
+-					 */
+-					elements[getSelectionIndex() + 1].setSelected(false);
+-				}
+-			}
+-			topNavigationElement.redraw();
+-			bottomNavigationElement.redraw();
+-
+-			if (selectedElementIndex < topVisibleIndex
+-				|| selectedElementIndex > bottomVisibleIndex) {
+-				computeTopAndBottomTab();
+-			}
+-		}
+-		notifyListeners(SWT.Selection, new Event());
+-	}
+-
+-	/**
+-	 * Deselects all the elements in the list.
+-	 */
+-	public void deselectAll() {
+-		if (getSelectionIndex() != NONE) {
+-			elements[getSelectionIndex()].setSelected(false);
+-			selectedElementIndex = NONE;
+-		}
+-	}
+-
+-	private int getIndex(ListElement element) {
+-		return element.index;
+-	}
+-
+-	public Point computeSize(int wHint, int hHint, boolean changed) {
+-		Point result = super.computeSize(hHint, wHint, changed);
+-		if (widestLabelIndex == -1) {
+-			String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
+-			result.x = getTextDimension(properties_not_available).x + INDENT;
+-		} else {
+-			/*
+-			 * Add INDENT pixels to the left of the longest tab as a margin.
+-			 */
+-			int width = getTabWidth(elements[widestLabelIndex].getTabItem()) + INDENT;
+-			/*
+-			 * Add 10 pixels to the right of the longest tab as a margin.
+-			 */
+-			result.x = width + 10;
+-		}
+-		return result;
+-	}
+-
+-	/**
+-	 * Get the dimensions of the provided string.
+-	 *
+-	 * @param text
+-	 *            the string.
+-	 * @return the dimensions of the provided string.
+-	 */
+-	private Point getTextDimension(String text) {
+-		GC gc = new GC(this);
+-		gc.setFont(JFaceResources.getFontRegistry().getBold(
+-				JFaceResources.DEFAULT_FONT));
+-		Point point = gc.textExtent(text);
+-		point.x++;
+-		gc.dispose();
+-		return point;
+-	}
+-
+-	/**
+-	 * Initialize the colours used in the list.
+-	 */
+-	private void initColours() {
+-		/*
+-		 * Colour 3 COLOR_LIST_BACKGROUND
+-		 */
+-		listBackground = Display.getCurrent().getSystemColor(
+-				SWT.COLOR_LIST_BACKGROUND);
+-
+-		/*
+-		 * Colour 13 COLOR_WIDGET_BACKGROUND
+-		 */
+-		widgetBackground = Display.getCurrent().getSystemColor(
+-				SWT.COLOR_WIDGET_BACKGROUND);
+-
+-		/*
+-		 * Colour 15 COLOR_WIDGET_DARK_SHADOW
+-		 */
+-		widgetDarkShadow = Display.getCurrent().getSystemColor(
+-				SWT.COLOR_WIDGET_DARK_SHADOW);
+-
+-		/*
+-		 * Colour 16 COLOR_WIDGET_FOREGROUND
+-		 */
+-		widgetForeground = Display.getCurrent().getSystemColor(
+-				SWT.COLOR_WIDGET_FOREGROUND);
+-
+-		/*
+-		 * Colour 19 COLOR_WIDGET_NORMAL_SHADOW
+-		 */
+-		widgetNormalShadow = Display.getCurrent().getSystemColor(
+-				SWT.COLOR_WIDGET_NORMAL_SHADOW);
+-
+-		RGB white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE)
+-				.getRGB();
+-		RGB black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK)
+-				.getRGB();
+-
+-		/*
+-		 * gradient in the default tab: start colour WIDGET_NORMAL_SHADOW 100% +
+-		 * white 20% + WIDGET_BACKGROUND 60% end colour WIDGET_NORMAL_SHADOW
+-		 * 100% + WIDGET_BACKGROUND 40%
+-		 */
+-		defaultGradientStart = factory.getColors().createColor(
+-				"TabbedPropertyList.defaultTabGradientStart", //$NON-NLS-1$
+-				FormColors.blend(widgetBackground.getRGB(), FormColors.blend(white,
+-						widgetNormalShadow.getRGB(), 20), 60));
+-		defaultGradientEnd = factory.getColors().createColor(
+-				"TabbedPropertyList.defaultTabGradientEnd", //$NON-NLS-1$
+-				FormColors.blend(widgetBackground.getRGB(), widgetNormalShadow.getRGB(),
+-						40));
+-
+-		navigationElementShadowStroke = factory.getColors().createColor(
+-				"TabbedPropertyList.shadowStroke", //$NON-NLS-1$
+-				FormColors.blend(white, widgetNormalShadow.getRGB(), 55));
+-		bottomNavigationElementShadowStroke1 = factory.getColors().createColor(
+-				"TabbedPropertyList.tabShadowStroke1", //$NON-NLS-1$
+-				FormColors.blend(black, widgetBackground.getRGB(), 10));
+-		bottomNavigationElementShadowStroke2 = factory.getColors().createColor(
+-				"TabbedPropertyList.tabShadowStroke2", //$NON-NLS-1$
+-				FormColors.blend(black, widgetBackground.getRGB(), 5));
+-
+-		/*
+-		 * gradient in the hover tab: start colour WIDGET_BACKGROUND 100% +
+-		 * white 20% end colour WIDGET_BACKGROUND 100% + WIDGET_NORMAL_SHADOW
+-		 * 10%
+-		 */
+-		hoverGradientStart = factory.getColors().createColor(
+-				"TabbedPropertyList.hoverBackgroundGradientStart", //$NON-NLS-1$
+-				FormColors.blend(white, widgetBackground.getRGB(), 20));
+-		hoverGradientEnd = factory.getColors().createColor(
+-				"TabbedPropertyList.hoverBackgroundGradientEnd", //$NON-NLS-1$
+-				FormColors.blend(widgetNormalShadow.getRGB(), widgetBackground
+-						.getRGB(), 10));
+-
+-		indentedDefaultBackground = factory.getColors().createColor(
+-				"TabbedPropertyList.indentedDefaultBackground", //$NON-NLS-1$
+-				FormColors.blend(white, widgetBackground.getRGB(), 10));
+-		indentedHoverBackground = factory.getColors().createColor(
+-				"TabbedPropertyList.indentedHoverBackground", //$NON-NLS-1$
+-				FormColors.blend(white, widgetBackground.getRGB(), 75));
+-	}
+-
+-	/**
+-	 * Get the height of a tab. The height of the tab is the height of the text
+-	 * plus buffer.
+-	 *
+-	 * @return the height of a tab.
+-	 */
+-	private int getTabHeight() {
+-		int tabHeight = getTextDimension("").y + INDENT; //$NON-NLS-1$
+-		if (tabsThatFitInComposite == 1) {
+-			/*
+-			 * if only one tab will fix, reduce the size of the tab height so
+-			 * that the navigation elements fit.
+-			 */
+-			int ret = getBounds().height - 20;
+-			return (ret > tabHeight) ? tabHeight
+-				: (ret < 5) ? 5
+-					: ret;
+-		}
+-		return tabHeight;
+-	}
+-
+-	/**
+-	 * Determine if a downward scrolling is required.
+-	 *
+-	 * @return true if downward scrolling is required.
+-	 */
+-	private boolean isDownScrollRequired() {
+-		return elements.length > tabsThatFitInComposite
+-			&& bottomVisibleIndex != elements.length - 1;
+-	}
+-
+-	/**
+-	 * Determine if an upward scrolling is required.
+-	 *
+-	 * @return true if upward scrolling is required.
+-	 */
+-	private boolean isUpScrollRequired() {
+-		return elements.length > tabsThatFitInComposite && topVisibleIndex != 0;
+-	}
+-
+-	/**
+-	 * Based on available space, figure out the top and bottom tabs in the list.
+-	 */
+-	private void computeTopAndBottomTab() {
+-		computeTabsThatFitInComposite();
+-		if (elements.length == 0) {
+-			/*
+-			 * no tabs to display.
+-			 */
+-			topVisibleIndex = 0;
+-			bottomVisibleIndex = 0;
+-		} else if (tabsThatFitInComposite >= elements.length) {
+-			/*
+-			 * all the tabs fit.
+-			 */
+-			topVisibleIndex = 0;
+-			bottomVisibleIndex = elements.length - 1;
+-		} else if (getSelectionIndex() == NONE) {
+-			/*
+-			 * there is no selected tab yet, assume that tab one would
+-			 * be selected for now.
+-			 */
+-			topVisibleIndex = 0;
+-			bottomVisibleIndex = tabsThatFitInComposite - 1;
+-		} else if (getSelectionIndex() + tabsThatFitInComposite > elements.length) {
+-			/*
+-			 * the selected tab is near the bottom.
+-			 */
+-			bottomVisibleIndex = elements.length - 1;
+-			topVisibleIndex = bottomVisibleIndex - tabsThatFitInComposite + 1;
+-		} else {
+-			/*
+-			 * the selected tab is near the top.
+-			 */
+-			topVisibleIndex = selectedElementIndex;
+-			bottomVisibleIndex = selectedElementIndex + tabsThatFitInComposite
+-				- 1;
+-		}
+-		layoutTabs();
+-	}
+-
+-	/**
+-	 * Layout the tabs.
+-	 */
+-	private void layoutTabs() {
+-		//System.out.println("TabFit " + tabsThatFitInComposite + " length "
+-		//	+ elements.length + " top " + topVisibleIndex + " bottom "
+-		//	+ bottomVisibleIndex);
+-		if (tabsThatFitInComposite == NONE || elements.length == 0) {
+-			FormData formData = new FormData();
+-			formData.left = new FormAttachment(0, 0);
+-			formData.right = new FormAttachment(100, 0);
+-			formData.top = new FormAttachment(0, 0);
+-			formData.height = getTabHeight();
+-			topNavigationElement.setLayoutData(formData);
+-
+-			formData = new FormData();
+-			formData.left = new FormAttachment(0, 0);
+-			formData.right = new FormAttachment(100, 0);
+-			formData.top = new FormAttachment(topNavigationElement, 0);
+-			formData.bottom = new FormAttachment(100, 0);
+-			bottomNavigationElement.setLayoutData(formData);
+-		} else {
+-
+-			FormData formData = new FormData();
+-			formData.left = new FormAttachment(0, 0);
+-			formData.right = new FormAttachment(100, 0);
+-			formData.top = new FormAttachment(0, 0);
+-			formData.height = 10;
+-			topNavigationElement.setLayoutData(formData);
+-
+-			/*
+-			 * use nextElement to attach the layout to the previous canvas
+-			 * widget in the list.
+-			 */
+-			Canvas nextElement = topNavigationElement;
+-
+-			for (int i = 0; i < elements.length; i++) {
+-				//System.out.print(i + " [" + elements[i].getText() + "]");
+-				if (i < topVisibleIndex || i > bottomVisibleIndex) {
+-					/*
+-					 * this tab is not visible
+-					 */
+-					elements[i].setLayoutData(null);
+-					elements[i].setVisible(false);
+-				} else {
+-					/*
+-					 * this tab is visible.
+-					 */
+-					//System.out.print(" visible");
+-					formData = new FormData();
+-					formData.height = getTabHeight();
+-					formData.left = new FormAttachment(0, 0);
+-					formData.right = new FormAttachment(100, 0);
+-					formData.top = new FormAttachment(nextElement, 0);
+-					nextElement = elements[i];
+-					elements[i].setLayoutData(formData);
+-					elements[i].setVisible(true);
+-				}
+-
+-				//if (i == selectedElementIndex) {
+-				//	System.out.print(" selected");
+-				//}
+-				//System.out.println("");
+-			}
+-			formData = new FormData();
+-			formData.left = new FormAttachment(0, 0);
+-			formData.right = new FormAttachment(100, 0);
+-			formData.top = new FormAttachment(nextElement, 0);
+-			formData.bottom = new FormAttachment(100, 0);
+-			formData.height = 10;
+-			bottomNavigationElement.setLayoutData(formData);
+-		}
+-		//System.out.println("");
+-
+-		// layout so that we have enough space for the new labels
+-		Composite grandparent = getParent().getParent();
+-		grandparent.layout(true);
+-		layout(true);
+-	}
+-
+-	/**
+-	 * Initialize the accessibility adapter.
+-	 */
+-	private void initAccessible() {
+-		final Accessible accessible = getAccessible();
+-		accessible.addAccessibleListener(new AccessibleAdapter() {
+-
+-			public void getName(AccessibleEvent e) {
+-				if (getSelectionIndex() != NONE) {
+-					e.result = elements[getSelectionIndex()].getTabItem()
+-							.getText();
+-				}
+-			}
+-
+-			public void getHelp(AccessibleEvent e) {
+-				if (getSelectionIndex() != NONE) {
+-					e.result = elements[getSelectionIndex()].getTabItem()
+-							.getText();
+-				}
+-			}
+-		});
+-
+-		accessible.addAccessibleControlListener(new AccessibleControlAdapter() {
+-
+-			public void getChildAtPoint(AccessibleControlEvent e) {
+-				Point pt = toControl(new Point(e.x, e.y));
+-				e.childID = (getBounds().contains(pt)) ? ACC.CHILDID_SELF
+-					: ACC.CHILDID_NONE;
+-			}
+-
+-			public void getLocation(AccessibleControlEvent e) {
+-				if (getSelectionIndex() != NONE) {
+-					Rectangle location = elements[getSelectionIndex()]
+-						.getBounds();
+-					Point pt = toDisplay(new Point(location.x, location.y));
+-					e.x = pt.x;
+-					e.y = pt.y;
+-					e.width = location.width;
+-					e.height = location.height;
+-				}
+-			}
+-
+-			public void getChildCount(AccessibleControlEvent e) {
+-				e.detail = 0;
+-			}
+-
+-			public void getRole(AccessibleControlEvent e) {
+-				e.detail = ACC.ROLE_TABITEM;
+-			}
+-
+-			public void getState(AccessibleControlEvent e) {
+-				e.detail = ACC.STATE_NORMAL | ACC.STATE_SELECTABLE
+-					| ACC.STATE_SELECTED | ACC.STATE_FOCUSED
+-					| ACC.STATE_FOCUSABLE;
+-			}
+-		});
+-
+-		addListener(SWT.Selection, new Listener() {
+-
+-			public void handleEvent(Event event) {
+-				if (isFocusControl()) {
+-					accessible.setFocus(ACC.CHILDID_SELF);
+-				}
+-			}
+-		});
+-
+-		addListener(SWT.FocusIn, new Listener() {
+-
+-			public void handleEvent(Event event) {
+-				accessible.setFocus(ACC.CHILDID_SELF);
+-			}
+-		});
+-	}
++    private boolean focus = false;
++
++    private ListElement[] elements;
++
++    /**
++     * This map specifies the number of dynamic images for a tab. It has a
++     * ITabItem as key and number of dynamic images for the tab as value. It is
++     * set using the setDynamicImageCount() method. It is used to calculate the
++     * width of the widest tab by setting aside enough space for displaying the
++     * dynamic images. Individual dynamic images are displayed/removed from a
++     * tab by using the showDynamicImage() and hideDynamicImage() methods on the
++     * tab's ListElement object.
++     */
++    private Map tabToDynamicImageCountMap;
++
++    private int selectedElementIndex = NONE;
++
++    private int topVisibleIndex = NONE;
++
++    private int bottomVisibleIndex = NONE;
++
++    private TopNavigationElement topNavigationElement;
++
++    private BottomNavigationElement bottomNavigationElement;
++
++    private int widestLabelIndex = NONE;
++
++    private int tabsThatFitInComposite = NONE;
++
++    private Color widgetForeground;
++
++    private Color widgetBackground;
++
++    private Color widgetNormalShadow;
++
++    private Color widgetDarkShadow;
++
++    private Color listBackground;
++
++    private Color hoverGradientStart;
++
++    private Color hoverGradientEnd;
++
++    private Color defaultGradientStart;
++
++    private Color defaultGradientEnd;
++
++    private Color indentedDefaultBackground;
++
++    private Color indentedHoverBackground;
++
++    private Color navigationElementShadowStroke;
++
++    private Color bottomNavigationElementShadowStroke1;
++
++    private Color bottomNavigationElementShadowStroke2;
++
++    private TabbedPropertySheetWidgetFactory factory;
++
++    private Color textColorNoFocus;
++
++    /**
++     * One of the tabs in the tabbed property list.
++     */
++    public class ListElement extends Canvas {
++
++        private ITabItem tab;
++
++        private int index;
++
++        private boolean selected;
++
++        private boolean hover;
++
++        private Image[] dynamicImages;
++
++        private Color textColor = widgetForeground;
++
++        /**
++         * Constructor for ListElement.
++         *
++         * @param parent
++         *        the parent Composite.
++         * @param tab
++         *        the tab item for the element.
++         * @param index
++         *        the index in the list.
++         */
++        public ListElement(Composite parent, final ITabItem tab, int index) {
++            super(parent, SWT.NO_FOCUS);
++            this.tab = tab;
++            hover = false;
++            selected = false;
++            this.index = index;
++
++            addPaintListener(new PaintListener() {
++
++                public void paintControl(PaintEvent e) {
++                    paint(e);
++                }
++            });
++            addMouseListener(new MouseAdapter() {
++
++                public void mouseUp(MouseEvent e) {
++                    if (!selected) {
++                        select(getIndex(ListElement.this));
++                        /*
++                         * We set focus to the tabbed property composite so that
++                         * focus is moved to the appropriate widget in the
++                         * section.
++                         */
++                        Composite tabbedPropertyComposite = getParent();
++                        while (!(tabbedPropertyComposite instanceof TabbedPropertyComposite)) {
++                            tabbedPropertyComposite = tabbedPropertyComposite
++                                    .getParent();
++                        }
++                        tabbedPropertyComposite.setFocus();
++                    }
++                }
++            });
++            addMouseMoveListener(new MouseMoveListener() {
++
++                public void mouseMove(MouseEvent e) {
++                    if (!hover) {
++                        hover = true;
++                        redraw();
++                    }
++                }
++            });
++            addMouseTrackListener(new MouseTrackAdapter() {
++
++                public void mouseExit(MouseEvent e) {
++                    hover = false;
++                    redraw();
++                }
++            });
++        }
++
++        /**
++         * Constructor for ListElement.
++         *
++         * @param parent
++         *        the parent Composite.
++         * @param tab
++         *        the tab item for the element.
++         * @param dynamicImageCount
++         *        number of dynamic images for this element
++         * @param index
++         *        the index in the list.
++         */
++        public ListElement(Composite parent, final ITabItem tab,
++                int dynamicImageCount, int index) {
++            this(parent, tab, index);
++            /*
++             * Dynamic images are not displayed initially, set all of them to
++             * null. Clients should call showDynamicImage() method to display a
++             * dynamic image.
++             */
++            this.dynamicImages = new Image[dynamicImageCount];
++            for (int i = 0; i < dynamicImageCount; i++) {
++                this.dynamicImages[i] = null;
++            }
++        }
++
++        /**
++         * Set selected value for this element.
++         *
++         * @param selected
++         *        the selected value.
++         */
++        public void setSelected(boolean selected) {
++            this.selected = selected;
++            redraw();
++        }
++
++        /**
++         * Show the dynamic image at specified index in dynamicImages array. The
++         * image width should not be more than 16 pixels. The caller is
++         * responsible for loading the image appropriately and managing it's
++         * resources.
++         *
++         * @param index
++         * @param image
++         */
++        public void showDynamicImage(int index, Image image) {
++            if (index >= 0 && index < dynamicImages.length) {
++                if (dynamicImages[index] != image) {
++                    dynamicImages[index] = image;
++                    redraw();
++                }
++            }
++        }
++
++        /**
++         * Hide the dynamic image at specified index in dynamicImages array. The
++         * caller is responsible for managing image resources and disposing it
++         * appropriately.
++         *
++         * @param index
++         */
++        public void hideDynamicImage(int index) {
++            if (index >= 0 && index < dynamicImages.length) {
++                if (dynamicImages[index] != null) {
++                    dynamicImages[index] = null;
++                    redraw();
++                }
++            }
++        }
++
++        /**
++         * Sets color to be used for drawing tab label text. The caller is
++         * responsible for managing the color's resources and disposing it
++         * appropriately after setDefaultTextColor() is later invoked.
++         *
++         * @param textColor
++         */
++        public void setTextColor(Color textColor) {
++            if (textColor != null && !this.textColor.equals(textColor)) {
++                this.textColor = textColor;
++                redraw();
++            }
++        }
++
++        /**
++         * Sets default color for tab label text
++         */
++        public void setDefaultTextColor() {
++            if (!this.textColor.equals(widgetForeground)) {
++                this.textColor = widgetForeground;
++                redraw();
++            }
++        }
++
++        /**
++         * Paint the element.
++         *
++         * @param e
++         *        the paint event.
++         */
++        private void paint(PaintEvent e) {
++            /*
++             * draw the top two lines of the tab, same for selected, hover and
++             * default
++             */
++            Rectangle bounds = getBounds();
++            e.gc.setForeground(widgetNormalShadow);
++            e.gc.drawLine(0, 0, bounds.width - 1, 0);
++            e.gc.setForeground(listBackground);
++            e.gc.drawLine(0, 1, bounds.width - 1, 1);
++
++            /* draw the fill in the tab */
++            if (selected) {
++                e.gc.setBackground(listBackground);
++                e.gc.fillRectangle(0, 2, bounds.width, bounds.height - 1);
++            } else if (hover && tab.isIndented()) {
++                e.gc.setBackground(indentedHoverBackground);
++                e.gc.fillRectangle(0, 2, bounds.width - 1, bounds.height - 1);
++            } else if (hover) {
++                e.gc.setForeground(hoverGradientStart);
++                e.gc.setBackground(hoverGradientEnd);
++                e.gc.fillGradientRectangle(0, 2, bounds.width - 1,
++                        bounds.height - 1, true);
++            } else if (tab.isIndented()) {
++                e.gc.setBackground(indentedDefaultBackground);
++                e.gc.fillRectangle(0, 2, bounds.width - 1, bounds.height - 1);
++            } else {
++                e.gc.setForeground(defaultGradientStart);
++                e.gc.setBackground(defaultGradientEnd);
++                e.gc.fillGradientRectangle(0, 2, bounds.width - 1,
++                        bounds.height - 1, true);
++            }
++
++            if (!selected) {
++                e.gc.setForeground(widgetNormalShadow);
++                e.gc.drawLine(bounds.width - 1, 1, bounds.width - 1,
++                        bounds.height + 1);
++            }
++
++            /*
++             * Add INDENT pixels to the left as a margin.
++             */
++            int textIndent = INDENT;
++            FontMetrics fm = e.gc.getFontMetrics();
++            int height = fm.getHeight();
++            int textMiddle = (bounds.height - height) / 2;
++
++            if (selected && tab.getImage() != null
++                    && !tab.getImage().isDisposed()) {
++                /* draw the icon for the selected tab */
++                if (tab.isIndented()) {
++                    textIndent = textIndent + INDENT;
++                } else {
++                    textIndent = textIndent - 3;
++                }
++                e.gc.drawImage(tab.getImage(), textIndent, textMiddle - 1);
++                textIndent = textIndent + 16 + 4;
++            } else if (tab.isIndented()) {
++                textIndent = textIndent + INDENT;
++            }
++
++            /* draw the text */
++            e.gc.setForeground(textColor);
++            if (selected) {
++                /* selected tab is bold font */
++                e.gc.setFont(JFaceResources.getFontRegistry().getBold(
++                        JFaceResources.DEFAULT_FONT));
++            } else {
++                e.gc.setForeground(textColorNoFocus);
++
++            }
++            e.gc.drawText(tab.getText(), textIndent, textMiddle, true);
++            if (((TabbedPropertyList) getParent()).focus && selected) {
++                /* draw a line if the tab has focus */
++                Point point = e.gc.textExtent(tab.getText());
++                e.gc.drawLine(textIndent, bounds.height - 4, textIndent
++                        + point.x, bounds.height - 4);
++            }
++
++            /* Draw dynamic images, if any */
++            boolean hasDynamicImage = false;
++            for (Image dynamicImage : dynamicImages) {
++                if (dynamicImage != null && !dynamicImage.isDisposed()) {
++                    hasDynamicImage = true;
++                    break;
++                }
++            }
++            if (hasDynamicImage) {
++                int drawPosition = textIndent
++                        + e.gc.textExtent(tab.getText()).x + 4;
++                boolean addSpace = false;
++                for (Image dynamicImage : dynamicImages) {
++                    if (dynamicImage != null && !dynamicImage.isDisposed()) {
++                        if (addSpace) {
++                            drawPosition = drawPosition + 3;
++                        }
++                        e.gc.drawImage(dynamicImage, drawPosition,
++                                textMiddle - 1);
++                        drawPosition = drawPosition + 16;
++                        addSpace = true;
++                    }
++                }
++            }
++
++            /* draw the bottom line on the tab for selected and default */
++            if (!hover) {
++                e.gc.setForeground(listBackground);
++                e.gc.drawLine(0, bounds.height - 1, bounds.width - 2,
++                        bounds.height - 1);
++            }
++        }
++
++        /**
++         * Get the tab item.
++         *
++         * @return the tab item.
++         */
++        public ITabItem getTabItem() {
++            return tab;
++        }
++
++        public String toString() {
++            return tab.getText();
++        }
++    }
++
++    /**
++     * The top navigation element in the tabbed property list. It looks like a
++     * scroll button when scrolling is needed or is just a spacer when no
++     * scrolling is required.
++     */
++    public class TopNavigationElement extends Canvas {
++
++        /**
++         * Constructor for TopNavigationElement.
++         *
++         * @param parent
++         *        the parent Composite.
++         */
++        public TopNavigationElement(Composite parent) {
++            super(parent, SWT.NO_FOCUS);
++            addPaintListener(new PaintListener() {
++
++                public void paintControl(PaintEvent e) {
++                    paint(e);
++                }
++            });
++            addMouseListener(new MouseAdapter() {
++
++                public void mouseUp(MouseEvent e) {
++                    if (isUpScrollRequired()) {
++                        bottomVisibleIndex--;
++                        if (topVisibleIndex != 0) {
++                            topVisibleIndex--;
++                        }
++                        layoutTabs();
++                        topNavigationElement.redraw();
++                        bottomNavigationElement.redraw();
++                    }
++                }
++            });
++        }
++
++        /**
++         * Paint the element.
++         *
++         * @param e
++         *        the paint event.
++         */
++        private void paint(PaintEvent e) {
++            e.gc.setBackground(widgetBackground);
++            e.gc.setForeground(widgetForeground);
++            Rectangle bounds = getBounds();
++
++            if (elements.length != 0) {
++                e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
++                e.gc.setForeground(widgetNormalShadow);
++                e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1,
++                        bounds.height - 1);
++            } else {
++                e.gc.setBackground(listBackground);
++                e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
++                int textIndent = INDENT;
++                FontMetrics fm = e.gc.getFontMetrics();
++                int height = fm.getHeight();
++                int textMiddle = (bounds.height - height) / 2;
++                e.gc.setForeground(widgetForeground);
++                String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
++                e.gc.drawText(properties_not_available, textIndent, textMiddle);
++            }
++
++            if (isUpScrollRequired()) {
++                e.gc.setForeground(widgetDarkShadow);
++                int middle = bounds.width / 2;
++                e.gc.drawLine(middle + 1, 3, middle + 5, 7);
++                e.gc.drawLine(middle, 3, middle - 4, 7);
++                e.gc.drawLine(middle - 3, 7, middle + 4, 7);
++
++                e.gc.setForeground(listBackground);
++                e.gc.drawLine(middle, 4, middle + 1, 4);
++                e.gc.drawLine(middle - 1, 5, middle + 2, 5);
++                e.gc.drawLine(middle - 2, 6, middle + 3, 6);
++
++                e.gc.setForeground(widgetNormalShadow);
++                e.gc.drawLine(0, 0, bounds.width - 2, 0);
++                e.gc.setForeground(navigationElementShadowStroke);
++                e.gc.drawLine(0, 1, bounds.width - 2, 1);
++                e.gc.drawLine(0, bounds.height - 1, bounds.width - 2,
++                        bounds.height - 1);
++            }
++        }
++    }
++
++    /**
++     * The top navigation element in the tabbed property list. It looks like a
++     * scroll button when scrolling is needed or is just a spacer when no
++     * scrolling is required.
++     */
++    public class BottomNavigationElement extends Canvas {
++
++        /**
++         * Constructor for BottomNavigationElement.
++         *
++         * @param parent
++         *        the parent Composite.
++         */
++        public BottomNavigationElement(Composite parent) {
++            super(parent, SWT.NO_FOCUS);
++            addPaintListener(new PaintListener() {
++
++                public void paintControl(PaintEvent e) {
++                    paint(e);
++                }
++            });
++            addMouseListener(new MouseAdapter() {
++
++                public void mouseUp(MouseEvent e) {
++                    if (isDownScrollRequired()) {
++                        topVisibleIndex++;
++                        if (bottomVisibleIndex != elements.length - 1) {
++                            bottomVisibleIndex++;
++                        }
++                        layoutTabs();
++                        topNavigationElement.redraw();
++                        bottomNavigationElement.redraw();
++                    }
++                }
++            });
++        }
++
++        /**
++         * Paint the element.
++         *
++         * @param e
++         *        the paint event.
++         */
++        private void paint(PaintEvent e) {
++            e.gc.setBackground(widgetBackground);
++            e.gc.setForeground(widgetForeground);
++            Rectangle bounds = getBounds();
++
++            if (elements.length != 0) {
++                e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
++                e.gc.setForeground(widgetNormalShadow);
++                e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1,
++                        bounds.height - 1);
++                e.gc.drawLine(0, 0, bounds.width - 1, 0);
++
++                e.gc.setForeground(bottomNavigationElementShadowStroke1);
++                e.gc.drawLine(0, 1, bounds.width - 2, 1);
++                e.gc.setForeground(bottomNavigationElementShadowStroke2);
++                e.gc.drawLine(0, 2, bounds.width - 2, 2);
++            } else {
++                e.gc.setBackground(listBackground);
++                e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
++            }
++
++            if (isDownScrollRequired()) {
++                e.gc.setForeground(widgetDarkShadow);
++                int middle = bounds.width / 2;
++                int bottom = bounds.height - 3;
++                e.gc.drawLine(middle + 1, bottom, middle + 5, bottom - 4);
++                e.gc.drawLine(middle, bottom, middle - 4, bottom - 4);
++                e.gc.drawLine(middle - 3, bottom - 4, middle + 4, bottom - 4);
++
++                e.gc.setForeground(listBackground);
++                e.gc.drawLine(middle, bottom - 1, middle + 1, bottom - 1);
++                e.gc.drawLine(middle - 1, bottom - 2, middle + 2, bottom - 2);
++                e.gc.drawLine(middle - 2, bottom - 3, middle + 3, bottom - 3);
++
++                e.gc.setForeground(widgetNormalShadow);
++                e.gc.drawLine(0, bottom - 7, bounds.width - 2, bottom - 7);
++                e.gc.setForeground(navigationElementShadowStroke);
++                e.gc.drawLine(0, bottom + 2, bounds.width - 2, bottom + 2);
++                e.gc.drawLine(0, bottom - 6, bounds.width - 2, bottom - 6);
++            }
++        }
++    }
++
++    /**
++     * Constructor for TabbedPropertyList.
++     *
++     * @param parent
++     *        the parent widget.
++     * @param factory
++     *        the widget factory.
++     */
++    public TabbedPropertyList(Composite parent,
++            TabbedPropertySheetWidgetFactory factory) {
++        super(parent, SWT.NO_FOCUS);
++        this.factory = factory;
++        removeAll();
++        setLayout(new FormLayout());
++        initColours();
++        initAccessible();
++        topNavigationElement = new TopNavigationElement(this);
++        bottomNavigationElement = new BottomNavigationElement(this);
++
++        this.addFocusListener(new FocusListener() {
++
++            public void focusGained(FocusEvent e) {
++                focus = true;
++                int i = getSelectionIndex();
++                if (i >= 0) {
++                    elements[i].redraw();
++                }
++            }
++
++            public void focusLost(FocusEvent e) {
++                focus = false;
++                int i = getSelectionIndex();
++                if (i >= 0) {
++                    elements[i].redraw();
++                }
++            }
++        });
++        this.addControlListener(new ControlAdapter() {
++
++            public void controlResized(ControlEvent e) {
++                computeTopAndBottomTab();
++            }
++        });
++        this.addTraverseListener(new TraverseListener() {
++
++            public void keyTraversed(TraverseEvent e) {
++                if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS
++                        || e.detail == SWT.TRAVERSE_ARROW_NEXT) {
++                    int nMax = elements.length - 1;
++                    int nCurrent = getSelectionIndex();
++                    if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
++                        nCurrent -= 1;
++                        nCurrent = Math.max(0, nCurrent);
++                    } else if (e.detail == SWT.TRAVERSE_ARROW_NEXT) {
++                        nCurrent += 1;
++                        nCurrent = Math.min(nCurrent, nMax);
++                    }
++                    select(nCurrent);
++                    redraw();
++                } else {
++                    e.doit = true;
++                }
++            }
++        });
++    }
++
++    /**
++     * Calculate the number of tabs that will fit in the tab list composite.
++     */
++    protected void computeTabsThatFitInComposite() {
++        tabsThatFitInComposite = Math
++                .round((getSize().y - 22) / getTabHeight());
++        if (tabsThatFitInComposite <= 0) {
++            tabsThatFitInComposite = 1;
++        }
++    }
++
++    /**
++     * Returns the number of elements in this list viewer.
++     *
++     * @return number of elements
++     */
++    public int getNumberOfElements() {
++        return elements.length;
++    }
++
++    /**
++     * Returns the element with the given index from this list viewer. Returns
++     * <code>null</code> if the index is out of range.
++     *
++     * @param index
++     *        the zero-based index
++     * @return the element at the given index, or <code>null</code> if the
++     *         index is out of range
++     */
++    public Object getElementAt(int index) {
++        if (index >= 0 && index < elements.length) {
++            return elements[index];
++        }
++        return null;
++    }
++
++    /**
++     * Returns the zero-relative index of the item which is currently selected
++     * in the receiver, or -1 if no item is selected.
++     *
++     * @return the index of the selected item
++     */
++    public int getSelectionIndex() {
++        return selectedElementIndex;
++    }
++
++    /**
++     * @return zero-relative index of the widest item, or -1 if this list is
++     *         empty.
++     */
++    public int getWidestLabelIndex() {
++        return widestLabelIndex;
++    }
++
++    /**
++     * Removes all elements from this list.
++     */
++    public void removeAll() {
++        if (elements != null) {
++            for (ListElement element : elements) {
++                element.dispose();
++            }
++        }
++        elements = ELEMENTS_EMPTY;
++        selectedElementIndex = NONE;
++        widestLabelIndex = NONE;
++        topVisibleIndex = NONE;
++        bottomVisibleIndex = NONE;
++    }
++
++    /**
++     * Sets a map containing an ITabItem as key and number of dynamic images as
++     * value. It is used to calculate the width of the widest tab by setting
++     * aside enough space (16 pixels per image) for displaying the dynamic
++     * images. Individual dynamic images are displayed/removed from a tab by
++     * using the showDynamicImage() and hideDynamicImage() methods on the tab's
++     * ListElement object.
++     *
++     * @param tabToDynamicImageCountMap
++     */
++    public void setDynamicImageCount(Map tabToDynamicImageCountMap) {
++        this.tabToDynamicImageCountMap = tabToDynamicImageCountMap;
++    }
++
++    /**
++     * Sets the new list elements.
++     *
++     * @param children
++     */
++    public void setElements(Object[] children) {
++        if (elements != ELEMENTS_EMPTY) {
++            removeAll();
++        }
++        elements = new ListElement[children.length];
++        if (children.length == 0) {
++            widestLabelIndex = NONE;
++        } else {
++            widestLabelIndex = 0;
++            for (int i = 0; i < children.length; i++) {
++                int dynamicImageCount = 0;
++                if (tabToDynamicImageCountMap != null
++                        && tabToDynamicImageCountMap.containsKey(children[i])) {
++                    dynamicImageCount = ((Integer) tabToDynamicImageCountMap
++                            .get(children[i])).intValue();
++                }
++                elements[i] = new ListElement(this, (ITabItem) children[i],
++                        dynamicImageCount, i);
++                elements[i].setVisible(false);
++                elements[i].setLayoutData(null);
++
++                if (i != widestLabelIndex) {
++                    int width = getTabWidth((ITabItem) children[i]);
++                    if (width > getTabWidth((ITabItem) children[widestLabelIndex])) {
++                        widestLabelIndex = i;
++                    }
++                }
++            }
++        }
++
++        computeTopAndBottomTab();
++    }
++
++    private int getTabWidth(ITabItem tabItem) {
++        int width = getTextDimension(tabItem.getText()).x;
++        /*
++         * To anticipate for the icon placement we should always keep the
++         * space available after the label. So when the active tab includes
++         * an icon the width of the tab doesn't change.
++         */
++        if (tabItem.getImage() != null) {
++            width = width + 16 + 4;
++        }
++        if (tabItem.isIndented()) {
++            width = width + INDENT;
++        }
++        if (tabToDynamicImageCountMap != null) {
++            int dynamicImageCount = 0;
++            if (tabToDynamicImageCountMap.containsKey(tabItem)) {
++                dynamicImageCount = ((Integer) tabToDynamicImageCountMap
++                        .get(tabItem)).intValue();
++            }
++            if (dynamicImageCount > 0) {
++                /*
++                 * Keep some space between tab's text and first dynamic image
++                 */
++                width = width + 4;
++                width = width + (dynamicImageCount * 16);
++                /*
++                 * Keep some space between consecutive dynamic images
++                 */
++                width = width + ((dynamicImageCount - 1) * 3);
++            }
++        }
++        return width;
++    }
++
++    /**
++     * Selects one of the elements in the list.
++     *
++     * @param index
++     *        the index of the element to select.
++     */
++    protected void select(int index) {
++        if (getSelectionIndex() == index) {
++            /*
++             * this index is already selected.
++             */
++            return;
++        }
++        if (index >= 0 && index < elements.length) {
++            int lastSelected = getSelectionIndex();
++            elements[index].setSelected(true);
++            selectedElementIndex = index;
++            if (lastSelected != NONE) {
++                elements[lastSelected].setSelected(false);
++                if (getSelectionIndex() != elements.length - 1) {
++                    /*
++                     * redraw the next tab to fix the border by calling
++                     * setSelected()
++                     */
++                    elements[getSelectionIndex() + 1].setSelected(false);
++                }
++            }
++            topNavigationElement.redraw();
++            bottomNavigationElement.redraw();
++
++            if (selectedElementIndex < topVisibleIndex
++                    || selectedElementIndex > bottomVisibleIndex) {
++                computeTopAndBottomTab();
++            }
++        }
++        notifyListeners(SWT.Selection, new Event());
++    }
++
++    /**
++     * Deselects all the elements in the list.
++     */
++    public void deselectAll() {
++        if (getSelectionIndex() != NONE) {
++            elements[getSelectionIndex()].setSelected(false);
++            selectedElementIndex = NONE;
++        }
++    }
++
++    private int getIndex(ListElement element) {
++        return element.index;
++    }
++
++    public Point computeSize(int wHint, int hHint, boolean changed) {
++        Point result = super.computeSize(hHint, wHint, changed);
++        if (widestLabelIndex == -1) {
++            String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
++            result.x = getTextDimension(properties_not_available).x + INDENT;
++        } else {
++            /*
++             * Add INDENT pixels to the left of the longest tab as a margin.
++             */
++            int width = getTabWidth(elements[widestLabelIndex].getTabItem()) + INDENT;
++            /*
++             * Add 10 pixels to the right of the longest tab as a margin.
++             */
++            result.x = width + 10;
++        }
++        return result;
++    }
++
++    /**
++     * Get the dimensions of the provided string.
++     *
++     * @param text
++     *        the string.
++     * @return the dimensions of the provided string.
++     */
++    private Point getTextDimension(String text) {
++        GC gc = new GC(this);
++        gc.setFont(JFaceResources.getFontRegistry().getBold(
++                JFaceResources.DEFAULT_FONT));
++        Point point = gc.textExtent(text);
++        point.x++;
++        gc.dispose();
++        return point;
++    }
++
++    /**
++     * Initialize the colours used in the list.
++     */
++    private void initColours() {
++        /*
++         * Colour 3 COLOR_LIST_BACKGROUND
++         */
++        listBackground = Display.getCurrent().getSystemColor(
++                SWT.COLOR_LIST_BACKGROUND);
++
++        /*
++         * Colour 13 COLOR_WIDGET_BACKGROUND
++         */
++        widgetBackground = Display.getCurrent().getSystemColor(
++                SWT.COLOR_WIDGET_BACKGROUND);
++
++        /*
++         * Colour 15 COLOR_WIDGET_DARK_SHADOW
++         */
++        widgetDarkShadow = Display.getCurrent().getSystemColor(
++                SWT.COLOR_WIDGET_DARK_SHADOW);
++
++        /*
++         * Colour 16 COLOR_WIDGET_FOREGROUND
++         */
++        widgetForeground = Display.getCurrent().getSystemColor(
++                SWT.COLOR_WIDGET_FOREGROUND);
++
++        /*
++         * Colour 19 COLOR_WIDGET_NORMAL_SHADOW
++         */
++        widgetNormalShadow = Display.getCurrent().getSystemColor(
++                SWT.COLOR_WIDGET_NORMAL_SHADOW);
++
++        RGB infoBackground = Display.getCurrent().getSystemColor(SWT.COLOR_INFO_BACKGROUND)
++                .getRGB();
++        RGB white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE)
++                .getRGB();
++        RGB black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK)
++                .getRGB();
++
++        /*
++         * gradient in the default tab: start colour WIDGET_NORMAL_SHADOW 100% +
++         * white 20% + WIDGET_BACKGROUND 60% end colour WIDGET_NORMAL_SHADOW
++         * 100% + WIDGET_BACKGROUND 40%
++         */
++        defaultGradientStart = factory.getColors().createColor(
++                "TabbedPropertyList.defaultTabGradientStart", //$NON-NLS-1$
++                FormColors.blend(black, white, 10));
++        defaultGradientEnd = factory.getColors().createColor(
++                "TabbedPropertyList.defaultTabGradientEnd", //$NON-NLS-1$
++                FormColors.blend(black, white,
++                        20));
++
++        navigationElementShadowStroke = factory.getColors().createColor(
++                "TabbedPropertyList.shadowStroke", //$NON-NLS-1$
++                FormColors.blend(white, widgetNormalShadow.getRGB(), 55));
++        bottomNavigationElementShadowStroke1 = factory.getColors().createColor(
++                "TabbedPropertyList.tabShadowStroke1", //$NON-NLS-1$
++                FormColors.blend(black, widgetBackground.getRGB(), 10));
++        bottomNavigationElementShadowStroke2 = factory.getColors().createColor(
++                "TabbedPropertyList.tabShadowStroke2", //$NON-NLS-1$
++                FormColors.blend(black, widgetBackground.getRGB(), 5));
++
++        /*
++         * gradient in the hover tab: start colour WIDGET_BACKGROUND 100% +
++         * white 20% end colour WIDGET_BACKGROUND 100% + WIDGET_NORMAL_SHADOW
++         * 10%
++         */
++        hoverGradientStart = factory.getColors().createColor(
++                "TabbedPropertyList.hoverBackgroundGradientStart", //$NON-NLS-1$
++                FormColors.blend(white, widgetBackground.getRGB(), 20));
++        hoverGradientEnd = factory.getColors().createColor(
++                "TabbedPropertyList.hoverBackgroundGradientEnd", //$NON-NLS-1$
++                FormColors.blend(widgetNormalShadow.getRGB(), widgetBackground
++                        .getRGB(), 10));
++
++        indentedDefaultBackground = factory.getColors().createColor(
++                "TabbedPropertyList.indentedDefaultBackground", //$NON-NLS-1$
++                FormColors.blend(white, widgetBackground.getRGB(), 10));
++        indentedHoverBackground = factory.getColors().createColor(
++                "TabbedPropertyList.indentedHoverBackground", //$NON-NLS-1$
++                FormColors.blend(white, widgetBackground.getRGB(), 75));
++
++        textColorNoFocus = factory.getColors().createColor(
++                "TabbedPropertyList.textColorNoFocus", //$NON-NLS-1$
++                FormColors.blend(black, widgetBackground.getRGB(), 70));
++    }
++
++    /**
++     * Get the height of a tab. The height of the tab is the height of the text
++     * plus buffer.
++     *
++     * @return the height of a tab.
++     */
++    private int getTabHeight() {
++        int tabHeight = getTextDimension("").y + INDENT; //$NON-NLS-1$
++        if (tabsThatFitInComposite == 1) {
++            /*
++             * if only one tab will fix, reduce the size of the tab height so
++             * that the navigation elements fit.
++             */
++            int ret = getBounds().height - 20;
++            return (ret > tabHeight) ? tabHeight
++                    : (ret < 5) ? 5
++                            : ret;
++        }
++        return tabHeight;
++    }
++
++    /**
++     * Determine if a downward scrolling is required.
++     *
++     * @return true if downward scrolling is required.
++     */
++    private boolean isDownScrollRequired() {
++        return elements.length > tabsThatFitInComposite
++                && bottomVisibleIndex != elements.length - 1;
++    }
++
++    /**
++     * Determine if an upward scrolling is required.
++     *
++     * @return true if upward scrolling is required.
++     */
++    private boolean isUpScrollRequired() {
++        return elements.length > tabsThatFitInComposite && topVisibleIndex != 0;
++    }
++
++    /**
++     * Based on available space, figure out the top and bottom tabs in the list.
++     */
++    private void computeTopAndBottomTab() {
++        computeTabsThatFitInComposite();
++        if (elements.length == 0) {
++            /*
++             * no tabs to display.
++             */
++            topVisibleIndex = 0;
++            bottomVisibleIndex = 0;
++        } else if (tabsThatFitInComposite >= elements.length) {
++            /*
++             * all the tabs fit.
++             */
++            topVisibleIndex = 0;
++            bottomVisibleIndex = elements.length - 1;
++        } else if (getSelectionIndex() == NONE) {
++            /*
++             * there is no selected tab yet, assume that tab one would
++             * be selected for now.
++             */
++            topVisibleIndex = 0;
++            bottomVisibleIndex = tabsThatFitInComposite - 1;
++        } else if (getSelectionIndex() + tabsThatFitInComposite > elements.length) {
++            /*
++             * the selected tab is near the bottom.
++             */
++            bottomVisibleIndex = elements.length - 1;
++            topVisibleIndex = bottomVisibleIndex - tabsThatFitInComposite + 1;
++        } else {
++            /*
++             * the selected tab is near the top.
++             */
++            topVisibleIndex = selectedElementIndex;
++            bottomVisibleIndex = selectedElementIndex + tabsThatFitInComposite
++                    - 1;
++        }
++        layoutTabs();
++    }
++
++    /**
++     * Layout the tabs.
++     */
++    private void layoutTabs() {
++        //System.out.println("TabFit " + tabsThatFitInComposite + " length "
++        //	+ elements.length + " top " + topVisibleIndex + " bottom "
++        //	+ bottomVisibleIndex);
++        if (tabsThatFitInComposite == NONE || elements.length == 0) {
++            FormData formData = new FormData();
++            formData.left = new FormAttachment(0, 0);
++            formData.right = new FormAttachment(100, 0);
++            formData.top = new FormAttachment(0, 0);
++            formData.height = getTabHeight();
++            topNavigationElement.setLayoutData(formData);
++
++            formData = new FormData();
++            formData.left = new FormAttachment(0, 0);
++            formData.right = new FormAttachment(100, 0);
++            formData.top = new FormAttachment(topNavigationElement, 0);
++            formData.bottom = new FormAttachment(100, 0);
++            bottomNavigationElement.setLayoutData(formData);
++        } else {
++
++            FormData formData = new FormData();
++            formData.left = new FormAttachment(0, 0);
++            formData.right = new FormAttachment(100, 0);
++            formData.top = new FormAttachment(0, 0);
++            formData.height = 10;
++            topNavigationElement.setLayoutData(formData);
++
++            /*
++             * use nextElement to attach the layout to the previous canvas
++             * widget in the list.
++             */
++            Canvas nextElement = topNavigationElement;
++
++            for (int i = 0; i < elements.length; i++) {
++                //System.out.print(i + " [" + elements[i].getText() + "]");
++                if (i < topVisibleIndex || i > bottomVisibleIndex) {
++                    /*
++                     * this tab is not visible
++                     */
++                    elements[i].setLayoutData(null);
++                    elements[i].setVisible(false);
++                } else {
++                    /*
++                     * this tab is visible.
++                     */
++                    //System.out.print(" visible");
++                    formData = new FormData();
++                    formData.height = getTabHeight();
++                    formData.left = new FormAttachment(0, 0);
++                    formData.right = new FormAttachment(100, 0);
++                    formData.top = new FormAttachment(nextElement, 0);
++                    nextElement = elements[i];
++                    elements[i].setLayoutData(formData);
++                    elements[i].setVisible(true);
++                }
++
++                //if (i == selectedElementIndex) {
++                //	System.out.print(" selected");
++                //}
++                //System.out.println("");
++            }
++            formData = new FormData();
++            formData.left = new FormAttachment(0, 0);
++            formData.right = new FormAttachment(100, 0);
++            formData.top = new FormAttachment(nextElement, 0);
++            formData.bottom = new FormAttachment(100, 0);
++            formData.height = 10;
++            bottomNavigationElement.setLayoutData(formData);
++        }
++        //System.out.println("");
++
++        // layout so that we have enough space for the new labels
++        Composite grandparent = getParent().getParent();
++        grandparent.layout(true);
++        layout(true);
++    }
++
++    /**
++     * Initialize the accessibility adapter.
++     */
++    private void initAccessible() {
++        final Accessible accessible = getAccessible();
++        accessible.addAccessibleListener(new AccessibleAdapter() {
++
++            public void getName(AccessibleEvent e) {
++                if (getSelectionIndex() != NONE) {
++                    e.result = elements[getSelectionIndex()].getTabItem()
++                            .getText();
++                }
++            }
++
++            public void getHelp(AccessibleEvent e) {
++                if (getSelectionIndex() != NONE) {
++                    e.result = elements[getSelectionIndex()].getTabItem()
++                            .getText();
++                }
++            }
++        });
++
++        accessible.addAccessibleControlListener(new AccessibleControlAdapter() {
++
++            public void getChildAtPoint(AccessibleControlEvent e) {
++                Point pt = toControl(new Point(e.x, e.y));
++                e.childID = (getBounds().contains(pt)) ? ACC.CHILDID_SELF
++                        : ACC.CHILDID_NONE;
++            }
++
++            public void getLocation(AccessibleControlEvent e) {
++                if (getSelectionIndex() != NONE) {
++                    Rectangle location = elements[getSelectionIndex()]
++                            .getBounds();
++                    Point pt = toDisplay(new Point(location.x, location.y));
++                    e.x = pt.x;
++                    e.y = pt.y;
++                    e.width = location.width;
++                    e.height = location.height;
++                }
++            }
++
++            public void getChildCount(AccessibleControlEvent e) {
++                e.detail = 0;
++            }
++
++            public void getRole(AccessibleControlEvent e) {
++                e.detail = ACC.ROLE_TABITEM;
++            }
++
++            public void getState(AccessibleControlEvent e) {
++                e.detail = ACC.STATE_NORMAL | ACC.STATE_SELECTABLE
++                        | ACC.STATE_SELECTED | ACC.STATE_FOCUSED
++                        | ACC.STATE_FOCUSABLE;
++            }
++        });
++
++        addListener(SWT.Selection, new Listener() {
++
++            public void handleEvent(Event event) {
++                if (isFocusControl()) {
++                    accessible.setFocus(ACC.CHILDID_SELF);
++                }
++            }
++        });
++
++        addListener(SWT.FocusIn, new Listener() {
++
++            public void handleEvent(Event event) {
++                accessible.setFocus(ACC.CHILDID_SELF);
++            }
++        });
++    }
+ }
+diff -urN src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryFactory.java src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryFactory.java
+--- src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryFactory.java	2016-05-01 20:12:32.000000000 +0200
++++ src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryFactory.java	2017-06-30 14:34:37.985023913 +0200
+@@ -71,7 +71,14 @@
+ 		CacheData data = (CacheData) idToCacheData.get(key);
+ 		if (data == null) {
+ 			data = new CacheData();
++			/*use here custom TabbedPropertyRegistry
++			 * that are aware of viewID in which they are used*/
++			if(key.equals("org.bonitasoft.studio.diagram") //$NON-NLS-1$
++					|| key.equals("org.bonitasoft.studio.diagram.form")){ //$NON-NLS-1$
++				data.registry = new TabbedPropertyRegistryViewAware(key);
++			} else {	
+ 			data.registry = new TabbedPropertyRegistry(key);
++			}
+ 			data.references = new ArrayList(5);
+ 			idToCacheData.put(key, data);
+ 		}
+diff -urN src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistry.java src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistry.java
+--- src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistry.java	2017-02-14 20:07:38.000000000 +0100
++++ src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistry.java	2017-06-30 14:34:38.045023383 +0200
+@@ -59,11 +59,11 @@
+ 
+ 	private static final String EXTPT_TABS = "propertyTabs"; //$NON-NLS-1$
+ 
+-	private static final String EXTPT_SECTIONS = "propertySections"; //$NON-NLS-1$
++	protected static final String EXTPT_SECTIONS = "propertySections"; //$NON-NLS-1$
+ 
+ 	private static final String ELEMENT_TAB = "propertyTab"; //$NON-NLS-1$
+ 
+-	private static final String ELEMENT_SECTION = "propertySection"; //$NON-NLS-1$
++	protected static final String ELEMENT_SECTION = "propertySection"; //$NON-NLS-1$
+ 
+ 	private static final String ELEMENT_PROPERTY_CATEGORY = "propertyCategory"; //$NON-NLS-1$
+ 
+diff -urN src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryViewAware.java src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryViewAware.java
+--- src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryViewAware.java	1970-01-01 01:00:00.000000000 +0100
++++ src/org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPropertyRegistryViewAware.java	2017-06-30 10:01:11.837575820 +0200
+@@ -0,0 +1,133 @@
++/**
++ * Copyright (C) 2010 BonitaSoft S.A.
++ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 2.0 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++package org.eclipse.ui.internal.views.properties.tabbed.view;
++
++
++import java.util.ArrayList;
++import java.util.List;
++
++import org.eclipse.core.runtime.IConfigurationElement;
++import org.eclipse.jface.viewers.ISelection;
++import org.eclipse.ui.IWorkbenchPart;
++import org.eclipse.ui.views.properties.tabbed.ISectionDescriptor;
++import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
++
++/**
++ * @since 3.5
++ *
++ */
++public class TabbedPropertyRegistryViewAware extends TabbedPropertyRegistry {
++
++	/**
++	 * @param id
++	 */
++	protected TabbedPropertyRegistryViewAware(String id) {
++		super(id);
++	}
++	
++	/**
++	 * Reads property section extensions. Returns all section descriptors for
++	 * the current contributor id or an empty array if none is found.
++	 * @param viewId
++	 * 	take care in which view it is
++	 */
++	protected ISectionDescriptor[] readSectionDescriptors(String viewId) {
++		List<ISectionDescriptor> result = new ArrayList<ISectionDescriptor>();
++		IConfigurationElement[] extensions = getConfigurationElements(EXTPT_SECTIONS);
++		for (int i = 0; i < extensions.length; i++) {
++			IConfigurationElement extension = extensions[i];
++			IConfigurationElement[] sections = extension
++					.getChildren(ELEMENT_SECTION);
++			for (int j = 0; j < sections.length; j++) {
++				IConfigurationElement section = sections[j];
++				String sectionViewId = section.getAttribute("viewID"); //$NON-NLS-1$
++				if(sectionViewId != null && sectionViewId.equals(viewId)){
++					ISectionDescriptor descriptor = new SectionDescriptor(section,
++						typeMapper);
++					result.add(descriptor);
++				}
++			}
++		}
++		return result.toArray(new ISectionDescriptor[result.size()]);
++	}
++	
++	/**
++	 * Populates the given tab descriptors with section descriptors.
++	 */
++	protected void populateWithSectionDescriptors(List<?> aTabDescriptors, String viewId) {
++		ISectionDescriptor[] sections = null;
++		if (sectionDescriptorProvider != null) {
++			sections = sectionDescriptorProvider.getSectionDescriptors();
++		} else {
++			sections = readSectionDescriptors(viewId);
++		}
++		for (int i = 0; i < sections.length; i++) {
++			ISectionDescriptor section = sections[i];
++			appendToTabDescriptor(section, aTabDescriptors);
++		}
++	}
++	
++	/**
++	 * Reads property tab extensions. Returns all tab descriptors for the
++	 * current contributor id or an empty array if none is found.
++	 */
++	protected ITabDescriptor[] getAllTabDescriptors(String viewId) {
++		//TODO: we no more use a cached tabDescriptors, might cause issue performance
++		//if (tabDescriptors == null) {
++			List<ITabDescriptor> temp = readTabDescriptors();
++			populateWithSectionDescriptors(temp, viewId);
++			temp = sortTabDescriptorsByCategory(temp);
++			temp = sortTabDescriptorsByAfterTab(temp);
++			tabDescriptors = temp
++					.toArray(new TabDescriptor[temp.size()]);
++		//}
++		return tabDescriptors;
++	}
++	
++	/**
++	 * Returns all section descriptors for the provided selection.
++	 * 
++	 * @param part
++	 *            the workbench part containing the selection
++	 * @param selection
++	 *            the current selection.
++	 * @param viewID
++	 *            The view in which we want the get tab
++	 * @return all section descriptors.
++	 */
++	public ITabDescriptor[] getTabDescriptors(IWorkbenchPart part,
++			ISelection selection, String viewID) {
++		if (selection == null || selection.isEmpty()) {
++			return EMPTY_DESCRIPTOR_ARRAY;
++		}
++
++		ITabDescriptor[] allDescriptors = null;
++		if (tabDescriptorProvider == null) {
++			allDescriptors = getAllTabDescriptors(viewID);
++		} else {
++			allDescriptors = tabDescriptorProvider.getTabDescriptors(part,
++					selection);
++		}
++
++		ITabDescriptor[] result = filterTabDescriptors(allDescriptors, part,
++				selection);
++		return result;
++	}
++	
++}
+diff -urN src/org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage.java src/org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage.java
+--- src/org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage.java	2017-02-14 20:07:38.000000000 +0100
++++ src/org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetPage.java	2017-06-30 14:34:37.973024019 +0200
+@@ -4,9 +4,8 @@
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+  * http://www.eclipse.org/legal/epl-v10.html
+- *
+  * Contributors:
+- *     IBM Corporation - initial API and implementation
++ * IBM Corporation - initial API and implementation
+  *******************************************************************************/
+ package org.eclipse.ui.views.properties.tabbed;
+ 
+@@ -64,970 +63,974 @@
+  * @author Anthony Hunter
+  */
+ public class TabbedPropertySheetPage
+-	extends Page
+-	implements IPropertySheetPage, ILabelProviderListener {
++        extends Page
++        implements IPropertySheetPage, ILabelProviderListener {
++
++    // widgets
++    private TabbedPropertyComposite tabbedPropertyComposite;
++
++    private TabbedPropertySheetWidgetFactory widgetFactory;
++
++    private ITabbedPropertySheetPageContributor contributor;
++
++    protected TabbedPropertyRegistry registry;
++
++    private ITabbedPropertySheetPageContributor selectionContributor = null;
++
++    /**
++     * The currently active contributor id, which may not match the contributor
++     * id from the workbench part that created this instance.
++     */
++    private String currentContributorId;
++
++    protected IStructuredContentProvider tabListContentProvider;
+ 
+-	// widgets
+-	private TabbedPropertyComposite tabbedPropertyComposite;
++    protected ISelection currentSelection;
+ 
+-	private TabbedPropertySheetWidgetFactory widgetFactory;
++    private boolean activePropertySheet;
+ 
+-	private ITabbedPropertySheetPageContributor contributor;
+-
+-	private TabbedPropertyRegistry registry;
+-
+-	private ITabbedPropertySheetPageContributor selectionContributor = null;
+-
+-	/**
+-	 * The currently active contributor id, which may not match the contributor
+-	 * id from the workbench part that created this instance.
+-	 */
+-	private String currentContributorId;
+-
+-	protected IStructuredContentProvider tabListContentProvider;
+-
+-	private ISelection currentSelection;
+-
+-	private boolean activePropertySheet;
+-
+-	private TabbedPropertyViewer tabbedPropertyViewer;
+-
+-	private TabContents currentTab;
+-
+-	private Map descriptorToTab;
+-
+-	private Map tabToComposite;
+-
+-	private List selectionQueue;
+-
+-	private boolean selectionQueueLocked;
+-
+-	private List tabSelectionListeners;
+-
+-	private IWorkbenchWindow cachedWorkbenchWindow;
+-
+-	private boolean hasTitleBar;
+-
+-	/**
+-	 * a listener that is interested in part activation events.
+-	 */
+-	private IPartListener partActivationListener = new IPartListener() {
+-
+-		public void partActivated(IWorkbenchPart part) {
+-			handlePartActivated(part);
+-		}
+-
+-		public void partBroughtToTop(IWorkbenchPart part) {
+-		}
+-
+-		public void partClosed(IWorkbenchPart part) {
+-		}
+-
+-		public void partDeactivated(IWorkbenchPart part) {
+-		}
+-
+-		public void partOpened(IWorkbenchPart part) {
+-		}
+-	};
+-
+-	private class TabbedPropertySheetPageContributorFromSelection
+-		implements ITabbedPropertySheetPageContributor {
+-
+-		private String contributorId;
+-
+-		/**
+-		 * Constructor that takes in a contributor id taken from a selection.
+-		 *
+-		 * @param contributorId
+-		 *            the contributor id.
+-		 */
+-		public TabbedPropertySheetPageContributorFromSelection(
+-				String contributorId) {
+-			super();
+-			this.contributorId = contributorId;
+-		}
+-
+-		/**
+-		 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor#getContributorId()
+-		 */
+-		public String getContributorId() {
+-			return contributorId;
+-		}
+-
+-	}
+-
+-	/**
+-	 * Label provider for the ListViewer.
+-	 */
+-	class TabbedPropertySheetPageLabelProvider
+-		extends LabelProvider {
+-
+-		public String getText(Object element) {
+-			if (element instanceof ITabDescriptor) {
+-				return ((ITabDescriptor) element).getLabel();
+-			}
+-			return null;
+-		}
+-	}
+-
+-	/**
+-	 * SelectionChangedListener for the ListViewer.
+-	 */
+-	class SelectionChangedListener
+-		implements ISelectionChangedListener {
+-
+-		/**
+-		 * Shows the tab associated with the selection.
+-		 */
+-		public void selectionChanged(SelectionChangedEvent event) {
+-			IStructuredSelection selection = (IStructuredSelection) event
+-				.getSelection();
+-			TabContents tab = null;
+-			ITabDescriptor descriptor = (ITabDescriptor) selection
+-					.getFirstElement();
+-
+-			if (descriptor == null) {
+-				// pretend the tab is empty.
+-				hideTab(currentTab);
+-			} else {
+-				// create tab if necessary
+-				// can not cache based on the id - tabs may have the same id,
+-				// but different section depending on the selection
+-				tab = (TabContents) descriptorToTab.get(descriptor);
+-
+-				if (tab != currentTab) {
+-					hideTab(currentTab);
+-				}
+-
+-				Composite tabComposite = (Composite) tabToComposite.get(tab);
+-				if (tabComposite == null) {
+-					tabComposite = createTabComposite();
+-					tab.createControls(tabComposite,
+-						TabbedPropertySheetPage.this);
+-					// tabAreaComposite.layout(true);
+-					tabToComposite.put(tab, tabComposite);
+-				}
+-				// force widgets to be resized
+-				tab.setInput(tabbedPropertyViewer.getWorkbenchPart(),
+-					(ISelection) tabbedPropertyViewer.getInput());
+-
+-				// store tab selection
+-				storeCurrentTabSelection(descriptor.getLabel());
+-
+-				if (tab != currentTab) {
+-					showTab(tab);
+-				}
+-
+-				tab.refresh();
+-			}
+-			tabbedPropertyComposite.getTabComposite().layout(true);
+-			currentTab = tab;
+-			resizeScrolledComposite();
+-
+-			if (descriptor != null) {
+-				handleTabSelection(descriptor);
+-			}
+-		}
+-
+-		/**
+-		 * Shows the given tab.
+-		 */
+-		private void showTab(TabContents target) {
+-			if (target != null) {
+-				Composite tabComposite = (Composite) tabToComposite.get(target);
+-				if (tabComposite != null) {
+-					/**
+-					 * the following method call order is important - do not
+-					 * change it or the widgets might be drawn incorrectly
+-					 */
+-					tabComposite.moveAbove(null);
+-					target.aboutToBeShown();
+-					tabComposite.setVisible(true);
+-				}
+-			}
+-		}
+-
+-		/**
+-		 * Hides the given tab.
+-		 */
+-		private void hideTab(TabContents target) {
+-			if (target != null) {
+-				Composite tabComposite = (Composite) tabToComposite.get(target);
+-				if (tabComposite != null) {
+-					target.aboutToBeHidden();
+-					tabComposite.setVisible(false);
+-				}
+-			}
+-		}
+-
+-	}
+-
+-	/**
+-	 * create a new tabbed property sheet page.
+-	 *
+-	 * @param tabbedPropertySheetPageContributor
+-	 *            the tabbed property sheet page contributor.
+-	 */
+-	public TabbedPropertySheetPage(
+-			ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor) {
+-		this(tabbedPropertySheetPageContributor, true);
+-	}
+-
+-	/**
+-	 * create a new tabbed property sheet page.
+-	 *
+-	 * @param tabbedPropertySheetPageContributor
+-	 *            the tabbed property sheet page contributor.
+-	 * @param showTitleBar
+-	 *            boolean indicating if the title bar should be shown;
+-	 *            default value is <code>true</code>
+-	 * @since 3.5
+-	 */
+-	public TabbedPropertySheetPage(
+-			ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor,
+-			boolean showTitleBar) {
+-		hasTitleBar = showTitleBar;
+-		contributor = tabbedPropertySheetPageContributor;
+-		tabToComposite = new HashMap();
+-		selectionQueue = new ArrayList(10);
+-		tabSelectionListeners = new ArrayList();
+-		initContributor(contributor.getContributorId());
+-	}
+-
+-	/**
+-	 * Handle the part activated event.
+-	 *
+-	 * @param part
+-	 *            the new activated part.
+-	 */
+-	protected void handlePartActivated(IWorkbenchPart part) {
+-		/*
+-		 * The properties view has been activated and the current page is this
+-		 * instance of TabbedPropertySheetPage
+-		 */
+-		boolean thisActivated = part instanceof PropertySheet
+-			&& ((PropertySheet) part).getCurrentPage() == this;
+-
+-		/*
+-		 * When the active part changes and the part does not provide a
+-		 * selection that affects this property sheet page, the PropertySheet
+-		 * does not send us a selectionChanged() event. We need to be informed
+-		 * of these events since we want to send aboutToBeHidden() and
+-		 * aboutToBeShown() when the property sheet is hidden or shown.
+-		 */
++    protected TabbedPropertyViewer tabbedPropertyViewer;
++
++    private TabContents currentTab;
++
++    private Map descriptorToTab;
++
++    private Map tabToComposite;
++
++    protected List selectionQueue;
++
++    protected boolean selectionQueueLocked;
++
++    private List tabSelectionListeners;
++
++    private IWorkbenchWindow cachedWorkbenchWindow;
++
++    private boolean hasTitleBar;
++
++    /**
++     * a listener that is interested in part activation events.
++     */
++    private IPartListener partActivationListener = new IPartListener() {
++
++        public void partActivated(IWorkbenchPart part) {
++            handlePartActivated(part);
++        }
++
++        public void partBroughtToTop(IWorkbenchPart part) {
++        }
++
++        public void partClosed(IWorkbenchPart part) {
++        }
++
++        public void partDeactivated(IWorkbenchPart part) {
++        }
++
++        public void partOpened(IWorkbenchPart part) {
++        }
++    };
++
++    private class TabbedPropertySheetPageContributorFromSelection
++            implements ITabbedPropertySheetPageContributor {
++
++        private String contributorId;
++
++        /**
++         * Constructor that takes in a contributor id taken from a selection.
++         *
++         * @param contributorId
++         *        the contributor id.
++         */
++        public TabbedPropertySheetPageContributorFromSelection(
++                String contributorId) {
++            super();
++            this.contributorId = contributorId;
++        }
++
++        /**
++         * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor#getContributorId()
++         */
++        public String getContributorId() {
++            return contributorId;
++        }
++
++    }
++
++    /**
++     * Label provider for the ListViewer.
++     */
++    class TabbedPropertySheetPageLabelProvider
++            extends LabelProvider {
++
++        public String getText(Object element) {
++            if (element instanceof ITabDescriptor) {
++                return ((ITabDescriptor) element).getLabel();
++            }
++            return null;
++        }
++    }
++
++    /**
++     * SelectionChangedListener for the ListViewer.
++     */
++    class SelectionChangedListener
++            implements ISelectionChangedListener {
++
++        /**
++         * Shows the tab associated with the selection.
++         */
++        public void selectionChanged(SelectionChangedEvent event) {
++            IStructuredSelection selection = (IStructuredSelection) event
++                    .getSelection();
++            TabContents tab = null;
++            ITabDescriptor descriptor = (ITabDescriptor) selection
++                    .getFirstElement();
++
++            if (descriptor == null) {
++                // pretend the tab is empty.
++                hideTab(currentTab);
++            } else {
++                // create tab if necessary
++                // can not cache based on the id - tabs may have the same id,
++                // but different section depending on the selection
++                tab = (TabContents) descriptorToTab.get(descriptor);
++
++                if (tab != currentTab) {
++                    hideTab(currentTab);
++                }
++
++                Composite tabComposite = (Composite) tabToComposite.get(tab);
++                if (tabComposite == null) {
++                    tabComposite = createTabComposite();
++                    tab.createControls(tabComposite,
++                            TabbedPropertySheetPage.this);
++                    // tabAreaComposite.layout(true);
++                    tabToComposite.put(tab, tabComposite);
++                }
++                // force widgets to be resized
++                tab.setInput(tabbedPropertyViewer.getWorkbenchPart(),
++                        (ISelection) tabbedPropertyViewer.getInput());
++
++                // store tab selection
++                storeCurrentTabSelection(descriptor.getLabel());
++
++                if (tab != currentTab) {
++                    showTab(tab);
++                }
++
++                tab.refresh();
++            }
++            tabbedPropertyComposite.getTabComposite().layout(true);
++            currentTab = tab;
++            resizeScrolledComposite();
++
++            if (descriptor != null) {
++                handleTabSelection(descriptor);
++            }
++        }
++
++        /**
++         * Shows the given tab.
++         */
++        private void showTab(TabContents target) {
++            if (target != null) {
++                Composite tabComposite = (Composite) tabToComposite.get(target);
++                if (tabComposite != null) {
++                    /**
++                     * the following method call order is important - do not
++                     * change it or the widgets might be drawn incorrectly
++                     */
++                    tabComposite.moveAbove(null);
++                    target.aboutToBeShown();
++                    tabComposite.setVisible(true);
++                }
++            }
++        }
++
++        /**
++         * Hides the given tab.
++         */
++        private void hideTab(TabContents target) {
++            if (target != null) {
++                Composite tabComposite = (Composite) tabToComposite.get(target);
++                if (tabComposite != null) {
++                    target.aboutToBeHidden();
++                    tabComposite.setVisible(false);
++                }
++            }
++        }
++
++    }
++
++    /**
++     * create a new tabbed property sheet page.
++     *
++     * @param tabbedPropertySheetPageContributor
++     *        the tabbed property sheet page contributor.
++     */
++    public TabbedPropertySheetPage(
++            ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor) {
++        this(tabbedPropertySheetPageContributor, true);
++    }
++
++    /**
++     * create a new tabbed property sheet page.
++     *
++     * @param tabbedPropertySheetPageContributor
++     *        the tabbed property sheet page contributor.
++     * @param showTitleBar
++     *        boolean indicating if the title bar should be shown;
++     *        default value is <code>true</code>
++     * @since 3.5
++     */
++    public TabbedPropertySheetPage(
++            ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor,
++            boolean showTitleBar) {
++        hasTitleBar = showTitleBar;
++        contributor = tabbedPropertySheetPageContributor;
++        tabToComposite = new HashMap();
++        selectionQueue = new ArrayList(10);
++        tabSelectionListeners = new ArrayList();
++        initContributor(contributor.getContributorId());
++    }
++
++    /**
++     * Handle the part activated event.
++     *
++     * @param part
++     *        the new activated part.
++     */
++    protected void handlePartActivated(IWorkbenchPart part) {
++        /*
++         * The properties view has been activated and the current page is this
++         * instance of TabbedPropertySheetPage
++         */
++        boolean thisActivated = part instanceof PropertySheet
++                && ((PropertySheet) part).getCurrentPage() == this;
++
++        /*
++         * When the active part changes and the part does not provide a
++         * selection that affects this property sheet page, the PropertySheet
++         * does not send us a selectionChanged() event. We need to be informed
++         * of these events since we want to send aboutToBeHidden() and
++         * aboutToBeShown() when the property sheet is hidden or shown.
++         */
+         if (!thisActivated && !part.equals(contributor)
+                 && !part.getSite().getId().equals(contributor.getContributorId())) {
+-			/*
+-			 * Is the part is a IContributedContentsView for the contributor,
+-			 * for example, outline view.
+-			 */
+-			IContributedContentsView view = (IContributedContentsView) Adapters.adapt(part,
+-					IContributedContentsView.class);
+-			if (view == null
+-				|| (view.getContributingPart() != null && !view
+-					.getContributingPart().equals(contributor))) {
+-				if (activePropertySheet) {
+-					if (currentTab != null) {
+-						currentTab.aboutToBeHidden();
+-					}
+-					activePropertySheet = false;
+-				}
+-				return;
+-			}
+-		}
+-		if (!activePropertySheet && currentTab != null) {
+-			currentTab.aboutToBeShown();
+-			currentTab.refresh();
+-		}
+-		activePropertySheet = true;
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+-	 */
+-	public void createControl(Composite parent) {
+-		widgetFactory = new TabbedPropertySheetWidgetFactory();
+-		tabbedPropertyComposite = new TabbedPropertyComposite(parent,
+-			widgetFactory, hasTitleBar);
+-		widgetFactory.paintBordersFor(tabbedPropertyComposite);
+-		tabbedPropertyComposite.setLayout(new FormLayout());
+-		FormData formData = new FormData();
+-		formData.left = new FormAttachment(0, 0);
+-		formData.right = new FormAttachment(100, 0);
+-		formData.top = new FormAttachment(0, 0);
+-		formData.bottom = new FormAttachment(100, 0);
+-		tabbedPropertyComposite.setLayoutData(formData);
+-
+-		tabbedPropertyViewer = new TabbedPropertyViewer(tabbedPropertyComposite
+-			.getList());
+-		tabbedPropertyViewer.setContentProvider(tabListContentProvider);
+-		tabbedPropertyViewer
+-			.setLabelProvider(new TabbedPropertySheetPageLabelProvider());
+-		tabbedPropertyViewer
+-			.addSelectionChangedListener(new SelectionChangedListener());
+-
+-		tabbedPropertyComposite.getScrolledComposite().addControlListener(
+-				new ControlAdapter() {
+-
+-					public void controlResized(ControlEvent e) {
+-						resizeScrolledComposite();
+-					}
+-				});
+-
+-		/**
+-		 * Add a part activation listener.
+-		 */
+-		cachedWorkbenchWindow = getSite().getWorkbenchWindow();
+-		cachedWorkbenchWindow.getPartService().addPartListener(
+-				partActivationListener);
+-
+-		/**
+-		 * Add a label provider change listener.
+-		 */
+-		if (hasTitleBar) {
+-			registry.getLabelProvider().addListener(this);
+-		}
+-	}
+-
+-	/**
+-	 * Initialize the contributor with the provided contributor id.
+-	 *
+-	 * @param contributorId
+-	 *            the contributor id.
+-	 */
+-	private void initContributor(String contributorId) {
+-		descriptorToTab = new HashMap();
+-		if (contributor.getContributorId().equals(contributorId)) {
+-			/**
+-			 * default contributor from the workbench part.
+-			 */
+-			registry = TabbedPropertyRegistryFactory.getInstance()
+-				.createRegistry(contributor);
+-		} else {
+-			/**
+-			 * selection contributor.
+-			 */
+-			selectionContributor = new TabbedPropertySheetPageContributorFromSelection(
+-				contributorId);
+-			registry = TabbedPropertyRegistryFactory.getInstance()
+-				.createRegistry(selectionContributor);
+-		}
+-		currentContributorId = contributorId;
+-		tabListContentProvider = getTabListContentProvider();
+-		hasTitleBar = hasTitleBar && registry.getLabelProvider() != null;
+-
+-		if (tabbedPropertyViewer != null) {
+-			tabbedPropertyViewer.setContentProvider(tabListContentProvider);
+-		}
+-
+-		/**
+-		 * Add a label provider change listener.
+-		 */
+-		if (hasTitleBar) {
+-			registry.getLabelProvider().addListener(this);
+-		}
+-
+-	}
+-
+-	/**
+-	 * Gets the tab list content provider for the contributor.
+-	 *
+-	 * @return the tab list content provider for the contributor.
+-	 */
+-	protected IStructuredContentProvider getTabListContentProvider() {
+-		return registry.getTabListContentProvider();
+-	}
+-
+-	/**
+-	 * Dispose the contributor with the provided contributor id. This happens on
+-	 * part close as well as when contributors switch between the workbench
+-	 * part and contributor from a selection.
+-	 * @since 3.6
+-	 */
+-	protected void disposeContributor() {
+-		/**
+-		 * If the current tab is about to be disposed we have to call
+-		 * aboutToBeHidden
+-		 */
+-		if (currentTab != null) {
+-			currentTab.aboutToBeHidden();
+-			currentTab = null;
+-		}
+-
+-		disposeTabs(descriptorToTab.values());
+-		descriptorToTab = new HashMap();
+-
+-		/**
+-		 * Remove the label provider change listener.
+-		 */
+-		if (hasTitleBar && registry != null) {
+-			registry.getLabelProvider().removeListener(this);
+-		}
+-
+-		if (selectionContributor != null) {
+-			/**
+-			 * remove the selection contributed registry.
+-			 */
+-			TabbedPropertyRegistryFactory.getInstance().disposeRegistry(
+-				selectionContributor);
+-			selectionContributor = null;
+-		}
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.part.IPage#dispose()
+-	 */
+-	public void dispose() {
+-
+-		disposeContributor();
+-
+-		if (widgetFactory != null) {
+-			widgetFactory.dispose();
+-			widgetFactory = null;
+-		}
+-		/**
+-		 * Remove the part activation listener.
+-		 */
+-		if (cachedWorkbenchWindow != null) {
+-			cachedWorkbenchWindow.getPartService().removePartListener(
+-				partActivationListener);
+-			cachedWorkbenchWindow = null;
+-		}
+-
+-		if (registry != null) {
+-			TabbedPropertyRegistryFactory.getInstance().disposeRegistry(
+-				contributor);
+-			registry = null;
+-		}
++            /*
++             * Is the part is a IContributedContentsView for the contributor,
++             * for example, outline view.
++             */
++            IContributedContentsView view = (IContributedContentsView) Adapters.adapt(part,
++                    IContributedContentsView.class);
++            if (view == null
++                    || (view.getContributingPart() != null && !view
++                            .getContributingPart().equals(contributor))) {
++                if (activePropertySheet) {
++                    if (currentTab != null) {
++                        currentTab.aboutToBeHidden();
++                    }
++                    activePropertySheet = false;
++                }
++                return;
++            }
++        }
++        if (!activePropertySheet && currentTab != null) {
++            currentTab.aboutToBeShown();
++            currentTab.refresh();
++        }
++        activePropertySheet = true;
++    }
++
++    /**
++     * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
++     */
++    public void createControl(Composite parent) {
++        widgetFactory = new TabbedPropertySheetWidgetFactory();
++        tabbedPropertyComposite = new TabbedPropertyComposite(parent,
++                widgetFactory, hasTitleBar);
++        widgetFactory.paintBordersFor(tabbedPropertyComposite);
++        tabbedPropertyComposite.setLayout(new FormLayout());
++        FormData formData = new FormData();
++        formData.left = new FormAttachment(0, 0);
++        formData.right = new FormAttachment(100, 0);
++        formData.top = new FormAttachment(0, 0);
++        formData.bottom = new FormAttachment(100, 0);
++        tabbedPropertyComposite.setLayoutData(formData);
++
++        tabbedPropertyViewer = new TabbedPropertyViewer(tabbedPropertyComposite
++                .getList());
++        tabbedPropertyViewer.setContentProvider(tabListContentProvider);
++        tabbedPropertyViewer
++                .setLabelProvider(new TabbedPropertySheetPageLabelProvider());
++        tabbedPropertyViewer
++                .addSelectionChangedListener(new SelectionChangedListener());
++
++        tabbedPropertyComposite.getScrolledComposite().addControlListener(
++                new ControlAdapter() {
++
++                    public void controlResized(ControlEvent e) {
++                        resizeScrolledComposite();
++                    }
++                });
++
++        /**
++         * Add a part activation listener.
++         */
++        cachedWorkbenchWindow = getSite().getWorkbenchWindow();
++        cachedWorkbenchWindow.getPartService().addPartListener(
++                partActivationListener);
++
++        /**
++         * Add a label provider change listener.
++         */
++        if (hasTitleBar) {
++            registry.getLabelProvider().addListener(this);
++        }
++    }
++
++    /**
++     * Initialize the contributor with the provided contributor id.
++     *
++     * @param contributorId
++     *        the contributor id.
++     */
++    private void initContributor(String contributorId) {
++        descriptorToTab = new HashMap();
++        if (contributor.getContributorId().equals(contributorId)) {
++            /**
++             * default contributor from the workbench part.
++             */
++            registry = TabbedPropertyRegistryFactory.getInstance()
++                    .createRegistry(contributor);
++        } else {
++            /**
++             * selection contributor.
++             */
++            selectionContributor = new TabbedPropertySheetPageContributorFromSelection(
++                    contributorId);
++            registry = TabbedPropertyRegistryFactory.getInstance()
++                    .createRegistry(selectionContributor);
++        }
++        currentContributorId = contributorId;
++        tabListContentProvider = getTabListContentProvider();
++        hasTitleBar = hasTitleBar && registry.getLabelProvider() != null;
++
++        if (tabbedPropertyViewer != null) {
++            tabbedPropertyViewer.setContentProvider(tabListContentProvider);
++        }
++
++        /**
++         * Add a label provider change listener.
++         */
++        if (hasTitleBar) {
++            registry.getLabelProvider().addListener(this);
++        }
++
++    }
++
++    /**
++     * Gets the tab list content provider for the contributor.
++     *
++     * @return the tab list content provider for the contributor.
++     */
++    protected IStructuredContentProvider getTabListContentProvider() {
++        return registry.getTabListContentProvider();
++    }
++
++    /**
++     * Dispose the contributor with the provided contributor id. This happens on
++     * part close as well as when contributors switch between the workbench
++     * part and contributor from a selection.
++     * 
++     * @since 3.6
++     */
++    protected void disposeContributor() {
++        /**
++         * If the current tab is about to be disposed we have to call
++         * aboutToBeHidden
++         */
++        if (currentTab != null) {
++            currentTab.aboutToBeHidden();
++            currentTab = null;
++        }
++
++        disposeTabs(descriptorToTab.values());
++        descriptorToTab = new HashMap();
++
++        /**
++         * Remove the label provider change listener.
++         */
++        if (hasTitleBar && registry != null) {
++            registry.getLabelProvider().removeListener(this);
++        }
++
++        if (selectionContributor != null) {
++            /**
++             * remove the selection contributed registry.
++             */
++            TabbedPropertyRegistryFactory.getInstance().disposeRegistry(
++                    selectionContributor);
++            selectionContributor = null;
++        }
++    }
++
++    /**
++     * @see org.eclipse.ui.part.IPage#dispose()
++     */
++    public void dispose() {
++
++        disposeContributor();
++
++        if (widgetFactory != null) {
++            widgetFactory.dispose();
++            widgetFactory = null;
++        }
++        /**
++         * Remove the part activation listener.
++         */
++        if (cachedWorkbenchWindow != null) {
++            cachedWorkbenchWindow.getPartService().removePartListener(
++                    partActivationListener);
++            cachedWorkbenchWindow = null;
++        }
++
++        if (registry != null) {
++            TabbedPropertyRegistryFactory.getInstance().disposeRegistry(
++                    contributor);
++            registry = null;
++        }
+ 
+         contributor = null;
+         currentSelection = null;
+-	}
++    }
+ 
+-	/**
+-	 * @see org.eclipse.ui.part.IPage#getControl()
+-	 */
+-	public Control getControl() {
+-		return tabbedPropertyComposite;
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
+-	 */
+-	public void setActionBars(IActionBars actionBars) {
+-		// Override the undo and redo global action handlers
+-		// to use the contributor action handlers
++    /**
++     * @see org.eclipse.ui.part.IPage#getControl()
++     */
++    public Control getControl() {
++        return tabbedPropertyComposite;
++    }
++
++    /**
++     * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
++     */
++    public void setActionBars(IActionBars actionBars) {
++        // Override the undo and redo global action handlers
++        // to use the contributor action handlers
+         IActionBars partActionBars = null;
+-		if (contributor instanceof IEditorPart) {
+-			IEditorPart editorPart = (IEditorPart) contributor;
++        if (contributor instanceof IEditorPart) {
++            IEditorPart editorPart = (IEditorPart) contributor;
+             partActionBars = editorPart.getEditorSite().getActionBars();
+-		} else if (contributor instanceof IViewPart) {
++        } else if (contributor instanceof IViewPart) {
+             IViewPart viewPart = (IViewPart) contributor;
+             partActionBars = viewPart.getViewSite().getActionBars();
+         }
+ 
+         if (partActionBars != null) {
+             IAction action = partActionBars.getGlobalActionHandler(ActionFactory.UNDO
+-                .getId());
++                    .getId());
+             if (action != null) {
+                 actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), action);
+             }
+             action = partActionBars.getGlobalActionHandler(ActionFactory.REDO
+-                .getId());
++                    .getId());
+             if (action != null) {
+                 actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), action);
+             }
+         }
+-	}
++    }
++
++    /**
++     * @see org.eclipse.ui.part.IPage#setFocus()
++     */
++    public void setFocus() {
++        getControl().setFocus();
++    }
++
++    /**
++     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
++     *      org.eclipse.jface.viewers.ISelection)
++     */
++    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
++        setInput(part, selection);
++    }
++
++    /**
++     * Stores the current tab label in the selection queue. Tab labels are used
++     * to carry the tab context from one input object to another. The queue
++     * specifies the selection priority. So if the first tab in the queue is not
++     * available for the input we try the second tab and so on. If none of the
++     * tabs are available we default to the first tab available for the input.
++     */
++    private void storeCurrentTabSelection(String label) {
++        if (!selectionQueueLocked) {
++            selectionQueue.remove(label);
++            selectionQueue.add(0, label);
++        }
++    }
++
++    /**
++     * Resize the scrolled composite enclosing the sections, which may result in the
++     * addition or removal of scroll bars.
++     *
++     * @since 3.5
++     */
++    public void resizeScrolledComposite() {
++        Point currentTabSize = new Point(0, 0);
++        if (currentTab != null) {
++            Composite sizeReference = (Composite) tabToComposite
++                    .get(currentTab);
++            if (sizeReference != null) {
++                currentTabSize = sizeReference.computeSize(SWT.DEFAULT, SWT.DEFAULT);
++            }
++        }
++        tabbedPropertyComposite.getScrolledComposite().setMinSize(
++                currentTabSize);
+ 
+-	/**
+-	 * @see org.eclipse.ui.part.IPage#setFocus()
+-	 */
+-	public void setFocus() {
+-		getControl().setFocus();
+-	}
+-
+-	/**
+-	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+-	 *      org.eclipse.jface.viewers.ISelection)
+-	 */
+-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+-		setInput(part, selection);
+-	}
+-
+-	/**
+-	 * Stores the current tab label in the selection queue. Tab labels are used
+-	 * to carry the tab context from one input object to another. The queue
+-	 * specifies the selection priority. So if the first tab in the queue is not
+-	 * available for the input we try the second tab and so on. If none of the
+-	 * tabs are available we default to the first tab available for the input.
+-	 */
+-	private void storeCurrentTabSelection(String label) {
+-		if (!selectionQueueLocked) {
+-			selectionQueue.remove(label);
+-			selectionQueue.add(0, label);
+-		}
+-	}
+-
+-	/**
+-	 * Resize the scrolled composite enclosing the sections, which may result in the
+-	 * addition or removal of scroll bars.
+-	 *
+-	 * @since 3.5
+-	 */
+-	public void resizeScrolledComposite() {
+-		Point currentTabSize = new Point(0, 0);
+-		if (currentTab != null) {
+-			Composite sizeReference = (Composite) tabToComposite
+-				.get(currentTab);
+-			if (sizeReference != null) {
+-				currentTabSize = sizeReference.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+-			}
+-		}
+-		tabbedPropertyComposite.getScrolledComposite().setMinSize(
+-				currentTabSize);
+-
+-		ScrollBar verticalScrollBar = tabbedPropertyComposite
+-				.getScrolledComposite().getVerticalBar();
+-		if (verticalScrollBar != null) {
+-			Rectangle clientArea = tabbedPropertyComposite
+-					.getScrolledComposite().getClientArea();
+-			int increment = clientArea.height - 5;
+-			verticalScrollBar.setPageIncrement(increment);
+-		}
+-
+-		ScrollBar horizontalScrollBar = tabbedPropertyComposite
+-				.getScrolledComposite().getHorizontalBar();
+-		if (horizontalScrollBar != null) {
+-			Rectangle clientArea = tabbedPropertyComposite
+-					.getScrolledComposite().getClientArea();
+-			int increment = clientArea.width - 5;
+-			horizontalScrollBar.setPageIncrement(increment);
+-		}
+-	}
+-
+-	/**
+-	 * Disposes the TabContents objects passed to this method. If the
+-	 * 'currentTab' is going to be disposed, then the caller should call
+-	 * aboutToBeHidden() on the currentTab and set it to null before calling
+-	 * this method. Also, the caller needs to ensure that descriptorToTab map
+-	 * entries corresponding to the disposed TabContents objects are also
+-	 * removed.
+-	 *
+-	 * @param tabs
+-	 * @since 3.6
+-	 */
+-	protected void disposeTabs(Collection tabs) {
+-		for (Iterator iter = tabs.iterator(); iter.hasNext();) {
+-			TabContents tab = (TabContents) iter.next();
+-			Composite composite = (Composite) tabToComposite.remove(tab);
+-			tab.dispose();
+-			if (composite != null) {
+-				composite.dispose();
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * Returns the last known selected tab for the given input.
+-	 */
+-	private int getLastTabSelection(IWorkbenchPart part, ISelection input) {
+-		ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
+-		if (descriptors.length != 0) {
+-			for (Iterator iter = selectionQueue.iterator(); iter.hasNext();) {
+-				String text = (String) iter.next();
+-				for (int i = 0; i < descriptors.length; i++) {
+-					if (text.equals(descriptors[i].getLabel())) {
+-						return i;
+-					}
+-				}
+-			}
+-		}
+-		return 0;
+-	}
+-
+-	/**
+-	 * Update the current tabs to represent the given input object. When tabs
+-	 * apply for both the old and new input they are reused otherwise they are
+-	 * disposed. If the current visible tab will not be reused (i.e. will be
+-	 * disposed) we have to send it an aboutToBeHidden() message.
+-	 * @since 3.4
+-	 */
+-	protected void updateTabs(ITabDescriptor[] descriptors) {
+-		Map newTabs = new HashMap(descriptors.length * 2);
+-		boolean disposingCurrentTab = (currentTab != null);
+-		for (ITabDescriptor descriptor : descriptors) {
+-			TabContents tab = (TabContents) descriptorToTab
+-					.remove(descriptor);
+-
+-			if (tab != null && tab.controlsHaveBeenCreated()) {
+-				if (tab == currentTab) {
+-					disposingCurrentTab = false;
+-				}
+-			} else {
+-				tab = createTab(descriptor);
+-			}
+-
+-			newTabs.put(descriptor, tab);
+-		}
+-		if (disposingCurrentTab) {
+-			/**
+-			 * If the current tab is about to be disposed we have to call
+-			 * aboutToBeHidden
+-			 */
+-			currentTab.aboutToBeHidden();
+-			currentTab = null;
+-		}
+-		disposeTabs(descriptorToTab.values());
+-		descriptorToTab = newTabs;
+-	}
+-
+-	/**
+-	 * Create the tab contents for the provided tab descriptor.
+-	 *
+-	 * @param tabDescriptor
+-	 *            the tab descriptor.
+-	 * @return the tab contents.
+-	 * @since 3.4
+-	 */
+-	protected TabContents createTab(ITabDescriptor tabDescriptor) {
+-		return tabDescriptor.createTab();
+-	}
+-
+-	/**
+-	 * Helper method for creating property tab composites.
+-	 *
+-	 * @return the property tab composite.
+-	 */
+-	private Composite createTabComposite() {
+-		Composite result = widgetFactory.createComposite(
+-			tabbedPropertyComposite.getTabComposite(), SWT.NO_FOCUS);
+-		result.setVisible(false);
+-		result.setLayout(new FillLayout());
+-		FormData data = new FormData();
+-		if (hasTitleBar) {
+-			data.top = new FormAttachment(tabbedPropertyComposite.getTitle(), 0);
+-		} else {
+-			data.top = new FormAttachment(0, 0);
+-		}
+-		data.bottom = new FormAttachment(100, 0);
+-		data.left = new FormAttachment(0, 0);
+-		data.right = new FormAttachment(100, 0);
+-		result.setLayoutData(data);
+-		return result;
+-	}
+-
+-	private void setInput(IWorkbenchPart part, ISelection selection) {
+-		if (selection.equals(currentSelection)) {
+-			return;
+-		}
+-
+-		this.currentSelection = selection;
+-
+-		// see if the selection provides a new contributor
+-		validateRegistry(selection);
+-		ITabDescriptor[] descriptors = registry.getTabDescriptors(part,
+-				currentSelection);
+-		// If there are no descriptors for the given input we do not need to
+-		// touch the tab objects. We might reuse them for the next valid
+-		// input.
+-		if (descriptors.length > 0) {
+-			updateTabs(descriptors);
+-		}
+-		// update tabs list
+-		tabbedPropertyViewer.setInput(part, currentSelection);
+-		int lastTabSelectionIndex = getLastTabSelection(part, currentSelection);
+-		Object selectedTab = tabbedPropertyViewer
+-			.getElementAt(lastTabSelectionIndex);
+-		selectionQueueLocked = true;
+-		try {
+-			if (selectedTab == null) {
+-				tabbedPropertyViewer.setSelection(null);
+-			} else {
+-				tabbedPropertyViewer.setSelection(new StructuredSelection(
+-					selectedTab));
+-			}
+-		} finally {
+-			selectionQueueLocked = false;
+-		}
+-		refreshTitleBar();
+-	}
+-
+-	/**
+-	 * Refresh the currently active tab.
+-	 */
+-	public void refresh() {
+-		currentTab.refresh();
+-	}
+-
+-	/**
+-	 * Get the currently active tab.
+-	 *
+-	 * @return the currently active tab.
+-	 * @since 3.4
+-	 */
+-	public TabContents getCurrentTab() {
+-		return currentTab;
+-	}
+-
+-	/**
+-	 * Handle the tab selected change event.
+-	 *
+-	 * @param tabDescriptor
+-	 *            the new selected tab.
+-	 */
+-	private void handleTabSelection(ITabDescriptor tabDescriptor) {
+-		if (selectionQueueLocked) {
+-			/*
+-			 * don't send tab selection events for non user changes.
+-			 */
+-			return;
+-		}
+-		for (Iterator i = tabSelectionListeners.iterator(); i.hasNext();) {
+-			ITabSelectionListener listener = (ITabSelectionListener) i.next();
+-			listener.tabSelected(tabDescriptor);
+-		}
+-	}
+-
+-	/**
+-	 * Add a tab selection listener.
+-	 *
+-	 * @param listener
+-	 *            a tab selection listener.
+-	 */
+-	public void addTabSelectionListener(ITabSelectionListener listener) {
+-		tabSelectionListeners.add(listener);
+-	}
+-
+-	/**
+-	 * Remove a tab selection listener.
+-	 *
+-	 * @param listener
+-	 *            a tab selection listener.
+-	 */
+-	public void removeTabSelectionListener(ITabSelectionListener listener) {
+-		tabSelectionListeners.remove(listener);
+-	}
+-
+-	/**
+-	 * Override the tabs with a new set of tabs. The tab list is obtained from
+-	 * the {@link AbstractOverridableTabListPropertySection} by the
+-	 * {@link IOverridableTabListContentProvider}.
+-	 * @since 3.4
+-	 */
+-	public void overrideTabs() {
+-		if (tabListContentProvider instanceof IOverridableTabListContentProvider) {
+-			IOverridableTabListContentProvider overridableTabListContentProvider = (IOverridableTabListContentProvider) tabListContentProvider;
+-			overridableTabListContentProvider.overrideTabs();
+-		}
+-	}
+-
+-	/**
+-	 * Get the widget factory.
+-	 *
+-	 * @return the widget factory.
+-	 */
+-	public TabbedPropertySheetWidgetFactory getWidgetFactory() {
+-		return widgetFactory;
+-	}
+-
+-	/**
+-	 * Update the title bar of the contributor has a label provider.
+-	 */
+-	private void refreshTitleBar() {
+-		if (hasTitleBar) {
+-			TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
+-			if (currentTab == null) {
+-				/**
+-				 * No tabs are shown so hide the title bar, otherwise you see
+-				 * "No properties available" and a title bar for the selection.
+-				 */
+-				title.setTitle(null, null);
+-			} else {
+-				String text = registry.getLabelProvider().getText(
+-					currentSelection);
+-				Image image = registry.getLabelProvider().getImage(
+-					currentSelection);
+-				title.setTitle(text, image);
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
+-	 */
+-	public void labelProviderChanged(LabelProviderChangedEvent event) {
+-		refreshTitleBar();
+-	}
++        ScrollBar verticalScrollBar = tabbedPropertyComposite
++                .getScrolledComposite().getVerticalBar();
++        if (verticalScrollBar != null) {
++            Rectangle clientArea = tabbedPropertyComposite
++                    .getScrolledComposite().getClientArea();
++            int increment = clientArea.height - 5;
++            verticalScrollBar.setPageIncrement(increment);
++        }
++
++        ScrollBar horizontalScrollBar = tabbedPropertyComposite
++                .getScrolledComposite().getHorizontalBar();
++        if (horizontalScrollBar != null) {
++            Rectangle clientArea = tabbedPropertyComposite
++                    .getScrolledComposite().getClientArea();
++            int increment = clientArea.width - 5;
++            horizontalScrollBar.setPageIncrement(increment);
++        }
++    }
++
++    /**
++     * Disposes the TabContents objects passed to this method. If the
++     * 'currentTab' is going to be disposed, then the caller should call
++     * aboutToBeHidden() on the currentTab and set it to null before calling
++     * this method. Also, the caller needs to ensure that descriptorToTab map
++     * entries corresponding to the disposed TabContents objects are also
++     * removed.
++     *
++     * @param tabs
++     * @since 3.6
++     */
++    protected void disposeTabs(Collection tabs) {
++        for (Iterator iter = tabs.iterator(); iter.hasNext();) {
++            TabContents tab = (TabContents) iter.next();
++            Composite composite = (Composite) tabToComposite.remove(tab);
++            tab.dispose();
++            if (composite != null) {
++                composite.dispose();
++            }
++        }
++    }
++
++    /**
++     * Returns the last known selected tab for the given input.
++     */
++    protected int getLastTabSelection(IWorkbenchPart part, ISelection input) {
++        ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
++        if (descriptors.length != 0) {
++            for (Iterator iter = selectionQueue.iterator(); iter.hasNext();) {
++                String text = (String) iter.next();
++                for (int i = 0; i < descriptors.length; i++) {
++                    if (text.equals(descriptors[i].getLabel())) {
++                        return i;
++                    }
++                }
++            }
++        }
++        return 0;
++    }
++
++    /**
++     * Update the current tabs to represent the given input object. When tabs
++     * apply for both the old and new input they are reused otherwise they are
++     * disposed. If the current visible tab will not be reused (i.e. will be
++     * disposed) we have to send it an aboutToBeHidden() message.
++     * 
++     * @since 3.4
++     */
++    protected void updateTabs(ITabDescriptor[] descriptors) {
++        Map newTabs = new HashMap(descriptors.length * 2);
++        boolean disposingCurrentTab = (currentTab != null);
++        for (ITabDescriptor descriptor : descriptors) {
++            TabContents tab = (TabContents) descriptorToTab
++                    .remove(descriptor);
++
++            if (tab != null && tab.controlsHaveBeenCreated()) {
++                if (tab == currentTab) {
++                    disposingCurrentTab = false;
++                }
++            } else {
++                tab = createTab(descriptor);
++            }
++
++            newTabs.put(descriptor, tab);
++        }
++        if (disposingCurrentTab) {
++            /**
++             * If the current tab is about to be disposed we have to call
++             * aboutToBeHidden
++             */
++            currentTab.aboutToBeHidden();
++            currentTab = null;
++        }
++        disposeTabs(descriptorToTab.values());
++        descriptorToTab = newTabs;
++    }
++
++    /**
++     * Create the tab contents for the provided tab descriptor.
++     *
++     * @param tabDescriptor
++     *        the tab descriptor.
++     * @return the tab contents.
++     * @since 3.4
++     */
++    protected TabContents createTab(ITabDescriptor tabDescriptor) {
++        return tabDescriptor.createTab();
++    }
++
++    /**
++     * Helper method for creating property tab composites.
++     *
++     * @return the property tab composite.
++     */
++    private Composite createTabComposite() {
++        Composite result = widgetFactory.createComposite(
++                tabbedPropertyComposite.getTabComposite(), SWT.NO_FOCUS);
++        result.setVisible(false);
++        result.setLayout(new FillLayout());
++        FormData data = new FormData();
++        if (hasTitleBar) {
++            data.top = new FormAttachment(tabbedPropertyComposite.getTitle(), 0);
++        } else {
++            data.top = new FormAttachment(0, 0);
++        }
++        data.bottom = new FormAttachment(100, 0);
++        data.left = new FormAttachment(0, 0);
++        data.right = new FormAttachment(100, 0);
++        result.setLayoutData(data);
++        return result;
++    }
++
++    protected void setInput(IWorkbenchPart part, ISelection selection) {
++        if (selection.equals(currentSelection)) {
++            return;
++        }
++
++        this.currentSelection = selection;
++
++        // see if the selection provides a new contributor
++        validateRegistry(selection);
++        ITabDescriptor[] descriptors = registry.getTabDescriptors(part,
++                currentSelection);
++        // If there are no descriptors for the given input we do not need to
++        // touch the tab objects. We might reuse them for the next valid
++        // input.
++        if (descriptors.length > 0) {
++            updateTabs(descriptors);
++        }
++        // update tabs list
++        tabbedPropertyViewer.setInput(part, currentSelection);
++        int lastTabSelectionIndex = getLastTabSelection(part, currentSelection);
++        Object selectedTab = tabbedPropertyViewer
++                .getElementAt(lastTabSelectionIndex);
++        selectionQueueLocked = true;
++        try {
++            if (selectedTab == null) {
++                tabbedPropertyViewer.setSelection(null);
++            } else {
++                tabbedPropertyViewer.setSelection(new StructuredSelection(
++                        selectedTab));
++            }
++        } finally {
++            selectionQueueLocked = false;
++        }
++        refreshTitleBar();
++    }
++
++    /**
++     * Refresh the currently active tab.
++     */
++    public void refresh() {
++        currentTab.refresh();
++    }
++
++    /**
++     * Get the currently active tab.
++     *
++     * @return the currently active tab.
++     * @since 3.4
++     */
++    public TabContents getCurrentTab() {
++        return currentTab;
++    }
++
++    /**
++     * Handle the tab selected change event.
++     *
++     * @param tabDescriptor
++     *        the new selected tab.
++     */
++    private void handleTabSelection(ITabDescriptor tabDescriptor) {
++        if (selectionQueueLocked) {
++            /*
++             * don't send tab selection events for non user changes.
++             */
++            return;
++        }
++        for (Iterator i = tabSelectionListeners.iterator(); i.hasNext();) {
++            ITabSelectionListener listener = (ITabSelectionListener) i.next();
++            listener.tabSelected(tabDescriptor);
++        }
++    }
++
++    /**
++     * Add a tab selection listener.
++     *
++     * @param listener
++     *        a tab selection listener.
++     */
++    public void addTabSelectionListener(ITabSelectionListener listener) {
++        tabSelectionListeners.add(listener);
++    }
++
++    /**
++     * Remove a tab selection listener.
++     *
++     * @param listener
++     *        a tab selection listener.
++     */
++    public void removeTabSelectionListener(ITabSelectionListener listener) {
++        tabSelectionListeners.remove(listener);
++    }
++
++    /**
++     * Override the tabs with a new set of tabs. The tab list is obtained from
++     * the {@link AbstractOverridableTabListPropertySection} by the
++     * {@link IOverridableTabListContentProvider}.
++     * 
++     * @since 3.4
++     */
++    public void overrideTabs() {
++        if (tabListContentProvider instanceof IOverridableTabListContentProvider) {
++            IOverridableTabListContentProvider overridableTabListContentProvider = (IOverridableTabListContentProvider) tabListContentProvider;
++            overridableTabListContentProvider.overrideTabs();
++        }
++    }
++
++    /**
++     * Get the widget factory.
++     *
++     * @return the widget factory.
++     */
++    public TabbedPropertySheetWidgetFactory getWidgetFactory() {
++        return widgetFactory;
++    }
++
++    /**
++     * Update the title bar of the contributor has a label provider.
++     */
++    protected void refreshTitleBar() {
++        if (hasTitleBar) {
++            TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
++            if (currentTab == null) {
++                /**
++                 * No tabs are shown so hide the title bar, otherwise you see
++                 * "No properties available" and a title bar for the selection.
++                 */
++                title.setTitle(null, null);
++            } else {
++                String text = registry.getLabelProvider().getText(
++                        currentSelection);
++                Image image = registry.getLabelProvider().getImage(
++                        currentSelection);
++                title.setTitle(text, image);
++            }
++        }
++    }
++
++    /**
++     * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
++     */
++    public void labelProviderChanged(LabelProviderChangedEvent event) {
++        refreshTitleBar();
++    }
+ 
+     /**
+      * Retrieve the contributor from the selection.
+      *
+      * @param object -
+-     *            the selected element
++     *        the selected element
+      * @return the TabbedPropertySheetPageContributor or null if not applicable
+      */
+-	private ITabbedPropertySheetPageContributor getTabbedPropertySheetPageContributor(Object object) {
+-		return (ITabbedPropertySheetPageContributor) Adapters.adapt(object, ITabbedPropertySheetPageContributor.class);
+-	}
+-
+-	/**
+-	 * The workbench part creates this instance of the TabbedPropertySheetPage
+-	 * and implements ITabbedPropertySheetPageContributor which is unique
+-	 * contributor id. This unique contributor id is used to load a registry
+-	 * with the extension point This id matches the registry.
+-	 * <p>
+-	 * It is possible for elements in a selection to implement
+-	 * ITabbedPropertySheetPageContributor to provide a different contributor id
+-	 * and thus a differenent registry.
+-	 *
+-	 * @param selection
+-	 *            the current selection in the active workbench part.
+-	 */
+-	private void validateRegistry(ISelection selection) {
+-		if (selection == null) {
+-			return;
+-		}
+-
+-		if (!(selection instanceof IStructuredSelection)) {
+-			return;
+-		}
+-
+-		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+-		if (structuredSelection.size() == 0) {
+-			return;
+-		}
+-
+-        ITabbedPropertySheetPageContributor newContributor = getTabbedPropertySheetPageContributor(structuredSelection.getFirstElement());
+-
+-		if (newContributor == null) {
+-			/**
+-			 * selection does not implement or adapt ITabbedPropertySheetPageContributor.
+-			 */
+-			newContributor = contributor;
+-		}
++    private ITabbedPropertySheetPageContributor getTabbedPropertySheetPageContributor(Object object) {
++        return (ITabbedPropertySheetPageContributor) Adapters.adapt(object, ITabbedPropertySheetPageContributor.class);
++    }
++
++    /**
++     * The workbench part creates this instance of the TabbedPropertySheetPage
++     * and implements ITabbedPropertySheetPageContributor which is unique
++     * contributor id. This unique contributor id is used to load a registry
++     * with the extension point This id matches the registry.
++     * <p>
++     * It is possible for elements in a selection to implement
++     * ITabbedPropertySheetPageContributor to provide a different contributor id
++     * and thus a differenent registry.
++     *
++     * @param selection
++     *        the current selection in the active workbench part.
++     */
++    protected void validateRegistry(ISelection selection) {
++        if (selection == null) {
++            return;
++        }
++
++        if (!(selection instanceof IStructuredSelection)) {
++            return;
++        }
++
++        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
++        if (structuredSelection.size() == 0) {
++            return;
++        }
++
++        ITabbedPropertySheetPageContributor newContributor = getTabbedPropertySheetPageContributor(
++                structuredSelection.getFirstElement());
++
++        if (newContributor == null) {
++            /**
++             * selection does not implement or adapt ITabbedPropertySheetPageContributor.
++             */
++            newContributor = contributor;
++        }
+ 
+         String selectionContributorId = newContributor.getContributorId();
+-		if (selectionContributorId.equals(currentContributorId)) {
+-			/**
+-			 * selection has the same contributor id as current, so leave
+-			 * existing registry.
+-			 */
+-			return;
+-		}
+-
+-		/**
+-		 * Selection implements ITabbedPropertySheetPageContributor different
+-		 * than current contributor id, so make sure all elements implement the
+-		 * new id. If all contributor id do not match, then fall back to default
+-		 * contributor from the workbench part.
+-		 */
+-		Iterator i = structuredSelection.iterator();
++        if (selectionContributorId.equals(currentContributorId)) {
++            /**
++             * selection has the same contributor id as current, so leave
++             * existing registry.
++             */
++            return;
++        }
++
++        /**
++         * Selection implements ITabbedPropertySheetPageContributor different
++         * than current contributor id, so make sure all elements implement the
++         * new id. If all contributor id do not match, then fall back to default
++         * contributor from the workbench part.
++         */
++        Iterator i = structuredSelection.iterator();
+         i.next();
+-		while (i.hasNext()) {
++        while (i.hasNext()) {
+             newContributor = getTabbedPropertySheetPageContributor(i.next());
+-			if (newContributor == null || !newContributor.getContributorId().equals(selectionContributorId)) {
+-				/**
+-				 * fall back to use the default contributor id from the
+-				 * workbench part.
+-				 */
+-				if (selectionContributor != null) {
+-					disposeContributor();
+-					currentContributorId = contributor.getContributorId();
+-					initContributor(currentContributorId);
+-				}
+-				return;
+-			}
+-		}
+-
+-		/**
+-		 * All the elements in the selection implement a new contributor id, so
+-		 * use that id.
+-		 */
+-		disposeContributor();
+-		currentContributorId = selectionContributorId;
+-		initContributor(currentContributorId);
++            if (newContributor == null || !newContributor.getContributorId().equals(selectionContributorId)) {
++                /**
++                 * fall back to use the default contributor id from the
++                 * workbench part.
++                 */
++                if (selectionContributor != null) {
++                    disposeContributor();
++                    currentContributorId = contributor.getContributorId();
++                    initContributor(currentContributorId);
++                }
++                return;
++            }
++        }
++
++        /**
++         * All the elements in the selection implement a new contributor id, so
++         * use that id.
++         */
++        disposeContributor();
++        currentContributorId = selectionContributorId;
++        initContributor(currentContributorId);
+         overrideActionBars();
+-	}
++    }
+ 
+     /**
+      * Override the action bars for the selection based contributor.
+      */
+     private void overrideActionBars() {
+-        if (registry.getActionProvider() != null ) {
++        if (registry.getActionProvider() != null) {
+             IActionProvider actionProvider = registry.getActionProvider();
+             actionProvider.setActionBars(contributor, getSite().getActionBars());
+         }
+     }
+ 
+-	/**
+-	 * Returns the currently selected tab.
+-	 *
+-	 * @return the currently selected tab or <code>null</code> if there is no
+-	 *         tab selected.
+-	 * @since 3.5
+-	 */
+-	public ITabDescriptor getSelectedTab() {
+-		int selectedTab = tabbedPropertyViewer.getSelectionIndex();
+-		if (selectedTab != -1) {
+-			Object object = tabbedPropertyViewer.getElementAt(selectedTab);
+-			if (object instanceof ITabDescriptor) {
+-				return (ITabDescriptor) object;
+-			}
+-		}
+-		return null;
+-	}
+-
+-	/**
+-	 * Returns the list of currently active tabs.
+-	 *
+-	 * @return the currently active tabs.
+-	 * @since 3.5
+-	 */
+-	public ITabDescriptor[] getActiveTabs() {
+-		List elements = tabbedPropertyViewer.getElements();
+-		if (elements != null && elements.size() > 0) {
+-			ITabDescriptor[] tabDescriptors = (ITabDescriptor[]) elements
+-					.toArray(new ITabDescriptor[0]);
+-			return tabDescriptors;
+-		}
+-		return new ITabDescriptor[] {};
+-	}
+-
+-	/**
+-	 * Set the currently selected tab to be that of the provided tab id.
+-	 *
+-	 * @param id
+-	 *            The string id of the tab to select.
+-	 * @since 3.5
+-	 */
+-	public void setSelectedTab(String id) {
+-		List elements = tabbedPropertyViewer.getElements();
+-		if (elements != null && elements.size() > 0) {
+-			for (Iterator i = elements.iterator(); i.hasNext();) {
+-				ITabDescriptor tabDescriptor = (ITabDescriptor) i.next();
+-				if (tabDescriptor.getId() != null &&
+-						tabDescriptor.getId().equals(id)) {
+-					tabbedPropertyViewer.setSelection(new StructuredSelection(
+-							tabDescriptor), true);
+-				}
+-			}
+-		}
+-	}
++    /**
++     * Returns the currently selected tab.
++     *
++     * @return the currently selected tab or <code>null</code> if there is no
++     *         tab selected.
++     * @since 3.5
++     */
++    public ITabDescriptor getSelectedTab() {
++        int selectedTab = tabbedPropertyViewer.getSelectionIndex();
++        if (selectedTab != -1) {
++            Object object = tabbedPropertyViewer.getElementAt(selectedTab);
++            if (object instanceof ITabDescriptor) {
++                return (ITabDescriptor) object;
++            }
++        }
++        return null;
++    }
++
++    /**
++     * Returns the list of currently active tabs.
++     *
++     * @return the currently active tabs.
++     * @since 3.5
++     */
++    public ITabDescriptor[] getActiveTabs() {
++        List elements = tabbedPropertyViewer.getElements();
++        if (elements != null && elements.size() > 0) {
++            ITabDescriptor[] tabDescriptors = (ITabDescriptor[]) elements
++                    .toArray(new ITabDescriptor[0]);
++            return tabDescriptors;
++        }
++        return new ITabDescriptor[] {};
++    }
++
++    /**
++     * Set the currently selected tab to be that of the provided tab id.
++     *
++     * @param id
++     *        The string id of the tab to select.
++     * @since 3.5
++     */
++    public void setSelectedTab(String id) {
++        List elements = tabbedPropertyViewer.getElements();
++        if (elements != null && elements.size() > 0) {
++            for (Iterator i = elements.iterator(); i.hasNext();) {
++                ITabDescriptor tabDescriptor = (ITabDescriptor) i.next();
++                if (tabDescriptor.getId() != null &&
++                        tabDescriptor.getId().equals(id)) {
++                    tabbedPropertyViewer.setSelection(new StructuredSelection(
++                            tabDescriptor), true);
++                }
++            }
++        }
++    }
+ 
+-	/**
++    /**
+      * Returns text of the properties title for given selection. If selection is null,
+      * then currentSelection is used
+      *
+-	 * @param selection Selection whose properties title text is to be returned
++     * @param selection Selection whose properties title text is to be returned
+      * @return String representing title text.
+-	 * @since 3.5
++     * @since 3.5
+      */
+     public String getTitleText(ISelection selection) {
+-    	if (selection == null) {
+-    		selection = currentSelection;
+-    	}
+-    	return registry.getLabelProvider().getText(selection);
++        if (selection == null) {
++            selection = currentSelection;
++        }
++        return registry.getLabelProvider().getText(selection);
+     }
+ 
+     /**
+@@ -1039,62 +1042,62 @@
+      * @since 3.5
+      */
+     public Image getTitleImage(ISelection selection) {
+-    	if (selection == null) {
+-    		selection = currentSelection;
+-    	}
+-		return registry.getLabelProvider().getImage(selection);
+-    }
+-
+-	/**
+-	 * Returns the TabContents object corresponding to the given tab-descriptor.
+-	 *
+-	 * @param tabDescriptor
+-	 *            tab-descriptor whose TabContents object is to be returned
+-	 * @return TabContents object corresponding to the given tab-descriptor key
+-	 *         in descriptorToTab map, or null if the key does not exist in the
+-	 *         map
+-	 * @since 3.6
+-	 */
+-	protected TabContents getTabContents(ITabDescriptor tabDescriptor) {
+-		TabContents tabContents = null;
+-		if (this.descriptorToTab.containsKey(tabDescriptor)) {
+-			tabContents = (TabContents) this.descriptorToTab.get(tabDescriptor);
+-		}
+-		return tabContents;
+-	}
+-
+-	/**
+-	 * Get the current selection-contributor if any
+-	 *
+-	 * @return The selection-contributor, or null.
+-	 * @since 3.6
+-	 */
+-	protected ITabbedPropertySheetPageContributor getSelectionContributor() {
+-		return this.selectionContributor;
+-	}
+-
+-	/**
+-	 * Get the currently active contributor id. It may not match the contributor
+-	 * id from the workbench part that created this instance because if all the
+-	 * elements in a structured selection implement
+-	 * ITabbedPropertySheetPageContributor and they all return the same unique
+-	 * contributor ID, then tabs and sections associated with that contributor
+-	 * ID are used by the tabbed property view for that selection.
+-	 *
+-	 * @return contributor id
+-	 * @since 3.6
+-	 */
+-	protected String getCurrentContributorId() {
+-		return this.currentContributorId;
+-	}
+-
+-	/**
+-	 * Get the current selection
+-	 *
+-	 * @return selection
+-	 * @since 3.6
+-	 */
+-	protected ISelection getCurrentSelection() {
+-		return this.currentSelection;
+-	}
+-}
+\ Pas de fin de ligne à la fin du fichier
++        if (selection == null) {
++            selection = currentSelection;
++        }
++        return registry.getLabelProvider().getImage(selection);
++    }
++
++    /**
++     * Returns the TabContents object corresponding to the given tab-descriptor.
++     *
++     * @param tabDescriptor
++     *        tab-descriptor whose TabContents object is to be returned
++     * @return TabContents object corresponding to the given tab-descriptor key
++     *         in descriptorToTab map, or null if the key does not exist in the
++     *         map
++     * @since 3.6
++     */
++    protected TabContents getTabContents(ITabDescriptor tabDescriptor) {
++        TabContents tabContents = null;
++        if (this.descriptorToTab.containsKey(tabDescriptor)) {
++            tabContents = (TabContents) this.descriptorToTab.get(tabDescriptor);
++        }
++        return tabContents;
++    }
++
++    /**
++     * Get the current selection-contributor if any
++     *
++     * @return The selection-contributor, or null.
++     * @since 3.6
++     */
++    protected ITabbedPropertySheetPageContributor getSelectionContributor() {
++        return this.selectionContributor;
++    }
++
++    /**
++     * Get the currently active contributor id. It may not match the contributor
++     * id from the workbench part that created this instance because if all the
++     * elements in a structured selection implement
++     * ITabbedPropertySheetPageContributor and they all return the same unique
++     * contributor ID, then tabs and sections associated with that contributor
++     * ID are used by the tabbed property view for that selection.
++     *
++     * @return contributor id
++     * @since 3.6
++     */
++    protected String getCurrentContributorId() {
++        return this.currentContributorId;
++    }
++
++    /**
++     * Get the current selection
++     *
++     * @return selection
++     * @since 3.6
++     */
++    protected ISelection getCurrentSelection() {
++        return this.currentSelection;
++    }
++}

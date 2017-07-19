@@ -23,6 +23,7 @@ import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * @author Romain Bioteau
@@ -49,12 +50,13 @@ public class BotOpenDiagramDialog extends BotDialog {
     }
 
     public BotOpenDiagramDialog delete() {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.button(org.bonitasoft.studio.diagram.custom.i18n.Messages.removeProcessLabel).click();
         bot.waitUntil(
                 Conditions.shellIsActive(org.bonitasoft.studio.diagram.custom.i18n.Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(getDialogTitle()));
-        bot.activeShell().setFocus();
+        activeShell.setFocus();
         return this;
     }
 

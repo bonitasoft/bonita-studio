@@ -126,4 +126,5 @@ public class WebFormBOSArchiveFileStoreProviderTest {
                 .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withName("processForm").withContent("invalid-process-form-id")))
                 .build();
     }
+
 }
