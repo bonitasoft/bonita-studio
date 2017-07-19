@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.edapt.common.ResourceUtils;
+import org.eclipse.emf.edapt.internal.common.ResourceUtils;
 import org.eclipse.emf.edapt.spi.history.History;
 
 /**

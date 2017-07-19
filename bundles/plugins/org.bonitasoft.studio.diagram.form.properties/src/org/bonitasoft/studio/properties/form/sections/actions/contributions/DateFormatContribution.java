@@ -39,7 +39,6 @@ public class DateFormatContribution implements IExtensibleGridPropertySectionCon
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
             ExtensibleGridPropertySection extensibleGridPropertySection) {
 
-
         GridLayout layout = new GridLayout(1, false);
 
         layout.marginHeight = InitialValueContribution.MARGIN_HEIGHT;
@@ -56,39 +55,42 @@ public class DateFormatContribution implements IExtensibleGridPropertySectionCon
         combo.add(Messages.Widget_Date_Format4);
         combo.add(Messages.Widget_Date_Format5);
 
-        final ControlDecoration hint = new ControlDecoration(combo, SWT.LEFT) ;
-        hint.setImage(Pics.getImage(PicsConstants.hint)) ;
-        hint.setMarginWidth(3) ;
-        hint.setDescriptionText(Messages.Widget_DisplayDateFormat_tooltip) ;
+        final ControlDecoration hint = new ControlDecoration(combo, SWT.LEFT);
+        hint.setImage(Pics.getImage(PicsConstants.hint));
+        hint.setMarginWidth(3);
+        hint.setDescriptionText(Messages.Widget_DisplayDateFormat_tooltip);
         bindWidgets();
 
     }
 
     private void bindWidgets() {
-        if(dataBindingContext != null){
+        if (dataBindingContext != null) {
             dataBindingContext.dispose();
         }
         dataBindingContext = new EMFDataBindingContext();
-        UpdateValueStrategy comboToFormat = new UpdateValueStrategy().setConverter(new Converter(String.class,String.class) {
+        UpdateValueStrategy comboToFormat = new UpdateValueStrategy()
+                .setConverter(new Converter(String.class, String.class) {
 
-            public Object convert(Object fromObject) {
-                return getComboText((String) fromObject);
-            }
-        });
-        UpdateValueStrategy formatToCombo = new UpdateValueStrategy().setConverter(new Converter(String.class,String.class) {
+                    public Object convert(Object fromObject) {
+                        return getComboText((String) fromObject);
+                    }
+                });
+        UpdateValueStrategy formatToCombo = new UpdateValueStrategy()
+                .setConverter(new Converter(String.class, String.class) {
 
-            public Object convert(Object fromObject) {
-                return setComboText((String) fromObject);
-            }
-        });
+                    public Object convert(Object fromObject) {
+                        return setComboText((String) fromObject);
+                    }
+                });
         dataBindingContext.bindValue(SWTObservables.observeText(combo),
-                EMFEditObservables.observeValue(editingDomain, dateFormField, FormPackage.Literals.DATE_FORM_FIELD__DISPLAY_FORMAT),
+                EMFEditObservables.observeValue(editingDomain, dateFormField,
+                        FormPackage.Literals.DATE_FORM_FIELD__DISPLAY_FORMAT),
                 comboToFormat,
                 formatToCombo);
     }
 
     public void dispose() {
-        if(dataBindingContext!=null) {
+        if (dataBindingContext != null) {
             dataBindingContext.dispose();
         }
     }
@@ -118,30 +120,31 @@ public class DateFormatContribution implements IExtensibleGridPropertySectionCon
     }
 
     private String getComboText(String format) {
-        if (format.equals(Messages.Widget_Date_Format1)) {
+        if (Messages.Widget_Date_Format1.equals(format)) {
             return format1;
-        } else if (format.equals(Messages.Widget_Date_Format2)) {
+        } else if (Messages.Widget_Date_Format2.equals(format)) {
             return format2;
-        } else if (format.equals(Messages.Widget_Date_Format3)) {
+        } else if (Messages.Widget_Date_Format3.equals(format)) {
             return format3;
-        } else if (format.equals(Messages.Widget_Date_Format4)) {
+        } else if (Messages.Widget_Date_Format4.equals(format)) {
             return format4;
-        } else if (format.equals(Messages.Widget_Date_Format5)) {
+        } else if (Messages.Widget_Date_Format5.equals(format)) {
             return format5;
         } else {
             return format;
         }
     }
+
     private String setComboText(String displayFormat) {
-        if (displayFormat.equals(format1)) {
+        if (format1.equals(displayFormat)) {
             return Messages.Widget_Date_Format1;
-        } else if (displayFormat.equals(format2)) {
+        } else if (format2.equals(displayFormat)) {
             return Messages.Widget_Date_Format2;
-        } else if (displayFormat.equals(format3)) {
+        } else if (format3.equals(displayFormat)) {
             return Messages.Widget_Date_Format3;
-        } else if (displayFormat.equals(format4)) {
+        } else if (format4.equals(displayFormat)) {
             return Messages.Widget_Date_Format4;
-        } else if (displayFormat.equals(format5)) {
+        } else if (format5.equals(displayFormat)) {
             return Messages.Widget_Date_Format5;
         } else {
             return displayFormat;

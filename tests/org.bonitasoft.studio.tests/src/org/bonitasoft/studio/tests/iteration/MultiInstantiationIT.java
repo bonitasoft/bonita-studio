@@ -34,6 +34,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.diagram.application.BotApplicationDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
@@ -211,10 +212,12 @@ public class MultiInstantiationIT implements SWTBotConstants {
         botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("0").ok();
         addDataBot.finish();
+        drawDiagram.selectElement("Step1");
 
-        final BotPageflowPropertySection botPageflowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart()
-                .selectApplicationTab()
-                .selectPageflowTab();
+        BotApplicationDiagramPropertiesView selectApplicationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
+                .selectApplicationTab();
+        drawDiagram.selectElement("Step1");
+        BotPageflowPropertySection botPageflowPropertySection = selectApplicationTab.selectPageflowTab();
         final BotAddFormWizardDialog botDialog = botPageflowPropertySection.addForm();
         if (botDialog.canFlipToNextPage()) {
             botDialog.next();
@@ -332,14 +335,14 @@ public class MultiInstantiationIT implements SWTBotConstants {
         BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
                 .selectPoolDataTab()
                 .addData();
-        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object")
+        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object")
                 .setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript")
                 .setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
                 .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
-        addDataBot.setName("vip2").setType("Java Object").setClassname("java.util.List")
+        botExpressionEditorDialog = addDataBot.setName("vip2").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"A\",\"B\",\"C\",\"D\"]").ok();
         addDataBot.finish();
@@ -454,7 +457,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 .setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
                 .setReturnType("java.util.List").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
-        addDataBot.setName("alreadyVip").setType("Java Object").setClassname("java.util.List")
+        botExpressionEditorDialog = addDataBot.setName("alreadyVip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[null]")
                 .setReturnType("java.util.List").ok();

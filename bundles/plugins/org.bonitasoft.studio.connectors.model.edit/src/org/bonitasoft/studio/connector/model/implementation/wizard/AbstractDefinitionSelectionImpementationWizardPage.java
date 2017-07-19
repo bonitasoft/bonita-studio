@@ -28,12 +28,9 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
@@ -232,16 +229,6 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                 return null;
             }
 
-        });
-        defIdStrategy.setBeforeSetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                //				if(value == null || value.toString().isEmpty()){
-                //					return ValidationStatus.error(Messages.missingDefinition) ;
-                //				}
-                return Status.OK_STATUS;
-            }
         });
 
         defModelStrategy = new UpdateValueStrategy();

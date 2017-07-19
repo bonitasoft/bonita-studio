@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.migration.migrator;
 
@@ -23,13 +21,13 @@ import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.history.reconstruction.EcoreForwardReconstructor;
-import org.eclipse.emf.edapt.internal.migration.MaterializingBackwardConverter;
-import org.eclipse.emf.edapt.internal.migration.Persistency;
+import org.eclipse.emf.edapt.internal.common.ResourceUtils;
 import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.internal.migration.execution.WrappedMigrationException;
+import org.eclipse.emf.edapt.internal.migration.execution.internal.WrappedMigrationException;
+import org.eclipse.emf.edapt.internal.migration.internal.MaterializingBackwardConverter;
+import org.eclipse.emf.edapt.internal.migration.internal.Persistency;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
@@ -40,7 +38,6 @@ import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BOSMigrator extends Migrator {
 
@@ -71,49 +68,49 @@ public class BOSMigrator extends Migrator {
 
     private BOSReportReconstructor reportReconstructor;
 
-
     @Override
-	public void migrateAndSave(final List<URI> modelURIs,
-			final Release sourceRelease, final Release targetRelease,
-			final IProgressMonitor monitor) throws MigrationException {
-		final Model model = migrate(modelURIs, sourceRelease, targetRelease,
-				monitor);
-		if (model == null) {
-			throw new MigrationException("Model is up-to-date", null);
-		}
-		try {
-			Persistency.saveModel(model);
-		} catch (final IOException e) {
-			throw new MigrationException("Model could not be saved", e);
-		}
-	}
+    public void migrateAndSave(final List<URI> modelURIs,
+            final Release sourceRelease, final Release targetRelease,
+            final IProgressMonitor monitor) throws MigrationException {
 
-	/**
-	 * Migrate a model based on a set of {@link URI}s and load it afterwards.
-	 *
-	 * @param modelURIs
-	 *            The set of {@link URI}
-	 * @param sourceRelease
-	 *            Release to which the model conforms
-	 * @param targetRelease
-	 *            Release to which the model should be migrated (use null for
-	 *            the newest release)
-	 * @param monitor
-	 *            Progress monitor
-	 * @return The model in a {@link ResourceSet}
-	 */
-	@Override
+        final Model model = migrate(modelURIs, sourceRelease, targetRelease,
+                monitor);
+        if (model == null) {
+            throw new MigrationException("Model is up-to-date", null);
+        }
+        try {
+            Persistency.saveModel(model, null);
+        } catch (final IOException e) {
+            throw new MigrationException("Model could not be saved", e);
+        }
+    }
+
+    /**
+     * Migrate a model based on a set of {@link URI}s and load it afterwards.
+     *
+     * @param modelURIs
+     *        The set of {@link URI}
+     * @param sourceRelease
+     *        Release to which the model conforms
+     * @param targetRelease
+     *        Release to which the model should be migrated (use null for
+     *        the newest release)
+     * @param monitor
+     *        Progress monitor
+     * @return The model in a {@link ResourceSet}
+     */
+    @Override
     public ResourceSet migrateAndLoad(final List<URI> modelURIs,
-			final Release sourceRelease, final Release targetRelease,
-			final IProgressMonitor monitor) throws MigrationException {
-		final Model model = migrate(modelURIs, sourceRelease, targetRelease,
-				monitor);
-		if (model == null) {
-			return null;
-		}
-		final MaterializingBackwardConverter converter = new MaterializingBackwardConverter();
-		return converter.convert(model);
-	}
+            final Release sourceRelease, final Release targetRelease,
+            final IProgressMonitor monitor) throws MigrationException {
+        final Model model = migrate(modelURIs, sourceRelease, targetRelease,
+                monitor);
+        if (model == null) {
+            return null;
+        }
+        final MaterializingBackwardConverter converter = new MaterializingBackwardConverter();
+        return converter.convert(model);
+    }
 
     @Override
     public void setLevel(final ValidationLevel level) {
@@ -121,25 +118,24 @@ public class BOSMigrator extends Migrator {
         this.level = level;
     }
 
-
-	/**
-	 * Migrate a model based on a set of {@link URI}s.
-	 *
-	 * @param modelURIs
-	 *            The set of {@link URI}
-	 * @param sourceRelease
-	 *            Release to which the model conforms
-	 * @param targetRelease
-	 *            Release to which the model should be migrated (use null for
-	 *            the newest release)
-	 * @param monitor
-	 *            Progress monitor
-	 * @return The model in the generic structure
-	 */
-	private Model migrate(final List<URI> modelURIs,
-			final Release sourceRelease, Release targetRelease,
-			final IProgressMonitor monitor) throws MigrationException {
-		try {
+    /**
+     * Migrate a model based on a set of {@link URI}s.
+     *
+     * @param modelURIs
+     *        The set of {@link URI}
+     * @param sourceRelease
+     *        Release to which the model conforms
+     * @param targetRelease
+     *        Release to which the model should be migrated (use null for
+     *        the newest release)
+     * @param monitor
+     *        Progress monitor
+     * @return The model in the generic structure
+     */
+    private Model migrate(final List<URI> modelURIs,
+            final Release sourceRelease, Release targetRelease,
+            final IProgressMonitor monitor) throws MigrationException {
+        try {
             if (targetRelease == null) {
                 targetRelease = getLatestRelease();
             }
@@ -164,7 +160,7 @@ public class BOSMigrator extends Migrator {
         } finally {
             monitor.done();
         }
-	}
+    }
 
     private int numberOfSteps(final Release sourceRelease, final Release targetRelease) {
         int size = 0;
@@ -183,8 +179,7 @@ public class BOSMigrator extends Migrator {
         return size;
     }
 
-
-	public Report getReport() {
-		return reportReconstructor.getReport();
-	}
+    public Report getReport() {
+        return reportReconstructor.getReport();
+    }
 }

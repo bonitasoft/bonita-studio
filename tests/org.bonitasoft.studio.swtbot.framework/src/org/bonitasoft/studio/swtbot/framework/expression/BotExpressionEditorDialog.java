@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
  * Expression editor dialog.
@@ -25,8 +26,11 @@ import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
  */
 public class BotExpressionEditorDialog extends BotDialog {
 
-    public BotExpressionEditorDialog(final SWTGefBot bot) {
+    private SWTBotShell activeShell;
+
+	public BotExpressionEditorDialog(final SWTGefBot bot, SWTBotShell activeShell) {
         super(bot, Messages.editExpression);
+        this.activeShell =  activeShell;
     }
 
     public BotScriptExpressionEditor selectScriptTab() {
@@ -68,6 +72,18 @@ public class BotExpressionEditorDialog extends BotDialog {
 
     public BotTableWidget listAvailableTypes() {
         return new BotTableWidget(bot.tableWithLabel(Messages.expressionTypeLabel));
+    }
+    
+    @Override
+    public void cancel() {
+    	super.cancel();
+    	activeShell.setFocus();
+    }
+    
+    @Override
+    public void ok() {
+    	super.ok();
+    	activeShell.setFocus();
     }
 
 }

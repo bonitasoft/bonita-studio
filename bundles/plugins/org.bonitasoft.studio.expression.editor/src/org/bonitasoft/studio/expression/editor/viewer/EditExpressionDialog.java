@@ -367,8 +367,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             final IConverter convert = new Converter(IExpressionProvider.class, String.class) {
 
                 @Override
-                public Object convert(final Object arg0) {
-                    return ((IExpressionProvider) arg0).getExpressionType();
+                public Object convert(final Object from) {
+                    return from != null ? ((IExpressionProvider) from).getExpressionType() : null;
                 }
             };
             selectionToExpressionType.setConverter(convert);

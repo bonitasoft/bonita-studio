@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -79,12 +80,14 @@ public class TestConnectorExpression implements SWTBotConstants {
     }
 
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
         bot.textWithLabel("Widget id*").setText(widgetId);
         bot.comboBoxWithLabel("Widget type").setSelection(widgetType);
         bot.comboBoxWithLabel("Input *").setSelection(inputIndex);
         bot.textWithLabel("Display name").setText(widgetId);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     @Test
@@ -95,12 +98,14 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.text().setText(id);
         bot.table().select(id);
         bot.button(IDialogConstants.NEXT_LABEL).click();
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, 0).click();
         bot.table().select("Constant");
         bot.text().setText("Hello World");
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("wrong return type", bot.comboBoxWithLabel("Return type").selection(), String.class.getName());
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
         assertEquals("wrong value for input1", bot.textWithLabel("Input1").getText(), "Hello World");
         editGroovyEditor(1, "Input2", Boolean.class.getName(), "booleanScriptTest", "1==1;");
         editGroovyEditor(2, "Input3", Double.class.getName(), "doubleScriptTest", "(double)9.345+1.256;");
@@ -111,6 +116,7 @@ public class TestConnectorExpression implements SWTBotConstants {
     }
 
     private void editGroovyEditor(int buttonIndex, String inputName, String inputtype, String scriptName, String groovyScript) {
+    	SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
@@ -119,6 +125,7 @@ public class TestConnectorExpression implements SWTBotConstants {
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
         assertEquals("wrong value for " + inputName, bot.textWithLabel(inputName).getText(), scriptName);
     }
 }

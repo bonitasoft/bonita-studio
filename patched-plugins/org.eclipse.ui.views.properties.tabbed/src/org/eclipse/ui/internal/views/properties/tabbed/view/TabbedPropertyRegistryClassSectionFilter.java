@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -27,7 +27,7 @@ import org.eclipse.ui.views.properties.tabbed.ITypeMapper;
 /**
  * Provides a section filtering mechanism where the selection is an
  * IStructuredSelection and filtering is based on class.
- * 
+ *
  * @author Anthony Hunter
  */
 public class TabbedPropertyRegistryClassSectionFilter {
@@ -36,7 +36,7 @@ public class TabbedPropertyRegistryClassSectionFilter {
 
 	/**
 	 * Constructor for TabbedPropertyRegistryClassSectionFilter
-	 * 
+	 *
 	 * @param typeMapper
 	 *            the type mapper.
 	 */
@@ -48,7 +48,7 @@ public class TabbedPropertyRegistryClassSectionFilter {
 	/**
 	 * Verifies if the property section extension represented by sectionElement
 	 * applies to the given input.
-	 * 
+	 *
 	 * @param descriptor
 	 *            the section descriptor.
 	 * @param selection
@@ -179,8 +179,7 @@ public class TabbedPropertyRegistryClassSectionFilter {
 	private void internalComputeInterfaceOrder(Class[] interfaces, List result,
 			Map seen) {
 		List newInterfaces = new ArrayList(seen.size());
-		for (int i = 0; i < interfaces.length; i++) {
-			Class interfac = interfaces[i];
+		for (Class interfac : interfaces) {
 			if (seen.get(interfac) == null) {
 				result.add(interfac.getName());
 				seen.put(interfac, interfac);

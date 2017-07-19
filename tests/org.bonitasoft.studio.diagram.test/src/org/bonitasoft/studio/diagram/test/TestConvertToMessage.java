@@ -31,6 +31,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,6 +41,7 @@ public class TestConvertToMessage {
     private final SWTGefBot bot = new SWTGefBot();
 
     @Test
+    @Ignore
     public void testConvertToMessage() throws InterruptedException {
         //bug 1983
         /* Create a new form */

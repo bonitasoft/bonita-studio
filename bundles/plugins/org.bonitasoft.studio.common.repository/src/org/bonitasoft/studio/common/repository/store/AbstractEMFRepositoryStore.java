@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -33,8 +34,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edapt.internal.migration.execution.BundleClassLoader;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.internal.migration.execution.internal.BundleClassLoader;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
@@ -53,7 +55,7 @@ import com.google.common.io.Files;
  * @author Romain Bioteau
  */
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
-        extends AbstractRepositoryStore<T>implements IRepositoryStore<T> {
+        extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
 
     private static final String MIGRATION_HISTORY_PATH = "process.history";
 
@@ -128,7 +130,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
     @Override
     protected InputStream handlePreImport(final String fileName,
             final InputStream inputStream) throws MigrationException,
-                    IOException {
+            IOException {
         final InputStream is = super.handlePreImport(fileName, inputStream);
         if (fileName.endsWith(".properties")
                 || fileName.toLowerCase().endsWith(".png")
@@ -165,7 +167,8 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
             final Release release = getRelease(targetMigrator, resource);
             if (release != null && !release.isLatestRelease()) {
                 try {
-                    BonitaStudioLog.debug("Performing migration on " + fileName + " from " + release.getLabel() + " to latest...",
+                    BonitaStudioLog.debug(
+                            "Performing migration on " + fileName + " from " + release.getLabel() + " to latest...",
                             CommonRepositoryPlugin.PLUGIN_ID);
                     performMigration(targetMigrator, resourceURI, release);
                 } catch (final MigrationException e) {
@@ -222,10 +225,12 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
 
     protected void performMigration(final Migrator migrator,
             final URI resourceURI, final Release release)
-                    throws MigrationException {
+            throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
+        Map<String, Object> loadOptions = new HashMap<>();
+        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         migrator.migrateAndSave(Collections.singletonList(resourceURI),
-                release, null, Repository.NULL_PROGRESS_MONITOR);
+                release, null, Repository.NULL_PROGRESS_MONITOR, loadOptions);
     }
 
     protected Resource getTmpEMFResource(final String fileName,

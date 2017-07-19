@@ -25,6 +25,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
 
@@ -142,6 +143,7 @@ public class SWTBotConnectorTestUtil {
      */
     public static void createNewCategory(SWTBot bot, String categoryId) {
         bot.waitUntil(Conditions.widgetIsEnabled((bot.button("New..."))), 10000);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("New...").click();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.activeShell()));
         Assert.assertFalse("ok button should be desabled",
@@ -149,6 +151,7 @@ public class SWTBotConnectorTestUtil {
         bot.textWithLabel("Id").setText(categoryId);
         bot.textWithLabel("Display name").setText(categoryId);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     /**

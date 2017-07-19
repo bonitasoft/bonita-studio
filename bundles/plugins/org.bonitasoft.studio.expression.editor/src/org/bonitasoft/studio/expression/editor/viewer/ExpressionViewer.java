@@ -851,6 +851,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
             @Override
             public Object convert(final Object from) {
+                if (from == null) {
+                    return true;
+                }
                 final boolean isScriptType = ExpressionConstants.SCRIPT_TYPE.equals(from.toString());
                 final boolean isConnectorType = from.toString().equals(ExpressionConstants.CONNECTOR_TYPE);
                 final boolean isXPathType = from.toString().equals(ExpressionConstants.XPATH_TYPE);

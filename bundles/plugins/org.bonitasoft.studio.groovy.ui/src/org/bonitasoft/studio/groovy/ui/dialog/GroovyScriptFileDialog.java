@@ -79,8 +79,8 @@ public class GroovyScriptFileDialog extends EditExpressionDialog {
             IConverter convert = new Converter(IExpressionProvider.class, String.class) {
 
                 @Override
-                public Object convert(Object arg0) {
-                    return ((IExpressionProvider) arg0).getExpressionType();
+                public Object convert(Object from) {
+                    return from != null ? ((IExpressionProvider) from).getExpressionType() : null;
                 }
             };
             selectionToExpressionType.setConverter(convert);

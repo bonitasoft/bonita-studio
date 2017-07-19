@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * Shows the list of tabs in the tabbed property sheet page.
- * 
+ *
  * @author Anthony Hunter
  */
 public class TabbedPropertyList
@@ -88,9 +88,9 @@ public class TabbedPropertyList
 
     private int bottomVisibleIndex = NONE;
 
-    private final TopNavigationElement topNavigationElement;
+    private TopNavigationElement topNavigationElement;
 
-    private final BottomNavigationElement bottomNavigationElement;
+    private BottomNavigationElement bottomNavigationElement;
 
     private int widestLabelIndex = NONE;
 
@@ -124,7 +124,7 @@ public class TabbedPropertyList
 
     private Color bottomNavigationElementShadowStroke2;
 
-    private final TabbedPropertySheetWidgetFactory factory;
+    private TabbedPropertySheetWidgetFactory factory;
 
     private Color textColorNoFocus;
 
@@ -133,9 +133,9 @@ public class TabbedPropertyList
      */
     public class ListElement extends Canvas {
 
-        private final ITabItem tab;
+        private ITabItem tab;
 
-        private final int index;
+        private int index;
 
         private boolean selected;
 
@@ -147,7 +147,7 @@ public class TabbedPropertyList
 
         /**
          * Constructor for ListElement.
-         * 
+         *
          * @param parent
          *        the parent Composite.
          * @param tab
@@ -170,7 +170,6 @@ public class TabbedPropertyList
             });
             addMouseListener(new MouseAdapter() {
 
-                @Override
                 public void mouseUp(MouseEvent e) {
                     if (!selected) {
                         select(getIndex(ListElement.this));
@@ -199,7 +198,6 @@ public class TabbedPropertyList
             });
             addMouseTrackListener(new MouseTrackAdapter() {
 
-                @Override
                 public void mouseExit(MouseEvent e) {
                     hover = false;
                     redraw();
@@ -209,7 +207,7 @@ public class TabbedPropertyList
 
         /**
          * Constructor for ListElement.
-         * 
+         *
          * @param parent
          *        the parent Composite.
          * @param tab
@@ -235,7 +233,7 @@ public class TabbedPropertyList
 
         /**
          * Set selected value for this element.
-         * 
+         *
          * @param selected
          *        the selected value.
          */
@@ -249,7 +247,7 @@ public class TabbedPropertyList
          * image width should not be more than 16 pixels. The caller is
          * responsible for loading the image appropriately and managing it's
          * resources.
-         * 
+         *
          * @param index
          * @param image
          */
@@ -266,7 +264,7 @@ public class TabbedPropertyList
          * Hide the dynamic image at specified index in dynamicImages array. The
          * caller is responsible for managing image resources and disposing it
          * appropriately.
-         * 
+         *
          * @param index
          */
         public void hideDynamicImage(int index) {
@@ -282,7 +280,7 @@ public class TabbedPropertyList
          * Sets color to be used for drawing tab label text. The caller is
          * responsible for managing the color's resources and disposing it
          * appropriately after setDefaultTextColor() is later invoked.
-         * 
+         *
          * @param textColor
          */
         public void setTextColor(Color textColor) {
@@ -304,7 +302,7 @@ public class TabbedPropertyList
 
         /**
          * Paint the element.
-         * 
+         *
          * @param e
          *        the paint event.
          */
@@ -313,7 +311,7 @@ public class TabbedPropertyList
              * draw the top two lines of the tab, same for selected, hover and
              * default
              */
-            final Rectangle bounds = getBounds();
+            Rectangle bounds = getBounds();
             e.gc.setForeground(widgetNormalShadow);
             e.gc.drawLine(0, 0, bounds.width - 1, 0);
             e.gc.setForeground(listBackground);
@@ -351,9 +349,9 @@ public class TabbedPropertyList
              * Add INDENT pixels to the left as a margin.
              */
             int textIndent = INDENT;
-            final FontMetrics fm = e.gc.getFontMetrics();
-            final int height = fm.getHeight();
-            final int textMiddle = (bounds.height - height) / 2;
+            FontMetrics fm = e.gc.getFontMetrics();
+            int height = fm.getHeight();
+            int textMiddle = (bounds.height - height) / 2;
 
             if (selected && tab.getImage() != null
                     && !tab.getImage().isDisposed()) {
@@ -370,9 +368,8 @@ public class TabbedPropertyList
             }
 
             /* draw the text */
-
+            e.gc.setForeground(textColor);
             if (selected) {
-                e.gc.setForeground(textColor);
                 /* selected tab is bold font */
                 e.gc.setFont(JFaceResources.getFontRegistry().getBold(
                         JFaceResources.DEFAULT_FONT));
@@ -383,15 +380,14 @@ public class TabbedPropertyList
             e.gc.drawText(tab.getText(), textIndent, textMiddle, true);
             if (((TabbedPropertyList) getParent()).focus && selected) {
                 /* draw a line if the tab has focus */
-                final Point point = e.gc.textExtent(tab.getText());
+                Point point = e.gc.textExtent(tab.getText());
                 e.gc.drawLine(textIndent, bounds.height - 4, textIndent
                         + point.x, bounds.height - 4);
             }
 
             /* Draw dynamic images, if any */
             boolean hasDynamicImage = false;
-            for (int i = 0; i < dynamicImages.length; i++) {
-                final Image dynamicImage = dynamicImages[i];
+            for (Image dynamicImage : dynamicImages) {
                 if (dynamicImage != null && !dynamicImage.isDisposed()) {
                     hasDynamicImage = true;
                     break;
@@ -401,8 +397,7 @@ public class TabbedPropertyList
                 int drawPosition = textIndent
                         + e.gc.textExtent(tab.getText()).x + 4;
                 boolean addSpace = false;
-                for (int i = 0; i < dynamicImages.length; i++) {
-                    final Image dynamicImage = dynamicImages[i];
+                for (Image dynamicImage : dynamicImages) {
                     if (dynamicImage != null && !dynamicImage.isDisposed()) {
                         if (addSpace) {
                             drawPosition = drawPosition + 3;
@@ -425,14 +420,13 @@ public class TabbedPropertyList
 
         /**
          * Get the tab item.
-         * 
+         *
          * @return the tab item.
          */
         public ITabItem getTabItem() {
             return tab;
         }
 
-        @Override
         public String toString() {
             return tab.getText();
         }
@@ -447,7 +441,7 @@ public class TabbedPropertyList
 
         /**
          * Constructor for TopNavigationElement.
-         * 
+         *
          * @param parent
          *        the parent Composite.
          */
@@ -461,7 +455,6 @@ public class TabbedPropertyList
             });
             addMouseListener(new MouseAdapter() {
 
-                @Override
                 public void mouseUp(MouseEvent e) {
                     if (isUpScrollRequired()) {
                         bottomVisibleIndex--;
@@ -478,14 +471,14 @@ public class TabbedPropertyList
 
         /**
          * Paint the element.
-         * 
+         *
          * @param e
          *        the paint event.
          */
         private void paint(PaintEvent e) {
             e.gc.setBackground(widgetBackground);
             e.gc.setForeground(widgetForeground);
-            final Rectangle bounds = getBounds();
+            Rectangle bounds = getBounds();
 
             if (elements.length != 0) {
                 e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
@@ -495,18 +488,18 @@ public class TabbedPropertyList
             } else {
                 e.gc.setBackground(listBackground);
                 e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
-                final int textIndent = INDENT;
-                final FontMetrics fm = e.gc.getFontMetrics();
-                final int height = fm.getHeight();
-                final int textMiddle = (bounds.height - height) / 2;
+                int textIndent = INDENT;
+                FontMetrics fm = e.gc.getFontMetrics();
+                int height = fm.getHeight();
+                int textMiddle = (bounds.height - height) / 2;
                 e.gc.setForeground(widgetForeground);
-                final String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
+                String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
                 e.gc.drawText(properties_not_available, textIndent, textMiddle);
             }
 
             if (isUpScrollRequired()) {
                 e.gc.setForeground(widgetDarkShadow);
-                final int middle = bounds.width / 2;
+                int middle = bounds.width / 2;
                 e.gc.drawLine(middle + 1, 3, middle + 5, 7);
                 e.gc.drawLine(middle, 3, middle - 4, 7);
                 e.gc.drawLine(middle - 3, 7, middle + 4, 7);
@@ -535,7 +528,7 @@ public class TabbedPropertyList
 
         /**
          * Constructor for BottomNavigationElement.
-         * 
+         *
          * @param parent
          *        the parent Composite.
          */
@@ -549,7 +542,6 @@ public class TabbedPropertyList
             });
             addMouseListener(new MouseAdapter() {
 
-                @Override
                 public void mouseUp(MouseEvent e) {
                     if (isDownScrollRequired()) {
                         topVisibleIndex++;
@@ -566,14 +558,14 @@ public class TabbedPropertyList
 
         /**
          * Paint the element.
-         * 
+         *
          * @param e
          *        the paint event.
          */
         private void paint(PaintEvent e) {
             e.gc.setBackground(widgetBackground);
             e.gc.setForeground(widgetForeground);
-            final Rectangle bounds = getBounds();
+            Rectangle bounds = getBounds();
 
             if (elements.length != 0) {
                 e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
@@ -593,8 +585,8 @@ public class TabbedPropertyList
 
             if (isDownScrollRequired()) {
                 e.gc.setForeground(widgetDarkShadow);
-                final int middle = bounds.width / 2;
-                final int bottom = bounds.height - 3;
+                int middle = bounds.width / 2;
+                int bottom = bounds.height - 3;
                 e.gc.drawLine(middle + 1, bottom, middle + 5, bottom - 4);
                 e.gc.drawLine(middle, bottom, middle - 4, bottom - 4);
                 e.gc.drawLine(middle - 3, bottom - 4, middle + 4, bottom - 4);
@@ -615,7 +607,7 @@ public class TabbedPropertyList
 
     /**
      * Constructor for TabbedPropertyList.
-     * 
+     *
      * @param parent
      *        the parent widget.
      * @param factory
@@ -636,7 +628,7 @@ public class TabbedPropertyList
 
             public void focusGained(FocusEvent e) {
                 focus = true;
-                final int i = getSelectionIndex();
+                int i = getSelectionIndex();
                 if (i >= 0) {
                     elements[i].redraw();
                 }
@@ -644,7 +636,7 @@ public class TabbedPropertyList
 
             public void focusLost(FocusEvent e) {
                 focus = false;
-                final int i = getSelectionIndex();
+                int i = getSelectionIndex();
                 if (i >= 0) {
                     elements[i].redraw();
                 }
@@ -652,7 +644,6 @@ public class TabbedPropertyList
         });
         this.addControlListener(new ControlAdapter() {
 
-            @Override
             public void controlResized(ControlEvent e) {
                 computeTopAndBottomTab();
             }
@@ -662,7 +653,7 @@ public class TabbedPropertyList
             public void keyTraversed(TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS
                         || e.detail == SWT.TRAVERSE_ARROW_NEXT) {
-                    final int nMax = elements.length - 1;
+                    int nMax = elements.length - 1;
                     int nCurrent = getSelectionIndex();
                     if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
                         nCurrent -= 1;
@@ -693,7 +684,7 @@ public class TabbedPropertyList
 
     /**
      * Returns the number of elements in this list viewer.
-     * 
+     *
      * @return number of elements
      */
     public int getNumberOfElements() {
@@ -703,7 +694,7 @@ public class TabbedPropertyList
     /**
      * Returns the element with the given index from this list viewer. Returns
      * <code>null</code> if the index is out of range.
-     * 
+     *
      * @param index
      *        the zero-based index
      * @return the element at the given index, or <code>null</code> if the
@@ -719,7 +710,7 @@ public class TabbedPropertyList
     /**
      * Returns the zero-relative index of the item which is currently selected
      * in the receiver, or -1 if no item is selected.
-     * 
+     *
      * @return the index of the selected item
      */
     public int getSelectionIndex() {
@@ -739,8 +730,8 @@ public class TabbedPropertyList
      */
     public void removeAll() {
         if (elements != null) {
-            for (int i = 0; i < elements.length; i++) {
-                elements[i].dispose();
+            for (ListElement element : elements) {
+                element.dispose();
             }
         }
         elements = ELEMENTS_EMPTY;
@@ -757,7 +748,7 @@ public class TabbedPropertyList
      * images. Individual dynamic images are displayed/removed from a tab by
      * using the showDynamicImage() and hideDynamicImage() methods on the tab's
      * ListElement object.
-     * 
+     *
      * @param tabToDynamicImageCountMap
      */
     public void setDynamicImageCount(Map tabToDynamicImageCountMap) {
@@ -766,7 +757,7 @@ public class TabbedPropertyList
 
     /**
      * Sets the new list elements.
-     * 
+     *
      * @param children
      */
     public void setElements(Object[] children) {
@@ -791,7 +782,7 @@ public class TabbedPropertyList
                 elements[i].setLayoutData(null);
 
                 if (i != widestLabelIndex) {
-                    final int width = getTabWidth((ITabItem) children[i]);
+                    int width = getTabWidth((ITabItem) children[i]);
                     if (width > getTabWidth((ITabItem) children[widestLabelIndex])) {
                         widestLabelIndex = i;
                     }
@@ -838,7 +829,7 @@ public class TabbedPropertyList
 
     /**
      * Selects one of the elements in the list.
-     * 
+     *
      * @param index
      *        the index of the element to select.
      */
@@ -850,7 +841,7 @@ public class TabbedPropertyList
             return;
         }
         if (index >= 0 && index < elements.length) {
-            final int lastSelected = getSelectionIndex();
+            int lastSelected = getSelectionIndex();
             elements[index].setSelected(true);
             selectedElementIndex = index;
             if (lastSelected != NONE) {
@@ -888,17 +879,16 @@ public class TabbedPropertyList
         return element.index;
     }
 
-    @Override
     public Point computeSize(int wHint, int hHint, boolean changed) {
-        final Point result = super.computeSize(hHint, wHint, changed);
+        Point result = super.computeSize(hHint, wHint, changed);
         if (widestLabelIndex == -1) {
-            final String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
+            String properties_not_available = TabbedPropertyMessages.TabbedPropertyList_properties_not_available;
             result.x = getTextDimension(properties_not_available).x + INDENT;
         } else {
             /*
              * Add INDENT pixels to the left of the longest tab as a margin.
              */
-            final int width = getTabWidth(elements[widestLabelIndex].getTabItem()) + INDENT;
+            int width = getTabWidth(elements[widestLabelIndex].getTabItem()) + INDENT;
             /*
              * Add 10 pixels to the right of the longest tab as a margin.
              */
@@ -909,16 +899,16 @@ public class TabbedPropertyList
 
     /**
      * Get the dimensions of the provided string.
-     * 
+     *
      * @param text
      *        the string.
      * @return the dimensions of the provided string.
      */
     private Point getTextDimension(String text) {
-        final GC gc = new GC(this);
+        GC gc = new GC(this);
         gc.setFont(JFaceResources.getFontRegistry().getBold(
                 JFaceResources.DEFAULT_FONT));
-        final Point point = gc.textExtent(text);
+        Point point = gc.textExtent(text);
         point.x++;
         gc.dispose();
         return point;
@@ -958,17 +948,17 @@ public class TabbedPropertyList
         widgetNormalShadow = Display.getCurrent().getSystemColor(
                 SWT.COLOR_WIDGET_NORMAL_SHADOW);
 
-        final RGB infoBackground = Display.getCurrent().getSystemColor(
-                SWT.COLOR_INFO_BACKGROUND).getRGB();
-        final RGB white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE)
+        RGB infoBackground = Display.getCurrent().getSystemColor(SWT.COLOR_INFO_BACKGROUND)
                 .getRGB();
-        final RGB black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK)
+        RGB white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE)
+                .getRGB();
+        RGB black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK)
                 .getRGB();
 
         /*
          * gradient in the default tab: start colour WIDGET_NORMAL_SHADOW 100% +
-         * white 20% + INFO_BACKGROUND 60% end colour WIDGET_NORMAL_SHADOW 100% +
-         * INFO_BACKGROUND 40%
+         * white 20% + WIDGET_BACKGROUND 60% end colour WIDGET_NORMAL_SHADOW
+         * 100% + WIDGET_BACKGROUND 40%
          */
         defaultGradientStart = factory.getColors().createColor(
                 "TabbedPropertyList.defaultTabGradientStart", //$NON-NLS-1$
@@ -1016,17 +1006,17 @@ public class TabbedPropertyList
     /**
      * Get the height of a tab. The height of the tab is the height of the text
      * plus buffer.
-     * 
+     *
      * @return the height of a tab.
      */
     private int getTabHeight() {
-        final int tabHeight = getTextDimension("").y + INDENT; //$NON-NLS-1$ 
+        int tabHeight = getTextDimension("").y + INDENT; //$NON-NLS-1$
         if (tabsThatFitInComposite == 1) {
             /*
              * if only one tab will fix, reduce the size of the tab height so
              * that the navigation elements fit.
              */
-            final int ret = getBounds().height - 20;
+            int ret = getBounds().height - 20;
             return (ret > tabHeight) ? tabHeight
                     : (ret < 5) ? 5
                             : ret;
@@ -1036,7 +1026,7 @@ public class TabbedPropertyList
 
     /**
      * Determine if a downward scrolling is required.
-     * 
+     *
      * @return true if downward scrolling is required.
      */
     private boolean isDownScrollRequired() {
@@ -1046,7 +1036,7 @@ public class TabbedPropertyList
 
     /**
      * Determine if an upward scrolling is required.
-     * 
+     *
      * @return true if upward scrolling is required.
      */
     private boolean isUpScrollRequired() {
@@ -1169,7 +1159,7 @@ public class TabbedPropertyList
         //System.out.println("");
 
         // layout so that we have enough space for the new labels
-        final Composite grandparent = getParent().getParent();
+        Composite grandparent = getParent().getParent();
         grandparent.layout(true);
         layout(true);
     }
@@ -1181,7 +1171,6 @@ public class TabbedPropertyList
         final Accessible accessible = getAccessible();
         accessible.addAccessibleListener(new AccessibleAdapter() {
 
-            @Override
             public void getName(AccessibleEvent e) {
                 if (getSelectionIndex() != NONE) {
                     e.result = elements[getSelectionIndex()].getTabItem()
@@ -1189,7 +1178,6 @@ public class TabbedPropertyList
                 }
             }
 
-            @Override
             public void getHelp(AccessibleEvent e) {
                 if (getSelectionIndex() != NONE) {
                     e.result = elements[getSelectionIndex()].getTabItem()
@@ -1200,19 +1188,17 @@ public class TabbedPropertyList
 
         accessible.addAccessibleControlListener(new AccessibleControlAdapter() {
 
-            @Override
             public void getChildAtPoint(AccessibleControlEvent e) {
-                final Point pt = toControl(new Point(e.x, e.y));
+                Point pt = toControl(new Point(e.x, e.y));
                 e.childID = (getBounds().contains(pt)) ? ACC.CHILDID_SELF
                         : ACC.CHILDID_NONE;
             }
 
-            @Override
             public void getLocation(AccessibleControlEvent e) {
                 if (getSelectionIndex() != NONE) {
-                    final Rectangle location = elements[getSelectionIndex()]
+                    Rectangle location = elements[getSelectionIndex()]
                             .getBounds();
-                    final Point pt = toDisplay(new Point(location.x, location.y));
+                    Point pt = toDisplay(new Point(location.x, location.y));
                     e.x = pt.x;
                     e.y = pt.y;
                     e.width = location.width;
@@ -1220,17 +1206,14 @@ public class TabbedPropertyList
                 }
             }
 
-            @Override
             public void getChildCount(AccessibleControlEvent e) {
                 e.detail = 0;
             }
 
-            @Override
             public void getRole(AccessibleControlEvent e) {
                 e.detail = ACC.ROLE_TABITEM;
             }
 
-            @Override
             public void getState(AccessibleControlEvent e) {
                 e.detail = ACC.STATE_NORMAL | ACC.STATE_SELECTABLE
                         | ACC.STATE_SELECTED | ACC.STATE_FOCUSED

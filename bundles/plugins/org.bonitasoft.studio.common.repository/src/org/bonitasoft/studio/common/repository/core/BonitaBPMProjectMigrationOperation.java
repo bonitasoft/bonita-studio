@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -42,10 +41,6 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
-        final IFile file = project.getFile(".project");
-        if (file.exists()) {
-            file.delete(true, false, monitor);
-        }
         project.setDescription(new ProjectDescriptionBuilder()
                 .withProjectName(project.getName())
                 .withComment(ProductVersion.CURRENT_VERSION)

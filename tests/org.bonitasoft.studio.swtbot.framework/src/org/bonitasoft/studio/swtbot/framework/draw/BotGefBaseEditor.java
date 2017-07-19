@@ -46,6 +46,7 @@ public class BotGefBaseEditor extends BotBase {
      * @param pName
      */
     public BotGefBaseEditor selectElement(final String pName) {
+    	gmfEditor.setFocus();
         final SWTBotGefEditPart element = gmfEditor.getEditPart(pName);
         Assert.assertNotNull("Error: Element not found : \'" + pName + "\'.", element);
         element.click();//

@@ -64,14 +64,11 @@ public class ImporterPriorityDisplayComparatorTest {
         };
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void testCompareViewerObject() {
         Assert.assertTrue("", new ImporterPriorityDisplayComparator().compare(null, if1, if2) < 0);
-        Assert.assertTrue("Two ImporterFactor with same priority shoudl return 0", new ImporterPriorityDisplayComparator().compare(null, if1, if1) == 0);
+        Assert.assertTrue("Two ImporterFactor with same priority shoudl return 0",
+                new ImporterPriorityDisplayComparator().compare(null, if1, if1) == 0);
         Assert.assertTrue("", new ImporterPriorityDisplayComparator().compare(null, if2, if1) > 0);
         Assert.assertTrue("If wrong parameter is provided, it shoudl return equal by default",
                 new ImporterPriorityDisplayComparator().compare(null, 3, if1) == 0);

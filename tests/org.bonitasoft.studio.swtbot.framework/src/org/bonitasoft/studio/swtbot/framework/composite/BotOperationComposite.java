@@ -18,6 +18,7 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.hamcrest.Matcher;
 
 /**
@@ -53,8 +54,9 @@ public class BotOperationComposite extends BotBase {
     }
 
     public BotExpressionEditorDialog editRightOperand() {
+    	SWTBotShell activeShell = bot.activeShell();
         localBot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot);
+        return new BotExpressionEditorDialog(bot,activeShell);
     }
 
     public String getSelectedOperator() {

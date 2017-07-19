@@ -298,8 +298,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     private CLabel transientDataWarning;
 
-    public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
-            final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, final String fixedReturnType) {
+    public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum,
+            final boolean showIsTransient,
+            final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID,
+            final String fixedReturnType) {
         super(DataWizardPage.class.getName());
         this.container = container;
         setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
@@ -405,7 +407,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
-            returnTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(), observeSingleSelectionDefaultValueExpression,
+            returnTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                    observeSingleSelectionDefaultValueExpression,
                     ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
             final MultiValidator returnTypeValidator = new MultiValidator() {
 
@@ -413,28 +416,34 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 protected IStatus validate() {
                     final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
                     final DataType type = (DataType) selectedType.getValue();
-                    String technicalTypeFor = DataUtil.getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(
-                            Messages.dataTechnicalTypeLabel + " ", "");
+                    String technicalTypeFor = DataUtil
+                            .getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(
+                                    Messages.dataTechnicalTypeLabel + " ", "");
                     if (data instanceof JavaObjectData) {
                         technicalTypeFor = ((JavaObjectData) data).getClassName();
                     }
                     final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue();
                     if (defaultValueExp != null) {
-                        final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-                        final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__TYPE);
-                        final IObservableValue multipleObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE);
+                        final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp,
+                                ExpressionPackage.Literals.EXPRESSION__CONTENT);
+                        final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp,
+                                ExpressionPackage.Literals.EXPRESSION__TYPE);
+                        final IObservableValue multipleObservable = EMFObservables.observeValue(data,
+                                ProcessPackage.Literals.DATA__MULTIPLE);
 
                         final String expressionType = (String) typeObservable.getValue();
                         final String returnType = (String) returnTypeObservable.getValue();
                         final boolean isMultiple = (Boolean) multipleObservable.getValue();
                         if (isMultiple) {
-                            if (returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(multipleReturnType, returnType)) {
+                            if (returnType != null && !returnType.isEmpty()
+                                    && !isReturnTypeCompatible(multipleReturnType, returnType)) {
                                 return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
                             }
                             return ValidationStatus.ok();
                         }
 
-                        if (returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(technicalTypeFor, returnType)) {
+                        if (returnType != null && !returnType.isEmpty()
+                                && !isReturnTypeCompatible(technicalTypeFor, returnType)) {
                             if (Date.class.getName().equals(technicalTypeFor)) {
                                 if (!isReturnTypeCompatible(technicalTypeFor, returnType)) {
                                     return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
@@ -444,7 +453,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                             }
                         }
                         final String content = (String) contentObservable.getValue();
-                        if (content != null && !content.isEmpty() && ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
+                        if (content != null && !content.isEmpty()
+                                && ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
                             if (Integer.class.getName().equals(returnType)) {
                                 try {
                                     Integer.valueOf(content);
@@ -504,33 +514,39 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         emfDatabindingContext.bindValue(SWTObservables.observeSelection(multiplicityButton),
                 EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE));
         final UpdateValueStrategy startegy = new UpdateValueStrategy();
-        final IObservableValue returnTypeObservable = EMFObservables.observeValue(data.getDefaultValue(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        final IObservableValue typeObservable = EMFObservables.observeValue(data.getDefaultValue(), ExpressionPackage.Literals.EXPRESSION__TYPE);
-        final IObservableValue interpreterObservable = EMFObservables.observeValue(data.getDefaultValue(), ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
+        final IObservableValue returnTypeObservable = EMFObservables.observeValue(data.getDefaultValue(),
+                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        final IObservableValue typeObservable = EMFObservables.observeValue(data.getDefaultValue(),
+                ExpressionPackage.Literals.EXPRESSION__TYPE);
+        final IObservableValue interpreterObservable = EMFObservables.observeValue(data.getDefaultValue(),
+                ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
         startegy.setConverter(new Converter(Boolean.class, String.class) {
 
             private Object previousExpressionType;
 
             @Override
             public Object convert(final Object input) {
-                if ((Boolean) input) {
-                    previousExpressionType = typeObservable.getValue();
-                    if (!previousExpressionType.equals(ExpressionConstants.QUERY_TYPE)) {
-                        typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
-                        interpreterObservable.setValue(ExpressionConstants.GROOVY);
-                    }
-                    defaultValueViewer.refresh();
-                    return multipleReturnType;
-                } else {
-                    if (previousExpressionType != null) {
-                        typeObservable.setValue(previousExpressionType);
-                        if (!ExpressionConstants.SCRIPT_TYPE.equals(previousExpressionType)) {
-                            interpreterObservable.setValue(null);
+                if (input != null) {
+                    if ((Boolean) input) {
+                        previousExpressionType = typeObservable.getValue();
+                        if (!previousExpressionType.equals(ExpressionConstants.QUERY_TYPE)) {
+                            typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
+                            interpreterObservable.setValue(ExpressionConstants.GROOVY);
                         }
                         defaultValueViewer.refresh();
+                        return multipleReturnType;
+                    } else {
+                        if (previousExpressionType != null) {
+                            typeObservable.setValue(previousExpressionType);
+                            if (!ExpressionConstants.SCRIPT_TYPE.equals(previousExpressionType)) {
+                                interpreterObservable.setValue(null);
+                            }
+                            defaultValueViewer.refresh();
+                        }
+                        return getSelectedReturnType();
                     }
-                    return getSelectedReturnType();
                 }
+                return null;
             }
 
         });
@@ -554,10 +570,13 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         final ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
 
         emfDatabindingContext.bindValue(observeText,
-                EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), updateValueStrategy().withValidator(multiValidator()
+                EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME),
+                updateValueStrategy().withValidator(multiValidator()
                         .addValidator(maxLengthValidator(Messages.name, 50))
                         .addValidator(groovyReferenceValidator(Messages.name).startsWithLowerCase())
-                        .addValidator(new DataNameUnicityValidator(findDataInScope(), ((DataWizard) getWizard()).getOriginalData()))).create(),
+                        .addValidator(new DataNameUnicityValidator(findDataInScope(),
+                                ((DataWizard) getWizard()).getOriginalData())))
+                        .create(),
                 null);
 
         emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
@@ -593,7 +612,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (!(container instanceof AbstractProcess)) {
             allAboveData.addAll(ModelHelper.getAccessibleData(container, true));
         } else {
-            final List<MultiInstantiable> multiInstantiables = ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.MULTI_INSTANTIABLE);
+            final List<MultiInstantiable> multiInstantiables = ModelHelper.getAllItemsOfType(container,
+                    ProcessPackage.Literals.MULTI_INSTANTIABLE);
             allAboveData.addAll(Sets.newHashSet(transform(multiInstantiables, iteratorExpressionToData())));
         }
         return allAboveData;
@@ -604,7 +624,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             @Override
             public Data apply(final MultiInstantiable input) {
-                return ExpressionHelper.dataFromIteratorExpression(input, input.getIteratorExpression(), ModelHelper.getMainProcess(container));
+                return ExpressionHelper.dataFromIteratorExpression(input, input.getIteratorExpression(),
+                        ModelHelper.getMainProcess(container));
             }
         };
     }
@@ -672,8 +693,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             }
             return className;
         } else if (type != null) {
-            final String technicalTypeFor = DataUtil.getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(
-                    Messages.dataTechnicalTypeLabel + " ", "");
+            final String technicalTypeFor = DataUtil
+                    .getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(
+                            Messages.dataTechnicalTypeLabel + " ", "");
             if (technicalTypeFor.isEmpty()) {
                 return String.class.getName();
             }
@@ -688,8 +710,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             final ISWTObservableValue observeSelection = SWTObservables.observeSelection(isTransientButton);
             emfDatabindingContext.bindValue(observeSelection,
                     EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__TRANSIENT));
-            emfDatabindingContext.bindValue(observeSelection, SWTObservables.observeVisible(transientDataWarning), null, new UpdateValueStrategy(
-                    UpdateValueStrategy.POLICY_NEVER));
+            emfDatabindingContext.bindValue(observeSelection, SWTObservables.observeVisible(transientDataWarning), null,
+                    new UpdateValueStrategy(
+                            UpdateValueStrategy.POLICY_NEVER));
         }
     }
 
@@ -705,17 +728,20 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     }
                     IType type = null;
                     try {
-                        type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(value.toString());
+                        type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                                .findType(value.toString());
                     } catch (final JavaModelException e) {
                     }
                     if (type == null) {
-                        return new Status(IStatus.WARNING, DataPlugin.PLUGIN_ID, NLS.bind(Messages.classNotFound, value.toString()));
+                        return new Status(IStatus.WARNING, DataPlugin.PLUGIN_ID,
+                                NLS.bind(Messages.classNotFound, value.toString()));
                     }
                     return Status.OK_STATUS;
                 }
             });
             emfDatabindingContext.bindValue(SWTObservables.observeText(classText, SWT.Modify),
-                    EMFObservables.observeValue(data, ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME), classNameStrategy, null);
+                    EMFObservables.observeValue(data, ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME),
+                    classNameStrategy, null);
         }
     }
 
@@ -745,7 +771,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     }
                 }
             });
-            final IObservableValue observeValue = EMFObservables.observeValue(data, ProcessPackage.Literals.XML_DATA__NAMESPACE);
+            final IObservableValue observeValue = EMFObservables.observeValue(data,
+                    ProcessPackage.Literals.XML_DATA__NAMESPACE);
             final ISWTObservableValue observeText = SWTObservables.observeText(nsCombo);
             emfDatabindingContext.bindValue(observeText,
                     observeValue);
@@ -830,13 +857,16 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         defaultValueComposite = new Composite(parent, SWT.NONE);
         defaultValueComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        defaultValueComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).span(2, 1).create());
+        defaultValueComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).span(2, 1).create());
 
-        defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
+        defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER,
+                ProcessPackage.Literals.DATA__DEFAULT_VALUE);
         defaultValueViewer.setIsPageFlowContext(isPageFlowContext);
         defaultValueViewer.setIsOverviewContext(isOverviewContext);
         defaultValueViewer.setExpressionNameResolver(new DataDefaultValueExpressionNameResolver(data));
-        defaultValueViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
+        defaultValueViewer.getControl()
+                .setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
         defaultValueViewer.setContext(container);
 
         final ToolItem eraseItem = defaultValueViewer.getEraseControl();
@@ -848,7 +878,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 if (defaultValueExp != null) {
                     final IObservableValue returnTypeObservable = EMFObservables.observeValue(defaultValueExp,
                             ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-                    final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+                    final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp,
+                            ExpressionPackage.Literals.EXPRESSION__CONTENT);
                     if (contentObservable.getValue() != null && contentObservable.getValue().toString().isEmpty()) {// ERASE BUTTON
                         returnTypeObservable.setValue(getSelectedReturnType());
                     }
@@ -858,7 +889,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         refreshDataNames();
 
-        defaultValueViewer.addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext(), isPageFlowContext()));
+        defaultValueViewer
+                .addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext(), isPageFlowContext()));
         defaultValueViewer.setInput(data);
 
         updateBrowseXMLButton(data.getDataType());
@@ -875,13 +907,15 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final NewXMLGenerator generator = new NewXMLGenerator();
-                final XSDRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
+                final XSDRepositoryStore store = RepositoryManager.getInstance()
+                        .getRepositoryStore(XSDRepositoryStore.class);
                 if (data instanceof XMLData) {
                     final XSDFileStore nameSpaceStore = store.findArtifactWithNamespace(((XMLData) data).getNamespace());
                     if (nameSpaceStore != null) {
                         final String[] errors = new String[2];
-                        final CMDocument createCMDocument = NewXMLGenerator.createCMDocument(nameSpaceStore.getResource().getLocation().toFile().toURI()
-                                .toString(), errors);
+                        final CMDocument createCMDocument = NewXMLGenerator
+                                .createCMDocument(nameSpaceStore.getResource().getLocation().toFile().toURI()
+                                        .toString(), errors);
                         generator.setCMDocument(createCMDocument);
                         generator.setBuildPolicy(ContentBuilder.BUILD_ALL_CONTENT);
                         generator.setRootElementName(((XMLData) data).getType());
@@ -922,7 +956,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         }
                         defaultValueViewer.getTextControl().setText(builder.toString());
                         if (!defaultValueViewer.getTextControl().getText().equals(builder.toString())) {
-                            MessageDialog.openError(getShell(), Messages.xmlDefaultValueTooLongTitle, Messages.xmlDefaultValueTooLongMessage);
+                            MessageDialog.openError(getShell(), Messages.xmlDefaultValueTooLongTitle,
+                                    Messages.xmlDefaultValueTooLongMessage);
                         }
                     } catch (final Exception e1) {
                         BonitaStudioLog.error(e1);
@@ -971,7 +1006,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
                 @Override
                 public void widgetSelected(final SelectionEvent e) {
-                    final EnumDataTypeDialog dialog = new EnumDataTypeDialog(Display.getDefault().getActiveShell(), ModelHelper.getMainProcess(container));
+                    final EnumDataTypeDialog dialog = new EnumDataTypeDialog(Display.getDefault().getActiveShell(),
+                            ModelHelper.getMainProcess(container));
                     if (dialog.open() == Window.OK) {
                         final EnumType type = dialog.getSelectedEnum();
                         updateDatabinding();
@@ -980,7 +1016,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 }
             });
         } else {
-            typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(10, 0).create());
+            typeCombo.getCombo()
+                    .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(10, 0).create());
         }
     }
 
@@ -1046,7 +1083,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
 
         descriptionText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
+        descriptionText
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
     }
 
     protected void createDataOptions(final Composite parent) {
@@ -1072,8 +1110,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         }
 
         if (showAutoGenerateform) {
-            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                    "org.bonitasoft.studio.properties.widget"); //$NON-NLS-1$
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(
+                            "org.bonitasoft.studio.properties.widget"); //$NON-NLS-1$
             IWidgetContribtution generateDataContribution = null;
             for (final IConfigurationElement elem : elements) {
                 try {
@@ -1105,7 +1144,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             transientDataWarning = new CLabel(composite, SWT.WRAP);
             transientDataWarning.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
             transientDataWarning.setText(Messages.transientDataWarning);
-            transientDataWarning.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+            transientDataWarning
+                    .setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
             transientDataWarning.setVisible(data.isTransient());
         }
     }
@@ -1209,9 +1249,11 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     @SuppressWarnings("restriction")
     protected void openClassSelectionDialog(final Text classText) {
-        final IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { RepositoryManager.getInstance().getCurrentRepository()
-                .getJavaProject() });
-        final OpenTypeSelectionDialog searchDialog = new OpenTypeSelectionDialog(getShell(), false, null, searchScope, IJavaSearchConstants.TYPE);
+        final IJavaSearchScope searchScope = SearchEngine
+                .createJavaSearchScope(new IJavaElement[] { RepositoryManager.getInstance().getCurrentRepository()
+                        .getJavaProject() });
+        final OpenTypeSelectionDialog searchDialog = new OpenTypeSelectionDialog(getShell(), false, null, searchScope,
+                IJavaSearchConstants.TYPE);
         if (searchDialog.open() == Dialog.OK) {
             classText.setText(((IType) searchDialog.getFirstResult()).getFullyQualifiedName());
         }
@@ -1239,16 +1281,19 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 fd.setFilterExtensions(new String[] { "*.xsd" });
                 fd.setText(Messages.selectXSDToImport);
                 if (fd.open() != null) {
-                    final XSDRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
+                    final XSDRepositoryStore store = RepositoryManager.getInstance()
+                            .getRepositoryStore(XSDRepositoryStore.class);
                     for (final String fileName : fd.getFileNames()) {
                         final File file = new File(fd.getFilterPath() + File.separator + fileName);
                         final IStatus xsdFileValid = store.isXSDFileValid(file);
                         if (!xsdFileValid.isOK()) {
-                            MessageDialog.openError(getShell(), Messages.importXsd_title, Messages.importXsd_msg + "\n" + xsdFileValid.getMessage());
+                            MessageDialog.openError(getShell(), Messages.importXsd_title,
+                                    Messages.importXsd_msg + "\n" + xsdFileValid.getMessage());
                             return;
                         }
 
-                        final Resource resource = new XSDResourceFactoryImpl().createResource(URI.createFileURI(file.getAbsolutePath()));
+                        final Resource resource = new XSDResourceFactoryImpl()
+                                .createResource(URI.createFileURI(file.getAbsolutePath()));
                         try {
                             resource.load(Collections.EMPTY_MAP);
                         } catch (final IOException e1) {
@@ -1270,7 +1315,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         final XSDFileStore file = (XSDFileStore) artifact;
                         final XSDSchema schema = (XSDSchema) file.getContent();
                         String xmlNamespace = null;
-                        if (schema != null && schema.getTargetNamespace() != null && !schema.getTargetNamespace().isEmpty()) {
+                        if (schema != null && schema.getTargetNamespace() != null
+                                && !schema.getTargetNamespace().isEmpty()) {
                             xmlNamespace = schema.getTargetNamespace();
                         } else {
                             xmlNamespace = "No Namespace " + "(" + artifact.getName() + ")";

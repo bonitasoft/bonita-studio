@@ -73,6 +73,9 @@ public class TestBugSave {
         assertEquals("There should be only one resource", 1,
                 formEditor.getEditingDomain().getResourceSet().getResources().size());
         formEditor.doSave(new NullProgressMonitor());
+        while (formEditor.isDirty()) {
+            Thread.sleep(100);
+        }
         assertEquals("There should be only one resource", 1,
                 formEditor.getEditingDomain().getResourceSet().getResources().size());
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(formEditor, false);
@@ -103,6 +106,9 @@ public class TestBugSave {
         assertEquals("There should be only one resource", 1,
                 formEditor.getEditingDomain().getResourceSet().getResources().size());
         formEditor.doSave(new NullProgressMonitor());
+        while (formEditor.isDirty()) {
+            Thread.sleep(100);
+        }
         assertEquals("There should be only one resource", 1,
                 processEditor.getEditingDomain().getResourceSet().getResources().size());
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(formEditor, false);

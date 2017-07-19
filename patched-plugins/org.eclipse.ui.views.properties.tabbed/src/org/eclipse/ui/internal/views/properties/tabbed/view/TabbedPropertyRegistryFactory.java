@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -20,7 +20,7 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 /**
  * tabbed property registry factory. Caches the tabbed property registry by
  * tabbed property contributor ID.
- * 
+ *
  * @author Anthony Hunter
  */
 public class TabbedPropertyRegistryFactory {
@@ -37,7 +37,7 @@ public class TabbedPropertyRegistryFactory {
 
 	/**
 	 * get the singleton instance of this class.
-	 * 
+	 *
 	 * @return the TabbedPropertyRegistryFactory instance.
 	 */
 	public static TabbedPropertyRegistryFactory getInstance() {
@@ -56,7 +56,7 @@ public class TabbedPropertyRegistryFactory {
 
 	/**
 	 * Creates a registry for the given contributor.
-	 * 
+	 *
 	 * @param target
 	 *            the contributor.
 	 * @return a registry for the given contributor.
@@ -69,7 +69,7 @@ public class TabbedPropertyRegistryFactory {
 		 */
 		String key = target.getContributorId();
 		CacheData data = (CacheData) idToCacheData.get(key);
-			if (data == null) {
+		if (data == null) {
 			data = new CacheData();
 			/*use here custom TabbedPropertyRegistry
 			 * that are aware of viewID in which they are used*/
@@ -77,7 +77,7 @@ public class TabbedPropertyRegistryFactory {
 					|| key.equals("org.bonitasoft.studio.diagram.form")){ //$NON-NLS-1$
 				data.registry = new TabbedPropertyRegistryViewAware(key);
 			} else {	
-				data.registry = new TabbedPropertyRegistry(key);
+			data.registry = new TabbedPropertyRegistry(key);
 			}
 			data.references = new ArrayList(5);
 			idToCacheData.put(key, data);
@@ -91,7 +91,7 @@ public class TabbedPropertyRegistryFactory {
 	 * Indicates that the given contributor no longer needs a registry. The
 	 * registry will be disposed when no other contributor of the same type
 	 * needs it.
-	 * 
+	 *
 	 * @param target
 	 *            the contributor;
 	 */

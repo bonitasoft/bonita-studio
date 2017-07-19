@@ -36,6 +36,7 @@ import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,8 +68,9 @@ public class SWTBOTTestConditions {
         diagramBot.selectFlowBetween("Step1", "Step2");
         //add a condition
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab();
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        final BotExpressionEditorDialog expressionEditor = new BotExpressionEditorDialog(bot);
+        final BotExpressionEditorDialog expressionEditor = new BotExpressionEditorDialog(bot,activeShell);
         final BotConditionExpressionEditor botConditionEditor = expressionEditor.selectConditionExpressionType();
         botConditionEditor.setValue("myData < \"value\"");
         botConditionEditor.ok();

@@ -27,11 +27,13 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
     }
 
     public OpenApplicationWizardBot rename(String newName) {
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(org.bonitasoft.studio.ui.i18n.Messages.rename).click();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.ui.i18n.Messages.rename));
         bot.text().setText(newName);
-        final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
+        activeShell.setFocus();
+        bot.waitUntil(Conditions.shellIsActive(Messages.openExistingApplication));
         return this;
     }
 

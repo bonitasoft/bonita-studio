@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -26,17 +27,23 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
+import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.After;
@@ -65,6 +72,7 @@ public class CreateDeployExportBusinessObjectIT {
 
     @Before
     public void setUp() throws Exception {
+        BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         String layout = "EN_US";
         if (Platform.getOS().equals(Platform.OS_MACOSX)) {
             layout = "MAC_" + layout;
@@ -138,14 +146,14 @@ public class CreateDeployExportBusinessObjectIT {
 
         final SWTBotTable attributeTable = bot.tableInGroup("Employee");
         attributeTable.click(1, 0);
-        bot.textInGroup("lastaNme", "Employee").typeText("lastName");
+        bot.textInGroup("lastaNme", "Employee").selectAll().typeText("lastName");
         keyboard.pressShortcut(Keystrokes.CR);
         activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Validation failed"));
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        activeShell.setFocus();
         editConstraint("Employee", new String[] { "firstName -- STRING", "lastName -- STRING" }, 0);
         editIndex("Employee", "NAMEINDEX", new String[] { "lastName -- STRING" }, 0);
 
@@ -239,6 +247,7 @@ public class CreateDeployExportBusinessObjectIT {
         bot.textInGroup("query1", boName).typeText(queryName);
 
         table.click(queryIndex, 2);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Create query"));
         bot.styledText().setText(content);
@@ -268,6 +277,7 @@ public class CreateDeployExportBusinessObjectIT {
 
         bot.comboBoxWithLabel("Result type").setSelection(returnType);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     protected void setMandatory(final String boName, final String attributeName) {
@@ -302,15 +312,31 @@ public class CreateDeployExportBusinessObjectIT {
 
     protected void addAttribute(final String boName, final String attributeName, final String type,
             final int attributeIndex) {
+        SWTBotShell activeShell = bot.activeShell();
         bot.tabItem("Attributes").activate();
         bot.buttonInGroup("Add", boName).click();
         final SWTBotTable attributeTable = bot.tableInGroup(boName);
 
         attributeTable.click(attributeIndex, 0);
         bot.textInGroup("attribute1", boName).typeText(attributeName);
-
+        keyboard.pressShortcut(Keystrokes.CR);
         attributeTable.click(attributeIndex, 1);
-        bot.ccomboBoxInGroup(boName).setSelection(type);
+
+        SWTBot activeBot = activeShell.bot();
+        SWTBotCCombo ccomboBoxInGroup = activeBot.ccomboBoxWithId(FieldTypeEditingSupport.TYPE_COMBO_EDITOR_ID);
+        activeBot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return Stream.of(ccomboBoxInGroup.items()).anyMatch(type::equals);
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return String.format("No attribute type '%s' found in combo", type);
+            }
+        });
+        ccomboBoxInGroup.setSelection(type);
     }
 
     protected void addConstraint(final String boName, final String constraintName, final String[] selectFields,
@@ -323,12 +349,14 @@ public class CreateDeployExportBusinessObjectIT {
         bot.textInGroup("UNIQUE_CONSTRAINT_1", boName).typeText(constraintName);
 
         table.click(constraintIndex, 1);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Select attributes"));
         for (final String f : selectFields) {
             bot.table().getTableItem(f).check();
         }
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     protected void editConstraint(final String boName, final String[] selectFields, final int constraintIndex) {
@@ -336,12 +364,14 @@ public class CreateDeployExportBusinessObjectIT {
         final SWTBotTable table = bot.tableInGroup(boName);
         table.click(constraintIndex, 0);
         table.click(constraintIndex, 1);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Select attributes"));
         for (final String f : selectFields) {
             bot.table().getTableItem(f).check();
         }
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     protected void addIndex(final String boName, final String indexName, final String[] selectFields, final int indexIndex) {
@@ -353,11 +383,13 @@ public class CreateDeployExportBusinessObjectIT {
         bot.textInGroup("INDEX_1", boName).typeText(indexName);
 
         table.click(indexIndex, 1);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Select attributes for " + indexName));
         bot.tableWithLabel("Available attributes").select(selectFields);
         bot.button("Add").click();
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     protected void editIndex(final String boName, final String indexName, final String[] selectFields,
@@ -365,6 +397,7 @@ public class CreateDeployExportBusinessObjectIT {
         bot.tabItem("Indexes").activate();
         final SWTBotTable table = bot.tableInGroup(boName);
         table.click(indexIndex, 1);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive("Select attributes for " + indexName));
         bot.tableWithLabel("Available attributes").select(selectFields);
@@ -372,6 +405,7 @@ public class CreateDeployExportBusinessObjectIT {
         bot.tableWithLabel("Indexed attributes").select(selectFields);
         bot.button("Up").click();
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
     }
 
     protected void exportBDM() {

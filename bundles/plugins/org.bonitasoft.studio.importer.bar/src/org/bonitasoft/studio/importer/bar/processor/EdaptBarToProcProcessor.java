@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -71,8 +69,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
-import org.eclipse.emf.edapt.internal.migration.execution.BundleClassLoader;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.internal.migration.execution.internal.BundleClassLoader;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
@@ -88,7 +86,6 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
@@ -119,7 +116,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     private CustomConnectorMigrator customConnectorMigrator;
 
     public EdaptBarToProcProcessor() {
-        final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH,
+        final URI migratorURI = URI.createPlatformPluginURI(
+                "/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH,
                 true);
         try {
             migrator = new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
@@ -139,7 +137,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
                 @Override
                 public void run() {
-                    final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard());
+                    final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),
+                            new MigrationWarningWizard());
                     final int result = dialog.open();
                     if (result != Dialog.OK) {
                         continueImport = false;
@@ -160,13 +159,15 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         importFormJarDependencies(archiveFile, progressMonitor);
         importApplicationResources(archiveFile, progressMonitor);
 
-        final Resource resource = new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
+        final Resource resource = new XMLResourceFactoryImpl()
+                .createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
         if (resource == null) {
             throw new Exception("Failed to create an EMF resource for " + barProcFile.getName());
         }
 
         final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(barProcFile);
-        final Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType("process:MainProcess",
+        final Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType(
+                "process:MainProcess",
                 ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
         if (featureValueFromEObjectType.size() != 1) {
             throw new Exception("Failed to create an EMF resource for " + barProcFile.getName());
@@ -182,7 +183,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         performMigration(migrator, resourceURI, release, progressMonitor);// Migrate from 5.9 to 6.0-Alpha
 
         // Migrate from 6.0-Alpha to current release
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         final String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
         final Migrator nextMigrator = store.getMigrator(nsURI);
         nextMigrator.setLevel(ValidationLevel.RELEASE);
@@ -213,7 +215,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     /**
      * @throws MigrationException
      */
-    protected void addMigrationReport(final BOSMigrator migrator, final URI resourceURI, final String sourceRelease, final IProgressMonitor monitor)
+    protected void addMigrationReport(final BOSMigrator migrator, final URI resourceURI, final String sourceRelease,
+            final IProgressMonitor monitor)
             throws MigrationException {
         final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
         final Resource resource = editingDomain.getResourceSet().createResource(resourceURI);
@@ -231,7 +234,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
                             diagramName = ((MainProcess) root).getName() + "--" + ((MainProcess) root).getVersion();
                             ((MainProcess) root).setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
                             ((MainProcess) root).setBonitaVersion(ProductVersion.CURRENT_VERSION);
-                            ((MainProcess) root).setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) root));
+                            ((MainProcess) root).setConfigId(ConfigurationIdProvider.getConfigurationIdProvider()
+                                    .getConfigurationId((MainProcess) root));
                         }
                     }
                     report.setName(Messages.bind(Messages.migrationReportOf, diagramName));
@@ -257,7 +261,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         }
     }
 
-    protected Change addReportChange(final String elementName, final String elementType, final String elementUUID, final String description, final String propertyName, final int status) {
+    protected Change addReportChange(final String elementName, final String elementType, final String elementUUID,
+            final String description, final String propertyName, final int status) {
         final Change change = MigrationReportFactory.eINSTANCE.createChange();
         change.setElementName(elementName);
         change.setElementType(elementType);
@@ -290,15 +295,18 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
                 toCopy = f;
                 if (toCopy.exists()) {
-                    PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy, progressMonitor);
+                    PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy,
+                            progressMonitor);
                 }
             }
             PlatformUtil.delete(tmpBar, progressMonitor);
         }
     }
 
-    private void importFormJarDependencies(final File archiveFile, final IProgressMonitor monitor) throws ZipException, IOException {
-        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+    private void importFormJarDependencies(final File archiveFile, final IProgressMonitor monitor)
+            throws ZipException, IOException {
+        final DependencyRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(archiveFile);
         final Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
@@ -306,9 +314,11 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             zipEntry = (ZipEntry) enumEntries.nextElement();
             final File currentFile = new File(zipEntry.getName());
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar")) {
-                final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
+                        zipfile.getInputStream(zipEntry));
                 if (dependencyFileStore == null) {
-                    BonitaStudioLog.debug("Failed to import application dependency " + currentFile.getName(), BarImporterPlugin.PLUGIN_ID);
+                    BonitaStudioLog.debug("Failed to import application dependency " + currentFile.getName(),
+                            BarImporterPlugin.PLUGIN_ID);
                 }
             }
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar")) {
@@ -325,8 +335,10 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         // TODO Import validator sources in repository
     }
 
-    private void importProcessJarDependencies(final File archiveFile, final IProgressMonitor monitor) throws ZipException, IOException {
-        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+    private void importProcessJarDependencies(final File archiveFile, final IProgressMonitor monitor)
+            throws ZipException, IOException {
+        final DependencyRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(archiveFile);
         final Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
@@ -334,10 +346,13 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             zipEntry = (ZipEntry) enumEntries.nextElement();
             final File currentFile = new File(zipEntry.getName());
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar")) {
-                if (!customConnectorMigrator.getImportedJarNames().contains(currentFile.getName()) && store.getChild(currentFile.getName()) == null) {
-                    final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                if (!customConnectorMigrator.getImportedJarNames().contains(currentFile.getName())
+                        && store.getChild(currentFile.getName()) == null) {
+                    final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
+                            zipfile.getInputStream(zipEntry));
                     if (dependencyFileStore == null) {
-                        BonitaStudioLog.debug("Failed to import process dependency " + currentFile.getName(), BarImporterPlugin.PLUGIN_ID);
+                        BonitaStudioLog.debug("Failed to import process dependency " + currentFile.getName(),
+                                BarImporterPlugin.PLUGIN_ID);
                     }
                 }
             }
@@ -351,7 +366,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     }
 
     private void importAttachment(final File archiveFile, final IProgressMonitor monitor) throws IOException {
-        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        final DocumentRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DocumentRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(archiveFile);
         final Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
@@ -387,7 +403,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         return ".bar";
     }
 
-    private void performMigration(final BOSMigrator migrator, final URI resourceURI, final Release release, final IProgressMonitor monitor) throws MigrationException {
+    private void performMigration(final BOSMigrator migrator, final URI resourceURI, final Release release,
+            final IProgressMonitor monitor) throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
         migrator.migrateAndSave(
                 Collections.singletonList(resourceURI), release,

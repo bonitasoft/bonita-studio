@@ -124,7 +124,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
         @Override
         public Object convert(final Object fromObject) {
-            return !((Boolean) fromObject);
+            return fromObject != null ? ((Boolean) fromObject) : false;
         }
     };
 
@@ -536,7 +536,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
                         @Override
                         public Object convert(final Object from) {
-                            if (from != null && from instanceof ValidatorDescriptor) {
+                            if (from instanceof ValidatorDescriptor) {
                                 return ((ValidatorDescriptor) from).getClassName();
                             }
                             return null;
@@ -547,7 +547,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
                         @Override
                         public Object convert(final Object from) {
-                            if (from != null && from instanceof String) {
+                            if (from instanceof String) {
                                 final Collection<ValidatorDescriptor> input = (Collection<ValidatorDescriptor>) comboViewerForValidatorClass
                                         .getInput();
                                 for (final ValidatorDescriptor d : input) {

@@ -41,6 +41,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -165,8 +166,11 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     private void fillGroovyExpression() {
+        SWTBotShell activeShell = bot.activeShell();
         bot.link(Messages.switchEditor).click(Messages.switchEditor.replaceAll("<A>", "").replaceAll("</A>", ""));
         bot.button(IDialogConstants.YES_LABEL).click();
+        activeShell.setFocus();
+        bot.waitUntil(Conditions.shellIsActive(activeShell.getText()));
         editGroovyEditor(0, "Request", String.class.getName(), "sqlQuery", GROOVY_SQL_QUERY);
         bot.sleep(1000);
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -219,6 +223,7 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
 
     private void editGroovyEditor(final int buttonIndex, final String inputName, final String inputtype,
             final String scriptName, final String groovyScript) {
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
@@ -227,6 +232,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
         bot.button(IDialogConstants.OK_LABEL).click();
+        activeShell.setFocus();
+        bot.waitUntil(Conditions.shellIsActive(activeShell.getText()));
         assertEquals("wrong value for " + inputName, bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText(),
                 scriptName);
     }

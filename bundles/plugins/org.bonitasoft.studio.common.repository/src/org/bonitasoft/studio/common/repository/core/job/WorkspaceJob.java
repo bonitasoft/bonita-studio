@@ -53,7 +53,7 @@ public abstract class WorkspaceJob extends Job {
             } finally {
                 if (depth >= 0)
                     workspace.getWorkManager().endUnprotected(depth);
-                workspace.endOperation(null, false, monitor);
+                workspace.endOperation(null, false);
             }
         } catch (final CoreException e) {
             return e.getStatus();

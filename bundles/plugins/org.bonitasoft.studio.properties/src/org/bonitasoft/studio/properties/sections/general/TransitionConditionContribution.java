@@ -366,7 +366,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if ((Boolean) fromObject) {
+                    if (fromObject != null && (Boolean) fromObject) {
                         return SequenceFlowConditionType.EXPRESSION;
                     } else {
                         return SequenceFlowConditionType.DECISION_TABLE;
@@ -379,7 +379,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if ((Boolean) fromObject) {
+                    if (fromObject != null && (Boolean) fromObject) {
                         return SequenceFlowConditionType.DECISION_TABLE;
                     } else {
                         return SequenceFlowConditionType.EXPRESSION;
@@ -392,11 +392,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
                 @Override
                 public Object convert(final Object fromObject) {
-                    if (fromObject == SequenceFlowConditionType.EXPRESSION) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return fromObject == SequenceFlowConditionType.EXPRESSION;
                 }
             });
 

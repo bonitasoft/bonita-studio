@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     BMW Car IT - Initial API and implementation
- *     Technische Universitaet Muenchen - Major refactoring and extension
+ * BMW Car IT - Initial API and implementation
+ * Technische Universitaet Muenchen - Major refactoring and extension
  *******************************************************************************/
 package org.eclipse.emf.edapt.internal.migration.impl;
 
@@ -18,10 +18,9 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 
-
 /**
  * A list automatically updating the model.
- * 
+ *
  * @author herrmama
  * @author $Author$
  * @version $Rev$
@@ -34,7 +33,7 @@ public class UpdatingList<E> extends BasicEList<E> {
 
 	/** Feature */
 	private EStructuralFeature feature;
-	
+
 	/** Instance */
 	private Instance instance;
 
@@ -42,26 +41,26 @@ public class UpdatingList<E> extends BasicEList<E> {
 	public UpdatingList(Instance instance, EStructuralFeature feature) {
 		this(instance, feature, new ArrayList<E>());
 	}
-	
+
 	/** Constructor */
 	public UpdatingList(Instance instance, EStructuralFeature feature, Collection<E> values) {
 		super(values);
 		this.instance = instance;
 		this.feature = feature;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	protected void didAdd(int index, Object object) {
 		instance.add(feature, index, object);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	protected void didRemove(int index, Object object) {
 		instance.remove(feature, index);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	protected boolean isUnique() {

@@ -33,6 +33,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,6 +43,7 @@ public class FormsDiagramTests {
     private final SWTGefBot bot = new SWTGefBot();
 
     @Test
+    @Ignore
     public void testFormsDiagramTest() throws ExecutionException, InterruptedException {
         SWTBotTestUtil.createNewDiagram(bot);
         SWTBotEditor botEditor = bot.activeEditor();
@@ -75,6 +77,7 @@ public class FormsDiagramTests {
     }
 
     @Test
+    @Ignore
     public void testConvertInForms() {
 
         /* Create a new form */
@@ -129,6 +132,7 @@ public class FormsDiagramTests {
      * @throws InterruptedException
      */
     @Test
+    @Ignore
     public void testGridSizeSetTo0() throws InterruptedException {
         /* Create a new form */
         SWTBotTestUtil.createNewDiagram(bot);
@@ -142,16 +146,13 @@ public class FormsDiagramTests {
         gmfEditor.activateTool("Checkbox");
         /* move depends on which tool we used, it seems that it begins from its. */
         gmfEditor.click(200, 200);
-        gmfEditor.getEditPart("Submit1").parent().select();
-        final SWTBotGefEditPart ep = gmfEditor.getEditPart("Checkbox1");
-        if (ep != null && ep.parent() != null) {
-            ep.parent().select();
-        }
-
+        gmfEditor.getEditPart("Submit1").parent().click();
+        gmfEditor.getEditPart("Checkbox1").parent().click();
         final SWTBotView viewByTitle = bot.viewByTitle("Appearance");
+        viewByTitle.setFocus();
         viewByTitle.show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Grid");
-        bot.saveAllEditors();
+        
         final SWTBotText widthTextBox = viewByTitle.bot().textWithLabel(Messages.AppearanceSection_ColumnWidth);
         final String text = widthTextBox.getText();
         assertEquals("", text);

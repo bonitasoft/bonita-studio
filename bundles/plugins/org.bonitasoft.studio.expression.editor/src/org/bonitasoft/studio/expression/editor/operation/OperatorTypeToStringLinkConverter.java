@@ -35,9 +35,9 @@ public class OperatorTypeToStringLinkConverter extends Converter {
     }
 
     @Override
-    public String convert(final Object arg0) {
-        final Operator operator = (Operator) operatorObservableValue.getValue();;
-        final String operatorType = (String) arg0;
+    public String convert(final Object from) {
+        final Operator operator = (Operator) operatorObservableValue.getValue();
+        final String operatorType = (String) from;
         if (operator != null) {
             return "<A>" + operatorLabelProvider.getText(operator) + "</A>";
         }

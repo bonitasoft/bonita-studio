@@ -28,6 +28,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -140,6 +141,7 @@ public class TestTextAreaInConnectorWizard {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
         bot.textWithLabel("Page id *").setText(pageId);
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
         bot.textWithLabel("Widget id*").setText(widgetId);
         bot.textWithLabel("Display name").setText("text");
@@ -167,6 +169,7 @@ public class TestTextAreaInConnectorWizard {
         } else {
             bot.button(IDialogConstants.CANCEL_LABEL).click();
         }
+        activeShell.setFocus();
         bot.button("Apply").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();

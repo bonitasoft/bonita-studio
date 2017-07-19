@@ -89,7 +89,7 @@ public class BOSWebServerManager {
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
     private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
-    protected static final String WEBSERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaWebServerManager";
+    protected static final String WEBSERVERMANAGER_EXTENSION_ID = "org.bonitasoft.studio.engine.bonitaWebServerManager";
     protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.70";
     protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.70";
     protected static final String START_TIMEOUT = "start-timeout";
@@ -118,7 +118,7 @@ public class BOSWebServerManager {
 
     protected static BOSWebServerManager createInstance() {
         for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements(WEBSERVERMANAGER_EXTENSION_D)) {
+                .getConfigurationElements(WEBSERVERMANAGER_EXTENSION_ID)) {
             try {
                 return (BOSWebServerManager) element.createExecutableExtension("class");
             } catch (final CoreException e) {
@@ -256,7 +256,21 @@ public class BOSWebServerManager {
     }
 
     private void waitServerRunning(final IProgressMonitor monitor) {
-        if (tomcat.getServerState() == IServer.STATE_STARTED) {
+        try {
+            Thread.sleep(5000);
+        } catch (final InterruptedException ex) {
+            BonitaStudioLog.error(ex, EnginePlugin.PLUGIN_ID);
+        }
+        int serverState = tomcat.getServerState();
+        while (serverState != IServer.STATE_STARTING && serverState != IServer.STATE_STOPPED) {
+            try {
+                Thread.sleep(500);
+            } catch (final InterruptedException ex) {
+                BonitaStudioLog.error(ex, EnginePlugin.PLUGIN_ID);
+            }
+        }
+        if (serverState == IServer.STATE_STARTING) {
+            connectWithRetries();
             BonitaStudioLog.debug("Tomcat server started.",
                     EnginePlugin.PLUGIN_ID);
         } else {
@@ -275,9 +289,7 @@ public class BOSWebServerManager {
                     }
                 });
             }
-            return;
         }
-        connectWithRetries();
     }
 
     private void connectWithRetries() {
