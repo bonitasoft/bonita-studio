@@ -39,8 +39,7 @@
         <module>org.bonitasoft.studio.connectors.model.edit</module>
         <module>org.bonitasoft.studio.data</module>
         <module>org.bonitasoft.studio.debug</module>
-        <module>org.bonitasoft.studio.decision.core</module>
-        <module>org.bonitasoft.studio.decision.ui</module>
+        <module>org.bonitasoft.studio.decision.table</module>
         <module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
         <module>org.bonitasoft.studio.designer.war</module>
