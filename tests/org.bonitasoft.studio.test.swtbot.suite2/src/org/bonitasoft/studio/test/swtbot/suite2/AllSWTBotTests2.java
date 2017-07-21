@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.test.swtbot.suite2;
 
-import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.actors.tests.SWTbot.TestOrganizationPassword;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
 import org.bonitasoft.studio.commands.test.DeleteCommandTest;
@@ -49,6 +48,7 @@ import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.document.TestDocument;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
+import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;

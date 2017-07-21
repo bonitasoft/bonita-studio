@@ -57,13 +57,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.exporter.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.importer.tests"
          download-size="0"
          install-size="0"
@@ -149,13 +142,6 @@
 
    <plugin
          id="org.bonitasoft.studio.test.swtbot.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.expressions.test"
          download-size="0"
          install-size="0"
          version="0.0.0"

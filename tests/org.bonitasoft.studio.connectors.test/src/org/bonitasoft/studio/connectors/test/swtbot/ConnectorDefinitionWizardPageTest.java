@@ -29,6 +29,7 @@ import org.bonitasoft.studio.connector.model.definition.Select;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
