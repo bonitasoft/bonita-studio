@@ -91,7 +91,9 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.validation.test,
  assertj-core;bundle-version="1.5.0",
  org.bonitasoft.studio.contract;bundle-version="7.1.0",
- org.bonitasoft.studio.la;bundle-version="7.5.0"
+ org.bonitasoft.studio.la;bundle-version="7.5.0",
+ org.codehaus.groovy;bundle-version="2.4.12",
+ org.bonitasoft.studio.decision.table;bundle-version="7.6.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.applicationDescriptor,
