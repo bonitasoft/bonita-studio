@@ -16,6 +16,7 @@
 package org.bonitasoft.studio.connectors.test.swtbot;
 
 import org.bonitasoft.studio.connector.model.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;

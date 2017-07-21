@@ -28,5 +28,3 @@ Require-Bundle: org.bonitasoft.studio.pics,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Export-Package: org.bonitasoft.studio.expression.editor.pattern,
- org.bonitasoft.studio.expression.editor.pattern.contentAssist

@@ -13,7 +13,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.bonitasoft.studio.connectors.test.swtbot;
+package org.bonitasoft.studio.swtbot.framework;
 
 import java.util.List;
 
