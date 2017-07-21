@@ -22,9 +22,9 @@ import static org.mockito.Mockito.when;
 
 import java.net.URL;
 
-import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.After;
 import org.junit.Before;

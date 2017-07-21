@@ -5,22 +5,20 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.browser.operation;
+package org.bonitasoft.studio.preferences.browser;
 
 import java.net.URL;
 
-import org.bonitasoft.studio.browser.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
+import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
@@ -30,10 +28,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class OpenBrowserOperation implements Runnable {
 
@@ -57,7 +53,8 @@ public class OpenBrowserOperation implements Runnable {
         if (browserIsSet()) {
             IWebBrowser browser = externalBrowser;
             if (browser == null) {
-                browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR, TYPE_ID, "", ""); //$NON-NLS-1$
+                browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,
+                        TYPE_ID, "", ""); //$NON-NLS-1$
             }
             browser.openURL(url);
         }
@@ -65,7 +62,8 @@ public class OpenBrowserOperation implements Runnable {
 
     protected boolean browserIsSet() {
         if (noExternalBrowserSet()) {
-            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle, Messages.noBrowserFoundMsg)) {
+            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle,
+                    Messages.noBrowserFoundMsg)) {
                 final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
                 dialog.create();
                 dialog.setSelectedPreferencePage(BonitaPreferenceDialog.WEB_BROWSER_PAGE_ID);
@@ -88,6 +86,5 @@ public class OpenBrowserOperation implements Runnable {
             BonitaStudioLog.error(e);
         }
     }
-
 
 }

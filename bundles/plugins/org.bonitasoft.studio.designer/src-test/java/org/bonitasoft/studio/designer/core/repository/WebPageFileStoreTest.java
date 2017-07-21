@@ -20,11 +20,11 @@ import static org.mockito.Mockito.verify;
 
 import java.net.URL;
 
-import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
