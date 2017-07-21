@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.debug.wizard;
+package org.bonitasoft.studio.connectors.ui.wizard;
 
 import org.bonitasoft.studio.connectors.ui.provider.StyledConnectorLabelProvider;
 import org.bonitasoft.studio.model.process.Connector;

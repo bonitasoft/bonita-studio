@@ -12,19 +12,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.debug.coolbar;
+package org.bonitasoft.studio.connectors.ui;
 
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.debug.i18n.Messages;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
@@ -90,7 +88,7 @@ public class DebugCoolbarItem extends ContributionItem implements IBonitaContrib
      */
     @Override
     public boolean isVisible() {
-        return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.EXECUTION);
+        return true;
     }
 
     @Override

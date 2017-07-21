@@ -8,6 +8,6 @@
         <version>7.6.0-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-    <artifactId>org.bonitasoft.studio.decision.core</artifactId>
+    <artifactId>org.bonitasoft.studio.decision.table</artifactId>
     <packaging>eclipse-plugin</packaging>
 </project>
