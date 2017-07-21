@@ -5,22 +5,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.gmf.tools.convert;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -37,7 +36,8 @@ public final class RemoveBoundaryWithItsFlows extends AbstractEMFOperation {
     private final BoundaryEvent boundaryToRemove;
     private final Activity boundaryHolder;
 
-    public RemoveBoundaryWithItsFlows(final TransactionalEditingDomain domain, final BoundaryEvent boundaryToRemove, final Activity boundaryHolder) {
+    public RemoveBoundaryWithItsFlows(final TransactionalEditingDomain domain, final BoundaryEvent boundaryToRemove,
+            final Activity boundaryHolder) {
         super(domain, "Remove boundary child");
         this.boundaryToRemove = boundaryToRemove;
         this.boundaryHolder = boundaryHolder;
@@ -58,9 +58,10 @@ public final class RemoveBoundaryWithItsFlows extends AbstractEMFOperation {
 
     private void cleanMessageFlow() {
         if (boundaryToRemove instanceof BoundaryMessageEvent) {
-            final MessageFlow messageFlow = ((BoundaryMessageEvent) boundaryToRemove).getIncomingMessag();
-            EcoreUtil.remove(messageFlow);
-            messageFlow.getSource().getOutgoingMessages().remove(messageFlow);
+            Optional.ofNullable(((BoundaryMessageEvent) boundaryToRemove).getIncomingMessag()).ifPresent(messageFlow -> {
+                EcoreUtil.remove(messageFlow);
+                messageFlow.getSource().getOutgoingMessages().remove(messageFlow);
+            });
         }
     }
 
