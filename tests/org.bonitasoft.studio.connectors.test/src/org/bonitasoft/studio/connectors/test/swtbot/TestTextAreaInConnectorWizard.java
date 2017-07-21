@@ -16,6 +16,7 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
+import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;

@@ -26,4 +26,14 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+    <extension
+         point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
+      <proposalFilter
+            name="BonitaGroovyProposalFilter"
+            proposalFilter="org.bonitasoft.studio.expression.editor.pattern.contentAssist.GenericProposalFilter">
+         <appliesTo
+               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
+         </appliesTo>
+      </proposalFilter>
+   </extension>
 </plugin>

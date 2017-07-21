@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.expressions.test;
+package org.bonitasoft.studio.tests.expressionEditor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -80,7 +80,7 @@ public class TestConnectorExpression implements SWTBotConstants {
     }
 
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
-    	SWTBotShell activeShell = bot.activeShell();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
         bot.textWithLabel("Widget id*").setText(widgetId);
         bot.comboBoxWithLabel("Widget type").setSelection(widgetType);
@@ -115,8 +115,9 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
-    private void editGroovyEditor(int buttonIndex, String inputName, String inputtype, String scriptName, String groovyScript) {
-    	SWTBotShell activeShell = bot.activeShell();
+    private void editGroovyEditor(int buttonIndex, String inputName, String inputtype, String scriptName,
+            String groovyScript) {
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
         bot.table().select("Script");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);

@@ -36,7 +36,7 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ExportConnectorArchiveOperation;
-import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;

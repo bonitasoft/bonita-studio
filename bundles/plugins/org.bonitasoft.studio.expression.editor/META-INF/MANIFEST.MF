@@ -21,6 +21,8 @@ Export-Package: org.bonitasoft.studio.expression.editor,
    org.bonitasoft.studio.tests,
    org.bonitasoft.studio.swtbot.framework",
  org.bonitasoft.studio.expression.editor.operation,
+ org.bonitasoft.studio.expression.editor.pattern,
+ org.bonitasoft.studio.expression.editor.pattern.contentAssist,
  org.bonitasoft.studio.expression.editor.provider,
  org.bonitasoft.studio.expression.editor.viewer,
  org.bonitasoft.studio.expression.editor.widget
@@ -55,7 +57,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.workbench;bundle-version="1.2.1",
  org.codehaus.groovy.eclipse.codeassist.completion;bundle-version="2.9.2",
  org.eclipse.jdt.groovy.core;bundle-version="2.9.2",
- org.codehaus.groovy.eclipse.core
+ org.codehaus.groovy.eclipse.core,
+ org.codehaus.groovy;bundle-version="2.4.12",
+ org.bonitasoft.studio.groovy;bundle-version="7.6.0",
+ org.eclipse.ui.ide;bundle-version="3.13.0",
+ org.codehaus.groovy.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.document,
