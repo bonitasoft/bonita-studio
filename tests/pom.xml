@@ -22,7 +22,6 @@
 		<module>org.bonitasoft.studio.common.diagram.test</module>
 		<module>org.bonitasoft.studio.configuration.test</module>
 		<module>org.bonitasoft.studio.connectors.test</module>
-		<module>org.bonitasoft.studio.decision.core.test</module>
 		<module>org.bonitasoft.studio.diagram.test</module>
 		<module>org.bonitasoft.studio.engine.test</module>
 		<module>org.bonitasoft.studio.exporter.tests</module>
