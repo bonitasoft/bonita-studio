@@ -23,7 +23,6 @@
         <module>org.bonitasoft.studio.diagram</module>
         <module>org.bonitasoft.studio.diagram.form</module>
         <module>org.bonitasoft.studio.actors</module>
-        <module>org.bonitasoft.studio.browser</module>
         <module>org.bonitasoft.studio.businessobject</module>
         <module>org.bonitasoft.studio.common</module>
         <module>org.bonitasoft.studio.common.diagram</module>
