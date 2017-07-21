@@ -12,28 +12,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.debug.command;
+package org.bonitasoft.studio.connectors.handler;
 
 import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
-import org.bonitasoft.studio.debug.i18n.Messages;
-import org.bonitasoft.studio.debug.wizard.DebugProcessWizard;
+import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.ui.wizard.DebugProcessWizard;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -68,7 +63,7 @@ public class DebugProcessCommand extends AbstractHandler {
 
     private MainProcess getSelectedProcess() {
         IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if (editorPart instanceof ProcessDiagramEditor) {
+        if (editorPart instanceof DiagramEditor) {
             Object selection = ((IStructuredSelection) editorPart.getSite().getSelectionProvider().getSelection())
                     .getFirstElement();
             if (selection instanceof IGraphicalEditPart) {
@@ -77,10 +72,6 @@ public class DebugProcessCommand extends AbstractHandler {
                     return ModelHelper.getMainProcess(semanticObject);
                 }
             }
-        } else if (editorPart instanceof FormDiagramEditor) {
-            DiagramEditPart formDiagram = ((DiagramDocumentEditor) editorPart).getDiagramEditPart();
-            Form form = (Form) formDiagram.resolveSemanticElement();
-            return ModelHelper.getMainProcess(form.eContainer());
         }
         return null;
     }

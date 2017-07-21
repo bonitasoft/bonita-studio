@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.debug.DebugPlugin;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -59,7 +58,6 @@ public class ApplicationPlugin extends AbstractUIPlugin {
             getDialogSettings().put(BAR_DEFAULT_PATH, System.getProperty("user.home"));
         }
         try {
-            DebugPlugin.getDefault().getBundle().start();
             ValidationPlugin.getDefault().getBundle().start();
             if (ConsolePlugin.getDefault() == null) {
                 new ConsolePlugin();

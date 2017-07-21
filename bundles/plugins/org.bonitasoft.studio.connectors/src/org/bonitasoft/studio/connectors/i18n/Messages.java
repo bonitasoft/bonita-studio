@@ -182,6 +182,12 @@ public class Messages extends NLS {
     public static String copy;
 
     public static String providedDefinitionAlreadyExists;
+    public static String selectConnectorTitle;
+    public static String selectConnectorMessage;
+    public static String selectAll;
+    public static String unSelectAll;
+    public static String DebugProcessButtonLabel;
+    public static String debugProcessWizardtitle;
 
     /**
      * @param event
