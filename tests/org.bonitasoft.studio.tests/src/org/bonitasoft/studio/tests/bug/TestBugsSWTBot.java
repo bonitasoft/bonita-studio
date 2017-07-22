@@ -18,7 +18,7 @@ import static org.bonitasoft.studio.repository.themes.i18n.Messages.themeReposit
 import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;

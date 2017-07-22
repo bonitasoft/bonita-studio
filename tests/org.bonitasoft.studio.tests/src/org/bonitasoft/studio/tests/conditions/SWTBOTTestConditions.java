@@ -28,7 +28,7 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotConditionExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.validation.test.ValidationTestBase;
+import org.bonitasoft.studio.tests.validation.ValidationTestBase;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.validation.model.EvaluationMode;
@@ -70,7 +70,7 @@ public class SWTBOTTestConditions {
         diagramPerspective.getDiagramPropertiesPart().selectGeneralTab();
         SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        final BotExpressionEditorDialog expressionEditor = new BotExpressionEditorDialog(bot,activeShell);
+        final BotExpressionEditorDialog expressionEditor = new BotExpressionEditorDialog(bot, activeShell);
         final BotConditionExpressionEditor botConditionEditor = expressionEditor.selectConditionExpressionType();
         botConditionEditor.setValue("myData < \"value\"");
         botConditionEditor.ok();
