@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.general.form;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 

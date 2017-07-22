@@ -10,10 +10,10 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.composite.BotDocInitialValueComposite;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -50,9 +50,9 @@ public class BotDataFormPropertySection extends BotBase {
     }
 
     public BotExpressionEditorDialog editInitialValue() {
-    	SWTBotShell activeShell = bot.activeShell();
+        SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
-        return new BotExpressionEditorDialog(bot,activeShell);
+        return new BotExpressionEditorDialog(bot, activeShell);
     }
 
     public BotDocInitialValueComposite getBotDocInitialValueComposite() {

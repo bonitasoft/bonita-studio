@@ -22,12 +22,12 @@
                 <configuration>
                     <dependency-resolution>
                         <extraRequirements>
-                            <requirement>
+                             <requirement>
                                 <type>eclipse-feature</type>
                                 <id>tests-feature</id>
                                 <versionRange>0.0.0</versionRange>
                             </requirement>
-                             <requirement>
+                            <requirement>
                                 <type>eclipse-feature</type>
                                 <id>studio-feature</id>
                                 <versionRange>0.0.0</versionRange>
