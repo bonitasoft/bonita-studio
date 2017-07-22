@@ -25,6 +25,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
+import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -41,7 +42,6 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOper
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefFormDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;

@@ -17,32 +17,11 @@
 	<modules>
 		<module>org.bonitasoft.studio.swtbot.framework</module>
 		<module>org.bonitasoft.studio.jre.extension</module>
-		<module>org.bonitasoft.studio.actors.tests</module>
-		<module>org.bonitasoft.studio.application.test</module>
-		<module>org.bonitasoft.studio.common.diagram.test</module>
-		<module>org.bonitasoft.studio.configuration.test</module>
-		<module>org.bonitasoft.studio.connectors.test</module>
-		<module>org.bonitasoft.studio.diagram.test</module>
-		<module>org.bonitasoft.studio.engine.test</module>
-		<module>org.bonitasoft.studio.exporter.tests</module>
-		<module>org.bonitasoft.studio.importer.jpdl.tests</module>
-		<module>org.bonitasoft.studio.importer.tests</module>
-		<module>org.bonitasoft.studio.importer.bar.tests</module>
-		<module>org.bonitasoft.studio.migration.tests</module>
-		<module>org.bonitasoft.studio.profiles.tests</module>
-		<module>org.bonitasoft.studio.properties.test</module>
-		<module>org.bonitasoft.studio.repository.test</module>
-		<module>org.bonitasoft.studio.repository.themes.test</module>
-		<module>org.bonitasoft.studio.test.swtbot.util</module>
 		<module>org.bonitasoft.studio.tests.hotspot</module>
 		<module>org.bonitasoft.studio.util.tests</module>
-		<module>org.bonitasoft.studio.validators.test</module>
-		<module>org.bonitasoft.studio.validation.test</module>
-		<module>org.bonitasoft.studio.workspace.test</module>
-		<module>org.bonitasoft.studio.xml.tests</module>
 		<module>org.bonitasoft.studio.tests</module>
-		<module>tests-feature</module>
 		<module>tests-common-feature</module>
+		<module>tests-feature</module>
 	</modules>
 
 	<profiles>

@@ -9,12 +9,12 @@
 package org.bonitasoft.studio.swtbot.framework.diagram;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.BotApplicationDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.data.BotDataDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotGeneralDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.validation.BotValidationPropertiesView;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 

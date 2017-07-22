@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestBugSave {
@@ -47,6 +48,7 @@ public class TestBugSave {
         }
     }
 
+    @Ignore
     @Test
     public void testCrashingSave() throws Exception {
         new NewDiagramCommandHandler().newDiagram().open();
