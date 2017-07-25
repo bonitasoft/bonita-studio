@@ -98,7 +98,6 @@ public class DefinitionResourceProvider {
     private final Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<>();
     private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
-
     static {
         INSTANCES_MAP = new WeakHashMap<>();
     }
@@ -136,10 +135,9 @@ public class DefinitionResourceProvider {
     }
 
     protected ImageRegistry createImageRegistry() {
-
         // If we are in the UI Thread use that
-        if (Display.getCurrent() != null) {
-            return new ImageRegistry(Display.getCurrent());
+        if (Display.getDefault() != null) {
+            return new ImageRegistry(Display.getDefault());
         }
 
         if (PlatformUI.isWorkbenchRunning()) {
@@ -204,7 +202,8 @@ public class DefinitionResourceProvider {
     }
 
     private String getCacheKey(final ConnectorDefinition definition, final Locale locale) {
-        return NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false) + locale.toString();
+        return NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false)
+                + locale.toString();
     }
 
     private String getMessage(final ConnectorDefinition definition, final String key) {
@@ -322,7 +321,8 @@ public class DefinitionResourceProvider {
                 .getAbsolutePath()
                 + File.separatorChar
                 + NamingUtils.toConnectorDefinitionFilename(definition.getId(),
-                        definition.getVersion(), false) + ".properties";
+                        definition.getVersion(), false)
+                + ".properties";
         final File defaultMessageFile = new File(fileName);
         FileOutputStream fos = null;
         try {
@@ -798,6 +798,5 @@ public class DefinitionResourceProvider {
     public void removeCategoryLabel(final Properties messages, final Category c) {
         messages.remove(c.getId() + "." + category);
     }
-
 
 }
