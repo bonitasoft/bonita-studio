@@ -23,11 +23,12 @@
                             <baseImgPath>${basedir}/content/images/Logo-Welcome-Community-Without-Version.png</baseImgPath>
                             <outputImagePath>${basedir}/content/images/logo-community.png</outputImagePath>
                             <outputImageFormat>png</outputImageFormat>
-                            <xLocation>70</xLocation>
-                            <yLocation>116</yLocation>
+                            <xLocation>192</xLocation>
+                            <yLocation>78</yLocation>
+                            <italic>true</italic>
                             <fontSize>35</fontSize>
-                            <color>55738c</color>
-                            <bold>false</bold>
+                            <color>#0b4361</color>
+                            <bold>true</bold>
                             <versionLabel>${project.version}</versionLabel>
                         </configuration>
                         <goals>
