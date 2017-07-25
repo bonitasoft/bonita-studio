@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -33,6 +34,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -148,6 +150,11 @@ public class ImportWorkspaceApplication implements IApplication {
      */
     @Override
     public void stop() {
+        try {
+            ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         PlatformUI.getWorkbench().close();
     }
 
