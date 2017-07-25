@@ -37,7 +37,6 @@ import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
 import org.bonitasoft.studio.engine.export.expression.converter.comparison.ComparisonExpressionConverter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
@@ -133,13 +132,6 @@ public class EngineExpressionUtil {
         return operation.getOperator().getType();
     }
 
-    /**
-     * Hack function because we want only constant in UI but we need a Variable type for the engine
-     *
-     * @param operation
-     * @return
-     */
-    @Deprecated
     public static org.bonitasoft.engine.operation.Operation createOperationForMessageContent(final Operation operation) {
         final OperationBuilder builder = new OperationBuilder();
         builder.createNewInstance();
@@ -150,7 +142,8 @@ public class EngineExpressionUtil {
             builder.setOperatorInputType(operatorInputTypes.get(0));
         }
         final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
-        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
+        rightOperand.setType(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())
+                ? ExpressionConstants.VARIABLE_TYPE : operation.getRightOperand().getType());
         if (!operatorInputTypes.isEmpty()) {
             rightOperand.setReturnType(operatorInputTypes.get(0));
         } else {
