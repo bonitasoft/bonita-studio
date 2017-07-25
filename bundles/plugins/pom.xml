@@ -48,7 +48,6 @@
         <module>org.bonitasoft.studio.engine</module>
         <module>org.bonitasoft.studio.exporter</module>
         <module>org.bonitasoft.studio.expression.editor</module>
-        <module>org.bonitasoft.studio.expression.editor.pattern</module>
         <module>org.bonitasoft.studio.expression.editor.win32</module>
         <module>org.bonitasoft.studio.form.preview</module>
         <module>org.bonitasoft.studio.groovy</module>
