@@ -18,6 +18,7 @@ package org.bonitasoft.studio.tests.conditions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -128,8 +129,20 @@ public class TestConditions {
     private ProcessDefinition startDeployedProcess(final ProcessAPI processApi)
             throws ProcessDefinitionNotFoundException, ProcessActivationException,
             ProcessExecutionException, InterruptedException {
-        final long processId = processApi.getProcessDefinitionId("Pool3", "1.0");
         int i = 0;
+        long processId = -1;
+        while (processId < 0 || i > 10) {
+            try {
+                processId = processApi.getProcessDefinitionId("Pool3", "1.0");
+            } catch (ProcessDefinitionNotFoundException e) {
+                i++;
+                Thread.sleep(100);
+            }
+        }
+        if (processId < 0) {
+            fail(String.format("Process definition not found: %s (%s)", "Pool3", "1.0"));
+        }
+        i = 0;
         ProcessDefinition processDef = null;
         while (processDef == null || i > 10) {
             try {
