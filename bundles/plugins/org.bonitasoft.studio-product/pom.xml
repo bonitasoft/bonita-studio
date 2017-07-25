@@ -21,8 +21,10 @@
                     <baseImgPath>${basedir}/splash_without_version.bmp</baseImgPath>
                     <outputImagePath>${basedir}/splash.bmp</outputImagePath>
                     <outputImageFormat>bmp</outputImageFormat>
-                    <xLocation>115</xLocation>
-                    <yLocation>200</yLocation>
+                    <xLocation>358</xLocation>
+                    <yLocation>159</yLocation>
+                    <italic>true</italic>
+                    <fontSize>58</fontSize>
                     <color>#0B4361</color>
                     <versionLabel>${project.version}</versionLabel>
                 </configuration>
