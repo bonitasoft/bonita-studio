@@ -15,6 +15,10 @@
 package org.bonitasoft.studio.engine.export;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.studio.model.expression.builders.OperatorBuilder.anAssignmentOperator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,11 +57,13 @@ public class EngineExpressionUtilTest {
     @Test
     public void should_createExpression_document() throws Exception {
         //given
-        final Expression studioExpression = createStudioExpression("document1", "document1", "org.bonitasoft.engine.bpm.document.DocumentValue",
+        final Expression studioExpression = createStudioExpression("document1", "document1",
+                "org.bonitasoft.engine.bpm.document.DocumentValue",
                 ExpressionConstants.DOCUMENT_TYPE);
 
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -75,7 +81,8 @@ public class EngineExpressionUtilTest {
         studioExpression.getReferencedElements().add(DocumentBuilder.aDocument().multiple().build());
 
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -88,10 +95,12 @@ public class EngineExpressionUtilTest {
     @Test
     public void should_createExpression_constant() throws Exception {
         //given
-        final Expression studioExpression = createStudioExpression("12", "12", Long.class.getName(), ExpressionConstants.CONSTANT_TYPE);
+        final Expression studioExpression = createStudioExpression("12", "12", Long.class.getName(),
+                ExpressionConstants.CONSTANT_TYPE);
 
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -105,10 +114,12 @@ public class EngineExpressionUtilTest {
     @Test
     public void should_createExpression_groovy() throws Exception {
         //given
-        final Expression studioExpression = createStudioExpression("myScript", "return 12", Long.class.getName(), ExpressionConstants.SCRIPT_TYPE);
+        final Expression studioExpression = createStudioExpression("myScript", "return 12", Long.class.getName(),
+                ExpressionConstants.SCRIPT_TYPE);
         studioExpression.setInterpreter(ExpressionConstants.GROOVY);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -124,9 +135,11 @@ public class EngineExpressionUtilTest {
         //given
 
         final Data stringData = createData("myData", false, DatasourceConstants.BOS_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(), ExpressionConstants.VARIABLE_TYPE, stringData);
+        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(),
+                ExpressionConstants.VARIABLE_TYPE, stringData);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -142,9 +155,11 @@ public class EngineExpressionUtilTest {
         //given
 
         final Data stringData = createData("myData", false, DatasourceConstants.PAGEFLOW_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(), ExpressionConstants.VARIABLE_TYPE, stringData);
+        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(),
+                ExpressionConstants.VARIABLE_TYPE, stringData);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -160,9 +175,11 @@ public class EngineExpressionUtilTest {
         //given
 
         final Data stringData = createData("myData", true, DatasourceConstants.IN_MEMORY_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(), ExpressionConstants.VARIABLE_TYPE, stringData);
+        final Expression studioExpression = createStudioExpression("a", "a", String.class.getName(),
+                ExpressionConstants.VARIABLE_TYPE, stringData);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -178,11 +195,13 @@ public class EngineExpressionUtilTest {
         //given
 
         final Data stringData = createData("myData", false, DatasourceConstants.BOS_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'", String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
+        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'",
+                String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
                 stringData);
         studioExpression.setInterpreter(ExpressionConstants.GROOVY);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -192,7 +211,8 @@ public class EngineExpressionUtilTest {
                 .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
                 .hasInterpreter(ExpressionConstants.GROOVY);
         EngineExpressionAssert.assertThat(engineExpression.getDependencies().get(0))
-                .hasName("myData").hasReturnType(String.class.getName()).hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
+                .hasName("myData").hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_VARIABLE.name());
     }
 
     @Test
@@ -200,11 +220,13 @@ public class EngineExpressionUtilTest {
         //given
 
         final Data stringData = createData("myData", true, DatasourceConstants.BOS_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'", String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
+        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'",
+                String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
                 stringData);
         studioExpression.setInterpreter(ExpressionConstants.GROOVY);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -214,18 +236,21 @@ public class EngineExpressionUtilTest {
                 .hasExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name())
                 .hasInterpreter(ExpressionConstants.GROOVY);
         EngineExpressionAssert.assertThat(engineExpression.getDependencies().get(0))
-                .hasName("myData").hasReturnType(String.class.getName()).hasExpressionType(ExpressionType.TYPE_TRANSIENT_VARIABLE.name());
+                .hasName("myData").hasReturnType(String.class.getName())
+                .hasExpressionType(ExpressionType.TYPE_TRANSIENT_VARIABLE.name());
     }
 
     @Test
     public void should_createExpression_groovy_with_form_transient_data_dep() throws Exception {
         //given
         final Data stringData = createData("myData", false, DatasourceConstants.PAGEFLOW_DATASOURCE);
-        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'", String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
+        final Expression studioExpression = createStudioExpression("myScript", "return myData+'plop'",
+                String.class.getName(), ExpressionConstants.SCRIPT_TYPE,
                 stringData);
         studioExpression.setInterpreter(ExpressionConstants.GROOVY);
         //when
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(studioExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                .createExpression(studioExpression);
 
         //then
         EngineExpressionAssert.assertThat(engineExpression)
@@ -252,7 +277,8 @@ public class EngineExpressionUtilTest {
         final Data textData = ProcessFactory.eINSTANCE.createData();
         textData.setDataType(ProcessFactory.eINSTANCE.createStringType());
         textData.setName("textData");
-        assertThat(EngineExpressionUtil.createVariableExpression(textData).getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
+        assertThat(EngineExpressionUtil.createVariableExpression(textData).getExpressionType())
+                .isEqualTo(ExpressionType.TYPE_VARIABLE.name());
     }
 
     @Test
@@ -261,7 +287,8 @@ public class EngineExpressionUtilTest {
         businessObjectData.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
         businessObjectData.setName("leaveRequest");
         businessObjectData.setClassName("org.bonita.business.LeaveRequest");
-        final org.bonitasoft.engine.expression.Expression createVariableExpression = EngineExpressionUtil.createVariableExpression(businessObjectData);
+        final org.bonitasoft.engine.expression.Expression createVariableExpression = EngineExpressionUtil
+                .createVariableExpression(businessObjectData);
         assertThat(createVariableExpression.getExpressionType()).isEqualTo("TYPE_BUSINESS_DATA");
         assertThat(createVariableExpression.getReturnType()).isEqualTo("org.bonita.business.LeaveRequest");
     }
@@ -273,14 +300,16 @@ public class EngineExpressionUtilTest {
         businessObjectData.setName("leaveRequest");
         businessObjectData.setClassName("org.bonita.business.LeaveRequest");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression businessDataExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final org.bonitasoft.studio.model.expression.Expression businessDataExpression = ExpressionFactory.eINSTANCE
+                .createExpression();
         businessDataExpression.setContent("businessDataExpression");
         businessDataExpression.getReferencedElements().add(businessObjectData);
         operation.setLeftOperand(businessDataExpression);
         final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
         operation.setOperator(op);
-        assertThat(EngineExpressionUtil.getOperatorType(operation)).isEqualTo(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR);
+        assertThat(EngineExpressionUtil.getOperatorType(operation))
+                .isEqualTo(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR);
     }
 
     @Test
@@ -288,14 +317,16 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("docName");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+                .createExpression();
         documentExpression.setContent("docName");
         documentExpression.getReferencedElements().add(document);
         operation.setLeftOperand(documentExpression);
         final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
         operation.setOperator(op);
-        assertThat(EngineExpressionUtil.getEngineOperator(operation).name()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assertThat(EngineExpressionUtil.getEngineOperator(operation).name())
+                .isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
     }
 
     @Test
@@ -304,14 +335,16 @@ public class EngineExpressionUtilTest {
         document.setName("docName");
         document.setMultiple(true);
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+                .createExpression();
         documentExpression.setContent("docName");
         documentExpression.getReferencedElements().add(document);
         operation.setLeftOperand(documentExpression);
         final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         operation.setOperator(op);
-        assertThat(EngineExpressionUtil.getEngineOperator(operation).name()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);//TODO: [BS-9610] change it if a specific operation is created in the Engine
+        assertThat(EngineExpressionUtil.getEngineOperator(operation).name())
+                .isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);//TODO: [BS-9610] change it if a specific operation is created in the Engine
     }
 
     @Test
@@ -320,7 +353,8 @@ public class EngineExpressionUtilTest {
         document.setName("docName");
         document.setMultiple(true);
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+                .createExpression();
         documentExpression.setContent("docName");
         documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
         documentExpression.getReferencedElements().add(document);
@@ -328,7 +362,8 @@ public class EngineExpressionUtilTest {
         final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         operation.setOperator(op);
-        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false)).isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT_LIST);
+        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false))
+                .isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT_LIST);
     }
 
     @Test
@@ -336,7 +371,8 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("docName");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+                .createExpression();
         documentExpression.setContent("docName");
         documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
         documentExpression.getReferencedElements().add(document);
@@ -344,12 +380,14 @@ public class EngineExpressionUtilTest {
         final Operator op = ExpressionFactory.eINSTANCE.createOperator();
         op.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         operation.setOperator(op);
-        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false)).isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT);
+        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false))
+                .isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT);
     }
 
     @Test
     public void shouldGetEngineLeftOperandType_Return_External() throws Exception {
-        assertThat(EngineExpressionUtil.getLeftOperandType(null, true)).isEqualTo(ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA);
+        assertThat(EngineExpressionUtil.getLeftOperandType(null, true))
+                .isEqualTo(ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA);
     }
 
     @Test
@@ -375,7 +413,8 @@ public class EngineExpressionUtilTest {
         final Expression expressionWithDocumentList = ExpressionHelper.createExpressionFromDocument(document);
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_LIST_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
+        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil
+                .createExpression(expressionWithDocumentList);
         assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
     }
 
@@ -386,7 +425,8 @@ public class EngineExpressionUtilTest {
         final Expression expressionWithDocumentSimple = ExpressionHelper.createExpressionFromDocument(document);
         expressionWithDocumentSimple.setType(ExpressionConstants.DOCUMENT_TYPE);
         expressionWithDocumentSimple.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentSimple);
+        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil
+                .createExpression(expressionWithDocumentSimple);
         assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
     }
 
@@ -397,7 +437,8 @@ public class EngineExpressionUtilTest {
         final Expression expressionWithDocumentList = ExpressionHelper.createExpressionFromDocument(document);
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
+        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil
+                .createExpression(expressionWithDocumentList);
         assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONSTANT.name());
         assertThat(createdExpression.getReturnType()).isEqualTo(String.class.getName());
     }
@@ -410,7 +451,8 @@ public class EngineExpressionUtilTest {
         final Expression expressionWithDocumentList = ExpressionHelper.createExpressionFromDocument(document);
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
+        final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil
+                .createExpression(expressionWithDocumentList);
         assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
         assertThat(createdExpression.getReturnType()).isEqualTo(List.class.getName());
     }
@@ -423,7 +465,8 @@ public class EngineExpressionUtilTest {
         document.setName("docName");
         document.setMultiple(true);
         expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil.createDependenciesList(expression);
+        final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil
+                .createDependenciesList(expression);
 
         assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
         assertThat(dependenciesList.get(0).getReturnType()).isEqualTo(List.class.getName());
@@ -436,19 +479,51 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("docName");
         expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil.createDependenciesList(expression);
+        final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil
+                .createDependenciesList(expression);
 
         assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
     }
 
     @Test
     public void testCreateBusinessDataObjectReference() {
-        final BusinessObjectData data = BusinessObjectDataBuilder.aBusinessData().withName("bName").withClassname("my.classname").build();
+        final BusinessObjectData data = BusinessObjectDataBuilder.aBusinessData().withName("bName")
+                .withClassname("my.classname").build();
 
-        final org.bonitasoft.engine.expression.Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(data);
+        final org.bonitasoft.engine.expression.Expression expression = EngineExpressionUtil
+                .createBusinessObjectDataReferenceExpression(data);
 
         assertThat(expression.getName()).isEqualTo("bName");
         assertThat(expression.getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+    }
 
+    @Test
+    public void should_create_a_message_operation_from_a_message_id() throws Exception {
+        org.bonitasoft.engine.operation.Operation operation = EngineExpressionUtil
+                .createOperationForMessageContent(anOperation()
+                        .havingLeftOperand(aVariableExpression().withName("myData"))
+                        .havingRightOperand(
+                                anExpression().withExpressionType(ExpressionConstants.MESSAGE_ID_TYPE)
+                                        .withName("dataFromMessage").withContent("dataFromMessage")
+                                        .withReturnType(String.class.getName()))
+                        .havingOperator(anAssignmentOperator())
+                        .build());
+
+        assertThat(operation.getRightOperand().getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
+    }
+
+    @Test
+    public void should_create_a_message_operation_from_a_constant() throws Exception {
+        org.bonitasoft.engine.operation.Operation operation = EngineExpressionUtil
+                .createOperationForMessageContent(anOperation()
+                        .havingLeftOperand(aVariableExpression().withName("myData"))
+                        .havingRightOperand(
+                                anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE)
+                                        .withName("dataFromMessage").withContent("dataFromMessage")
+                                        .withReturnType(String.class.getName()))
+                        .havingOperator(anAssignmentOperator())
+                        .build());
+
+        assertThat(operation.getRightOperand().getExpressionType()).isEqualTo(ExpressionType.TYPE_CONSTANT.name());
     }
 }
