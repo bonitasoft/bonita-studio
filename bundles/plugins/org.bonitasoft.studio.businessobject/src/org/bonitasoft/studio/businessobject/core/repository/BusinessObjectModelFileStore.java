@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -42,7 +44,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
@@ -55,6 +62,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
+    public static final String BDM_ACCESS_RIGHT_FILENAME = "bom_access_right.xml";
 
     private final BusinessObjectModelConverter converter;
 
@@ -129,7 +137,17 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     @Override
     protected IWorkbenchPart doOpen() {
-        return null;
+        try {
+            return Objects.equals(getName(), BDM_ACCESS_RIGHT_FILENAME)
+                    ? IDE.openEditor(getActivePage(), getResource())
+                    : null;
+        } catch (final PartInitException e) {
+            throw new RuntimeException("Failed to open bdm access right file", e);
+        }
+    }
+
+    protected IWorkbenchPage getActivePage() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     }
 
     public List<BusinessObject> getBusinessObjects() {
@@ -138,22 +156,29 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         return content.getBusinessObjects();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return Pics.getImage("bdm.png", BusinessObjectPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
-     */
     @Override
     protected void doClose() {
-
+        if (Objects.equals(getName(), BDM_ACCESS_RIGHT_FILENAME)) {
+            IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
+                IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+                Stream.of(activePage.getEditorReferences())
+                        .filter(editorRef -> {
+                            try {
+                                return getName().contentEquals(editorRef.getEditorInput().getName());
+                            } catch (PartInitException e) {
+                                throw new RuntimeException(
+                                        "an error occured while trying to close the bdm access right file", e);
+                            }
+                        })
+                        .forEach(editorRef -> activePage.closeEditor(editorRef.getEditor(true), false));
+            }
+        }
     }
 
     public BusinessObject getBusinessObject(final String qualifiedName) {
