@@ -6,3 +6,4 @@ Bundle-Version: 7.6.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: system.bundle; extension:=framework
 Export-Package: com.sun.management
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
