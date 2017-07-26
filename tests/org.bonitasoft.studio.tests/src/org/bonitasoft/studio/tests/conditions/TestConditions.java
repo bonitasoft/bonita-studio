@@ -56,8 +56,10 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,6 +87,7 @@ public class TestConditions {
     public void testConditions() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final MainProcess mainProcess = importProcessToTest();
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
         final List<HumanTaskInstance> tasks = getPendingTasks(processApi);
         runProcess(mainProcess);
         final ProcessDefinition processDef = startDeployedProcess(processApi);
@@ -166,9 +169,8 @@ public class TestConditions {
 
     private List<HumanTaskInstance> getPendingTasks(final ProcessAPI processApi) throws SearchException {
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
+        return processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
                 .getResult();
-        return tasks;
     }
 
     private MainProcess importProcessToTest() throws IOException, InvocationTargetException, InterruptedException {
@@ -187,6 +189,7 @@ public class TestConditions {
         } catch (final ReadFileStoreException e) {
             BonitaStudioLog.error("Failed read diagram content", e);
         }
+
         return null;
     }
 }
