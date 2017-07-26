@@ -43,6 +43,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -103,21 +104,44 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     @Override
     protected void doSave(final Object content) {
         Assert.isNotNull(content);
-        Assert.isLegal(content instanceof BusinessObjectModel);
-        try {
-            final byte[] xml = converter.marshall((BusinessObjectModel) content);
-            final ByteArrayInputStream source = new ByteArrayInputStream(xml);
-            final IFile resource = getResource();
-            if (resource.exists()) {
-                resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-            } else {
-                resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+        if (Objects.equals(getName(), BOM_FILENAME)) {
+            Assert.isLegal(content instanceof BusinessObjectModel);
+            try {
+                final byte[] xml = converter.marshall((BusinessObjectModel) content);
+                final ByteArrayInputStream source = new ByteArrayInputStream(xml);
+                final IFile resource = getResource();
+                if (resource.exists()) {
+                    resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                } else {
+                    resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                }
+                cachedBusinessObjectModel.clear();
+                cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
             }
-            cachedBusinessObjectModel.clear();
-            cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
+        } else {
+            try {
+                final byte[] xmlContent = getFakeBdmAccessRightXML().getBytes();
+                try (ByteArrayInputStream is = new ByteArrayInputStream(xmlContent)) {
+                    final IFile resource = getResource();
+                    if (!resource.exists()) {
+                        resource.create(is, IResource.FORCE,
+                                Repository.NULL_PROGRESS_MONITOR);
+                    } else {
+                        resource.setContents(is, IResource.KEEP_HISTORY | IResource.FORCE,
+                                Repository.NULL_PROGRESS_MONITOR);
+                    }
+                }
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error("Failed to save bdm access right model", e);
+            }
         }
+    }
+
+    private String getFakeBdmAccessRightXML() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<accessRight xmlns=\"http://documentation.bonitasoft.com/bdm-access-right-xml-schema/temporary\"/>";
     }
 
     @Override
