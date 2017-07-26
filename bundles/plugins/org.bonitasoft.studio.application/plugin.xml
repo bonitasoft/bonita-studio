@@ -732,6 +732,12 @@
                   value="com.bonitasoft.studio.customProfile.perspective">
             </equals>
          </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.bdm.access.righ.perspective">
+            </equals>
+         </with>
          </or>
       </definition>
       <definition
