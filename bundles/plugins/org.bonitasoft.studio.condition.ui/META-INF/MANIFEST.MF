@@ -28,7 +28,8 @@ Require-Bundle: org.bonitasoft.studio.condition;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.junit;resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
- assertj-core;resolution:=optional
+ assertj-core;resolution:=optional,
+ org.eclipse.core.databinding.property;bundle-version="1.6.100"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.bonitasoft.studio.condition.ui.contentassist,org.b
