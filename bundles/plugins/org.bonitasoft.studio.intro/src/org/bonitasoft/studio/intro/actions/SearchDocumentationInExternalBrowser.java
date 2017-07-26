@@ -32,8 +32,8 @@ import org.eclipse.ui.intro.config.IIntroAction;
 public class SearchDocumentationInExternalBrowser implements IIntroAction {
 
     private final static String SEARCH_DOC_URL = String.format(
-            "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=668&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=%s&amp;bos_redirect_minor_version=0",
-            ProductVersion.CURRENT_VERSION);
+            "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=668&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
+            ProductVersion.majorVersion());
 
     @Override
     public void run(final IIntroSite arg0, final Properties params) {
