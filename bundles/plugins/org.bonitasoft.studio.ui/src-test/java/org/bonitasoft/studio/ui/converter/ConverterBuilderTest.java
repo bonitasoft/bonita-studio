@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.junit.Rule;
@@ -50,7 +50,8 @@ public class ConverterBuilderTest {
         B b = new B();
 
         DataBindingContext ctx = new DataBindingContext();
-        IObservableValue observeA = PojoObservables.observeValue(a, "a"), observeB = PojoObservables.observeValue(b, "b");
+        IObservableValue<String> observeA = PojoProperties.value("a").observe(a);
+        IObservableValue<Integer> observeB = PojoProperties.value("b").observe(b);
         ctx.bindValue(observeA, observeB, UpdateStrategyFactory.updateValueStrategy().withConverter(stringToInt).create(),
                 UpdateStrategyFactory.updateValueStrategy().withConverter(intToString).create());
 
@@ -88,8 +89,8 @@ public class ConverterBuilderTest {
         Container container = new Container();
 
         DataBindingContext ctx = new DataBindingContext();
-        IObservableValue observeHuman = PojoObservables.observeValue(container, "human"),
-                observeStudent = PojoObservables.observeValue(container, "student");
+        IObservableValue<Human> observeHuman = PojoProperties.value("human").observe(container);
+        IObservableValue<Student> observeStudent = PojoProperties.value("student").observe(container);
         ctx.bindValue(observeHuman, observeStudent,
                 UpdateStrategyFactory.updateValueStrategy().withConverter(humanToStudent).create(),
                 UpdateStrategyFactory.updateValueStrategy().withConverter(studentToHuman).create());
@@ -105,7 +106,7 @@ public class ConverterBuilderTest {
 
     class A {
 
-        private String a;
+        private String a = "";
 
         public String getA() {
             return a;
@@ -118,7 +119,7 @@ public class ConverterBuilderTest {
 
     class B {
 
-        private Integer b;
+        private Integer b = 0;
 
         public Integer getB() {
             return b;
@@ -134,6 +135,11 @@ public class ConverterBuilderTest {
         Human() {
             name = "human";
             age = 20;
+        }
+
+        Human(String name, int age) {
+            this.name = name;
+            this.age = age;
         }
 
         private String name;
@@ -166,6 +172,11 @@ public class ConverterBuilderTest {
             age = 30;
         }
 
+        public Student(String mail, int age) {
+            this.mail = mail;
+            this.age = age;
+        }
+
         public int getAge() {
             return age;
         }
@@ -185,8 +196,8 @@ public class ConverterBuilderTest {
 
     class Container {
 
-        private Human human;
-        private Student student;
+        private Human human = new Human("h", 0);
+        private Student student = new Student("s", 0);
 
         public Human getHuman() {
             return human;
