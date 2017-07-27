@@ -702,7 +702,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 				final Expression expression = (Expression) iteratorObservable.getValue();
 				final EditingDomainEObjectObservableValueWithRefactoring innerObservableValue = (EditingDomainEObjectObservableValueWithRefactoring) ((DetailObservableValueWithRefactor) expressionReturnTypeDetailValue)
 						.getInnerObservableValue();
-				if (expression != null && returnType != null) {
+				if (expression != null && returnType != null && innerObservableValue != null) {
 					final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper
 							.getParentFlowElement(expression);
 					final Data oldItem = ExpressionHelper.dataFromIteratorExpression(parentFlowElement, expression,
@@ -712,7 +712,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
 					final Data newItem = ExpressionHelper.dataFromIteratorExpression(parentFlowElement, expressionCopy,
 							mainProcess(parentFlowElement));
 					innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
-				} else {
+				} else if(innerObservableValue != null) {
 					innerObservableValue.setRefactoringCommand(null);
 				}
 				return value;

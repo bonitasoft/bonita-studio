@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="229">
+<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="230">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
@@ -117,6 +117,10 @@
 <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.m2m.qvt.oml.sdk.feature.group" version="3.4.0.v20140610-1621"/>
+<repository location="http://download.eclipse.org/mmt/qvto/updates/releases"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706142203"/>
 <unit id="org.eclipse.buildship.feature.group" version="2.0.2.v20170420-0909"/>
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.14.0.201701131441"/>
@@ -127,6 +131,8 @@
 <unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
 <unit id="org.eclipse.ecf.discovery.feature.feature.group" version="1.0.0.v20170110-1317"/>
 <unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.13.7.v20170516-2248"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.13.7.v20170516-2248"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
 <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
 <unit id="org.eclipse.ecf.provider.generic.feature.feature.group" version="1.0.0.v20170110-1317"/>
 <unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="3.13.7.v20170517-0201"/>
@@ -188,10 +194,6 @@
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.13.0.v20170609-0928"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.12.0.v20170519-1412"/>
 <repository location="http://download.eclipse.org/releases/oxygen/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.m2m.qvt.oml.sdk.feature.group" version="3.4.0.v20140610-1621"/>
-<repository location="http://download.eclipse.org/mmt/qvto/updates/releases"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
