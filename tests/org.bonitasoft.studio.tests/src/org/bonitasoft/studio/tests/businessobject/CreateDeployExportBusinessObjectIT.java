@@ -318,8 +318,7 @@ public class CreateDeployExportBusinessObjectIT {
         final SWTBotTable attributeTable = bot.tableInGroup(boName);
 
         attributeTable.click(attributeIndex, 0);
-        bot.textInGroup("attribute1", boName).typeText(attributeName);
-        keyboard.pressShortcut(Keystrokes.CR);
+        bot.textInGroup("attribute1", boName).setText(attributeName);
         attributeTable.click(attributeIndex, 1);
 
         SWTBot activeBot = activeShell.bot();
