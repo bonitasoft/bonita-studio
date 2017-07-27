@@ -65,6 +65,14 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.emf.edapt.runtime.feature"
          version="1.2.2.201705070604"/>
 
+   <includes
+         id="org.eclipse.equinox.p2.extras.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.e4.rcp"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="4.7.0.v20170612-1255" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.6.0" match="equivalent"/>

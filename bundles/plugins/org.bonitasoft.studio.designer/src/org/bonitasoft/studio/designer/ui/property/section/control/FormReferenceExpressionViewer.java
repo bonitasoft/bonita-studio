@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.designer.core.command.UpdateFormMappingCommand;
@@ -81,7 +83,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
                     return "";
                 }
                 final String displayName = webPageFileStore.getDisplayName();
-                if (!displayName.equals(fromObject)) {
+                if (!Objects.equals(displayName,fromObject)) {
                     updateName(displayName);
                 }
                 return displayName;

@@ -237,7 +237,7 @@
             </conditionRuleList>
         </if>
         <createDirectory>
-            <path>${installdir}/jre</path>
+            <path>${installdir}/@product.short.name@.app/Contents/Eclipse/jre</path>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -246,7 +246,7 @@
         </createDirectory>
         <runProgram>
             <program>tar</program>
-            <programArguments>-xzf "${installdir}/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/jre"</programArguments>
+            <programArguments>-xzf "${installdir}/@product.short.name@.app/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/@product.short.name@.app/Contents/Eclipse/jre"</programArguments>
             <progressText>Installing JRE...</progressText>
             <ruleList>
                 <platformTest>
@@ -256,7 +256,7 @@
         </runProgram>
         <runProgram>
             <program>mv</program>
-            <programArguments>"${installdir}/jre/jre1.8.0_112.jre/Contents" "${installdir}/jre"</programArguments>
+            <programArguments>"${installdir}/@product.short.name@.app/Contents/Eclipse/jre/jre1.8.0_112.jre/Contents" "${installdir}/@product.short.name@.app/Contents/Eclipse/jre"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -265,7 +265,7 @@
         </runProgram>
         <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/jre-8u112-macosx-x64.tar.gz"</programArguments>
+            <programArguments>-rf "${installdir}/@product.short.name@.app/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -274,14 +274,14 @@
         </runProgram>
         <substitute>
             <encoding>utf-8</encoding>
-            <files>${installdir}/@product.short.name@.app/Contents/MacOS/@product.short.name@.ini</files>
+            <files>${installdir}/@product.short.name@.app/Contents/Eclipse/@product.short.name@.ini</files>
             <type>exact</type>
             <substitutionList>
                 <substitution>
-                    <pattern>-clearPersistedState</pattern>
-                    <value>-clearPersistedState
+                    <pattern>--launcher.XXMaxPermSize512m</pattern>
+                    <value>--launcher.XXMaxPermSize512m
                         -vm
-                        ../../../jre/Contents/Home/bin/java
+                       ./jre/Contents/Home/bin/java
                     </value>
                 </substitution>
             </substitutionList>
@@ -384,8 +384,7 @@
         </runProgram>
         <launchBrowser>
             <show>0</show>
-            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community
-            </url>
+            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community</url>
         </launchBrowser>
     </finalPageActionList>
 
@@ -429,13 +428,35 @@
             </desktopShortcutList>
             <folderList>
                 <folder>
-                    <description>Program Files</description>
+                    <description>Linux Program Files</description>
                     <destination>${installdir}</destination>
-                    <name>programfiles</name>
-                    <platforms>all</platforms>
+                    <name>linux_programfiles</name>
+                    <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionDirectory allowWildcards="1">
                             <origin>@studio.dir@/**</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                 <folder>
+                    <description>Windows Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>win_programfiles</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>@studio.dir@/**</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                  <folder>
+                    <description>OSX Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>osx_programfiles</name>
+                    <platforms>osx</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>@mac.studio.dir@/**</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -463,7 +484,6 @@
         </component>
     </componentList>
     <parameterList>
-
         <directoryParameter>
             <name>installdir</name>
             <description>Installer.Parameter.installdir.description</description>
@@ -476,97 +496,6 @@
             <mustBeWritable>yes</mustBeWritable>
             <mustExist>0</mustExist>
         </directoryParameter>
-
-        <parameterGroup>
-            <name>licensePage</name>
-            <title>${msg(install.license.title)}</title>
-            <explanation></explanation>
-            <value></value>
-            <default></default>
-            <insertBefore>installationFinished</insertBefore>
-            <parameterList>
-                <infoParameter>
-                    <name>RequestKey</name>
-                    <description></description>
-                    <explanation>${msg(request.key.explanation)}</explanation>
-                    <value>${keyContent}</value>
-                    <default></default>
-                    <insertAfter>installLicense</insertAfter>
-                    <trimMarginNumChars>0</trimMarginNumChars>
-                    <preShowPageActionList>
-                        <changePermissions>
-                            <files>${installDir}/license/*</files>
-                            <permissions>777</permissions>
-                        </changePermissions>
-                        <touchFile>
-                            <path>${installDir}/license/requestKey.txt</path>
-                        </touchFile>
-                        <findFile>
-                            <baseDirectory>${installDir}/license/</baseDirectory>
-                            <pattern>generateKey*.jar</pattern>
-                            <variable>generateKeyJar</variable>
-                        </findFile>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt -output=${installDir}/license/requestKey.txt</programArguments>
-                            <progressText>Generate request key</progressText>
-                        </runProgram>
-                        <readFile>
-                            <name>keyContent</name>
-                            <path>${installDir}/license/requestKey.txt</path>
-                        </readFile>
-                    </preShowPageActionList>
-                </infoParameter>
-                <fileParameter>
-                    <name>installLicense</name>
-                    <description>${msg(install.license.desc)}</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default></default>
-                    <allowEmptyValue>1</allowEmptyValue>
-                    <mustBeWritable>0</mustBeWritable>
-                    <mustExist>0</mustExist>
-                    <width>25</width>
-                    <validationActionList>
-                        <throwError>
-                            <text>${msg(install.license.error)}</text>
-                            <ruleList>
-                                <compareValues>
-                                    <logic>does_not_equal</logic>
-                                    <value1>${installLicense}</value1>
-                                    <value2></value2>
-                                </compareValues>
-                                <fileExists>
-                                    <path>${installLicense}</path>
-                                </fileExists>
-                                <regExMatch logic="does_not_match" pattern=".*\.(lic)$" text="${installLicense}" />
-                            </ruleList>
-                        </throwError>
-                        <copyFile>
-                            <customErrorMessage>${msg(install.license.error)}</customErrorMessage>
-                            <destination>${installdir}</destination>
-                            <origin>${installLicense}</origin>
-                            <ruleList>
-                                <fileTest>
-                                    <condition>is_not_directory</condition>
-                                    <path>${installLicense}</path>
-                                </fileTest>
-                                <compareText>
-                                    <logic>contains</logic>
-                                    <text>${installLicense}</text>
-                                    <value>.lic</value>
-                                </compareText>
-                            </ruleList>
-                        </copyFile>
-                    </validationActionList>
-                </fileParameter>
-            </parameterList>
-            <ruleList>
-                <fileExists>
-                    <path>${installDir}/license/</path>
-                </fileExists>
-            </ruleList>
-        </parameterGroup>
     </parameterList>
     <preUninstallationActionList>
         <deleteFile>

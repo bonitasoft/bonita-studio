@@ -10,8 +10,8 @@
 	<name>Bonita Studio</name>
 	<properties>
 		<!--forceContextQualifier -->
-		<tychoVersion>0.22.0</tychoVersion>
-		<tychoExtrasVersion>0.22.0</tychoExtrasVersion>
+		<tychoVersion>1.0.0</tychoVersion>
+		<tychoExtrasVersion>1.0.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.6.10</ui.designer.version>
@@ -33,7 +33,7 @@
 				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
 					<artifactId>image-overlay-plugin</artifactId>
-					<version>1.0.2</version>
+					<version>1.0.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
