@@ -16,7 +16,7 @@
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
-      <vmArgsMac>-XstartOnFirstThread -Djava.endorsed.dirs=../../../endorsed
+      <vmArgsMac>-XstartOnFirstThread -Djava.endorsed.dirs=./endorsed
       </vmArgsMac>
       <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
       </vmArgsWin>
