@@ -541,13 +541,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.views.properties.tabbed"
-         download-size="0"
-         install-size="0"
-         version="3.8.0.v20170516-1617"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.ui"
          download-size="0"
          install-size="0"
@@ -556,6 +549,13 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.la"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.views.properties.tabbed"
          download-size="0"
          install-size="0"
          version="0.0.0"
