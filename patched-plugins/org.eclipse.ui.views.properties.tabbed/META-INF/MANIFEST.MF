@@ -17,7 +17,7 @@ Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/platfo
  rm/eclipse.platform.ui.git;path="bundles/org.eclipse.ui.views.propert
  ies.tabbed";tag="I20170516-2000";commitId=d786bd652250609bcd4dbff6a92
  91e3ba1824dd9
-Bundle-Vendor: %Plugin.providerName
+Bundle-Vendor: Bonitasoft S.A.
 Import-Package: com.ibm.icu.text
 Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
  rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.l10n;x-int

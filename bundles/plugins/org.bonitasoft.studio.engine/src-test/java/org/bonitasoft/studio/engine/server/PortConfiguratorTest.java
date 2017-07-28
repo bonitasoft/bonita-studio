@@ -30,7 +30,7 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.server.tomcat.core.internal.Tomcat70Configuration;
+import org.eclipse.jst.server.tomcat.core.internal.Tomcat85Configuration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -62,7 +62,7 @@ public class PortConfiguratorTest {
     @Mock
     private IServerWorkingCopy serverWC;
     @Mock
-    private Tomcat70Configuration tomcatConfiguration;
+    private Tomcat85Configuration tomcatConfiguration;
 
     /**
      * @throws java.lang.Exception
@@ -81,7 +81,8 @@ public class PortConfiguratorTest {
     public void should_update_client_home_property_with_tomcat_port() throws Exception {
         //Given
         doReturn(false).when(portConfigurator).isPortInUse(anyInt());
-        when(tomcatServer.getServerPorts()).thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
+        when(tomcatServer.getServerPorts())
+                .thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
 
         //When
         portConfigurator.configureServerPort(monitor);
@@ -96,7 +97,8 @@ public class PortConfiguratorTest {
         //Given
         doReturn(false).when(portConfigurator).isPortInUse(anyInt());
         doThrow(IOException.class).when(clientBonitaHomeBuilder).writeClientProperties();
-        when(tomcatServer.getServerPorts()).thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
+        when(tomcatServer.getServerPorts())
+                .thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
 
         //When
         portConfigurator.configureServerPort(monitor);
@@ -106,7 +108,8 @@ public class PortConfiguratorTest {
     public void should_update_port_preference() throws Exception {
         //Given
         doReturn(false).when(portConfigurator).isPortInUse(anyInt());
-        when(tomcatServer.getServerPorts()).thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8182, "")), ServerPort.class));
+        when(tomcatServer.getServerPorts())
+                .thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8182, "")), ServerPort.class));
 
         //When
         portConfigurator.configureServerPort(monitor);
@@ -120,8 +123,10 @@ public class PortConfiguratorTest {
     public void should_update_port_if_current_port_is_not_available() throws Exception {
         //Given
         doReturn(true).when(portConfigurator).isPortInUse(8080);
-        doReturn(8081).when(portConfigurator).findUnusedPort(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
-        when(tomcatServer.getServerPorts()).thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
+        doReturn(8081).when(portConfigurator).findUnusedPort(PortConfigurator.MIN_PORT_NUMBER,
+                PortConfigurator.MAX_PORT_NUMBER);
+        when(tomcatServer.getServerPorts())
+                .thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
 
         //When
         portConfigurator.configureServerPort(monitor);

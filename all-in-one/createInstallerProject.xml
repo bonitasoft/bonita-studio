@@ -35,6 +35,8 @@
 		<replace file="${updated.project.file}" token="@mac.shortcut.name@" value="${mac.shortcut.name}"/>
 		<replace file="${updated.project.file}" token="@windows.shortcut.name@" value="${windows.shortcut.name}"/>
 		<replace file="${updated.project.file}" token="@linux.shortcut.name@" value="${linux.shortcut.name}"/>
+		<replace file="${updated.project.file}" token="@mac.studio.dir@" value="${mac.studio.dir}"/>
+		<replace file="${updated.project.file}" token="@enable.uninstaller@" value="${enable.uninstaller}"/>
 		<replace file="${updated.project.file}" token="@slide1@" value="${slide1}"/>
 		<replace file="${updated.project.file}" token="@slide2@" value="${slide2}"/>
 		<replace file="${updated.project.file}" token="@slide3@" value="${slide3}"/>

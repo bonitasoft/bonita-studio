@@ -90,8 +90,8 @@ public class BOSWebServerManager {
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
     private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
     protected static final String WEBSERVERMANAGER_EXTENSION_ID = "org.bonitasoft.studio.engine.bonitaWebServerManager";
-    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.70";
-    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.70";
+    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.85";
+    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.85";
     protected static final String START_TIMEOUT = "start-timeout";
 
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
