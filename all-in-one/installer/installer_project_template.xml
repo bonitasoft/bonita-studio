@@ -13,6 +13,7 @@
     <wmImage>@titlebar.image@</wmImage>
     <windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
     <osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
+    <createUninstaller>@enable.uninstaller@</createUninstaller>
     <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
     <slideShowImageList>
@@ -75,16 +76,6 @@
             </substitutionList>
         </substitute>
     </preBuildActionList>
-    <preShowHelpActionList>
-        <setInstallerVariable>
-            <!-- Set default path to C: on Windows -->
-            <name>installdir</name>
-            <value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
-            <ruleList>
-                <platformTest type="windows" />
-            </ruleList>
-        </setInstallerVariable>
-    </preShowHelpActionList>
     <preInstallationActionList>
         <setInstallerVariable>
             <name>continue</name>
@@ -130,6 +121,14 @@
                 <platformTest type="windows" />
             </ruleList>
         </setInstallerVariable>
+         <setInstallerVariable>
+            <!-- Set default path to /Applications on OSX -->
+            <name>installdir</name>
+            <value>${platform_install_prefix}</value>
+            <ruleList>
+                <platformTest type="osx" />
+            </ruleList>
+        </setInstallerVariable>
         <setInstallerVariable>
             <!-- 32 bits -->
             <name>windowsExecName</name>
@@ -140,7 +139,23 @@
         </setInstallerVariable>
     </preInstallationActionList>
     <postInstallationActionList>
-        <setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1" />
+        <setInstallerVariable persist="1">
+          <name>ini_file</name>
+          <value>${installdir}/configuration/config.ini</value>
+            <ruleList>
+                <platformTest>
+                <negate>1</negate>
+                 <type>osx</type>
+                 </platformTest>
+            </ruleList>
+        </setInstallerVariable>
+         <setInstallerVariable persist="1">
+          <name>ini_file</name>
+          <value>${installdir}/@mac.shortcut.name@/Contents/Eclipse/configuration/config.ini</value>
+            <ruleList>
+                <platformTest type="osx" />
+            </ruleList>
+        </setInstallerVariable>
         <iniFileSet>
             <file>${ini_file}</file>
             <section>Language</section>
@@ -237,7 +252,7 @@
             </conditionRuleList>
         </if>
         <createDirectory>
-            <path>${installdir}/@product.short.name@.app/Contents/Eclipse/jre</path>
+            <path>${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre</path>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -246,7 +261,7 @@
         </createDirectory>
         <runProgram>
             <program>tar</program>
-            <programArguments>-xzf "${installdir}/@product.short.name@.app/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/@product.short.name@.app/Contents/Eclipse/jre"</programArguments>
+            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
             <progressText>Installing JRE...</progressText>
             <ruleList>
                 <platformTest>
@@ -256,7 +271,7 @@
         </runProgram>
         <runProgram>
             <program>mv</program>
-            <programArguments>"${installdir}/@product.short.name@.app/Contents/Eclipse/jre/jre1.8.0_112.jre/Contents" "${installdir}/@product.short.name@.app/Contents/Eclipse/jre"</programArguments>
+            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jre1.8.0_112.jre/Contents" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -265,7 +280,7 @@
         </runProgram>
         <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/@product.short.name@.app/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz"</programArguments>
+            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -274,15 +289,14 @@
         </runProgram>
         <substitute>
             <encoding>utf-8</encoding>
-            <files>${installdir}/@product.short.name@.app/Contents/Eclipse/@product.short.name@.ini</files>
+            <files>${installdir}/@mac.shortcut.name@/Contents/Eclipse/@product.short.name@.ini</files>
             <type>exact</type>
             <substitutionList>
                 <substitution>
                     <pattern>--launcher.XXMaxPermSize512m</pattern>
                     <value>--launcher.XXMaxPermSize512m
-                        -vm
-                       ./jre/Contents/Home/bin/java
-                    </value>
+-vm
+${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</value>
                 </substitution>
             </substitutionList>
             <ruleList>
@@ -432,6 +446,17 @@
                     <destination>${installdir}</destination>
                     <name>linux_programfiles</name>
                     <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>@studio.dir@/**</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Linux Program Files x64</description>
+                    <destination>${installdir}</destination>
+                    <name>linux_programfiles_64</name>
+                    <platforms>linux-x64</platforms>
                     <distributionFileList>
                         <distributionDirectory allowWildcards="1">
                             <origin>@studio.dir@/**</origin>
