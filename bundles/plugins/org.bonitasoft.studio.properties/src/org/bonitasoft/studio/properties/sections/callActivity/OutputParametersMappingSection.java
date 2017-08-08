@@ -248,8 +248,8 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
 
     private CCombo createSubprocessSourceCombo(final Composite outputMappingControl, final OutputMapping mapping) {
         final CCombo subprocessSourceCombo = getWidgetFactory().createCCombo(outputMappingControl, SWT.BORDER);
-        for (final String subprocessData : callActivityHelper.getCallActivityData()) {
-            subprocessSourceCombo.add(subprocessData);
+        for (final Data subprocessData : callActivityHelper.getCallActivityData()) {
+            subprocessSourceCombo.add(subprocessData.getName());
         }
         subprocessSourceCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
         subprocessSourceCombo.addListener(SWT.Modify, new Listener() {

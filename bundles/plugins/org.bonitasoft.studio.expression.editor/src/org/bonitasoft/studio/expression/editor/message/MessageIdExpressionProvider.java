@@ -56,8 +56,9 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
                 for (int i = 0; i < throwMessageContent.getExpressions().size(); i++) {
                     ListExpression row = throwMessageContent.getExpressions().get(i);
                     Expression id = row.getExpressions().get(0);
+                    Expression value = row.getExpressions().get(1);
                     if (id != null && id.getName() != null) {
-                        messageContentIds.add(createExpression(id.getName()));
+                        messageContentIds.add(createExpression(id.getName(), value.getReturnType()));
                     }
                 }
                 return messageContentIds;
@@ -66,12 +67,12 @@ public class MessageIdExpressionProvider implements IExpressionProvider {
         return Collections.emptySet();
     }
 
-    private Expression createExpression(String id) {
+    private Expression createExpression(String name, String returnType) {
         Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setType(getExpressionType());
-        exp.setContent(id);
-        exp.setName(id);
-        exp.setReturnType(String.class.getName());
+        exp.setContent(name);
+        exp.setName(name);
+        exp.setReturnType(returnType);
         return exp;
     }
 
