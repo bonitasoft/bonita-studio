@@ -39,6 +39,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 
@@ -72,14 +73,12 @@ public class OpenH2ConsoleHandler {
     }
 
     protected String javaBinaryLocation() throws FileNotFoundException {
-        final String binaryName = Platform.getOS().toLowerCase().contains("win") ? "java.exe" : "java";
-        final Path javaBinaryPath = Paths.get(JavaRuntime.getDefaultVMInstall().getInstallLocation().getAbsolutePath(),
-                "bin", binaryName);
-        if (!javaBinaryPath.toFile().exists()) {
+        File javaBinaryPath = StandardVMType.findJavaExecutable(JavaRuntime.getDefaultVMInstall().getInstallLocation());
+        if (javaBinaryPath == null || !javaBinaryPath.exists()) {
             throw new FileNotFoundException(
-                    String.format("Java binary not found at '%s'", javaBinaryPath.toFile().getAbsolutePath()));
+                    String.format("Java binary not found at '%s'", javaBinaryPath.getAbsolutePath()));
         }
-        return javaBinaryPath.toString();
+        return javaBinaryPath.getAbsolutePath();
     }
 
     protected ILaunchManager getLaunchManager() {

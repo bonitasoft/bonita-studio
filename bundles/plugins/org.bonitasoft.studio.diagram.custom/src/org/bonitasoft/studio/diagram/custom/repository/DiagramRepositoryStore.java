@@ -77,6 +77,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
@@ -441,6 +442,8 @@ public class DiagramRepositoryStore extends
             }
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();
+            diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
+                    .ifPresent(d -> new RemoveDanglingReferences(d).execute());
             updateConfigurationId(diagramResource, diagram);
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));

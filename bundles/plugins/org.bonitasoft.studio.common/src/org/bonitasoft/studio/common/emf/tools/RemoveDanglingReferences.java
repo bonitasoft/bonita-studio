@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
+import org.eclipse.gmf.runtime.notation.Edge;
 
 public class RemoveDanglingReferences {
 
@@ -51,6 +52,10 @@ public class RemoveDanglingReferences {
             element.eAllContents().forEachRemaining(eObject -> {
                 if (eObject instanceof Connection &&
                         (((Connection) eObject).getTarget() == null || ((Connection) eObject).getSource() == null)) {
+                    toRemove.add(eObject);
+                }
+                if (eObject instanceof Edge &&
+                        (((Edge) eObject).getTarget() == null || ((Edge) eObject).getSource() == null)) {
                     toRemove.add(eObject);
                 }
             });

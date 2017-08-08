@@ -73,9 +73,6 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
 
     @Override
     public String getDescription(final Expression expression) {
-        if (ExpressionConstants.MESSAGE_ID_TYPE.equals(expression.getType())) {
-            return "";
-        }
         return expression.getReturnType();
     }
 

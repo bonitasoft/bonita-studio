@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Browser Support Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.browser
+Bundle-Version: 7.5.4.qualifier
+Bundle-Activator: org.bonitasoft.studio.browser.BrowserSupportPlugin
+Bundle-Vendor: Bonitasoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ org.mockito;bundle-version="1.9.5";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.eclipse.ui.browser,
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.common
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.browser.operation
