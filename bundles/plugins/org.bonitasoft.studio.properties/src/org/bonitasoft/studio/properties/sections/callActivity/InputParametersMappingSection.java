@@ -333,8 +333,8 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
     protected void updateAvailableValuesInputMappingTargetCombo(final CCombo targetCombo,
             final InputMappingAssignationType assignationType) {
         if (InputMappingAssignationType.DATA == assignationType) {
-            for (final String subprocessData : callActivityHelper.getCallActivityData()) {
-                targetCombo.add(subprocessData);
+            for (final Data subprocessData : callActivityHelper.getCallActivityData()) {
+                targetCombo.add(subprocessData.getName());
             }
         } else {
             for (final String contractInputOfCalledActivity : callActivityHelper.getCallActivityContractInput()) {

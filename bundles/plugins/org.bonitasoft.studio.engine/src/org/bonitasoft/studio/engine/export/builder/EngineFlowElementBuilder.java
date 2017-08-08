@@ -15,9 +15,12 @@
 package org.bonitasoft.studio.engine.export.builder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bpm.flownode.GatewayType;
 import org.bonitasoft.engine.bpm.flownode.TaskPriority;
@@ -50,12 +53,15 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ActorFilter;
@@ -105,7 +111,6 @@ import org.bonitasoft.studio.model.process.StartSignalEvent;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -431,10 +436,11 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         return object;
     }
 
-    protected void exportInputMappingsForCallActivity(final CallActivity object, final CallActivityBuilder activityBuilder) {
-        for (final InputMapping mapping : object.getInputMappings()) {
+    protected void exportInputMappingsForCallActivity(final CallActivity callActivity,
+            final CallActivityBuilder activityBuilder) {
+        for (final InputMapping mapping : callActivity.getInputMappings()) {
             if (InputMappingAssignationType.DATA == mapping.getAssignationType()) {
-                exportInputMappingAssignedToDataForCallActivity(activityBuilder, mapping);
+                exportInputMappingAssignedToDataForCallActivity(activityBuilder, callActivity, mapping);
             } else {
                 exportInputMappingAssignedToContractInputForCallActivity(activityBuilder, mapping);
             }
@@ -448,22 +454,49 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     private void exportInputMappingAssignedToDataForCallActivity(final CallActivityBuilder activityBuilder,
-            final InputMapping mapping) {
+            CallActivity callActivity, final InputMapping mapping) {
         final OperationBuilder opBuilder = new OperationBuilder();
         opBuilder.createNewInstance();
         opBuilder.setRightOperand(EngineExpressionUtil.createExpression(mapping.getProcessSource()));
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
-        builder.setName(mapping.getSubprocessTarget());
-        final EList<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
-        String type = LeftOperand.TYPE_DATA;
-        if (!referencedElements.isEmpty()) {
-            type = getLeftOperandTypeForData(referencedElements.get(0));
+        String subprocessTarget = mapping.getSubprocessTarget();
+        builder.setName(subprocessTarget);
+
+        Optional<Data> targetData = findProcess(
+                callActivity.getCalledActivityName() != null ? callActivity.getCalledActivityName().getContent() : null,
+                callActivity.getCalledActivityVersion() != null ? callActivity.getCalledActivityVersion().getContent()
+                        : null)
+                                .map(AbstractProcess::getData)
+                                .map(Collection::stream)
+                                .orElse(Stream.empty())
+                                .filter(data -> subprocessTarget.equals(data.getName()))
+                                .findFirst();
+        if (targetData.isPresent()) {
+            builder.setType(
+                    targetData.get() instanceof BusinessObjectData ? LeftOperand.TYPE_BUSINESS_DATA : LeftOperand.TYPE_DATA);
+        } else {
+            final List<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
+            String type = LeftOperand.TYPE_DATA;
+            if (!referencedElements.isEmpty()) {
+                type = getLeftOperandTypeForData(referencedElements.get(0));
+            }
+            builder.setType(type);
         }
-        builder.setType(type);
         opBuilder.setLeftOperand(builder.done());
         opBuilder.setType(OperatorType.ASSIGNMENT);
         activityBuilder.addDataInputOperation(opBuilder.done());
+    }
+
+    protected Optional<AbstractProcess> findProcess(final String subprocessName, final String subprocessVersion) {
+        final DiagramRepositoryStore repositoryStore = getDiagramRepositoryStore();
+        return Optional
+                .ofNullable(ModelHelper.findProcess(subprocessName, subprocessVersion, repositoryStore.getAllProcesses()));
+    }
+
+    protected DiagramRepositoryStore getDiagramRepositoryStore() {
+        return RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     protected void exportOutputMappingForCallActivities(final CallActivity object,

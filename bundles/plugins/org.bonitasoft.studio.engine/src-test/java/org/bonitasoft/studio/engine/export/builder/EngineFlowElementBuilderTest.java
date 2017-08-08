@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -41,6 +42,7 @@ import org.bonitasoft.engine.operation.Operation;
 import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
@@ -107,6 +109,8 @@ public class EngineFlowElementBuilderTest {
 
     @Mock
     private IEngineDefinitionBuilder engineContractBuilder;
+    @Mock
+    private DiagramRepositoryStore diagramStore;
 
     /**
      * @throws java.lang.Exception
@@ -115,8 +119,10 @@ public class EngineFlowElementBuilderTest {
     public void setUp() throws Exception {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new EngineFlowElementBuilder(instance, Collections.<EObject> emptySet()));
-        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class), any(Contract.class));
+        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class),
+                any(Contract.class));
         doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
+        doReturn(diagramStore).when(flowElementSwitch).getDiagramRepositoryStore();
     }
 
     /**
@@ -135,7 +141,8 @@ public class EngineFlowElementBuilderTest {
         subProcessEvent.getElements().add(startMessageEventinSubprocess);
         flowElementSwitch.caseStartMessageEvent(startMessageEventinSubprocess);
 
-        verify(flowElementSwitch).addMessageCorrelation(eq(startMessageEventinSubprocess), any(CatchMessageEventTriggerDefinitionBuilder.class));
+        verify(flowElementSwitch).addMessageCorrelation(eq(startMessageEventinSubprocess),
+                any(CatchMessageEventTriggerDefinitionBuilder.class));
     }
 
     @Test
@@ -148,7 +155,8 @@ public class EngineFlowElementBuilderTest {
         final Activity activity = ProcessFactory.eINSTANCE.createActivity();
         activity.getBoundaryIntermediateEvents().add(bmEvent);
         when(activityDefinitionBuilder.addBoundaryEvent(bmEvent.getName(), true)).thenReturn(boundaryEventBuilder);
-        when(boundaryEventBuilder.addMessageEventTrigger(bmEvent.getEvent())).thenReturn(catchMessageEventTriggerDefinitionBuilder);
+        when(boundaryEventBuilder.addMessageEventTrigger(bmEvent.getEvent()))
+                .thenReturn(catchMessageEventTriggerDefinitionBuilder);
         flowElementSwitch.addBoundaryEvents(activityDefinitionBuilder, activity);
         verify(flowElementSwitch).addMessageCorrelation(eq(bmEvent), any(CatchMessageEventTriggerDefinitionBuilder.class));
     }
@@ -171,12 +179,16 @@ public class EngineFlowElementBuilderTest {
 
     @Test
     public void testAddContext() {
-        final Data collectionDataToMultiInstantiate = DataBuilder.aData().withName("pData").havingDataType(StringDataTypeBuilder.aStringDataType()).build();
+        final Data collectionDataToMultiInstantiate = DataBuilder.aData().withName("pData")
+                .havingDataType(StringDataTypeBuilder.aStringDataType()).build();
 
-        final TaskBuilder taskB = TaskBuilder.aTask().havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
+        final TaskBuilder taskB = TaskBuilder.aTask()
+                .havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
                 .havingIteratorExpression(ExpressionBuilder.anExpression()
-                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withReturnType(String.class.getName())
-                        .withName("pData")).havingData(collectionDataToMultiInstantiate);
+                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE)
+                        .withReturnType(String.class.getName())
+                        .withName("pData"))
+                .havingData(collectionDataToMultiInstantiate);
 
         final Pool pool = PoolBuilder.aPool()
                 .havingElements(taskB)
@@ -195,17 +207,22 @@ public class EngineFlowElementBuilderTest {
 
     @Test
     public void testAddIteratorToContext() {
-        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData").withClassname("classname").build();
+        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData")
+                .withClassname("classname").build();
 
-        final TaskBuilder taskB = TaskBuilder.aTask().havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
+        final TaskBuilder taskB = TaskBuilder.aTask()
+                .havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
                 .havingIteratorExpression(ExpressionBuilder.anExpression()
-                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withReturnType(String.class.getName())
-                        .withName("pData")).havingData(collectionDataToMultiInstantiate);
+                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE)
+                        .withReturnType(String.class.getName())
+                        .withName("pData"))
+                .havingData(collectionDataToMultiInstantiate);
 
         final Pool pool = PoolBuilder.aPool().havingElements(taskB).build();
         final MainProcess mainProcess = MainProcessBuilder.aMainProcess().build();
         mainProcess.getElements().add(pool);
-        mainProcess.getDatatypes().add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
+        mainProcess.getDatatypes()
+                .add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
         flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -216,15 +233,18 @@ public class EngineFlowElementBuilderTest {
 
     @Test
     public void testAddIteratorToContext_robustnessWithNullValue() {
-        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData").withClassname("classname").build();
+        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData")
+                .withClassname("classname").build();
 
-        final TaskBuilder taskB = TaskBuilder.aTask().havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
+        final TaskBuilder taskB = TaskBuilder.aTask()
+                .havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
                 .havingData(collectionDataToMultiInstantiate);
 
         final Pool pool = PoolBuilder.aPool().havingElements(taskB).build();
         final MainProcess mainProcess = MainProcessBuilder.aMainProcess().build();
         mainProcess.getElements().add(pool);
-        mainProcess.getDatatypes().add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
+        mainProcess.getDatatypes()
+                .add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
         flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
 
         verify(taskBuilder, times(0)).addContextEntry(anyString(), any(Expression.class));
@@ -237,11 +257,13 @@ public class EngineFlowElementBuilderTest {
                         CallActivityBuilder
                                 .aCallActivity()
                                 .withName("Call Activity")
+                                .havingCalledActivityName(aConstantExpression().withContent("Pool1"))
                                 .havingInputMappings(
                                         InputMappingBuilder
                                                 .anInputMapping()
                                                 .setSubProcessTarget(InputMappingAssignationType.DATA, "subProcessData")
-                                                .setProcessSource(ExpressionBuilder.aVariableExpression().withContent("processData").build())
+                                                .setProcessSource(ExpressionBuilder.aVariableExpression()
+                                                        .withContent("processData").build())
                                                 .build()))
                 .havingData(DataBuilder.aData().havingDataType(aStringDataType()).withName("processData"))
                 .build();
@@ -266,8 +288,10 @@ public class EngineFlowElementBuilderTest {
                                 .havingInputMappings(
                                         InputMappingBuilder
                                                 .anInputMapping()
-                                                .setSubProcessTarget(InputMappingAssignationType.CONTRACT_INPUT, "contractInput")
-                                                .setProcessSource(ExpressionBuilder.aVariableExpression().withContent("processData").build())
+                                                .setSubProcessTarget(InputMappingAssignationType.CONTRACT_INPUT,
+                                                        "contractInput")
+                                                .setProcessSource(ExpressionBuilder.aVariableExpression()
+                                                        .withContent("processData").build())
                                                 .build()))
                 .havingData(DataBuilder.aData().havingDataType(aStringDataType()).withName("processData"))
                 .build();
@@ -289,7 +313,8 @@ public class EngineFlowElementBuilderTest {
         tableExpression.getExpressions().add(listExpression);
         final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
                 ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
-                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop").havingExpression(tableExpression))).build();
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop").havingExpression(tableExpression)))
+                .build();
         flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
         verify(userFilterBuilder).addInput(anyString(), any(Expression.class));
     }
@@ -298,25 +323,29 @@ public class EngineFlowElementBuilderTest {
     public void testAddUserFilterToTask_withEmptyOptionalInputs() {
         final ActorFilter actorFilter = ActorFilterBuilder.anActorFilter().havingConfiguration(
                 ConnectorConfigurationBuilder.aConnectorConfiguration().havingParameters(
-                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop"))).build();
+                        ConnectorParameterBuilder.aConnectorParameter().withKey("plop")))
+                .build();
         flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
         verify(userFilterBuilder, never()).addInput(anyString(), any(Expression.class));
     }
 
     @Test
     public void testAddDataForMultiInstanceIterator_WithBusinessData() {
-        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData").withClassname("classname").build();
+        final Data collectionDataToMultiInstantiate = BusinessObjectDataBuilder.aBusinessData().withName("bData")
+                .withClassname("classname").build();
         final Pool pool = PoolBuilder.aPool()
                 .havingElements(
                         ActivityBuilder.anActivity()
                                 .havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
                                 .havingIteratorExpression(ExpressionBuilder.anExpression()
-                                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withReturnType(String.class.getName())
+                                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE)
+                                        .withReturnType(String.class.getName())
                                         .withName("bData")))
                 .havingData(collectionDataToMultiInstantiate)
                 .build();
 
-        flowElementSwitch.addDataForMultiInstanceIterator(activityDefinitionBuilder, ((Activity) pool.getElements().get(0)).getIteratorExpression(),
+        flowElementSwitch.addDataForMultiInstanceIterator(activityDefinitionBuilder,
+                ((Activity) pool.getElements().get(0)).getIteratorExpression(),
                 collectionDataToMultiInstantiate);
 
         verify(activityDefinitionBuilder).addBusinessData(anyString(), anyString());
@@ -324,18 +353,21 @@ public class EngineFlowElementBuilderTest {
 
     @Test
     public void testAddDataForMultiInstanceIterator_WithProcessData() {
-        final Data collectionDataToMultiInstantiate = DataBuilder.aData().withName("pData").havingDataType(StringDataTypeBuilder.aStringDataType()).build();
+        final Data collectionDataToMultiInstantiate = DataBuilder.aData().withName("pData")
+                .havingDataType(StringDataTypeBuilder.aStringDataType()).build();
         final Pool pool = PoolBuilder.aPool()
                 .havingElements(
                         ActivityBuilder.anActivity()
                                 .havingCollectionDataToMultiInstantiate(collectionDataToMultiInstantiate)
                                 .havingIteratorExpression(ExpressionBuilder.anExpression()
-                                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE).withReturnType(String.class.getName())
+                                        .withExpressionType(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE)
+                                        .withReturnType(String.class.getName())
                                         .withName("pData")))
                 .havingData(collectionDataToMultiInstantiate)
                 .build();
 
-        flowElementSwitch.addDataForMultiInstanceIterator(activityDefinitionBuilder, ((Activity) pool.getElements().get(0)).getIteratorExpression(),
+        flowElementSwitch.addDataForMultiInstanceIterator(activityDefinitionBuilder,
+                ((Activity) pool.getElements().get(0)).getIteratorExpression(),
                 collectionDataToMultiInstantiate);
 
         verify(activityDefinitionBuilder).addData(anyString(), anyString(), any(Expression.class));

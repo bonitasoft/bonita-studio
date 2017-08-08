@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.properties.sections.callActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +42,12 @@ public class CallActivityHelper {
         this.selectionProvider = selectionProvider;
     }
 
-    protected List<String> getCallActivityData() {
-        final List<String> res = new ArrayList<>();
+    protected List<Data> getCallActivityData() {
         final AbstractProcess subProcess = getCalledProcess();
         if (subProcess != null) {
-            for (final Data data : subProcess.getData()) {
-                res.add(data.getName());
-            }
+            return subProcess.getData();
         }
-        return res;
+        return Collections.emptyList();
     }
 
     protected List<String> getCallActivityContractInput() {
