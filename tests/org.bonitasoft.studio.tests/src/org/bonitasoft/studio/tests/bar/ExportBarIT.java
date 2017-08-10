@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -43,28 +44,30 @@ public class ExportBarIT {
 
     private File bosToImportFile;
 
+    private ImportBosArchiveOperation importBosArchiveOperation;
+
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    @Test
-    public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
-        //Given
+    @Before
+    public void import_bos_archive() throws Exception {
         bosToImportFile = Paths.get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
                 .toFile();
-        final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
 
-        //When
-        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation().disableValidation();
+        importBosArchiveOperation = new ImportBosArchiveOperation().disableValidation();
         importBosArchiveOperation.setArchiveFile(bosToImportFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
 
-        //Then
         assertThat(importBosArchiveOperation.getStatus()).isOK();
         assertThat(importBosArchiveOperation.getFileStoresToOpen()).extracting("name")
                 .containsOnly("DiagramWithNewFormMapping-1.0.proc");
+    }
 
-        //When
+    @Test
+    public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
+
+        final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
         final DiagramFileStore diagram = (DiagramFileStore) importBosArchiveOperation.getFileStoresToOpen().get(0);
         exportBarOperation.addProcessToDeploy(diagram.getProcesses().get(0));
