@@ -21,6 +21,7 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.eclipse.core.runtime.FileLocator.toFileURL;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -32,7 +33,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.junit.Before;
+import org.eclipse.swt.widgets.Display;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -42,30 +43,30 @@ import org.junit.rules.TemporaryFolder;
  */
 public class ExportBarIT {
 
-    private File bosToImportFile;
-
-    private ImportBosArchiveOperation importBosArchiveOperation;
-
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    @Before
-    public void import_bos_archive() throws Exception {
-        bosToImportFile = Paths.get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
+    @Test
+    public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
+
+        File bosToImportFile = Paths
+                .get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
                 .toFile();
 
-        importBosArchiveOperation = new ImportBosArchiveOperation().disableValidation();
+        ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation().disableValidation();
         importBosArchiveOperation.setArchiveFile(bosToImportFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        Display.getDefault().syncExec(() -> {
+            try {
+                importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException("Error while importing bos archive");
+            }
+        });
 
         assertThat(importBosArchiveOperation.getStatus()).isOK();
         assertThat(importBosArchiveOperation.getFileStoresToOpen()).extracting("name")
                 .containsOnly("DiagramWithNewFormMapping-1.0.proc");
-    }
-
-    @Test
-    public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
 
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
