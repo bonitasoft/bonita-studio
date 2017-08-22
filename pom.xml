@@ -80,6 +80,7 @@
                         <jgit.ignore>
                             pom.xml
                         </jgit.ignore>
+                        <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
                     </configuration>
                 </plugin>
                 <plugin>
