@@ -71,7 +71,8 @@
 							<addMavenDescriptor>false</addMavenDescriptor>
 						</archive>
                         <forceContextQualifier>${forceContextQualifier}</forceContextQualifier>
-					</configuration>
+					    <qualifier>${forceContextQualifier}</qualifier>
+                    </configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.sonatype.tycho</groupId>
