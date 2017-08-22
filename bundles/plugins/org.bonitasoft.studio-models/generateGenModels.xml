@@ -18,12 +18,27 @@
 <project name="org.bonitasoft.studio-build" default="generate" xmlns:gmfAnt="http://ecliptical.ca/gmf/ant">
 
 	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask" />
+	<taskdef classpath="antTasks/ant-contrib-0.6.jar" name="propertyregex" classname="net.sf.antcontrib.property.RegexTask" />
 
 	<target name="generate">
 		<copy todir="${workspacePath}/org.bonitasoft.studio-models">
 			<fileset dir="${basedir}" />
 		</copy>
+		
+		<propertyregex property="plugin.version.replaced"
+		               input="${plugin.version}"
+					   defaultvalue="${plugin.version}"
+		               regexp="\-SNAPSHOT"
+		               replace="\.qualifier"
+		               global="true" />
+		 <echo>Replace version in generation templates</echo>
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/process.gmfgen" />
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/form/form.gmfgen" />
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/edit/manifest.mfjet" />
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/model/manifest.mfjet" />
+		
 		<refreshWorkspace project="org.bonitasoft.studio-models" />
+		
 		<emf.Ecore2Java modelpluginid="org.bonitasoft.studio.model" modelproject="org.bonitasoft.studio.model" model="process.ecore" genmodel="process.genmodel" modelprojectfragmentpath="src" reconcilegenmodel="keep" generatejavacode="true" generatemodelproject="true" generateeditproject="true" generateeditorproject="false" generatetestsproject="false" templatepath="EMFTemplates/" autobuild="false" jdklevel="7.0">
 		</emf.Ecore2Java>
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />

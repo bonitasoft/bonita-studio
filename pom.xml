@@ -8,7 +8,6 @@
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
-        <!--forceContextQualifier -->
         <tychoVersion>1.0.0</tychoVersion>
         <tychoExtrasVersion>1.0.0</tychoExtrasVersion>
         <os-jvm-flags></os-jvm-flags>
@@ -124,7 +123,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.12</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.google.code.maven-replacer-plugin</groupId>
@@ -246,90 +245,6 @@
             <properties>
                 <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
             </properties>
-        </profile>
-        <profile>
-            <id>tag-trunk</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>tag-trunk</id>
-                                <phase>pre-clean</phase>
-                                <configuration>
-                                    <tasks>
-                                        <echo>Updating pom version from ${current.version} to
-                                            ${tag.version}</echo>
-                                        <replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${tag.version}&lt;/version&gt;"
-                                            file="${basedir}/pom.xml" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>revert-trunk-snapshot</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>revert-trunk-snapshot</id>
-                                <phase>pre-clean</phase>
-                                <configuration>
-                                    <tasks>
-                                        <echo>Updating pom version from ${tag.version} to
-                                            ${current.version}</echo>
-                                        <replace token="&lt;version&gt;${tag.version}&lt;/version&gt;" value="&lt;version&gt;${current.version}&lt;/version&gt;"
-                                            file="${basedir}/pom.xml" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>upgrade-trunk-snapshot</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>upgrade-trunk-snapshot</id>
-                                <phase>pre-clean</phase>
-                                <configuration>
-                                    <tasks>
-                                        <echo>Updating pom version from ${current.version} to
-                                            ${next.snapshot.version}</echo>
-                                        <replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
-                                            file="${basedir}/pom.xml" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 

@@ -93,12 +93,14 @@
     <%} else if (genPackage.getResource() != GenResourceKind.NONE_LITERAL) {%>
 
    <extension point="org.eclipse.emf.ecore.extension_parser">
-  <%if (hasKey) {%>
+      <%if (hasKey) {%>
       <!-- @generated <%=key%> -->
-  <%}%>
+      <%}%>
+      <%for (String fileExtension : genPackage.getFileExtensionList()) {%>
       <parser
-            type="<%=genPackage.getFileExtension()%>"
+            type="<%=fileExtension%>"
             class="<%=genPackage.getQualifiedResourceFactoryClassName()%>"/>
+      <%}%>
    </extension>
     <%}%>
   <%}%>
@@ -113,11 +115,9 @@
   <%if (hasKey) {%>
       <!-- @generated <%=key%> -->
   <%}%>
- 
       <factory
             uri="<%=genPackage.getNSURI()%>"
-           class="<%=genPackage.getQualifiedItemProviderAdapterFactoryClassName()%>"
-  
+            class="<%=genPackage.getQualifiedItemProviderAdapterFactoryClassName()%>"
             supportedTypes=
     <%for (ListIterator<?> j = genPackage.getProviderSupportedTypes().listIterator(); j.hasNext(); ) {%>
               <%=j.hasPrevious() ? " " : "\""%><%=j.next()%><%if (!j.hasNext()) {%>"/><%}%>
