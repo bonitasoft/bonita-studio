@@ -1,8 +1,6 @@
-<%@ jet package="org.eclipse.emf.codegen.ecore.templates.edit" imports="java.util.* org.eclipse.emf.codegen.ecore.genmodel.*" class="PluginProperties" version="$Id: plugin.propertiesjet,v 1.16 2008/12/13 15:53:17 emerks Exp $" %>
+<%@ jet package="org.eclipse.emf.codegen.ecore.templates.edit" imports="java.util.* org.eclipse.emf.codegen.ecore.genmodel.*" class="PluginProperties"%>
 <%
 /**
- * <copyright>
- *
  * Copyright (c) 2002-2007 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,15 +9,14 @@
  * 
  * Contributors: 
  *   IBM - Initial API and implementation
- *
- * </copyright>
  */
 %>
 <%GenModel genModel = (GenModel)argument; /* Trick to import java.util.* without warnings */Iterator.class.getName();%>
 <%@ include file="../Header.propertiesjetinc"%>
 
 pluginName = <%=genModel.getModelName()%> Edit Support
-providerName = BonitaSoft S.A.
+providerName = Bonitasoft S.A.
+<%if (genModel.getRuntimePlatform() != GenRuntimePlatform.GWT) {%>
 
 <%if (genModel.isCreationCommands()) {%>
 _UI_CreateChild_text = {0}
@@ -62,4 +59,5 @@ _UI_<%=genEnum.getName()%>_<%=genEnumLiteral.getName()%>_literal = <%=genEnumLit
 <%}%>
 <%for (String category : genModel.getPropertyCategories()) {%>
 <%=genModel.getPropertyCategoryKey(category)%> = <%=category%>
+<%}%>
 <%}%>
