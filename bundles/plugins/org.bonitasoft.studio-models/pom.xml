@@ -10,7 +10,7 @@
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio-models</artifactId>
     <packaging>eclipse-plugin</packaging>
-
+    
     <properties>
         <workspacePath>${project.build.directory}/generationWorkspace</workspacePath>
     </properties>
@@ -25,7 +25,7 @@
                         <artifactId>tycho-eclipserun-plugin</artifactId>
                         <configuration>
                             <appArgLine>-data ${workspacePath} -application org.eclipse.ant.core.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
-                            <argLine>${os-jvm-flags} -Xmx512m -Xms256m -DworkspacePath=${workspacePath}</argLine>
+                            <argLine>${os-jvm-flags} -Xmx512m -Xms256m -DworkspacePath=${workspacePath} -Dplugin.version=${project.version}</argLine>
                             <repositories>
                                 <repository>
                                     <id>BonitaBPM P2 Repository</id>
@@ -140,37 +140,6 @@
                                 </fileset>
                             </filesets>
                         </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>upgrade-trunk-snapshot</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>upgrade-trunk-snapshot</id>
-                                <phase>pre-clean</phase>
-                                <configuration>
-                                    <tasks>
-                                        <echo>Updating pom version from ${current.version} to ${next.snapshot.version}</echo>
-                                        <replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
-                                            file="${basedir}/pom.xml" />
-                                        <replace token="${current.model.version}" value="${next.snapshot.model.version}" file="${basedir}/process.gmfgen" />
-                                        <replace token="${current.model.version}" value="${next.snapshot.model.version}" file="${basedir}/form/form.gmfgen" />
-                                        <replace token="${current.model.version}" value="${next.snapshot.model.version}" file="${basedir}/EMFTemplates/edit/manifest.mfjet" />
-                                        <replace token="${current.model.version}" value="${next.snapshot.model.version}" file="${basedir}/EMFTemplates/model/manifest.mfjet" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
