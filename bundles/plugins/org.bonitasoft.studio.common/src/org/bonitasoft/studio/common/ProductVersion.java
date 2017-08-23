@@ -24,12 +24,17 @@ public class ProductVersion {
     //OEM Variable to be use for redirect urls
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = "7.6.0";
+    public static final String CURRENT_VERSION = manifestVersion();
 
     public static final String CURRENT_YEAR = "2017";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
+    }
+
+    private static String manifestVersion() {
+        Version version = Activator.getDefault().getBundle().getVersion();
+        return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro());
     }
 
     public static boolean sameMinorVersion(final String version) {
