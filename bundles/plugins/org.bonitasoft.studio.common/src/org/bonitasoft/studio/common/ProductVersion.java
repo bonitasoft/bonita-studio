@@ -35,7 +35,7 @@ public class ProductVersion {
     private static String manifestVersion() {
         Activator activator = Activator.getDefault();
         if (activator == null) {
-            return "1.0.0";
+            return "7.6.0";
         }
         Version version = activator.getBundle().getVersion();
         return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro());
