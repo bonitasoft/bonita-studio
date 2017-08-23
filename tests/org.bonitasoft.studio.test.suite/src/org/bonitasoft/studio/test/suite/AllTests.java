@@ -24,6 +24,7 @@ import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.ProductVersionIT;
 import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestInitialWorkspace;
@@ -79,6 +80,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        ProductVersionIT.class,
         TestInitialWorkspace.class,
         TestExtensionProject.class,
         TestFunctionRepository.class,
