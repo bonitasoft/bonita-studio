@@ -122,6 +122,19 @@
 							<goal>parse-version</goal>
 						</goals>
 					</execution>
+                    <execution>
+                        <id>regex-property</id>
+                        <goals>
+                          <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                          <name>osgiVersion</name>
+                          <value>${parsedVersion.osgiVersion}</value>
+                          <regex>.SNAPSHOT</regex>
+                          <replacement>.qualifier</replacement>
+                          <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                      </execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -312,7 +325,7 @@
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>Bonita Community Tomcat Bundle</Bundle-Name>
 						<Bundle-Vendor>Bonitasoft S.A.</Bundle-Vendor>
-						<Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
+						<Bundle-Version>${osgiVersion}</Bundle-Version>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
