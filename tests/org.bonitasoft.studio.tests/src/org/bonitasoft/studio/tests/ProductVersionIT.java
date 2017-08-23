@@ -12,17 +12,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.junit.Test;
 import org.osgi.framework.Version;
 
-public class ProductVersionTest {
+public class ProductVersionIT {
 
     @Test
     public void shouldCurrentProductVersionEquals_POMVersionIgnoringQualifier() throws Exception {
