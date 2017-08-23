@@ -34,7 +34,9 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
+import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.Messages;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
@@ -44,9 +46,17 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
+import org.codehaus.groovy.eclipse.core.model.GroovyProjectFacade;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -80,6 +90,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         final Set<ICompilationUnit> compilationUnits = new HashSet<ICompilationUnit>();
         final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+
         for (final GroovyFileStore file : providedStore.getChildren()) {
             compilationUnits.add(file.getCompilationUnit());
         }
@@ -98,6 +109,31 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
     protected void addGroovyCompilationUnitToClasspath(final BusinessArchiveBuilder builder,
             final Set<ICompilationUnit> compilationUnits,
             final String exportedProvidedJarName) throws InvocationTargetException, InterruptedException, IOException {
+
+        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(javaProject));
+        for (ICompilationUnit compilationUnit : compilationUnits) {
+            CompilationResult compileForErrors;
+            try {
+                compileForErrors = compiler.compileForErrors(compilationUnit.getSource(), null);
+                CategorizedProblem[] errors = compileForErrors.getErrors();
+                if (errors != null && errors.length > 0) {
+                    MultiStatus errorStatus = new MultiStatus(GroovyPlugin.PLUGIN_ID, 0, "", null);
+                    for (CategorizedProblem e : errors) {
+                        errorStatus.add(new Status(IStatus.ERROR, GroovyPlugin.PLUGIN_ID,
+                                String.format("%s (line %s, col %s): %s", compilationUnit.getElementName(),
+                                        e.getSourceLineNumber(),
+                                        e.getSourceStart(), e.getMessage())));
+                        throw new JarExportFailedException(
+                                Messages.errorBuildingJarForGroovyScriptsForProcess + " ",
+                                errorStatus);
+                    }
+                }
+            } catch (JavaModelException e) {
+                throw new InvocationTargetException(e);
+            }
+        }
+
         if (!compilationUnits.isEmpty()) {
             final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), exportedProvidedJarName);
             final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar,
