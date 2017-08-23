@@ -72,6 +72,8 @@ public class CreateJarOperation implements IRunnableWithProgress {
         final JarPackageData jarPackakeData = newJarPackageData();
         jarPackakeData.setJarLocation(Path.fromOSString(toFile.getAbsolutePath()));
         jarPackakeData.setElements(compilationUnits);
+        jarPackakeData.setExportWarnings(true);
+        jarPackakeData.setExportErrors(false);
         jarPackakeData.setDeprecationAware(true);
         jarPackakeData.setExportJavaFiles(includeSources);
         jarPackakeData.setOverwrite(true);
