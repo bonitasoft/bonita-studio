@@ -75,11 +75,6 @@
                         <archive>
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </archive>
-                        <timestampProvider>jgit</timestampProvider>
-                        <jgit.ignore>
-                            pom.xml
-                        </jgit.ignore>
-                        <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
                     </configuration>
                 </plugin>
                 <plugin>
