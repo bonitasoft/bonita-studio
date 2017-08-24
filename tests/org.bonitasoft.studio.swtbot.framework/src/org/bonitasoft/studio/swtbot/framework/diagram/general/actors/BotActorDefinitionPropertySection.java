@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.diagram.general.actors;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -61,7 +63,8 @@ public class BotActorDefinitionPropertySection extends BotBase {
     }
 
     public BotActorDefinitionPropertySection setSetAsInitiator() {
-        if (bot.button(Messages.setAsProcessInitiator).isEnabled()) {
+        if (Objects.equals(bot.buttonWithId("org.bonitasoft.studio.actors.ui.section.initiatorButton").getText(),
+                Messages.setAsProcessInitiator)) {
             bot.button(Messages.setAsProcessInitiator).click();
         }
         return this;
