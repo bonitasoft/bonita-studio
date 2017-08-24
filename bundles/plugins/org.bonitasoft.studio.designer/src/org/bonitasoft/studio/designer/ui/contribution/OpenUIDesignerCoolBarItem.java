@@ -21,8 +21,6 @@ import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -111,10 +109,5 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.uiDesigner";
-    }
-
-    @Override
-    public boolean isVisible() {
-        return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.FORMS_MODELING);
     }
 }

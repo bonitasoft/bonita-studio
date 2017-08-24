@@ -32,7 +32,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -75,7 +74,8 @@ import org.osgi.service.event.EventHandler;
 /**
  * @author Romain Bioteau
  */
-public class CoolbarToolControl implements INullSelectionListener, IActivityManagerListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
+public class CoolbarToolControl
+        implements INullSelectionListener, IActivityManagerListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
 
     private static final int ICON_SIZE = 24;
 
@@ -96,15 +96,18 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
     private boolean isRegistered;
 
     @PostConstruct
-    public void createControls(final Composite parent, final IEclipseContext context, final IWorkbenchActivitySupport activitySupport) {
+    public void createControls(final Composite parent, final IEclipseContext context,
+            final IWorkbenchActivitySupport activitySupport) {
         if (isRendered(context)) {
             initCoolBarPreferredSize();
             final Composite parentShell = parent.getParent();
             final TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
             if (layout != null) {
                 toolbarContainer = new Composite(parentShell, SWT.INHERIT_FORCE);
-                toolbarContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-                toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create());
+                toolbarContainer.setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+                toolbarContainer
+                        .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create());
                 layout.top = toolbarContainer;
                 final Composite leftTrim = layout.left;
                 if (leftTrim != null) {
@@ -198,10 +201,12 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
         }
 
         if (size == CoolbarSize.SMALL) {
-            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 40));
+            image = new Image(Display.getDefault(),
+                    Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 40));
 
         } else {
-            image = new Image(Display.getDefault(), Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 85));
+            image = new Image(Display.getDefault(),
+                    Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 85));
 
         }
         toolbarContainer.setBackgroundImage(image);
@@ -266,8 +271,8 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
     }
 
     private void initCoolBarPreferredSize() {
-        BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(), false);
-        final String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE);
+        final String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE);
         if (value.equals(BonitaCoolBarPreferenceConstant.SMALL)) {
             size = CoolbarSize.SMALL;
         } else if (value.equals(BonitaCoolBarPreferenceConstant.NORMAL)) {
@@ -415,7 +420,8 @@ public class CoolbarToolControl implements INullSelectionListener, IActivityMana
                         if (wp instanceof DiagramEditor) {
                             for (final IBonitaContributionItem bcItem : contributions.values()) {
                                 if (bcItem instanceof ISelectionChangedListener) {
-                                    ((DiagramEditor) wp).getDiagramGraphicalViewer().addSelectionChangedListener((ISelectionChangedListener) bcItem);
+                                    ((DiagramEditor) wp).getDiagramGraphicalViewer()
+                                            .addSelectionChangedListener((ISelectionChangedListener) bcItem);
                                 }
                             }
                         }

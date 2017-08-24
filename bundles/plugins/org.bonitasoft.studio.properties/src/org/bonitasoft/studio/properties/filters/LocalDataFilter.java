@@ -22,8 +22,6 @@ import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.StartSignalEvent;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.TimerEvent;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
@@ -59,8 +57,7 @@ public class LocalDataFilter implements IFilter {
                 return false;
             }
 
-            return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)
-                    && eObject.eClass().getEAllStructuralFeatures().contains(ProcessPackage.Literals.DATA_AWARE__DATA);
+            return eObject.eClass().getEAllStructuralFeatures().contains(ProcessPackage.Literals.DATA_AWARE__DATA);
 
         }
         return false;

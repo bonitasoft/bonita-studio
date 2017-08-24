@@ -112,5 +112,14 @@
             label="%runKeywords">
       </keyword>
    </extension>
-
+	<extension
+           point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester
+              class="org.bonitasoft.studio.preferences.manager.ActivityPropertyTester"
+              id="org.eclipse.ui.activityPropertyTester"
+              namespace="org.bonitasoft"
+              properties="is6XLegacyEnabled"
+              type="org.eclipse.ui.IWorkbenchWindow">
+        </propertyTester>
+     </extension>
 </plugin>
