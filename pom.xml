@@ -63,13 +63,6 @@
                     <groupId>org.eclipse.tycho</groupId>
                     <artifactId>tycho-packaging-plugin</artifactId>
                     <version>${tychoVersion}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.eclipse.tycho.extras</groupId>
-                            <artifactId>tycho-buildtimestamp-jgit</artifactId>
-                            <version>${tychoExtrasVersion}</version>
-                        </dependency>
-                    </dependencies>
                     <configuration>
                         <strictBinIncludes>false</strictBinIncludes>
                         <strictVersions>false</strictVersions>
