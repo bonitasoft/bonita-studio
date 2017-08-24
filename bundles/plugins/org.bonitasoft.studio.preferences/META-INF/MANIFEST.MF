@@ -35,3 +35,4 @@ Export-Package: org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.preferences.i18n,
  org.bonitasoft.studio.preferences.pages
 Bundle-ClassPath: .
+Import-Package: org.eclipse.core.expressions

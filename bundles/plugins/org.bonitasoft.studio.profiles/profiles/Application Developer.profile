@@ -1,4 +1,0 @@
-#Fri Aug 19 10:51:06 CEST 2011
-features=org.bonitasoft.studio.profiles.validators,org.bonitasoft.studio.profiles.appearance,org.bonitasoft.studio.profiles.dependencies,org.bonitasoft.studio.profiles.contexts,org.bonitasoft.studio.profiles.formsmodeling,org.bonitasoft.studio.profiles.kpi,org.bonitasoft.studio.profiles.formstemplates,org.bonitasoft.studio.profiles.simulation,org.bonitasoft.studio.profiles.datamanagement,org.bonitasoft.studio.profiles.looknfeels,org.bonitasoft.studio.profiles.connectors,org.bonitasoft.studio.profiles.execution,org.bonitasoft.studio.profiles.processmodeling,org.bonitasoft.studio.profiles.language,org.bonitasoft.studio.profiles.validation
-description=Includes all of the concepts of the Business Analyst profiles, plus adds form building for application development.
-provided = true

@@ -19,8 +19,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.ContributionItem;
@@ -59,15 +57,6 @@ public class FormPreviewCoolbarItem extends ContributionItem implements IBonitaC
     public boolean isEnabled() {
         final Command cmd = getCommand();
         return cmd.isEnabled();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.FORMS_MODELING);
     }
 
     @Override
