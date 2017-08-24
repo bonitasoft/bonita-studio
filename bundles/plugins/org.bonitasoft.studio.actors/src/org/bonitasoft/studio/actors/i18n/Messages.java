@@ -267,4 +267,5 @@ public class Messages extends NLS {
     public static String userNameIsEmpty;
     public static String organizationName;
     public static String invalidCharInGroupName;
+    public static String removeProcessInitiator;
 }
