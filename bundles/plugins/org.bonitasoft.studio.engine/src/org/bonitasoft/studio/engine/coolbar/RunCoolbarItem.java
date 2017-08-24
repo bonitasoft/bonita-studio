@@ -23,8 +23,6 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
@@ -82,15 +80,6 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
             }
         }
         return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.EXECUTION);
     }
 
     @Override

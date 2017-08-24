@@ -20,8 +20,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.profiles.ProfilePlugin;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.IHeapDumper;
@@ -130,7 +128,6 @@ public class AllTests {
         WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
                 BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
-        ProfilePlugin.getDefault().getPreferenceStore().setValue(BonitaProfilesManager.SHOW_SELECT_PROFILE, false);
         BOSEngineManager.getInstance().start();
     }
 

@@ -44,8 +44,6 @@ import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAc
 import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -282,8 +280,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
      */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
-        if (eObject instanceof SequenceFlow
-                && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)) {
+        if (eObject instanceof SequenceFlow) {
             final SourceElement source = ((SequenceFlow) eObject).getSource();
             final boolean sourceIdAndGateway = source instanceof ANDGateway;
             final TargetElement target = ((SequenceFlow) eObject).getTarget();

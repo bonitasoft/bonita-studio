@@ -19,8 +19,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.ContributionItem;
@@ -53,15 +51,6 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
     @Override
     public boolean isEnabled() {
         return getCommand().isEnabled();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.EXECUTION);
     }
 
     @Override
