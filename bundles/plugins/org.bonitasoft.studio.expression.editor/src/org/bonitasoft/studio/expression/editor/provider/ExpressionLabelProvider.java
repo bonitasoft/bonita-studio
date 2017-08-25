@@ -46,7 +46,9 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
                     && !((Expression) expression).getContent().isEmpty()) {
                 return Pics.getImage(PicsConstants.constant);
             }
-
+            if (ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(((Expression) expression).getType())) {
+                return Pics.getImage(PicsConstants.engineConstant);
+            }
         }
         return super.getImage(expression);
     }

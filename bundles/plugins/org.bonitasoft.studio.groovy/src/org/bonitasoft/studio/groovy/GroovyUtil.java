@@ -235,7 +235,7 @@ public class GroovyUtil {
         return result;
     }
 
-    private static List<ExpressionConstants> getBonitaConstantsFor(
+    public static List<ExpressionConstants> getBonitaConstantsFor(
             EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ExpressionConstants> result = new ArrayList<>();
         DisplayEngineExpressionWithName engineFilter = null;
