@@ -41,6 +41,7 @@ import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -55,6 +56,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -153,6 +155,14 @@ public class GroovyViewer implements IDocumentListener {
 
         final StyledText styledText = getSourceViewer().getTextWidget();
         styledText.setTextLimit(MAX_SCRIPT_LENGTH);
+
+        styledText.addModifyListener(e -> {
+            if (styledText.getText().length() >= MAX_SCRIPT_LENGTH) {
+                MessageDialog.openInformation(styledText.getShell(), Messages.maxScriptLengthTitle,
+                        Messages.maxScriptLength);
+            }
+        });
+
         getSourceViewer().addTextListener(new ITextListener() {
 
             private boolean isReconciling;
