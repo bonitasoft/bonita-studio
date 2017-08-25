@@ -119,6 +119,13 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         doCreateAdditionalControl(mainComposite, ctx);
         doCreateFileTree(mainComposite, ctx);
 
+        treeSection.setVisible(false);
+        textWidget.addTextListener(SWT.Modify, e -> {
+            treeSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty()
+                    && new File(textWidget.getText()).exists());
+            treeSection.layout();
+        });
+
         return mainComposite;
     }
 

@@ -89,6 +89,13 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
         doCreateWorkspaceTips(mainComposite);
         doCreateFileBrowser(mainComposite, ctx);
         statusSection = createStatusSection(mainComposite);
+
+        statusSection.setVisible(false);
+        textWidget.addTextListener(SWT.Modify, e -> {
+            statusSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty());
+            statusSection.layout();
+        });
+
         return mainComposite;
     }
 
