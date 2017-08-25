@@ -17,6 +17,7 @@ package org.bonitasoft.studio.test.suite2;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.tests.CloseAllEditors;
@@ -64,6 +65,7 @@ public class AllMigrationTests extends TestSuite {
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
+        BOSEngineManager.getInstance().start();
     }
 
     @AfterClass
