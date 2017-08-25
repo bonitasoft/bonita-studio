@@ -269,7 +269,7 @@ public class BOSWebServerManager {
                 BonitaStudioLog.error(ex, EnginePlugin.PLUGIN_ID);
             }
         }
-        if (serverState == IServer.STATE_STARTING) {
+        if (serverState == IServer.STATE_STARTING || serverState == IServer.STATE_STARTED) {
             connectWithRetries();
             BonitaStudioLog.debug("Tomcat server started.",
                     EnginePlugin.PLUGIN_ID);
