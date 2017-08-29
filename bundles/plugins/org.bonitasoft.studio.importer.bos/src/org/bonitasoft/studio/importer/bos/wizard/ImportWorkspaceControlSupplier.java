@@ -93,9 +93,7 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
         statusSection.setVisible(false);
         textWidget.addTextListener(SWT.Modify, e -> {
             statusSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty());
-            statusSection.layout();
         });
-
         return mainComposite;
     }
 
@@ -175,6 +173,8 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
             statusSection.setClient(createStatusControl(statusSection));
             if (workspaceModel.getStatus().isOK()) {
                 statusSection.setExpanded(true);
+                statusSection.getShell().pack(true);
+                statusSection.getShell().layout(true, true);
             }
             textWidget.getParent().getParent().layout();
             if (new File(filePath).exists()) {
@@ -264,6 +264,7 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
          */
         @Override
         public void expansionStateChanged(ExpansionEvent e) {
+            toLayout.getShell().pack(true);
             toLayout.layout();
         }
 
