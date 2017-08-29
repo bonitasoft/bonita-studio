@@ -3,10 +3,18 @@ package org.bonitasoft.studio.importer.bos.operation;
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -34,6 +42,7 @@ import org.eclipse.pde.launching.IPDELauncherConstants;
 public class ScanWorkspaceOperation implements IRunnableWithProgress {
 
     private static final String APPLICATION_ID = "org.bonitasoft.studio.importer.bos.ImportWorkspaceApplication";
+    public static final String TMP_WS_FOLDER = ".tmpWS";
     private final ImportWorkspaceModel workspaceModel;
     protected Repository repository;
 
@@ -59,7 +68,7 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
             workingCopy.setAttribute(IPDELauncherConstants.CONFIG_CLEAR_AREA, false);
             workingCopy.setAttribute(IPDELauncherConstants.RUN_IN_UI_THREAD, true);
             workingCopy.setAttribute(IPDELauncherConstants.DOCLEAR, false);
-            workingCopy.setAttribute(IPDELauncherConstants.LOCATION, workspaceModel.getWorksapceFolder());
+            workingCopy.setAttribute(IPDELauncherConstants.LOCATION, tmpWorskpaceFolder());
             workingCopy.setAttribute(IPDELauncherConstants.USE_PRODUCT, false);
             final ILaunch launch = workingCopy.launch("run", Repository.NULL_PROGRESS_MONITOR);
             launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
@@ -80,9 +89,48 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
             if (launch.isTerminated()) {
                 monitor.done();
             }
-        } catch (final CoreException e) {
+        } catch (final CoreException | IOException e) {
             throw new InvocationTargetException(e);
         }
+    }
+
+    private String tmpWorskpaceFolder() throws IOException {
+        File wsFolder = new File(workspaceModel.getWorksapceFolder());
+        File tmpFolder = new File(System.getProperty("java.io.tmpdir"), TMP_WS_FOLDER);
+        if (tmpFolder.exists()) {
+            PlatformUtil.delete(tmpFolder, Repository.NULL_PROGRESS_MONITOR);
+        }
+        Files.walkFileTree(wsFolder.toPath(), new SimpleFileVisitor<Path>() {
+
+            /*
+             * (non-Javadoc)
+             * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
+             */
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                if (dir.endsWith(Paths.get("workspace", "tomcat")) //Do not copy tomcat folder
+                        || dir.endsWith(Paths.get(".plugins", "org.eclipse.jdt.core"))) {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+                Files.createDirectories(tmpFolder.toPath().resolve(wsFolder.toPath()
+                        .relativize(dir)));
+                return FileVisitResult.CONTINUE;
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see java.nio.file.SimpleFileVisitor#visitFile(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
+             */
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file.endsWith(Paths.get("workspace", ".metadata", ".log"))) {
+                    return FileVisitResult.CONTINUE;
+                }
+                Files.copy(file, tmpFolder.toPath().resolve(wsFolder.toPath().relativize(file)));
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return tmpFolder.getAbsolutePath();
     }
 
     protected void scanStatus(String text) {

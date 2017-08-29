@@ -35,6 +35,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -51,18 +52,17 @@ public class ImportWorkspaceApplication implements IApplication {
      */
     @Override
     public Object start(IApplicationContext context) throws Exception {
-        disableGroovyDSL();
         repositoryAccessor.init();
         final String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
         final Optional<String> scan = Stream.of(args).filter("-scan"::equals).findFirst();
-
         final Optional<String> export = Stream.of(args).filter(arg -> arg.startsWith("-export=")).findFirst();
-        final File targetFolder = new File(System.getProperty("java.io.tmpdir"), IMPORT_CACHE_FOLDER);
+
+        final File exportTargetFolder = new File(System.getProperty("java.io.tmpdir"), IMPORT_CACHE_FOLDER);
         if (export.isPresent()) {
-            if (targetFolder.exists()) {
-                PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+            if (exportTargetFolder.exists()) {
+                PlatformUtil.delete(exportTargetFolder, Repository.NULL_PROGRESS_MONITOR);
             }
-            targetFolder.mkdirs();
+            exportTargetFolder.mkdirs();
         }
 
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -82,23 +82,33 @@ public class ImportWorkspaceApplication implements IApplication {
                                 .orElse(Stream.empty())
                                 .filter(repository.getName()::equals)
                                 .findFirst()
-                                .ifPresent(repoToExport -> {
-                                    System.out.println(
-                                            String.format("$EXPORT_PROGRESS_%s",
-                                                    String.format(Messages.exportingWorkspace, repository.getName())));
-                                    final boolean closed = !repository.getProject().isOpen();
-                                    repositoryAccessor.setRepository(repository.getName());
-                                    repository
-                                            .exportToArchive(
-                                                    new File(targetFolder, repository.getName() + ".bos").getAbsolutePath());
-                                    if (closed) {
-                                        repository.close();
-                                    }
-                                });
+                                .ifPresent(repoToExport -> migrateAndExportRepository(exportTargetFolder, repository));
 
                     });
         }
         return IApplication.EXIT_OK;
+    }
+
+    private void migrateAndExportRepository(final File targetFolder, Repository repository) {
+        System.out.println(
+                String.format("$EXPORT_PROGRESS_%s",
+                        String.format(Messages.exportingWorkspace, repository.getName())));
+        final boolean closed = !repository.getProject().isOpen();
+        repositoryAccessor.setRepository(repository.getName());
+        try {
+            repository.migrate(Repository.NULL_PROGRESS_MONITOR);
+            repository
+                    .exportToArchive(
+                            new File(targetFolder, repository.getName() + ".bos")
+                                    .getAbsolutePath());
+
+        } catch (CoreException | MigrationException e) {
+            BonitaStudioLog.error(e);
+        } finally {
+            if (closed) {
+                repository.close();
+            }
+        }
     }
 
     private String findEdition(Repository repository) {
