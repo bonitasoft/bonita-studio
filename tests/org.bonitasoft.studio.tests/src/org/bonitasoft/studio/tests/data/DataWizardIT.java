@@ -445,7 +445,7 @@ public class DataWizardIT {
         botDataPropertySection.processDataList().select("varS1_2" + " -- " + "Integer");
         editDataWizardPage = botDataPropertySection.edit();
         SWTBotShell activeShell = bot.activeShell();
-        
+
         editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
         variableList = editDefaultValueExpression.selectVariableTab().variableList();
 
