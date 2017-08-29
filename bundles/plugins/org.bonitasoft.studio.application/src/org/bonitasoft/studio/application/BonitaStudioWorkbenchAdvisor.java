@@ -55,7 +55,6 @@ import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
-import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -71,6 +70,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.sourcelookup.SourceLookupManager;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
@@ -95,7 +96,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
-import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
@@ -620,7 +620,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     protected void doStartEngine() {
         //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
-        new GroovyConsoleLineTracker();
+        DebugUIPlugin.getDefault().getProcessConsoleManager();
+        SourceLookupManager.getDefault();
         final StartEngineJob job = new StartEngineJob("Starting BOS Engine");
         job.setPriority(Job.DECORATE);
         job.setUser(false);
