@@ -142,6 +142,7 @@ public abstract class EditableControlWidget extends ControlWidget {
     protected void adapt(FormToolkit toolkit) {
         label.ifPresent(label -> toolkit.adapt(label, true, true));
         filler.ifPresent(filler -> toolkit.adapt(filler, true, true));
+        toolkit.adapt(this, true, true);
     }
 
     protected ControlMessageSupport bindControl(DataBindingContext ctx, IObservableValue controlObservable,
