@@ -2,6 +2,7 @@ package org.bonitasoft.studio.importer.bos.operation;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ import org.eclipse.pde.launching.IPDELauncherConstants;
 public class ImportWorkspaceOperation implements IRunnableWithProgress {
 
     private static final String APPLICATION_ID = "org.bonitasoft.studio.importer.bos.ImportWorkspaceApplication";
+
     private final ImportWorkspaceModel workspaceModel;
     protected RepositoryAccessor repositoryAccessor;
     private MultiStatus status = new MultiStatus(BosArchiveImporterPlugin.PLUGIN_ID, 0, "", null);
@@ -65,7 +67,8 @@ public class ImportWorkspaceOperation implements IRunnableWithProgress {
             workingCopy.setAttribute(IPDELauncherConstants.CONFIG_CLEAR_AREA, false);
             workingCopy.setAttribute(IPDELauncherConstants.RUN_IN_UI_THREAD, true);
             workingCopy.setAttribute(IPDELauncherConstants.DOCLEAR, false);
-            workingCopy.setAttribute(IPDELauncherConstants.LOCATION, workspaceModel.getWorksapceFolder());
+            workingCopy.setAttribute(IPDELauncherConstants.LOCATION,
+                    new File(System.getProperty("java.io.tmpdir"), ScanWorkspaceOperation.TMP_WS_FOLDER).getAbsolutePath());
             workingCopy.setAttribute(IPDELauncherConstants.USE_PRODUCT, false);
             final ILaunch launch = workingCopy.launch("run", Repository.NULL_PROGRESS_MONITOR);
             launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
@@ -73,7 +76,7 @@ public class ImportWorkspaceOperation implements IRunnableWithProgress {
                 @Override
                 public void streamAppended(String text, IStreamMonitor streamMonitor) {
                     if (text.startsWith("$EXPORT_PROGRESS_")) {
-                        monitor.subTask(text.replace("$EXPORT_PROGRESS_", ""));
+                        monitor.subTask(text.replace("$EXPORT_PROGRESS_", "").split(System.lineSeparator())[0]);
                     }
                 }
             });
