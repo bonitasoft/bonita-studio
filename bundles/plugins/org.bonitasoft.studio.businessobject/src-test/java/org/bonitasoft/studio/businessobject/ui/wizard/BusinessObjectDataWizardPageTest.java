@@ -24,7 +24,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -76,8 +75,9 @@ public class BusinessObjectDataWizardPageTest {
     @Before
     public void setUp() throws Exception {
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getChildren()).thenReturn(Collections.singletonList(fileStore));
-        final BusinessObjectData data = aBusinessData().havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType()).build();
+        when(store.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).thenReturn(fileStore);
+        final BusinessObjectData data = aBusinessData()
+                .havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType()).build();
         final Pool pool = aPool().build();
         pool.getData().add(data);
         wizardPageUnderTest = new BusinessObjectDataWizardPage(pool, data, store, newHashSet("data1"), hintImageProvider);
