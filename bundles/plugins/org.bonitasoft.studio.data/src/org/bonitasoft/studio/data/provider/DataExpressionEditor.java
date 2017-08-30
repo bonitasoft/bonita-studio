@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -389,7 +390,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
     @Override
     public void okPressed() {
-        if (!editorInputExpression.getContent().equals(
+        if (!Objects.equals(editorInputExpression.getContent(),
                 editorInputExpression.getName())) {
             editorInputExpression.setName(editorInputExpression.getContent());
         }
