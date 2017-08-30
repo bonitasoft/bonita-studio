@@ -40,7 +40,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
-import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -450,6 +449,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static void addNewData(final SWTBot bot, final String name, final String type, final boolean multiplicity,
             final String defaultValue) {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
+        bot.activeShell().setFocus();
         bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.name + " *").setText(name);
         bot.comboBoxWithLabel(org.bonitasoft.studio.data.i18n.Messages.datatypeLabel).setSelection(type);
         if (multiplicity) {
