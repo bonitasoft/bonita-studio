@@ -39,7 +39,8 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -120,7 +121,7 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
     }
 
     private void updateViewerInput(final EObject context) {
-        final Set<ContractInput> input = new HashSet<>();
+        final Set<ContractInput> input = new HashSet<ContractInput>();
         final IExpressionProvider provider = getContractInputExpressionProvider();
         final Set<Expression> expressions = provider.getExpressions(context);
         for (final Expression expression : expressions) {
@@ -155,13 +156,14 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
                         ExpressionPackage.Literals.EXPRESSION__CONTENT);
         final IObservableValue nameObservable = EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        final IObservableValue<String> returnTypeObservable = EMFObservables.observeValue(inputExpression,
+        final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         final IObservableValue referenceObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        IObservableValue<ContractInput> observeSingleSelection = ViewersObservables.observeSingleSelection(viewer);
+        final IViewerObservableValue observeSingleSelection = ViewersObservables
+                .observeSingleSelection(viewer);
         dataBindingContext.bindValue(observeSingleSelection, EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE),
                 selectionToTypeStrategy(), new UpdateValueStrategy(
@@ -173,17 +175,17 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         dataBindingContext.bindValue(observeSingleSelection, contentObservable,
                 selectionToInputNameStrategy(), new UpdateValueStrategy(
                         UpdateValueStrategy.POLICY_NEVER));
-        observeSingleSelection.addValueChangeListener(e -> {
-            if (e.getObservableValue().getValue() != null) {
-                returnTypeObservable
-                        .setValue(ExpressionHelper.getContractInputReturnType(e.getObservableValue().getValue()));
-            }
-        });
+        dataBindingContext.bindValue(
+                observeSingleSelection,
+                returnTypeObservable, selectionToReturnTypeStrategy(),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(
                 observeSingleSelection,
                 referenceObservable, selectionToContractInputStrategy(),
                 contractInputToSelectionStrategy());
-        dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(typeText), returnTypeObservable);
+        dataBindingContext.bindValue(
+                SWTObservables.observeText(typeText, SWT.Modify),
+                returnTypeObservable);
     }
 
     protected UpdateValueStrategy selectionToTypeStrategy() {
@@ -243,6 +245,20 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
 
         };
         strategy.setConverter(referenceConverter);
+        return strategy;
+    }
+
+    protected UpdateValueStrategy selectionToReturnTypeStrategy() {
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
+        final IConverter returnTypeConverter = new Converter(ContractInput.class, String.class) {
+
+            @Override
+            public Object convert(final Object input) {
+                return input != null ? ExpressionHelper.getContractInputReturnType((ContractInput) input) : null;
+            }
+
+        };
+        strategy.setConverter(returnTypeConverter);
         return strategy;
     }
 
