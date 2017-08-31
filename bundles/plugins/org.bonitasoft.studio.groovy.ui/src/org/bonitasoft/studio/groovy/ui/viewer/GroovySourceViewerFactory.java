@@ -37,7 +37,7 @@ public class GroovySourceViewerFactory {
         if (context == null) {
             configureContext(container.getShell());
         }
-        return new GroovyViewer(container, null, editor);
+        return new GroovyViewer(container, null, editor,true);
     }
 
     public GroovyViewer createSourceViewer(final Composite container, final boolean isPageFlowContext) {
@@ -45,7 +45,7 @@ public class GroovySourceViewerFactory {
         if (context == null) {
             configureContext(container.getShell());
         }
-        return new GroovyViewer(container, isPageFlowContext);
+        return new GroovyViewer(container, isPageFlowContext,true);
     }
 
     private void configureContext(Shell shell) {
