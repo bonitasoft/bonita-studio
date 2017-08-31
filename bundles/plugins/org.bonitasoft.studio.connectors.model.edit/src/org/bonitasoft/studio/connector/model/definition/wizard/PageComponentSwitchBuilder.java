@@ -437,17 +437,18 @@ public class PageComponentSwitchBuilder {
                 input);
 
         if (parameter != null) {
-            final Composite container = new Composite(composite, SWT.NONE);
-            container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-            container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-            final Label labelField = createFieldLabel(container, SWT.TOP, array.getId(), input.isMandatory());
+            final Composite compositeContainer = new Composite(composite, SWT.NONE);
+            compositeContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+            compositeContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+            final Label labelField = createFieldLabel(compositeContainer, SWT.TOP, array.getId(), input.isMandatory());
             labelField.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
             final String desc = getDescription(array.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
 
-            final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(container, 0, array.isFixedRows(),
+            final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(compositeContainer, 0,
+                    array.isFixedRows(),
                     array.getCols().intValue(),
                     array.isFixedCols(), array.getColsCaption(), true, false);
             if (desc != null && !desc.isEmpty()) {
@@ -459,6 +460,7 @@ public class PageComponentSwitchBuilder {
             if (input.isMandatory()) {
                 viewer.setMandatoryField(getLabel(array.getId()), context);
             }
+            viewer.setContext(container);
             viewer.setInput(parameter);
             viewer.setSelection(parameter.getExpression());
             viewer.addExpressionModeListener(new IExpressionModeListener() {
