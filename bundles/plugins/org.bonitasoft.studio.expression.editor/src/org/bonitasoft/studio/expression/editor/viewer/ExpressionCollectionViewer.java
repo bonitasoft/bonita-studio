@@ -43,6 +43,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -97,7 +98,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private Composite expressionComposite;
     private MagicComposite mainComposite;
 
-    private Object context;
+    private EObject context;
     private final int minNbRow;
     private final List<String> captions;
     private final int minNbCol;
@@ -136,6 +137,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private String mandatoryLabel;
     private Binding bindValue;
     private final List<IAddLineListener> addLineLineListeners = new ArrayList<>();
+    private Object input;
 
     public void setEditingDomain(final EditingDomain editingDomain) {
         this.editingDomain = editingDomain;
@@ -300,7 +302,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             buttonComposite = new Composite(parent, SWT.NONE);
         }
         final int topIndent = captions == null || captions.isEmpty() ? 0 : 15;
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).indent(0, topIndent).create());
+        buttonComposite.setLayoutData(
+                GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).indent(0, topIndent).create());
 
         final RowLayout rl = new RowLayout(SWT.VERTICAL);
         rl.spacing = 3;
@@ -385,7 +388,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     protected MultiValidator createListExpressionValidator() {
         final ListExpression listExpression = (ListExpression) getValue();
-        final IObservableValue listValue = EMFObservables.observeValue(listExpression, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+        final IObservableValue listValue = EMFObservables.observeValue(listExpression,
+                ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
         return new MultiValidator() {
 
             @Override
@@ -395,7 +399,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                     if (expression instanceof ListExpression) {
                         listValue.getValue();
                         if (listExpression.getExpressions() == null || listExpression.getExpressions().isEmpty()) {
-                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
+                            return ValidationStatus
+                                    .error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
                         }
                     }
                 }
@@ -406,7 +411,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     protected MultiValidator createTableExpressionValidator() {
         final TableExpression tableExpression = (TableExpression) getValue();
-        final IObservableValue tableValue = EMFObservables.observeValue(tableExpression, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+        final IObservableValue tableValue = EMFObservables.observeValue(tableExpression,
+                ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
         return new MultiValidator() {
 
             @Override
@@ -416,7 +422,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                     if (expression instanceof TableExpression) {
                         tableValue.getValue();
                         if (tableExpression.getExpressions() == null || tableExpression.getExpressions().isEmpty()) {
-                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
+                            return ValidationStatus
+                                    .error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
                         }
                     }
                 }
@@ -1003,9 +1010,11 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             if (validationContext != null) {
                 IObservableValue observeValue = null;
                 if (input instanceof ListExpression) {
-                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+                    observeValue = EMFObservables.observeValue(input,
+                            ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
                 } else {
-                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+                    observeValue = EMFObservables.observeValue(input,
+                            ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
                 }
                 final UpdateValueStrategy strategy = new UpdateValueStrategy();
                 strategy.setAfterGetValidator(new IValidator() {
@@ -1015,13 +1024,17 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                         if (isTableMode()) {
                             final AbstractExpression expression = getValue();
                             if (expression instanceof ListExpression) {
-                                if (((ListExpression) expression).getExpressions() == null || ((ListExpression) expression).getExpressions().isEmpty()) {
-                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
+                                if (((ListExpression) expression).getExpressions() == null
+                                        || ((ListExpression) expression).getExpressions().isEmpty()) {
+                                    return ValidationStatus
+                                            .error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
                                 }
                             }
                             if (expression instanceof TableExpression) {
-                                if (((TableExpression) expression).getExpressions() == null || ((TableExpression) expression).getExpressions().isEmpty()) {
-                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
+                                if (((TableExpression) expression).getExpressions() == null
+                                        || ((TableExpression) expression).getExpressions().isEmpty()) {
+                                    return ValidationStatus
+                                            .error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor, mandatoryLabel));
                                 }
                             }
                         }
@@ -1047,13 +1060,26 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
+    public void setContext(EObject context) {
+        this.context = context;
+    }
+
+    protected boolean isOldContextAndInputSimilar(final Object input) {
+        return input instanceof EObject && input.equals(context);
+    }
+
     public void setInput(final Object input) {
-        context = input;
+        this.input = input;
+        if (isOldContextAndInputSimilar(input)) {
+            setContext((EObject) input);
+        }
         if (expressionEditor != null) {
-            expressionEditor.setInput(context);
+            expressionEditor.setContext(context);
+            expressionEditor.setInput(input);
         }
         for (final ExpressionCollectionEditingSupport es : editingSupports) {
-            es.setInput(context);
+            es.setContext(context);
+            es.setInput(input);
             if (viewerFilters.size() > editingSupports.indexOf(es)) {
                 final ViewerFilter filter = viewerFilters.get(editingSupports.indexOf(es));
                 if (filter != null) {
@@ -1160,7 +1186,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    public void setExpressionProposalLableProvider(final int colIndex, final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+    public void setExpressionProposalLableProvider(final int colIndex,
+            final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
         if (editingSupports != null && !editingSupports.isEmpty()) {
             if (colIndex >= 0 && colIndex < editingSupports.size()) {
                 editingSupports.get(colIndex).setExpressionProposalLableProvider(expressionProposalLabelProvider);

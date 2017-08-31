@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.CellEditor;
@@ -43,13 +44,14 @@ import org.eclipse.swt.widgets.Event;
  */
 public class ExpressionCollectionEditingSupport extends EditingSupport {
 
-    protected Object context;
+    protected EObject context;
     protected final int colIndex;
     protected final List<ViewerFilter> filters;
     protected EditingDomain editingDomain;
     private IExpressionNatureProvider expressionNatureProvider;
     private final SelectionListener removeRowListener;
     private IExpressionProposalLabelProvider expressionProposalLabelProvider;
+    private Object input;
 
     /**
      * @param viewer
@@ -104,7 +106,10 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
             editor.addFilter(filter);
         }
         if (context != null) {
-            editor.setInput(context);
+            editor.setContext(context);
+        }
+        if (input != null) {
+            editor.setInput(input);
         }
         if (element instanceof Expression) {
             editor.setSelection(new StructuredSelection(element));
@@ -162,7 +167,11 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
     }
 
     public void setInput(final Object input) {
-        context = input;
+        this.input = input;
+    }
+
+    public void setContext(final EObject context) {
+        this.context = context;
     }
 
     public void addFilter(final ViewerFilter filter) {
