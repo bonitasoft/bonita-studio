@@ -24,6 +24,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -84,8 +85,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
             valueText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         }
 
-        valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
-                .indent(0, -LayoutConstants.getSpacing().y + 1).hint(300, 80).create());
+        valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, -LayoutConstants.getSpacing().y + 1).hint(300, 80).create());
 
         Composite comboComposite = new Composite(mainComposite, SWT.NONE);
         comboComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 0).create());
@@ -111,24 +111,19 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
         typeCombo.setContentProvider(ArrayContentProvider.getInstance());
         typeCombo.setLabelProvider(new ConstantTypeLabelProvider());
         typeCombo.setInput(new String[] {
-                String.class.getName(), Boolean.class.getName(), Long.class.getName(), Float.class.getName(),
-                Double.class.getName(), Integer.class.getName()
+                String.class.getName(), Boolean.class.getName(), Long.class.getName(), Float.class.getName(), Double.class.getName(), Integer.class.getName()
         });
 
         return mainComposite;
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression,
-            ViewerFilter[] filters,
+    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression, ViewerFilter[] filters,
             ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
-        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression,
-                ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression,
-                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
 
-        Object value = returnTypeModelObservable.getValue();
         dataBindingContext.bindValue(SWTObservables.observeText(valueText, SWT.Modify), contentModelObservable);
         UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterGetValidator(new IValidator() {
@@ -142,8 +137,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
             }
         });
 
-        Binding bindValue = dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo),
-                returnTypeModelObservable, targetToModel, null);
+        Binding bindValue = dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable, targetToModel, null);
         IObservableValue validationStatus = bindValue.getValidationStatus();
         validationStatus.addValueChangeListener(handleValidationStatusChanged());
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
@@ -173,8 +167,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
      */
     @Override
     public boolean canFinish() {
-        return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null
-                && !typeCombo.getCombo().getText().isEmpty();
+        return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null && !typeCombo.getCombo().getText().isEmpty();
     }
 
     @Override
