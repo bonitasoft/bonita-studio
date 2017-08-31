@@ -5,18 +5,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>7.5.5-SNAPSHOT</version>
+	<version>7.5.5.W35</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<!--forceContextQualifier -->
+		<forceContextQualifier>201708310828</forceContextQualifier>
 		<tychoVersion>0.22.0</tychoVersion>
 		<tychoExtrasVersion>0.22.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>7.5.5-SNAPSHOT</bundle.version>
+		<bundle.version>7.5.5.W35</bundle.version>
 		<ui.designer.version>1.5.54</ui.designer.version>
-		<engine.version>7.5.5-SNAPSHOT</engine.version>
-		<filters.version>7.5.5-SNAPSHOT</filters.version>
+		<engine.version>7.5.5.W35</engine.version>
+		<filters.version>7.5.5.W35</filters.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/7.2</p2MirrorUrl>
@@ -163,7 +163,7 @@
                         <artifact>
                             <groupId>org.bonitasoft.studio</groupId>
                             <artifactId>platform</artifactId>
-								<version>7.5.5-SNAPSHOT</version>
+								<version>7.5.5.W35</version>
                         </artifact>
                     </target>
                     <filters>
