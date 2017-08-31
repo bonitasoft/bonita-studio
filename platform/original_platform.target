@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="230">
+<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="231">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
@@ -65,28 +65,6 @@
 <repository location="http://download.eclipse.org/edapt/releases/12x/122/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.recommenders_es.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.recommenders_fr.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_technology.recommenders_ja.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.6.0.v20161126060001"/>
-<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.6.0.v20161126060001"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.14.1/neon"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.compare.rcp.ui.feature.group" version="3.3.0.201611041634"/>
-<repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases/3.3/R201611041634"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
 <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
@@ -138,6 +116,7 @@
 <unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="3.13.7.v20170517-0201"/>
 <unit id="org.eclipse.egit.feature.group" version="4.8.0.201706111038-r"/>
 <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="4.8.0.201706111038-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r" />
 <unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="3.3.1.201706130827"/>
 <unit id="org.eclipse.emf.compare.egit.feature.group" version="1.2.1.201706130827"/>
 <unit id="org.eclipse.emf.compare.feature.group" version="3.3.1.201706130827"/>
@@ -194,6 +173,27 @@
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.13.0.v20170609-0928"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.12.0.v20170519-1412"/>
 <repository location="http://download.eclipse.org/releases/oxygen/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.jgit_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.recommenders_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.recommenders_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_technology.recommenders_ja.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.7.0.v20170819060001"/>
+<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.7.0.v20170819060001"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.0/oxygen"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
