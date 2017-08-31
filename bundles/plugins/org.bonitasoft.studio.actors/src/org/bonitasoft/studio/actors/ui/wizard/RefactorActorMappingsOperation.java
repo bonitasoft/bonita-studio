@@ -46,9 +46,6 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.match.IMatchEngine;
-import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EAttribute;
@@ -91,13 +88,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 
     protected Comparison compareOrganizations() {
         final IComparisonScope scope = new DefaultComparisonScope(newOrganization, oldOrganization, null);
-	    final IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
-	    final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
-		final EMFCompare comparator = EMFCompare.builder()
-	                                           .setMatchEngineFactoryRegistry(matchEngineRegistry)
-	                                           .setPostProcessorRegistry(postProcessorRegistry)
-	                                           .build();
-
+		final EMFCompare comparator = EMFCompare.builder().build();
 		final Comparison comparison = comparator.compare(scope);
         return comparison;
     }
