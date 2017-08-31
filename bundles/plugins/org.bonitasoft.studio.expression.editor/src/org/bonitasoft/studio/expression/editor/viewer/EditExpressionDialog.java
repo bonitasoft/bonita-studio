@@ -383,6 +383,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
+
+            inputExpression.isReturnTypeFixed();
+
             currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters,
                     expressionViewer);
             currentExpressionEditor.addListener(event -> {
