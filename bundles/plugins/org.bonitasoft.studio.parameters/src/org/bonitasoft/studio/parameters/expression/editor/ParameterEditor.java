@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.parameters.expression.editor;
 
-import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,7 +44,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -225,7 +223,7 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
                         ExpressionPackage.Literals.EXPRESSION__CONTENT);
         final IObservableValue nameObservable = EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        final IObservableValue<String> returnTypeObservable = EMFObservables.observeValue(
+        final IObservableValue returnTypeObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         final IObservableValue referenceObservable = EMFObservables.observeValue(
@@ -254,6 +252,18 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
 
         };
         selectionToContent.setConverter(contentConverter);
+
+        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        final IConverter returnTypeConverter = new Converter(Parameter.class,
+                String.class) {
+
+            @Override
+            public Object convert(final Object parameter) {
+                return parameter != null ? ((Parameter) parameter).getTypeClassname() : null;
+            }
+
+        };
+        selectionToReturnType.setConverter(returnTypeConverter);
 
         final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
         final IConverter referenceConverter = new Converter(Parameter.class,
@@ -294,20 +304,25 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
         };
         referencedDataToSelection.setConverter(referencetoDataConverter);
 
-        IObservableValue<Parameter> observeSingleSelection = ViewersObservables.observeSingleSelection(viewer);
-
-        dataBindingContext.bindValue(observeSingleSelection, nameObservable,
-                selectionToName, neverUpdateValueStrategy().create());
-        dataBindingContext.bindValue(observeSingleSelection, contentObservable,
-                selectionToContent, neverUpdateValueStrategy().create());
-        observeSingleSelection.addValueChangeListener(e -> {
-            if (e.getObservableValue().getValue() != null) {
-                returnTypeObservable.setValue(e.getObservableValue().getValue().getTypeClassname());
-            }
-        });
-        dataBindingContext.bindValue(observeSingleSelection, referenceObservable, selectionToReferencedData,
+        dataBindingContext.bindValue(ViewersObservables
+                .observeSingleSelection(viewer), nameObservable,
+                selectionToName, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables
+                .observeSingleSelection(viewer), contentObservable,
+                selectionToContent, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(
+                ViewersObservables.observeSingleSelection(viewer),
+                returnTypeObservable, selectionToReturnType,
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(
+                ViewersObservables.observeSingleSelection(viewer),
+                referenceObservable, selectionToReferencedData,
                 referencedDataToSelection);
-        dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(typeText), returnTypeObservable);
+        dataBindingContext.bindValue(
+                SWTObservables.observeText(typeText, SWT.Modify),
+                returnTypeObservable);
     }
 
     @Override
