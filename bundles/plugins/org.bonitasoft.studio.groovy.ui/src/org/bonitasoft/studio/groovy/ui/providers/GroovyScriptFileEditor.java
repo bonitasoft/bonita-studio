@@ -63,9 +63,10 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
-        createGroovyEditor(parent);
+        createGroovyEditor(parent,false);
         return mainComposite;
     }
+
 
     @Override
     public boolean canFinish() {
@@ -83,7 +84,6 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
         this.inputExpression = inputExpression;
         this.context = context;
 
-        final IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
 
         groovyViewer.getDocument().set(inputExpression.getContent());
         IExpressionNatureProvider natureProvider = null;
@@ -94,26 +94,11 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
         groovyViewer.getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, null);
         groovyViewer.getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, null);
         groovyViewer.getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, null);
-       /* dataBindingContext.bindValue(new DocumentObservable(sourceViewer), contentModelObservable,
-                new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null);
-        sourceViewer.addTextListener(new ITextListener() {
-
-            @Override
-            public void textChanged(TextEvent event) {
-                sourceViewer.getTextWidget().notifyListeners(SWT.Modify, new Event());
-            }
-        });*/
-        final IValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
         sourceViewer.getDocument().addDocumentListener(new IDocumentListener() {
 
             @Override
             public void documentChanged(final DocumentEvent event) {
-                final String text = event.getDocument().get();
-                if (lenghtValidator.validate(text).isOK()) {
-                	//groovyViewer.resetFoldingStructure();
-                    GroovyScriptFileEditor.this.inputExpression.setContent(text);
-                }
-
+               GroovyScriptFileEditor.this.inputExpression.setContent(event.getDocument().get());
             }
 
             @Override
