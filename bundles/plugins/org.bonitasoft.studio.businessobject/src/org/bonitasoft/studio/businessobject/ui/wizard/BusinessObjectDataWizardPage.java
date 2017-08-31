@@ -23,7 +23,9 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -342,7 +344,9 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     protected List<BusinessObject> getAllBusinessObjects() {
-        return businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).getBusinessObjects();
+        return Optional.ofNullable(businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME))
+        		.map(BusinessObjectModelFileStore::getBusinessObjects)
+        		.orElse(Collections.emptyList());
     }
 
     protected Text createDescriptionControl(final Composite mainComposite,
