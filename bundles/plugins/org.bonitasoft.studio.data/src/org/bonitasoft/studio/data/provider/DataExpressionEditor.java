@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.data.provider;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -53,7 +55,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -96,7 +98,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
     private Text typeText;
 
-    private IObservableValue returnTypeObservable = null;
+    private IObservableValue<String> returnTypeObservable = null;
 
     private Button addExpressionButton;
 
@@ -276,18 +278,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         };
         selectionToContent.setConverter(contentConverter);
 
-        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
-        final IConverter returnTypeConverter = new Converter(Data.class, String.class) {
-
-            @Override
-            public Object convert(final Object data) {
-                return data != null ? org.bonitasoft.studio.common.DataUtil
-                        .getTechnicalTypeFor((Data) data) : null;
-            }
-
-        };
-        selectionToReturnType.setConverter(returnTypeConverter);
-
         final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
         final IConverter referenceConverter = new Converter(Data.class, List.class) {
 
@@ -326,25 +316,22 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         };
         referencedDataToSelection.setConverter(referencetoDataConverter);
 
-        dataBindingContext.bindValue(ViewersObservables
-                .observeSingleSelection(viewer), nameObservable,
-                selectionToName, new UpdateValueStrategy(
-                        UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(ViewersObservables
-                .observeSingleSelection(viewer), contentObservable,
-                selectionToContent, new UpdateValueStrategy(
-                        UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(
-                ViewersObservables.observeSingleSelection(viewer),
-                returnTypeObservable, selectionToReturnType,
-                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-        dataBindingContext.bindValue(
-                ViewersObservables.observeSingleSelection(viewer),
+        IObservableValue<Data> observeSingleSelection = ViewersObservables.observeSingleSelection(viewer);
+
+        dataBindingContext.bindValue(observeSingleSelection, nameObservable,
+                selectionToName, neverUpdateValueStrategy().create());
+        dataBindingContext.bindValue(observeSingleSelection, contentObservable,
+                selectionToContent, neverUpdateValueStrategy().create());
+        observeSingleSelection.addValueChangeListener(e -> {
+            if (e.getObservableValue().getValue() != null) {
+                returnTypeObservable.setValue(
+                        org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(e.getObservableValue().getValue()));
+            }
+        });
+        dataBindingContext.bindValue(observeSingleSelection,
                 referenceObservable, selectionToReferencedData,
                 referencedDataToSelection);
-        dataBindingContext.bindValue(
-                SWTObservables.observeText(typeText, SWT.Modify),
-                returnTypeObservable);
+        dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(typeText), returnTypeObservable);
 
         if (context instanceof DateFormField) {
             handleDateFormFieldBinding();
