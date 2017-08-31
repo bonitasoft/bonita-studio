@@ -62,7 +62,6 @@
 <unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.7.0.v20170819060001"/>
-<unit id="org.eclipse.emf.compare.rcp.ui.feature.group" version="3.3.0.201611041634"/>
 <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
 <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
