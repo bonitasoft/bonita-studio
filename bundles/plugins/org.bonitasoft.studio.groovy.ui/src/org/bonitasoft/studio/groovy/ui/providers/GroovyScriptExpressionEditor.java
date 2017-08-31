@@ -225,7 +225,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
 
-        createGroovyEditor(parent);
+        createGroovyEditor(parent,true);
         createDependencyViewer(parent);
 
         return mainComposite;
@@ -395,8 +395,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         depndencySection.setClient(dependenciesComposite);
     }
 
-    protected void createGroovyEditor(final Composite parent) {
-        groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext);
+    protected void createGroovyEditor(final Composite parent,boolean restrictSciptSize) {
+        groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext,restrictSciptSize);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         sourceViewer = groovyViewer.getSourceViewer();
         document = groovyViewer.getDocument();
