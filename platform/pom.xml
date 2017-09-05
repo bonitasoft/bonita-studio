@@ -26,36 +26,9 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho.extras</groupId>
-                <artifactId>target-platform-validation-plugin</artifactId>
-                <version>${tychoExtrasVersion}</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>validate-target-platform</goal>
-                        </goals>
-                        <configuration>
-                            <targetFiles>
-                                <param>platform.target</param>
-                            </targetFiles>
-                            <failOnError>true</failOnError>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <id>remote</id>
             <build>
                 <plugins>
                     <plugin>
@@ -74,6 +47,25 @@
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.tycho.extras</groupId>
+                        <artifactId>target-platform-validation-plugin</artifactId>
+                        <version>${tychoExtrasVersion}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>validate-target-platform</goal>
+                                </goals>
+                                <configuration>
+                                    <targetFiles>
+                                        <param>platform.target</param>
+                                    </targetFiles>
+                                    <failOnError>true</failOnError>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -102,6 +94,25 @@
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.tycho.extras</groupId>
+                        <artifactId>target-platform-validation-plugin</artifactId>
+                        <version>${tychoExtrasVersion}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>validate-target-platform</goal>
+                                </goals>
+                                <configuration>
+                                    <targetFiles>
+                                        <param>platform.target</param>
+                                    </targetFiles>
+                                    <failOnError>true</failOnError>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="231">
+<?pde version="3.8"?>
+
+<target includeMode="feature" name="mirrored" sequenceNumber="153">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<repository location="http://repositories.rd.lan/p2/7.6"/>
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.6.0.201706141832"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.6.0.201706141832"/>
@@ -13,15 +16,9 @@
 <unit id="org.eclipse.swtbot.nebula.gallery.feature.group" version="2.6.0.201706141832"/>
 <unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
 <unit id="org.hamcrest.library" version="1.3.0.v201505072020"/>
-<repository location="http://download.eclipse.org/technology/swtbot/releases/2.6.0/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="6.0.4.I20161211-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.javahl18.feature.group" version="6.0.0.I20160427-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="6.0.4.I20161211-1700"/>
-<repository location="http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
 <unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
 <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
@@ -36,35 +33,17 @@
 <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
 <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
 <unit id="stax2-api" version="3.1.4"/>
-<repository location="http://p2.restlet.org/2.3"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="0.0.0"/>
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="0.0.0"/>
 <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
 <unit id="org.codehaus.groovy24.feature.feature.group" version="0.0.0"/>
-<repository location="http://dist.springsource.org/snapshot/GRECLIPSE/e4.7/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.9.0.v201611141242"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.9.0.v201611141242"/>
-<repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201706221838"/>
 <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201706221838"/>
-<repository location="http://download.eclipse.org/nebula/releases/1.3.0"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="javax.persistence.feature.group" version="2.1.0"/>
-<repository location="http://www.elver.org/eclipse/2.1.0/update/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.edapt.recorder.feature.feature.group" version="1.2.2.201705070604"/>
 <unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="1.2.2.201705070604"/>
-<repository location="http://download.eclipse.org/edapt/releases/12x/122/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
 <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
@@ -84,21 +63,12 @@
 <unit id="org.json" version="1.0.0.v201011060100"/>
 <unit id="org.objectweb.asm" version="5.2.0.v20170126-0011"/>
 <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
-<repository location="http://download.eclipse.org/tools/orbit/R-builds/R20170516192513/repository"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
 <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/>
 <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/>
 <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/>
 <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/>
-<repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.m2m.qvt.oml.sdk.feature.group" version="3.4.0.v20140610-1621"/>
-<repository location="http://download.eclipse.org/mmt/qvto/updates/releases"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706142203"/>
 <unit id="org.eclipse.buildship.feature.group" version="2.0.2.v20170420-0909"/>
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.14.0.201701131441"/>
@@ -116,11 +86,6 @@
 <unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="3.13.7.v20170517-0201"/>
 <unit id="org.eclipse.egit.feature.group" version="4.8.0.201706111038-r"/>
 <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="4.8.0.201706111038-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r" />
-<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="3.3.1.201706130827"/>
-<unit id="org.eclipse.emf.compare.egit.feature.group" version="1.2.1.201706130827"/>
-<unit id="org.eclipse.emf.compare.feature.group" version="3.3.1.201706130827"/>
-<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="3.3.1.201706130827"/>
 <unit id="org.eclipse.emf.diffmerge.sdk.feature.feature.group" version="0.8.0.201706120810"/>
 <unit id="org.eclipse.emf.ecore.xcore.sdk.feature.group" version="1.5.0.v20170613-0242"/>
 <unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.3.21.201705291011"/>
@@ -137,6 +102,7 @@
 <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.11.0.201706061354"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.11.0.201706061437"/>
 <unit id="org.eclipse.jdt.feature.group" version="3.13.0.v20170612-0950"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.8.0.201706111038-r"/>
 <unit id="org.eclipse.jst.common.fproj.enablement.jdt.feature.group" version="3.8.0.v201603091933"/>
 <unit id="org.eclipse.jst.enterprise_ui.feature.feature.group" version="3.9.0.v201701262152"/>
 <unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.3.600.v201705172117"/>
@@ -172,9 +138,6 @@
 <unit id="org.eclipse.xpand.sdk.feature.group" version="2.2.0.v201605260315"/>
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.13.0.v20170609-0928"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.12.0.v20170519-1412"/>
-<repository location="http://download.eclipse.org/releases/oxygen/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.7.0.v20170819060001"/>
@@ -193,7 +156,13 @@
 <unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.7.0.v20170819060001"/>
 <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.7.0.v20170819060001"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.0/oxygen"/>
+<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="3.3.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.egit.feature.group" version="1.2.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.feature.group" version="3.3.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="3.3.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.rcp.ui.feature.group" version="3.3.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.source.feature.group" version="3.3.1.201706130827"/>
+<unit id="org.eclipse.emf.compare.subversive.feature.group" version="1.1.0.201706130827"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
