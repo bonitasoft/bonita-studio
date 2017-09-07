@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.general;
 
@@ -33,46 +30,44 @@ import org.bonitasoft.studio.properties.sections.timer.TimerEventConditionContri
 
 /**
  * @author Mickael Istria
- *
  */
 public class GeneralExtensibleGridPropertySection extends ExtensibleGridPropertySection {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
+     */
+    @Override
     protected void addContributions() {
-		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage(),this));
-		addContribution(new MessageFlowContribution());
-		addContribution(new VersionGridPropertySectionContribution());
-		addContribution(new DescriptionGridPropertySectionContribution());
-		addContribution(new TextAnnotationTextPropertySectionContribution());
-		addContribution(new CatchLinkEventSectionContribution());
-		addContribution(new ThrowLinkEventSectionContribution());
-		addContribution(new LinkTypeSelectionSectionContribution(getTabbedPropertySheetPage()));
-		final ActivityTypeSelectionGridPropertySectionContribution activityTypeContrib = new ActivityTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
-		addContribution(activityTypeContrib);
-		final MessageEventTypeSelectionGridPropertySectionContribution messageEventContrib = new MessageEventTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
-		addContribution(messageEventContrib);
-		addContribution(new TimerEventConditionContribution());
-		addContribution(new CatchEventEventSelectionContribution());
-		addContribution(new SignalEventEventSelectionContribution());
-		addContribution(new TransitionConditionContribution());
-		final GatewayTypeSelectionGridPropertySectionContribution gatewayTypeContrib = new GatewayTypeSelectionGridPropertySectionContribution(getTabbedPropertySheetPage());
-		addContribution(gatewayTypeContrib);
-		addContribution(new TaskPriorityPropertySection());
-		addContribution(new ErrorEventSectionContribution());
-		
-	}
+        addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
+        addContribution(new MessageFlowContribution());
+        addContribution(new VersionGridPropertySectionContribution());
+        addContribution(new DescriptionGridPropertySectionContribution());
+        addContribution(new TextAnnotationTextPropertySectionContribution());
+        addContribution(new CatchLinkEventSectionContribution());
+        addContribution(new ThrowLinkEventSectionContribution());
+        addContribution(new LinkTypeSelectionSectionContribution(getTabbedPropertySheetPage()));
+        final ActivityTypeSelectionGridPropertySectionContribution activityTypeContrib = new ActivityTypeSelectionGridPropertySectionContribution(
+                getTabbedPropertySheetPage());
+        addContribution(activityTypeContrib);
+        final MessageEventTypeSelectionGridPropertySectionContribution messageEventContrib = new MessageEventTypeSelectionGridPropertySectionContribution(
+                getTabbedPropertySheetPage());
+        addContribution(messageEventContrib);
+        addContribution(new TimerEventConditionContribution());
+        addContribution(new CatchEventEventSelectionContribution());
+        addContribution(new SignalEventEventSelectionContribution());
+        addContribution(new TransitionConditionContribution());
+        final GatewayTypeSelectionGridPropertySectionContribution gatewayTypeContrib = new GatewayTypeSelectionGridPropertySectionContribution(
+                getTabbedPropertySheetPage());
+        addContribution(gatewayTypeContrib);
+        addContribution(new TaskPriorityPropertySection());
+        addContribution(new ErrorEventSectionContribution());
 
-	
+    }
 
-	@Override
-	public String getSectionDescription() {
-		return Messages.generalPropertiesSectionDescription;
-	}
+    @Override
+    public String getSectionDescription() {
+        return Messages.generalPropertiesSectionDescription;
+    }
 
-
-
-	
 }

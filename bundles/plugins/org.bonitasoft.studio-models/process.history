@@ -14443,5 +14443,44 @@
   <releases xmi:id="_bSK0MDoTEeeGMZ8Q55whqg" date="2017-05-16T11:43:27.494+0200" label="7.6.0-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_gCo5kDoTEeeGMZ8Q55whqg" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateSQLServerConnectorVersionTo121"/>
   </releases>
+  <releases xmi:id="_n02LoJI5EeeX94p4It-lew" date="2017-09-05T11:43:27.494+0200" label="7.6.0-002">
+    <changes xsi:type="history:OperationChange" xmi:id="_ljhpQJI5EeeX94p4It-lew">
+      <changes xsi:type="history:Create" xmi:id="_ljhpQZI5EeeX94p4It-lew" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//Pool"/>
+        <element href="process.ecore#//Pool/displayName"/>
+        <changes xsi:type="history:Set" xmi:id="_ljiQUJI5EeeX94p4It-lew" featureName="name" dataValue="displayName">
+          <element href="process.ecore#//Pool/displayName"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_ljiQUZI5EeeX94p4It-lew" featureName="eType">
+          <element href="process.ecore#//Pool/displayName"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_ljiQUpI5EeeX94p4It-lew" name="newAttribute">
+        <parameters xmi:id="_ljiQU5I5EeeX94p4It-lew" name="eClass">
+          <referenceValue xmi:id="_ljiQVJI5EeeX94p4It-lew">
+            <element href="process.ecore#//Pool"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_ljiQVZI5EeeX94p4It-lew" name="name">
+          <dataValue>displayName</dataValue>
+        </parameters>
+        <parameters xmi:id="_ljiQVpI5EeeX94p4It-lew" name="type">
+          <referenceValue xmi:id="_ljiQV5I5EeeX94p4It-lew">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_ljiQWJI5EeeX94p4It-lew" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_ljiQWZI5EeeX94p4It-lew" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_ljiQWpI5EeeX94p4It-lew" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

@@ -232,7 +232,7 @@ public class DiagramTests {
                 gmfEditor.getEditPart(nametask).click();
                 bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
                 SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-
+                gmfEditor.getEditPart(nametask).click();
                 // add a form
                 bot.button(addForm, 0).click();
                 // first shell "Add form..."

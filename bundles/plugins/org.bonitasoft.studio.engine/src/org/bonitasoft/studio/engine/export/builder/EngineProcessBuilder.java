@@ -39,6 +39,9 @@ public class EngineProcessBuilder extends AbstractProcessBuilder {
      */
     @Override
     public Element casePool(final Pool pool) {
+        if (pool.getDisplayName() != null) {
+            builder.addDisplayName(pool.getDisplayName());
+        }
         addDocuments(builder, pool);
         addActors(builder, pool);
         addData(builder, pool);

@@ -162,7 +162,6 @@ public class Messages extends NLS {
 
     public static String version;
     public static String name;
-
     public static String localTemplate;
 
     public static String selectLocalTemplateWizardPageDescription;
@@ -461,22 +460,26 @@ public class Messages extends NLS {
     public static String dataInCalledProcess;
     public static String dataFromCalledProcess;
     public static String dataInRootProcess;
-
     public static String configureDataToSend;
-
     public static String fetchContract;
-
     public static String processNotFoundExcpetion;
-
     public static String latest;
-
     public static String noProcessToCallDefined;
-
     public static String noContractDefinedException;
-
     public static String dueDateCalculation;
-
     public static String dueDateCalculationHint;
+    public static String displayName;
+    public static String displayNameCaption;
+    public static String displayNameTooltip;
+    public static String poolSectionDescription;
+    public static String poolNameHint;
+    public static String aNameMustBeSet;
+    public static String maxNameLength;
+    public static String maxDescriptionLength;
+    public static String aVersionMustBeSet;
+    public static String maxVersionLength;
+    public static String technicalNameTooltip;
+    public static String maxDisplayNameLength;
 
     static {
         // initialize resource bundle

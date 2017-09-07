@@ -187,7 +187,7 @@
          </propertySection>
      
         <propertySection
-              class="org.bonitasoft.studio.properties.sections.general.GeneralExtensibleGridPropertySection"
+              class="org.bonitasoft.studio.properties.sections.general.PoolGeneralPropertySection"
               enablesFor="1"
               filter="org.bonitasoft.studio.properties.filters.PoolOrLaneFilter"
               id="PoolSection"

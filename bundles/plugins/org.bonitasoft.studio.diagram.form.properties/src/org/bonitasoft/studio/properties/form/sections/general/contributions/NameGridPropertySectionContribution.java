@@ -77,7 +77,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
      */
     public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
-        super(tabbedPropertySheetPage, extensibleGridPropertySection);
+        super(tabbedPropertySheetPage);
     }
 
     @Override

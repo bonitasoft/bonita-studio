@@ -66,7 +66,7 @@ public class ProcessElementNameContributionTest {
     @Before
     public void setUp() throws Exception {
         dbc = new EMFDataBindingContext();
-        nameGridPropertySectionContribution = new ProcessElementNameContribution(sheetPage, gridPropertySection);
+        nameGridPropertySectionContribution = new ProcessElementNameContribution(sheetPage);
     }
 
     @After
