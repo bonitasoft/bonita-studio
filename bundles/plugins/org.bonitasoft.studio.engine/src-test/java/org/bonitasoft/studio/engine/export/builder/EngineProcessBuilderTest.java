@@ -141,7 +141,8 @@ public class EngineProcessBuilderTest {
     @Test
     public void should_add_process_parameters() throws Exception {
         final Pool pool = aPool()
-                .havingParameters(aParameter().withName("myParam").withDescription("a parameter example").withType(String.class.getName()))
+                .havingParameters(aParameter().withName("myParam").withDescription("a parameter example")
+                        .withType(String.class.getName()))
                 .build();
         final ParameterDefinitionBuilder parameterDefinitionBuilder = mock(ParameterDefinitionBuilder.class);
         doReturn(parameterDefinitionBuilder).when(processDefBuilder).addParameter(anyString(), anyString());
@@ -159,7 +160,8 @@ public class EngineProcessBuilderTest {
                 .havingDocuments(myDocument)
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
-        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool), any(Document.class));
+        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool),
+                any(Document.class));
 
         engineProcessBuilder.casePool(pool);
 
@@ -173,10 +175,23 @@ public class EngineProcessBuilderTest {
                 .havingContract(myContract)
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
-        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool), any(Contract.class));
+        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool),
+                any(Contract.class));
 
         engineProcessBuilder.casePool(pool);
 
         verify(engineDefinitionBuilder).build(myContract);
     }
+
+    @Test
+    public void should_set_display_name() throws Exception {
+        final Pool pool = aPool()
+                .withDisplayName("my process")
+                .build();
+
+        engineProcessBuilder.casePool(pool);
+
+        verify(processDefBuilder).addDisplayName("my process");
+    }
+
 }

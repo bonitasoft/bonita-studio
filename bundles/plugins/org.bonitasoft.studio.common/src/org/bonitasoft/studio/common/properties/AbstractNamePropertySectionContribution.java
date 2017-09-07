@@ -55,8 +55,7 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     protected TabbedPropertySheetPage tabbedPropertySheetPage;
     protected EMFDataBindingContext context;
 
-    public AbstractNamePropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
-            final ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public AbstractNamePropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage) {
         this.tabbedPropertySheetPage = tabbedPropertySheetPage;
     }
 

@@ -8,16 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.pool;
 
-import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Pool property section.
- * 
- * @author Joachim Segala
  */
 public class BotPoolPropertySection extends BotBase {
 
@@ -25,25 +21,28 @@ public class BotPoolPropertySection extends BotBase {
         super(bot);
     }
 
-    /**
-     * Edit pool name & version if not null.
-     * 
-     * @param pName
-     * @param pVersion
-     */
-    public void editPool(final String pName, final String pVersion) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.edit)));
-        bot.button(Messages.edit).click();
-
-        // Open new Shell
-        bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
-
-        if (pName != null && pName != "") {
-            bot.textWithLabel(Messages.name).setText(pName);
-        }
-        if (pVersion != null && pVersion != "") {
-            bot.textWithLabel(Messages.version).setText(pVersion);
-        }
-        bot.button(IDialogConstants.OK_LABEL).click();
+    public BotPoolPropertySection setName(String name) {
+        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.editButton", 0).click();
+        bot.textWithLabel(Messages.name).setText(name);
+        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.validateEdit").click();
+        return this;
     }
+
+    public BotPoolPropertySection setVersion(String version) {
+        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.editButton", 1).click();
+        bot.textWithLabel(Messages.version).setText(version);
+        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.validateEdit").click();
+        return this;
+    }
+
+    public BotPoolPropertySection setDisplayName(String displayName) {
+        bot.textWithLabel(Messages.displayName).setText(displayName);
+        return this;
+    }
+
+    public BotPoolPropertySection setDescription(String description) {
+        bot.textWithLabel(Messages.description).setText(description);
+        return this;
+    }
+
 }

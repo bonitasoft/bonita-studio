@@ -29,6 +29,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.PositionConstants;
@@ -88,13 +89,15 @@ public class TestWebPurchase implements SWTBotConstants {
 
     private void configurePool(final SWTBotGefEditor gmfEditor) {
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
+        SWTBotView viewById = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
+        viewById.setFocus();
         bot.tree().select(0);
-        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-        bot.textWithLabel(Messages.name).setText("Web Purchase");
-        bot.textWithLabel(Messages.version).setText("1.6");
-        bot.button(IDialogConstants.OK_LABEL).click();
+        new BotProcessDiagramPerspective(bot).getDiagramPropertiesPart()
+                .selectGeneralTab()
+                .selectPoolTab()
+                .setName("Web Purchase")
+                .setVersion("1.6");
+
         selectPoolVariablesTabbedPropertyView();
         bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();
         SWTBotTestUtil.addNewData(bot, "customerEmail", "Text", false, null);
@@ -140,6 +143,8 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
+
+        bot.activeShell().setFocus();
         selectDataVariablesTabbedPropertyView();
         final Map<String, List<String>> options = new HashMap<>();
         final List<String> choices = new ArrayList<>();
@@ -260,7 +265,9 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.radio(useTaskActors).click();
         bot.comboBoxWithLabel(selectActorTitle).setSelection("Actor1");
+
         selectDataVariablesTabbedPropertyView();
+        gmfEditor.getEditPart("Pay").click();
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "chooseExpressDelivery", "Boolean", false, "true");
         bot.button("Add...").click();

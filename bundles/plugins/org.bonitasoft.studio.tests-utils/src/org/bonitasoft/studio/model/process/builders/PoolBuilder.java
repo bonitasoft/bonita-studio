@@ -140,10 +140,17 @@ public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
         containerBuildable.build().getElements().add(getBuiltInstance());
         return getThis();
     }
+    
+    public PoolBuilder withDisplayName(String displayName) {
+        getBuiltInstance().setDisplayName(displayName);
+        return getThis();
+    }
 
     @Override
     protected Pool newInstance() {
         return ProcessFactory.eINSTANCE.createPool();
     }
+
+   
 
 }

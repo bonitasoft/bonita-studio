@@ -30,6 +30,8 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -64,12 +66,18 @@ public class TextWidget extends EditableControlWidget {
         protected boolean transactionalEdit = false;
         private BiConsumer<String, String> onEdit;
         private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
+        private Optional<String> tooltip = Optional.empty();
 
         /**
          * Adds a placeholder to the resulting {@link Text}
          */
         public Builder withPlaceholder(String placeholder) {
             this.placeholder = Optional.ofNullable(placeholder);
+            return this;
+        }
+
+        public Builder withTootltip(String tooltip) {
+            this.tooltip = Optional.ofNullable(tooltip);
             return this;
         }
 
@@ -138,6 +146,7 @@ public class TextWidget extends EditableControlWidget {
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
             placeholder.ifPresent(control::setPlaceholder);
+            tooltip.ifPresent(control::setTooltip);
 
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
@@ -200,6 +209,20 @@ public class TextWidget extends EditableControlWidget {
 
     public void setPlaceholder(String placeholder) {
         text.setMessage(placeholder);
+    }
+
+    public void setTooltip(String tooltip) {
+        ControlDecoration controlDecoration = null;
+        if (label.isPresent()) {
+            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT);
+        } else {
+            controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT);
+        }
+        controlDecoration.setMarginWidth(5);
+        controlDecoration.setShowOnlyOnFocus(false);
+        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        controlDecoration.setDescriptionText(tooltip);
     }
 
     public void onCLickButton(Listener listener) {
@@ -293,6 +316,9 @@ public class TextWidget extends EditableControlWidget {
         if (transactionalEdit) {
             final ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
             toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
+            if (toolkit.isPresent()) {
+                toolkit.get().adapt(toolBar, true, true);
+            }
             createEditItem(toolBar);
             text.addListener(SWT.FocusOut, event -> {
                 if (Objects.equals(event.widget, text)) {

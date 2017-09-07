@@ -42,7 +42,7 @@ public class LaneNameSectionContribution extends ProcessElementNameContribution 
 
 	public LaneNameSectionContribution(
 			TabbedPropertySheetPage tabbedPropertySheetPage, ExtensibleGridPropertySection extensibleGridPropertySection) {
-		super(tabbedPropertySheetPage, extensibleGridPropertySection);
+		super(tabbedPropertySheetPage);
 	}
 
 	@Override

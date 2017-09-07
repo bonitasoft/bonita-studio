@@ -24,7 +24,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -105,25 +104,6 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
         if (propertySectionHistory.isDescriptionVisible()) {
             toggleHelp();
         }
-    }
-
-    @Override
-    public void fill(final Menu parent, final int index) {
-        menuItem = new MenuItem(parent, SWT.PUSH);
-        if (descriptionWell == null) {
-            menuItem.setText(Messages.showHelp);
-        } else {
-            menuItem.setText(Messages.hideHelp);
-        }
-
-        menuItem.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                toggleHelp();
-            };
-        });
-        menuItem.setSelection(descriptionWell != null);
     }
 
     public void setHelpContent(final String helpContent) {
