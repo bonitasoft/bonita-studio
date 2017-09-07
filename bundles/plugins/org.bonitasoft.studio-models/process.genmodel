@@ -760,6 +760,7 @@
     <genClasses ecoreClass="process.ecore#//Pool">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/documents"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/searchIndexes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Pool/displayName"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ProcessApplication">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/errorTemplate"/>

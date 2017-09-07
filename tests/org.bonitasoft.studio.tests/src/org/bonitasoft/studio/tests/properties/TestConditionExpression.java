@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
@@ -46,8 +47,12 @@ public class TestConditionExpression implements SWTBotConstants {
 
     @Before
     public void initialiseTest() {
-        SWTBotTestUtil.createNewDiagram(bot);
-        configurePool(poolName, poolVersion);
+        new BotApplicationWorkbenchWindow(bot).createNewDiagram()
+                .getDiagramPropertiesPart()
+                .selectGeneralTab()
+                .selectPoolTab()
+                .setName(poolName)
+                .setVersion(poolVersion);
     }
 
     @Test

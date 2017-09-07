@@ -37,7 +37,7 @@ public class DiagramSection extends ExtensibleGridPropertySection {
 	 */
 	@Override
 	protected void addContributions() {
-		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage(),this));
+		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
 		addContribution(new VersionGridPropertySectionContribution());
 		addContribution(new DescriptionGridPropertySectionContribution());
 		addContribution(new ActivateValidationPropertySectionContribution()) ;

@@ -54,7 +54,11 @@ public class SWTBOTTestConditions {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final String poolName = "conditionTestPool";
-        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectPoolTab().editPool(poolName, "1.0");
+        diagramPerspective.getDiagramPropertiesPart()
+                .selectGeneralTab()
+                .selectPoolTab()
+                .setName(poolName)
+                .setVersion("1.0");
 
         //add a data on pool
         final BotAddDataWizardPage addDataBot = diagramPerspective.getDiagramPropertiesPart().selectDataTab()

@@ -31,7 +31,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
@@ -97,13 +96,15 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
         @Override
         public void notifyChanged(final Notification notification) {
-            final List<AbstractCatchMessageEvent> messages = ModelHelper.getAllItemsOfType(element, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent());
+            final List<AbstractCatchMessageEvent> messages = ModelHelper.getAllItemsOfType(element,
+                    ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent());
             for (final AbstractCatchMessageEvent m : messages) {
                 final String eventName = m.getEvent();
                 final Message event = ModelHelper.findEvent(ModelHelper.getMainProcess(element), eventName);
                 if (event != null) {
                     editingDomain.getCommandStack().execute(
-                            SetCommand.create(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION,
+                            SetCommand.create(editingDomain, event,
+                                    ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION,
                                     ExpressionHelper.createConstantExpression(element.getName(), String.class.getName())));
                 }
             }
@@ -112,23 +113,9 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     /**
      * @param tabbedPropertySheetPage
-     * @param extensibleGridPropertySection
      */
-    public ProcessElementNameContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
-            final ExtensibleGridPropertySection extensibleGridPropertySection) {
-        super(tabbedPropertySheetPage, extensibleGridPropertySection);
-    }
-
-    protected void updateEvents(final Element element) {
-        for (final AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))) {
-            final Message eventObject = ModelHelper.findEvent(element, ev.getEvent());
-            if (eventObject != null) {
-                editingDomain.getCommandStack().execute(
-                        new SetCommand(editingDomain, eventObject, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper
-                                .createConstantExpression(element.getName(), String.class.getName())));
-            }
-        }
-
+    public ProcessElementNameContribution(final TabbedPropertySheetPage tabbedPropertySheetPage) {
+        super(tabbedPropertySheetPage);
     }
 
     /*
@@ -167,7 +154,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     protected void activateNameListener() {
         if (editingDomain != null) {
-            DiagramEventBroker.getInstance(editingDomain).addNotificationListener(element, ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
+            DiagramEventBroker.getInstance(editingDomain).addNotificationListener(element,
+                    ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
         }
     }
 
@@ -199,7 +187,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
                 final int start = text.getSelection().x;
                 context.dispose();
                 context = new EMFDataBindingContext();
-                context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),
+                context.bindValue(observable,
+                        EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),
                         labelTargetToModelUpdate, labelModelToTargetUpdate);
                 text.setSelection(start);
             }
@@ -220,7 +209,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     protected void deactivateNameListener() {
         if (editingDomain != null) {
-            DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(element, ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
+            DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(element,
+                    ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
         }
     }
 
@@ -228,7 +218,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
     protected void createBinding(final EMFDataBindingContext context) {
         observable = SWTObservables.observeDelayedValue(250, SWTObservables.observeText(text, SWT.Modify));
 
-        final IObservableValue nameObservable = EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME);
+        final IObservableValue nameObservable = EMFEditObservables.observeValue(editingDomain, element,
+                ProcessPackage.Literals.ELEMENT__NAME);
         nameObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
@@ -322,11 +313,14 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     protected void editDiagramAndPoolNameAndVersion() {
         final MainProcess diagram = ModelHelper.getMainProcess(element);
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(
+                Display.getDefault().getActiveShell(), diagram,
                 diagramStore);
         if (nameDialog.open() == Dialog.OK) {
-            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
             final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
             editingDomain.getCommandStack().execute(
                     SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
@@ -341,7 +335,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
         }
     }
 
-    protected void renameDiagramAndPool(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
+    protected void renameDiagramAndPool(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor,
+            final MainProcess newProcess) {
         final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
         final Identifier identifier = nameDialog.getIdentifier();
         renameDiagramOperation.setDiagramToDuplicate(newProcess);
@@ -360,17 +355,21 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
     }
 
     protected void editSinglePoolNameAndVersion(final Pool pool) {
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), pool, diagramStore);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), pool,
+                diagramStore);
         if (dialog1.open() == Dialog.OK) {
             final String oldPoolName = element.getName();
             final String oldVersion = ((Pool) element).getVersion();
             final Identifier identifier = dialog1.getIdentifier();
-            processNamingTools.proceedForPools(element, identifier.getName(), oldPoolName, oldVersion, identifier.getVersion());
+            processNamingTools.proceedForPools(element, identifier.getName(), oldPoolName, oldVersion,
+                    identifier.getVersion());
         }
     }
 
-    protected void renamePoolsOnly(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
+    protected void renamePoolsOnly(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor,
+            final MainProcess newProcess) {
         editor.doSave(Repository.NULL_PROGRESS_MONITOR);
         final Identifier identifier = nameDialog.getIdentifier();
         processNamingTools.changeProcessNameAndVersion(newProcess, identifier.getName(), identifier.getVersion());

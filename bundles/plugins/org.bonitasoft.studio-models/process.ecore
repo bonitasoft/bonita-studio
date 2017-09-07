@@ -454,6 +454,7 @@
         eType="#//Document" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="searchIndexes" upperBound="-1"
         eType="#//SearchIndex" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProcessApplication" eSuperTypes="#//ResourceContainer form.ecore#//MandatoryFieldsCustomization">
     <eStructuralFeatures xsi:type="ecore:EReference" name="errorTemplate" eType="#//AssociatedFile"

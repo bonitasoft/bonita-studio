@@ -52,7 +52,6 @@ import org.bonitasoft.studio.tests.diagram.TestOpenDiagram;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
 import org.bonitasoft.studio.tests.diagram.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramForDiagramTest;
-import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramTest;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
@@ -110,9 +109,7 @@ import org.junit.runners.Suite;
         TestOpenDiagram.class,
         TestDeleteTaskWithForm.class,
         TestDebugFeature.class,
-        OpenNameAndVersionDiagramTest.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
-        //WORKAROUND: put at the end otherwise when doing a new run after, it fails
         ConnectorDefinitionTranslationsTest.class
 })
 

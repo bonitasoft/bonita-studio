@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPro
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.Form;
@@ -69,19 +68,12 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         formBodyComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        form.setToolBarVerticalAlignment(SWT.CENTER);
-
         togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
                 getSectionDescription(), propertySectionHistory);
         updateToolbar(form.getToolBarManager());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
         createContent(formBodyComposite);
-
-        if (togglePropertyHelpContributionItem.isVisible()) {
-            form.getMenuManager().add(togglePropertyHelpContributionItem);
-            form.getMenuManager().update(true);
-        }
 
         form.update();
         form.setFocus();
