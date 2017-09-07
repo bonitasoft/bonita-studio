@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.ui.validator.ValidatorBuilder;
 import org.eclipse.core.runtime.IStatus;
@@ -79,8 +80,8 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                     try {
                         return fStore.getContent();
                     } catch (final ReadFileStoreException e) {
-                        BonitaStudioLog.error(String.format("Failed to parse application descriptor file '%s'",
-                                fStore.getName()), e);
+                        BonitaStudioLog.debug(String.format("Failed to parse application descriptor file '%s'",
+                                fStore.getName()), e, LivingApplicationPlugin.PLUGIN_ID);
                         return null;
                     }
                 })
