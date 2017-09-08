@@ -29,6 +29,10 @@ import org.eclipse.ui.internal.Workbench;
 public class GroovySourceViewerFactory {
 
     public GroovyViewer createSourceViewer(final Composite container) {
+        final IEclipseContext context = (IEclipseContext) container.getShell().getData("org.eclipse.e4.ui.shellContext");
+        if (context == null) {
+            configureContext(container.getShell());
+        }
         return new GroovyViewer(container);
     }
 
@@ -37,7 +41,7 @@ public class GroovySourceViewerFactory {
         if (context == null) {
             configureContext(container.getShell());
         }
-        return new GroovyViewer(container, null, editor,true);
+        return new GroovyViewer(container, null, editor, true);
     }
 
     public GroovyViewer createSourceViewer(final Composite container, final boolean isPageFlowContext) {
@@ -45,7 +49,7 @@ public class GroovySourceViewerFactory {
         if (context == null) {
             configureContext(container.getShell());
         }
-        return new GroovyViewer(container, isPageFlowContext,true);
+        return new GroovyViewer(container, isPageFlowContext, true);
     }
 
     private void configureContext(Shell shell) {
