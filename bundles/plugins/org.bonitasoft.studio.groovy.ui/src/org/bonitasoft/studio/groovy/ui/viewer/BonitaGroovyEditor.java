@@ -17,9 +17,11 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
+import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 /**
  * @author Romain Bioteau
@@ -33,6 +35,42 @@ public class BonitaGroovyEditor extends GroovyEditor {
     @Override
     public void editorContextMenuAboutToShow(final IMenuManager menu) {
         menu.dispose();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.codehaus.groovy.eclipse.editor.GroovyEditor#createActions()
+     */
+    @Override
+    protected void createActions() {
+        super.createActions();
+        //Disable unsupported actions for groovy editor inside dialogs
+        setAction(ITextEditorActionConstants.FIND, null);
+        setAction(IJavaEditorActionDefinitionIds.SHOW_OUTLINE, null);
+        setAction(IJavaEditorActionDefinitionIds.EXTRACT_CLASS, null);
+        setAction(IJavaEditorActionDefinitionIds.EXTERNALIZE_STRINGS, null);
+        setAction(IJavaEditorActionDefinitionIds.EXTRACT_INTERFACE, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_HIERARCHY, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_EDITOR, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_HYPERLINK, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_SUPER_IMPLEMENTATION, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_IMPLEMENTATION, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_ATTACHED_JAVADOC, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_STRUCTURE, null);
+        setAction(IJavaEditorActionDefinitionIds.SHOW_IN_BREADCRUMB, null);
+        setAction(IJavaEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, null);
+        setAction(IJavaEditorActionDefinitionIds.PULL_UP, null);
+        setAction(IJavaEditorActionDefinitionIds.PUSH_DOWN, null);
+        setAction(IJavaEditorActionDefinitionIds.SHOW_IN_NAVIGATOR_VIEW, null);
+        setAction(IJavaEditorActionDefinitionIds.SEARCH_DECLARATIONS_IN_HIERARCHY, null);
+        setAction(IJavaEditorActionDefinitionIds.SEARCH_DECLARATIONS_IN_PROJECTS, null);
+        setAction(IJavaEditorActionDefinitionIds.SEARCH_DECLARATIONS_IN_WORKING_SET, null);
+        setAction(IJavaEditorActionDefinitionIds.SEARCH_DECLARATIONS_IN_WORKSPACE, null);
+        if (fActionGroups != null) {
+            fActionGroups.dispose();
+            fActionGroups = null;
+        }
     }
 
     @Override
