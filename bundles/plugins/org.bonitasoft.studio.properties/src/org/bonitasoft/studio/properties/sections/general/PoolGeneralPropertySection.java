@@ -66,7 +66,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection {
 
-    private static final int MAX_NAME_LENGTH = 150;
+    private static final int MAX_NAME_LENGTH = 75;
     private static final int MAX_DESC_LENGTH = 255;
     private static final int MAX_VERSION_LENGTH = 50;
     private static final int MAX_DISPLAYNAME_LENGTH = 75;
