@@ -110,6 +110,9 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         if (status == null || status.isOK()) {
             return foregroundColor;
         }
+        if (status.getSeverity() == IStatus.INFO) {
+            return foregroundColor;
+        }
         return status.getSeverity() == IStatus.WARNING ? warningColor
                 : errorColor;
     }

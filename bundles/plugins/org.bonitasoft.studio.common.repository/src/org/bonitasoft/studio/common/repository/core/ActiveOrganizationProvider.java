@@ -20,10 +20,12 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
+@Creatable
 public class ActiveOrganizationProvider {
 
     private static final String PLUGIN_ID = CommonRepositoryPlugin.PLUGIN_ID;

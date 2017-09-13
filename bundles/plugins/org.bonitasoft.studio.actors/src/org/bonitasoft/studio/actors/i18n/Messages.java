@@ -130,12 +130,11 @@ public class Messages extends NLS {
     public static String defaultOrganizationName;
     public static String manageOrganizationTitle;
     public static String manageOrganizationDesc;
-    public static String synchronizeOrganizationTitle;
-    public static String synchronizeInformationTitle;
-    public static String synchronizeOrganizationSuccessMsg;
-    public static String synchronizeOrganizationDesc;
-    public static String synchronize;
-    public static String synchronizingOrganization;
+    public static String deployInformationTitle;
+    public static String deployOrganizationSuccessMsg;
+    public static String deployOrganizationDesc;
+    public static String deploy;
+    public static String deployOrganization;
     public static String selectActor;
     public static String illegalCharacter;
     public static String filterDefRepositoryName;
@@ -269,4 +268,10 @@ public class Messages extends NLS {
     public static String invalidCharInGroupName;
     public static String removeProcessInitiator;
     public static String unknownActorMappingElement;
+    public static String defaultUser;
+    public static String publishFailed;
+    public static String defaultUserTooltip;
+    public static String deployOrganizationTitle;
+    public static String deployOrganizationPageTitle;
+    public static String organizationValidationFailedMsg;
 }

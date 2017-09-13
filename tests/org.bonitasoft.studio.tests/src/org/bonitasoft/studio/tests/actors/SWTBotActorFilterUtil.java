@@ -97,8 +97,8 @@ public class SWTBotActorFilterUtil {
      */
     public static void activateSynchronizeOrganizationWizard(final SWTBot bot) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")), 10000);
-        bot.menu("Organization").menu("Publish...").click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeOrganizationTitle), 10000);
+        bot.menu("Organization").menu("Deploy...").click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deployOrganizationTitle), 10000);
     }
 
     /**
