@@ -42,7 +42,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected UpdateValueStrategy modelToTargetStrategy;
     protected UpdateValueStrategy targetToModelStrategy;
     protected Object layoutData;
-    protected IObservableValue modelObservable;
+    protected IObservableValue<T> modelObservable;
     protected DataBindingContext ctx;
     protected String id;
     protected Optional<FormToolkit> toolkit = Optional.empty();
@@ -273,7 +273,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     /**
      * Sets the model {@link IObservableValue} to bind to this control
      */
-    public T bindTo(IObservableValue modelObservable) {
+    public T bindTo(IObservableValue<T> modelObservable) {
         this.modelObservable = modelObservable;
         return (T) this;
     }

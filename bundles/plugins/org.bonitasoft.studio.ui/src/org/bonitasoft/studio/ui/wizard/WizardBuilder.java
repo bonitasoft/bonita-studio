@@ -90,8 +90,11 @@ public class WizardBuilder<T> {
             @Override
             public boolean performFinish() {
                 try {
-                    finishResult = finishHandler.finish(getContainer());
-                    return finishResult.isPresent();
+                    if (finishHandler != null) {
+                        finishResult = finishHandler.finish(getContainer());
+                        return finishResult.isPresent();
+                    }
+                    return true;
                 } catch (final Throwable t) {
                     new ExceptionDialogHandler().openErrorDialog(getShell(), Messages.errorOccuredDuringFinish, t);
                     return false;
