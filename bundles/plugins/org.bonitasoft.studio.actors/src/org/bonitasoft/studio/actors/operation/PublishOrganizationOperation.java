@@ -79,6 +79,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
+
         flushSession = false;
         BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", ActorsPlugin.PLUGIN_ID);
         try {

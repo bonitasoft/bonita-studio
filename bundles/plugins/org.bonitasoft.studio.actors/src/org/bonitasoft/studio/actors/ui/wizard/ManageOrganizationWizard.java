@@ -16,20 +16,18 @@ package org.bonitasoft.studio.actors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.AbstractOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupsWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.ManageOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.RolesWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.UsersWizardPage;
+import org.bonitasoft.studio.actors.validator.OrganizationValidationException;
 import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -38,13 +36,18 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.Parameterization;
-import org.eclipse.core.commands.ParameterizedCommand;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -55,9 +58,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Romain Bioteau
@@ -72,8 +72,10 @@ public class ManageOrganizationWizard extends Wizard {
     private boolean activeOrganizationHasBeenModified = false;
     String userName;
     private final ActiveOrganizationProvider activeOrganizationProvider;
+    private ECommandService commandService;
 
-    public ManageOrganizationWizard() {
+    public ManageOrganizationWizard(ECommandService commandService) {
+        this.commandService = commandService;
         activeOrganizationProvider = new ActiveOrganizationProvider();
         organizations = new ArrayList<Organization>();
         organizationsWorkingCopy = new ArrayList<Organization>();
@@ -148,9 +150,10 @@ public class ManageOrganizationWizard extends Wizard {
                     monitor.beginTask(Messages.saveOrganization, IProgressMonitor.UNKNOWN);
                     for (final Organization organization : organizationsWorkingCopy) {
                         monitor.subTask(Messages.validatingOrganizationContent);
-                        final String errorMessage = isOrganizationValid(organization);
-                        if (errorMessage != null) {
-                            throw new InterruptedException(organization.getName() + ": " + errorMessage);
+                        final IStatus status = validator.validate(organization);
+                        if (!status.isOK()) {
+                            throw new InvocationTargetException(
+                                    new OrganizationValidationException((MultiStatus) status, organization.getName()));
                         }
                         final String fileName = organization.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
                         IRepositoryFileStore file = store.getChild(fileName);
@@ -165,7 +168,8 @@ public class ManageOrganizationWizard extends Wizard {
                             }
                         }
                         if (oldOrga != null) {
-                            final RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga, organization);
+                            final RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga,
+                                    organization);
                             refactorOp.run(monitor);
                         }
                         file.save(organization);
@@ -179,7 +183,8 @@ public class ManageOrganizationWizard extends Wizard {
                             }
                         }
                         if (!exists) {
-                            final IRepositoryFileStore f = store.getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                            final IRepositoryFileStore f = store
+                                    .getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
                             if (f != null) {
                                 f.delete();
                             }
@@ -188,40 +193,45 @@ public class ManageOrganizationWizard extends Wizard {
                     monitor.done();
                 }
             });
-        } catch (final InterruptedException e) {
-            openErrorStatusDialog(e.getMessage());
-            return false;
-        } catch (final InvocationTargetException e) {
-            BonitaStudioLog.error(e);
+        } catch (final InterruptedException | InvocationTargetException e) {
+            openErrorStatusDialog(e);
             return false;
         }
         final String pref = activeOrganizationProvider.getPublishOrganizationState();
         final boolean publishOrganization = activeOrganizationProvider.shouldPublishOrganization();
         if (publishOrganization && MessageDialogWithToggle.ALWAYS.equals(pref)) {
             try {
-                publishOrganization();
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
+                return true;
+            } finally {
+                try {
+                    publishOrganization();
+                } catch (final InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                    return false;
+                }
             }
         } else {
             if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified) {
                 final String[] buttons = { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
                 final MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(),
                         Messages.organizationHasBeenModifiedTitle,
-                        null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING, buttons, 0,
+                        null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()),
+                        MessageDialog.WARNING, buttons, 0,
                         Messages.doNotDisplayAgain, false);
                 mdwt.setPrefStore(activeOrganizationProvider.getPreferenceStore());
                 mdwt.setPrefKey(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
                 final int index = mdwt.open();
                 if (index == 2) {
                     try {
-                        publishOrganization();
                         activeOrganizationProvider.savePublishOrganization(mdwt.getToggleState());
-                    } catch (final InvocationTargetException | InterruptedException e) {
-                        BonitaStudioLog.error(e);
+                        return true;
+                    } finally {
+                        try {
+                            publishOrganization();
+                        } catch (InvocationTargetException | InterruptedException e) {
+                            BonitaStudioLog.error(e);
+                            return false;
+                        }
                     }
                 } else {
                     if (mdwt.getToggleState()) {
@@ -236,74 +246,25 @@ public class ManageOrganizationWizard extends Wizard {
     }
 
     private void publishOrganization() throws InvocationTargetException, InterruptedException {
-        getContainer().run(true, false, new IRunnableWithProgress() {
-
-            @Override
-            public void run(final IProgressMonitor maonitor) throws InvocationTargetException, InterruptedException {
-                maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN);
-                userName = activeOrganizationProvider.getDefaultUser();
-
-                if (isUserExist(activeOrganization.getUsers().getUser(), userName)) {
-
-                    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-                    final Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization");
-
-                    final Map<String, Object> parameters = new HashMap<String, Object>();
-                    parameters.put("artifact", activeOrganization.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
-
-                    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-                    Parameterization p;
-                    try {
-                        p = new Parameterization(cmd.getParameter("artifact"), activeOrganization.getName() + "."
-                                + OrganizationRepositoryStore.ORGANIZATION_EXT);
-                        handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }), null);
-                    } catch (final Exception e) {
-                        throw new InvocationTargetException(e);
-                    }
-
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,
-                                    Messages.bind(Messages.synchronizeOrganizationSuccessMsg, activeOrganization.getName()));
-                        }
-                    });
-
-                } else {
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.userDoesntExistAnymoreTitle,
-                                    Messages.bind(Messages.userDoesntExistAnymore, userName));
-                        }
-                    });
-                }
-
+        Display.getDefault().asyncExec(() -> {
+            try {
+                commandService.getCommand("org.bonitasoft.studio.organization.publish")
+                        .executeWithChecks(new ExecutionEvent());
+            } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e1) {
+                BonitaStudioLog.error(e1);
             }
         });
     }
 
-    private boolean isUserExist(final List<User> users, final String userName) {
-        for (final User user : users) {
-            if (user.getUserName().equals(userName)) {
-                return true;
-            }
+    protected void openErrorStatusDialog(final Exception exception) {
+        if (exception.getCause() instanceof OrganizationValidationException) {
+            new MultiStatusDialog(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed,
+                    Messages.organizationValidationFailedMsg, MessageDialog.ERROR,
+                    new String[] { IDialogConstants.CLOSE_LABEL },
+                    ((OrganizationValidationException) exception.getCause()).getValidationStatus()).open();
+        } else {
+            BonitaStudioLog.error(exception);
         }
-        return false;
-    }
-
-    protected void openErrorStatusDialog(final String errorMessage) {
-        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, errorMessage);
-    }
-
-    protected String isOrganizationValid(final Organization organization) {
-        final IStatus status = validator.validate(organization);
-        if (!status.isOK()) {
-            return status.getMessage();
-        }
-        return null;
     }
 
 }

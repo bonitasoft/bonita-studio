@@ -348,7 +348,7 @@ public class TextWidget extends EditableControlWidget {
 
     private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter) {
         text.getDisplay().asyncExec(() -> {
-            if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
+            if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
                     && (text.getText() == null || text.getText().isEmpty())) {
                 final Event ctrlSpaceEvent = new Event();
                 ctrlSpaceEvent.keyCode = SWT.SPACE;

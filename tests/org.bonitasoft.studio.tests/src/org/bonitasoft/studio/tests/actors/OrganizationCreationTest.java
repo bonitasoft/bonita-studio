@@ -38,10 +38,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author aurelie Zara
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OrganizationCreationTest {
 
@@ -110,7 +106,7 @@ public class OrganizationCreationTest {
         SWTBotShell activeShell = bot.activeShell();
 
         bot.waitUntil(Conditions.shellIsActive(Messages.organizationValidationFailed), 10000);
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.button(IDialogConstants.CLOSE_LABEL).click();
 
         activeShell.setFocus();
 
@@ -136,8 +132,9 @@ public class OrganizationCreationTest {
         }
         assertEquals("There should be two root groups", 2, nbRootGroup);
 
-        synchronizeOrganization(organizationName, user1);
-        synchronizeOrganization("ACME", "walter.bates");
+        deployOrganization(organizationName, user1);
+
+        deployOrganization("ACME", "walter.bates");
 
     }
 
@@ -165,15 +162,12 @@ public class OrganizationCreationTest {
         }
     }
 
-    private void synchronizeOrganization(final String organizationName, final String username) {
+    private void deployOrganization(final String organizationName, final String username) {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
-        bot.button(IDialogConstants.NEXT_LABEL).click();
-        if (username != null) {
-            bot.textWithLabel(Messages.userName).setText(username);
-        }
-        bot.button(Messages.synchronize).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeInformationTitle),
+        bot.textWithLabel(Messages.defaultUser).setText(username);
+        bot.button(Messages.deploy).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deployInformationTitle),
                 1500000);
         bot.button(IDialogConstants.OK_LABEL).click();
     }
@@ -184,8 +178,6 @@ public class OrganizationCreationTest {
      */
     @Test
     public void addNewUsersInACMETest() throws InterruptedException {
-
-        //SWTBotTestUtil.createNewDiagram(bot);
         // open shell "Manage organization"
         bot.menu("Organization").menu("Manage...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.manageOrganizationTitle));

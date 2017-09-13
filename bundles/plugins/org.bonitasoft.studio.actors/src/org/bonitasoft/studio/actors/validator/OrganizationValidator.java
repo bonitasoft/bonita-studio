@@ -29,6 +29,7 @@ import org.bonitasoft.studio.actors.ui.wizard.page.GroupContentProvider;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -42,19 +43,20 @@ public class OrganizationValidator implements IValidator, ValidatorConstants {
      */
     @Override
     public IStatus validate(final Object input) {
+        MultiStatus validationStatus = new MultiStatus(ActorsPlugin.PLUGIN_ID, 0, null, null);
         final Organization organization = (Organization) input;
         for (final User u : organization.getUsers().getUser()) {
             if (u.getUserName() == null || u.getUserName().isEmpty()) {
-                return ValidationStatus.error(Messages.userNameMissing);
+                validationStatus.add(ValidationStatus.error(Messages.userNameMissing));
             }
             if (u.getPassword() == null || u.getPassword().getValue() == null || u.getPassword().getValue().isEmpty()) {
-                return ValidationStatus.error(Messages.bind(Messages.userPasswordMissing, u.getUserName()));
+                validationStatus.add(ValidationStatus.error(Messages.bind(Messages.userPasswordMissing, u.getUserName())));
             }
 
             if (u.getManager() != null && !u.getManager().isEmpty()) {
                 final IStatus status = checkManagerCycles(organization, u);
                 if (!status.isOK()) {
-                    return status;
+                    validationStatus.add(status);
                 }
             }
 
@@ -66,7 +68,8 @@ public class OrganizationValidator implements IValidator, ValidatorConstants {
                         membershipFound = true;
                         final String groupName = membership.getGroupName();
                         if (groupName == null) {
-                            return ValidationStatus.error(Messages.bind(Messages.missingGroup, u.getUserName()));
+                            validationStatus
+                                    .add(ValidationStatus.error(Messages.bind(Messages.missingGroup, u.getUserName())));
                         }
                         final String parentPath = membership.getGroupParentPath();
                         String groupPath = null;
@@ -77,22 +80,24 @@ public class OrganizationValidator implements IValidator, ValidatorConstants {
                         }
                         final IStatus groupStatus = validateGroupExists(organization, groupPath, membership);
                         if (groupStatus.getSeverity() != IStatus.OK) {
-                            return groupStatus;
+                            validationStatus.add(groupStatus);
                         }
 
                         final String roleName = membership.getRoleName();
                         if (roleName == null) {
-                            return ValidationStatus.error(Messages.bind(Messages.missingRole, u.getUserName()));
+                            validationStatus
+                                    .add(ValidationStatus.error(Messages.bind(Messages.missingRole, u.getUserName())));
                         }
                         final IStatus roleStatus = validateRoleExists(organization, roleName, membership);
                         if (roleStatus.getSeverity() != IStatus.OK) {
-                            return roleStatus;
+                            validationStatus.add(roleStatus);
                         }
                     }
                 }
             }
             if (!membershipFound) {
-                return ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser, u.getUserName()));
+                validationStatus
+                        .add(ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser, u.getUserName())));
             }
         }
 
@@ -100,11 +105,12 @@ public class OrganizationValidator implements IValidator, ValidatorConstants {
                 .map(Group::getName)
                 .filter(groupName -> groupName.contains("/"))
                 .collect(Collectors.toList());
+        if (!invalidGroups.isEmpty()) {
+            validationStatus.add(ValidationStatus.error(String.format(Messages.invalidCharInGroupName,
+                    invalidGroups.stream().reduce((group1, group2) -> group1 + "\n" + group2).get())));
+        }
 
-        return invalidGroups.isEmpty()
-                ? ValidationStatus.ok()
-                : ValidationStatus.error(String.format(Messages.invalidCharInGroupName,
-                        invalidGroups.stream().reduce((group1, group2) -> group1 + "\n" + group2).get()));
+        return validationStatus;
     }
 
     private IStatus checkManagerCycles(final Organization organization, final User u) {
