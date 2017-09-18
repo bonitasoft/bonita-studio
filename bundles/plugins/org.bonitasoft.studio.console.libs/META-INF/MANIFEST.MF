@@ -30,10 +30,10 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  mon.jar;g="org.bonitasoft.engine";a="bonita-common";v="7.6.0-SNAPSHOT",
  lib/commons-lang3.jar;g="org.apache.commons";a="commons-lang3";v="3.3.2
  ",lib/jackson-annotations.jar;g="com.fasterxml.jackson.core";a="jackson
- -annotations";v="2.4.4",lib/commons-io.jar;g="commons-io";a="commons-io
+ -annotations";v="2.9.0",lib/commons-io.jar;g="commons-io";a="commons-io
  ";v="2.5",lib/jackson-databind.jar;g="com.fasterxml.jackson.core";a="ja
- ckson-databind";v="2.4.4",lib/jackson-core.jar;g="com.fasterxml.jackson
- .core";a="jackson-core";v="2.4.4",lib/slf4j-api.jar;g="org.slf4j";a="sl
+ ckson-databind";v="2.9.0",lib/jackson-core.jar;g="com.fasterxml.jackson
+ .core";a="jackson-core";v="2.9.0",lib/slf4j-api.jar;g="org.slf4j";a="sl
  f4j-api";v="1.6.1",lib/theme-builder.jar;g="org.bonitasoft.web";a="them
  e-builder";v="1.1.0",lib/forms-server.jar;g="org.bonitasoft.forms";a="f
  orms-server";v="7.6.0-SNAPSHOT",lib/forms-model.jar;g="org.bonitasoft.f
@@ -111,20 +111,20 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  sion.impl;version="0.0.0",org.bonitasoft.engine.theme;version="0.0.0",o
  rg.bonitasoft.engine.theme.exception;version="0.0.0",org.bonitasoft.eng
  ine.theme.impl;version="0.0.0",org.bonitasoft.engine.util;version="0.0.
- 0",org.bonitasoft.engine.xml;version="0.0.0",org.bonitasoft.forms.clien
- t.model;version="0.0.0",org.bonitasoft.forms.server.accessor;version="0
- .0.0",org.bonitasoft.forms.server.accessor.impl.util;version="0.0.0",or
- g.bonitasoft.forms.server.api;version="0.0.0",org.bonitasoft.forms.serv
- er.builder;version="0.0.0",org.bonitasoft.forms.server.builder.impl;ver
- sion="0.0.0",org.bonitasoft.forms.server.exception;version="0.0.0",org.
- bonitasoft.forms.server.provider.impl.util;version="0.0.0",org.bonitaso
- ft.forms.server.validator;version="0.0.0",org.bonitasoft.theme;version=
- "0.0.0",org.bonitasoft.theme.builder;version="0.0.0",org.bonitasoft.the
- me.builder.impl;version="0.0.0",org.bonitasoft.theme.constants;version=
- "0.0.0",org.bonitasoft.theme.css;version="0.0.0",org.bonitasoft.theme.c
- ss.impl;version="0.0.0",org.bonitasoft.theme.exception;version="0.0.0",
- org.bonitasoft.theme.impl;version="0.0.0",org.bonitasoft.theme.model;ve
- rsion="0.0.0"
+ 0",org.bonitasoft.engine.xml;version="0.0.0",org.bonitasoft.engine.xml.
+ parser;version="0.0.0",org.bonitasoft.forms.client.model;version="0.0.0
+ ",org.bonitasoft.forms.server.accessor;version="0.0.0",org.bonitasoft.f
+ orms.server.accessor.impl.util;version="0.0.0",org.bonitasoft.forms.ser
+ ver.api;version="0.0.0",org.bonitasoft.forms.server.builder;version="0.
+ 0.0",org.bonitasoft.forms.server.builder.impl;version="0.0.0",org.bonit
+ asoft.forms.server.exception;version="0.0.0",org.bonitasoft.forms.serve
+ r.provider.impl.util;version="0.0.0",org.bonitasoft.forms.server.valida
+ tor;version="0.0.0",org.bonitasoft.theme;version="0.0.0",org.bonitasoft
+ .theme.builder;version="0.0.0",org.bonitasoft.theme.builder.impl;versio
+ n="0.0.0",org.bonitasoft.theme.constants;version="0.0.0",org.bonitasoft
+ .theme.css;version="0.0.0",org.bonitasoft.theme.css.impl;version="0.0.0
+ ",org.bonitasoft.theme.exception;version="0.0.0",org.bonitasoft.theme.i
+ mpl;version="0.0.0",org.bonitasoft.theme.model;version="0.0.0"
 Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/repository/or
  g/bonitasoft/engine/bonita-client/7.6.0-SNAPSHOT/bonita-client-7.6.0-SN
  APSHOT.jar,lib/httpclient.jar=/home/romain/.m2/repository/org/apache/ht
@@ -143,12 +143,12 @@ Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/repository/or
  /bonita-common-7.6.0-SNAPSHOT.jar,lib/commons-lang3.jar=/home/romain/.m
  2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2
  .jar,lib/jackson-annotations.jar=/home/romain/.m2/repository/com/faster
- xml/jackson/core/jackson-annotations/2.4.4/jackson-annotations-2.4.4.ja
+ xml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0.ja
  r,lib/commons-io.jar=/home/romain/.m2/repository/commons-io/commons-io/
  2.5/commons-io-2.5.jar,lib/jackson-databind.jar=/home/romain/.m2/reposi
- tory/com/fasterxml/jackson/core/jackson-databind/2.4.4/jackson-databind
- -2.4.4.jar,lib/jackson-core.jar=/home/romain/.m2/repository/com/fasterx
- ml/jackson/core/jackson-core/2.4.4/jackson-core-2.4.4.jar,lib/slf4j-api
+ tory/com/fasterxml/jackson/core/jackson-databind/2.9.0/jackson-databind
+ -2.9.0.jar,lib/jackson-core.jar=/home/romain/.m2/repository/com/fasterx
+ ml/jackson/core/jackson-core/2.9.0/jackson-core-2.9.0.jar,lib/slf4j-api
  .jar=/home/romain/.m2/repository/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.
  6.1.jar,lib/theme-builder.jar=/home/romain/.m2/repository/org/bonitasof
  t/web/theme-builder/1.1.0/theme-builder-1.1.0.jar,lib/forms-server.jar=
@@ -230,107 +230,108 @@ Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  on.databind.ser,com.fasterxml.jackson.databind.ser.impl,com.fasterxml.j
  ackson.databind.ser.std,com.fasterxml.jackson.databind.type,com.fasterx
  ml.jackson.databind.util,com.fasterxml.jackson.core,com.fasterxml.jacks
- on.core.base,com.fasterxml.jackson.core.format,com.fasterxml.jackson.co
- re.io,com.fasterxml.jackson.core.json,com.fasterxml.jackson.core.sym,co
- m.fasterxml.jackson.core.type,com.fasterxml.jackson.core.util,org.slf4j
- ,org.slf4j.helpers,org.slf4j.spi,locale.i18n,org.bonitasoft.forms.serve
- r,org.bonitasoft.forms.server.accessor.api,org.bonitasoft.forms.server.
- accessor.api.utils,org.bonitasoft.forms.server.accessor.impl,org.bonita
- soft.forms.server.accessor.widget,org.bonitasoft.forms.server.accessor.
- widget.impl,org.bonitasoft.forms.server.api.impl,org.bonitasoft.forms.s
- erver.api.impl.util,org.bonitasoft.forms.server.cache,org.bonitasoft.fo
- rms.server.constants,org.bonitasoft.forms.server.filter,org.bonitasoft.
- forms.server.provider,org.bonitasoft.forms.server.provider.impl,org.bon
- itasoft.forms.server.util,org.bonitasoft.forms.client.model.exception,o
- rg.bonitasoft.forms.client.rpc,WEB-INF,html,org.bonitasoft.console.comm
- on.server,org.bonitasoft.console.common.server.api,org.bonitasoft.conso
- le.common.server.api.token,org.bonitasoft.console.common.server.auth,or
- g.bonitasoft.console.common.server.auth.impl.jaas,org.bonitasoft.consol
- e.common.server.auth.impl.oauth,org.bonitasoft.console.common.server.au
- th.impl.standard,org.bonitasoft.console.common.server.form,org.bonitaso
- ft.console.common.server.i18n,org.bonitasoft.console.common.server.jsp,
- org.bonitasoft.console.common.server.login,org.bonitasoft.console.commo
- n.server.login.credentials,org.bonitasoft.console.common.server.login.f
- ilter,org.bonitasoft.console.common.server.login.localization,org.bonit
- asoft.console.common.server.login.servlet,org.bonitasoft.console.common
- .server.page,org.bonitasoft.console.common.server.page.extension,org.bo
- nitasoft.console.common.server.servlet,org.bonitasoft.console.common.se
- rver.sso.filter,org.bonitasoft.console.common.server.sso.servlet,org.bo
- nitasoft.console.common.server.utils,org.bonitasoft.console.server,org.
- bonitasoft.console.server.service,org.bonitasoft.console.server.servlet
- ,org.bonitasoft.livingapps,org.bonitasoft.livingapps.exception,org.boni
- tasoft.livingapps.menu,org.bonitasoft.web.rest.server,org.bonitasoft.we
- b.rest.server.api,org.bonitasoft.web.rest.server.api.application,org.bo
- nitasoft.web.rest.server.api.applicationmenu,org.bonitasoft.web.rest.se
- rver.api.applicationpage,org.bonitasoft.web.rest.server.api.bdm,org.bon
- itasoft.web.rest.server.api.bonitaPage,org.bonitasoft.web.rest.server.a
- pi.bpm.cases,org.bonitasoft.web.rest.server.api.bpm.connector,org.bonit
- asoft.web.rest.server.api.bpm.flownode,org.bonitasoft.web.rest.server.a
- pi.bpm.flownode.archive,org.bonitasoft.web.rest.server.api.bpm.process,
- org.bonitasoft.web.rest.server.api.deployer,org.bonitasoft.web.rest.ser
- ver.api.document,org.bonitasoft.web.rest.server.api.document.api.impl,o
- rg.bonitasoft.web.rest.server.api.extension,org.bonitasoft.web.rest.ser
- ver.api.form,org.bonitasoft.web.rest.server.api.organization,org.bonita
- soft.web.rest.server.api.organization.password.validator,org.bonitasoft
- .web.rest.server.api.page,org.bonitasoft.web.rest.server.api.platform,o
- rg.bonitasoft.web.rest.server.api.profile,org.bonitasoft.web.rest.serve
- r.api.resource,org.bonitasoft.web.rest.server.api.system,org.bonitasoft
- .web.rest.server.api.tenant,org.bonitasoft.web.rest.server.datastore,or
- g.bonitasoft.web.rest.server.datastore.application,org.bonitasoft.web.r
- est.server.datastore.applicationmenu,org.bonitasoft.web.rest.server.dat
- astore.applicationpage,org.bonitasoft.web.rest.server.datastore.bpm.cas
- es,org.bonitasoft.web.rest.server.datastore.bpm.connector,org.bonitasof
- t.web.rest.server.datastore.bpm.flownode,org.bonitasoft.web.rest.server
- .datastore.bpm.flownode.archive,org.bonitasoft.web.rest.server.datastor
- e.bpm.flownode.archive.converter,org.bonitasoft.web.rest.server.datasto
- re.bpm.process,org.bonitasoft.web.rest.server.datastore.bpm.process.hel
- per,org.bonitasoft.web.rest.server.datastore.converter,org.bonitasoft.w
- eb.rest.server.datastore.filter,org.bonitasoft.web.rest.server.datastor
- e.organization,org.bonitasoft.web.rest.server.datastore.page,org.bonita
- soft.web.rest.server.datastore.profile,org.bonitasoft.web.rest.server.d
- atastore.profile.entry,org.bonitasoft.web.rest.server.datastore.profile
- .member,org.bonitasoft.web.rest.server.datastore.system,org.bonitasoft.
- web.rest.server.datastore.utils,org.bonitasoft.web.rest.server.enginecl
- ient,org.bonitasoft.web.rest.server.framework,org.bonitasoft.web.rest.s
- erver.framework.api,org.bonitasoft.web.rest.server.framework.exception,
- org.bonitasoft.web.rest.server.framework.json,org.bonitasoft.web.rest.s
- erver.framework.search,org.bonitasoft.web.rest.server.framework.servlet
- ,org.bonitasoft.web.rest.server.framework.utils,org.bonitasoft.web.rest
- .server.framework.utils.converter,org.bonitasoft.web.rest.server.framew
- ork.utils.converter.typed,org.bonitasoft.web.rest.server.utils,org.boni
- tasoft.web.toolkit.server,org.bonitasoft.web.toolkit.server.servlet,org
- .bonitasoft.web.toolkit.server.utils,org.bonitasoft.console.common.serv
- er.themes,org.bonitasoft.console.common.server.themes.exception,org.bon
- itasoft.web,org.bonitasoft.web.common.model,org.bonitasoft.web.rest.mod
- el,org.bonitasoft.web.rest.model.application,org.bonitasoft.web.rest.mo
- del.applicationmenu,org.bonitasoft.web.rest.model.applicationpage,org.b
- onitasoft.web.rest.model.bpm,org.bonitasoft.web.rest.model.bpm.cases,or
- g.bonitasoft.web.rest.model.bpm.connector,org.bonitasoft.web.rest.model
- .bpm.flownode,org.bonitasoft.web.rest.model.bpm.process,org.bonitasoft.
- web.rest.model.builder.bpm.cases,org.bonitasoft.web.rest.model.builder.
- bpm.process,org.bonitasoft.web.rest.model.builder.identity,org.bonitaso
- ft.web.rest.model.builder.organisation,org.bonitasoft.web.rest.model.bu
- ilder.profile,org.bonitasoft.web.rest.model.builder.profile.entry,org.b
- onitasoft.web.rest.model.builder.profile.member,org.bonitasoft.web.rest
- .model.document,org.bonitasoft.web.rest.model.identity,org.bonitasoft.w
- eb.rest.model.monitoring.report,org.bonitasoft.web.rest.model.platform,
- org.bonitasoft.web.rest.model.portal.page,org.bonitasoft.web.rest.model
- .portal.profile,org.bonitasoft.web.rest.model.system,org.bonitasoft.web
- .rest.model.tenant,org.bonitasoft.web.rest.model.user,org.bonitasoft.we
- b.toolkit.client,org.bonitasoft.web.toolkit.client.common,org.bonitasof
- t.web.toolkit.client.common.exception,org.bonitasoft.web.toolkit.client
- .common.exception.api,org.bonitasoft.web.toolkit.client.common.exceptio
- n.http,org.bonitasoft.web.toolkit.client.common.i18n,org.bonitasoft.web
- .toolkit.client.common.i18n.model,org.bonitasoft.web.toolkit.client.com
- mon.json,org.bonitasoft.web.toolkit.client.common.session,org.bonitasof
- t.web.toolkit.client.common.texttemplate,org.bonitasoft.web.toolkit.cli
- ent.common.url,org.bonitasoft.web.toolkit.client.common.util,org.bonita
- soft.web.toolkit.client.data,org.bonitasoft.web.toolkit.client.data.ite
- m,org.bonitasoft.web.toolkit.client.data.item.attribute,org.bonitasoft.
- web.toolkit.client.data.item.attribute.modifier,org.bonitasoft.web.tool
- kit.client.data.item.attribute.reader,org.bonitasoft.web.toolkit.client
- .data.item.attribute.validator,org.bonitasoft.web.toolkit.client.data.i
- tem.template,org.bonitasoft.web.toolkit.client.ui,org.bonitasoft.web.to
- olkit.client.ui.utils,org.bonitasoft.web.toolkit.client.ui.utils.datefo
- rmat
+ on.core.async,com.fasterxml.jackson.core.base,com.fasterxml.jackson.cor
+ e.filter,com.fasterxml.jackson.core.format,com.fasterxml.jackson.core.i
+ o,com.fasterxml.jackson.core.json,com.fasterxml.jackson.core.json.async
+ ,com.fasterxml.jackson.core.sym,com.fasterxml.jackson.core.type,com.fas
+ terxml.jackson.core.util,org.slf4j,org.slf4j.helpers,org.slf4j.spi,loca
+ le.i18n,org.bonitasoft.forms.server,org.bonitasoft.forms.server.accesso
+ r.api,org.bonitasoft.forms.server.accessor.api.utils,org.bonitasoft.for
+ ms.server.accessor.impl,org.bonitasoft.forms.server.accessor.widget,org
+ .bonitasoft.forms.server.accessor.widget.impl,org.bonitasoft.forms.serv
+ er.api.impl,org.bonitasoft.forms.server.api.impl.util,org.bonitasoft.fo
+ rms.server.cache,org.bonitasoft.forms.server.constants,org.bonitasoft.f
+ orms.server.filter,org.bonitasoft.forms.server.provider,org.bonitasoft.
+ forms.server.provider.impl,org.bonitasoft.forms.server.util,org.bonitas
+ oft.forms.client.model.exception,org.bonitasoft.forms.client.rpc,WEB-IN
+ F,html,org.bonitasoft.console.common.server,org.bonitasoft.console.comm
+ on.server.api,org.bonitasoft.console.common.server.api.token,org.bonita
+ soft.console.common.server.auth,org.bonitasoft.console.common.server.au
+ th.impl.jaas,org.bonitasoft.console.common.server.auth.impl.oauth,org.b
+ onitasoft.console.common.server.auth.impl.standard,org.bonitasoft.conso
+ le.common.server.form,org.bonitasoft.console.common.server.i18n,org.bon
+ itasoft.console.common.server.jsp,org.bonitasoft.console.common.server.
+ login,org.bonitasoft.console.common.server.login.credentials,org.bonita
+ soft.console.common.server.login.filter,org.bonitasoft.console.common.s
+ erver.login.localization,org.bonitasoft.console.common.server.login.ser
+ vlet,org.bonitasoft.console.common.server.page,org.bonitasoft.console.c
+ ommon.server.page.extension,org.bonitasoft.console.common.server.servle
+ t,org.bonitasoft.console.common.server.sso.filter,org.bonitasoft.consol
+ e.common.server.sso.servlet,org.bonitasoft.console.common.server.utils,
+ org.bonitasoft.console.server,org.bonitasoft.console.server.service,org
+ .bonitasoft.console.server.servlet,org.bonitasoft.livingapps,org.bonita
+ soft.livingapps.exception,org.bonitasoft.livingapps.menu,org.bonitasoft
+ .web.rest.server,org.bonitasoft.web.rest.server.api,org.bonitasoft.web.
+ rest.server.api.application,org.bonitasoft.web.rest.server.api.applicat
+ ionmenu,org.bonitasoft.web.rest.server.api.applicationpage,org.bonitaso
+ ft.web.rest.server.api.bdm,org.bonitasoft.web.rest.server.api.bonitaPag
+ e,org.bonitasoft.web.rest.server.api.bpm.cases,org.bonitasoft.web.rest.
+ server.api.bpm.connector,org.bonitasoft.web.rest.server.api.bpm.flownod
+ e,org.bonitasoft.web.rest.server.api.bpm.flownode.archive,org.bonitasof
+ t.web.rest.server.api.bpm.process,org.bonitasoft.web.rest.server.api.de
+ ployer,org.bonitasoft.web.rest.server.api.document,org.bonitasoft.web.r
+ est.server.api.document.api.impl,org.bonitasoft.web.rest.server.api.ext
+ ension,org.bonitasoft.web.rest.server.api.form,org.bonitasoft.web.rest.
+ server.api.organization,org.bonitasoft.web.rest.server.api.organization
+ .password.validator,org.bonitasoft.web.rest.server.api.page,org.bonitas
+ oft.web.rest.server.api.platform,org.bonitasoft.web.rest.server.api.pro
+ file,org.bonitasoft.web.rest.server.api.resource,org.bonitasoft.web.res
+ t.server.api.system,org.bonitasoft.web.rest.server.api.tenant,org.bonit
+ asoft.web.rest.server.datastore,org.bonitasoft.web.rest.server.datastor
+ e.application,org.bonitasoft.web.rest.server.datastore.applicationmenu,
+ org.bonitasoft.web.rest.server.datastore.applicationpage,org.bonitasoft
+ .web.rest.server.datastore.bpm.cases,org.bonitasoft.web.rest.server.dat
+ astore.bpm.connector,org.bonitasoft.web.rest.server.datastore.bpm.flown
+ ode,org.bonitasoft.web.rest.server.datastore.bpm.flownode.archive,org.b
+ onitasoft.web.rest.server.datastore.bpm.flownode.archive.converter,org.
+ bonitasoft.web.rest.server.datastore.bpm.process,org.bonitasoft.web.res
+ t.server.datastore.bpm.process.helper,org.bonitasoft.web.rest.server.da
+ tastore.converter,org.bonitasoft.web.rest.server.datastore.filter,org.b
+ onitasoft.web.rest.server.datastore.organization,org.bonitasoft.web.res
+ t.server.datastore.page,org.bonitasoft.web.rest.server.datastore.profil
+ e,org.bonitasoft.web.rest.server.datastore.profile.entry,org.bonitasoft
+ .web.rest.server.datastore.profile.member,org.bonitasoft.web.rest.serve
+ r.datastore.system,org.bonitasoft.web.rest.server.datastore.utils,org.b
+ onitasoft.web.rest.server.engineclient,org.bonitasoft.web.rest.server.f
+ ramework,org.bonitasoft.web.rest.server.framework.api,org.bonitasoft.we
+ b.rest.server.framework.exception,org.bonitasoft.web.rest.server.framew
+ ork.json,org.bonitasoft.web.rest.server.framework.search,org.bonitasoft
+ .web.rest.server.framework.servlet,org.bonitasoft.web.rest.server.frame
+ work.utils,org.bonitasoft.web.rest.server.framework.utils.converter,org
+ .bonitasoft.web.rest.server.framework.utils.converter.typed,org.bonitas
+ oft.web.rest.server.utils,org.bonitasoft.web.toolkit.server,org.bonitas
+ oft.web.toolkit.server.servlet,org.bonitasoft.web.toolkit.server.utils,
+ org.bonitasoft.console.common.server.themes,org.bonitasoft.console.comm
+ on.server.themes.exception,org.bonitasoft.web,org.bonitasoft.web.common
+ .model,org.bonitasoft.web.rest.model,org.bonitasoft.web.rest.model.appl
+ ication,org.bonitasoft.web.rest.model.applicationmenu,org.bonitasoft.we
+ b.rest.model.applicationpage,org.bonitasoft.web.rest.model.bpm,org.boni
+ tasoft.web.rest.model.bpm.cases,org.bonitasoft.web.rest.model.bpm.conne
+ ctor,org.bonitasoft.web.rest.model.bpm.flownode,org.bonitasoft.web.rest
+ .model.bpm.process,org.bonitasoft.web.rest.model.builder.bpm.cases,org.
+ bonitasoft.web.rest.model.builder.bpm.process,org.bonitasoft.web.rest.m
+ odel.builder.identity,org.bonitasoft.web.rest.model.builder.organisatio
+ n,org.bonitasoft.web.rest.model.builder.profile,org.bonitasoft.web.rest
+ .model.builder.profile.entry,org.bonitasoft.web.rest.model.builder.prof
+ ile.member,org.bonitasoft.web.rest.model.document,org.bonitasoft.web.re
+ st.model.identity,org.bonitasoft.web.rest.model.monitoring.report,org.b
+ onitasoft.web.rest.model.platform,org.bonitasoft.web.rest.model.portal.
+ page,org.bonitasoft.web.rest.model.portal.profile,org.bonitasoft.web.re
+ st.model.system,org.bonitasoft.web.rest.model.tenant,org.bonitasoft.web
+ .rest.model.user,org.bonitasoft.web.toolkit.client,org.bonitasoft.web.t
+ oolkit.client.common,org.bonitasoft.web.toolkit.client.common.exception
+ ,org.bonitasoft.web.toolkit.client.common.exception.api,org.bonitasoft.
+ web.toolkit.client.common.exception.http,org.bonitasoft.web.toolkit.cli
+ ent.common.i18n,org.bonitasoft.web.toolkit.client.common.i18n.model,org
+ .bonitasoft.web.toolkit.client.common.json,org.bonitasoft.web.toolkit.c
+ lient.common.session,org.bonitasoft.web.toolkit.client.common.texttempl
+ ate,org.bonitasoft.web.toolkit.client.common.url,org.bonitasoft.web.too
+ lkit.client.common.util,org.bonitasoft.web.toolkit.client.data,org.boni
+ tasoft.web.toolkit.client.data.item,org.bonitasoft.web.toolkit.client.d
+ ata.item.attribute,org.bonitasoft.web.toolkit.client.data.item.attribut
+ e.modifier,org.bonitasoft.web.toolkit.client.data.item.attribute.reader
+ ,org.bonitasoft.web.toolkit.client.data.item.attribute.validator,org.bo
+ nitasoft.web.toolkit.client.data.item.template,org.bonitasoft.web.toolk
+ it.client.ui,org.bonitasoft.web.toolkit.client.ui.utils,org.bonitasoft.
+ web.toolkit.client.ui.utils.dateformat
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
