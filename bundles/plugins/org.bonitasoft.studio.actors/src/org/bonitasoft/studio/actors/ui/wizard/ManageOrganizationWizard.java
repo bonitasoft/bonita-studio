@@ -37,17 +37,14 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -73,9 +70,11 @@ public class ManageOrganizationWizard extends Wizard {
     String userName;
     private final ActiveOrganizationProvider activeOrganizationProvider;
     private ECommandService commandService;
+    private EHandlerService handlerService;
 
-    public ManageOrganizationWizard(ECommandService commandService) {
+    public ManageOrganizationWizard(ECommandService commandService, EHandlerService handlerService) {
         this.commandService = commandService;
+        this.handlerService = handlerService;
         activeOrganizationProvider = new ActiveOrganizationProvider();
         organizations = new ArrayList<Organization>();
         organizationsWorkingCopy = new ArrayList<Organization>();
@@ -203,12 +202,7 @@ public class ManageOrganizationWizard extends Wizard {
             try {
                 return true;
             } finally {
-                try {
-                    publishOrganization();
-                } catch (final InvocationTargetException | InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                    return false;
-                }
+                publishOrganization();
             }
         } else {
             if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified) {
@@ -226,12 +220,7 @@ public class ManageOrganizationWizard extends Wizard {
                         activeOrganizationProvider.savePublishOrganization(mdwt.getToggleState());
                         return true;
                     } finally {
-                        try {
-                            publishOrganization();
-                        } catch (InvocationTargetException | InterruptedException e) {
-                            BonitaStudioLog.error(e);
-                            return false;
-                        }
+                        publishOrganization();
                     }
                 } else {
                     if (mdwt.getToggleState()) {
@@ -245,14 +234,10 @@ public class ManageOrganizationWizard extends Wizard {
         return true;
     }
 
-    private void publishOrganization() throws InvocationTargetException, InterruptedException {
+    private void publishOrganization() {
         Display.getDefault().asyncExec(() -> {
-            try {
-                commandService.getCommand("org.bonitasoft.studio.organization.publish")
-                        .executeWithChecks(new ExecutionEvent());
-            } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e1) {
-                BonitaStudioLog.error(e1);
-            }
+            handlerService.executeHandler(ParameterizedCommand
+                    .generateCommand(commandService.getCommand("org.bonitasoft.studio.organization.publish"), null));
         });
     }
 
