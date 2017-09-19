@@ -36,11 +36,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -50,7 +50,8 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class StartupMessageDialog extends MessageDialogWithPrompt {
 
-    private Link messageLink;
+    private Label startMessage;
+    public static int IMPORT_BUTTON_ID = 38;
 
     public StartupMessageDialog(Shell parentShell) {
         super(parentShell,
@@ -88,8 +89,8 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
         }
         // create message
         if (message != null) {
-            messageLink = new Link(composite, getMessageLabelStyle());
-            messageLink.setText(String.format(Messages.startDialogMsg, Messages.importWorkFromAnotherWorkspace));
+            startMessage = new Label(composite, getMessageLabelStyle());
+            startMessage.setText(Messages.startDialogMsg);
             GridDataFactory
                     .fillDefaults()
                     .align(SWT.FILL, SWT.BEGINNING)
@@ -97,16 +98,18 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
                     .hint(
                             convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
                             SWT.DEFAULT)
-                    .applyTo(messageLink);
-            messageLink.addListener(SWT.Selection, e -> {
-                if (Messages.importWorkFromAnotherWorkspace.equals(e.text)) {
-                    Display.getDefault().asyncExec(this::openImportWorkspaceDialog);
-                }
-            });
+                    .applyTo(startMessage);
 
             createDetailsSection(composite);
         }
         return composite;
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        Button importButton = createButton(parent, IMPORT_BUTTON_ID, Messages.importWorkspace, false);
+        super.createButtonsForButtonBar(parent);
+        importButton.addListener(SWT.Selection, e -> Display.getDefault().asyncExec(this::openImportWorkspaceDialog));
     }
 
     private void createDetailsSection(Composite parent) {
