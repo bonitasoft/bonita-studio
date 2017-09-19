@@ -69,7 +69,6 @@
 							</a></h2>
 							<contentProvider id="4,recent" pluginId="org.bonitasoft.studio.intro" class="org.bonitasoft.studio.intro.content.RecentProcessContentProvider"/>
 						</div>
-
 					</div>
 
 					<div class="right">
@@ -89,9 +88,7 @@
 				</div>
 
 				<div class="logo">
-					<a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D99%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">
-						<img src="images/logo-community.png" />
-					</a>
+					<contentProvider id="99" class="org.bonitasoft.studio.intro.content.LogoProvider"  pluginId="org.bonitasoft.studio.intro" />
 				</div>
 
 				<div class="clear"><img src="images/pix.png" width="0" height="0" />
@@ -118,11 +115,11 @@
 
 					<div class="block-second">
 						<div id="video">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D141%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Videos</a></h2>
-							<contentProvider id="4,7-0-videos-community,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<h2><contentProvider id="141,Videos" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
+							<contentProvider id="4,7-0-videos-community" class="org.bonitasoft.studio.intro.content.RssContentProvider" pluginId="org.bonitasoft.studio.intro"/>
 						</div>
 						<div id="documentation">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D74%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Documentation</a></h2>
+							<h2><contentProvider id="74,Documentation" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
 							<div class="search">
 								<form action="http://org.eclipse.ui.intro/runAction" method="get" accept-charset="UTF-8" >
 									<input id="edit-keys" title="Enter the terms you wish to search for." onclick="this.value='';" type="text" name="keys" value="Search Documentation" size="50" maxlength="128"  style="width: 215px; margin-left: 10px; border: 0px; background-color:transparent; margin-top: 2px; float:left; color: #1B465F" />
@@ -133,14 +130,13 @@
 								<div class="clear"><img src="images/pix.png" width="0" height="0" />
 								</div>
 							</div>
-							<contentProvider id="4,7-0-documentation,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<contentProvider id="4,7-0-documentation" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 						</div>
 
 						<div id="training">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D75%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Training</a></h2>
-							<contentProvider id="4,7-0-training,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<h2><contentProvider id="75,Training" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
+							<contentProvider id="4,7-0-training" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 						</div>
-
 					</div>
 
 					<div class="right">
@@ -182,20 +178,19 @@
 					</div>
 
 					<div class="block-third">
-
 						<div id="example">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D97%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Examples</a></h2>
-							<contentProvider id="4,7-0-examples-community,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<h2><contentProvider id="164,Examples" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
+							<contentProvider id="4,7-0-examples-community" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 						</div>
 
 						<div id="forums">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D76%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Community</a></h2>
-							<contentProvider id="4,7-0-community,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<h2><contentProvider id="76,Community" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
+							<contentProvider id="4,7-0-community" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 						</div>
 
 						<div id="news">
-							<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http%3A//www.bonitasoft.com/bos_redirect.php%3Fbos_redirect_id%3D106%26bos_redirect_product%3Dbos%26bos_redirect_major_version%3D7.6%26bos_redirect_minor_version%3D0">Blog</a></h2>
-							<contentProvider id="5,7-0-blogs,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152&amp;bos_redirect_product=bos&amp;bos_redirect_major_version=7.6&amp;bos_redirect_minor_version=0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+							<h2><contentProvider id="106,Blog" class="org.bonitasoft.studio.intro.content.OpenBrowserProvider" pluginId="org.bonitasoft.studio.intro"/></h2>
+							<contentProvider id="5,7-0-blogs"  pluginId="org.bonitasoft.studio.intro"/>
 						</div>
 					</div>
 					<div class="right">
