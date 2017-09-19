@@ -22,14 +22,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.stream.Stream;
 
+import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.BonitaOperationHistory;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -57,6 +62,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
     public static final String PREFERENCES_FILE = ".wsPreferences";
     public static final String WS_ROOT = "wsRootDir";
     public static final String ONLINE_DOC_REQUIREMENTS = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=165&bos_redirect_product=bos&bos_redirect_major_version=";
+    private static final String PRIORITY = "priority";
 
     public static long START_TIME = 0;
 
@@ -83,9 +89,44 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
             return IApplication.EXIT_OK;
         }
         initWorkspaceLocation();
+        executePreStartupContributions();
+
         //set our custom operation factory
         OperationHistoryFactory.setOperationHistory(new BonitaOperationHistory());
         return createAndRunWorkbench(display);
+    }
+
+    private void executePreStartupContributions() {
+        Stream.of(BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements("org.bonitasoft.studio.application.prestartup"))
+                .sorted(this::sortContribution)
+                .map(elem -> {
+                    try {
+                        return elem.createExecutableExtension("class");
+                    } catch (CoreException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(IPreStartupContribution.class::cast)
+                .filter(IPreStartupContribution::canExecute)
+                .forEach(IPreStartupContribution::execute);
+
+    }
+
+    private int sortContribution(final IConfigurationElement e1, final IConfigurationElement e2) {
+        int p1 = 0;
+        int p2 = 0;
+        try {
+            p1 = Integer.parseInt(e1.getAttribute(PRIORITY));
+        } catch (final NumberFormatException e) {
+            p1 = 0;
+        }
+        try {
+            p2 = Integer.parseInt(e2.getAttribute(PRIORITY));
+        } catch (final NumberFormatException e) {
+            p2 = 0;
+        }
+        return p1 - p2; // Lowest Priority first
     }
 
     protected Object createAndRunWorkbench(final Display display) {
@@ -140,9 +181,10 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
             final Version version = Version.parseVersion(ProductVersion.CURRENT_VERSION);
             final String uriWithProductVersion = ONLINE_DOC_REQUIREMENTS + version.getMajor() + "." + version.getMinor();
             final URI uri = new URI(uriWithProductVersion);
-            final MessageDialogWithLink messageDialog = new MessageDialogWithLink(shell, Messages.incompatibleJavaVersionTitle, null, Messages.bind(
-                    Messages.incompatibleJavaVersionMessage,
-                    org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion),
+            final MessageDialogWithLink messageDialog = new MessageDialogWithLink(shell,
+                    Messages.incompatibleJavaVersionTitle, null, Messages.bind(
+                            Messages.incompatibleJavaVersionMessage,
+                            org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion),
                     MessageDialog.ERROR,
                     new String[] { IDialogConstants.OK_LABEL },
                     0,
