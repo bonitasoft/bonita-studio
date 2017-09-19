@@ -21,15 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
-import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
@@ -129,8 +124,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             }
         }
     }
-
-    protected static final String PRIORITY = "priority";
 
     private IProgressMonitor monitor;
 
@@ -356,22 +349,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         declareWorkbenchImage(ideBundle,
                 IDEInternalWorkbenchImages.IMG_ETOOL_PROBLEMS_VIEW_WARNING,
                 PATH_EVIEW + "problems_view_warning.png", true); //$NON-NLS-1$
-
-        // synchronization indicator objects
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_WBET_STAT,
-        // PATH_OVERLAY+"wbet_stat.png");
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_SBET_STAT,
-        // PATH_OVERLAY+"sbet_stat.png");
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_CONFLICT_STAT,
-        // PATH_OVERLAY+"conflict_stat.png");
-
-        // content locality indicator objects
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_NOTLOCAL_STAT,
-        // PATH_STAT+"notlocal_stat.png");
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_LOCAL_STAT,
-        // PATH_STAT+"local_stat.png");
-        // declareRegistryImage(IDEInternalWorkbenchImages.IMG_OBJS_FILLLOCAL_STAT,
-        // PATH_STAT+"filllocal_stat.png");
     }
 
     /**
@@ -427,11 +404,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         disableGroovyDSL();
         checkCurrentRepository(monitor);
-
-        final List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
-        sortConfigurationElementsByPriority(sortedConfigElems);
-        executeConfigurationElement(sortedConfigElems);
-
         doInitWorkspace();
         if (!PlatformUtil.isHeadless()) {
             doStartEngine();
@@ -490,61 +462,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     protected void resetToDefaultRepository(final IProgressMonitor monitor) {
         CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
         RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME, monitor);
-    }
-
-    private List<IConfigurationElement> retrievePreStartupContribution() {
-        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.application.prestartup"); //$NON-NLS-1$
-        final List<IConfigurationElement> sortedConfigElems = new ArrayList<>();
-        for (final IConfigurationElement elem : elems) {
-            sortedConfigElems.add(elem);
-        }
-        return sortedConfigElems;
-    }
-
-    private void executeConfigurationElement(final List<IConfigurationElement> sortedConfigElems) {
-        IPreStartupContribution preStartupcontrib = null;
-        for (final IConfigurationElement elem : sortedConfigElems) {
-            try {
-                preStartupcontrib = (IPreStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            try {
-                if (preStartupcontrib.canExecute()) {
-                    preStartupcontrib.execute();
-                    monitor.worked(1);
-                }
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-                System.exit(-1);
-            }
-
-        }
-    }
-
-    private void sortConfigurationElementsByPriority(
-            final List<IConfigurationElement> sortedConfigElems) {
-        Collections.sort(sortedConfigElems, new Comparator<IConfigurationElement>() {
-
-            @Override
-            public int compare(final IConfigurationElement e1, final IConfigurationElement e2) {
-                int p1 = 0;
-                int p2 = 0;
-                try {
-                    p1 = Integer.parseInt(e1.getAttribute(PRIORITY));
-                } catch (final NumberFormatException e) {
-                    p1 = 0;
-                }
-                try {
-                    p2 = Integer.parseInt(e2.getAttribute(PRIORITY));
-                } catch (final NumberFormatException e) {
-                    p2 = 0;
-                }
-                return p1 - p2; // Lowest Priority first
-            }
-
-        });
     }
 
     private void executeContributions() {

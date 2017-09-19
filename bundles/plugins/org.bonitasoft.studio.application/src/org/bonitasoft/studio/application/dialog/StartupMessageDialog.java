@@ -64,14 +64,13 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
                 false);
     }
 
-    public static StartupMessageDialog open(Shell parent, int style, IPreferenceStore store, String key) {
+    public static int open(Shell parent, int style, IPreferenceStore store, String key) {
         final StartupMessageDialog dialog = new StartupMessageDialog(parent);
         style &= SWT.SHEET;
         dialog.setShellStyle(dialog.getShellStyle() | style);
         dialog.setPrefStore(store);
         dialog.setPrefKey(key);
-        dialog.open();
-        return dialog;
+        return dialog.open();
     }
 
     @Override
