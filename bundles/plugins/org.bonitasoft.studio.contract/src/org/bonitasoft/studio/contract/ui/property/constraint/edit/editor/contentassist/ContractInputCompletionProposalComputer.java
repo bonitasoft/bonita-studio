@@ -39,7 +39,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 /**
  * @author Romain Bioteau
  */
-public class ContractInputCompletionProposalComputer extends GroovyCompletionProposalComputer implements IJavaCompletionProposalComputer {
+public class ContractInputCompletionProposalComputer extends GroovyCompletionProposalComputer
+        implements IJavaCompletionProposalComputer {
 
     public static final String INPUTS = "INPUTS";
 
@@ -49,10 +50,12 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
      * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
+    public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context,
+            final IProgressMonitor monitor) {
         if (!(context instanceof JavaContentAssistInvocationContext)
                 || context instanceof JavaContentAssistInvocationContext
-                && !(((JavaContentAssistInvocationContext) context).getCompilationUnit() instanceof GroovyCompilationUnit)) {
+                        && !(((JavaContentAssistInvocationContext) context)
+                                .getCompilationUnit() instanceof GroovyCompilationUnit)) {
             return Collections.emptyList();
         }
 
@@ -69,10 +72,12 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         try {
             computeIdentifierPrefix = javaContext.computeIdentifierPrefix();
         } catch (final BadLocationException e) {
-            BonitaStudioLog.error("Failed to compute identifier prefix in ContractConstraint expression editor", e, ContractPlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Failed to compute identifier prefix in ContractConstraint expression editor", e,
+                    ContractPlugin.PLUGIN_ID);
             return Collections.emptyList();
         }
-        final CodeVisitorSupportContext codeVisitorSupportContext = new CodeVisitorSupportContext(computeIdentifierPrefix.toString(),
+        final CodeVisitorSupportContext codeVisitorSupportContext = new CodeVisitorSupportContext(
+                computeIdentifierPrefix.toString(),
                 (JavaContentAssistInvocationContext) context,
                 contentAssistContext,
                 getProjectClassloader(monitor),
