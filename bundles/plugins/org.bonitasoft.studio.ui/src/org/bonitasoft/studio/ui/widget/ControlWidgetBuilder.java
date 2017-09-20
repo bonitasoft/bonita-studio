@@ -22,10 +22,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -42,7 +39,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected UpdateValueStrategy modelToTargetStrategy;
     protected UpdateValueStrategy targetToModelStrategy;
     protected Object layoutData;
-    protected IObservableValue<T> modelObservable;
+    protected IObservableValue modelObservable;
     protected DataBindingContext ctx;
     protected String id;
     protected Optional<FormToolkit> toolkit = Optional.empty();
@@ -273,7 +270,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     /**
      * Sets the model {@link IObservableValue} to bind to this control
      */
-    public T bindTo(IObservableValue<T> modelObservable) {
+    public T bindTo(IObservableValue modelObservable) {
         this.modelObservable = modelObservable;
         return (T) this;
     }
