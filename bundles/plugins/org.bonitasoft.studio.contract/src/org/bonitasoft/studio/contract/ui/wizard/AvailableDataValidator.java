@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -32,12 +34,12 @@ public final class AvailableDataValidator extends MultiValidator {
 
     private final List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final List<Document> availableDocuments;
 
     public AvailableDataValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
             final List<Document> availableDocuments,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
         this.availableBusinessData = availableBusinessData;
         this.selectedDataObservable = selectedDataObservable;
         this.businessObjectStore = businessObjectStore;
@@ -52,12 +54,13 @@ public final class AvailableDataValidator extends MultiValidator {
         final Object selectedData = selectedDataObservable.getValue();
         if (selectedData != null && selectedData instanceof BusinessObjectData) {
             final BusinessObjectData value = (BusinessObjectData) selectedData;
-            return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
+            return toBusinessObject(value).isPresent() ? Status.OK_STATUS
+                    : ValidationStatus.error(Messages.invalidBusinessDataSelected);
         }
         return Status.OK_STATUS;
     }
 
-    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
+    private Optional<BusinessObject> toBusinessObject(final BusinessObjectData selectedData) {
         return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 }

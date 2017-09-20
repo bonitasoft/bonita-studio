@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
@@ -102,9 +103,9 @@ public class RootContractInputGenerator {
         relationField.setCollection(data.isMultiple());
         relationField.setName(inputName);
         relationField.setType(Type.COMPOSITION);
-        relationField.setReference(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                .getBusinessObjectByQualifiedName(
-                        data.getClassName()));
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        relationField.setReference(repositoryStore.getBusinessObjectByQualifiedName(data.getClassName()).orElse(null));
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(relationField);
         for (final FieldToContractInputMapping child : children) {
             mapping.addChild(child);

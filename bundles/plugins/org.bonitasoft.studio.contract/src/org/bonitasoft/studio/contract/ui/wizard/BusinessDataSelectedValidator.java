@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -32,12 +34,12 @@ public final class BusinessDataSelectedValidator extends MultiValidator {
 
     private final List<Data> availableBusinessData;
     private final WritableValue selectedDataObservable;
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final SelectObservableValue selectionTypeObservable;
 
     public BusinessDataSelectedValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
             final SelectObservableValue selectionTypeObservable,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
         this.availableBusinessData = availableBusinessData;
         this.selectedDataObservable = selectedDataObservable;
         this.selectionTypeObservable = selectionTypeObservable;
@@ -49,19 +51,22 @@ public final class BusinessDataSelectedValidator extends MultiValidator {
         final Object selectedData = selectedDataObservable.getValue();
         if (selectedData != null && selectedData instanceof BusinessObjectData) {
             final BusinessObjectData value = (BusinessObjectData) selectedData;
-            return toBusinessObject(value) != null ? Status.OK_STATUS : ValidationStatus.error(Messages.invalidBusinessDataSelected);
+            return toBusinessObject(value).isPresent() ? Status.OK_STATUS
+                    : ValidationStatus.error(Messages.invalidBusinessDataSelected);
         } else {
             if (availableBusinessData.isEmpty()) {
-                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
+                return Boolean.TRUE.equals(selectionTypeObservable.getValue())
+                        ? ValidationStatus.warning(Messages.warningAddFromData_noDataAvailable)
                         : Status.OK_STATUS;
             } else {
-                return Boolean.TRUE.equals(selectionTypeObservable.getValue()) ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
+                return Boolean.TRUE.equals(selectionTypeObservable.getValue())
+                        ? ValidationStatus.warning(Messages.warningAddFromData_noDataSelected)
                         : Status.OK_STATUS;
             }
         }
     }
 
-    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
+    private Optional<BusinessObject> toBusinessObject(final BusinessObjectData selectedData) {
         return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 }

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
@@ -40,7 +41,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
@@ -66,7 +66,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<BusinessObjectModelFileStore> {
+public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
+        extends AbstractRepositoryStore<AbstractBDMFileStore> {
 
     private static final String STORE_NAME = "bdm";
 
@@ -87,7 +88,7 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
-    public BusinessObjectModelFileStore createRepositoryFileStore(final String fileName) {
+    public AbstractBDMFileStore createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
     }
 
@@ -127,30 +128,22 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         return extensions;
     }
 
-    public BusinessObjectModelFileStore getChildByQualifiedName(final String qualifiedName) {
-        for (final IRepositoryFileStore file : getChildren()) {
-            final BusinessObjectModelFileStore businessObjectFileStore = (BusinessObjectModelFileStore) file;
-            if (businessObjectFileStore.getBusinessObject(qualifiedName) != null) {
-                return businessObjectFileStore;
-            }
-        }
-        return null;
+    public Optional<BusinessObjectModelFileStore> getChildByQualifiedName(final String qualifiedName) {
+        final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME));
+        return businessObjectFileStore
+                .map(fileStore -> fileStore.getBusinessObject(qualifiedName) != null ? fileStore : null);
     }
 
-    public BusinessObject getBusinessObjectByQualifiedName(final String qualifiedName) {
-        for (final IRepositoryFileStore file : getChildren()) {
-            final BusinessObjectModelFileStore businessObjectFileStore = (BusinessObjectModelFileStore) file;
-            final BusinessObject businessObject = businessObjectFileStore.getBusinessObject(qualifiedName);
-            if (businessObject != null) {
-                return businessObjectFileStore.getBusinessObject(qualifiedName);
-            }
-        }
-        return null;
+    public Optional<BusinessObject> getBusinessObjectByQualifiedName(final String qualifiedName) {
+        final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME));
+        return businessObjectFileStore.map(fileStore -> fileStore.getBusinessObject(qualifiedName));
     }
 
     @Override
-    protected BusinessObjectModelFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-        BusinessObjectModelFileStore fileStore = null;
+    protected F doImportInputStream(final String fileName, final InputStream inputStream) {
+        F fileStore = null;
         if (BusinessObjectModelFileStore.ZIP_FILENAME.equals(fileName)) {
             try {
                 final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
@@ -166,7 +159,7 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         }
 
         if (isDeployable()) {
-            deploy(fileStore);
+            deploy((BusinessObjectModelFileStore) fileStore);
         }
         return fileStore;
     }
@@ -174,7 +167,8 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
-        final BusinessObjectModelFileStore fStore = getChild(BusinessObjectModelFileStore.ZIP_FILENAME);
+        final BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
+                BusinessObjectModelFileStore.ZIP_FILENAME);
         if (fStore != null) {
             final File legacyBDM = fStore.getResource().getLocation().toFile();
             BusinessObjectModel businessObjectModel;
@@ -193,8 +187,8 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
         }
     }
 
-    protected BusinessObjectModelFileStore superDoImportInputStream(final String fileName, final InputStream inputStream) {
-        return super.doImportInputStream(fileName, inputStream);
+    protected F superDoImportInputStream(final String fileName, final InputStream inputStream) {
+        return (F) super.doImportInputStream(fileName, inputStream);
     }
 
     protected void deploy(final BusinessObjectModelFileStore fileStore) {
@@ -292,6 +286,11 @@ public class BusinessObjectModelRepositoryStore extends AbstractRepositoryStore<
                 return input.getPath().equals(new Path("repositoryDependencies"));
             }
         };
+    }
+
+    @Override
+    public F getChild(String fileName) {
+        return (F) super.getChild(fileName);
     }
 
 }

@@ -21,6 +21,7 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -47,21 +48,23 @@ public class SelectFormWizardTest {
     @Rule
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
     @Mock
-    private BusinessObjectModelRepositoryStore businessObjectStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     @Mock
     private BusinessObjectModelFileStore bomFStore;
 
     @Before
     public void setUp() throws Exception {
-        when(businessObjectStore.getChildByQualifiedName("org.bos.Person")).thenReturn(bomFStore);
+        when(businessObjectStore.getChildByQualifiedName("org.bos.Person")).thenReturn(Optional.of(bomFStore));
     }
 
     @Test
     public void should_not_add_business_data_without_simple_fields_in_accessible_elements() throws Exception {
         //Given
         final SelectFormWizard formWizard = new SelectFormWizard(null, null, null, businessObjectStore);
-        final BusinessObjectData businessDataWithNoSimpleFields = aBusinessData().havingDataType(aBusinessObjectDataType()).withClassname(
-                "org.bos.Person").build();
+        final BusinessObjectData businessDataWithNoSimpleFields = aBusinessData().havingDataType(aBusinessObjectDataType())
+                .withClassname(
+                        "org.bos.Person")
+                .build();
         final Task task = aTask().havingData(businessDataWithNoSimpleFields).build();
         when(bomFStore.getBusinessObject("org.bos.Person")).thenReturn(new BusinessObject());
 
@@ -76,8 +79,10 @@ public class SelectFormWizardTest {
     public void should_add_business_data_with_simple_fields_in_accessible_elements() throws Exception {
         //Given
         final SelectFormWizard formWizard = new SelectFormWizard(null, null, null, businessObjectStore);
-        final BusinessObjectData businessDataWithSimpleFields = aBusinessData().havingDataType(aBusinessObjectDataType()).withClassname(
-                "org.bos.Person").build();
+        final BusinessObjectData businessDataWithSimpleFields = aBusinessData().havingDataType(aBusinessObjectDataType())
+                .withClassname(
+                        "org.bos.Person")
+                .build();
         final Task task = aTask().havingData(businessDataWithSimpleFields).build();
         final BusinessObject businessObject = new BusinessObject();
         businessObject.addField(new SimpleField());

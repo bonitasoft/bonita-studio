@@ -49,8 +49,9 @@ public class DAOExpressionProvider implements IExpressionProvider {
      */
     @Override
     public Set<Expression> getExpressions(final EObject context) {
-        final Set<Expression> result = new HashSet<Expression>();
-        final BusinessObjectModelRepositoryStore boStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final Set<Expression> result = new HashSet<>();
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> boStore = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         for (final IType t : boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().getJavaProject())) {
             result.add(createExpression(t));
         }
@@ -142,6 +143,8 @@ public class DAOExpressionProvider implements IExpressionProvider {
     }
 
     protected BusinessObjectModelFileStore getBusinessFileStore() {
-        return repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        return ((BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore>) repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class))
+                        .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
     }
 }

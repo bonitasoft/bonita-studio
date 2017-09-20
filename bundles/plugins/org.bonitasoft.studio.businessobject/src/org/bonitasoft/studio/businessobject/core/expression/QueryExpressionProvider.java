@@ -80,7 +80,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
     }
 
     protected List<Expression> getExpressions(final BusinessObject bo) {
-        final List<Expression> result = new ArrayList<Expression>();
+        final List<Expression> result = new ArrayList<>();
         for (final Query q : BDMQueryUtil.createProvidedQueriesForBusinessObject(bo)) {
             result.add(createExpression(bo, q));
         }
@@ -104,9 +104,11 @@ public class QueryExpressionProvider implements IExpressionProvider {
             query.getReferencedElements().add(createQueryParameterExpression(param, ""));
         }
         if (List.class.getName().equals(q.getReturnType())) {// Add pagination parameters
-            final QueryParameter startIndexParam = new QueryParameter(BDMQueryUtil.START_INDEX_PARAM_NAME, Integer.class.getName());
+            final QueryParameter startIndexParam = new QueryParameter(BDMQueryUtil.START_INDEX_PARAM_NAME,
+                    Integer.class.getName());
             query.getReferencedElements().add(createQueryParameterExpression(startIndexParam, "0"));
-            final QueryParameter maxResultsParam = new QueryParameter(BDMQueryUtil.MAX_RESULTS_PARAM_NAME, Integer.class.getName());
+            final QueryParameter maxResultsParam = new QueryParameter(BDMQueryUtil.MAX_RESULTS_PARAM_NAME,
+                    Integer.class.getName());
             query.getReferencedElements().add(createQueryParameterExpression(maxResultsParam, "20"));
         }
         return query;
@@ -131,7 +133,8 @@ public class QueryExpressionProvider implements IExpressionProvider {
     }
 
     protected BusinessObjectModel getBusinessObjectModel() {
-        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = RepositoryManager
+                .getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         if (fileStore == null) {
             fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         }

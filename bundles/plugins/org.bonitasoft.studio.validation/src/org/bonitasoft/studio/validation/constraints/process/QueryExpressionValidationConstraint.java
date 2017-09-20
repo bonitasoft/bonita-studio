@@ -51,12 +51,14 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
             final String simpleBOName = split[0];
             final BusinessObject businessObject = getBusinessObject(simpleBOName);
             if (businessObject == null) {
-                return context.createFailureStatus(Messages.bind(Messages.queryReferencedAnUnexistingBusinessObject, simpleBOName, queryName));
+                return context.createFailureStatus(
+                        Messages.bind(Messages.queryReferencedAnUnexistingBusinessObject, simpleBOName, queryName));
             }
             final String namedQuery = split[1];
             final Query q = getQuery(businessObject, namedQuery);
             if (q == null) {
-                return context.createFailureStatus(Messages.bind(Messages.queryNotExistsInBusinessObject, namedQuery, simpleBOName));
+                return context.createFailureStatus(
+                        Messages.bind(Messages.queryNotExistsInBusinessObject, namedQuery, simpleBOName));
             }
 
             final String returnType = queryExpression.getReturnType();
@@ -69,7 +71,8 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
                 if (queryExpressionParam instanceof Expression) {
                     final Expression parameterExpression = (Expression) queryExpressionParam;
                     final String paramName = parameterExpression.getName();
-                    if ((paramName.equals(BDMQueryUtil.START_INDEX_PARAM_NAME) || paramName.equals(BDMQueryUtil.MAX_RESULTS_PARAM_NAME))
+                    if ((paramName.equals(BDMQueryUtil.START_INDEX_PARAM_NAME)
+                            || paramName.equals(BDMQueryUtil.MAX_RESULTS_PARAM_NAME))
                             && returnType.equals(List.class.getName())) {
                         continue;
                     }
@@ -80,12 +83,14 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
                         }
                     }
                     if (correspondingParam == null) {
-                        return context.createFailureStatus(Messages.bind(Messages.queryParameterDoesNotExistInQueryDefinition,
-                                new String[] { queryName, paramName }));
+                        return context
+                                .createFailureStatus(Messages.bind(Messages.queryParameterDoesNotExistInQueryDefinition,
+                                        new String[] { queryName, paramName }));
                     } else {
                         if (!correspondingParam.getClassName().equals(parameterExpression.getReturnType())) {
                             return context.createFailureStatus(Messages.bind(Messages.queryParameterReturnTypeIsInvalid,
-                                    new String[] { queryName, paramName, parameterExpression.getReturnType(), correspondingParam.getClassName() }));
+                                    new String[] { queryName, paramName, parameterExpression.getReturnType(),
+                                            correspondingParam.getClassName() }));
                         }
                     }
                 }
@@ -126,19 +131,18 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
     }
 
     protected BusinessObject getBusinessObject(final String simpleBOName) {
-        final BusinessObjectModelRepositoryStore store = getBusinessObjectDefinitionStore();
-        for (final BusinessObjectModelFileStore fStore : store.getChildren()) {
-            final BusinessObjectModel businessObjectModel = fStore.getContent();
-            for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
-                if (simpleBOName.equals(NamingUtils.getSimpleName(bo.getQualifiedName()))) {
-                    return bo;
-                }
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectDefinitionStore();
+        BusinessObjectModelFileStore fStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        final BusinessObjectModel businessObjectModel = fStore.getContent();
+        for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
+            if (simpleBOName.equals(NamingUtils.getSimpleName(bo.getQualifiedName()))) {
+                return bo;
             }
         }
         return null;
     }
 
-    protected BusinessObjectModelRepositoryStore getBusinessObjectDefinitionStore() {
+    protected BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 

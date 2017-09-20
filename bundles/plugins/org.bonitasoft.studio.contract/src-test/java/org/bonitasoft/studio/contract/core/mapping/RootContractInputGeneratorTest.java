@@ -18,17 +18,20 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
@@ -48,7 +51,7 @@ public class RootContractInputGeneratorTest {
     @Test
     public void should_create_a_complex_contract_input_with_root_input_name() throws Exception {
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 Collections.<FieldToContractInputMapping> emptyList(), repositoryAccessor,
@@ -68,7 +71,7 @@ public class RootContractInputGeneratorTest {
                         "input2").build());
         notGeneratedMapping.setGenerated(false);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping, new SimpleFieldToContractInputMapping(SimpleFieldBuilder
@@ -90,7 +93,7 @@ public class RootContractInputGeneratorTest {
         final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(mapping),
@@ -111,7 +114,7 @@ public class RootContractInputGeneratorTest {
         final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping),
@@ -130,7 +133,7 @@ public class RootContractInputGeneratorTest {
         final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping,
@@ -147,9 +150,9 @@ public class RootContractInputGeneratorTest {
         final SimpleField firstNameField = SimpleFieldBuilder.aStringField("firstName").build();
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(firstNameField);
 
-        final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore = getBusinessObjectModelRepositoryStore();
         final BusinessObject bo = aBO("org.test.Employee").withField(firstNameField).build();
-        when(businessObjectStore.getBusinessObjectByQualifiedName("org.test.Employee")).thenReturn(bo);
+        when(businessObjectStore.getBusinessObjectByQualifiedName("org.test.Employee")).thenReturn(Optional.of(bo));
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
                 .thenReturn(businessObjectStore);
@@ -184,7 +187,7 @@ public class RootContractInputGeneratorTest {
         final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
                 FieldToContractInputMappingExpressionBuilder.class);
@@ -213,7 +216,7 @@ public class RootContractInputGeneratorTest {
         final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final BusinessObjectModelRepositoryStore businessStore = mock(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
                 FieldToContractInputMappingExpressionBuilder.class);
@@ -230,5 +233,12 @@ public class RootContractInputGeneratorTest {
         assertThat(fieldToContractInputMapping.getField().getName()).isEqualTo("rootInputName");
         assertThat(fieldToContractInputMapping.getField().isCollection()).isTrue();
         assertThat(fieldToContractInputMapping.getChildren()).hasSize(1);
+    }
+
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectModelRepositoryStore() {
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(businessStore.getBusinessObjectByQualifiedName(anyString())).thenReturn(Optional.empty());
+        return businessStore;
     }
 }

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,16 +25,16 @@ import org.eclipse.swt.graphics.TextStyle;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BusinessObjectDataStyledLabelProvider extends DataStyledTreeLabelProvider {
 
     private final BusinessObjectModelRepositoryStore store;
 
-    public BusinessObjectDataStyledLabelProvider(final BusinessObjectModelRepositoryStore store, final IObservableMap... attributeMaps) {
-		super(attributeMaps);
+    public BusinessObjectDataStyledLabelProvider(final BusinessObjectModelRepositoryStore store,
+            final IObservableMap... attributeMaps) {
+        super(attributeMaps);
         this.store = store;
-	}
+    }
 
     @Override
     public void update(final ViewerCell cell) {
@@ -67,7 +65,7 @@ public class BusinessObjectDataStyledLabelProvider extends DataStyledTreeLabelPr
     }
 
     protected boolean businessObjectDefinitionExists(final BusinessObjectData data) {
-        return store.getChildByQualifiedName(data.getClassName()) != null;
+        return store.getChildByQualifiedName(data.getClassName()).isPresent();
     }
 
 }

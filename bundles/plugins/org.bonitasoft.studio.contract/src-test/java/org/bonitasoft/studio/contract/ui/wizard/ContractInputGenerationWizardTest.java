@@ -23,9 +23,13 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -133,10 +137,7 @@ public class ContractInputGenerationWizardTest {
         final Pool process = aPool().havingContract(aContract()).build();
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
@@ -163,10 +164,7 @@ public class ContractInputGenerationWizardTest {
         final Pool process = aPool().havingContract(aContract()).build();
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
@@ -195,10 +193,7 @@ public class ContractInputGenerationWizardTest {
         final Pool process = aPool().havingContract(aContract()).build();
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
@@ -231,10 +226,7 @@ public class ContractInputGenerationWizardTest {
         process.getElements().add(task);
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
@@ -262,10 +254,7 @@ public class ContractInputGenerationWizardTest {
         process.getElements().add(task);
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
@@ -363,10 +352,12 @@ public class ContractInputGenerationWizardTest {
         final BusinessObjectData data = aBusinessData().withName("employee").withClassname("com.company.Employee").build();
         process.getData().add(data);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        Mockito.doReturn(BusinessObjectBuilder.aBO("com.company.Employee")
-                .withField(SimpleFieldBuilder.aTextField("name").build()).build()).when(store)
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        Mockito.doReturn(Optional.of(BusinessObjectBuilder.aBO("com.company.Employee")
+                .withField(SimpleFieldBuilder.aTextField("name").build()).build())).when(store)
                 .getBusinessObjectByQualifiedName("com.company.Employee");
+        when(store.getChildByQualifiedName(anyString())).thenReturn(Optional.empty());
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
@@ -385,6 +376,16 @@ public class ContractInputGenerationWizardTest {
 
     private EditingDomain editingDomain() {
         return new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory());
+    }
+
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectModelRepositoryStore() {
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
+                Optional.of(BusinessObjectBuilder.aBO("org.company.Employee")
+                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build()));
+        when(store.getChildByQualifiedName(anyString())).thenReturn(Optional.empty());
+        return store;
     }
 
 }

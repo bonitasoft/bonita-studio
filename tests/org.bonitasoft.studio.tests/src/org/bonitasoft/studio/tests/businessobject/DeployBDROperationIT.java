@@ -39,7 +39,7 @@ import org.junit.Test;
  */
 public class DeployBDROperationIT {
 
-    private BusinessObjectModelRepositoryStore defStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
     private DependencyRepositoryStore depStore;
     private BusinessObjectModelFileStore businessObjectDefinitionFileStore;
     private APISession apiSession;
@@ -68,7 +68,7 @@ public class DeployBDROperationIT {
         if (fileStore != null) {
             fileStore.delete();
         }
-        businessObjectDefinitionFileStore = defStore.importInputStream("bdm.zip",
+        businessObjectDefinitionFileStore = (BusinessObjectModelFileStore) defStore.importInputStream("bdm.zip",
                 DeployBDROperationIT.class.getResourceAsStream("/bdm.zip"));
         managerEx = BOSEngineManager.getInstance();
     }
