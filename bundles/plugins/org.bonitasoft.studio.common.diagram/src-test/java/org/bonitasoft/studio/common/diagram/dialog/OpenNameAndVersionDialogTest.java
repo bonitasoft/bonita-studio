@@ -36,8 +36,10 @@ public class OpenNameAndVersionDialogTest {
 
     @Test
     public void should_diagram_name_strategy_validate_fileName() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
+        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(),
+                aMainProcess().withName("MyDiagram")
+                        .withVersion("1.0").build(),
+                diagramStore);
 
         final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
@@ -46,8 +48,10 @@ public class OpenNameAndVersionDialogTest {
 
     @Test
     public void should_diagram_name_strategy_validate_empty_name() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
+        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(),
+                aMainProcess().withName("MyDiagram")
+                        .withVersion("1.0").build(),
+                diagramStore);
 
         final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
@@ -56,12 +60,16 @@ public class OpenNameAndVersionDialogTest {
 
     @Test
     public void should_diagram_name_strategy_validate_max_length_name() throws Exception {
-        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(), aMainProcess().withName("MyDiagram")
-                .withVersion("1.0").build(), diagramStore);
+        final OpenNameAndVersionDialog dialog = new OpenNameAndVersionDialog(realmWithDisplay.getShell(),
+                aMainProcess().withName("MyDiagram")
+                        .withVersion("1.0").build(),
+                diagramStore);
 
         final UpdateValueStrategy nameStrategy = dialog.diagramUpdateStrategy("");
 
-        assertThat(nameStrategy.validateAfterGet("toooooooooooooooooooooooooooooooooooooooooooooooLong")).isNotOK();
+        assertThat(nameStrategy.validateAfterGet(
+                "tooooooooooooooooooooooooooooo00000000000000000000000000000000000000000000000000000000ooooooooooooooooooLong"))
+                        .isNotOK();
     }
 
 }
