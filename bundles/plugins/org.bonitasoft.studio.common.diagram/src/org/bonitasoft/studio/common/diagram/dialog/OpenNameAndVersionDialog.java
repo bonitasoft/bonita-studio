@@ -67,7 +67,7 @@ import com.google.common.base.Function;
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
-    private static final int MAX_LENGTH = 50;
+    private static final int MAX_LENGTH = 75;
     private boolean forceNameUpdate = false;
     private final Set<String> existingFileNames;
     private final Set<Identifier> processIdentifiers;
@@ -113,11 +113,13 @@ public class OpenNameAndVersionDialog extends Dialog {
         return result;
     }
 
-    protected Set<Identifier> computeProcessIdentifiers(final IRepositoryStore<? extends IRepositoryFileStore> diagramStore) {
+    protected Set<Identifier> computeProcessIdentifiers(
+            final IRepositoryStore<? extends IRepositoryFileStore> diagramStore) {
         final Set<Identifier> result = new HashSet<Identifier>();
         for (final IRepositoryFileStore irepStore : diagramStore.getChildren()) {
             try {
-                result.addAll(newHashSet(transform(ModelHelper.getAllProcesses((Element) irepStore.getContent()), toIdentifier())));
+                result.addAll(newHashSet(
+                        transform(ModelHelper.getAllProcesses((Element) irepStore.getContent()), toIdentifier())));
             } catch (final ReadFileStoreException e) {
                 BonitaStudioLog.error("Failed read diagram content", e);
             }
@@ -174,10 +176,12 @@ public class OpenNameAndVersionDialog extends Dialog {
         nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
         final Text nameText = new Text(res, SWT.BORDER);
-        nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(10, 0).create());
+        nameText.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(10, 0).create());
         final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
-        ControlDecorationSupport.create(dbc.bindValue(observeNameText, PojoProperties.value("name").observe(identifier)
-                , nameUpdateStrategy(), null), SWT.LEFT);
+        ControlDecorationSupport.create(
+                dbc.bindValue(observeNameText, PojoProperties.value("name").observe(identifier), nameUpdateStrategy(), null),
+                SWT.LEFT);
 
         final Label versionLabel = new Label(res, SWT.NONE);
         versionLabel.setText(Messages.version);
@@ -186,11 +190,11 @@ public class OpenNameAndVersionDialog extends Dialog {
         final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
         ControlDecorationSupport.create(dbc.bindValue(observeVersionText,
                 PojoProperties.value("version").observe(identifier),
-                versionUpdateStrategy()
-                , null), SWT.LEFT);
+                versionUpdateStrategy(), null), SWT.LEFT);
 
         if (isForceNameUpdate()) {
-            final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(abstractProcess, observeNameText, observeVersionText);
+            final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(abstractProcess, observeNameText,
+                    observeVersionText);
             dbc.addValidationStatusProvider(mustUpdateValidator);
             ControlDecorationSupport.create(mustUpdateValidator, SWT.LEFT);
         }
@@ -201,18 +205,23 @@ public class OpenNameAndVersionDialog extends Dialog {
 
     }
 
-    protected MultiValidator unicityValidator(final ISWTObservableValue observeNameText, final ISWTObservableValue observeVersionText) {
-        return abstractProcess instanceof MainProcess ? new DiagramUnicityValidator((MainProcess) abstractProcess, observeNameText, observeVersionText,
-                existingFileNames) : new ProcessUnicityValidator(abstractProcess, observeNameText, observeVersionText,
-                existingProcessIdentifiers());
+    protected MultiValidator unicityValidator(final ISWTObservableValue observeNameText,
+            final ISWTObservableValue observeVersionText) {
+        return abstractProcess instanceof MainProcess
+                ? new DiagramUnicityValidator((MainProcess) abstractProcess, observeNameText, observeVersionText,
+                        existingFileNames)
+                : new ProcessUnicityValidator(abstractProcess, observeNameText, observeVersionText,
+                        existingProcessIdentifiers());
     }
 
     private UpdateValueStrategy nameUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.name) : poolUpdateStrategy(Messages.name);
+        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.name)
+                : poolUpdateStrategy(Messages.name);
     }
 
     private UpdateValueStrategy versionUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.version) : poolUpdateStrategy(Messages.version);
+        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.version)
+                : poolUpdateStrategy(Messages.version);
     }
 
     protected UpdateValueStrategy diagramUpdateStrategy(final String fieldName) {
