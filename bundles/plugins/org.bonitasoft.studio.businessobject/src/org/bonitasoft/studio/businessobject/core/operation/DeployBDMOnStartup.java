@@ -32,7 +32,8 @@ public class DeployBDMOnStartup implements IEngineAction {
      */
     @Override
     public void run(APISession session) throws Exception {
-        final BusinessObjectModelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (fileStore != null) {
             final DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fileStore);

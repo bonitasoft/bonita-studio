@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class ImportLegacyBDMIT {
 
-    private BusinessObjectModelRepositoryStore defStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
     private DependencyRepositoryStore depStore;
 
     @After

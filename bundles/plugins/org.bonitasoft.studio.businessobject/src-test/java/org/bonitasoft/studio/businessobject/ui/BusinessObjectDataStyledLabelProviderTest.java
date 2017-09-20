@@ -15,8 +15,11 @@
 package org.bonitasoft.studio.businessobject.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -41,7 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class BusinessObjectDataStyledLabelProviderTest {
 
     @Mock
-    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store;
 
     @Mock
     private BusinessObjectModelFileStore fStore;
@@ -83,19 +86,20 @@ public class BusinessObjectDataStyledLabelProviderTest {
 
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnTrue() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
         assertThat(labelProviderUnderTest.businessObjectDefinitionExists(data)).isTrue();
     }
 
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnFalse() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest2");
+        doReturn(Optional.empty()).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
         assertThat(labelProviderUnderTest.businessObjectDefinitionExists(data)).isFalse();
     }
 
     @Test
     public void shouldUpdateCell_SetStyledString() throws Exception {
         when(cell.getText()).thenReturn("myData -- hr.LeaveRequest");
+        when(store.getChildByQualifiedName(anyString())).thenReturn(Optional.empty());
         labelProviderUnderTest.update(cell);
     }
 

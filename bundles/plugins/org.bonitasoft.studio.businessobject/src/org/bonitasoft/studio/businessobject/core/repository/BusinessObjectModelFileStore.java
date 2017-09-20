@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -35,7 +33,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -43,14 +40,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
@@ -58,18 +49,17 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelFileStore extends AbstractFileStore {
+public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
 
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
-    public static final String BDM_ACCESS_RIGHT_FILENAME = "bom_access_right.xml";
 
     private final BusinessObjectModelConverter converter;
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
 
-    public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<BusinessObjectModelFileStore> store) {
+    public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);
         converter = new BusinessObjectModelConverter();
     }
@@ -104,44 +94,21 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     @Override
     protected void doSave(final Object content) {
         Assert.isNotNull(content);
-        if (Objects.equals(getName(), BOM_FILENAME)) {
-            Assert.isLegal(content instanceof BusinessObjectModel);
-            try {
-                final byte[] xml = converter.marshall((BusinessObjectModel) content);
-                final ByteArrayInputStream source = new ByteArrayInputStream(xml);
-                final IFile resource = getResource();
-                if (resource.exists()) {
-                    resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-                } else {
-                    resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-                }
-                cachedBusinessObjectModel.clear();
-                cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
+        Assert.isLegal(content instanceof BusinessObjectModel);
+        try {
+            final byte[] xml = converter.marshall((BusinessObjectModel) content);
+            final ByteArrayInputStream source = new ByteArrayInputStream(xml);
+            final IFile resource = getResource();
+            if (resource.exists()) {
+                resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+            } else {
+                resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
             }
-        } else {
-            try {
-                final byte[] xmlContent = getFakeBdmAccessRightXML().getBytes();
-                try (ByteArrayInputStream is = new ByteArrayInputStream(xmlContent)) {
-                    final IFile resource = getResource();
-                    if (!resource.exists()) {
-                        resource.create(is, IResource.FORCE,
-                                Repository.NULL_PROGRESS_MONITOR);
-                    } else {
-                        resource.setContents(is, IResource.KEEP_HISTORY | IResource.FORCE,
-                                Repository.NULL_PROGRESS_MONITOR);
-                    }
-                }
-            } catch (IOException | CoreException e) {
-                BonitaStudioLog.error("Failed to save bdm access right model", e);
-            }
+            cachedBusinessObjectModel.clear();
+            cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
-    }
-
-    private String getFakeBdmAccessRightXML() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                "<accessRight xmlns=\"http://documentation.bonitasoft.com/bdm-access-right-xml-schema/temporary\"/>";
     }
 
     @Override
@@ -161,17 +128,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     @Override
     protected IWorkbenchPart doOpen() {
-        try {
-            return Objects.equals(getName(), BDM_ACCESS_RIGHT_FILENAME)
-                    ? IDE.openEditor(getActivePage(), getResource())
-                    : null;
-        } catch (final PartInitException e) {
-            throw new RuntimeException("Failed to open bdm access right file", e);
-        }
-    }
-
-    protected IWorkbenchPage getActivePage() {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        return null;
     }
 
     public List<BusinessObject> getBusinessObjects() {
@@ -187,22 +144,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     @Override
     protected void doClose() {
-        if (Objects.equals(getName(), BDM_ACCESS_RIGHT_FILENAME)) {
-            IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
-                IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-                Stream.of(activePage.getEditorReferences())
-                        .filter(editorRef -> {
-                            try {
-                                return getName().contentEquals(editorRef.getEditorInput().getName());
-                            } catch (PartInitException e) {
-                                throw new RuntimeException(
-                                        "an error occured while trying to close the bdm access right file", e);
-                            }
-                        })
-                        .forEach(editorRef -> activePage.closeEditor(editorRef.getEditor(true), false));
-            }
-        }
+
     }
 
     public BusinessObject getBusinessObject(final String qualifiedName) {
@@ -243,15 +185,6 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
             BonitaStudioLog.error(e);
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#getResource()
-     */
-    @Override
-    public IFile getResource() {
-        return (IFile) super.getResource();
     }
 
     public String getDependencyName() {

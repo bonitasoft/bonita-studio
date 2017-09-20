@@ -29,30 +29,23 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class BusinessObjectBOSArchiveProvider implements IBOSArchiveFileStoreProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.
-     * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
-     */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
-        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
-        final List<BusinessObjectData> allBusinessObjectData = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.BUSINESS_OBJECT_DATA);
-        final BusinessObjectModelRepositoryStore store = getBusinessObjectDefinitionStore();
+    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+            final Configuration configuration) {
+        final Set<IRepositoryFileStore> result = new HashSet<>();
+        final List<BusinessObjectData> allBusinessObjectData = ModelHelper.getAllItemsOfType(process,
+                ProcessPackage.Literals.BUSINESS_OBJECT_DATA);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectDefinitionStore();
         for (final BusinessObjectData data : allBusinessObjectData) {
-            final BusinessObjectModelFileStore childByName = store.getChildByQualifiedName(data.getClassName());
-            if (childByName != null) {
-                result.add(childByName);
-            }
+            store.getChildByQualifiedName(data.getClassName()).ifPresent(result::add);
         }
         return result;
     }
 
-    protected BusinessObjectModelRepositoryStore getBusinessObjectDefinitionStore() {
+    protected BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 

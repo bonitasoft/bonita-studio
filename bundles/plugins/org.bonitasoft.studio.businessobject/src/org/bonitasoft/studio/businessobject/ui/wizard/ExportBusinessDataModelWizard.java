@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,16 +34,15 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ExportBusinessDataModelWizard extends Wizard {
 
-    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store;
 
     private ExportBusinessDataModelWizardPage wizardPage;
 
     public ExportBusinessDataModelWizard(
-            BusinessObjectModelRepositoryStore store) {
+            BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store) {
         this.store = store;
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
@@ -65,11 +62,12 @@ public class ExportBusinessDataModelWizard extends Wizard {
     protected ExportBusinessDataModelWizardPage createExportBusinessObjectWizardPage() {
         ExportBusinessDataModelWizardPage wizardPage = new ExportBusinessDataModelWizardPage(getStore());
         wizardPage.setTitle(Messages.exportBusinessDataModelTitle);
-        wizardPage.setDescription(Messages.bind(Messages.exportBusinessDataModelDescription, org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+        wizardPage.setDescription(Messages.bind(Messages.exportBusinessDataModelDescription,
+                org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
         return wizardPage;
     }
 
-    protected BusinessObjectModelRepositoryStore getStore() {
+    protected BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getStore() {
         return store;
     }
 
@@ -93,11 +91,13 @@ public class ExportBusinessDataModelWizard extends Wizard {
             runExportOperationInWizard(file.getParent());
         } catch (InvocationTargetException e) {
             BonitaStudioLog.error(e);
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, e.getCause().getMessage(), e.getCause()).open();
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, e.getCause().getMessage(),
+                    e.getCause()).open();
             return false;
         } catch (InterruptedException e) {
             BonitaStudioLog.error(e);
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, e.getCause().getMessage(), e.getCause()).open();
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, e.getCause().getMessage(),
+                    e.getCause()).open();
             return false;
         }
         openSuccessDialog();
@@ -145,7 +145,8 @@ public class ExportBusinessDataModelWizard extends Wizard {
         };
     }
 
-    protected void exportBusinessDataModel(String targetPath, BusinessObjectModelFileStore fileStore, IProgressMonitor monitor) throws IOException,
+    protected void exportBusinessDataModel(String targetPath, BusinessObjectModelFileStore fileStore,
+            IProgressMonitor monitor) throws IOException,
             InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.exportingBusinessDataModel, IProgressMonitor.UNKNOWN);
         ExportBusinessDataModelOperation exportOperation = createExportBDMOperation(targetPath, fileStore);

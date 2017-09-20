@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.eclipse.jdt.core.IJavaProject;
@@ -41,7 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class BusinessObjectModelRepositoryStoreTest {
 
     @Spy
-    private BusinessObjectModelRepositoryStore storeUnderTest;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> storeUnderTest;
 
     @Mock
     private BusinessObjectModelFileStore businessObjectFileStore;
@@ -62,14 +62,15 @@ public class BusinessObjectModelRepositoryStoreTest {
 
     @Test
     public void shouldGetChildFromPackage_ReturnBusinessObjectFromPackageName() throws Exception {
-        doReturn(Collections.singletonList(businessObjectFileStore)).when(storeUnderTest).getChildren();
-        assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.poc.model.Car")).isNotNull().isEqualTo(businessObjectFileStore);
+        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.poc.model.Car")).isPresent()
+                .isEqualTo(Optional.of(businessObjectFileStore));
     }
 
     @Test
     public void shouldGetChildFromPackage_ReturnNullIfNoPackageFound() throws Exception {
-        doReturn(Collections.singletonList(businessObjectFileStore)).when(storeUnderTest).getChildren();
-        assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.notexists")).isNull();
+        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.notexists")).isEmpty();
     }
 
     @Test

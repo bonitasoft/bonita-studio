@@ -16,13 +16,16 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
@@ -43,24 +46,26 @@ public class AvailableDataValidatorTest {
         final WritableValue selectedDataObservable = new WritableValue();
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final List<Data> availableBusinessData = new ArrayList<Data>();
+        final List<Data> availableBusinessData = new ArrayList<>();
         availableBusinessData.add(ProcessFactory.eINSTANCE.createData());
 
         final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
-        when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName())).thenReturn(new BusinessObject());
+        when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.of(new BusinessObject()));
         assertThat(
-                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(), businessObjectStore)
-                        .validate().isOK()).isTrue();
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
+                        businessObjectStore)
+                                .validate().isOK()).isTrue();
     }
 
     @Test
     public void testValidate_KO_forEmptyBusinessData() throws Exception {
         final WritableValue selectedDataObservable = new WritableValue();
-        final List<Data> availableBusinessData = new ArrayList<Data>();
+        final List<Data> availableBusinessData = new ArrayList<>();
         assertThat(
                 new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
                         mock(BusinessObjectModelRepositoryStore.class)).validate()
-                        .isOK()).isFalse();
+                                .isOK()).isFalse();
     }
 
     @Test
@@ -68,27 +73,32 @@ public class AvailableDataValidatorTest {
         final WritableValue selectedDataObservable = new WritableValue();
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final List<Data> availableBusinessData = new ArrayList<Data>();
+        final List<Data> availableBusinessData = new ArrayList<>();
         availableBusinessData.add(ProcessFactory.eINSTANCE.createData());
 
-        final BusinessObjectModelRepositoryStore businessObjectStore = mock(BusinessObjectModelRepositoryStore.class);
-        when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName())).thenReturn(null);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(businessObjectStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.empty());
         assertThat(
-                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(), businessObjectStore)
-                        .validate().isOK()).isFalse();
+                new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
+                        businessObjectStore)
+                                .validate().isOK()).isFalse();
     }
 
     @Test
     public void testValidate_KO_forInvalidBusinessDataSelected() throws Exception {
         final WritableValue selectedDataObservable = new WritableValue();
-        final List<Data> availableBusinessData = new ArrayList<Data>();
+        final List<Data> availableBusinessData = new ArrayList<>();
         final BusinessObjectData data = ProcessFactory.eINSTANCE.createBusinessObjectData();
         availableBusinessData.add(data);
         selectedDataObservable.setValue(data);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(store.getBusinessObjectByQualifiedName(anyString())).thenReturn(Optional.empty());
         assertThat(
                 new AvailableDataValidator(availableBusinessData, selectedDataObservable, new ArrayList<Document>(),
-                        mock(BusinessObjectModelRepositoryStore.class)).validate()
-                        .isOK()).isFalse();
+                        store).validate().isOK()).isFalse();
     }
 
 }
