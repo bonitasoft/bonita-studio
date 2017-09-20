@@ -17,6 +17,7 @@ package org.bonitasoft.studio.properties.sections.forms.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -108,7 +109,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
     private final boolean isInstanciationForm;
 
-    public SelectGeneratedWidgetsWizardPage(final Element pageFlow, final String defautFormName, final List<EObject> inputElements,
+    public SelectGeneratedWidgetsWizardPage(final Element pageFlow, final String defautFormName,
+            final List<EObject> inputElements,
             final BusinessObjectModelRepositoryStore store) {
         super(SelectGeneratedWidgetsWizardPage.class.getName());
         setFormName(defautFormName);
@@ -155,8 +157,10 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         descLabel.setText(Messages.GeneralSection_Description);
 
         final Text descriptionText = new Text(topComposite, SWT.MULTI + SWT.BORDER);
-        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).hint(SWT.DEFAULT, 45).create());
-        databindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), PojoProperties.value("formDescription").observe(this));
+        descriptionText.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).hint(SWT.DEFAULT, 45).create());
+        databindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
+                PojoProperties.value("formDescription").observe(this));
 
         if (hasWidgetToGenerated()) {
             createWidgetSelectionGroup(composite);
@@ -171,7 +175,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
     protected Collection<? extends EObject> filterBusinessData(
             final List<EObject> inputElements) {
-        final List<EObject> filterdInputElements = new ArrayList<EObject>();
+        final List<EObject> filterdInputElements = new ArrayList<>();
         for (final EObject in : inputElements) {
             if (!(in instanceof BusinessObjectData)) {
                 filterdInputElements.add(in);
@@ -213,7 +217,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final Composite businessTreeContainerComposite = createTreeContainer(tabFolder);
         businessDataInput = asWidgetMappingList(filterProcessData(inputElements));
         if (!businessDataInput.isEmpty()) {
-            final CheckboxTreeViewer viewer = createProcessDataMappingTreeViewer(businessTreeContainerComposite, businessDataInput);
+            final CheckboxTreeViewer viewer = createProcessDataMappingTreeViewer(businessTreeContainerComposite,
+                    businessDataInput);
             viewer.addFilter(new ProcessDataMappingViewerFilter());
             final Button generateInitialValueButton = new Button(businessTreeContainerComposite, SWT.CHECK);
             generateInitialValueButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
@@ -236,7 +241,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
     protected Collection<? extends EObject> filterProcessData(
             final List<EObject> inputElements) {
-        final List<EObject> filterdInputElements = new ArrayList<EObject>();
+        final List<EObject> filterdInputElements = new ArrayList<>();
         for (final EObject in : inputElements) {
             if (in instanceof BusinessObjectData) {
                 filterdInputElements.add(in);
@@ -251,7 +256,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final Button selectAllCheckbox = new Button(treeContainerComposite, SWT.CHECK);
         selectAllCheckbox.setText(Messages.selectAll);
 
-        final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer(treeContainerComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
+        final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer(treeContainerComposite,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
         final WidgetMappingTreeContentProvider widgetMappingTreeContentProvider = new WidgetMappingTreeContentProvider();
@@ -285,7 +291,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
         mandatoryTreeViewerColumn.getColumn().setWidth(90);
-        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider(mandatoryTreeViewerColumn.getViewer()));
+        mandatoryTreeViewerColumn
+                .setLabelProvider(new MandatoryCheckboxLabelProvider(mandatoryTreeViewerColumn.getViewer()));
         mandatoryTreeViewerColumn.setEditingSupport(createMandatoryEditingSupport(treeViewer));
 
         final TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
@@ -304,7 +311,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
             @Override
             public void handleSetChange(final SetChangeEvent event) {
                 updateGeneratedMappings(event);
-                final List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
+                final List<WidgetMapping> allMappings = new ArrayList<>();
                 fillAllMappings(allMappings, input);
                 selectAllCheckbox.setSelection(event.getObservableSet().size() == allMappings.size());
             }
@@ -363,7 +370,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         };
     }
 
-    private void createWidgetTypeEditors(final CheckboxTreeViewer treeViewer, final WidgetTypeEditingSupport widgetTypeEditingSupport,
+    private void createWidgetTypeEditors(final CheckboxTreeViewer treeViewer,
+            final WidgetTypeEditingSupport widgetTypeEditingSupport,
             final TreeItem[] treeItems) {
         for (final TreeItem ti : treeItems) {
             final TreeEditor editor = new TreeEditor(treeViewer.getTree());
@@ -467,7 +475,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
     }
 
     protected List<? extends WidgetMapping> asWidgetMappingList(final Collection<? extends EObject> elements) {
-        final ArrayList<WidgetMapping> result = new ArrayList<WidgetMapping>();
+        final ArrayList<WidgetMapping> result = new ArrayList<>();
         for (final EObject e : elements) {
             final WidgetMapping mappingForModelElement = createMappingForModelElement(e);
             if (mappingForModelElement != null) {
@@ -516,12 +524,12 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final String className = currentData.getClassName();
         Assert.isNotNull(className, "className");
 
-        final BusinessObjectModelFileStore fileStore = store.getChildByQualifiedName(className);
-        if (fileStore == null) {
+        final Optional<BusinessObjectModelFileStore> fileStore = store.getChildByQualifiedName(className);
+        if (!fileStore.isPresent()) {
             return null;
         }
 
-        final BusinessObject bo = fileStore.getBusinessObject(currentData.getClassName());
+        final BusinessObject bo = fileStore.get().getBusinessObject(currentData.getClassName());
         Assert.isNotNull(bo, "BusinessObject");
         return bo;
     }
@@ -564,7 +572,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
     }
 
     public List<? extends WidgetMapping> getWidgetMappings() {
-        final List<WidgetMapping> result = new ArrayList<WidgetMapping>();
+        final List<WidgetMapping> result = new ArrayList<>();
         if (processDataInput != null) {
             result.addAll(processDataInput);
         }

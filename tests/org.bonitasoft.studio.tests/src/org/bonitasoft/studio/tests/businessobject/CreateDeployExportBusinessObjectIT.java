@@ -66,7 +66,7 @@ public class CreateDeployExportBusinessObjectIT {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    private BusinessObjectModelRepositoryStore bdmStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bdmStore;
 
     private File tmpFile;
 

@@ -54,8 +54,10 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
         while (!(context instanceof Pool)) {
             context = context.eContainer();
         }
-        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context, newMultipleBusinessData(context), repositoryStore,
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = RepositoryManager
+                .getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final AddBusinessObjectDataWizard newWizard = new AddBusinessObjectDataWizard((DataAware) context,
+                newMultipleBusinessData(context), repositoryStore,
                 TransactionUtil.getEditingDomain(context));
         Shell activeShell = Display
                 .getDefault().getActiveShell();
@@ -141,7 +143,8 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
     }
 
     private boolean isSupportedType(String returnType) {
-        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = RepositoryManager
+                .getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore child = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (child != null) {
             final BusinessObjectModel content = child.getContent();

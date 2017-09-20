@@ -30,7 +30,6 @@ import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Objects;
 
-
 public class QueryNameValidationConstraint extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraint.businessobject.checkQueryName";
@@ -45,7 +44,8 @@ public class QueryNameValidationConstraint extends AbstractLiveValidationMarkerC
                     for (final Query customQuery : bo.getQueries()) {
                         if (Objects.equal(customQuery.getName().toLowerCase(), q.getName().toLowerCase())) {
                             multiStatus.add(
-                                    context.createFailureStatus(NLS.bind(Messages.conflictingQueryNamesInBusinessObject, bo.getSimpleName(), q.getName())));
+                                    context.createFailureStatus(NLS.bind(Messages.conflictingQueryNamesInBusinessObject,
+                                            bo.getSimpleName(), q.getName())));
                         }
                     }
                 }
@@ -56,7 +56,7 @@ public class QueryNameValidationConstraint extends AbstractLiveValidationMarkerC
     }
 
     protected BusinessObjectModelFileStore getCurrentBDM() {
-        final BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = getBusinessObjectDefinitionStore();
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectModelRepositoryStore = getBusinessObjectDefinitionStore();
         return businessObjectModelRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
     }
 

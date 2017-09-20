@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -103,7 +104,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     private final IProject project;
 
-    private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
+    protected SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
     private final JDTTypeHierarchyManager jdtTypeHierarchyManager;
 
@@ -467,9 +468,10 @@ public class Repository implements IRepository, IJavaContainer {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
             enableBuild();
         }
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>(stores.values());
-        Collections.sort(result, new RepositoryStoreComparator());
-        return result;
+        return stores.values().stream()
+                .distinct()
+                .sorted(new RepositoryStoreComparator())
+                .collect(Collectors.toList());
     }
 
     @Override

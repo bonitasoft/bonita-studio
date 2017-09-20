@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
@@ -86,7 +88,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private List<FieldToContractInputMapping> mappings;
     private String rootName;
     private final Contract contract;
-    private final BusinessObjectModelRepositoryStore businessObjectStore;
+    private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final GenerationOptions generationOptions;
     private SelectObservableValue actionObservable;
     private final WritableList fieldToContractInputMappingsObservable;
@@ -100,7 +102,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             final WritableValue selectedDataObservable,
             final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
             final WritableList fieldToContractInputMappingsObservable,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
+            final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
         setDescription(Messages.selectFieldToGenerateDescription);
         this.selectedDataObservable = selectedDataObservable;
@@ -377,7 +379,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                     return Collections.emptyList();
                 }
                 mappings = fieldToContractInputMappingFactory
-                        .createMappingForBusinessObjectType(toBusinessObject((BusinessObjectData) selectedData));
+                        .createMappingForBusinessObjectType(
+                                toBusinessObject((BusinessObjectData) selectedData).orElse(null));
                 fieldToContractInputMappingsObservable.clear();
                 fieldToContractInputMappingsObservable.addAll(mappings);
                 if (multiValidator != null) {
@@ -400,7 +403,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         return super.canFlipToNextPage();
     }
 
-    private BusinessObject toBusinessObject(final BusinessObjectData selectedData) {
+    private Optional<BusinessObject> toBusinessObject(final BusinessObjectData selectedData) {
         return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 

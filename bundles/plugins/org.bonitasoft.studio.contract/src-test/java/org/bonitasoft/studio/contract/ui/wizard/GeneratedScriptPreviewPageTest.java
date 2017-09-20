@@ -24,6 +24,9 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
@@ -106,11 +109,12 @@ public class GeneratedScriptPreviewPageTest {
                         "firstName").build());
         fieldToContactInputMappingsObservable.add(mapping);
 
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(store.getBusinessObjectByQualifiedName("org.company.Employee")).thenReturn(
-                BusinessObjectBuilder.aBO("org.company.Employee")
-                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build());
+        when(store.getBusinessObjectByQualifiedName("org.company.Employee"))
+                .thenReturn(Optional.of(BusinessObjectBuilder.aBO("org.company.Employee")
+                        .withField(SimpleFieldBuilder.aStringField("firstName").build()).build()));
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);

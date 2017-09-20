@@ -79,7 +79,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BusinessObjectDataWizardPage extends WizardPage {
 
-    private final BusinessObjectModelRepositoryStore businessObjectModelStore;
+    private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectModelStore;
 
     private final BusinessObjectData businessObjectData;
 
@@ -100,7 +100,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     private IObservableValue defaultReturnTypeObservable;
 
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
-            final BusinessObjectModelRepositoryStore businessObjectDefinitionStore,
+            final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectDefinitionStore,
             final Set<String> existingNames,
             final HintImageProvider imageProvider) {
         super(BusinessObjectDataWizardPage.class.getName());
@@ -310,10 +310,10 @@ public class BusinessObjectDataWizardPage extends WizardPage {
             public Object convert(final Object fromObject) {
                 if (fromObject instanceof String) {
                     final String qualifiedName = fromObject.toString();
-                    final BusinessObjectModelFileStore childByQualifiedName = businessObjectModelStore
+                    final Optional<BusinessObjectModelFileStore> childByQualifiedName = businessObjectModelStore
                             .getChildByQualifiedName(qualifiedName);
-                    if (childByQualifiedName != null) {
-                        return childByQualifiedName.getBusinessObject(qualifiedName);
+                    if (childByQualifiedName.isPresent()) {
+                        return childByQualifiedName.get().getBusinessObject(qualifiedName);
                     }
                 }
                 return null;
@@ -345,8 +345,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     protected List<BusinessObject> getAllBusinessObjects() {
         return Optional.ofNullable(businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME))
-        		.map(BusinessObjectModelFileStore::getBusinessObjects)
-        		.orElse(Collections.emptyList());
+                .map(BusinessObjectModelFileStore::getBusinessObjects)
+                .orElse(Collections.emptyList());
     }
 
     protected Text createDescriptionControl(final Composite mainComposite,

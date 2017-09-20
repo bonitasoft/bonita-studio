@@ -19,6 +19,8 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.DataTypeLabels;
@@ -46,7 +48,7 @@ public class BusinessObjectDefinitionValidationConstraintTest {
     private BusinessObjectDefinitionValidationConstraint constraintUnderTest;
 
     @Mock
-    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store;
 
     @Mock
     private IValidationContext context;
@@ -80,22 +82,22 @@ public class BusinessObjectDefinitionValidationConstraintTest {
 
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnTrue() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
         assertThat(constraintUnderTest.businessObjectDefinitionExists(data)).isTrue();
     }
 
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnFalse() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest2");
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
+        doReturn(Optional.empty()).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
         assertThat(constraintUnderTest.businessObjectDefinitionExists(data)).isFalse();
     }
 
     @Test
     public void shouldPerformBatchValidation_ReturnFailureStatus() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest2");
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
+        doReturn(Optional.empty()).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
 
         final IStatus failure = new Status(IStatus.ERROR, "org.bonitasoft.studio.validation.ex", "");
         when(context.createFailureStatus(anyObject())).thenReturn(failure);
@@ -104,8 +106,8 @@ public class BusinessObjectDefinitionValidationConstraintTest {
 
     @Test
     public void shouldPerformBatchValidation_ReturnOkStatus() throws Exception {
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(fStore).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
+        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
 
         final IStatus success = Status.OK_STATUS;
         when(context.createSuccessStatus()).thenReturn(success);

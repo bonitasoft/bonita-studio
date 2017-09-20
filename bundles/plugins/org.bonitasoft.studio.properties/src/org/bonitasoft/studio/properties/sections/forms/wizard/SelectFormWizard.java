@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.find;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
@@ -60,7 +61,8 @@ public class SelectFormWizard extends Wizard {
     protected EStructuralFeature pageFlowFormFeature;
     protected final BusinessObjectModelRepositoryStore businessObjectStore;
 
-    public SelectFormWizard(final Element element, final EStructuralFeature pageFlowFormFeature, final TransactionalEditingDomain editingDomain,
+    public SelectFormWizard(final Element element, final EStructuralFeature pageFlowFormFeature,
+            final TransactionalEditingDomain editingDomain,
             final BusinessObjectModelRepositoryStore businessObjectStore) {
         pageFlow = element;
         this.businessObjectStore = businessObjectStore;
@@ -72,21 +74,25 @@ public class SelectFormWizard extends Wizard {
 
     @Override
     public void addPages() {
-        final SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = createSelectGeneratedWidgetsWizardPage(generateDefaultFormName(),
+        final SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = createSelectGeneratedWidgetsWizardPage(
+                generateDefaultFormName(),
                 getAccessibleModelElements(pageFlow, pageFlowFormFeature));
         addPage(selectGeneratedWidgetsWizardPage);
     }
 
-    protected SelectGeneratedWidgetsWizardPage createSelectGeneratedWidgetsWizardPage(final String defaultFormName, final List<EObject> inputElements) {
-        final SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(pageFlow, defaultFormName, inputElements,
+    protected SelectGeneratedWidgetsWizardPage createSelectGeneratedWidgetsWizardPage(final String defaultFormName,
+            final List<EObject> inputElements) {
+        final SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(pageFlow, defaultFormName,
+                inputElements,
                 businessObjectStore);
         page.setTitle(Messages.createForm_title);
         page.setDescription(Messages.createForm_desc);
         return page;
     }
 
-    protected List<EObject> getAccessibleModelElements(final Element container, final EStructuralFeature pageFlowFormFeature) {
-        final List<EObject> elements = new ArrayList<EObject>();
+    protected List<EObject> getAccessibleModelElements(final Element container,
+            final EStructuralFeature pageFlowFormFeature) {
+        final List<EObject> elements = new ArrayList<>();
         if (container instanceof PageFlow) {
             final List<Data> allData = ModelHelper.getAccessibleDataInFormsWithNoRestriction(container, pageFlowFormFeature);
             for (final Data currentData : allData) {
@@ -112,7 +118,8 @@ public class SelectFormWizard extends Wizard {
 
     private void addMultiInstanceIterator(final Element container, final List<EObject> elements) {
         if (isDataMultiInstantiated((MultiInstantiable) container)) {
-            final Data dataFromIteratorExpression = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) container,
+            final Data dataFromIteratorExpression = ExpressionHelper.dataFromIteratorExpression(
+                    (MultiInstantiable) container,
                     ((MultiInstantiable) container).getIteratorExpression(), ModelHelper.getMainProcess(container));
             final EClass eClassData = dataFromIteratorExpression.getDataType().eClass();
             if (!aJavaObjectData(eClassData)
@@ -131,12 +138,13 @@ public class SelectFormWizard extends Wizard {
     }
 
     private boolean aBusinessDataWithoutSimpleFields(final Data currentData) {
-        return currentData instanceof BusinessObjectData && !hasSimpleField(((BusinessObjectData) currentData).getClassName());
+        return currentData instanceof BusinessObjectData
+                && !hasSimpleField(((BusinessObjectData) currentData).getClassName());
     }
 
     private boolean hasSimpleField(final String className) {
-        final BusinessObjectModelFileStore modelFileStore = businessObjectStore.getChildByQualifiedName(className);
-        final BusinessObject bo = modelFileStore.getBusinessObject(className);
+        final Optional<BusinessObjectModelFileStore> modelFileStore = businessObjectStore.getChildByQualifiedName(className);
+        final BusinessObject bo = modelFileStore.get().getBusinessObject(className);
         if (bo != null) {
             return find(bo.getFields(), instanceOf(SimpleField.class), null) != null;
         }
@@ -148,7 +156,8 @@ public class SelectFormWizard extends Wizard {
     }
 
     protected boolean isDataMultiInstantiated(final MultiInstantiable element) {
-        return (element.getType() == MultiInstanceType.PARALLEL || element.getType() == MultiInstanceType.SEQUENTIAL) && !element.isUseCardinality()
+        return (element.getType() == MultiInstanceType.PARALLEL || element.getType() == MultiInstanceType.SEQUENTIAL)
+                && !element.isUseCardinality()
                 && element.getIteratorExpression() != null && element.getIteratorExpression().getContent() != null;
     }
 
@@ -206,9 +215,11 @@ public class SelectFormWizard extends Wizard {
     protected CreateFormCommand getCreateFormCommand(final String name,
             final List<? extends WidgetMapping> widgesMappings) {
         if (widgesMappings == null) {
-            return new CreateFormCommand(pageFlow, pageFlowFormFeature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), editingDomain);
+            return new CreateFormCommand(pageFlow, pageFlowFormFeature, name,
+                    getSelectGeneratedWidgetsWizardPage().getFormDescription(), editingDomain);
         } else {
-            return new CreateFormCommand(pageFlow, pageFlowFormFeature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings,
+            return new CreateFormCommand(pageFlow, pageFlowFormFeature, name,
+                    getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings,
                     editingDomain);
         }
     }

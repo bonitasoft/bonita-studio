@@ -9,6 +9,7 @@
 
 package org.bonitasoft.studio.validation.constraints.process;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -31,18 +32,18 @@ public class BusinessObjectDefinitionValidationConstraint extends AbstractLiveVa
         if (eObj instanceof BusinessObjectData) {
             final BusinessObjectData businessObjectData = (BusinessObjectData) eObj;
             if (!businessObjectDefinitionExists(businessObjectData)) {
-                return context.createFailureStatus(Messages.bind(Messages.businessObjectDefinitionNotFound, businessObjectData.getClassName()));
+                return context.createFailureStatus(
+                        Messages.bind(Messages.businessObjectDefinitionNotFound, businessObjectData.getClassName()));
             }
         }
         return context.createSuccessStatus();
     }
 
     protected boolean businessObjectDefinitionExists(final BusinessObjectData businessObjectData) {
-        final BusinessObjectModelRepositoryStore store = getBusinessObjectDefinitionStore();
-        return store.getChildByQualifiedName(businessObjectData.getClassName()) != null;
+        return getBusinessObjectDefinitionStore().getChildByQualifiedName(businessObjectData.getClassName()).isPresent();
     }
 
-    protected BusinessObjectModelRepositoryStore getBusinessObjectDefinitionStore() {
+    protected BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 

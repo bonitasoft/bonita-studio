@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -58,7 +59,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
     private SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage;
     @Mock
-    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store;
     private BusinessObjectData businessData;
     @Mock
     private BusinessObjectModelFileStore fStore;
@@ -80,7 +81,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
         car.getFields().add(modelField);
         bom.getBusinessObjects().add(car);
         when(fStore.getContent()).thenReturn(bom);
-        when(store.getChildByQualifiedName("org.bonita.Car")).thenReturn(fStore);
+        when(store.getChildByQualifiedName("org.bonita.Car")).thenReturn(Optional.of(fStore));
         when(fStore.getBusinessObjects()).thenCallRealMethod();
         when(fStore.getBusinessObject(anyString())).thenCallRealMethod();
 
@@ -90,7 +91,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
         businessData.setName("testData");
         businessData.setClassName("org.bonita.Car");
         pageFlow.getData().add(businessData);
-        final List<EObject> input = new ArrayList<EObject>();
+        final List<EObject> input = new ArrayList<>();
         input.add(businessData);
         selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage(pageFlow, "",
                 input, store));
@@ -102,14 +103,15 @@ public class SelectGeneratedWidgetsWizardPageTest {
      */
     @Test
     public void shouldAsWidgetMappingList_ReturnsAListOfWidgetMappingFromAListOfData() throws Exception {
-        final List<Data> data = new ArrayList<Data>();
+        final List<Data> data = new ArrayList<>();
         final Data myData = ProcessFactory.eINSTANCE.createData();
         myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
         final Data myData2 = ProcessFactory.eINSTANCE.createData();
         myData2.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
         data.add(myData);
         data.add(myData2);
-        assertThat(selectGeneratedWidgetsWizardPage.asWidgetMappingList(data)).isNotNull().isNotEmpty().hasSize(2).extracting("modelElement")
+        assertThat(selectGeneratedWidgetsWizardPage.asWidgetMappingList(data)).isNotNull().isNotEmpty().hasSize(2)
+                .extracting("modelElement")
                 .contains(myData, myData2);
     }
 
@@ -174,7 +176,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
         root.addChild(c1);
         root.addChild(c2);
         c1.addChild(c1_c1);
-        final List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
+        final List<WidgetMapping> allMappings = new ArrayList<>();
         assertThat(allMappings).isEmpty();
         selectGeneratedWidgetsWizardPage.fillAllMappings(allMappings, Collections.singletonList(root));
         assertThat(allMappings).isNotEmpty().containsExactly(root, c1, c2, c1_c1);
@@ -210,7 +212,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
             @Override
             public Set<?> getAdditions() {
-                final Set<WidgetMapping> additions = new HashSet<WidgetMapping>();
+                final Set<WidgetMapping> additions = new HashSet<>();
                 additions.add(root);
                 return additions;
             }
@@ -237,7 +239,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
             @Override
             public Set<?> getRemovals() {
-                final Set<WidgetMapping> additions = new HashSet<WidgetMapping>();
+                final Set<WidgetMapping> additions = new HashSet<>();
                 additions.add(root);
                 return additions;
 
@@ -278,7 +280,8 @@ public class SelectGeneratedWidgetsWizardPageTest {
         parent.addChild(mapping1);
         parent.addChild(mapping2);
 
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage
+                .getCheckStateProvider(checkboxTreeViewer);
 
         assertThat(checkStateProvider.isGrayed(parent)).isTrue();
         assertThat(checkStateProvider.isChecked(parent)).isFalse();
@@ -290,14 +293,16 @@ public class SelectGeneratedWidgetsWizardPageTest {
         modelElement.setType(FieldType.BOOLEAN);
         final WidgetMapping mapping1 = new WidgetMapping(modelElement);
         when(checkboxTreeViewer.getChecked(mapping1)).thenReturn(true);
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage
+                .getCheckStateProvider(checkboxTreeViewer);
 
         assertThat(checkStateProvider.isGrayed(mapping1)).isFalse();
     }
 
     @Test
     public void should_element_in_tree_be_checked_if_generated() throws Exception {
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage
+                .getCheckStateProvider(checkboxTreeViewer);
 
         final SimpleField modelElement = new SimpleField();
         modelElement.setType(FieldType.BOOLEAN);
@@ -309,7 +314,8 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
     @Test
     public void should_element_in_tree_be_unchecked_if_not_generated() throws Exception {
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage
+                .getCheckStateProvider(checkboxTreeViewer);
 
         final SimpleField modelElement = new SimpleField();
         modelElement.setType(FieldType.BOOLEAN);

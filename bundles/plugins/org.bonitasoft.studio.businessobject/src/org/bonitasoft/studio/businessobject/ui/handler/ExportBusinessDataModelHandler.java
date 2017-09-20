@@ -37,7 +37,7 @@ public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandle
      */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final BusinessObjectModelRepositoryStore store = getStore();
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getStore();
         final IWizard exportWizard = createWizard(store);
         final CustomWizardDialog dialog = createWizardDialog(exportWizard, Messages.export);
         dialog.setPageSize(SWT.DEFAULT, 100);
@@ -57,7 +57,8 @@ public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandle
     public boolean isEnabled() {
         if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
-            return fileStore != null && fileStore.getContent() != null && !fileStore.getContent().getBusinessObjects().isEmpty();
+            return fileStore != null && fileStore.getContent() != null
+                    && !fileStore.getContent().getBusinessObjects().isEmpty();
         }
         return false;
 
