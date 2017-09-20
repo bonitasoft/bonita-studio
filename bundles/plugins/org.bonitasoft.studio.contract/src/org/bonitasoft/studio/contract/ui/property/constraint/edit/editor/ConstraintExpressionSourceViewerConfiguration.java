@@ -14,8 +14,9 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyConfiguration;
@@ -32,28 +33,32 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfiguration {
 
-    public ConstraintExpressionSourceViewerConfiguration(final GroovyColorManager colorManager, final IPreferenceStore preferenceSource,
+    private static final String CONSTRAINT_CONTENT_ASSIST_CATEGORY_ID = "org.codehaus.groovy.contract.input.category";
+
+    public ConstraintExpressionSourceViewerConfiguration(final GroovyColorManager colorManager,
+            final IPreferenceStore preferenceSource,
             final ITextEditor editor) {
         super(colorManager, preferenceSource, editor);
     }
 
     @Override
     public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {
-        final ContentAssistant contentAssistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
-        contentAssistant.enableAutoActivation(true);
-        contentAssistant.setStatusLineVisible(false);
-        final IContentAssistProcessor processor = contentAssistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
-        final List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils.getPrivateField(ContentAssistProcessor.class,
-                "fCategories", processor);
-        final List<CompletionProposalCategory> newCategories = new ArrayList<CompletionProposalCategory>();
-        for (final CompletionProposalCategory category : categories) {
-            if ("org.bonitasoft.studio.contract.input.category".equals(category.getId())) {
-                newCategories.add(category);
-            }
-        }
+        // returns only Groovy-approved completion proposal categories
+        ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+        assistant.enableAutoActivation(true);
+        assistant.setStatusLineVisible(false);
 
-        ReflectionUtils.setPrivateField(ContentAssistProcessor.class, "fCategories", processor, newCategories);
-        return contentAssistant;
+        // retain only contract input categories
+        IContentAssistProcessor processor = assistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
+
+        List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils
+                .getPrivateField(ContentAssistProcessor.class, "fCategories", processor);
+
+        ReflectionUtils.setPrivateField(ContentAssistProcessor.class, "fCategories", processor, categories.stream()
+                .filter(category -> Objects.equals(category.getId(), CONSTRAINT_CONTENT_ASSIST_CATEGORY_ID))
+                .collect(Collectors.toList()));
+
+        return assistant;
     }
 
 }
