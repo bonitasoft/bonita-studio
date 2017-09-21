@@ -612,11 +612,8 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
             try {
                 template.createNewFile();
                 // should not be copied here
-                PlatformUtil.copyResource(new File(TMP_DIR), ProjectUtil.getConsoleLibsBundle(), "tomcat/webapps/bonita.war", new NullProgressMonitor());
+                PlatformUtil.copyResource(new File(TMP_DIR), ProjectUtil.getConsoleLibsBundle(), "tomcat/server/webapps/bonita.war", new NullProgressMonitor());
                 FileUtil.getFileFromZip(new File(TMP_DIR + File.separatorChar + "bonita.war"), path + name, template);
-                // edit it in the java/html editor?
-                // IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
-                // ifile,BonitaJavaEditor.ID);
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
