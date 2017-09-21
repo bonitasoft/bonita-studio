@@ -26,6 +26,7 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.swt.SWT;
@@ -36,6 +37,8 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
  * @author Baptiste Mesta
  */
 public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
+
+    private IViewerObservableSet checkedElementsObservable;
 
     public CheckboxRepositoryTreeViewer(final Composite parent) {
         super(parent, SWT.VIRTUAL | SWT.BORDER | SWT.V_SCROLL);
@@ -64,7 +67,10 @@ public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
     }
 
     public IObservableSet checkedElementsObservable() {
-        return ViewersObservables.observeCheckedElements(this, Object.class);
+        if(checkedElementsObservable == null) {
+            checkedElementsObservable = ViewersObservables.observeCheckedElements(this, Object.class);
+        }
+        return checkedElementsObservable;
     }
 
 }
