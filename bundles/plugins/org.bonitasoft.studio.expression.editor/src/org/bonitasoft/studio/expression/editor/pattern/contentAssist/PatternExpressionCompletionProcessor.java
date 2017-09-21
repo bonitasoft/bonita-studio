@@ -27,6 +27,7 @@ import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaContentAssistInvoc
 import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaFieldCompletionProposal;
 import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaGuessingCompletionProposal;
+import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaMethodCompletionProposal;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -125,8 +126,9 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
             @Override
             public boolean apply(ICompletionProposal proposal) {
                 return proposal instanceof GroovyJavaFieldCompletionProposal
-                        || proposal instanceof GroovyJavaGuessingCompletionProposal ||
-                        proposal instanceof AbstractJavaCompletionProposal
+                        || proposal instanceof GroovyJavaGuessingCompletionProposal 
+                        || proposal instanceof GroovyJavaMethodCompletionProposal
+                        ||  proposal instanceof AbstractJavaCompletionProposal
                                 && isAnExpressionReference((AbstractJavaCompletionProposal) proposal);
             }
 
