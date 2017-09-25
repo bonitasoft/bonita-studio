@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
@@ -41,8 +40,6 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.emf.common.notify.Notification;
@@ -76,8 +73,8 @@ public class ManageOrganizationWizard extends Wizard {
         this.commandService = commandService;
         this.handlerService = handlerService;
         activeOrganizationProvider = new ActiveOrganizationProvider();
-        organizations = new ArrayList<Organization>();
-        organizationsWorkingCopy = new ArrayList<Organization>();
+        organizations = new ArrayList<>();
+        organizationsWorkingCopy = new ArrayList<>();
         setWindowTitle(Messages.manageOrganizationTitle);
         store = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(OrganizationRepositoryStore.class);
         for (final IRepositoryFileStore file : store.getChildren()) {
@@ -87,10 +84,7 @@ public class ManageOrganizationWizard extends Wizard {
                 BonitaStudioLog.error("Failed read organization content", e);
             }
         }
-        final IScopeContext projectScope = RepositoryManager.getInstance().getCurrentRepository().getScopeContext();
-        final IEclipsePreferences node = projectScope.getNode(ActorsPlugin.PLUGIN_ID);
-        final String activeOrganizationName = node.get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
-                OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
+        final String activeOrganizationName = activeOrganizationProvider.getActiveOrganization();
         for (final Organization orga : organizations) {
             final Organization copy = EcoreUtil.copy(orga);
             if (activeOrganizationName.equals(orga.getName())) {

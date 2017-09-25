@@ -16,6 +16,7 @@ package org.bonitasoft.studio.actors.ui.handler;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
@@ -61,10 +63,12 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
     private OrganizationFileStore fileStore;
     private final OrganizationRepositoryStore organizationStore;
     private String username;
+    private ActiveOrganizationProvider activeOrganizationprovider;
 
     public DeployOrganizationControlSupplier(String username, OrganizationRepositoryStore organizationStore) {
         this.organizationStore = organizationStore;
         this.username = username;
+        this.activeOrganizationprovider = new ActiveOrganizationProvider();
     }
 
     /*
@@ -143,6 +147,11 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
             //re-evaluate validators for selected organization
             widget.getValueBinding().validateTargetToModel();
         });
+
+        organizationStore.getChildren().stream()
+                .filter(orga -> Objects.equals(orga.getDisplayName(), activeOrganizationprovider.getActiveOrganization()))
+                .findFirst()
+                .ifPresent(fileStoreObservable::setValue);
 
         return mainComposite;
     }
