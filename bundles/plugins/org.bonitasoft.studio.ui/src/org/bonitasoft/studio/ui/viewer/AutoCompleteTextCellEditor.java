@@ -39,7 +39,7 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     protected Control createControl(Composite parent) {
         final Control control = super.createControl(parent);
         Stream.of(control.getListeners(SWT.FocusIn)).forEach(l -> control.removeListener(SWT.FocusIn, l));
-        Stream.of(control.getListeners(SWT.FocusIn)).forEach(l -> control.removeListener(SWT.FocusOut, l));
+        Stream.of(control.getListeners(SWT.FocusOut)).forEach(l -> control.removeListener(SWT.FocusOut, l));
         control.addListener(SWT.Modify, e -> fireControlSpaceEvent());
         return control;
     }

@@ -63,7 +63,7 @@ public class EditingSupportBuilder<T> {
             @Override
             protected void setValue(Object element, Object value) {
                 valueUpdater.accept((T) element, value);
-                viewer.getControl().getDisplay().asyncExec(() -> viewer.refresh(element));
+                viewer.getControl().getDisplay().asyncExec(() -> viewer.update(element, null));
             }
 
             @Override
