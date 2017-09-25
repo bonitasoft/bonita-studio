@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.ui.widget;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -85,8 +85,8 @@ public class ButtonWidget extends ControlWidget {
         this.button.setText(text);
     }
 
-    public IObservableValue observeEnabled() {
-        return SWTObservables.observeEnabled(button);
+    public IObservableValue<Boolean> observeEnabled() {
+        return WidgetProperties.enabled().observe(button);
     }
 
     @Override
