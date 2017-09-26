@@ -8,19 +8,6 @@
       </repositoryStore>
    </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler"
-            name="%manageBusinessObjects"
-            id="org.bonitasoft.studio.businessobject.manage">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.businessobject.ui.handler.ExportBusinessDataModelHandler"
-            name="%Export"
-            id="org.bonitasoft.studio.businessobject.exportCommand">
-      </command>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">

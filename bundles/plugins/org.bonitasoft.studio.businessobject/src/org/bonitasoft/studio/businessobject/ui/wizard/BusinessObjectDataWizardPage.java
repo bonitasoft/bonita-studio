@@ -36,6 +36,7 @@ import org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandl
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -99,6 +100,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     private IObservableValue defaultReturnTypeObservable;
 
+    private RepositoryAccessor repositoryAccessor;
+
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
             final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectDefinitionStore,
             final Set<String> existingNames,
@@ -109,6 +112,13 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         this.existingNames = existingNames;
         this.businessObjectData = businessObjectData;
         this.imageProvider = imageProvider;
+        this.repositoryAccessor = repositoryAccessor();
+    }
+
+    private RepositoryAccessor repositoryAccessor() {
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        return repositoryAccessor;
     }
 
     /*
@@ -337,8 +347,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     protected void openNewBusinessObjectWizard() {
         try {
-            new ManageBusinessObjectHandler().execute(null);
-        } catch (final ExecutionException e) {
+            new ManageBusinessObjectHandler().execute(repositoryAccessor, getShell());
+        } catch (ExecutionException e) {
             BonitaStudioLog.error(e);
         }
     }

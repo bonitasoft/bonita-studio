@@ -16,12 +16,14 @@ package org.bonitasoft.studio.businessobject.ui.handler;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.ManageBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -29,22 +31,23 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
  */
-public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
+public class ManageBusinessObjectHandler {
 
     private static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
+    private Shell shell;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore;
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
+    @Execute
+    public Object execute(RepositoryAccessor repositoryAccessor, Shell shell) throws ExecutionException {
+        this.repositoryStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        this.shell = shell;
         final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL);
         if (dialog.open() == IDialogConstants.OK_ID) {
@@ -58,7 +61,7 @@ public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
         final IPreferenceStore preferenceStore = BusinessObjectPlugin.getDefault().getPreferenceStore();
         if (!preferenceStore.getBoolean(DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG)) {
             MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
-                    getShell(),
+                    shell,
                     Messages.bdmDeployedTitle,
                     Messages.bdmDeployedMessage,
                     Messages.doNotShowMeAgain,
@@ -70,9 +73,8 @@ public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
         }
     }
 
-    @Override
     protected CustomWizardDialog createWizardDialog(final IWizard wizard, final String finishLabel) {
-        final CustomWizardDialog dialog = new CustomWizardDialog(getShell(), wizard, finishLabel) {
+        final CustomWizardDialog dialog = new CustomWizardDialog(shell, wizard, finishLabel) {
 
             @Override
             protected Control createHelpControl(final Composite parent) {
@@ -90,9 +92,9 @@ public class ManageBusinessObjectHandler extends AbstractBusinessObjectHandler {
     }
 
     protected ManageBusinessDataModelWizard createWizard() {
-        BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (fileStore == null) {
-            fileStore = (BusinessObjectModelFileStore) getStore()
+            fileStore = (BusinessObjectModelFileStore) repositoryStore
                     .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
         }
         return new ManageBusinessDataModelWizard(fileStore);

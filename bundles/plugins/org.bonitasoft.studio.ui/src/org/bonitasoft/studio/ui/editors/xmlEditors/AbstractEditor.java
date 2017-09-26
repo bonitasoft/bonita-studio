@@ -23,11 +23,13 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -36,10 +38,12 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     protected AbstractFormPage<T> formPage;
     protected StructuredTextEditor fSourceEditor;
     protected T workingCopy;
+    private IEclipseContext context;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         super.init(site, input);
+        context = ((WorkbenchWindow) getEditorSite().getWorkbenchWindow()).getModel().getContext();
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
@@ -150,6 +154,10 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     public StructuredTextEditor getSourceEditor() {
         return fSourceEditor;
+    }
+
+    public IEclipseContext getContext() {
+        return context;
     }
 
 }
