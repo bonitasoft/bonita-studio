@@ -20,6 +20,9 @@ import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.ui.UIPlugin;
 import org.bonitasoft.studio.ui.i18n.Messages;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -51,9 +54,15 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
     private boolean errorState = false;
 
-    public AbstractFormPage(String id, String title) {
+    private ECommandService eCommandService;
+
+    private EHandlerService eHandlerService;
+
+    public AbstractFormPage(String id, String title, IEclipseContext context) {
         super(id, title);
         this.repositoryAccessor = repositoryAccessor();
+        eCommandService = context.get(ECommandService.class);
+        eHandlerService = context.get(EHandlerService.class);
     }
 
     protected RepositoryAccessor repositoryAccessor() {
@@ -154,6 +163,14 @@ public abstract class AbstractFormPage<T> extends FormPage {
     @Override
     public AbstractEditor<T> getEditor() {
         return (AbstractEditor<T>) super.getEditor();
+    }
+
+    public ECommandService getECommandService() {
+        return eCommandService;
+    }
+
+    public EHandlerService getEHandlerService() {
+        return eHandlerService;
     }
 
 }
