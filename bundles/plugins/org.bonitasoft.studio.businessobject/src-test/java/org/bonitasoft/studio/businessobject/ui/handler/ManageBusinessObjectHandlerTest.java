@@ -19,10 +19,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.ui.wizard.ManageBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Shell;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +44,7 @@ public class ManageBusinessObjectHandlerTest {
     private ManageBusinessObjectHandler handlerUnderTest;
 
     @Mock
-    private BusinessObjectModelRepositoryStore businessStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore;
 
     @Mock
     private ManageBusinessDataModelWizard wizard;
@@ -49,12 +52,19 @@ public class ManageBusinessObjectHandlerTest {
     @Mock
     private CustomWizardDialog wizardDialog;
 
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
+
+    @Mock
+    private Shell shell;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        Mockito.doReturn(businessStore).when(handlerUnderTest).getStore();
+        Mockito.doReturn(businessStore).when(repositoryAccessor)
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         Mockito.doReturn(wizard).when(handlerUnderTest).createWizard();
         when(wizardDialog.open()).thenReturn(IDialogConstants.OK_ID);
         Mockito.doReturn(wizardDialog).when(handlerUnderTest).createWizardDialog(wizard, IDialogConstants.FINISH_LABEL);
@@ -63,7 +73,7 @@ public class ManageBusinessObjectHandlerTest {
 
     @Test
     public void shouldExecute_SaveArtifactWithEditorContent() throws Exception {
-        assertThat(handlerUnderTest.execute(null)).isEqualTo(IDialogConstants.OK_ID);
+        assertThat(handlerUnderTest.execute(repositoryAccessor, shell)).isEqualTo(IDialogConstants.OK_ID);
         verify(wizardDialog).open();
         verify(handlerUnderTest).openSuccessDialog();
     }

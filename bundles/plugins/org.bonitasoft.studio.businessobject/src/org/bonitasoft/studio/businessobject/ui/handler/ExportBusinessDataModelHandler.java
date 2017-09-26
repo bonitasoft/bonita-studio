@@ -20,43 +20,36 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.ExportBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
  */
-public class ExportBusinessDataModelHandler extends AbstractBusinessObjectHandler {
+public class ExportBusinessDataModelHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getStore();
-        final IWizard exportWizard = createWizard(store);
-        final CustomWizardDialog dialog = createWizardDialog(exportWizard, Messages.export);
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store;
+    private RepositoryAccessor repositoryAccessor;
+
+    @Execute
+    public Object execute(RepositoryAccessor repositoryAccessor, Shell shell) throws ExecutionException {
+        this.repositoryAccessor = repositoryAccessor;
+        store = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final CustomWizardDialog dialog = createWizardDialog(shell, Messages.export);
         dialog.setPageSize(SWT.DEFAULT, 100);
         return dialog.open();
     }
 
-    protected IWizard createWizard(
-            final BusinessObjectModelRepositoryStore store) {
-        return new ExportBusinessDataModelWizard(store);
+    protected CustomWizardDialog createWizardDialog(Shell shell, String finishLabel) {
+        return new CustomWizardDialog(shell, new ExportBusinessDataModelWizard(store), finishLabel);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
     public boolean isEnabled() {
-        if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
-            final BusinessObjectModelFileStore fileStore = getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        if (!PlatformUtil.isHeadless() && repositoryAccessor.getCurrentRepository().isLoaded()) {
+            final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
             return fileStore != null && fileStore.getContent() != null
                     && !fileStore.getContent().getBusinessObjects().isEmpty();
         }
