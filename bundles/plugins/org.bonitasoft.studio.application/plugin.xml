@@ -735,7 +735,7 @@
          <with
                variable="activeWorkbenchWindow.activePerspective">
            <equals
-                  value="org.bonitasoft.studio.bdm.access.righ.perspective">
+                  value="org.bonitasoft.studio.bdm.access.control.perspective">
             </equals>
          </with>
          </or>
