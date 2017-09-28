@@ -35,5 +35,11 @@ public class Messages extends NLS {
     public static String required;
     public static String invalidFileName;
     public static String invalidCharFileName;
+    public static String export;
+    public static String exportTooltips;
+    public static String saveBeforeTitle;
+    public static String saveBeforeMessage;
+    public static String exportFailedTitle;
+    public static String exportDoneTitle;
 
 }

@@ -40,7 +40,6 @@ public class Messages extends NLS {
     public static String delete;
     public static String export;
     public static String exportApplicationDescriptor;
-    public static String exportDoneTitle;
     public static String exportDoneMessage;
     public static String importApplicationDescriptorLabel;
     public static String browse;
@@ -51,7 +50,6 @@ public class Messages extends NLS {
     public static String importLabel;
     public static String notAnApplicationError;
     public static String importApplicationDescriptorDesc;
-    public static String exportFailedTitle;
     public static String exportOperation;
     public static String exporting;
     public static String deleteDescriptor;
