@@ -1,29 +1,26 @@
 /**
  * Copyright (C) 2009-2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.gmf.tools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.convert.ConvertBPMNTypeCommand;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
@@ -63,6 +60,7 @@ public class GMFTools {
     public static final double MINIMAL_ZOOM_DISPLAY = 0.60;
 
     public static interface ElementTypeResolver {
+
         /**
          * @param parentEditPart
          * @param targetEClass
@@ -76,7 +74,8 @@ public class GMFTools {
     /**
      * 
      */
-    public static GraphicalEditPart create(EClass targetEClass, final GraphicalEditPart node, ElementTypeResolver elementTypeResolver) {
+    public static GraphicalEditPart create(EClass targetEClass, final GraphicalEditPart node,
+            ElementTypeResolver elementTypeResolver) {
         IElementType type = elementTypeResolver.getElementType(node, targetEClass);
         if (type != null) {
             Node newNode = createNode(node, type);
@@ -96,7 +95,8 @@ public class GMFTools {
      * @return
      */
     public static Node createNode(final GraphicalEditPart node, IElementType type) {
-        CreateViewRequest boundaryRequest = CreateViewRequestFactory.getCreateShapeRequest(type, node.getDiagramPreferencesHint());
+        CreateViewRequest boundaryRequest = CreateViewRequestFactory.getCreateShapeRequest(type,
+                node.getDiagramPreferencesHint());
         Command command = node.getCommand(boundaryRequest);
 
         final IDiagramEditDomain diagramEditDomain = node.getDiagramEditDomain();
@@ -112,11 +112,13 @@ public class GMFTools {
      * @param node
      * @return
      */
-    public static GraphicalEditPart convert(EClass targetEClass, final GraphicalEditPart node, ElementTypeResolver elementTypeResolver, String editorType) {
+    public static GraphicalEditPart convert(EClass targetEClass, final GraphicalEditPart node,
+            ElementTypeResolver elementTypeResolver, String editorType) {
         TransactionalEditingDomain editingDomain = node.getEditingDomain();
-        final ConvertBPMNTypeCommand cmd = new ConvertBPMNTypeCommand(editingDomain, targetEClass, node, elementTypeResolver);
+        final ConvertBPMNTypeCommand cmd = new ConvertBPMNTypeCommand(editingDomain, targetEClass, node,
+                elementTypeResolver);
         try {
-            OperationHistoryFactory.getOperationHistory().execute(cmd,null,null);
+            OperationHistoryFactory.getOperationHistory().execute(cmd, null, null);
         } catch (ExecutionException e) {
             BonitaStudioLog.error(e);
         }
@@ -124,14 +126,13 @@ public class GMFTools {
         return targetEditPart;
     }
 
-
     /**
      * returns the the appropriate snap helper(s), this method will always reach
      * for the first reachable DiagramEditPart using the passed edit part, then
      * use this Diagram edit part to get the snap helper
      * 
      * @param editPart
-     *            , edit part to get the snap helper for
+     *        , edit part to get the snap helper for
      * @return
      */
     static public Object getSnapHelper(GraphicalEditPart editPart) {
@@ -142,7 +143,7 @@ public class GMFTools {
             return null;
         }
 
-        List<SnapToHelper> snapStrategies = new ArrayList<SnapToHelper>();
+        List<SnapToHelper> snapStrategies = new ArrayList<>();
         EditPartViewer viewer = diagramEditPart.getViewer();
 
         Boolean val = (Boolean) editPart.getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
@@ -177,50 +178,49 @@ public class GMFTools {
         return new CompoundSnapToHelperEx(ss);
     }
 
-
-    public static IGraphicalEditPart findEditPart(EditPart containerEditPart,EObject elementToFind) {
+    public static IGraphicalEditPart findEditPart(EditPart containerEditPart, EObject elementToFind) {
 
         final EObject containerElement = ((IGraphicalEditPart) containerEditPart).resolveSemanticElement();
-        if (ModelHelper.getEObjectID( containerElement) != null && ModelHelper.getEObjectID(containerElement).equals(ModelHelper.getEObjectID(elementToFind))) {
+        if (ModelHelper.getEObjectID(containerElement) != null
+                && ModelHelper.getEObjectID(containerElement).equals(ModelHelper.getEObjectID(elementToFind))) {
             return (IGraphicalEditPart) containerEditPart;
         }
 
         for (Object child : containerEditPart.getChildren()) {
             if (child instanceof IGraphicalEditPart) {
                 final EObject childResolvedSemanticElement = ((IGraphicalEditPart) child).resolveSemanticElement();
-                final String eObjectID = ModelHelper.getEObjectID( childResolvedSemanticElement);
-                if (eObjectID != null && eObjectID.equals(ModelHelper.getEObjectID(elementToFind))) {
+                final String eObjectID = ModelHelper.getEObjectID(childResolvedSemanticElement);
+                if (eObjectID != null && Objects.equals(eObjectID, ModelHelper.getEObjectID(elementToFind))) {
                     return (IGraphicalEditPart) child;
-                }else{
-
-                    if(!((IGraphicalEditPart)child).getTargetConnections().isEmpty() || !((IGraphicalEditPart)child).getSourceConnections().isEmpty()) {
-                        for(Object ep : ((IGraphicalEditPart)child).getTargetConnections()){
-                            final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
-                            if(resolveSemanticElement != null){
-                                if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
-                                    return (IGraphicalEditPart) ep;
-                                }
-                            }
-                        }
-
-                        for(Object ep : ((IGraphicalEditPart)child).getSourceConnections()){
-                            final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
-                            if(resolveSemanticElement != null){
-                                if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
-                                    return (IGraphicalEditPart) ep;
-                                }
-                            }
+                }
+                if (!((IGraphicalEditPart) child).getTargetConnections().isEmpty()
+                        || !((IGraphicalEditPart) child).getSourceConnections().isEmpty()) {
+                    for (Object ep : ((IGraphicalEditPart) child).getTargetConnections()) {
+                        final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
+                        if (resolveSemanticElement != null
+                                && Objects.equals(ModelHelper.getEObjectID(resolveSemanticElement),
+                                        (ModelHelper.getEObjectID(elementToFind)))) {
+                            return (IGraphicalEditPart) ep;
                         }
                     }
 
-                    IGraphicalEditPart ep = findEditPart((EditPart) child, elementToFind);
-                    if (ep != null) {
-                        return ep;
+                    for (Object ep : ((IGraphicalEditPart) child).getSourceConnections()) {
+                        final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
+                        if (resolveSemanticElement != null && Objects.equals(
+                                ModelHelper.getEObjectID(resolveSemanticElement), ModelHelper.getEObjectID(elementToFind))) {
+                            return (IGraphicalEditPart) ep;
+                        }
                     }
+                }
+
+                IGraphicalEditPart ep = findEditPart((EditPart) child, elementToFind);
+                if (ep != null) {
+                    return ep;
                 }
             }
         }
         return null;
+
     }
 
     /**
@@ -228,7 +228,7 @@ public class GMFTools {
      * @return
      */
     public static List<IGraphicalEditPart> addMissingConnectionsAndBoundaries(List<IGraphicalEditPart> toCopyElements) {
-        List<IGraphicalEditPart> res = new ArrayList<IGraphicalEditPart>();
+        List<IGraphicalEditPart> res = new ArrayList<>();
         // first, add nodes
         for (IGraphicalEditPart part : toCopyElements) {
             if (part instanceof ShapeNodeEditPart) {
@@ -236,7 +236,7 @@ public class GMFTools {
             }
         }
         // then, add boundaries
-        List<IGraphicalEditPart> boundaries = new ArrayList<IGraphicalEditPart>();
+        List<IGraphicalEditPart> boundaries = new ArrayList<>();
         for (IGraphicalEditPart part : res) {
             for (Object child : part.getChildren()) {
                 if (child instanceof BorderedBorderItemEditPart && !res.contains(child)) {
@@ -246,12 +246,12 @@ public class GMFTools {
         }
         res.addAll(boundaries);
         // finally, add transitions between contained nodes
-        List<IGraphicalEditPart> transitions = new ArrayList<IGraphicalEditPart>();
+        List<IGraphicalEditPart> transitions = new ArrayList<>();
         for (IGraphicalEditPart part : res) {
             if (part instanceof INodeEditPart) {
                 INodeEditPart node = (INodeEditPart) part;
                 for (Object conn : node.getSourceConnections()) {
-                    ConnectionEditPart connection = (ConnectionEditPart)conn;
+                    ConnectionEditPart connection = (ConnectionEditPart) conn;
                     if (res.contains(connection.getTarget()) && !transitions.contains(conn)) {
                         transitions.add((ConnectionEditPart) conn);
                     }
