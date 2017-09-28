@@ -52,6 +52,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
@@ -63,6 +64,7 @@ import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
 
+@Ignore
 public class BPMNDataExportImportTest {
 
     @After
