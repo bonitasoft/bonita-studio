@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.la.ui.control;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -25,10 +26,10 @@ import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.IViewerObservableList;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -36,7 +37,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -55,7 +55,7 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
 
     private FileStoreLabelProvider labelProvider;
 
-    private Optional<ViewerFilter> filter = Optional.empty();
+    private Optional<List<IRepositoryFileStore>> unselectableElements = Optional.empty();
 
     public SelectionPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider labelProvider) {
         this.repositoryAccessor = repositoryAccessor;
@@ -76,26 +76,28 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
         tableViewer.setLabelProvider(labelProvider);
         tableViewer.setInput(getInput());
         tableViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
-        filter.ifPresent(tableViewer::addFilter);
 
         ColumnViewerToolTipSupport.enableFor(tableViewer);
 
-        IViewerObservableList multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
+        IObservableList<IRepositoryFileStore> multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
         ctx.addValidationStatusProvider(new MultiValidator() {
 
             @Override
             protected IStatus validate() {
-                return multiSelection.isEmpty() ? ValidationStatus.error("No selection")
-                        : ValidationStatus.ok();
+                return multiSelection.isEmpty()
+                        ? ValidationStatus.error("No selection")
+                        : unselectableElements.isPresent()
+                                && multiSelection.stream().anyMatch(unselectableElements.get()::contains)
+                                        ? ValidationStatus.error("Unselectable element selected")
+                                        : ValidationStatus.ok();
             }
         });
 
         return mainComposite;
     }
 
-    @SuppressWarnings("unchecked")
-    protected List<T> getInput() {
-        return (List<T>) repositoryAccessor.getRepositoryStore(type).getChildren();
+    protected List<? extends IRepositoryFileStore> getInput() {
+        return repositoryAccessor.getRepositoryStore(type).getChildren();
     }
 
     protected abstract TableViewer createTableViewer(Composite mainComposite);
@@ -104,8 +106,8 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
         return ((IStructuredSelection) tableViewer.getSelection()).toList().stream();
     }
 
-    public void addFilter(ViewerFilter filter) {
-        this.filter = Optional.ofNullable(filter);
+    public void addUnselectableElements(IRepositoryFileStore... unselectableElements) {
+        this.unselectableElements = Optional.ofNullable(Arrays.asList(unselectableElements));
     }
 
 }
