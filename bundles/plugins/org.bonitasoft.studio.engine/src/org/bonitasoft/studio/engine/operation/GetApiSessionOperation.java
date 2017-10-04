@@ -37,7 +37,7 @@ public class GetApiSessionOperation implements IRunnableWithProgress {
 
     public APISession execute() {
         try {
-            progressService().run(true, false, this);
+            progressService().busyCursorWhile(this);
             return session;
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException(e);
