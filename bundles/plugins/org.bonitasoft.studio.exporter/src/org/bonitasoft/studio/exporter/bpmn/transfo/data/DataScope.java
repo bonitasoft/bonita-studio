@@ -14,10 +14,11 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.data;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.exporter.bpmn.transfo.IScope;
 import org.bonitasoft.studio.model.process.Data;
@@ -30,23 +31,21 @@ import org.omg.spec.bpmn.model.TItemDefinition;
 public class DataScope implements IScope<Data, TItemDefinition> {
 
     private Map<Data, TItemDefinition> dataStore;
-    private final ItemDefinitionTransformer itemDefinitionTransformer;
+    private final ItemDefinitionFunction itemDefinitionTransformer;
 
-    public DataScope(final ItemDefinitionTransformer itemDefinitionTransformer) {
+    public DataScope(final ItemDefinitionFunction itemDefinitionTransformer) {
         this.itemDefinitionTransformer = itemDefinitionTransformer;
     }
 
     public void initializeContext(final DataAware dataAwareContext) {
-        dataStore = new HashMap<Data, TItemDefinition>();
-        for (final Data item : dataAwareContext.getData()) {
-            dataStore.put(item, itemDefinitionTransformer.transform(item));
-        }
+        dataStore = dataAwareContext.getData()
+                .stream()
+                .collect(Collectors.toMap(Function.identity(), itemDefinitionTransformer));
     }
 
     @Override
     public TItemDefinition get(final Data data) {
-        checkNotNull(dataStore);
-        return dataStore.get(data);
+        return requireNonNull(dataStore).get(data);
     }
 
 }

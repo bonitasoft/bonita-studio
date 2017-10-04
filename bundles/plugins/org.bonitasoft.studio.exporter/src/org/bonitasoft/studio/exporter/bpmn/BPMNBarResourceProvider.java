@@ -14,32 +14,52 @@
  */
 package org.bonitasoft.studio.exporter.bpmn;
 
-import java.util.List;
+import static com.google.common.io.Files.toByteArray;
+
+import java.io.File;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.exporter.Activator;
+import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.transaction.RunnableWithResult;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.emf.ecore.resource.Resource;
 
 public class BPMNBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder,
+            final AbstractProcess process,
+            final Configuration configuration,
             final Set<EObject> excludedObject) throws Exception {
-        if (PlatformUI.isWorkbenchRunning()) {
-            final RunnableWithResult<List<BarResource>> runnableWithResult = new AddBpmnBarResourceRunnable(builder, process);
-            Display.getDefault().syncExec(runnableWithResult);
-        } else {
-            BonitaStudioLog.warning("UI is not available. The BPMN file will not be included in the generated bar file. Some Portal features might not work.",
-                    Activator.PLUGIN_ID);
+        File destFile = null;
+        try {
+            Resource eResource = process.eResource();
+            if (eResource != null) {
+                destFile = File.createTempFile(process.getName() + "-" + process.getVersion(), ".bpmn");
+                RepositoryAccessor repositoryAccessor = new RepositoryAccessor().init();
+                new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource), repositoryAccessor, destFile,
+                        new NullProgressMonitor());
+                builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));
+            } else {
+                BonitaStudioLog.warning(
+                        String.format(
+                                "Process %s (%s) is not contained in a Resource. BPMN file will not be added to the bar.",
+                                process.getName(), process.getVersion()),
+                        Activator.PLUGIN_ID);
+            }
+        } finally {
+            if (destFile != null) {
+                destFile.delete();
+            }
         }
     }
 

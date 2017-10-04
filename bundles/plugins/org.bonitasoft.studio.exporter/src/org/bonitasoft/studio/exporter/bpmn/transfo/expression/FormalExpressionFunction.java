@@ -14,12 +14,13 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
+
+import java.util.function.Function;
 
 import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.exporter.bpmn.transfo.BPMNConstants;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNFunction;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
@@ -29,17 +30,7 @@ import org.omg.spec.bpmn.model.TFormalExpression;
 /**
  * @author Romain Bioteau
  */
-public class FormalExpressionTransformer implements BonitaToBPMNFunction<Expression, TFormalExpression>, BPMNConstants {
-
-    @Override
-    public TFormalExpression transform(final Expression bonitaExpression) {
-        checkNotNull(bonitaExpression);
-        final TFormalExpression formalExpression = newTFormalExpression();
-        formalExpression.setId(EcoreUtil.generateUUID());
-        formalExpression.setEvaluatesToTypeRef(newQName(JAVA_XMLNS, bonitaExpression.getReturnType()));
-        formalExpression.setLanguage(getFormalExpressionLanguage());
-        return addContent(bonitaExpression, formalExpression);
-    }
+public class FormalExpressionFunction implements Function<Expression, TFormalExpression>, BPMNConstants {
 
     protected QName newQName(final String nsPrefix, final String typeRef) {
         return QName.valueOf(nsPrefix + ":" + typeRef);
@@ -56,6 +47,20 @@ public class FormalExpressionTransformer implements BonitaToBPMNFunction<Express
 
     protected String getFormalExpressionLanguage() {
         return XPATH_LANGUAGE_NS;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.function.Function#apply(java.lang.Object)
+     */
+    @Override
+    public TFormalExpression apply(Expression bonitaExpression) {
+        requireNonNull(bonitaExpression);
+        final TFormalExpression formalExpression = newTFormalExpression();
+        formalExpression.setId(EcoreUtil.generateUUID());
+        formalExpression.setEvaluatesToTypeRef(newQName(JAVA_XMLNS, bonitaExpression.getReturnType()));
+        formalExpression.setLanguage(getFormalExpressionLanguage());
+        return addContent(bonitaExpression, formalExpression);
     }
 
 }

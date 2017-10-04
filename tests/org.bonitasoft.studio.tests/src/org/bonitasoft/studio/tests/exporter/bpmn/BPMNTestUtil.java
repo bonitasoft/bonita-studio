@@ -7,15 +7,17 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
@@ -24,10 +26,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.junit.Assert;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
@@ -37,8 +37,7 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 public class BPMNTestUtil {
 
     public static File importFileWithName(final Class<?> clazz, final String bpmnFileName) throws IOException {
-        final URL bpmnResource = FileLocator.toFileURL(clazz.getResource(bpmnFileName));
-        return importBPMNFile(bpmnResource);
+        return importBPMNFile(FileLocator.toFileURL(clazz.getResource(bpmnFileName)));
     }
 
     protected static File importBPMNFile(final URL bpmnResource) {
@@ -79,13 +78,14 @@ public class BPMNTestUtil {
         return mainProcess;
     }
 
-    public static DocumentRoot exportToBpmn(final DiagramFileStore newDiagramFileStore) throws IOException {
-        DiagramEditPart part = newDiagramFileStore.getOpenedEditor().getDiagramEditPart();
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl((MainProcessEditPart) part);
+    public static DocumentRoot exportToBpmn(final Resource resource) throws IOException {
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(resource);
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         bpmnFileExported.deleteOnExit();
-        final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
-        Assert.assertTrue("Error during export", transformed);
+        BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
+        bonitaToBPMNExporter.export(exporter, new RepositoryAccessor().init(), bpmnFileExported,
+                new NullProgressMonitor());
+        StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry()

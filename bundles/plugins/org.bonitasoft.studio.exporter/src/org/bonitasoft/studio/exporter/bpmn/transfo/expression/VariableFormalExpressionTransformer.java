@@ -5,22 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.find;
+import static java.util.Objects.requireNonNull;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAccessibleData;
-import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess;
+
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -34,13 +31,10 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TItemDefinition;
 
-import com.google.common.base.Predicate;
-
 /**
  * @author Romain Bioteau
- *
  */
-public class VariableFormalExpressionTransformer extends FormalExpressionTransformer {
+public class VariableFormalExpressionTransformer extends FormalExpressionFunction {
 
     private static final String DATA_OBJECT_PATTERN = "getDataObject('%s')";
     private static final String ACTIVITY_PROPERTY_PATTERN = "getActivityProperty('%s','%s')";
@@ -52,17 +46,23 @@ public class VariableFormalExpressionTransformer extends FormalExpressionTransfo
 
     @Override
     protected TFormalExpression addContent(final Expression bonitaExpression, final TFormalExpression formalExpression) {
-        checkNotNull(bonitaExpression);
-        checkNotNull(formalExpression);
-        checkArgument(ExpressionConstants.VARIABLE_TYPE.equals(bonitaExpression.getType()), "Expression type is invalid. Expected %s but was %s",
-                ExpressionConstants.VARIABLE_TYPE, bonitaExpression.getType());
+        requireNonNull(bonitaExpression);
+        requireNonNull(formalExpression);
+        if (!ExpressionConstants.VARIABLE_TYPE.equals(bonitaExpression.getType())) {
+            throw new IllegalArgumentException(
+                    String.format("Expression type is invalid. Expected %s but was %s", ExpressionConstants.VARIABLE_TYPE,
+                            bonitaExpression.getType()));
+        }
         final EList<EObject> referencedElements = bonitaExpression.getReferencedElements();
-        checkArgument(!referencedElements.isEmpty(), "Missing referenced elements for variable expression %s", bonitaExpression.getName());
+        if (referencedElements.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("Missing referenced elements for variable expression %s", bonitaExpression.getName()));
+        }
 
-        final Data bonitaData = (Data) referencedElements.get(0);
-        checkNotNull(bonitaData);
-        final TItemDefinition bpmnData = dataScope.get(resolveData(bonitaData));
-        FeatureMapUtil.addText(formalExpression.getMixed(), createContentFor(bpmnData, bonitaData, bonitaExpression.getContent()));
+        final Data bonitaData = requireNonNull((Data) referencedElements.get(0));
+        final TItemDefinition bpmnData = dataScope.get(resolveData(bonitaData.getName(), bonitaExpression));
+        FeatureMapUtil.addText(formalExpression.getMixed(),
+                createContentFor(bpmnData, bonitaData, bonitaExpression.getContent()));
         return formalExpression;
     }
 
@@ -73,23 +73,24 @@ public class VariableFormalExpressionTransformer extends FormalExpressionTransfo
         return createContentForData(bpmnData, bonitaData, expressionContent);
     }
 
-    private String createContentForData(final TItemDefinition bpmnData, final Data bonitaData, final String expressionContent) {
+    private String createContentForData(final TItemDefinition bpmnData, final Data bonitaData,
+            final String expressionContent) {
         return String.format(DATA_OBJECT_PATTERN, bpmnData != null ? bpmnData.getId() : expressionContent);
     }
 
-    private String createContentForTransientData(final TItemDefinition bpmnData, final Data bonitaData, final String expressionContent) {
+    private String createContentForTransientData(final TItemDefinition bpmnData, final Data bonitaData,
+            final String expressionContent) {
         final AbstractProcess parentProcess = ModelHelper.getParentProcess(bonitaData);
-        return String.format(ACTIVITY_PROPERTY_PATTERN, parentProcess.getName(), bpmnData != null ? bpmnData.getId() : expressionContent);
+        return String.format(ACTIVITY_PROPERTY_PATTERN, parentProcess.getName(),
+                bpmnData != null ? bpmnData.getId() : expressionContent);
     }
 
-    private static Data resolveData(final Data referencedData) {
-        return find(getAccessibleData(getParentProcess(referencedData)), new Predicate<Data>() {
-
-            @Override
-            public boolean apply(final Data data) {
-                return data.getName().equals(referencedData.getName());
-            }
-        }, null);
+    private static Data resolveData(final String referencedDataName, EObject context) {
+        return getAccessibleData(context).stream()
+                .filter(data -> Objects.equals(data.getName(), referencedDataName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("No data found in scope with name '%s'", referencedDataName)));
     }
 
 }

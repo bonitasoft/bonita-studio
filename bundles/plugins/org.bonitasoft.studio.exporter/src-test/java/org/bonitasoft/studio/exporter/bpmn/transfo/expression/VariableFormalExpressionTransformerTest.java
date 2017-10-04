@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,7 +29,6 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Pool;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,10 +38,8 @@ import org.omg.spec.bpmn.model.ModelFactory;
 import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TItemDefinition;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class VariableFormalExpressionTransformerTest {
@@ -62,21 +57,16 @@ public class VariableFormalExpressionTransformerTest {
         variableFormalExpressionTransformer = new VariableFormalExpressionTransformer(dataScope);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void should_transform_throw_an_IllegalArgumentException_if_expressionType_is_invalid() throws Exception {
-        variableFormalExpressionTransformer.transform(anExpression().withExpressionType(ExpressionConstants.PARAMETER_TYPE).build());
+        variableFormalExpressionTransformer
+                .apply(anExpression().withExpressionType(ExpressionConstants.PARAMETER_TYPE).build());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_transform_throw_an_IllegalArgumentException_for_missing_referenced_element() throws Exception {
-        variableFormalExpressionTransformer.transform(anExpression().withExpressionType(ExpressionConstants.VARIABLE_TYPE).build());
+        variableFormalExpressionTransformer
+                .apply(anExpression().withExpressionType(ExpressionConstants.VARIABLE_TYPE).build());
     }
 
     @Test
@@ -98,7 +88,7 @@ public class VariableFormalExpressionTransformerTest {
         itemDefValue.setId("name");
         when(dataScope.get(pool.getData().get(0))).thenReturn(itemDefValue);
 
-        final TFormalExpression tFormalExpression = variableFormalExpressionTransformer.transform(expression);
+        final TFormalExpression tFormalExpression = variableFormalExpressionTransformer.apply(expression);
 
         assertThat(tFormalExpression).isNotNull();
         assertThat(tFormalExpression.getId()).isNotNull();
@@ -126,7 +116,7 @@ public class VariableFormalExpressionTransformerTest {
         itemDefValue.setId("name");
         when(dataScope.get(pool.getData().get(0))).thenReturn(itemDefValue);
 
-        final TFormalExpression tFormalExpression = variableFormalExpressionTransformer.transform(expression);
+        final TFormalExpression tFormalExpression = variableFormalExpressionTransformer.apply(expression);
 
         assertThat(tFormalExpression).isNotNull();
         assertThat(tFormalExpression.getId()).isNotNull();

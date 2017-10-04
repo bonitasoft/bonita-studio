@@ -14,14 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.exporter.bpmn.transfo;
+package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 
 /**
  * @author Romain Bioteau
  *
  */
-public interface BonitaToBPMNFunction<B, T> {
+public class FormalExpressionFunctionFactory {
 
-    T transform(B sourceElement);
+    public FormalExpressionFunction newFormalExpressionFunction(final DataScope dataScope, final String expressionType) {
+        if (ExpressionConstants.SCRIPT_TYPE.equals(expressionType)) {
+            return new ScriptFormalExpressionFunction();
+        }
+        if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
+            return new VariableFormalExpressionTransformer(dataScope);
+        }
+        return new FormalExpressionFunction();
+    }
 }

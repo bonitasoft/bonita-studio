@@ -29,9 +29,13 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
@@ -43,31 +47,37 @@ import org.junit.Test;
 public class TestAutoLogin {
 
     private static final String CONF_NAME = "TestConfiguration";
-    private static AbstractProcess pool;
+    private DiagramFileStore diagramFileStore;
 
     @Before
     public void setUp() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-        if (pool == null) {
-            final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
-            final DiagramFileStore diagramFileStore = newDiagram.newDiagram();
-            diagramFileStore.open();
-            pool = (AbstractProcess) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
-            final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+        final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
+        diagramFileStore = newDiagram.newDiagram();
+        MainProcess mainProcess = diagramFileStore.getContent();
+        AbstractProcess pool = (AbstractProcess) mainProcess.getElements().get(0);
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramFileStore.getEMFResource());
+        editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
 
-            conf.setName(CONF_NAME);
-            pool.getConfigurations().add(conf);
+            @Override
+            protected void doExecute() {
+                final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+                conf.setName(CONF_NAME);
+                pool.getConfigurations().add(conf);
 
-            conf.setAnonymousPassword("bpm");
-            conf.setAnonymousUserName("anonymous");
+                conf.setAnonymousPassword("bpm");
+                conf.setAnonymousUserName("anonymous");
 
-            pool.setAutoLogin(true);
-            pool.getFormMapping().setType(FormMappingType.LEGACY);
-            for (final Task t : ModelHelper.getAllElementOfTypeIn(pool, Task.class)) {
-                t.getFormMapping().setType(FormMappingType.LEGACY);
+                pool.setAutoLogin(true);
+                pool.getFormMapping().setType(FormMappingType.LEGACY);
+                for (final Task t : ModelHelper.getAllElementOfTypeIn(pool, Task.class)) {
+                    t.getFormMapping().setType(FormMappingType.LEGACY);
+                }
             }
-        }
+        });
+
+        diagramFileStore.save(mainProcess);
     }
 
     @After
@@ -80,7 +90,7 @@ public class TestAutoLogin {
         final String securityFileName = "security-config.properties";
         final String securityFilePath = "resources/forms/";
         Configuration conf = null;
-
+        Pool pool = (Pool) diagramFileStore.getContent().getElements().get(0);
         for (final Configuration tmpConf : pool.getConfigurations()) {
             if (tmpConf.getName().equals(CONF_NAME)) {
                 conf = tmpConf;
@@ -90,6 +100,7 @@ public class TestAutoLogin {
         assertNotNull("Configuration should not be null", conf);
 
         if (conf != null) {
+
             final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(),
                     Collections.<EObject> emptySet());
             final Map<String, byte[]> map = bar.getResources();

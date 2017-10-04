@@ -33,9 +33,9 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FormalExpressionTransformerFactoryTest {
+public class FormalExpressionFunctionFactoryTest {
 
-    private FormalExpressionTransformerFactory formalExpressionTransformerFactory;
+    private FormalExpressionFunctionFactory formalExpressionTransformerFactory;
     @Mock
     private DataScope dataScope;
 
@@ -44,7 +44,7 @@ public class FormalExpressionTransformerFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        formalExpressionTransformerFactory = new FormalExpressionTransformerFactory();
+        formalExpressionTransformerFactory = new FormalExpressionFunctionFactory();
     }
 
     /**
@@ -56,19 +56,19 @@ public class FormalExpressionTransformerFactoryTest {
 
     @Test
     public void should_create_FormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionTransformer(null, ExpressionConstants.PARAMETER_TYPE)).hasSameClassAs(
-                new FormalExpressionTransformer());
+        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.PARAMETER_TYPE)).hasSameClassAs(
+                new FormalExpressionFunction());
     }
 
     @Test
     public void should_create_ScriptFormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionTransformer(null, ExpressionConstants.SCRIPT_TYPE)).hasSameClassAs(
-                new ScriptFormalExpressionTransformer());
+        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.SCRIPT_TYPE)).hasSameClassAs(
+                new ScriptFormalExpressionFunction());
     }
 
     @Test
     public void should_create_VariableFormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionTransformer(dataScope, ExpressionConstants.VARIABLE_TYPE)).hasSameClassAs(
+        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(dataScope, ExpressionConstants.VARIABLE_TYPE)).hasSameClassAs(
                 new VariableFormalExpressionTransformer(dataScope));
     }
 }
