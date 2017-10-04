@@ -24,7 +24,7 @@ import org.junit.Before;
  * @author Romain Bioteau
  *
  */
-public class ItemDefinitionTransformerTest {
+public class ItemDefinitionFunctionTest {
 
     /**
      * @throws java.lang.Exception

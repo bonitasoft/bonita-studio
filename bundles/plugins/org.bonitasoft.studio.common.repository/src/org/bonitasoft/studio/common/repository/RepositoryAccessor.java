@@ -52,9 +52,10 @@ public class RepositoryAccessor {
     }
 
     @PostConstruct
-    public void init() {
+    public RepositoryAccessor init() {
         repositoryManagerInstance = RepositoryManager.getInstance();
         jobManager = Job.getJobManager();
+        return this;
     }
 
     public <T extends IRepositoryStore<? extends IRepositoryFileStore>> T getRepositoryStore(final Class<T> storeClass) {

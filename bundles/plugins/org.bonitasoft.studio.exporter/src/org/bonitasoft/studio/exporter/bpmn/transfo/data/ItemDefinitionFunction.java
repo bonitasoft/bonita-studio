@@ -14,13 +14,14 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.data;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
+
+import java.util.function.Function;
 
 import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BPMNConstants;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNFunction;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
@@ -32,20 +33,18 @@ import org.omg.spec.bpmn.model.TItemDefinition;
 /**
  * @author Romain Bioteau
  */
-public class ItemDefinitionTransformer implements BonitaToBPMNFunction<Data, TItemDefinition>, BPMNConstants {
+public class ItemDefinitionFunction implements Function<Data, TItemDefinition>, BPMNConstants {
 
     private final TDefinitions bpmnDefinitions;
     private final XMLNamespaceResolver xmlNamespaceResolver;
 
-    public ItemDefinitionTransformer(final TDefinitions bpmnDefinitions, final XMLNamespaceResolver xmlNamespaceResolver) {
-        checkNotNull(bpmnDefinitions);
-        checkNotNull(xmlNamespaceResolver);
-        this.bpmnDefinitions = bpmnDefinitions;
-        this.xmlNamespaceResolver = xmlNamespaceResolver;
+    public ItemDefinitionFunction(final TDefinitions bpmnDefinitions, final XMLNamespaceResolver xmlNamespaceResolver) {
+        this.bpmnDefinitions = requireNonNull(bpmnDefinitions);
+        this.xmlNamespaceResolver = requireNonNull(xmlNamespaceResolver);
     }
 
     @Override
-    public TItemDefinition transform(final Data sourceElement) {
+    public TItemDefinition apply(final Data sourceElement) {
         final ModelFactory modelFactory = ModelFactory.eINSTANCE;
         final TItemDefinition dataItemDefinition = modelFactory.createTItemDefinition();
         dataItemDefinition.setId(ModelHelper.getEObjectID(sourceElement));

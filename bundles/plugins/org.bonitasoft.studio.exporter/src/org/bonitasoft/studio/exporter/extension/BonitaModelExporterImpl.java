@@ -14,43 +14,77 @@
  */
 package org.bonitasoft.studio.exporter.extension;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.notation.View;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.InclusiveGateway2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.ReceiveTask2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.ScriptTask2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.SendTask2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.ServiceTask2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.Task2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotation2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.XORGateway2EditPart;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
+import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
 
 /**
  * @author Romain Bioteau
  */
 public class BonitaModelExporterImpl implements IBonitaModelExporter {
 
-    private MainProcessEditPart mainEditPart;
-    private MainProcess mainProcess;
+    private Resource resource;
 
-    public BonitaModelExporterImpl(MainProcessEditPart mainPart) {
-        this.mainEditPart = mainPart;
-        this.mainProcess = (MainProcess) mainPart.resolveSemanticElement();
+    public BonitaModelExporterImpl(Resource resource) {
+        this.resource = requireNonNull(resource);
     }
 
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getDiagram()
      */
-    public MainProcess getDiagram() {
-        return mainProcess;
+    public MainProcess getMainProcess() {
+        return resource.getContents().stream()
+                .filter(MainProcess.class::isInstance)
+                .map(MainProcess.class::cast)
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException(String.format("No MainProcess found in resource %s", resource)));
+    }
+
+    public Diagram getDiagram() {
+        return resource.getContents().stream()
+                .filter(Diagram.class::isInstance)
+                .map(Diagram.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(String.format("No Diagram found in resource %s", resource)));
     }
 
     /*
@@ -58,49 +92,109 @@ public class BonitaModelExporterImpl implements IBonitaModelExporter {
      * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getPools()
      */
     public List<Pool> getPools() {
-        return ModelHelper.getAllItemsOfType(mainProcess, ProcessPackage.eINSTANCE.getPool());
+        return getMainProcess().getElements().stream()
+                .filter(Pool.class::isInstance)
+                .map(Pool.class::cast)
+                .collect(Collectors.toList());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getFlowElements(org.bonitasoft.studio.model.process.Container)
-     */
     public List<FlowElement> getFlowElements(Container container) {
         return ModelHelper.getAllItemsOfType(container, ProcessPackage.eINSTANCE.getFlowElement());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getLanes(org.bonitasoft.studio.model.process.Pool)
-     */
     public List<Lane> getLanes(Pool pool) {
         return ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getLane());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getElementBounds(org.bonitasoft.studio.model.process.Element)
-     */
-    public Rectangle getElementBounds(Element element) {
-        Rectangle result = new Rectangle();
-        IGraphicalEditPart ep = GMFTools.findEditPart(mainEditPart, element);
-        if (ep != null) {
-            result = ep.getFigure().getBounds().getCopy();
-            FiguresHelper.translateToAbsolute(ep.getFigure(), result);
+    public Node getElementNotationNode(EObject modelElement) {
+        List<Node> views = new ArrayList<>();
+        TreeIterator<EObject> iterator = getDiagram().eAllContents();
+        iterator.forEachRemaining(notationElement -> {
+            if (notationElement instanceof Node && Objects.equals(((Node) notationElement).getElement(), modelElement)) {
+                views.add((Node) notationElement);
+                iterator.prune();
+            }
+        });
+        if (views.isEmpty()) {
+            throw new IllegalStateException(String.format("No view found for %s", modelElement));
         }
-        return result;
+        return views.get(0);
     }
 
-    public View getElementNotationView(Element element) {
-        IGraphicalEditPart ep = GMFTools.findEditPart(mainEditPart, element);
-        if (ep != null) {
-            return ep.getNotationView();
+    @Override
+    public Bounds getBounds(Node view) {
+        LayoutConstraint layoutConstraint = view.getLayoutConstraint();
+        if (layoutConstraint instanceof Bounds) {
+            Bounds bounds = NotationFactory.eINSTANCE.createBounds();
+            bounds.setHeight(((Bounds) layoutConstraint).getHeight());
+            bounds.setWidth(((Bounds) layoutConstraint).getWidth());
+            bounds.setX(((Bounds) layoutConstraint).getX());
+            bounds.setY(((Bounds) layoutConstraint).getY());
+            Dimension defaultSize = getDefaultSize(view);
+            if (bounds.getHeight() == -1) {
+                bounds.setHeight(defaultSize.height);
+            }
+            if (bounds.getWidth() == -1) {
+                bounds.setWidth(defaultSize.width);
+            }
+            return bounds;
         }
         return null;
     }
 
-    public MainProcessEditPart getMainProcessEditPart() {
-        return mainEditPart;
+    private Dimension getDefaultSize(Node node) {
+        switch (Integer.valueOf(node.getType())) {
+            case PoolEditPart.VISUAL_ID:
+                return new Dimension(1000, 250);
+            case LaneEditPart.VISUAL_ID:
+                return new Dimension(975, 250);
+            case Activity2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case Task2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case ScriptTask2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case ServiceTask2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case SendTask2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case ReceiveTask2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case CallActivity2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case TextAnnotation2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            case XORGateway2EditPart.VISUAL_ID:
+                return new Dimension(43, 43);
+            case ANDGateway2EditPart.VISUAL_ID:
+                return new Dimension(43, 43);
+            case InclusiveGateway2EditPart.VISUAL_ID:
+                return new Dimension(43, 43);
+            case SubProcessEvent2EditPart.VISUAL_ID:
+                return new Dimension(100, 50);
+            default:
+                return new Dimension(30, 30);
+        }
+    }
+
+    @Override
+    public Location getLocation(Node view) {
+        LayoutConstraint layoutConstraint = view.getLayoutConstraint();
+        if (layoutConstraint instanceof Location) {
+            return (Location) layoutConstraint;
+        }
+        return null;
+    }
+
+    @Override
+    public Edge getElementNotationEdge(EObject connection) {
+        Optional<Edge> edgeOptional = getDiagram().getPersistedEdges().stream()
+                .filter(edge -> Objects.equals(((Edge) edge).getElement(), connection))
+                .findFirst();
+        if (!edgeOptional.isPresent()) {
+            throw new IllegalStateException(String.format("No edge found for %s", connection));
+        }
+        return edgeOptional.get();
     }
 
 }

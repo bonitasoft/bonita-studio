@@ -31,7 +31,6 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -47,12 +46,13 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.builders.XMLDataTypeBuilder;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
@@ -64,7 +64,6 @@ import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TProperty;
 import org.omg.spec.bpmn.model.TRootElement;
 
-@Ignore
 public class BPMNDataExportImportTest {
 
     @After
@@ -422,7 +421,8 @@ public class BPMNDataExportImportTest {
     private void compareDatas(final Data initialData, final Data reImportedData, final boolean checkDefaultValue) {
         assertEquals("Not the same type of data (Java)", initialData instanceof JavaObjectData,
                 reImportedData instanceof JavaObjectData);
-        assertEquals("Not the same type of data (XML)", initialData instanceof XMLData, reImportedData instanceof XMLData);
+        assertEquals("Not the same type of data (XML)", initialData instanceof XMLData,
+                reImportedData instanceof XMLData);
 
         if (initialData instanceof JavaObjectData) {
             assertEquals("Java classname not correct", ((JavaObjectData) initialData).getClassName(),
@@ -431,7 +431,8 @@ public class BPMNDataExportImportTest {
         if (initialData instanceof XMLData) {
             assertEquals("Namespace not correct", ((XMLData) initialData).getNamespace(),
                     ((XMLData) reImportedData).getNamespace());
-            assertEquals("Namespace not correct", ((XMLData) initialData).getType(), ((XMLData) reImportedData).getType());
+            assertEquals("Namespace not correct", ((XMLData) initialData).getType(),
+                    ((XMLData) reImportedData).getType());
         }
 
         if (checkDefaultValue) {
@@ -446,12 +447,14 @@ public class BPMNDataExportImportTest {
             assertEquals("Content is not correct", initialDefaultValueExpression.getContent(),
                     reImportedDefaultValueExpression.getContent());
         }
-        assertEquals("Datatype is not correct", initialData.getDataType().getName(), reImportedData.getDataType().getName());
+        assertEquals("Datatype is not correct", initialData.getDataType().getName(),
+                reImportedData.getDataType().getName());
         assertEquals("Interpreter is not correct", initialData.getDefaultValue().getInterpreter(),
                 reImportedData.getDefaultValue().getInterpreter());
     }
 
-    private void checkPropertyExistWithGoodStructure(final Expression defaultValueExpression, final DocumentRoot model2) {
+    private void checkPropertyExistWithGoodStructure(final Expression defaultValueExpression,
+            final DocumentRoot model2) {
         for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
             if (rootElement instanceof TProcess) {
                 for (final TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
@@ -460,7 +463,8 @@ public class BPMNDataExportImportTest {
                         property.getItemSubjectRef().getLocalPart();
                         final TAssignment assignment = ((TActivity) fe).getDataInputAssociation().get(0).getAssignment()
                                 .get(0);
-                        assertEquals(defaultValueExpression.getContent(), assignment.getFrom().getMixed().get(0).getValue());
+                        assertEquals(defaultValueExpression.getContent(),
+                                assignment.getFrom().getMixed().get(0).getValue());
                     }
                 }
             }
@@ -519,8 +523,8 @@ public class BPMNDataExportImportTest {
     private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
-        newDiagramFileStore.open();
-        final TransactionalEditingDomain editingDomain = newDiagramFileStore.getOpenedEditor().getEditingDomain();
+        Resource emfResource = newDiagramFileStore.getEMFResource();
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
         abstractProcess.getElements().stream()
                 .filter(Lane.class::isInstance)
@@ -540,41 +544,30 @@ public class BPMNDataExportImportTest {
         assertThat(data.getDataType())
                 .overridingErrorMessage("No datatype '%s' set on data %s", NamingUtils.convertToId(dataType), data)
                 .isNotNull();
-        newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
-        while (newDiagramFileStore.getOpenedEditor().isDirty()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-
-            }
-        }
-        return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
+        newDiagramFileStore.save(mainProcess);
+        return BPMNTestUtil.exportToBpmn(emfResource);
     }
 
     protected DocumentRoot exportToBPMNProcessWithData(final Data data, final String dataType) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
-        newDiagramFileStore.open();
+        Resource emfResource = newDiagramFileStore.getEMFResource();
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
         MainProcess mainProcess = newDiagramFileStore.getContent();
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        final TransactionalEditingDomain editingDomain = newDiagramFileStore.getOpenedEditor().getEditingDomain();
         editingDomain.getCommandStack()
-                .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA, data));
+                .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA,
+                        data));
         mainProcess.getDatatypes().stream()
                 .filter(dt -> Objects.equals(NamingUtils.convertToId(dataType), dt.getName()))
                 .findFirst()
                 .ifPresent(dt -> editingDomain.getCommandStack()
                         .execute(SetCommand.create(editingDomain, data, ProcessPackage.Literals.DATA__DATA_TYPE, dt)));
-        assertThat(data.getDataType()).isNotNull();
-        newDiagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
-        while (newDiagramFileStore.getOpenedEditor().isDirty()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-
-            }
-        }
-        return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
+        assertThat(data.getDataType())
+                .overridingErrorMessage("No datatype '%s' set on data %s", NamingUtils.convertToId(dataType), data)
+                .isNotNull();
+        newDiagramFileStore.save(mainProcess);
+        return BPMNTestUtil.exportToBpmn(emfResource);
     }
 
 }

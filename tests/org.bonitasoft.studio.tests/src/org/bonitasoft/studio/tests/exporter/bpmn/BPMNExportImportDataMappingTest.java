@@ -16,7 +16,6 @@ package org.bonitasoft.studio.tests.exporter.bpmn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -25,7 +24,9 @@ import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
+import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -133,10 +135,12 @@ public class BPMNExportImportDataMappingTest {
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped.resolveSemanticElement().eResource());
         final File bpmnFileExported = tmpFolder.newFile("testSingleConnectorOnServiceTask.bpmn");
-        final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
-        assertTrue("Error during export", transformed);
+        BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
+        bonitaToBPMNExporter.export(exporter, new RepositoryAccessor().init(), bpmnFileExported,
+                new NullProgressMonitor());
+        StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry()
