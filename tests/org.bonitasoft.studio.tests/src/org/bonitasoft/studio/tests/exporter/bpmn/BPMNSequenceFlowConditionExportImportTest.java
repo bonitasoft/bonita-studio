@@ -30,8 +30,9 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TExpression;
@@ -119,16 +120,16 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
     protected DocumentRoot exportToBPMNProcessWithCondition(final Expression condition) throws IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
-        newDiagramFileStore.open();
+        Resource emfResource = newDiagramFileStore.getEMFResource();
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
         final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        final EditingDomain domain = TransactionUtil.getEditingDomain(abstractProcess);
         final SequenceFlow sequenceFlow = (SequenceFlow) abstractProcess.getConnections().get(0);
-        domain.getCommandStack().execute(
-                SetCommand.create(domain, sequenceFlow, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, condition));
-        domain.getCommandStack().execute(SetCommand.create(domain, sequenceFlow,
+        editingDomain.getCommandStack().execute(
+                SetCommand.create(editingDomain, sequenceFlow, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, condition));
+        editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, sequenceFlow,
                 ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE, SequenceFlowConditionType.EXPRESSION));
-        newDiagramFileStore.save(newDiagramFileStore.getOpenedEditor());
-        return BPMNTestUtil.exportToBpmn(newDiagramFileStore);
+        newDiagramFileStore.save(abstractProcess.eContainer());
+        return BPMNTestUtil.exportToBpmn(emfResource);
     }
 
 }

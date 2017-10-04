@@ -31,10 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.Element;
@@ -45,6 +47,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -59,7 +62,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -418,20 +420,12 @@ public class BPMNImportExportTest {
             final boolean checkActivities, final boolean checkEvents,
             final boolean checkMessageFlow, final MainProcess mainProcess)
             throws IOException {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
-        DiagramEditPart dep;
-        try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-        } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-        }
-        final MainProcessEditPart mped = (MainProcessEditPart) dep;
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mainProcess.eResource());
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
-        final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
-        Assert.assertTrue("Error during export", transformed);
+        BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
+        bonitaToBPMNExporter.export(exporter, new RepositoryAccessor().init(), bpmnFileExported,
+                new NullProgressMonitor());
+        StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         //compare bpmn before import and after import/export
         final ResourceSet resourceSet1 = new ResourceSetImpl();

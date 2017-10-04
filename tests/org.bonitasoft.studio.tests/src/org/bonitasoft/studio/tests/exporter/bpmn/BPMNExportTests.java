@@ -22,26 +22,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
+import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -66,7 +63,6 @@ import org.omg.spec.bpmn.model.util.ModelResourceFactoryImpl;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BPMNExportTests {
 
-    private DiagramEditPart dep;
     private final SWTGefBot bot = new SWTGefBot();
 
     @Rule
@@ -79,23 +75,15 @@ public class BPMNExportTests {
                 .setArchive(BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
                 .finish();
 
-        final MainProcess mainProcess = (MainProcess) ((ProcessDiagramEditor) bot.activeEditor().getReference()
+        final MainProcess c = (MainProcess) ((ProcessDiagramEditor) bot.activeEditor().getReference()
                 .getPart(false)).getDiagram().getElement();
-        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
 
-        Display.getDefault().syncExec(() -> {
-            try {
-                dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
-            } catch (final Exception ex) {
-                dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
-            }
-        });
-
-        final MainProcessEditPart mped = (MainProcessEditPart) dep;
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(c.eResource());
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
-        final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
-        assertTrue("Export failed", transformed);
+        BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
+        bonitaToBPMNExporter.export(exporter, new RepositoryAccessor().init(), bpmnFileExported,
+                new NullProgressMonitor());
+        StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
         String line = ""; //$NON-NLS-1$

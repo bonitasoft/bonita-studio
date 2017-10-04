@@ -4,17 +4,25 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.exporter;singleton:=true
 Bundle-Version: 7.6.0.qualifier
 Bundle-ClassPath: .,
- lib/jericho-html-3.1.jar
+  lib/jericho-html-3.1.jar
+Bundle-Activator: org.bonitasoft.studio.exporter.Activator
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: net.htmlparser.jericho,org.bonitasoft.studio.exporter,
- org.bonitasoft.studio.exporter.application,org.bonitasoft.studio.expo
- rter.application.service,org.bonitasoft.studio.exporter.bpmn.transfo;
- x-friends:="org.bonitasoft.studio.exporter.tests",org.bonitasoft.stud
- io.exporter.extension,org.bonitasoft.studio.exporter.form,org.bonitas
- oft.studio.exporter.handler,org.bonitasoft.studio.exporter.preview,or
- g.bonitasoft.studio.exporter.runtime,org.w3._1999.xhtml
+Export-Package: net.htmlparser.jericho,
+  org.bonitasoft.studio.exporter,
+  org.bonitasoft.studio.exporter.application,
+  org.bonitasoft.studio.exporter.application.service,
+  org.bonitasoft.studio.exporter.bpmn,
+  org.bonitasoft.studio.exporter.bpmn.transfo,
+  org.bonitasoft.studio.exporter.bpmn.transfo.data,
+  org.bonitasoft.studio.exporter.bpmn.transfo.expression,
+  org.bonitasoft.studio.exporter.coolbar,
+  org.bonitasoft.studio.exporter.extension,
+  org.bonitasoft.studio.exporter.form,
+  org.bonitasoft.studio.exporter.handler,
+  org.bonitasoft.studio.exporter.preview,
+  org.bonitasoft.studio.exporter.runtime,
+  org.w3._1999.xhtml
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.ui,
@@ -51,19 +59,27 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.document,
  com.google.guava;bundle-version="11.0.1",
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.eclipse.e4.core.di;bundle-version="1.4.0"
+ org.eclipse.e4.core.di;bundle-version="1.4.0",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.0.0.v20170228-1842",
+ org.eclipse.e4.core.services,
+ org.eclipse.e4.core.di.extensions,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.osgi.services,
+ org.eclipse.e4.ui.services,
+ org.bonitasoft.studio.ui;bundle-version="7.6.0"
+Import-Package: javax.inject;version="1.0.0",
+  org.bonitasoft.engine.api,
+  org.bonitasoft.engine.bpm,
+  org.bonitasoft.engine.bpm.bar,
+  org.bonitasoft.engine.bpm.process,
+  org.bonitasoft.engine.expression,
+  org.bonitasoft.engine.operation,
+  org.bonitasoft.engine.session,
+  org.bonitasoft.forms.client.model,
+  org.bonitasoft.forms.server.accessor,
+  org.bonitasoft.forms.server.builder,
+  org.bonitasoft.forms.server.builder.impl,
+  org.bonitasoft.forms.server.exception,
+  org.bonitasoft.forms.server.provider.impl.util
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.bonitasoft.studio.exporter.Activator
-Import-Package: org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm,
- org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.process,
- org.bonitasoft.engine.expression,
- org.bonitasoft.engine.operation,
- org.bonitasoft.engine.session,
- org.bonitasoft.forms.client.model,
- org.bonitasoft.forms.server.accessor,
- org.bonitasoft.forms.server.builder,
- org.bonitasoft.forms.server.builder.impl,
- org.bonitasoft.forms.server.exception,
- org.bonitasoft.forms.server.provider.impl.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

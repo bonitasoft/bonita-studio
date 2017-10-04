@@ -43,8 +43,9 @@ public class ExceptionDialogHandler {
     }
 
     private Status createErrorStatus(Throwable t) {
-        return new Status(IStatus.ERROR, PLUGIN_ID, t.getMessage(),
-                InvocationTargetException.class.isInstance(t) ? t.getCause() : t);
+        Throwable exception = InvocationTargetException.class.isInstance(t)
+                ? ((InvocationTargetException) t).getTargetException() : t;
+        return new Status(IStatus.ERROR, PLUGIN_ID, exception.getMessage(), exception);
     }
 
 }
