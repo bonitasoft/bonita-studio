@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -35,6 +36,23 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             String[] dialogButtonLabels, MultiStatus status) {
         super(parentShell, dialogTitle, dialogMessage, dialogImageType, dialogButtonLabels);
         this.status = status;
+    }
+
+    public MultiStatusDialog(Shell shell, String dialogTitle, String deployStatusMessage, String[] dialogButtonLabels,
+            MultiStatus status) {
+        this(shell, dialogTitle, deployStatusMessage, dialogImageType(status), dialogButtonLabels, status);
+    }
+
+    private static int dialogImageType(MultiStatus status) {
+        switch (status.getSeverity()) {
+            case IStatus.ERROR:
+                return MessageDialog.ERROR;
+            case IStatus.WARNING:
+                return MessageDialog.WARNING;
+            case IStatus.INFO:
+            default:
+                return MessageDialog.INFORMATION;
+        }
     }
 
     /*
