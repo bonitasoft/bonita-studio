@@ -71,8 +71,11 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess,
-     * org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
+     * @see
+     * org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.
+     * process.AbstractProcess,
+     * org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition,
+     * java.util.Map)
      */
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
@@ -87,10 +90,9 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
     private void addProvidedScriptsToClasspath(final BusinessArchiveBuilder builder)
             throws InvocationTargetException, InterruptedException, IOException {
-        final Set<ICompilationUnit> compilationUnits = new HashSet<ICompilationUnit>();
+        final Set<ICompilationUnit> compilationUnits = new HashSet<>();
         final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-
         for (final GroovyFileStore file : providedStore.getChildren()) {
             compilationUnits.add(file.getCompilationUnit());
         }
@@ -184,7 +186,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
     private Set<ICompilationUnit> collectCompilationUnits(final Configuration configuration,
             final List<FragmentContainer> containers) {
-        final Set<ICompilationUnit> result = new HashSet<ICompilationUnit>();
+        final Set<ICompilationUnit> result = new HashSet<>();
         if (configuration != null) {
             final GroovyRepositoryStore store = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
             for (final FragmentContainer fc : containers) {
