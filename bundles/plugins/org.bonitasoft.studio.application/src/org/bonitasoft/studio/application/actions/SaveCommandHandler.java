@@ -101,8 +101,10 @@ public class SaveCommandHandler extends SaveHandler {
                 }
 
             } else {//in case of the editor doesn't have a good handler defined (like xml design editor)
-                editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+                super.execute(event);
             }
+        }else {
+            super.execute(event);
         }
 
         return null;

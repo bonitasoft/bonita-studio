@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -69,9 +68,6 @@ import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
@@ -233,25 +229,6 @@ public class GroovyViewer implements IDocumentListener {
 
     public void setLayoutData(final Object layoutData) {
         getSourceViewer().getTextWidget().setLayoutData(layoutData);
-    }
-
-    public void addTextChangedListener(Consumer<TextChangedEvent> listener) {
-        getSourceViewer().getTextWidget().getContent().addTextChangeListener(new TextChangeListener() {
-
-            @Override
-            public void textSet(TextChangedEvent event) {
-                listener.accept(event); // need it, else we are not notified when editor become empty
-            }
-
-            @Override
-            public void textChanging(TextChangingEvent event) {
-            }
-
-            @Override
-            public void textChanged(TextChangedEvent event) {
-                listener.accept(event);
-            }
-        });
     }
 
     public void setContext(final ExpressionViewer viewer, final EObject context, final ViewerFilter[] filters,
