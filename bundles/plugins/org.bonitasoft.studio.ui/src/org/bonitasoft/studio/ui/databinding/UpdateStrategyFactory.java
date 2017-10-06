@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.databinding;
 
+import org.eclipse.core.databinding.UpdateSetStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 
 public class UpdateStrategyFactory {
@@ -24,6 +25,10 @@ public class UpdateStrategyFactory {
 
     public static UpdateValueStrategyFactory updateValueStrategy() {
         return new UpdateValueStrategyFactory(UpdateValueStrategy.POLICY_UPDATE);
+    }
+
+    public static UpdateSetStrategyFactory updateSetStrategy() {
+        return new UpdateSetStrategyFactory(UpdateSetStrategy.POLICY_UPDATE);
     }
 
     public static UpdateValueStrategyFactory neverUpdateValueStrategy() {
