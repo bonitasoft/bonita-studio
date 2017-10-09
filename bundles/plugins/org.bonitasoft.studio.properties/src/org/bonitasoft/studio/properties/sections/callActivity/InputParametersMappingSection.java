@@ -142,13 +142,14 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 try {
+                    fetchContractOperation.setCallActivity((CallActivity) getEObject());
                     progressService.run(true, false, fetchContractOperation);
                     for (final ContractInput input : fetchContractOperation.getResult()) {
                         createInputMapping(null, InputMappingAssignationType.CONTRACT_INPUT, input.getName());
                     }
                 } catch (final InvocationTargetException ex) {
                     MessageDialogWithLink.openWarning(mainComposite.getShell(), Messages.fetchContract,
-                            ex.getCause().getMessage());
+                            ex.getTargetException().getMessage());
                 } catch (final InterruptedException e1) {
                     BonitaStudioLog.error(e1);
                 }

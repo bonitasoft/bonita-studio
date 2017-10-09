@@ -38,7 +38,6 @@ import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.google.common.base.Predicate;
@@ -47,13 +46,13 @@ import com.google.common.base.Strings;
 @Creatable
 public class FetchContractOperation implements IRunnableWithProgress {
 
-    @Inject
-    private CallActivitySelectionProvider selectionProvider;
 
     @Inject
     private RepositoryAccessor repositoryAccessor;
 
     private final List<ContractInput> result = new ArrayList<>();
+
+    private CallActivity callActivity;
 
     /*
      * (non-Javadoc)
@@ -62,7 +61,6 @@ public class FetchContractOperation implements IRunnableWithProgress {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         result.clear();
-        final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
         try {
             result.addAll(getAccessibleContractInput(callActivity));
         } catch (ProcessNotFoundException | NoProcessToCallDefined | NoContractDefinedException e) {
@@ -138,6 +136,10 @@ public class FetchContractOperation implements IRunnableWithProgress {
 
     public List<ContractInput> getResult() {
         return result;
+    }
+
+    public void setCallActivity(CallActivity callActivity) {
+       this.callActivity = callActivity;
     }
 
 }
