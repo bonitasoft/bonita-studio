@@ -28,7 +28,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -200,11 +200,11 @@ public class TextWidget extends EditableControlWidget {
     }
 
     public ISWTObservableValue observeText(int event) {
-        return SWTObservables.observeText(text, event);
+        return WidgetProperties.text(event).observe(text);
     }
 
     public ISWTObservableValue observeText(int delay, int event) {
-        return SWTObservables.observeDelayedValue(delay, SWTObservables.observeText(text, event));
+        return WidgetProperties.text(event).observeDelayed(delay, text);
     }
 
     public void setPlaceholder(String placeholder) {
