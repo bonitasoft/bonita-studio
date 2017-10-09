@@ -56,7 +56,6 @@ public class Messages extends NLS {
     public static String deleteDescriptorDone;
     public static String deleteContainer;
     public static String applicationInfo;
-    public static String doNotShowMeAgain;
     public static String applicationDetails;
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
