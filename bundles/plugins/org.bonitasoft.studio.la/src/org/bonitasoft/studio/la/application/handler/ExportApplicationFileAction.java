@@ -29,7 +29,7 @@ public class ExportApplicationFileAction extends AbstractExportAction {
                     shell,
                     Messages.exportApplicationDescriptorTitle,
                     Messages.exportApplicationDescriptorMessage,
-                    Messages.doNotShowMeAgain,
+                    org.bonitasoft.studio.ui.i18n.Messages.doNotShowMeAgain,
                     false,
                     preferenceStore,
                     DO_NOT_SHOW_EXPORT_MESSAGE_DIALOG,

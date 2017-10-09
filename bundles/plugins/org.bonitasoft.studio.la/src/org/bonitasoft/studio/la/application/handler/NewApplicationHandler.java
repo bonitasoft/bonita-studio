@@ -43,7 +43,7 @@ public class NewApplicationHandler extends NewFileHandler {
                     activeShell,
                     Messages.newApplicationDescriptorTitle,
                     Messages.applicationInfo,
-                    Messages.doNotShowMeAgain,
+                    org.bonitasoft.studio.ui.i18n.Messages.doNotShowMeAgain,
                     Messages.applicationDetails,
                     false,
                     preferenceStore,

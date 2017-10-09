@@ -41,5 +41,6 @@ public class Messages extends NLS {
     public static String saveBeforeMessage;
     public static String exportFailedTitle;
     public static String exportDoneTitle;
+    public static String doNotShowMeAgain;
 
 }
