@@ -76,6 +76,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     @Override
     public void doSave(IProgressMonitor monitor) {
+        formPage.doSave(monitor);
         fSourceEditor.doSave(monitor);
     }
 
@@ -86,7 +87,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     @Override
     public boolean isDirty() {
-        return fSourceEditor.isDirty();
+        return fSourceEditor.isDirty() || formPage.isDirty();
     }
 
     @Override
