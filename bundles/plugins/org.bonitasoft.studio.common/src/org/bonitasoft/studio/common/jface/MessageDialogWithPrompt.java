@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -25,6 +27,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -36,6 +40,7 @@ import org.eclipse.ui.forms.widgets.Section;
 public class MessageDialogWithPrompt extends MessageDialogWithToggle {
 
     private String detailsMessage;
+    private Optional<Listener> linkSelectionListener = Optional.empty();
 
     public MessageDialogWithPrompt(Shell parentShell, String dialogTitle,
             Image image, String message, int dialogImageType,
@@ -45,10 +50,79 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
                 dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
     }
 
+    MessageDialogWithPrompt(Shell parentShell,
+            String dialogTitle,
+            Image image, String message,
+            Listener linkSelectionListener,
+            int dialogImageType,
+            String[] dialogButtonLabels,
+            int defaultIndex,
+            String toggleMessage,
+            boolean toggleState) {
+        super(parentShell, dialogTitle, image, message, dialogImageType,
+                dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
+        this.linkSelectionListener = Optional.ofNullable(linkSelectionListener);
+    }
+
+    @Override
+    protected Control createMessageArea(final Composite composite) {
+        // create composite
+        // create image
+        final Image image = getImage();
+        if (image != null) {
+            imageLabel = new Label(composite, SWT.NULL);
+            image.setBackground(imageLabel.getBackground());
+            imageLabel.setImage(image);
+            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
+                    .applyTo(imageLabel);
+        }
+        // create message
+        if (message != null) {
+            final Link messageLabel = new Link(composite, getMessageLabelStyle());
+            linkSelectionListener.ifPresent(listener -> messageLabel.addListener(SWT.Selection, listener));
+            messageLabel.setText(message);
+            GridDataFactory
+                    .fillDefaults()
+                    .align(SWT.FILL, SWT.BEGINNING)
+                    .grab(true, false)
+                    .hint(
+                            convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
+                            SWT.DEFAULT)
+                    .applyTo(messageLabel);
+        }
+        return composite;
+    }
+
     public static MessageDialogWithPrompt openOkCancelConfirm(Shell parent,
             String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key) {
         return open(CONFIRM, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+    }
+
+    public static MessageDialogWithPrompt open(int kind, Shell parent, String title,
+            String message,
+            Listener linkSelectionListener,
+            String toggleMessage,
+            boolean toggleState,
+            IPreferenceStore store,
+            String key,
+            int style) {
+        final MessageDialogWithPrompt dialog = new MessageDialogWithPrompt(parent,
+                title,
+                null, // accept the default window icon
+                message,
+                linkSelectionListener,
+                kind,
+                getButtonLabelsFor(kind),
+                0,
+                toggleMessage,
+                toggleState);
+        style &= SWT.SHEET;
+        dialog.setShellStyle(dialog.getShellStyle() | style);
+        dialog.setPrefStore(store);
+        dialog.setPrefKey(key);
+        dialog.open();
+        return dialog;
     }
 
     public static MessageDialogWithPrompt open(int kind, Shell parent, String title,
@@ -183,7 +257,8 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
 
                 /*
                  * (non-Javadoc)
-                 * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+                 * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.
+                 * ExpansionEvent)
                  */
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {

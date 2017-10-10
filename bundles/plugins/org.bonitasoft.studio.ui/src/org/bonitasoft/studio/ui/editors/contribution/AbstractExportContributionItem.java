@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.ToolItem;
 public abstract class AbstractExportContributionItem<T extends AbstractFormPage> extends ContributionItem {
 
     protected final T formPage;
+    protected ToolItem item;
 
     public AbstractExportContributionItem(String ID, T formPage) {
         super(ID);
@@ -30,7 +31,7 @@ public abstract class AbstractExportContributionItem<T extends AbstractFormPage>
 
     @Override
     public void fill(ToolBar parent, int index) {
-        final ToolItem item = new ToolItem(parent, SWT.PUSH);
+        item = new ToolItem(parent, SWT.PUSH);
         item.setText(Messages.export);
         item.setToolTipText(Messages.exportTooltips);
         item.setImage(UIPlugin.getImage("icons/export_16.png"));
