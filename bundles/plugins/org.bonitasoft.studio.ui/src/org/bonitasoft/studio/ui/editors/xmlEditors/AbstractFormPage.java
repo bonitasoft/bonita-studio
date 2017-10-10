@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
@@ -44,7 +45,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 public abstract class AbstractFormPage<T> extends FormPage {
 
-    protected final RepositoryAccessor repositoryAccessor;
+    protected RepositoryAccessor repositoryAccessor;
 
     protected ScrolledForm scrolledForm;
     protected FormToolkit toolkit;
@@ -103,7 +104,33 @@ public abstract class AbstractFormPage<T> extends FormPage {
         scrolledForm.reflow(true);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.forms.editor.FormPage#setActive(boolean)
+     */
+    @Override
+    public void setActive(boolean active) {
+        if (active) {
+            update();
+        }
+        super.setActive(active);
+    }
+
     public void update() {
+        IDocument document = getEditor().getSourceEditor() != null
+                ? getEditor().getSourceEditor().getDocumentProvider().getDocument(getEditorInput())
+                : null;
+        if (document != null) {
+            final Optional<T> newModel = getEditor().xmlToModel(document.get().getBytes());
+            newModel.ifPresent(model -> {
+                getEditor().updateWorkingCopy(model);
+                setErrorState(false);
+                recreateForm();
+            });
+        }
+    }
+
+    public void recreateForm() {
         if (scrolledForm != null) {
             Stream.of(toolBarManager.getItems()).forEach(IContributionItem::update);
             Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
