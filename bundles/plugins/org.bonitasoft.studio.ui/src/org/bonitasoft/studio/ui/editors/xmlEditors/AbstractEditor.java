@@ -95,24 +95,6 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
         return fSourceEditor.isSaveAsAllowed();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.forms.editor.FormEditor#pageChange(int)
-     */
-    @Override
-    protected void pageChange(int newPageIndex) {
-        if (newPageIndex == formPage.getIndex()) {
-            final Optional<T> newModel = xmlToModel(
-                    fSourceEditor.getDocumentProvider().getDocument(getEditorInput()).get().getBytes());
-            newModel.ifPresent(model -> {
-                updateWorkingCopy(model);
-                formPage.setErrorState(false);
-                formPage.update();
-            });
-        }
-        super.pageChange(newPageIndex);
-    }
-
     @Override
     public void resourceChanged(IResourceChangeEvent e) {
         IResourceDelta delta = e.getDelta();
@@ -135,7 +117,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
         setInputWithNotify(input);
         setPartName(input.getName());
         initVariablesAndListeners();
-        formPage.update();
+        formPage.recreateForm();
         formPage.reflow();
     }
 
