@@ -14,14 +14,21 @@
  */
 package org.bonitasoft.studio.legacy6x.preferences;
 
+
+import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.legacy6x.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.xtext.ui.editor.preferences.fields.LabelFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 
 public class Legacy6xPreferencePage extends AbstractBonitaPreferencePage {
@@ -36,6 +43,7 @@ public class Legacy6xPreferencePage extends AbstractBonitaPreferencePage {
         createTitleBar(org.bonitasoft.studio.preferences.i18n.Messages.BonitaPreferenceDialog_legacy6x, Pics.getImage(PicsConstants.preferenceLegacy6x), false);
         createDescription();
         createBooleanField();
+        new Well(getFieldEditorParent(), org.bonitasoft.studio.common.Messages.deprecatedLegacyMode, new FormToolkit(Display.getDefault()), IStatus.WARNING);
     }
 
     private void createBooleanField() {
@@ -47,9 +55,10 @@ public class Legacy6xPreferencePage extends AbstractBonitaPreferencePage {
     }
 
     private void createDescription() {
-        final String descriptionText = Messages.bind(Messages.showLegcyModeDescriptionPreferncePage,
-                org.bonitasoft.studio.common.Messages.bonitaStudioModuleName);
-        addField(new LabelFieldEditor(descriptionText, getFieldEditorParent()));
+        Label descriptionLabel = new Label(getFieldEditorParent(),SWT.WRAP);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+        descriptionLabel.setText(Messages.bind(Messages.showLegcyModeDescriptionPreferncePage,
+                org.bonitasoft.studio.common.Messages.bonitaStudioModuleName));
     }
 
 }

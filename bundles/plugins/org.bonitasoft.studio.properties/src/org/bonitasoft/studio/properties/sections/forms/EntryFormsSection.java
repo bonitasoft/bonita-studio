@@ -21,6 +21,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -189,7 +190,15 @@ public class EntryFormsSection extends AbstractFormsSection {
 
     @Override
     public String getSectionDescription() {
-        return Messages.sectionDescriptionEntryForm;
+        return org.bonitasoft.studio.common.Messages.deprecatedLegacyMode;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getDescriptionSeverity()
+     */
+    @Override
+    protected int getDescriptionSeverity() {
+        return IStatus.WARNING;
     }
 
     @Override

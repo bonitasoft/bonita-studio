@@ -65,6 +65,8 @@ import org.eclipse.ui.internal.preferences.WorkbenchPreferenceExtensionNode;
 
 public class BonitaPreferenceDialog extends Dialog {
 
+    private static final int SHELL_HEIGHT = 530;
+    private static final int SHELL_WIDTH = 800;
     private static final int MARGIN_RIGHT = 80;
     private static final int MARGIN_LEFT = 25;
     private static final int LABEL_WIDTH = 110;
@@ -95,7 +97,6 @@ public class BonitaPreferenceDialog extends Dialog {
     private Composite preferencePageComposite;
     private Button btnDisplay;
     private StringMatcher matcher;
-    private Point initialSize;
 
     private final List<IPreferencePage> applyOnBack;
 
@@ -714,7 +715,7 @@ public class BonitaPreferenceDialog extends Dialog {
      */
     @Override
     protected Point getInitialSize() {
-    	return new Point(745, 530);
+    	return new Point(SHELL_WIDTH, SHELL_HEIGHT);
     }
 
 

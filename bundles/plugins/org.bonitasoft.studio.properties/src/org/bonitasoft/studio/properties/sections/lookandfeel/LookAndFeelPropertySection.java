@@ -45,6 +45,7 @@ import org.bonitasoft.studio.properties.sections.resources.SaveAsTemplateWizard;
 import org.bonitasoft.studio.properties.sections.resources.SelectLocalTemplateWizard;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -529,7 +530,15 @@ public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection
 
     @Override
     public String getSectionDescription() {
-        return Messages.looknfeelPropertySectionDescription;
+        return String.format("%s\n%s",Messages.looknfeelPropertySectionDescription,org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getDescriptionSeverity()
+     */
+    @Override
+    protected int getDescriptionSeverity() {
+        return IStatus.WARNING;
     }
 
 }

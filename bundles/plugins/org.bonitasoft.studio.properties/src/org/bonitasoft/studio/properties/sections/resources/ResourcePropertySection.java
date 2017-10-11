@@ -49,6 +49,7 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -61,7 +62,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
@@ -650,7 +650,15 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
 
     @Override
     public String getSectionDescription() {
-        return NLS.bind(Messages.resourcePropertySectionDescription, org.bonitasoft.studio.common.Messages.bonitaPortalModuleName);
+        return String.format("%s\n%s", Messages.resourcePropertySectionDescription,org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getDescriptionSeverity()
+     */
+    @Override
+    protected int getDescriptionSeverity() {
+        return IStatus.WARNING;
     }
 
 
