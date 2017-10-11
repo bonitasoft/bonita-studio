@@ -97,17 +97,21 @@ public class ContractInputCompletionProposalComputerTest {
         contract.getInputs().add(employeeInput);
         contract.getInputs().add(buildInput(null, "days", ContractInputType.TEXT, true));
         doReturn(contract.getInputs()).when(proposalComputer).getContractInputs(context);
-        doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(GroovyCompilationUnit.class), anyInt(), any(Document.class));
-        doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer).getProjectClassloader(monitor);
+        doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(GroovyCompilationUnit.class),
+                anyInt(), any(Document.class));
+        doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer)
+                .getProjectClassloader(monitor);
         doReturn(methodProposalCreator).when(proposalComputer).createMethodProposalCreator();
         doReturn(moduleNode).when(proposalComputer).getModuleNode(contentAssistContext);
         when(context.computeIdentifierPrefix()).thenReturn("");
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression(""));
         when(context.getCompilationUnit()).thenReturn(groovyCompilationUnit);
+        when(groovyCompilationUnit.getModuleNode()).thenReturn(moduleNode);
     }
 
     @Test
-    public void should_computeCompletionProposals_return_emptyList_if_context_is_not_a_JavaContentAssistInvocationContext() throws Exception {
+    public void should_computeCompletionProposals_return_emptyList_if_context_is_not_a_JavaContentAssistInvocationContext()
+            throws Exception {
         assertThat(proposalComputer.computeCompletionProposals(null, monitor)).isEmpty();
     }
 
@@ -148,7 +152,8 @@ public class ContractInputCompletionProposalComputerTest {
     public void should_computeCompletionProposals_returns_complex_input_children() throws Exception {
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression("employee"));
         final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, monitor);
-        assertThat(proposals).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT", "skills -- TEXT");
+        assertThat(proposals).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+                "skills -- TEXT");
     }
 
     @Test
@@ -159,23 +164,30 @@ public class ContractInputCompletionProposalComputerTest {
     }
 
     @Test
-    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_variable_expression() throws Exception {
+    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_variable_expression()
+            throws Exception {
         final BinaryExpression binaryExpression = new BinaryExpression(new VariableExpression("employee"), null, null);
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
-        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains(
+                "firstName -- TEXT", "lastName -- TEXT",
                 "skills -- TEXT");
     }
 
     @Test
-    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_property_expression() throws Exception {
-        final BinaryExpression binaryExpression = new BinaryExpression(new PropertyExpression(new ConstantExpression("employee"), new ConstantExpression(
-                "employee")), null, null);
+    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_property_expression()
+            throws Exception {
+        final BinaryExpression binaryExpression = new BinaryExpression(
+                new PropertyExpression(new ConstantExpression("employee"), new ConstantExpression(
+                        "employee")),
+                null, null);
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
-        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+        assertThat(proposalComputer.computeCompletionProposals(context, monitor)).extracting("displayString").contains(
+                "firstName -- TEXT", "lastName -- TEXT",
                 "skills -- TEXT");
     }
 
-    private ContractInput buildInput(final ContractInput parent, final String name, final ContractInputType type, final boolean multiple) {
+    private ContractInput buildInput(final ContractInput parent, final String name, final ContractInputType type,
+            final boolean multiple) {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName(name);
         input.setType(type);
