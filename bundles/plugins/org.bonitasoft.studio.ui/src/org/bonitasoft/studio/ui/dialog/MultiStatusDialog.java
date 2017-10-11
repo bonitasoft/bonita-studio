@@ -37,7 +37,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     private MultiStatus status;
     private Predicate<IStatus> canFinish;
 
-    public MultiStatusDialog(Shell parentShell, String dialogTitle, 
+    public MultiStatusDialog(Shell parentShell, String dialogTitle,
             String dialogMessage,
             int dialogImageType,
             String[] dialogButtonLabels,
@@ -45,8 +45,8 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         super(parentShell, dialogTitle, dialogMessage, dialogImageType, dialogButtonLabels);
         this.status = status;
     }
-    
-    public MultiStatusDialog(Shell parentShell, String dialogTitle, 
+
+    public MultiStatusDialog(Shell parentShell, String dialogTitle,
             String dialogMessage,
             int dialogImageType,
             String[] dialogButtonLabels,
@@ -56,14 +56,15 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         this.status = status;
         this.canFinish = canFinish;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
      */
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         Button button = super.createButton(parent, id, label, defaultButton);
-        if(IDialogConstants.OK_ID == id && canFinish != null) {
+        if (IDialogConstants.OK_ID == id && canFinish != null) {
             button.setEnabled(canFinish.test(status));
         }
         return button;
@@ -85,7 +86,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
                 return MessageDialog.INFORMATION;
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.jface.dialog.ProblemsDialog#getTypedLabelProvider()
@@ -121,6 +122,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     protected Collection<IStatus> getInput() {
         return Stream
                 .of(status.getChildren())
+                .sorted((s1, s2) -> -Integer.valueOf(s1.getSeverity()).compareTo(Integer.valueOf(s2.getSeverity())))
                 .collect(Collectors.toList());
     }
 
