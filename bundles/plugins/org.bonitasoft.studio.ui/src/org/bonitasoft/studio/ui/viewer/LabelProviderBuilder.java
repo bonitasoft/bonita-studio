@@ -103,7 +103,12 @@ public class LabelProviderBuilder<T> {
                         viewersToUpdate.forEach(viewer -> {
                             if (viewer.getInput() instanceof Collection) {
                                 viewer.getControl().getDisplay().asyncExec(
-                                        () -> viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null));
+                                        () -> {
+                                            if (viewer != null && !viewer.getControl().isDisposed()
+                                                    && viewer.getInput() != null) {
+                                                viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null);
+                                            }
+                                        });
                             }
                         });
 
