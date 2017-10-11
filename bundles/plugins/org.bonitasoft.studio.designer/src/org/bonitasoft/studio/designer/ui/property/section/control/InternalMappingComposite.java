@@ -75,7 +75,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
         addResourceChangeListener(webPageNameResourceChangeListener);
 
         info = widgetFactory.createLabel(this, "", SWT.WRAP);
-        info.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).hint(600, SWT.DEFAULT).align(SWT.FILL, SWT.CENTER).create());
+        info.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).align(SWT.FILL, SWT.CENTER).create());
         widgetFactory.adapt(this);
     }
 

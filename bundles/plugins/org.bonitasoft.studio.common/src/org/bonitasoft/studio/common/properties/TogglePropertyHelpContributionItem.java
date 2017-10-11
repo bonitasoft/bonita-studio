@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.dialogs.Dialog;
@@ -42,10 +41,15 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
     private MenuItem menuItem;
     private final PropertySectionHistory propertySectionHistory;
     private Well descriptionWell;
+    private int wellSeverity;
 
-    public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent,
+    public TogglePropertyHelpContributionItem(final FormToolkit toolkit,
+            final Form form, 
+            final String helpContent,
+            int wellSeverity,
             final PropertySectionHistory propertySectionHistory) {
         this.helpContent = helpContent;
+        this.wellSeverity = wellSeverity;
         this.form = form;
         this.toolkit = toolkit;
         this.propertySectionHistory = propertySectionHistory;
@@ -80,7 +84,7 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
             }
             propertySectionHistory.hideDescription();
         } else {
-            descriptionWell = new Well(form.getHead(), helpContent, toolkit, IStatus.INFO);
+            descriptionWell = new Well(form.getHead(), helpContent, toolkit, wellSeverity);
             form.setHeadClient(descriptionWell);
             if (menuItem != null) {
                 menuItem.setText(Messages.hideHelp);

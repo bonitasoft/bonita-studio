@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -56,6 +58,7 @@ public class Well extends Composite {
 
     private final Link label;
     private Link moreInformationLink;
+    private IObservableValue<String> labelTextObservable;
 
     /**
      * Display the given text in colored frame starting with a bold separator
@@ -93,11 +96,17 @@ public class Well extends Composite {
         });
 
         label = new Link(this, SWT.WRAP);
-        label.setText(text);
+        if(text != null) {
+            label.setText(text);
+        }
         label.setBackground(backgroundColor(toolkit, severity));
         label.setForeground(separatorColor(toolkit, severity));
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(parent.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, SWT.DEFAULT)
                 .create());
+        labelTextObservable = WidgetProperties.text().observe(label);
+        labelTextObservable.addValueChangeListener(e -> {
+            getParent().getParent().layout(true,true);
+        });
 
         if (!Strings.isNullOrEmpty(moreDetails)) {
             moreInformationLink = new Link(this, SWT.WRAP);
@@ -217,6 +226,10 @@ public class Well extends Composite {
 
     public void addSelectionListener(final SelectionListener listener) {
         label.addSelectionListener(listener);
+    }
+
+    public IObservableValue<String> labelObservable() {
+        return labelTextObservable;
     }
 
 }

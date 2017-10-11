@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.properties.sections.forms;
 
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EReference;
 
@@ -59,6 +59,14 @@ public class OverviewFormsSection extends AbstractFormsSection {
 
 	@Override
 	public String getSectionDescription() {
-        return Messages.sectionDescriptionOverviewForm;
+        return org.bonitasoft.studio.common.Messages.deprecatedLegacyMode;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getDescriptionSeverity()
+	 */
+	@Override
+	protected int getDescriptionSeverity() {
+	    return IStatus.WARNING;
 	}
 }

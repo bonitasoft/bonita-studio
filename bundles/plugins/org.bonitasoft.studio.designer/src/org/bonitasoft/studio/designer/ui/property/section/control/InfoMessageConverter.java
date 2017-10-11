@@ -68,10 +68,7 @@ public final class InfoMessageConverter extends Converter {
     }
 
     private String getLegacyMessage(final EObject context, final EReference formMappingFeature) {
-        if (ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING.equals(formMappingFeature)) {
-            return Messages.overviewLegacyInfo;
-        }
-        return context instanceof Task ? Messages.stepLegacyInfo : Messages.processLegacyInfo;
+        return org.bonitasoft.studio.common.Messages.deprecatedLegacyMode;
     }
 
     private String getNoFormMessage(final EObject context, final EReference formMappingFeature) {

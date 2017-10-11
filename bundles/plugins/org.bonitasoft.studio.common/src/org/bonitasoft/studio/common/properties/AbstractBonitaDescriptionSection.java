@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.properties;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -69,7 +70,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
-                getSectionDescription(), propertySectionHistory);
+                getSectionDescription(),getDescriptionSeverity(), propertySectionHistory);
         updateToolbar(form.getToolBarManager());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
@@ -77,6 +78,10 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
         form.update();
         form.setFocus();
+    }
+
+    protected int getDescriptionSeverity() {
+        return IStatus.INFO;
     }
 
     protected void updateToolbar(final IToolBarManager toolbarManager) {

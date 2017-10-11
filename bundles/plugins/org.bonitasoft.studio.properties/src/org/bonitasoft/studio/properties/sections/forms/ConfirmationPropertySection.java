@@ -37,6 +37,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.resources.ResourcePropertySection;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -251,9 +252,17 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
 
     @Override
     public String getSectionDescription() {
-        return Messages.confirmationPropertySectionDescription;
+        return String.format("%s\n%s", Messages.confirmationPropertySectionDescription,org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
     }
 
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getDescriptionSeverity()
+     */
+    @Override
+    protected int getDescriptionSeverity() {
+        return IStatus.WARNING;
+    }
+    
     @Override
     protected void createContent(final Composite parent) {
         final Composite composite = getWidgetFactory().createComposite(parent);
