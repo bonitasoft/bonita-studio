@@ -22,9 +22,10 @@ import org.eclipse.core.runtime.Status;
 
 public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.result.Status, Status> {
 
-    private static EngineStatusMapper INSTANCE;
+    private Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction;
 
-    private EngineStatusMapper() {
+    private EngineStatusMapper(Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction) {
+        this.l10nFunction = l10nFunction;
     }
 
     /*
@@ -37,13 +38,7 @@ public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.re
     }
 
     private String l10n(org.bonitasoft.engine.api.result.Status engineStatus) {
-        switch (engineStatus.getCode()) {
-            case OK:
-            default:
-                break;
-        }
-        //No l10n, use technical message.
-        return engineStatus.getMessage();
+        return l10nFunction.apply(engineStatus);
     }
 
     private int levelToSeverity(org.bonitasoft.engine.api.result.Status engineStatus) {
@@ -59,11 +54,9 @@ public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.re
         }
     }
 
-    public static Function<org.bonitasoft.engine.api.result.Status, Status> instance() {
-        if (INSTANCE == null) {
-            INSTANCE = new EngineStatusMapper();
-        }
-        return INSTANCE;
+    public static Function<org.bonitasoft.engine.api.result.Status, Status> instance(
+            Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction) {
+        return new EngineStatusMapper(l10nFunction);
     }
 
 }

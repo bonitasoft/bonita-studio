@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.ui.dialog;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,19 +24,49 @@ import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 public class MultiStatusDialog extends ProblemsDialog<IStatus> {
 
     private MultiStatus status;
+    private Predicate<IStatus> canFinish;
 
-    public MultiStatusDialog(Shell parentShell, String dialogTitle, String dialogMessage, int dialogImageType,
-            String[] dialogButtonLabels, MultiStatus status) {
+    public MultiStatusDialog(Shell parentShell, String dialogTitle, 
+            String dialogMessage,
+            int dialogImageType,
+            String[] dialogButtonLabels,
+            MultiStatus status) {
         super(parentShell, dialogTitle, dialogMessage, dialogImageType, dialogButtonLabels);
         this.status = status;
+    }
+    
+    public MultiStatusDialog(Shell parentShell, String dialogTitle, 
+            String dialogMessage,
+            int dialogImageType,
+            String[] dialogButtonLabels,
+            MultiStatus status,
+            Predicate<IStatus> canFinish) {
+        super(parentShell, dialogTitle, dialogMessage, dialogImageType, dialogButtonLabels);
+        this.status = status;
+        this.canFinish = canFinish;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+     */
+    @Override
+    protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
+        Button button = super.createButton(parent, id, label, defaultButton);
+        if(IDialogConstants.OK_ID == id && canFinish != null) {
+            button.setEnabled(canFinish.test(status));
+        }
+        return button;
     }
 
     public MultiStatusDialog(Shell shell, String dialogTitle, String deployStatusMessage, String[] dialogButtonLabels,
@@ -54,7 +85,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
                 return MessageDialog.INFORMATION;
         }
     }
-
+    
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.jface.dialog.ProblemsDialog#getTypedLabelProvider()
