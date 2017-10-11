@@ -58,16 +58,19 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
                                 .getCompilationUnit() instanceof GroovyCompilationUnit)) {
             return Collections.emptyList();
         }
-
-        final JavaContentAssistInvocationContext javaContext = (JavaContentAssistInvocationContext) context;
-        GroovyCompilationUnit compilationUnit = (GroovyCompilationUnit) javaContext.getCompilationUnit();
-        final ContentAssistContext contentAssistContext = createContentAssistContext(
-                compilationUnit,
-                context.getInvocationOffset(), context.getDocument());
         final List<ContractInput> inputs = getContractInputs(context);
         if (inputs.isEmpty()) {
             return java.util.Collections.emptyList();
         }
+        final JavaContentAssistInvocationContext javaContext = (JavaContentAssistInvocationContext) context;
+        GroovyCompilationUnit compilationUnit = (GroovyCompilationUnit) javaContext.getCompilationUnit();
+        if (compilationUnit.getModuleNode() == null) {
+            return Collections.emptyList();
+        }
+        final ContentAssistContext contentAssistContext = createContentAssistContext(
+                compilationUnit,
+                context.getInvocationOffset(), context.getDocument());
+
         CharSequence computeIdentifierPrefix = "";
         try {
             computeIdentifierPrefix = javaContext.computeIdentifierPrefix();
