@@ -72,6 +72,10 @@ public abstract class AbstractFormPage<T> extends FormPage {
         return repositoryAccessor;
     }
 
+    public ToolBarManager getToolbarManager() {
+        return toolBarManager;
+    }
+
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         toolkit = managedForm.getToolkit();
