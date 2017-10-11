@@ -95,10 +95,11 @@ public class ProcessEntryFormsSection extends EntryFormsSection {
 
         showOrHideComposite(pageFlowComposite, getPageFlow().getEntryPageFlowType() == EntryPageFlowType.PAGEFLOW);
     }
+    
 
     @Override
     public String getSectionDescription() {
-        return Messages.sectionDescriptionProcessEntryForm;
+        return org.bonitasoft.studio.common.Messages.deprecatedLegacyMode;
     }
 
 }

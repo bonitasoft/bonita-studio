@@ -52,7 +52,7 @@ public class URLMappingComposite extends Composite implements BonitaPreferenceCo
         urlText.setLayoutData(GridDataFactory.swtDefaults().hint(WIDTH_HINT, SWT.DEFAULT).create());
 
         info = widgetFactory.createLabel(this, "", SWT.WRAP);
-        info.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).hint(600, SWT.DEFAULT).align(SWT.FILL, SWT.CENTER).create());
+        info.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).align(SWT.FILL, SWT.CENTER).create());
 
         widgetFactory.adapt(this);
     }

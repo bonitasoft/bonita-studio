@@ -14,27 +14,26 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class InfoMessageComposite extends Composite {
 
-    private final Label info;
+    private final Well well;
 
-    public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory) {
+    public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,int severity) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 0).create());
-        info = widgetFactory.createLabel(this, "", SWT.WRAP);
-        info.setLayoutData(GridDataFactory.swtDefaults().hint(600, SWT.DEFAULT).align(SWT.FILL, SWT.CENTER).create());
+        well = new Well(this, null, widgetFactory, severity);
+        well.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
         widgetFactory.adapt(this);
     }
 
@@ -45,6 +44,6 @@ public class InfoMessageComposite extends Composite {
     protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable, final FormMappingType type) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
         infoStrategy.setConverter(new InfoMessageConverter(type));
-        context.bindValue(SWTObservables.observeText(info), formMappingObservable, null, infoStrategy);
+        context.bindValue(well.labelObservable(), formMappingObservable, null, infoStrategy);
     }
 }
