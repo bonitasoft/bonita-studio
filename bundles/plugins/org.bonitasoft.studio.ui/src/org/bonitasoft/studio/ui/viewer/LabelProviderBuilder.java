@@ -158,10 +158,6 @@ public class LabelProviderBuilder<T> {
                 return super.getToolTipText(element);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-             */
             @Override
             public String getText(Object element) {
                 try {
@@ -172,10 +168,6 @@ public class LabelProviderBuilder<T> {
                 }
             }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-             */
             @Override
             public Image getImage(Object element) {
                 try {
@@ -203,6 +195,8 @@ public class LabelProviderBuilder<T> {
                         return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
                     case IStatus.WARNING:
                         return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                    case IStatus.INFO:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
                     default:
                         return imageFunction.map(function -> function.apply(element)).orElse(super.getImage(element));
                 }
@@ -213,10 +207,6 @@ public class LabelProviderBuilder<T> {
     public LabelProvider createLabelProvider() {
         return new LabelProvider() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-             */
             @Override
             public String getText(Object element) {
                 try {
@@ -227,10 +217,6 @@ public class LabelProviderBuilder<T> {
                 }
             }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-             */
             @Override
             public Image getImage(Object element) {
                 try {

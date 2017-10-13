@@ -108,15 +108,8 @@ public abstract class AbstractFormPage<T> extends FormPage {
         scrolledForm.reflow(true);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.forms.editor.FormPage#setActive(boolean)
-     */
     @Override
     public void setActive(boolean active) {
-        if (active) {
-            update();
-        }
         super.setActive(active);
     }
 
@@ -144,6 +137,10 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
     public T getWorkingCopy() {
         return workingCopy;
+    }
+
+    public void setWorkingCopy(T workingCopy) {
+        this.workingCopy = workingCopy;
     }
 
     public IDocument getDocument() {
