@@ -22,23 +22,17 @@ import org.eclipse.core.runtime.Status;
 
 public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.result.Status, Status> {
 
-    private Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction;
-
-    private EngineStatusMapper(Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction) {
-        this.l10nFunction = l10nFunction;
-    }
-
     /*
      * (non-Javadoc)
      * @see java.util.function.Function#apply(java.lang.Object)
      */
     @Override
     public Status apply(org.bonitasoft.engine.api.result.Status engineStatus) {
-        return new Status(levelToSeverity(engineStatus), UIPlugin.PLUGIN_ID, l10n(engineStatus));
+        return new Status(levelToSeverity(engineStatus), UIPlugin.PLUGIN_ID, localizedMessage(engineStatus));
     }
 
-    private String l10n(org.bonitasoft.engine.api.result.Status engineStatus) {
-        return l10nFunction.apply(engineStatus);
+    protected String localizedMessage(org.bonitasoft.engine.api.result.Status engineStatus) {
+        return engineStatus.getMessage();
     }
 
     private int levelToSeverity(org.bonitasoft.engine.api.result.Status engineStatus) {
@@ -52,11 +46,6 @@ public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.re
             default:
                 return IStatus.OK;
         }
-    }
-
-    public static Function<org.bonitasoft.engine.api.result.Status, Status> instance(
-            Function<org.bonitasoft.engine.api.result.Status, String> l10nFunction) {
-        return new EngineStatusMapper(l10nFunction);
     }
 
 }
