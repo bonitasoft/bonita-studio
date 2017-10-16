@@ -97,6 +97,9 @@ public class BosArchive {
 
         parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments, resourcesToOpen,
                 true);
+        if(store.getChildren().length == 0) {
+            archiveModel.removeStore(store);
+        }
     }
 
     private void parseFolder(AbstractFolderModel store, List<String> segments, List<String> parentSegments,
@@ -105,8 +108,10 @@ public class BosArchive {
                 && directStoreChild) { // File
             final ImportFileStoreModel file = new ImportFileStoreModel(Joiner.on('/').join(concat(parentSegments, segments)),
                     store);
-            file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
-            store.addFile(file);
+            if(!isALegacyProfile(store, file)) {
+                file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
+                store.addFile(file);
+            }
         } else if (segments.size() == 1 && !directStoreChild) {
             final ImportFileModel file = new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)), store);
             if (shouldReadNameInJSON(store, file)) {
@@ -132,6 +137,10 @@ public class BosArchive {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false);
         }
+    }
+
+    protected boolean isALegacyProfile(AbstractFolderModel store, final ImportFileStoreModel file) {
+        return file.getFileName().endsWith(".profile") && "profiles".equals(store.getFolderName());
     }
 
     private boolean shouldReadNameInJSON(AbstractFolderModel store, final ImportFileModel file) {
