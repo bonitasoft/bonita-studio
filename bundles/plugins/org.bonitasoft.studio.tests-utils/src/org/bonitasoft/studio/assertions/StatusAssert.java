@@ -38,7 +38,8 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     /**
      * An entry point for IStatusAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
-     * With a static import, one's can write directly : <code>assertThat(myIStatus)</code> and get specific assertion with code completion.
+     * With a static import, one's can write directly : <code>assertThat(myIStatus)</code> and get specific assertion with
+     * code completion.
      *
      * @param actual the IStatus we want to make assertions on.
      * @return a new </code>{@link StatusAssert}</code>
@@ -249,6 +250,15 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         }
 
         // return the current assertion for method chaining
+        return this;
+    }
+
+    public StatusAssert isInfo() {
+        isNotNull();
+        final String errorMessage = format("Expected actual IStatus to be Info but was.", actual);
+        if (!Objects.equals(actual.getSeverity(), IStatus.INFO)) {
+            throw new AssertionError(errorMessage);
+        }
         return this;
     }
 
