@@ -102,8 +102,16 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         if (status == null) {
             return null;
         }
-        return status.getSeverity() == IStatus.WARNING ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING)
-                : status.getSeverity() == IStatus.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : null;
+        switch (status.getSeverity()) {
+            case IStatus.INFO:
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+            case IStatus.WARNING:
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+            case IStatus.ERROR:
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+            default:
+                return null;
+        }
     }
 
     private Color getStatusColor(IStatus status) {
