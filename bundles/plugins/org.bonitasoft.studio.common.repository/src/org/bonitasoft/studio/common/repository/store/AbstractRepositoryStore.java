@@ -372,9 +372,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
                 final IResource r = fs.getResource();
                 if (r instanceof IFile && r.exists()) {
                     final IFile iFile = (IFile) r;
-                    final InputStream is = iFile.getContents();
                     InputStream newIs;
-                    try {
+                    try(final InputStream is = iFile.getContents()) {
                         newIs = handlePreImport(r.getName(), is);
                         if (!is.equals(newIs)) {
                             iFile.setContents(newIs, IResource.FORCE, monitor);

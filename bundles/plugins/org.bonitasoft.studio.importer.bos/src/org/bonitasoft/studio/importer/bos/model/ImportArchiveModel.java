@@ -24,6 +24,10 @@ public class ImportArchiveModel {
                 });
     }
 
+    public void removeStore(ImportStoreModel store) {
+        stores.remove(store);
+    }
+    
     public List<ImportStoreModel> getStores() {
         Collections.sort(stores, (f1, f2) -> f1.getFolderName().compareTo(f2.getFolderName()));
         return Collections.unmodifiableList(stores);
@@ -56,4 +60,5 @@ public class ImportArchiveModel {
     public void resetStatus() {
         stores.stream().forEach(ImportStoreModel::resetStatus);
     }
+
 }
