@@ -39,6 +39,15 @@ public class BonitaGroovyEditor extends GroovyEditor {
 
     /*
      * (non-Javadoc)
+     * @see org.eclipse.jdt.internal.ui.javaeditor.JavaEditor#updateStatusLine()
+     */
+    @Override
+    protected void updateStatusLine() {
+
+    }
+
+    /*
+     * (non-Javadoc)
      * @see org.codehaus.groovy.eclipse.editor.GroovyEditor#createActions()
      */
     @Override
