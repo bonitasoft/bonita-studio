@@ -70,6 +70,14 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     }
 
     @Override
+    protected void pageChange(int newPageIndex) {
+        if (newPageIndex == formPage.getIndex()) {
+            formPage.update();
+        }
+        super.pageChange(newPageIndex);
+    }
+
+    @Override
     public String getPartName() {
         return getEditorInput().getName();
     }
