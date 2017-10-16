@@ -17,5 +17,7 @@ public interface ColorConstants {
     static final RGB SUCCESS_RGB = new RGB(60, 130, 40);
     static final RGB BLUE_RGB = new RGB(0, 0, 200);
     static final RGB EDITING_RGB = new RGB(62, 190, 222);
+    static final RGB SIMPLE_TYPE_RGB = new RGB(163, 163, 117);
+    static final RGB COMPLEX_TYPE_RGB = new RGB(117, 163, 163);
 
 }

@@ -32,6 +32,8 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
@@ -43,6 +45,7 @@ import org.eclipse.swt.widgets.Display;
 public class LabelProviderBuilder<T> {
 
     private Optional<Function<T, String>> textFunction = Optional.empty();
+    private Optional<Function<T, StyledString>> styledStringFunction = Optional.empty();
     private Optional<Function<T, Image>> imageFunction = Optional.empty();
     private Optional<Function<T, IStatus>> statusProvider = Optional.empty();
     private Optional<Function<T, Font>> fontProvider = Optional.empty();
@@ -50,6 +53,11 @@ public class LabelProviderBuilder<T> {
 
     public LabelProviderBuilder<T> withTextProvider(Function<T, String> textFunction) {
         this.textFunction = Optional.ofNullable(textFunction);
+        return this;
+    }
+
+    public LabelProviderBuilder<T> withStyledStringProvider(Function<T, StyledString> styledStringFunction) {
+        this.styledStringFunction = Optional.ofNullable(styledStringFunction);
         return this;
     }
 
@@ -73,6 +81,91 @@ public class LabelProviderBuilder<T> {
         return this;
     }
 
+    public StyledCellLabelProvider createStyledCellLabelProvider() {
+
+        return new StyledCellLabelProvider() {
+
+            private Color errorColor;
+            private Color warningColor;
+
+            @Override
+            public void initialize(ColumnViewer viewer, ViewerColumn column) {
+                super.initialize(viewer, column);
+                errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
+                warningColor = new Color(Display.getDefault(), ColorConstants.WARNING_RGB);
+                viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit());
+            }
+
+            @Override
+            public void update(ViewerCell cell) {
+                T element = (T) cell.getElement();
+                StyledString styledString = getStyledString(element);
+                cell.setText(styledString.getString());
+                cell.setImage(getImage(element));
+
+                statusProvider.ifPresent(provider -> {
+                    final IStatus status = provider.apply(element);
+                    if (!status.isOK()) {
+                        cell.setImage(statusImage(status, element));
+                        statusColor(status).ifPresent(cell::setForeground);
+                    }
+                });
+
+                cell.setStyleRanges(styledString.getStyleRanges());
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                return tooltipProvider().apply((T) element).orElse(super.getToolTipText(element));
+            }
+
+            private StyledString getStyledString(T element) {
+                return styledStringFunction.map(function -> function.apply(element))
+                        .orElse(new StyledString());
+            }
+
+            private Image getImage(T element) {
+                return imageFunction.map(function -> function.apply(element)).orElse(null);
+            }
+
+            private Optional<Color> statusColor(IStatus status) {
+                switch (status.getSeverity()) {
+                    case IStatus.ERROR:
+                        return Optional.of(errorColor);
+                    case IStatus.WARNING:
+                        return Optional.of(warningColor);
+                    default:
+                        return Optional.empty();
+                }
+            }
+
+            private Image statusImage(IStatus status, T element) {
+                switch (status.getSeverity()) {
+                    case IStatus.ERROR:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+                    case IStatus.WARNING:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                    case IStatus.INFO:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+                    default:
+                        return getImage(element);
+                }
+            }
+
+            private ColumnViewerEditorActivationListener refreshAllAfterEdit() {
+                return refreshAfterEditListener();
+            }
+
+            @Override
+            public void dispose() {
+                errorColor.dispose();
+                warningColor.dispose();
+                super.dispose();
+            }
+
+        };
+    }
+
     public ColumnLabelProvider createColumnLabelProvider() {
         return new ColumnLabelProvider() {
 
@@ -88,36 +181,7 @@ public class LabelProviderBuilder<T> {
             }
 
             private ColumnViewerEditorActivationListener refreshAllAfterEdit() {
-                return new ColumnViewerEditorActivationListener() {
-
-                    @Override
-                    public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
-                    }
-
-                    @Override
-                    public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
-                    }
-
-                    @Override
-                    public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
-                        viewersToUpdate.forEach(viewer -> {
-                            if (viewer.getInput() instanceof Collection) {
-                                viewer.getControl().getDisplay().asyncExec(
-                                        () -> {
-                                            if (viewer != null && !viewer.getControl().isDisposed()
-                                                    && viewer.getInput() != null) {
-                                                viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null);
-                                            }
-                                        });
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
-                    }
-                };
+                return refreshAfterEditListener();
             }
 
             @Override
@@ -143,19 +207,7 @@ public class LabelProviderBuilder<T> {
 
             @Override
             public String getToolTipText(Object element) {
-                if (statusProvider.isPresent()) {
-                    final IStatus status = statusProvider.get().apply((T) element);
-                    if (!status.isOK()) {
-                        if (status.isMultiStatus()) {
-                            return Arrays.asList(((MultiStatus) status).getChildren()).stream()
-                                    .filter(s -> !s.isOK())
-                                    .map(IStatus::getMessage)
-                                    .reduce((message1, message2) -> String.format("%s\n%s", message1, message2)).orElse("");
-                        }
-                        return status.getMessage();
-                    }
-                }
-                return super.getToolTipText(element);
+                return tooltipProvider().apply((T) element).orElse(super.getToolTipText(element));
             }
 
             @Override
@@ -225,6 +277,57 @@ public class LabelProviderBuilder<T> {
                 } catch (final ClassCastException e) {
                     return super.getImage(element);
                 }
+            }
+        };
+    }
+
+    private Function<T, Optional<String>> tooltipProvider() {
+        return element -> {
+            if (statusProvider.isPresent()) {
+                final IStatus status = statusProvider.get().apply(element);
+                if (!status.isOK()) {
+                    if (status.isMultiStatus()) {
+                        return Optional.ofNullable(Arrays.asList(((MultiStatus) status).getChildren()).stream()
+                                .filter(s -> !s.isOK())
+                                .map(IStatus::getMessage)
+                                .reduce((message1, message2) -> String.format("%s\n%s", message1, message2)).orElse(""));
+                    }
+                    return Optional.ofNullable(status.getMessage());
+                }
+            }
+            return Optional.empty();
+        };
+    }
+
+    private ColumnViewerEditorActivationListener refreshAfterEditListener() {
+        return new ColumnViewerEditorActivationListener() {
+
+            @Override
+            public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+            }
+
+            @Override
+            public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
+            }
+
+            @Override
+            public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+                viewersToUpdate.forEach(viewer -> {
+                    if (viewer.getInput() instanceof Collection) {
+                        viewer.getControl().getDisplay().asyncExec(
+                                () -> {
+                                    if (viewer != null && !viewer.getControl().isDisposed()
+                                            && viewer.getInput() != null) {
+                                        viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null);
+                                    }
+                                });
+                    }
+                });
+
+            }
+
+            @Override
+            public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
             }
         };
     }
