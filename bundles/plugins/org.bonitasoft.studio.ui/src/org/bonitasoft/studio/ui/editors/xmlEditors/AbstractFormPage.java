@@ -130,7 +130,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
     public void recreateForm() {
         if (scrolledForm != null) {
             Stream.of(toolBarManager.getItems()).forEach(IContributionItem::update);
-            Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
+            disposePageContent();
             createForm();
         }
     }
@@ -166,7 +166,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
     public void loadErrorPage() {
         if (scrolledForm != null) {
             Stream.of(toolBarManager.getItems()).forEach(IContributionItem::update);
-            Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
+            disposePageContent();
 
             final Composite composite = toolkit.createComposite(scrolledForm.getBody());
             composite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -185,7 +185,12 @@ public abstract class AbstractFormPage<T> extends FormPage {
             final Label label = toolkit.createLabel(composite, Messages.parseError);
             label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
             label.setFont(BonitaStudioFontRegistry.getPreferenceTitleFont());
+            scrolledForm.getParent().layout(true, true);
         }
+    }
+
+    protected void disposePageContent() {
+        Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
     }
 
     @Override
