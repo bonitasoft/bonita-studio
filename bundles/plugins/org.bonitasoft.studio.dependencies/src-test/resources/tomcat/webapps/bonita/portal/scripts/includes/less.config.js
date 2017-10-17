@@ -1,3 +1,0 @@
-less = {
-	relativeUrls: true
-}
