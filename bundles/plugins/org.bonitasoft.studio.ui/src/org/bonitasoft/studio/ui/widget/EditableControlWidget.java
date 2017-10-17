@@ -165,8 +165,9 @@ public abstract class EditableControlWidget extends ControlWidget {
             IObservableValue modelObservable, IValidator validator) {
         final UpdateValueStrategy validateOnlyStrategy = UpdateStrategyFactory.convertUpdateValueStrategy()
                 .withValidator(validator).create();
-        return new ControlMessageSupport(ctx.bindValue(controlObservable, modelObservable,
-                validateOnlyStrategy, validateOnlyStrategy)) {
+        Binding binding = ctx.bindValue(controlObservable, modelObservable,
+                validateOnlyStrategy, validateOnlyStrategy);
+        ControlMessageSupport controlMessageSupport = new ControlMessageSupport(binding) {
 
             @Override
             protected void statusChanged(IStatus status) {
@@ -174,6 +175,8 @@ public abstract class EditableControlWidget extends ControlWidget {
             }
 
         };
+        binding.validateTargetToModel();
+        return controlMessageSupport;
     }
 
     protected void statusChanged(IStatus status) {
