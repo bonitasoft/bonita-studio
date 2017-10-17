@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.actors.ui.handler;
 
-import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,8 +69,7 @@ public class DeployOrganizationHandler {
                 .needProgress()
                 .havingPage(newPage()
                         .withTitle(Messages.deployOrganizationPageTitle)
-                        .withDescription(
-                                Messages.bind(Messages.deployOrganizationDesc, new Object[] { bonitaPortalModuleName }))
+                        .withDescription(Messages.deployOrganizationDesc)
                         .withControl(controlSupplier))
                 .onFinish(wizardContainer -> publish(wizardContainer, activeOrganizationProvider, controlSupplier))
                 .open(Display.getDefault().getActiveShell(), Messages.deploy)
@@ -114,9 +112,9 @@ public class DeployOrganizationHandler {
                                 new OrganizationValidationException((MultiStatus) status, fileStore.getDisplayName()));
                     }
                     monitor.beginTask(Messages.deployOrganization, IProgressMonitor.UNKNOWN);
-                    final ICommandService service = (ICommandService) PlatformUI.getWorkbench()
+                    final ICommandService service = PlatformUI.getWorkbench()
                             .getService(ICommandService.class);
-                    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+                    final IHandlerService handlerService = PlatformUI.getWorkbench()
                             .getService(IHandlerService.class);
                     final Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization");
                     try {
