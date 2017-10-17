@@ -22,7 +22,9 @@ import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -37,7 +39,14 @@ public class GetApiSessionOperation implements IRunnableWithProgress {
 
     public APISession execute() {
         try {
-            progressService().busyCursorWhile(this);
+            if (!BOSEngineManager.getInstance().isRunning()) {
+                progressService().run(true, false, monitor -> {
+                    monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
+                    BOSEngineManager.getInstance().start();
+                    monitor.done();
+                });
+            }
+            run(new NullProgressMonitor());
             return session;
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException(e);
