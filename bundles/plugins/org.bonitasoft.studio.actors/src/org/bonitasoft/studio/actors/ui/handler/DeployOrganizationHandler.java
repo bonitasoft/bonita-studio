@@ -82,11 +82,15 @@ public class DeployOrganizationHandler {
             final String organizationName = controlSupplier.getFileStore().getDisplayName();
             MessageDialog.openInformation(Display.getDefault().getActiveShell(),
                     Messages.deployInformationTitle,
-                    Messages.bind(Messages.deployOrganizationSuccessMsg, organizationName));
+                    Messages.bind(getSuccessMessage(), organizationName));
         } else {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(), status.getMessage(),
                     status.getException());
         }
+    }
+
+    protected String getSuccessMessage() {
+        return Messages.deployOrganizationSuccessMsg;
     }
 
     protected DeployOrganizationControlSupplier newPublishOrganizationControlSupplier(
