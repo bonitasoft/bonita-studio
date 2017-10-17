@@ -142,15 +142,6 @@ public class TestConnectorMigrationUseCase {
     }
 
     @Test
-    public void testTalendConnectorsMigration() throws Exception {
-        final MainProcess mainProc = importBar("talend_connectors.bar");
-
-        final List<Connector> connectors = ModelHelper.getAllItemsOfType(
-                mainProc, ProcessPackage.Literals.CONNECTOR);
-        assertEquals("Invalid number of connector", 0, connectors.size());
-    }
-
-    @Test
     public void testWebServiceConnectorMigration() throws Exception {
         final MainProcess mainProc = importBar("WebServiceConnectorMigration--1.0.bar");
 
@@ -165,14 +156,6 @@ public class TestConnectorMigrationUseCase {
         final List<Connector> connectors = ModelHelper.getAllItemsOfType(
                 mainProc, ProcessPackage.Literals.CONNECTOR);
         assertEquals("Invalid number of connector", 17, connectors.size());
-    }
-
-    @Test
-    public void testSapConnectorMigration() throws Exception {
-        final MainProcess mainProc = importBar("SapConnectorMigrationUseCase--1.0.bar");
-        final List<Connector> connectors = ModelHelper.getAllItemsOfType(
-                mainProc, ProcessPackage.Literals.CONNECTOR);
-        assertEquals("Invalid number of connector", 1, connectors.size());
     }
 
     @Test
