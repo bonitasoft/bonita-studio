@@ -14,9 +14,15 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class ApplicationTokenUnicityValidatorTest {
+
+    @Rule
+    public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
 
     @Test
     public void should_validate_uniqueness_without_current_token() throws Exception {
@@ -36,14 +42,14 @@ public class ApplicationTokenUnicityValidatorTest {
         ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         nodeContainer.addApplication(ApplicationNodeBuilder.newApplication("token3", "appName", "1.0").create());
         ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", "token2");
+                nodeContainer, "filename.xml", new WritableValue<String>("token2", String.class));
 
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("token2")).isNotOK();
         assertThat(validator.validate("token3")).isNotOK();
 
         validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", "token3");
+                nodeContainer, "filename.xml", new WritableValue<String>("token3", String.class));
 
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("token2")).isNotOK();
@@ -55,7 +61,7 @@ public class ApplicationTokenUnicityValidatorTest {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
         ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", "token4");
+                nodeContainer, "filename.xml", new WritableValue<String>("token4", String.class));
 
         assertThat(validator.validate("token4")).isNotOK();
     }
@@ -71,7 +77,7 @@ public class ApplicationTokenUnicityValidatorTest {
         workingCopy.addApplication(ApplicationNodeBuilder.newApplication("duplicatedToken", "name5", "1.0").create());
 
         ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                workingCopy, "filename.xml", "workingcpy_token2");
+                workingCopy, "filename.xml", new WritableValue<String>("workingcpy_token2", String.class));
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("workingcpy_token1")).isNotOK();
         assertThat(validator.validate("workingcpy_token2")).isOK();
@@ -79,7 +85,8 @@ public class ApplicationTokenUnicityValidatorTest {
         validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml");
         assertThat(validator.validate("token2")).isOK();
 
-        validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml", "duplicatedToken");
+        validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml",
+                new WritableValue<String>("duplicatedToken", String.class));
         assertThat(validator.validate("duplicatedToken")).isNotOK();
     }
 

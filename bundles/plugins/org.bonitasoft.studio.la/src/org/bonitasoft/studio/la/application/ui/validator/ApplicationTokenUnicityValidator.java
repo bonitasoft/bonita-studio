@@ -28,6 +28,8 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.ui.validator.ValidatorBuilder;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 
 public class ApplicationTokenUnicityValidator extends UniqueValidator {
@@ -55,7 +57,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     }
 
     private final RepositoryAccessor repositoryAccessor;
-    private Optional<String> currentToken;
+    private Optional<IObservableValue<String>> currentTokenObservable;
     private ApplicationNodeContainer applicationWorkingCopy;
     private String filename;
 
@@ -65,10 +67,11 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     }
 
     public ApplicationTokenUnicityValidator(RepositoryAccessor repositoryAccessor,
-            ApplicationNodeContainer applicationWorkingCopy, String filename, String currentToken) {
+            ApplicationNodeContainer applicationWorkingCopy, String filename,
+            IObservableValue<String> currentTokenObservable) {
         this.repositoryAccessor = repositoryAccessor;
         this.applicationWorkingCopy = applicationWorkingCopy;
-        this.currentToken = Optional.ofNullable(currentToken);
+        this.currentTokenObservable = Optional.ofNullable(currentTokenObservable);
         this.filename = filename;
     }
 
@@ -94,14 +97,11 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                 .forEach(allTokens::add);
 
         applicationWorkingCopy.getApplications().stream()
-                .filter(application -> Objects.equals(currentToken.orElse(""), application.getToken()))
+                .filter(application -> Objects.equals(currentTokenObservable.orElse(new WritableValue<>()).getValue(),
+                        application.getToken()))
                 .map(ApplicationNode::getToken)
                 .findFirst().ifPresent(allTokens::remove);
         return allTokens;
-    }
-
-    public void setCurrentToken(String currentToken) {
-        this.currentToken = Optional.ofNullable(currentToken);
     }
 
     /**
