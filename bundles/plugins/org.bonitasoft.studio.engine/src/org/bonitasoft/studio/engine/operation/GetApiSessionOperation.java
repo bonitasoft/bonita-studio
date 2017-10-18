@@ -41,7 +41,7 @@ public class GetApiSessionOperation implements IRunnableWithProgress {
         try {
             if (!BOSEngineManager.getInstance().isRunning()) {
                 progressService().run(true, false, monitor -> {
-                    monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.waitingForEngineToStart, IProgressMonitor.UNKNOWN);
                     BOSEngineManager.getInstance().start();
                     monitor.done();
                 });
