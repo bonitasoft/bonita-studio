@@ -152,7 +152,6 @@ public class BOSEngineManager {
             initBonitaHome();
             BOSWebServerManager.getInstance().startServer(monitor);
             isRunning = postEngineStart();
-            monitor.done();
         }
     }
 
@@ -302,9 +301,6 @@ public class BOSEngineManager {
                 BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
             }
 
-        }
-        if (monitor != null) {
-            monitor.done();
         }
         return session;
     }
