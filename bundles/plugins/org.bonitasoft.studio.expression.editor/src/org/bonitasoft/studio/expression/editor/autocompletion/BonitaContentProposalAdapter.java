@@ -742,6 +742,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                     @Override
                                     public void widgetSelected(final SelectionEvent e) {
                                         linkClicked = true;
+                                        closeProposalPopup();
                                         updateExpressionField(addNewData(listener));
                                         linkClicked = false;
                                     }
@@ -837,11 +838,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 final GridData data = new GridData(GridData.FILL_BOTH);
                 data.heightHint = proposalTable.getItemHeight()
                         * POPUP_CHAR_HEIGHT;
-                
-               int tableSize = proposalTable.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-               int pupupSize = Math.max(control.getSize().x,
+
+                int tableSize = proposalTable.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+                int pupupSize = Math.max(control.getSize().x,
                         POPUP_MINIMUM_WIDTH);
-                data.widthHint = Math.max(tableSize,pupupSize);
+                data.widthHint = Math.max(tableSize, pupupSize);
                 proposalTable.setLayoutData(data);
                 getShell().pack();
                 popupSize = getShell().getSize();

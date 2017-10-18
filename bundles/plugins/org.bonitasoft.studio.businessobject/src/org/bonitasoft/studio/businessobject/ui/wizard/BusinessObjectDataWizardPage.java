@@ -23,7 +23,7 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +47,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -250,7 +251,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         businessObjectComboViewer.setContentProvider(new ObservableListContentProvider());
         businessObjectComboViewer.setLabelProvider(businessObjectLabelProvider());
 
-        final WritableList businessObjectsObservableList = new WritableList(getAllBusinessObjects(), BusinessObject.class);
+        final IObservableList<BusinessObject> businessObjectsObservableList = new WritableList(getAllBusinessObjects(),
+                BusinessObject.class);
 
         final IViewerObservableValue observeSingleSelection = ViewersObservables
                 .observeSingleSelection(businessObjectComboViewer);
@@ -290,7 +292,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     private void createNewBusinessObjectLink(final Composite comboComposite,
-            final WritableList businessObjectsObservableList,
+            final IObservableList<BusinessObject> businessObjectsObservableList,
             final IViewerObservableValue observeSingleSelection) {
         final Link createBusinessObjectLink = new Link(comboComposite, SWT.NO_FOCUS);
         createBusinessObjectLink.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
@@ -356,7 +358,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     protected List<BusinessObject> getAllBusinessObjects() {
         return Optional.ofNullable(businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME))
                 .map(BusinessObjectModelFileStore::getBusinessObjects)
-                .orElse(Collections.emptyList());
+                .orElse(new ArrayList<>());
     }
 
     protected Text createDescriptionControl(final Composite mainComposite,
