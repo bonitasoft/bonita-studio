@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+Copyright (C) 2009-2015 BonitaSoft S.A.
+Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2.0 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<plugin>
+
+   <extension point="org.eclipse.team.core.fileTypes" id="repo-ftype">
+      <?gmfgen generated="true"?>
+      <fileTypes type="text" extension="form"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser" id="resource-factory">
+      <?gmfgen generated="true"?>
+      <parser
+         type="form"
+         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+      </parser>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors" id="gmf-editor">
+      <?gmfgen generated="true"?>
+      <editor
+         id="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID"
+         name="%editorName"
+         icon="icons/obj16/FormDiagramFile.gif"
+         extensions="form"
+         default="true"
+         class="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor"
+         matchingStrategy="org.bonitasoft.studio.model.process.diagram.form.part.ProcessMatchingStrategy"
+         contributorClass="org.bonitasoft.studio.model.process.diagram.form.part.ProcessDiagramActionBarContributor">
+      </editor>
+   </extension>
+   
+   <extension point="org.eclipse.ui.contexts" id="ui-context">
+      <?gmfgen generated="true"?>
+      <context
+         description="%context.description"
+         id="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
+         name="%context.name"
+         parentId="org.eclipse.gmf.runtime.diagram.ui.diagramContext">
+      </context>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards" id="creation-wizard">
+      <?gmfgen generated="true"?>
+  	  <wizard
+  	     name="%newWizardName"
+  	     icon="icons/obj16/FormDiagramFile.gif"
+  	     category="org.eclipse.ui.Examples"
+  	     class="org.bonitasoft.studio.model.process.diagram.form.part.ProcessCreationWizard"
+  	     id="org.bonitasoft.studio.model.process.diagram.form.part.ProcessCreationWizardID">
+  	  	 <description>%newWizardDesc</description>  
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus" id="init-diagram-action">
+      <?gmfgen generated="true"?>
+      <objectContribution
+            id="org.bonitasoft.studio.diagram.form.InitDiagram"
+            nameFilter="*.form"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               label="%initDiagramActionLabel"
+               class="org.bonitasoft.studio.model.process.diagram.form.part.ProcessInitDiagramFileAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.bonitasoft.studio.diagram.form.InitDiagramAction">
+         </action>
+      </objectContribution>
+   </extension>
+	
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders" id="global-actions">
+      <?gmfgen generated="true"?>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider"
+         id="FormPresentation">
+         <Priority name="Lowest"/>
+         <ViewId id="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="delete"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+               <GlobalActionId actionId="save"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="save">
+               </GlobalActionId>
+            </ElementType>        
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEGlobalActionHandlerProvider"
+         id="FormPresentationIDE">
+         <Priority name="Lowest"/>
+         <ViewId id="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="bookmark"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderGlobalActionHandlerProvider"
+            id="FormRender">
+         <Priority name="Lowest"/>
+         <ViewId id="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="cut"/>
+               <GlobalActionId actionId="copy"/>
+               <GlobalActionId actionId="paste"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+   </extension>
+
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders" id="markers-navigation">
+      <?gmfgen generated="true"?>
+      <MarkerNavigationProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider">
+         <MarkerType name="org.bonitasoft.studio.diagram.form.diagnostic"/>
+         <Priority name="Lowest"/>
+      </MarkerNavigationProvider>
+   </extension>
+
+   <extension id="diagnostic" name="Bonita Form editor problems" point="org.eclipse.core.resources.markers">
+      <?gmfgen generated="true"?>
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
+
+   <extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <?gmfgen generated="true"?>
+      <decoratorProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.FormValidationDecoratorProvider">
+         <Priority name="Medium"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences" id="prefs">
+      <?gmfgen generated="true"?>
+      <initializer class="org.bonitasoft.studio.model.process.diagram.form.preferences.DiagramPreferenceInitializer"/>
+   </extension>
+
+
+
+
+
+   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders" id="view-provider">
+      <?gmfgen generated="true"?>
+      <viewProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.ProcessViewProvider">
+         <Priority name="Lowest"/>
+	
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Form"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="2130,2114,2115,2116,2117,2118,2119,2144,2120,2121,2140,2126,2127,2128,2125,2131,2132,2133,2134,2135,2136,2137,2138,2139,2141,2142,2143,3114,3118,3103,3115,3105,3106,3107,3116,3109,3110,3111,3112,3113,3128,3119,3120,3121,3122,3123,3124,3125,3126,3127,3129,3130,3131,3132"/>
+      </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders" id="ep-provider">
+      <?gmfgen generated="true"?>
+      <editpartProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.ProcessEditPartProvider">
+         <Priority name="Lowest"/>
+         <object class="org.eclipse.gmf.runtime.notation.Diagram" id="generated-diagram">
+            <method name="getType()" value="Form"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-nodes">
+            <method name="getType()" value="2130,2114,2115,2116,2117,2118,2119,2144,2120,2121,2140,2126,2127,2128,2125,2131,2132,2133,2134,2135,2136,2137,2138,2139,2141,2142,2143,3114,3118,3103,3115,3105,3106,3107,3116,3109,3110,3111,3112,3113,3128,3119,3120,3121,3122,3123,3124,3125,3126,3127,3129,3130,3131,3132"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Edge" id="generated-links">
+            <method name="getType()" value=""/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-labels">
+            <method name="getType()" value="5148,5150,5151,5152,5153,5154,5155,5156,5157,5158,5159,5160,5161,5162,5135,5188,5189,5190,5191,5141,5192,5193,5194,5195,5196,5197,5163,5149,5164,5165,5166,5167,5168,5169,5170,5171,5172,5173,5174,5175,5176,5177,5145,5178,5147,5179,5180,5181,5182,5183,5184,5185"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-compartments">
+            <method name="getType()" value=""/>
+         </object>
+         <context views="generated-diagram,generated-nodes,generated-links,generated-labels,generated-compartments"/>
+      </editpartProvider>
+   </extension>
+
+
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.iconProviders" id="icon-provider">
+      <?gmfgen generated="true"?>
+      <IconProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.ProcessIconProvider">
+         <Priority name="Low"/>
+      </IconProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.parserProviders" id="parser-provider">
+      <?gmfgen generated="true"?>
+      <ParserProvider class="org.bonitasoft.studio.model.process.diagram.form.providers.ProcessParserProvider">
+         <Priority name="Lowest"/>
+      </ParserProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes" id="element-types">
+      <?gmfgen generated="true"?>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.Form_1000"
+               name="%metatype.name.Form_1000"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="Form"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.FormEditHelper">
+            <param name="semanticHint" value="1000"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.CheckBoxSingleFormField_2130"
+               name="%metatype.name.CheckBoxSingleFormField_2130"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="CheckBoxSingleFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.CheckBoxSingleFormFieldEditHelper">
+            <param name="semanticHint" value="2130"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.ComboFormField_2114"
+               name="%metatype.name.ComboFormField_2114"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="ComboFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.ComboFormFieldEditHelper">
+            <param name="semanticHint" value="2114"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.DateFormField_2115"
+               name="%metatype.name.DateFormField_2115"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="DateFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.DateFormFieldEditHelper">
+            <param name="semanticHint" value="2115"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.ListFormField_2116"
+               name="%metatype.name.ListFormField_2116"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="ListFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.ListFormFieldEditHelper">
+            <param name="semanticHint" value="2116"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.PasswordFormField_2117"
+               name="%metatype.name.PasswordFormField_2117"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="PasswordFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.PasswordFormFieldEditHelper">
+            <param name="semanticHint" value="2117"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.RadioFormField_2118"
+               name="%metatype.name.RadioFormField_2118"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="RadioFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.RadioFormFieldEditHelper">
+            <param name="semanticHint" value="2118"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.SelectFormField_2119"
+               name="%metatype.name.SelectFormField_2119"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="SelectFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.SelectFormFieldEditHelper">
+            <param name="semanticHint" value="2119"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.SuggestBox_2144"
+               name="%metatype.name.SuggestBox_2144"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="SuggestBox"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.SuggestBoxEditHelper">
+            <param name="semanticHint" value="2144"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.TextFormField_2120"
+               name="%metatype.name.TextFormField_2120"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="TextFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.TextFormFieldEditHelper">
+            <param name="semanticHint" value="2120"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.TextAreaFormField_2121"
+               name="%metatype.name.TextAreaFormField_2121"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="TextAreaFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.TextAreaFormFieldEditHelper">
+            <param name="semanticHint" value="2121"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.RichTextAreaFormField_2140"
+               name="%metatype.name.RichTextAreaFormField_2140"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="RichTextAreaFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.RichTextAreaFormFieldEditHelper">
+            <param name="semanticHint" value="2140"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.SubmitFormButton_2126"
+               name="%metatype.name.SubmitFormButton_2126"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="SubmitFormButton"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.SubmitFormButtonEditHelper">
+            <param name="semanticHint" value="2126"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.NextFormButton_2127"
+               name="%metatype.name.NextFormButton_2127"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="NextFormButton"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.NextFormButtonEditHelper">
+            <param name="semanticHint" value="2127"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.PreviousFormButton_2128"
+               name="%metatype.name.PreviousFormButton_2128"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="PreviousFormButton"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.PreviousFormButtonEditHelper">
+            <param name="semanticHint" value="2128"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.Group_2125"
+               name="%metatype.name.Group_2125"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="Group"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.GroupEditHelper">
+            <param name="semanticHint" value="2125"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.MessageInfo_2131"
+               name="%metatype.name.MessageInfo_2131"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.MessageInfo_3124"/>
+            <param name="semanticHint" value="2131"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.TextInfo_2132"
+               name="%metatype.name.TextInfo_2132"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.TextInfo_3125"/>
+            <param name="semanticHint" value="2132"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.FileWidget_2133"
+               name="%metatype.name.FileWidget_2133"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.FileWidget_3119"/>
+            <param name="semanticHint" value="2133"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.CheckBoxMultipleFormField_2134"
+               name="%metatype.name.CheckBoxMultipleFormField_2134"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.CheckBoxMultipleFormField_3120"/>
+            <param name="semanticHint" value="2134"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.ImageWidget_2135"
+               name="%metatype.name.ImageWidget_2135"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.ImageWidget_3123"/>
+            <param name="semanticHint" value="2135"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.HiddenWidget_2136"
+               name="%metatype.name.HiddenWidget_2136"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.HiddenWidget_3122"/>
+            <param name="semanticHint" value="2136"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.DurationFormField_2137"
+               name="%metatype.name.DurationFormField_2137"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.DurationFormField_3121"/>
+            <param name="semanticHint" value="2137"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.FormButton_2138"
+               name="%metatype.name.FormButton_2138"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.FormButton_3126"/>
+            <param name="semanticHint" value="2138"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.Table_2139"
+               name="%metatype.name.Table_2139"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.Table_3127"/>
+            <param name="semanticHint" value="2139"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.DynamicTable_2141"
+               name="%metatype.name.DynamicTable_2141"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.DynamicTable_3129"/>
+            <param name="semanticHint" value="2141"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.IFrameWidget_2142"
+               name="%metatype.name.IFrameWidget_2142"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.IFrameWidget_3130"/>
+            <param name="semanticHint" value="2142"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.HtmlWidget_2143"
+               name="%metatype.name.HtmlWidget_2143"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.HtmlWidget_3131"/>
+            <param name="semanticHint" value="2143"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.PreviousFormButton_3114"
+               name="%metatype.name.PreviousFormButton_3114"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.PreviousFormButton_2128"/>
+            <param name="semanticHint" value="3114"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.CheckBoxSingleFormField_3118"
+               name="%metatype.name.CheckBoxSingleFormField_3118"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.CheckBoxSingleFormField_2130"/>
+            <param name="semanticHint" value="3118"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.ComboFormField_3103"
+               name="%metatype.name.ComboFormField_3103"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.ComboFormField_2114"/>
+            <param name="semanticHint" value="3103"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.NextFormButton_3115"
+               name="%metatype.name.NextFormButton_3115"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.NextFormButton_2127"/>
+            <param name="semanticHint" value="3115"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.DateFormField_3105"
+               name="%metatype.name.DateFormField_3105"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.DateFormField_2115"/>
+            <param name="semanticHint" value="3105"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.Group_3106"
+               name="%metatype.name.Group_3106"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.Group_2125"/>
+            <param name="semanticHint" value="3106"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.ListFormField_3107"
+               name="%metatype.name.ListFormField_3107"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.ListFormField_2116"/>
+            <param name="semanticHint" value="3107"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.SubmitFormButton_3116"
+               name="%metatype.name.SubmitFormButton_3116"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.SubmitFormButton_2126"/>
+            <param name="semanticHint" value="3116"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.PasswordFormField_3109"
+               name="%metatype.name.PasswordFormField_3109"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.PasswordFormField_2117"/>
+            <param name="semanticHint" value="3109"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.RadioFormField_3110"
+               name="%metatype.name.RadioFormField_3110"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.RadioFormField_2118"/>
+            <param name="semanticHint" value="3110"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.SelectFormField_3111"
+               name="%metatype.name.SelectFormField_3111"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.SelectFormField_2119"/>
+            <param name="semanticHint" value="3111"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.TextFormField_3112"
+               name="%metatype.name.TextFormField_3112"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.TextFormField_2120"/>
+            <param name="semanticHint" value="3112"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.TextAreaFormField_3113"
+               name="%metatype.name.TextAreaFormField_3113"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.TextAreaFormField_2121"/>
+            <param name="semanticHint" value="3113"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.RichTextAreaFormField_3128"
+               name="%metatype.name.RichTextAreaFormField_3128"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.RichTextAreaFormField_2140"/>
+            <param name="semanticHint" value="3128"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.FileWidget_3119"
+               name="%metatype.name.FileWidget_3119"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="FileWidget"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.FileWidgetEditHelper">
+            <param name="semanticHint" value="3119"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.CheckBoxMultipleFormField_3120"
+               name="%metatype.name.CheckBoxMultipleFormField_3120"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="CheckBoxMultipleFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.CheckBoxMultipleFormFieldEditHelper">
+            <param name="semanticHint" value="3120"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.DurationFormField_3121"
+               name="%metatype.name.DurationFormField_3121"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="DurationFormField"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.DurationFormFieldEditHelper">
+            <param name="semanticHint" value="3121"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.HiddenWidget_3122"
+               name="%metatype.name.HiddenWidget_3122"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="HiddenWidget"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.HiddenWidgetEditHelper">
+            <param name="semanticHint" value="3122"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.ImageWidget_3123"
+               name="%metatype.name.ImageWidget_3123"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="ImageWidget"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.ImageWidgetEditHelper">
+            <param name="semanticHint" value="3123"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.MessageInfo_3124"
+               name="%metatype.name.MessageInfo_3124"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="MessageInfo"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.MessageInfoEditHelper">
+            <param name="semanticHint" value="3124"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.TextInfo_3125"
+               name="%metatype.name.TextInfo_3125"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="TextInfo"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.TextInfoEditHelper">
+            <param name="semanticHint" value="3125"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.FormButton_3126"
+               name="%metatype.name.FormButton_3126"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="FormButton"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.FormButtonEditHelper">
+            <param name="semanticHint" value="3126"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.Table_3127"
+               name="%metatype.name.Table_3127"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="Table"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.TableEditHelper">
+            <param name="semanticHint" value="3127"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.DynamicTable_3129"
+               name="%metatype.name.DynamicTable_3129"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="DynamicTable"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.DynamicTableEditHelper">
+            <param name="semanticHint" value="3129"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.IFrameWidget_3130"
+               name="%metatype.name.IFrameWidget_3130"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="IFrameWidget"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.IFrameWidgetEditHelper">
+            <param name="semanticHint" value="3130"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.form.HtmlWidget_3131"
+               name="%metatype.name.HtmlWidget_3131"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               
+               eclass="HtmlWidget"
+               edithelper="org.bonitasoft.studio.model.process.diagram.form.edit.helpers.HtmlWidgetEditHelper">
+            <param name="semanticHint" value="3131"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/form">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.form.SuggestBox_3132"
+               name="%metatype.name.SuggestBox_3132"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.form.SuggestBox_2144"/>
+            <param name="semanticHint" value="3132"/>
+         </specializationType>
+      </metamodel>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings" id="element-types-bindings">
+      <?gmfgen generated="true"?>
+      <clientContext id="org.bonitasoft.studio.diagram.form.TypeContext">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="org.bonitasoft.studio.diagram.EditingDomain"/>
+         </enablement>
+      </clientContext> 
+      <binding context="org.bonitasoft.studio.diagram.form.TypeContext">
+         <elementType ref="org.bonitasoft.studio.diagram.form.Form_1000"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.CheckBoxSingleFormField_2130"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ComboFormField_2114"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DateFormField_2115"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ListFormField_2116"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.PasswordFormField_2117"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.RadioFormField_2118"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SelectFormField_2119"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SuggestBox_2144"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextFormField_2120"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextAreaFormField_2121"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.RichTextAreaFormField_2140"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SubmitFormButton_2126"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.NextFormButton_2127"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.PreviousFormButton_2128"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.Group_2125"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.MessageInfo_2131"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextInfo_2132"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.FileWidget_2133"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.CheckBoxMultipleFormField_2134"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ImageWidget_2135"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.HiddenWidget_2136"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DurationFormField_2137"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.FormButton_2138"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.Table_2139"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DynamicTable_2141"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.IFrameWidget_2142"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.HtmlWidget_2143"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.PreviousFormButton_3114"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.CheckBoxSingleFormField_3118"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ComboFormField_3103"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.NextFormButton_3115"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DateFormField_3105"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.Group_3106"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ListFormField_3107"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SubmitFormButton_3116"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.PasswordFormField_3109"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.RadioFormField_3110"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SelectFormField_3111"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextFormField_3112"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextAreaFormField_3113"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.RichTextAreaFormField_3128"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.FileWidget_3119"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.CheckBoxMultipleFormField_3120"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DurationFormField_3121"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.HiddenWidget_3122"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.ImageWidget_3123"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.MessageInfo_3124"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.TextInfo_3125"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.FormButton_3126"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.Table_3127"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.DynamicTable_3129"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.IFrameWidget_3130"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.HtmlWidget_3131"/>
+         <elementType ref="org.bonitasoft.studio.diagram.form.SuggestBox_3132"/>
+         <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+      </binding>
+   </extension>
+	   <extension point="org.eclipse.core.expressions.propertyTesters" id="navigator-proptest.isURIEditorInput">
+      <?gmfgen generated="true"?>
+       <propertyTester
+           id="org.bonitasoft.studio.diagram.form.URIEditorInputPropertyTester"
+           type="org.eclipse.emf.common.ui.URIEditorInput"
+           namespace="org.bonitasoft.studio.diagram.form"
+           properties="isURIEditorInput"
+           class="org.bonitasoft.studio.model.process.diagram.form.part.FormUriEditorInputTester">
+       </propertyTester>
+   </extension>
+
+	   <extension point="org.eclipse.ui.navigator.viewer" id="navigator-viewbinding">
+      <?gmfgen generated="true"?>
+      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <contentExtension pattern="org.bonitasoft.studio.diagram.form.resourceContent"/>
+            <contentExtension pattern="org.bonitasoft.studio.diagram.form.navigatorLinkHelper"/>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <actionExtension pattern="org.bonitasoft.studio.diagram.form.navigatorActionProvider"/>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+
+   <extension point="org.eclipse.ui.navigator.navigatorContent" id="navigator-content">
+      <?gmfgen generated="true"?>
+      <navigatorContent
+            id="org.bonitasoft.studio.diagram.form.resourceContent" 
+            name="%navigatorContentName" 
+            priority="normal" 
+            contentProvider="org.bonitasoft.studio.model.process.diagram.form.navigator.FormNavigatorContentProvider" 
+            labelProvider="org.bonitasoft.studio.model.process.diagram.form.navigator.FormNavigatorLabelProvider"
+            icon="icons/obj16/FormDiagramFile.gif"
+            activeByDefault="true">
+         <triggerPoints>
+            <or>
+	           <and>
+    	          <instanceof value="org.eclipse.core.resources.IFile"/>
+        	      <test property="org.eclipse.core.resources.extension" value="form"/>
+               </and>
+               <instanceof value="org.bonitasoft.studio.model.process.diagram.form.navigator.FormAbstractNavigatorItem"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+         	   <instanceof value="org.bonitasoft.studio.model.process.diagram.form.navigator.FormAbstractNavigatorItem"/>
+            </or>
+         </possibleChildren>
+         <commonSorter 
+               id="org.bonitasoft.studio.diagram.form.navigatorSorter" 
+               class="org.bonitasoft.studio.model.process.diagram.form.navigator.FormNavigatorSorter">
+            <parentExpression>
+               <or>
+	              <and>
+    	             <instanceof value="org.eclipse.core.resources.IFile"/>
+        	         <test property="org.eclipse.core.resources.extension" value="form"/>
+                  </and>
+                  <instanceof value="org.bonitasoft.studio.model.process.diagram.form.navigator.FormAbstractNavigatorItem"/>
+               </or>
+            </parentExpression>
+         </commonSorter>
+      </navigatorContent>
+      <actionProvider
+            id="org.bonitasoft.studio.diagram.form.navigatorActionProvider"
+            class="org.bonitasoft.studio.model.process.diagram.form.navigator.FormNavigatorActionProvider">
+         <enablement>
+            <or>
+               <instanceof value="org.bonitasoft.studio.model.process.diagram.form.navigator.FormAbstractNavigatorItem"/>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   
+	   <extension point="org.eclipse.ui.navigator.linkHelper" id="navigator-linkhelper">
+      <?gmfgen generated="true"?>
+      <linkHelper
+            id="org.bonitasoft.studio.diagram.form.navigatorLinkHelper"
+            class="org.bonitasoft.studio.model.process.diagram.form.navigator.FormNavigatorLinkHelper">
+         <editorInputEnablement>
+            <and>
+               <instanceof value="org.eclipse.emf.common.ui.URIEditorInput"/>
+               <test property="org.bonitasoft.studio.diagram.form.isURIEditorInput"/>
+            </and>
+         </editorInputEnablement>
+         <selectionEnablement>
+            <instanceof value="org.bonitasoft.studio.model.process.diagram.form.navigator.FormAbstractNavigatorItem"/>
+         </selectionEnablement>
+      </linkHelper>
+   </extension>
+   <extension point="org.eclipse.ui.commands" id="update-cmd">
+      <?gmfgen generated="true"?>
+      <command
+         categoryId="org.eclipse.ui.category.edit"
+         defaultHandler="org.bonitasoft.studio.model.process.diagram.form.part.ProcessDiagramUpdateCommand"
+         description="%update.diagram.description"
+         id="org.bonitasoft.studio.model.process.diagram.form.updateDiagram"
+         name="%update.diagram.name"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.bindings" id="update-cmd-binding">
+      <?gmfgen generated="true"?>
+      <key 
+         commandId="org.bonitasoft.studio.model.process.diagram.form.updateDiagram"
+         contextId="org.bonitasoft.studio.model.process.diagram.form.ui.diagramContext"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="F5"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus" id="context-menus">
+      <?gmfgen generated="true"?>
+      <!-- menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=">
+      </menuContribution>
+      <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=">
+      </menuContribution -->
+      <menuContribution locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu">
+         <command commandId="org.bonitasoft.studio.diagram.form.LoadResourceAction">
+            <visibleWhen>
+               <and>
+                  <with variable="activePartId"><equals value="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID"/></with>
+                  <with variable="selection"><iterate ifEmpty="false"> 
+                     <instanceof value="org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart"/>
+                  </iterate></with>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands" id="menu-commands">
+      <?gmfgen generated="true"?>
+      <category id="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID" name="%cmdcategory.name" description="%cmdcategory.desc"/>
+      <command id="org.bonitasoft.studio.diagram.form.LoadResourceAction"
+         name="Load Resource"
+         categoryId="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID"
+         defaultHandler="org.bonitasoft.studio.model.process.diagram.form.part.LoadResourceAction"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.handlers" id="menu-handlers">
+      <?gmfgen generated="true"?>
+   </extension>
+
+   <!-- optionally, specify keybindings -->
+</plugin>
