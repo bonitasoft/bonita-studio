@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.la.application.ui.provider;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -46,10 +50,13 @@ public class ApplicationFileStoreLabelProvider extends FileStoreLabelProvider {
     private String appendAppTokens(final ApplicationFileStore fileStore, final StyledString styledString)
             throws ReadFileStoreException {
         styledString.append("  ");
-        fileStore.getContent().getApplications().stream()
-                .forEach(
-                        app -> styledString.append("../apps/" + app.getToken() + ", ", StyledString.COUNTER_STYLER));
-        return styledString.getString().substring(0, styledString.getString().length() - 2);
+        List<ApplicationNode> applications = fileStore.getContent().getApplications();
+        styledString.append(
+                applications.stream()
+                        .map(application -> "../apps/" + application.getToken())
+                        .collect(Collectors.joining(", ")),
+                StyledString.COUNTER_STYLER);
+        return styledString.getString();
     }
 
 }
