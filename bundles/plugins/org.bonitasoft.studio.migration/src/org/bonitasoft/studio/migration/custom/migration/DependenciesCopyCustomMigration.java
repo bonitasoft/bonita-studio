@@ -91,6 +91,9 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
     protected Instance newCleanedDocumentDependency(final Instance refElement, final Model model) {
         final Instance newInstance = model.newInstance(refElement.getEClass());
         newInstance.set("name", refElement.get("name"));
+        if (newInstance.getEClass().getEStructuralFeature("multiple") != null) {
+            newInstance.set("multiple", refElement.get("multiple"));
+        }
         return newInstance;
     }
 
