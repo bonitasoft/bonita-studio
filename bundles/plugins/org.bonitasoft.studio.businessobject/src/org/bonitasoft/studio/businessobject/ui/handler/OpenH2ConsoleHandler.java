@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.businessobject.ui.handler;
 
-import static com.google.common.collect.Iterables.tryFind;
-import static com.google.common.io.Files.fileTreeTraverser;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -44,8 +42,6 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 
 public class OpenH2ConsoleHandler {
 
@@ -113,26 +109,18 @@ public class OpenH2ConsoleHandler {
     protected String locateH2jar(RepositoryAccessor repositoryAccessor) throws IOException {
         final File root = rootFile(repositoryAccessor);
         final Path path = Paths.get(root.toURI()).resolve(Paths.get("tomcat", "server", "lib", "bonita"));
-        final Optional<File> candidate = tryFind(fileTreeTraverser().children(path.toFile()), h2Jar());
-        if (!candidate.isPresent()) {
-            throw new FileNotFoundException("Cannot find h2 jar file in tomcat/server/lib/bonita folder.");
-        }
-        return candidate.get().getAbsolutePath();
+        return Stream.of(path.toFile().listFiles(this::h2Jar))
+                .findFirst()
+                .orElseThrow(() -> new FileNotFoundException(String.format("Cannot find h2 jar file in %s folder.", path)))
+                .getAbsolutePath();
     }
 
     protected File rootFile(RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getWorkspace().getRoot().getLocation().toFile();
     }
 
-    private Predicate<? super File> h2Jar() {
-        return new Predicate<File>() {
-
-            @Override
-            public boolean apply(File file) {
-                final String name = file.getName();
-                return name.startsWith("h2-") && name.endsWith(".jar");
-            }
-        };
+    private boolean h2Jar(File dir, String name) {
+        return name.startsWith("h2-") && name.endsWith(".jar");
     }
 
 }
