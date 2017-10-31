@@ -60,8 +60,11 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
+
                 final AbstractManageDiagramWizard wizard = (AbstractManageDiagramWizard) getWizard();
-                wizard.deleteDiagrams(OpenDiagramWizardPage.this);
+                if (wizard.confirmDelete(getSelectedDiagrams())) {
+                    wizard.deleteDiagrams(getSelectedDiagrams(), getViewer());
+                }
             }
 
         });
