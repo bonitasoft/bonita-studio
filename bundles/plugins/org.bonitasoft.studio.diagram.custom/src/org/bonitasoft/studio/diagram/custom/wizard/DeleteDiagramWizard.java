@@ -14,15 +14,16 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import java.util.List;
+
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 
 public class DeleteDiagramWizard extends AbstractManageDiagramWizard {
 
     protected DeleteDiagramWizardPage page;
 
     public DeleteDiagramWizard() {
-        setNeedsProgressMonitor(true);
         setWindowTitle(Messages.DeleteDiagramWizardPage_title);
     }
 
@@ -36,11 +37,13 @@ public class DeleteDiagramWizard extends AbstractManageDiagramWizard {
         addPage(page);
     }
 
+    public List<DiagramFileStore> getSelectedDiagrams() {
+        return page.getSelectedDiagrams();
+    }
+
     @Override
     public boolean performFinish() {
-        final boolean deleted = deleteDiagrams(page);
-        PlatformUtil.openIntroIfNoOtherEditorOpen();
-        return deleted;
+        return confirmDelete(page.getSelectedDiagrams());
     }
 
 }
