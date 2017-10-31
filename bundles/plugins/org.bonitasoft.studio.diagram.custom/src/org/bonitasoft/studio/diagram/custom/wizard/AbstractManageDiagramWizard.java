@@ -31,6 +31,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
@@ -43,47 +44,54 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractManageDiagramWizard extends Wizard implements IWizard {
 
-    public boolean deleteDiagrams(final AbstractManageDiagramWizardPage page) {
-        final List<DiagramFileStore> files = page.getSelectedDiagrams();
+    public boolean confirmDelete(final List<DiagramFileStore> selectedDiagrams) {
+        if (!selectedDiagrams.isEmpty()) {
+            final StringBuilder stringBuilder = new StringBuilder(selectedDiagrams.size() == 1 ? "" : "\n");
+            for (final DiagramFileStore file : selectedDiagrams) {
+                stringBuilder.append(file.getName());
+                stringBuilder.append("\n");
+            }
+            return MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.confirmProcessDeleteTitle,
+                    NLS.bind(Messages.confirmProcessDeleteMessage, stringBuilder.toString()));
+        }
+        return false;
+    }
+
+    public boolean deleteDiagrams(final List<DiagramFileStore> files, ContentViewer viewer) {
         if (!files.isEmpty()) {
             try {
-                final StringBuilder stringBuilder = new StringBuilder(files.size() == 1 ? "" : "\n");
                 for (final DiagramFileStore file : files) {
-                    stringBuilder.append(file.getName());
-                    stringBuilder.append("\n");
-                }
-                if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.confirmProcessDeleteTitle,
-                        NLS.bind(Messages.confirmProcessDeleteMessage, stringBuilder.toString()))) {
-                    for (final DiagramFileStore file : files) {
-                        for (final AbstractProcess process : file.getProcesses()) {
-                            final String uuid = ModelHelper.getEObjectID(process);
-                            final IRepositoryFileStore resourceFolder = getApplicationResourceRepositoryStore().getChild(uuid);
-                            if (resourceFolder != null) {
-                                resourceFolder.delete();
-                            }
-                            final IRepositoryFileStore confFile = getConfigurationRepositoryStore()
-                                    .getChild(uuid + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
-                            if (confFile != null) {
-                                confFile.delete();
-                            }
+                    for (final AbstractProcess process : file.getProcesses()) {
+                        final String uuid = ModelHelper.getEObjectID(process);
+                        final IRepositoryFileStore resourceFolder = getApplicationResourceRepositoryStore()
+                                .getChild(uuid);
+                        if (resourceFolder != null) {
+                            resourceFolder.delete();
                         }
-
-                        for (final IEditorPart editor : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getDirtyEditors()) {
-                            if (editor.getEditorInput().getName().equals(file.getName())) {
-                                file.save(editor);
-                                break;
-                            }
+                        final IRepositoryFileStore confFile = getConfigurationRepositoryStore()
+                                .getChild(uuid + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                        if (confFile != null) {
+                            confFile.delete();
                         }
-                        final Map<String, Object> parameters = new HashMap<String, Object>();
-                        parameters.put(AbstractFileStore.ASK_ACTION_ON_CLOSE, false);
-                        file.setParameters(parameters);
-                        file.close();
-                        file.delete();
                     }
 
-                    page.getViewer().setInput(getDiagramRepositoryStore());
-                    return true;
+                    for (final IEditorPart editor : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .getDirtyEditors()) {
+                        if (editor.getEditorInput().getName().equals(file.getName())) {
+                            file.save(editor);
+                            break;
+                        }
+                    }
+                    final Map<String, Object> parameters = new HashMap<String, Object>();
+                    parameters.put(AbstractFileStore.ASK_ACTION_ON_CLOSE, false);
+                    file.setParameters(parameters);
+                    file.close();
+                    file.delete();
                 }
+                if (viewer != null) {
+                    viewer.setInput(getDiagramRepositoryStore());
+                }
+                return true;
             } catch (final Exception e1) {
                 BonitaStudioLog.error(e1);
             }
