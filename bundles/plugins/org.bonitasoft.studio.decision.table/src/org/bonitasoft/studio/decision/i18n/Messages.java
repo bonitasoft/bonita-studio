@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.decision.ui;
+package org.bonitasoft.studio.decision.i18n;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -40,6 +40,7 @@ public class Messages extends NLS {
     public static String conditions;
     public static String decision;
     public static String noConditionDefined;
+    public static String editDecisionTable;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

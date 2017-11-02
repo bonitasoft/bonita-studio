@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.test.swtbot.suite2;
+package org.bonitasoft.studio.test.swtbot.suite;
 
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -46,12 +46,12 @@ import org.junit.runners.Suite;
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class
 })
-public class AllSWTBotBPMNTests {
+public class BPMNSWTbotTestSuite {
 
     @BeforeClass
     public static void setUp() {
         System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                AllSWTBotBPMNTests.class.getName(), ConsoleColors.RESET));
+                BPMNSWTbotTestSuite.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
@@ -77,7 +77,7 @@ public class AllSWTBotBPMNTests {
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(AllSWTBotBPMNTests.class.getSimpleName() + ".hprof", false);
+                dumper.dumpHeap(BPMNSWTbotTestSuite.class.getSimpleName() + ".hprof", false);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }

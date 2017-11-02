@@ -67,7 +67,6 @@ public class TestProcessZoo {
         int foundProcesses = 0;
         final List<URL> entries = getEntries();
         for (URL url : entries) {
-            System.err.println(url.getFile());
             url = FileLocator.toFileURL(url);
             try {
                 applyTestsOnProcess(url);
@@ -140,28 +139,6 @@ public class TestProcessZoo {
                 "toqa/Buy a NEW mini-6.4.bos",
                 "BPMN-ShowcaseToTestDynamicLabels-1.0.bos",
                 "testonsLesValidateurs-1.0.bos"
-                // Deactivate previous processes import
-                // "bug1657/Create_User_Sequence--1.1.bar",
-                // "My_Bar_Process_1.1.bar",
-                // "BPMN_Showcase_1.0.proc",//test bug 1642
-                // "testonslesValidators.bar", //test import of validators from .bar doesn't crash
-                // "bonita4/approvalWorkflow.bar",
-                // "bonita4/carpool.bar",
-                // "bonita4/webSale.bar",
-                // "mickeyProcesses/1_Enter_order_1.3.bar",
-                // "mickeyProcesses/2_Order_Car_from_Factory_1.0.bar",
-                // //"mickeyProcesses/Bonita_New_Car_Sales_1.0.proc",
-                // "previewExamples/Request_For_Advance_Payment_1.0.proc",
-                // //"mickeyProcesses/Enter_order_1.3.proc",
-                // "previewExamples/Web_Purchase_1.0.proc",
-                // "Travel_request_approval_process--1.0.proc",
-                // "mickeyProcesses/3_Bonita_New_Car_Sales_1.0.bar",
-                // // "mickeyProcesses/Order_Car_from_Factory_1.0.proc"
-                // "JavaConnector-5.4.bar",
-                // "bug4181/Trip_Request--1.0.bar",
-                // "TestProvidedLibsMigration--1.0.bar",
-                // "test_boundary_signal--1.0.proc",
-                // "Business_trip_application_process--1.0.bar"
         };
 
         for (final String name : nameForEntry) {

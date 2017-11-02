@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.properties.i18n.Messages.useDecisionTable;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.decision.ui.Messages;
+import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;

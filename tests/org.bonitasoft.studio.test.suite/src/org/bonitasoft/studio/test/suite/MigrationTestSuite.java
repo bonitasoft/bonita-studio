@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.test.suite2;
+package org.bonitasoft.studio.test.suite;
 
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -54,12 +54,12 @@ import junit.framework.TestSuite;
         CorrelationMigrationTest.class,
         CloseAllEditors.class
 })
-public class AllMigrationTests extends TestSuite {
+public class MigrationTestSuite extends TestSuite {
 
     @BeforeClass
     public static void setUp() {
         System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                AllMigrationTests.class.getName(), ConsoleColors.RESET));
+                MigrationTestSuite.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
@@ -77,7 +77,7 @@ public class AllMigrationTests extends TestSuite {
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(AllMigrationTests.class.getSimpleName() + ".hprof", false);
+                dumper.dumpHeap(MigrationTestSuite.class.getSimpleName() + ".hprof", false);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
