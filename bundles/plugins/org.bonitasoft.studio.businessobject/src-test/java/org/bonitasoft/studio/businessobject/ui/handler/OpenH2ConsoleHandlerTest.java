@@ -24,13 +24,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
@@ -83,13 +82,13 @@ public class OpenH2ConsoleHandlerTest {
         assertThat(path).contains("tomcat");
     }
 
-    private File rootFile() throws MalformedURLException, URISyntaxException {
-        return new File(OpenH2ConsoleHandlerTest.class.getResource("/workspace").toURI().toURL().getFile());
+    private File rootFile() throws Exception {
+        return new File(FileLocator.toFileURL(OpenH2ConsoleHandlerTest.class.getResource("/workspace")).getFile());
     }
 
     @Test
     public void should_throw_FileNotFoundException_if_h2_jar_is_missing() throws Exception {
-        doReturn(new File(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2").toURI().toURL().getFile()))
+        doReturn(new File(FileLocator.toFileURL(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2")).getFile()))
                 .when(openH2ConsoleHandler)
                 .rootFile(repositoryAccessor);
 
