@@ -48,11 +48,8 @@ public class TestImportOrganization {
         String organizationName = "OrganizationTest.xml";
         final File toImport = getFileToImport(organizationName);
         assertTrue("organization to import does not exist", toImport.exists());
-        FileInputStream fis = new FileInputStream(toImport);
-        String id = toImport.getName();
-        organizationStore.importInputStream(id, fis);
-        if (fis != null) {
-            fis.close();
+        try (FileInputStream fis = new FileInputStream(toImport)) {
+            organizationStore.importInputStream(toImport.getName(), fis);
         }
         final String orgaNameWithBosExtansion = organizationName.substring(0, organizationName.indexOf(".")) + "."
                 + OrganizationRepositoryStore.ORGANIZATION_EXT;
@@ -88,16 +85,14 @@ public class TestImportOrganization {
         String organizationName = "ACME-Alpha.xml";
         final File toImport = getFileToImport(organizationName);
         assertTrue("organization to import does not exist", toImport.exists());
-        FileInputStream fis = new FileInputStream(toImport);
-        String id = toImport.getName();
-        organizationStore.importInputStream(id, fis);
-        if (fis != null) {
-            fis.close();
+        try (FileInputStream fis = new FileInputStream(toImport)) {
+            String id = toImport.getName();
+            organizationStore.importInputStream(id, fis);
+            final String orgaNameWithBosExtansion = organizationName.substring(0, organizationName.indexOf(".")) + "."
+                    + OrganizationRepositoryStore.ORGANIZATION_EXT;
+            final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+            assertNotNull(orgaNameWithBosExtansion + " was not imported", organizationTest);
         }
-        final String orgaNameWithBosExtansion = organizationName.substring(0, organizationName.indexOf(".")) + "."
-                + OrganizationRepositoryStore.ORGANIZATION_EXT;
-        final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
-        assertNotNull(orgaNameWithBosExtansion + " was not imported", organizationTest);
     }
 
     @Test
@@ -106,13 +101,11 @@ public class TestImportOrganization {
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final File toImport = getFileToImport("toto.xml");
         assertTrue("organization to import does not exist", toImport.exists());
-        FileInputStream fis = new FileInputStream(toImport);
-        String id = toImport.getName();
-        final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
-        if (fis != null) {
-            fis.close();
+        try (FileInputStream fis = new FileInputStream(toImport)) {
+            String id = toImport.getName();
+            final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
+            assertNull(id + " was imported", fStore);
         }
-        assertNull(id + " was imported", fStore);
     }
 
     @Test
@@ -121,13 +114,11 @@ public class TestImportOrganization {
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final File toImport = getFileToImport("oldOrganizationTest.xml");
         assertTrue("organization to import does not exist", toImport.exists());
-        FileInputStream fis = new FileInputStream(toImport);
-        String id = toImport.getName();
-        final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
-        if (fis != null) {
-            fis.close();
+        try (FileInputStream fis = new FileInputStream(toImport)) {
+            String id = toImport.getName();
+            final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
+            assertNotNull(id + " was imported", fStore);
         }
-        assertNotNull(id + " was imported", fStore);
     }
 
     private File getFileToImport(String organizationName) throws IOException {
