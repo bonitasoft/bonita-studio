@@ -119,7 +119,7 @@ public final class BonitaSuite extends Suite {
                 @Override
                 public void testFailure(Failure failure) throws Exception {
                     System.out.println(
-                            String.format("%s\u2718 %s%s", ConsoleColors.RED, failure.toString(), ConsoleColors.RESET));
+                            String.format(" %s\u2718 %s%s", ConsoleColors.RED, failure.toString(), ConsoleColors.RESET));
                     success = false;
                 }
 

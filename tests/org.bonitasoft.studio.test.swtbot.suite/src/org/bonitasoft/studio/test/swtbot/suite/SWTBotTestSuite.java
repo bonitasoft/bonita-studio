@@ -31,12 +31,18 @@ import org.bonitasoft.studio.tests.actors.ActorFilterEditionTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterImplementationTest;
 import org.bonitasoft.studio.tests.actors.OrganizationCreationTest;
 import org.bonitasoft.studio.tests.actors.SWTBotActorFilterExportTests;
+import org.bonitasoft.studio.tests.actors.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
+import org.bonitasoft.studio.tests.bar.BarExporterTest;
 import org.bonitasoft.studio.tests.bar.TestMenus;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
+import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
+import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
+import org.bonitasoft.studio.tests.configuration.ProcessDependenciesConfigurationIT;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionTranslationsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
+import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditionTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorImplementationTest;
 import org.bonitasoft.studio.tests.connectors.SWTBotConnectorDefinitionTest;
@@ -44,23 +50,53 @@ import org.bonitasoft.studio.tests.connectors.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorOutputMode;
 import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration;
 import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
+import org.bonitasoft.studio.tests.contract.ContractIT;
+import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.debug.TestDebugFeature;
+import org.bonitasoft.studio.tests.diagram.ConvertActivityTypeWithBoundariesIT;
+import org.bonitasoft.studio.tests.diagram.CopyPasteTests;
+import org.bonitasoft.studio.tests.diagram.DeleteCommandTest;
 import org.bonitasoft.studio.tests.diagram.DiagramTests;
+import org.bonitasoft.studio.tests.diagram.DuplicateCommandTest;
+import org.bonitasoft.studio.tests.diagram.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.tests.diagram.FormsDiagramTests;
+import org.bonitasoft.studio.tests.diagram.NewRunTest;
+import org.bonitasoft.studio.tests.diagram.SharedEditingDomainTests;
+import org.bonitasoft.studio.tests.diagram.TestBoundariesCreation;
+import org.bonitasoft.studio.tests.diagram.TestConvertToMessage;
 import org.bonitasoft.studio.tests.diagram.TestDeleteDiagrams;
 import org.bonitasoft.studio.tests.diagram.TestDeleteTaskWithForm;
+import org.bonitasoft.studio.tests.diagram.TestMoveBetweenLane;
 import org.bonitasoft.studio.tests.diagram.TestOpenDiagram;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
+import org.bonitasoft.studio.tests.diagram.TestSave;
 import org.bonitasoft.studio.tests.diagram.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramForDiagramTest;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
+import org.bonitasoft.studio.tests.document.TestDocument;
+import org.bonitasoft.studio.tests.document.TestRunWithDocument;
+import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
+import org.bonitasoft.studio.tests.duplicate.TestDuplicate;
+import org.bonitasoft.studio.tests.exporter.ExportBosArchiveIT;
+import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
+import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
+import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
+import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
+import org.bonitasoft.studio.tests.migration.BarImportReportIT;
+import org.bonitasoft.studio.tests.migration.MigrationReporTest;
 import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
+import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
+import org.bonitasoft.studio.tests.properties.TestResources;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
+import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
+import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.tests.validator.TestAddValidatorToProcessAndRun;
+import org.bonitasoft.studio.tests.validator.TestCreateValidatorWizard;
+import org.bonitasoft.studio.tests.validator.TestFormValidatorIT;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -86,7 +122,6 @@ import org.junit.runners.Suite;
         TestLoadSaveConnectorConfiguration.class,
         TestConditionExpression.class,
         ConfigurationDialogIT.class,
-        OrganizationCreationTest.class,
         TestDeleteDiagrams.class,
         ActorDefinitionTranslationsTest.class,
         ActorFilterDefinitionTest.class,
@@ -111,15 +146,53 @@ import org.junit.runners.Suite;
         TestDeleteTaskWithForm.class,
         TestDebugFeature.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
-        ConnectorDefinitionTranslationsTest.class
+        ConnectorDefinitionTranslationsTest.class,
+        TestBonitaGroovyEditorDialog.class,
+        CopyPasteTests.class,
+        DeleteCommandTest.class,
+        NewRunTest.class,
+        DeleteWidgetWithContextMenuIT.class,
+        DataWizardIT.class,
+        SWTBOTTestConditions.class,
+        TestConvertToMessage.class,
+        ExtractAsSubprocessTest.class,
+        SharedEditingDomainTests.class,
+        TestBoundariesCreation.class,
+        TestResources.class,
+        OpenNameAndVersionForDiagramDialogTest.class,
+        TestDuplicate.class,
+        TestCreateValidatorWizard.class,
+        TestLifeCycleWidget.class,
+        TestConnectorExpression.class,
+        MultiInstantiationIT.class,
+        BarExporterTest.class,
+        ExportBosArchiveIT.class,
+        TestRunWithDocument.class,
+        TestDocument.class,
+        DuplicateCommandTest.class,
+        TestSave.class,
+        TestMoveBetweenLane.class,
+        MigrationReporTest.class,
+        TestTimer.class,
+        ConnectorEditedInAsingleCommandIT.class,
+        ProcessDependenciesConfigurationIT.class,
+        ContractIT.class,
+        RefactorWidgetIT.class,
+        TestFormValidatorIT.class,
+        TestOrganizationPassword.class,
+        BarImportReportIT.class,
+        CallActivityMappingIT.class,
+        CreateDeployExportBusinessObjectIT.class,
+        ConvertActivityTypeWithBoundariesIT.class,
+        OrganizationCreationTest.class
 })
 
-public class AllSWTBotTests {
+public class SWTBotTestSuite {
 
     @BeforeClass
     public static void setUp() {
         System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                AllSWTBotTests.class.getName(), ConsoleColors.RESET));
+                SWTBotTestSuite.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
@@ -147,7 +220,7 @@ public class AllSWTBotTests {
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(AllSWTBotTests.class.getSimpleName() + ".hprof", false);
+                dumper.dumpHeap(SWTBotTestSuite.class.getSimpleName() + ".hprof", false);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }

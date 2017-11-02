@@ -46,9 +46,9 @@
 					<application>org.bonitasoft.studio.application.application</application>
 					<product>org.bonitasoft.studio.product</product>
 					<includes>
-						<include>**/AllSWTBotTests.java</include>
+						<include>**/*TestSuite.java</include>
 					</includes>
-					<argLine>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level} -Dosgi.nls.warnings=ignore</argLine>
+					<argLine>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
 					<appArgLine>-nl en -clean</appArgLine>
 					<osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
 					<bundleStartLevel>

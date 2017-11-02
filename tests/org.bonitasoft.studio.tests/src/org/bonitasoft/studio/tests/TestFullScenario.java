@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,6 +49,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestFullScenario {
@@ -86,6 +84,11 @@ public class TestFullScenario {
     private static int nbProcBefore;
     private static String webPurchaseVersion = "1.5";
 
+    @Before
+    public void closeEditors() throws Exception {
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+    }
+    
     @Test
     public void testNewProcess() throws Exception {
         final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();

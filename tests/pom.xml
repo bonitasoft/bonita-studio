@@ -32,16 +32,13 @@
 			</activation>
 			<modules>
 				<module>org.bonitasoft.studio.test.suite</module>
-				<module>org.bonitasoft.studio.test.suite2</module>
 				<module>org.bonitasoft.studio.test.swtbot.suite</module>
-				<module>org.bonitasoft.studio.test.swtbot.suite2</module>
 			</modules>
 		</profile>
 		<profile>
 			<id>swtbot-tests</id>
 			<modules>
 				<module>org.bonitasoft.studio.test.swtbot.suite</module>
-				<module>org.bonitasoft.studio.test.swtbot.suite2</module>
 			</modules>
 		</profile>
 	</profiles>

@@ -14,8 +14,7 @@
  */
 package org.bonitasoft.studio.tests.actors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,5 +233,6 @@ public class OrganizationCreationTest {
         bot.waitUntil(Conditions.shellIsActive(Messages.organizationHasBeenModifiedTitle));
         bot.button(IDialogConstants.NO_LABEL).click();
     }
+    
 
 }
