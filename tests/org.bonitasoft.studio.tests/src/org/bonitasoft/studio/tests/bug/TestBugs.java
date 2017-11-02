@@ -14,22 +14,28 @@
  */
 package org.bonitasoft.studio.tests.bug;
 
+import static org.junit.Assert.*;
+
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramActionBarContributor;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
-/**
- * @author Baptiste Mesta
- *         test that zoomContributionItem is disabled (beeps on mac)
- */
-public class TestBugs extends TestCase {
 
+public class TestBugs {
+
+    private DiagramFileStore newDiagram;
+
+    @Test
     public void testBug1644() throws Exception {
-        new NewDiagramCommandHandler().newDiagram().open();
+        newDiagram = new NewDiagramCommandHandler().newDiagram();
+        newDiagram.open();
 
         final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         final ProcessDiagramActionBarContributor actionBarContributor = (ProcessDiagramActionBarContributor) editor
@@ -37,6 +43,13 @@ public class TestBugs extends TestCase {
         final IContributionItem[] items = actionBarContributor.getActionBars().getToolBarManager().getItems();
         for (final IContributionItem iContributionItem : items) {
             assertFalse("zoom contribution is still present", iContributionItem.getId().equals("zoomContributionItem"));
+        }
+    }
+    
+    @After
+    public void closeEditor() throws Exception {
+        if(newDiagram != null) {
+            newDiagram.close();
         }
     }
 

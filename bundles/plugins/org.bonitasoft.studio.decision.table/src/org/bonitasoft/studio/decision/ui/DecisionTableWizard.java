@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.decision.ui;
 
+import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;

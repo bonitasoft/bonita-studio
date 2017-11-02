@@ -265,8 +265,6 @@ public class Messages extends NLS {
 
     public static String groovyForNameWarningDescription;
 
-    public static String propertyName;
-
     public static String groovyForNameWarningPropertyName;
 
     public static String widgetContigencyConnectorMigrationDescription;
