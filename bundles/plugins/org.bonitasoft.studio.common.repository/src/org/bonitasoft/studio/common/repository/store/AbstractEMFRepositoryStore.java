@@ -22,6 +22,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
@@ -48,6 +52,10 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.google.common.io.Files;
 
@@ -154,14 +162,12 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
         }
         final URI resourceURI = resource.getURI();
         final File tmpFile = new File(resource.getURI().toFileString());
-        final String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
-
+        final String nsURI = getNamespaceURI(fileName, copyIs, resourceURI, tmpFile);
         if (nsURI == null) {
             tmpFile.delete();
             copyIs.close();
             throw new IOException(fileName);
         }
-
         final Migrator targetMigrator = getMigrator(nsURI);
         if (targetMigrator != null) {
             final Release release = getRelease(targetMigrator, resource);
@@ -202,6 +208,33 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
         tmpFile.delete();
         copyIs.close();
         return originalStream;
+    }
+
+    private String getNamespaceURI(final String fileName, final CopyInputStream copyIs, final URI resourceURI,
+            final File tmpFile) throws IOException {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            dBuilder.setErrorHandler(new ErrorHandler() {
+
+                @Override
+                public void warning(SAXParseException exception) throws SAXException {
+                }
+
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException {
+                }
+
+                @Override
+                public void error(SAXParseException exception) throws SAXException {
+                }
+            });
+            dBuilder.parse(tmpFile);
+        } catch (ParserConfigurationException | SAXException e1) {
+            throw new IOException(e1);
+        }
+
+       return ReleaseUtils.getNamespaceURI(resourceURI);
     }
 
     /**
