@@ -14,30 +14,34 @@
  */
 package org.bonitasoft.studio.tests;
 
+import static org.junit.Assert.assertNotSame;
+
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class TestInitialWorkspace extends TestCase {
+public class TestInitialWorkspace {
 
+    @Test
     public void testInitialWorkspaceContainsOrganization() throws Exception {
         OrganizationRepositoryStore store = (OrganizationRepositoryStore) RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         assertNotSame(0, store.getChildren().size());
     }
 
+    @Test
     public void testInitialWorkspaceContainsDefaultScript() throws Exception {
         ProvidedGroovyRepositoryStore store = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance()
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         assertNotSame(0, store.getChildren().size());
     }
 
+    @Test
     public void testInitialWorkspaceContainsXSD() throws Exception {
         XSDRepositoryStore store = (XSDRepositoryStore) RepositoryManager.getInstance()
                 .getRepositoryStore(XSDRepositoryStore.class);

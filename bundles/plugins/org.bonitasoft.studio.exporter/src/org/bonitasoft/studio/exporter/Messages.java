@@ -39,7 +39,6 @@ public class Messages extends NLS {
     public static String exportSuccessfulMessage;
     public static String exportFailedTitle;
     public static String exportFailedMessage;
-    public static String exportAsImage;
     public static String ExportButtonLabel;
 	public static String autoLoginMessageMigration;
 	public static String autoLoginNameMigration;

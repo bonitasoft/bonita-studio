@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.test.swtbot.suite2;
 
+import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -113,6 +114,8 @@ public class AllSWTBotTests2 {
 
     @BeforeClass
     public static void setUp() {
+        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
+                AllSWTBotTests2.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
