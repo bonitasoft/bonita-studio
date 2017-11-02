@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.test.suite;
 
+import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -59,18 +60,6 @@ import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.DeviceData;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Path;
-import org.eclipse.swt.graphics.Pattern;
-import org.eclipse.swt.graphics.Region;
-import org.eclipse.swt.graphics.TextLayout;
-import org.eclipse.swt.graphics.Transform;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -119,7 +108,8 @@ public class AllTests {
 
     @BeforeClass
     public static void setUp() {
-        BonitaStudioLog.info("AllTests", "org.bonitasoft.studio.tests");
+        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
+                AllTests.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(
                 BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
                 BonitaPreferenceConstants.INTERNAL_BROWSER);
@@ -129,123 +119,6 @@ public class AllTests {
                 BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
         BOSEngineManager.getInstance().start();
-    }
-
-    private static Object[] oldObjects = new Object[0];
-    private static Error[] oldErrors = new Error[0];
-    private static Object[] objects = new Object[0];
-    private static Error[] errors = new Error[0];
-
-    public static void refreshAll() {
-        oldObjects = new Object[0];
-        oldErrors = new Error[0];
-        resourceSnaphot();
-        oldObjects = objects;
-        oldErrors = errors;
-    }
-
-    public static String refreshLabel() {
-        int colors = 0, cursors = 0, fonts = 0, gcs = 0, images = 0;
-        int paths = 0, patterns = 0, regions = 0, textLayouts = 0, transforms = 0;
-        for (int i = 0; i < objects.length; i++) {
-            final Object object = objects[i];
-            if (object instanceof Color) {
-                colors++;
-            }
-            if (object instanceof Cursor) {
-                cursors++;
-            }
-            if (object instanceof Font) {
-                fonts++;
-            }
-            if (object instanceof GC) {
-                gcs++;
-            }
-            if (object instanceof Image) {
-                images++;
-            }
-            if (object instanceof Path) {
-                paths++;
-            }
-            if (object instanceof Pattern) {
-                patterns++;
-            }
-            if (object instanceof Region) {
-                regions++;
-            }
-            if (object instanceof TextLayout) {
-                textLayouts++;
-            }
-            if (object instanceof Transform) {
-                transforms++;
-            }
-        }
-        String string = "";
-        if (colors != 0) {
-            string += colors + " Color(s)\n";
-        }
-        if (cursors != 0) {
-            string += cursors + " Cursor(s)\n";
-        }
-        if (fonts != 0) {
-            string += fonts + " Font(s)\n";
-        }
-        if (gcs != 0) {
-            string += gcs + " GC(s)\n";
-        }
-        if (images != 0) {
-            string += images + " Image(s)\n";
-        }
-        if (paths != 0) {
-            string += paths + " Paths(s)\n";
-        }
-        if (patterns != 0) {
-            string += patterns + " Pattern(s)\n";
-        }
-        if (regions != 0) {
-            string += regions + " Region(s)\n";
-        }
-        if (textLayouts != 0) {
-            string += textLayouts + " TextLayout(s)\n";
-        }
-        if (transforms != 0) {
-            string += transforms + " Transform(s)\n";
-        }
-        if (string.length() != 0) {
-            string = string.substring(0, string.length() - 1);
-        }
-        return string;
-    }
-
-    public static void resourceSnaphot() {
-        final Display display = Display.getDefault();
-        final DeviceData info = display.getDeviceData();
-        if (!info.tracking) {
-            BonitaStudioLog.warning("Device is not tracking resource allocation", "org.bonitasoft.studio.test.suite");
-        }
-        final Object[] newObjects = info.objects;
-        final Error[] newErrors = info.errors;
-        final Object[] diffObjects = new Object[newObjects.length];
-        final Error[] diffErrors = new Error[newErrors.length];
-        int count = 0;
-        for (int i = 0; i < newObjects.length; i++) {
-            int index = 0;
-            while (index < oldObjects.length) {
-                if (newObjects[i] == oldObjects[index]) {
-                    break;
-                }
-                index++;
-            }
-            if (index == oldObjects.length) {
-                diffObjects[count] = newObjects[i];
-                diffErrors[count] = newErrors[i];
-                count++;
-            }
-        }
-        objects = new Object[count];
-        errors = new Error[count];
-        System.arraycopy(diffObjects, 0, objects, 0, count);
-        System.arraycopy(diffErrors, 0, errors, 0, count);
     }
 
     @AfterClass

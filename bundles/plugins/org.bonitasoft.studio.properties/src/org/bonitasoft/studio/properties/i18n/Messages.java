@@ -328,7 +328,6 @@ public class Messages extends NLS {
     public static String laneSectionDescription;
     public static String looknfeelPropertySectionDescription;
     public static String resourcePropertySectionDescription;
-    public static String parametersMappingSectionDescription;
     public static String userXPSectionDescription;
     public static String confirmationPropertySectionDescription;
     public static String loopSectionDescription;

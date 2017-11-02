@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.test.suite2;
 
+import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -119,7 +120,8 @@ public class AllTests2 extends TestSuite {
 
     @BeforeClass
     public static void setUp() {
-        BonitaStudioLog.info("AllTests2", "org.bonitasoft.studio.test.suite2");
+        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
+                AllTests2.class.getName(), ConsoleColors.RESET));
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()

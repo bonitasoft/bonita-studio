@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.eclipse.core.runtime.Platform;
 import org.junit.Test;
 import org.osgi.framework.Version;
 
@@ -27,21 +28,15 @@ public class ProductVersionIT {
 
     @Test
     public void shouldCurrentProductVersionEquals_POMVersionIgnoringQualifier() throws Exception {
-        final String pomVersion = loadPomVersion();
-        org.junit.Assume.assumeFalse("Test must be run in maven to retrieve pom version", "UNDEFINED".equals(pomVersion));
+        final Version osgiVersion = loadBundleVersion();
         final Version current = new Version(ProductVersion.CURRENT_VERSION);
-        final Version osgiPomVersion = Version.parseVersion(pomVersion);
-        assertThat(current.getMajor()).isEqualTo(osgiPomVersion.getMajor());
-        assertThat(current.getMinor()).isEqualTo(osgiPomVersion.getMinor());
-        assertThat(current.getMicro()).isEqualTo(osgiPomVersion.getMicro());
+        assertThat(current.getMajor()).isEqualTo(osgiVersion.getMajor());
+        assertThat(current.getMinor()).isEqualTo(osgiVersion.getMinor());
+        assertThat(current.getMicro()).isEqualTo(osgiVersion.getMicro());
     }
 
-    private String loadPomVersion() {
-        String pomVersion = System.getProperty("projectVersion", "UNDEFINED");
-        if (pomVersion.indexOf("-SNAPSHOT") != -1) {
-            pomVersion = pomVersion.substring(0, pomVersion.indexOf("-SNAPSHOT"));
-        }
-        return pomVersion;
+    private Version loadBundleVersion() {
+        return Platform.getBundle("org.bonitasoft.studio.tests").getVersion();
     }
 
     @Test

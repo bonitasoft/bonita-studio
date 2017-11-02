@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ConsoleColors;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -85,7 +86,13 @@ public final class BonitaSuite extends Suite {
                     startTime = System.currentTimeMillis();
                     success = true;
                     System.out.print(
-                            String.format("| %s: Running %s", format.format(new Date()), description.getDisplayName()));
+                            String.format("%s%s%s: %s%s%s",
+                                    ConsoleColors.BLACK_BOLD,
+                                    format.format(new Date()),
+                                    ConsoleColors.RESET,
+                                    ConsoleColors.BLUE_BRIGHT,
+                                    description.getDisplayName(),
+                                    ConsoleColors.RESET));
                 }
 
                 /*
@@ -94,7 +101,14 @@ public final class BonitaSuite extends Suite {
                  */
                 @Override
                 public void testIgnored(Description description) throws Exception {
-                    System.out.println(String.format(" --------> Skipped"));
+                    System.out.println(
+                            String.format("%s%s%s: %s%s%s",
+                                    ConsoleColors.BLACK_BOLD,
+                                    format.format(new Date()),
+                                    ConsoleColors.RESET,
+                                    ConsoleColors.BLUE_BRIGHT_STRIKETHROUGH,
+                                    description.getDisplayName(),
+                                    ConsoleColors.RESET));
                     success = false;
                 }
 
@@ -104,7 +118,8 @@ public final class BonitaSuite extends Suite {
                  */
                 @Override
                 public void testFailure(Failure failure) throws Exception {
-                    System.out.println(String.format(" --------> Failure: %s", failure.toString()));
+                    System.out.println(
+                            String.format("%s\u2718 %s%s", ConsoleColors.RED, failure.toString(), ConsoleColors.RESET));
                     success = false;
                 }
 
@@ -114,7 +129,8 @@ public final class BonitaSuite extends Suite {
                  */
                 @Override
                 public void testAssumptionFailure(Failure failure) {
-                    System.out.println(String.format(" --------> Error: %s", failure.toString()));
+                    System.out.println(
+                            String.format(" %s\u274E %s%s", ConsoleColors.RED, failure.toString(), ConsoleColors.RESET));
                     success = false;
                 }
 
@@ -125,7 +141,14 @@ public final class BonitaSuite extends Suite {
                 @Override
                 public void testFinished(Description description) throws Exception {
                     if (success) {
-                        System.out.println(String.format(" --------> Success (%s)", time()));
+                        System.out
+                                .println(
+                                        String.format(" %s\u2713%s %s(%s)%s",
+                                                ConsoleColors.GREEN,
+                                                ConsoleColors.RESET,
+                                                ConsoleColors.BLACK_BRIGHT,
+                                                time(),
+                                                ConsoleColors.RESET));
                     }
                 }
 
