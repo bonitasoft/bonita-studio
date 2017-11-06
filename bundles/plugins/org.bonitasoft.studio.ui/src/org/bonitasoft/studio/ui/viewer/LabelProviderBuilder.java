@@ -108,6 +108,8 @@ public class LabelProviderBuilder<T> {
                     if (!status.isOK()) {
                         cell.setImage(statusImage(status, element));
                         statusColor(status).ifPresent(cell::setForeground);
+                    } else {
+                        cell.setForeground(null);
                     }
                 });
 
