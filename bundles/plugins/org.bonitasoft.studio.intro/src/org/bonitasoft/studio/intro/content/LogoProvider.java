@@ -76,7 +76,7 @@ public class LogoProvider implements IIntroXHTMLContentProvider {
         Document dom = parent.getOwnerDocument();
         Element a = dom.createElement("a");
         try {
-            a.setAttribute("href", redirectUrl("99", ProductVersion.majorVersion()));
+            a.setAttribute("href", redirectUrl(id, ProductVersion.majorVersion()));
         } catch (DOMException | UnsupportedEncodingException e) {
             BonitaStudioLog.error(e);
         }
