@@ -509,6 +509,7 @@ public class Repository implements IRepository, IJavaContainer {
             for (final IRepositoryFileStore fs : store.getChildren()) {
                 if (fs.canBeExported()) {
                     fileStores.add(fs);
+                    fileStores.addAll(fs.getRelatedFileStore());
                 }
             }
         }
