@@ -137,7 +137,7 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         final String[] scannedRepo = text.replace("$SCAN_PROGRESS_", "").split(":");
         final String repoName = scannedRepo[0];
         final String repoVersion = scannedRepo[1];
-        final String repoEdition = scannedRepo[2];
+        final String repoEdition = scannedRepo[2].trim();
         final ImportRepositoryModel repositoryModel = new ImportRepositoryModel(repoName, repoVersion, repoEdition);
         final MultiStatus repoStatus = new MultiStatus(BosArchiveImporterPlugin.PLUGIN_ID, 0, "", null);
         if (!ProductVersion.canBeImported(repoVersion)) {
