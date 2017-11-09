@@ -101,6 +101,19 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
         Label workspaceTips = new Label(mainComposite, SWT.NONE);
         workspaceTips.setLayoutData(GridDataFactory.fillDefaults().create());
         workspaceTips.setText(Messages.workspaceTips);
+
+        final Section section = new Section(mainComposite, Section.TREE_NODE | Section.CLIENT_INDENT);
+        section.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
+        section.setLayoutData(
+                GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).hint(200, SWT.DEFAULT)
+                        .grab(true, false).create());
+        section.setText(Messages.moreInfo);
+        Label label = new Label(section, SWT.WRAP);
+        label.setLayoutData(GridDataFactory.swtDefaults().create());
+        label.setText(Messages.importWorkspaceOverwriteBehavior);
+        section.setClient(label);
+        section.setExpanded(false);
+        section.addExpansionListener(new UpdateLayoutListener(mainComposite));
     }
 
     private Section createStatusSection(Composite parent) {
