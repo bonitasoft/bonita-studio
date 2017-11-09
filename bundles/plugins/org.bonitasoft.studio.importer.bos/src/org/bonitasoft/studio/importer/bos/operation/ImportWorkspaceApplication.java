@@ -27,9 +27,6 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
-import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,7 +35,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
 public class ImportWorkspaceApplication implements IApplication {
@@ -122,16 +118,6 @@ public class ImportWorkspaceApplication implements IApplication {
             return "Subscription";
         }
         return "Community";
-    }
-
-    private void disableGroovyDSL() {
-        final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
-        groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-        groovyDSLstore.setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-        groovyDSLstore.setDefault(DSLPreferencesInitializer.DSLD_DISABLED, true);
-        groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
-        groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
-        groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
     }
 
     private Predicate<? super IProject> hasBonitaNature() {
