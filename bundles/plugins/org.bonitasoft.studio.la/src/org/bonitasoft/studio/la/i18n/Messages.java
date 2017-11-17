@@ -44,8 +44,6 @@ public class Messages extends NLS {
     public static String importApplicationDescriptorLabel;
     public static String browse;
     public static String importApplicationDescriptor;
-    public static String filePathNotEmpty;
-    public static String fileDoesntExist;
     public static String importConflictWarning;
     public static String importLabel;
     public static String notAnApplicationError;

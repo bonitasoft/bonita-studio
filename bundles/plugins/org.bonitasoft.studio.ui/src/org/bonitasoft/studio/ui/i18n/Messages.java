@@ -42,5 +42,9 @@ public class Messages extends NLS {
     public static String exportFailedTitle;
     public static String exportDoneTitle;
     public static String doNotShowMeAgain;
+    public static String importLabel;
+    public static String browse;
+    public static String filePathNotEmpty;
+    public static String fileDoesntExist;
 
 }
