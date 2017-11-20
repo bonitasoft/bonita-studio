@@ -32,11 +32,7 @@ public class Messages extends NLS {
     public static String openExistingApplicationDescription;
     public static String deleteExistingApplication;
     public static String deleteExistingApplicationDescription;
-    public static String deleteConfirmation;
-    public static String deleteConfirmationMessage;
     public static String deleteSingleDoneMessage;
-    public static String deleteDoneTitle;
-    public static String deleteDoneMessage;
     public static String delete;
     public static String export;
     public static String exportApplicationDescriptor;
@@ -57,7 +53,6 @@ public class Messages extends NLS {
     public static String applicationDetails;
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
-    public static String unparsableXmlFile;
     public static String menuLevelWarning;
 
     static {
