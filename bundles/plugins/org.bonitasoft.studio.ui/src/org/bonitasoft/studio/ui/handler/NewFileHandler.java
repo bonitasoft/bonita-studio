@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.handler;
+package org.bonitasoft.studio.ui.handler;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,25 +20,22 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class NewFileHandler {
 
     @Execute
     public void execute(Shell activeShell, RepositoryAccessor repositoryAccessor) {
-        final IPreferenceStore preferenceStore = LivingApplicationPlugin.getDefault().getPreferenceStore();
-        openHelpDialog(activeShell, preferenceStore);
+        openHelpDialog(activeShell);
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
                 .map(IRepositoryFileStore::getDisplayName).collect(Collectors.toList());
         createFileStore(repositoryAccessor,
                 StringIncrementer.getIncrementedString(getDefaultFileName(), existingFileNameList)).open();
     }
 
-    protected abstract void openHelpDialog(Shell activeShell, IPreferenceStore preferenceStore);
+    protected abstract void openHelpDialog(Shell activeShell);
 
     protected abstract IRepositoryFileStore createFileStore(RepositoryAccessor repositoryAccessor, String fileName);
 

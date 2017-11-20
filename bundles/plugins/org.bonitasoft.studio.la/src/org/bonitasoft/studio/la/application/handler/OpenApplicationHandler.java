@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.ui.control.SelectionRenamePage;
+import org.bonitasoft.studio.ui.page.SelectionRenamePage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;

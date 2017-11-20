@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.la;
 
-import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;

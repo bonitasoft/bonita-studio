@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.la;
 
-import org.bonitasoft.studio.la.ui.control.SelectionMultiPage;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
+import org.bonitasoft.studio.ui.page.SelectionMultiPage;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 

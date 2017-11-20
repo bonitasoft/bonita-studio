@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
-import org.bonitasoft.studio.la.ui.validator.XMLContentValidator;
+import org.bonitasoft.studio.ui.validator.XMLContentValidator;
 import org.xml.sax.SAXException;
 
 public class ApplicationXMLContentValidator extends XMLContentValidator {
