@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.ui.control;
+package org.bonitasoft.studio.ui.page;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
 import org.eclipse.core.databinding.DataBindingContext;

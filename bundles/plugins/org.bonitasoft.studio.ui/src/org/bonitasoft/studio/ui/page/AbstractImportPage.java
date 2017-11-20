@@ -48,10 +48,12 @@ public abstract class AbstractImportPage implements ControlSupplier {
 
     protected final RepositoryAccessor repositoryAccessor;
     private TextWidget importerWidget;
-    private String filePath;
+    protected String filePath;
+    protected IObservableValue<String> filePathObservable;
 
     public AbstractImportPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
+        filePathObservable = PojoProperties.value("filePath").observe(this);
     }
 
     @Override
@@ -59,9 +61,6 @@ public abstract class AbstractImportPage implements ControlSupplier {
         final Composite importerComposite = new Composite(parent, SWT.NONE);
         importerComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         importerComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final IObservableValue<String> filePathObservable = PojoProperties.value("filePath").observe(this);
-
         importerWidget = new TextWidget.Builder()
                 .withLabel(Messages.importLabel)
                 .labelAbove()

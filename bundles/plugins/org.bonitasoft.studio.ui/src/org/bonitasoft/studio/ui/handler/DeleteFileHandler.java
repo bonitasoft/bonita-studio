@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.handler;
+package org.bonitasoft.studio.ui.handler;
 
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 
@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.la.ui.control.SelectionPage;
+import org.bonitasoft.studio.ui.i18n.Messages;
+import org.bonitasoft.studio.ui.page.SelectionPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;

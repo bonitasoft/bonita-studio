@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.ui.control;
+package org.bonitasoft.studio.ui.page;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -20,8 +20,8 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.dialog.RenameXMLFileDialog;
+import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;

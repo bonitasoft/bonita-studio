@@ -21,10 +21,11 @@ import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.handler.NewFileHandler;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.ui.handler.NewFileHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -37,7 +38,8 @@ public class NewApplicationHandler extends NewFileHandler {
     public static final String DO_NOT_SHOW_HELP_MESSAGE_DIALOG = "DO_NOT_SHOW_HELP_MESSAGE_DIALOG";
 
     @Override
-    protected void openHelpDialog(Shell activeShell, IPreferenceStore preferenceStore) {
+    protected void openHelpDialog(Shell activeShell) {
+        IPreferenceStore preferenceStore = LivingApplicationPlugin.getDefault().getPreferenceStore();
         if (!preferenceStore.getBoolean(DO_NOT_SHOW_HELP_MESSAGE_DIALOG)) {
             MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
                     activeShell,

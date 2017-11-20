@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
-import org.bonitasoft.studio.la.ui.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.ui.UIPlugin;
+import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.StyledString;
@@ -41,7 +41,7 @@ public class ApplicationFileStoreLabelProvider extends FileStoreLabelProvider {
             } catch (ReadFileStoreException e) {
                 //Do not display app descriptors
                 cell.setImage(new DecorationOverlayIcon(getImage(cell.getElement()),
-                        LivingApplicationPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
+                        UIPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
                                 .createImage());
             }
         }
