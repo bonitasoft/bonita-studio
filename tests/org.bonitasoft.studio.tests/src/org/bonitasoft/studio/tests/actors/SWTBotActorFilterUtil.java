@@ -66,14 +66,14 @@ public class SWTBotActorFilterUtil {
     }
 
     /**
-     * use it to access to the manage organization wizard "Manage Organization"
-     * (menu Organization>Manage...)
+     * use it to access to the define organization wizard "Define Organization"
+     * (menu Organization>Define...)
      *
      * @param bot
      */
     public static void activateNewOrganizationWizard(final SWTBot bot) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")), 10000);
-        bot.menu("Organization").menu("Manage...").click();
+        bot.menu("Organization").menu("Define...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.manageOrganizationTitle), 10000);
     }
 
