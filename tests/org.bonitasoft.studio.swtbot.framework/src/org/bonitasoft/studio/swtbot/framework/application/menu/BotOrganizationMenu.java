@@ -24,7 +24,7 @@ public class BotOrganizationMenu extends AbstractBotMenu {
     }
 
     public BotManageOrganizationWizard manage() {
-        openMenu("Manage...");
+        openMenu("Define...");
         return new BotManageOrganizationWizard(bot);
     }
 

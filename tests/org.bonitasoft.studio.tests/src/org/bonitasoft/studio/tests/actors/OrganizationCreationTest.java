@@ -14,7 +14,8 @@
  */
 package org.bonitasoft.studio.tests.actors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +53,9 @@ public class OrganizationCreationTest {
         final String lastName3 = "Dupuis";
         final String organizationName = "Organization1";
         final String[] membership1 = { "/Group1", "Role1" };
-        final ArrayList<String[]> membershipList1 = new ArrayList<String[]>();
+        final ArrayList<String[]> membershipList1 = new ArrayList<>();
         membershipList1.add(membership1);
-        final ArrayList<String[]> membershipList2 = new ArrayList<String[]>();
+        final ArrayList<String[]> membershipList2 = new ArrayList<>();
         final String[] membership2 = { "/Group1/Group3", "Role2" };
         membershipList2.add(membership2);
         final String[] membership3 = { "/Group1/Group2/Group4", "Role3" };
@@ -178,7 +179,7 @@ public class OrganizationCreationTest {
     @Test
     public void addNewUsersInACMETest() throws InterruptedException {
         // open shell "Manage organization"
-        bot.menu("Organization").menu("Manage...").click();
+        bot.menu("Organization").menu("Define...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.manageOrganizationTitle));
 
         SWTBotTable table = bot.table();
@@ -233,6 +234,5 @@ public class OrganizationCreationTest {
         bot.waitUntil(Conditions.shellIsActive(Messages.organizationHasBeenModifiedTitle));
         bot.button(IDialogConstants.NO_LABEL).click();
     }
-    
 
 }
