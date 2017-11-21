@@ -24,13 +24,20 @@ Require-Bundle: org.bonitasoft.studio.common.repository;bundle-version="7.5.0",
  assertj-core;bundle-version="3.6.1";resolution:=optional,
  org.mockito;bundle-version="1.10.19";resolution:=optional,
  org.eclipse.jface.text,
- org.bonitasoft.studio.actors
+ org.bonitasoft.studio.actors,
+ org.bonitasoft.studio.engine
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.bonitasoft.engine.business.application,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.business.application,
  org.bonitasoft.engine.business.application.exporter,
  org.bonitasoft.engine.business.application.xml,
+ org.bonitasoft.engine.exception,
  org.bonitasoft.engine.profile,
  org.bonitasoft.engine.profile.xml,
+ org.bonitasoft.engine.search,
+ org.bonitasoft.engine.search.impl,
+ org.bonitasoft.engine.session,
  org.eclipse.ui.forms.editor
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.la,
