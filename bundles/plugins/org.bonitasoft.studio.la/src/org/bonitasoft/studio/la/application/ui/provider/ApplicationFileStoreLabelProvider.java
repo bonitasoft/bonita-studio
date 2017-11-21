@@ -40,11 +40,15 @@ public class ApplicationFileStoreLabelProvider extends FileStoreLabelProvider {
                 }
             } catch (ReadFileStoreException e) {
                 //Do not display app descriptors
-                cell.setImage(new DecorationOverlayIcon(getImage(cell.getElement()),
-                        UIPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
-                                .createImage());
+                applyUnparsableFileStyle(cell);
             }
         }
+    }
+
+    protected void applyUnparsableFileStyle(ViewerCell cell) {
+        cell.setImage(new DecorationOverlayIcon(getImage(cell.getElement()),
+                UIPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
+                        .createImage());
     }
 
     private String appendAppTokens(final ApplicationFileStore fileStore, final StyledString styledString)

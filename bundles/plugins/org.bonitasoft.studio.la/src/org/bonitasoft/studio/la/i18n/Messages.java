@@ -54,6 +54,13 @@ public class Messages extends NLS {
     public static String exportApplicationDescriptorTitle;
     public static String exportApplicationDescriptorMessage;
     public static String menuLevelWarning;
+    public static String applicationDescriptorDeployed;
+    public static String deployExistingApplication;
+    public static String selectApplicationToDeploy;
+    public static String deployDoneTitle;
+    public static String deployDoneMessage;
+    public static String deployFailedTitle;
+    public static String deploy;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
