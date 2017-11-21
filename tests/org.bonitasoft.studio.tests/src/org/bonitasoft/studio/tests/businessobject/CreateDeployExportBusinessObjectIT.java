@@ -99,7 +99,7 @@ public class CreateDeployExportBusinessObjectIT {
     @Test
     public void shouldCreateAndPublishABusinessObject() throws Exception {
         // Create a business object
-        bot.menu("Development").menu("Business Data Model").menu("Manage...").click();
+        bot.menu("Development").menu("Business Data Model").menu("Define...").click();
         bot.waitUntil(Conditions.shellIsActive("Manage Business Data Model"));
 
         bot.textWithLabel("Package").setText("org.model.test");
@@ -141,7 +141,7 @@ public class CreateDeployExportBusinessObjectIT {
         bot.button(IDialogConstants.OK_LABEL).click();
 
         // Edit business object
-        bot.menu("Development").menu("Business Data Model").menu("Manage...").click();
+        bot.menu("Development").menu("Business Data Model").menu("Define...").click();
         table = bot.tableInGroup(listBOGroupTitle);
 
         final SWTBotTable attributeTable = bot.tableInGroup("Employee");
