@@ -46,6 +46,14 @@
                   commandId="org.bonitasoft.studio.la.import.command"
                   style="push">
             </command>
+            <separator
+                  name="org.bonitasoft.studio.la.separator.deploy"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.la.deploy.command"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       
