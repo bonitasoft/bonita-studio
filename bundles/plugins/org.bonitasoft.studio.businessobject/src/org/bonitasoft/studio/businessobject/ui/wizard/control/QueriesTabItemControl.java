@@ -172,7 +172,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         final Query query = new Query(generateQueryName(viewerObservableValue), "", List.class.getName());
         queryObserveDetailList.add(query);
 
-        Display.getDefault().asyncExec(() -> queriesTableViewer.editElement(query, 0));
+        Display.getDefault().asyncExec(() -> queriesTableViewer.editElement(query, 1));
     }
 
     protected String generateQueryName(IViewerObservableValue viewerObservableValue) {

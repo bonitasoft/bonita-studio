@@ -8,6 +8,10 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -46,6 +50,13 @@ public class BotBase implements SWTBotConstants {
 
     public void pressDelete() {
         pressShortcut(Keystrokes.DELETE);
+    }
+
+    public void selectText() {
+        List<KeyStroke> keystrokes = new ArrayList<>();
+        keystrokes.add(Keystrokes.CTRL);
+        keystrokes.addAll(Arrays.asList(Keystrokes.create('a')));
+        pressShortcut(keystrokes.toArray(new KeyStroke[0]));
     }
 
 }
