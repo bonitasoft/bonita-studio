@@ -23,6 +23,7 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
+import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
@@ -189,4 +190,11 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
+    @SuppressWarnings("restriction")
+    public DefineBdmWizardBot defineBDM() {
+        bot.menu("Development").menu("Business Data Model").menu("Define...").click();
+        bot.waitUntil(
+                Conditions.shellIsActive(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));
+        return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
+    }
 }
