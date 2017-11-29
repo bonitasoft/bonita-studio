@@ -82,4 +82,5 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
     }
+
 }

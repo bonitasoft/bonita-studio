@@ -67,4 +67,6 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDispl
 
     void close();
 
+    void repositoryUpdated();
+
 }
