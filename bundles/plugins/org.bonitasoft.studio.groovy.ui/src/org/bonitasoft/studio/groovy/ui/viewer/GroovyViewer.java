@@ -134,12 +134,16 @@ public class GroovyViewer implements IDocumentListener {
             boolean restrictScriptSize) {
         this.restrictScriptSize = restrictScriptSize;
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
-        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
-        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
+        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
         if (input == null) {
             final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-            tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
+            GroovyFileStore tmpGroovyFileStore = store.getChild("groovy-expression-script.groovy");
+            if (tmpGroovyFileStore != null) {
+                tmpGroovyFileStore.delete();
+            }
+            tmpGroovyFileStore = store.createRepositoryFileStore("groovy-expression-script.groovy");
             tmpGroovyFileStore.save("");
             this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
         } else {
@@ -150,7 +154,6 @@ public class GroovyViewer implements IDocumentListener {
             editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
         }
         try {
-            editor.getDocumentProvider().connect(input);
             groovyEditorContext = createGroovyEditorContext();
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
             groovyEditorContext.set(ISources.ACTIVE_SITE_NAME, site);
@@ -320,9 +323,6 @@ public class GroovyViewer implements IDocumentListener {
     }
 
     public void dispose() {
-        if (tmpGroovyFileStore != null) {
-            tmpGroovyFileStore.delete();
-        }
         final IColumnSupport columSupport = (IColumnSupport) editor.getAdapter(IColumnSupport.class);
         if (columSupport != null) {
             columSupport.dispose();
