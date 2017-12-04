@@ -134,8 +134,8 @@ public class GroovyViewer implements IDocumentListener {
             boolean restrictScriptSize) {
         this.restrictScriptSize = restrictScriptSize;
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
-        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
-        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
+        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         if (input == null) {
             final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
