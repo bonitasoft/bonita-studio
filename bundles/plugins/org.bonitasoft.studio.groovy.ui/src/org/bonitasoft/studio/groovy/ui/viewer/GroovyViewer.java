@@ -139,11 +139,11 @@ public class GroovyViewer implements IDocumentListener {
         if (input == null) {
             final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-            GroovyFileStore tmpGroovyFileStore = store.getChild("groovy-expression-script.groovy");
+            GroovyFileStore tmpGroovyFileStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
             if (tmpGroovyFileStore != null) {
                 tmpGroovyFileStore.delete();
             }
-            tmpGroovyFileStore = store.createRepositoryFileStore("groovy-expression-script.groovy");
+            tmpGroovyFileStore = store.createRepositoryFileStore(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
             tmpGroovyFileStore.save("");
             this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
         } else {
@@ -323,6 +323,12 @@ public class GroovyViewer implements IDocumentListener {
     }
 
     public void dispose() {
+        final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
+        if (fStore != null) {
+            fStore.delete();
+        }
         final IColumnSupport columSupport = (IColumnSupport) editor.getAdapter(IColumnSupport.class);
         if (columSupport != null) {
             columSupport.dispose();
