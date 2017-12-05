@@ -94,7 +94,9 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         for (final GroovyFileStore file : providedStore.getChildren()) {
-            compilationUnits.add(file.getCompilationUnit());
+            if (!file.getName().startsWith(GroovyFileStore.EXPRESSION_SCRIPT_NAME)) {
+                compilationUnits.add(file.getCompilationUnit());
+            }
         }
         addGroovyCompilationUnitToClasspath(builder, compilationUnits,
                 ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);

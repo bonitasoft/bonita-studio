@@ -98,7 +98,8 @@ import com.google.common.collect.Lists;
 /**
  * @author Romain Bioteau
  */
-public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor, IBonitaVariableContext {
+public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
+        implements IExpressionEditor, IBonitaVariableContext {
 
     protected Composite mainComposite;
 
@@ -225,7 +226,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
 
-        createGroovyEditor(parent,true);
+        createGroovyEditor(parent, true);
         createDependencyViewer(parent);
 
         return mainComposite;
@@ -395,8 +396,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         depndencySection.setClient(dependenciesComposite);
     }
 
-    protected void createGroovyEditor(final Composite parent,boolean restrictSciptSize) {
-        groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext,restrictSciptSize);
+    protected void createGroovyEditor(final Composite parent, boolean restrictSciptSize) {
+        groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext, restrictSciptSize);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         sourceViewer = groovyViewer.getSourceViewer();
         document = groovyViewer.getDocument();
@@ -413,10 +414,12 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(
-                        groovyViewer.getGroovyCompilationUnit(), nodes == null ? Lists.<ScriptVariable> newArrayList() : nodes);
+                        groovyViewer.getGroovyCompilationUnit(),
+                        nodes == null ? Lists.<ScriptVariable> newArrayList() : nodes);
 
                 if (variables.isEmpty()) {
-                    final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
+                    final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(
+                            Display.getDefault().getActiveShell());
                     final int retCode = mcjd.open();
                     if (retCode == Window.OK) {
                         try {
@@ -448,7 +451,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context,
+            final Expression inputExpression,
             final ViewerFilter[] filters, final ExpressionViewer viewer) {
         this.inputExpression = inputExpression;
         this.context = context;
@@ -526,7 +530,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 if (lenghtValidator.validate(text).isOK()) {
                     GroovyScriptExpressionEditor.this.inputExpression.setContent(text);
                 }
-                if (automaticResolutionButton.getSelection()) {
+                if (!automaticResolutionButton.isDisposed() && automaticResolutionButton.getSelection()) {
                     dependencyJob.schedule();
                 }
 
