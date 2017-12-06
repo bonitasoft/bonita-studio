@@ -20,7 +20,7 @@
                 <configuration>
                     <baseImgPath>${basedir}/splash_without_version.bmp</baseImgPath>
                     <outputImagePath>${basedir}/splash.bmp</outputImagePath>
-                    <outputImageFormat>bmp</outputImageFormat>
+                    <outputImageFormat>png</outputImageFormat>
                     <xLocation>358</xLocation>
                     <yLocation>159</yLocation>
                     <italic>true</italic>
