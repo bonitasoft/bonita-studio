@@ -57,7 +57,7 @@ public class SearchDocumentationInExternalBrowser implements IIntroAction {
         } catch (final UnsupportedEncodingException e) {
             BonitaStudioLog.error(e);
         }
-        return SEARCH_DOC_URL + "?start=0&pageSize=10&searchRequest=" + searchField;
+        return SEARCH_DOC_URL + "&start=0&pageSize=10&searchRequest=" + searchField;
     }
 
 }

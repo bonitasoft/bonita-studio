@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="153">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<repository location="http://repositories.rd.lan/p2/7.6"/>
+<repository location="http://repositories.rd.lan/p2/7.6.1"/>
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.6.0.201706141832"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.6.0.201706141832"/>
