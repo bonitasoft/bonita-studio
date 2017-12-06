@@ -76,6 +76,6 @@ public class ContractConstraintEditor extends GroovyEditor {
     }
 
     protected GroovyColorManager getColorManager() {
-        return new GroovyColorManager();
+        return GroovyPlugin.getDefault().getTextTools().getColorManager();
     }
 }

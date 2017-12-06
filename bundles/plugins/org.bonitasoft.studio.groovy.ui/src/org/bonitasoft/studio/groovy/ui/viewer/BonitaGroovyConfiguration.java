@@ -24,11 +24,9 @@ import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyConfiguration;
 import org.codehaus.groovy.eclipse.editor.GroovyPartitionScanner;
 import org.eclipse.jdt.groovy.core.util.ReflectionUtils;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.text.java.CompletionProposalCategory;
 import org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -94,12 +92,4 @@ public class BonitaGroovyConfiguration extends GroovyConfiguration {
         return assistant;
     }
 
-    private IDialogSettings getSettings(final String sectionName) {
-        IDialogSettings settings = JavaPlugin.getDefault().getDialogSettings().getSection(sectionName);
-        if (settings == null) {
-            settings = JavaPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
-        }
-
-        return settings;
-    }
 }
