@@ -144,7 +144,8 @@ public class DummyEditorSite implements IEditorSite {
      */
     @Override
     public IWorkbenchPage getPage() {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null ? PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() : null;
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                ? PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() : null;
     }
 
     /*
