@@ -15,22 +15,18 @@
 
 package org.bonitasoft.studio.groovy.ui.viewer;
 
-import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
+import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
+import org.codehaus.groovy.eclipse.editor.GroovyTextTools;
 import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 /**
  * @author Romain Bioteau
  */
 public class BonitaGroovyEditor extends GroovyEditor {
-
-    public BonitaGroovyEditor(final IPreferenceStore store) {
-        setPreferenceStore(store);
-    }
 
     @Override
     public void editorContextMenuAboutToShow(final IMenuManager menu) {
@@ -84,7 +80,8 @@ public class BonitaGroovyEditor extends GroovyEditor {
 
     @Override
     public JavaSourceViewerConfiguration createJavaSourceViewerConfiguration() {
-        return new BonitaGroovyConfiguration(new GroovyColorManager(), getPreferenceStore(), this);
+        GroovyTextTools textTools = GroovyPlugin.getDefault().getTextTools();
+        return new BonitaGroovyConfiguration(textTools.getColorManager(), getPreferenceStore(), this);
     }
 
 }
