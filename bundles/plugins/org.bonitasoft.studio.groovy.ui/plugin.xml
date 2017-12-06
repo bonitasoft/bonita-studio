@@ -58,15 +58,6 @@
       </scriptLanguage>
    </extension>
    <extension
-         point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
-      <proposalFilter
-            proposalFilter="org.bonitasoft.studio.groovy.ui.contentassist.BonitaProposalFilter">
-         <appliesTo
-               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
-         </appliesTo>
-      </proposalFilter>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.configuration.synchronizer">
       <synchronier
             class="org.bonitasoft.studio.groovy.ui.providers.ProcessGroovyScriptConfigurationSynchronizer">
