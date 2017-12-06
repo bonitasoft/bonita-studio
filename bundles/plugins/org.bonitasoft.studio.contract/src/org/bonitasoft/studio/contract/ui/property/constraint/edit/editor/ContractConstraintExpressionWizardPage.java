@@ -17,12 +17,14 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -41,6 +43,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -84,6 +87,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     @Override
     public void dispose() {
         if (groovyViewer != null) {
+            groovyViewer.enbaleSyntaxHighligthing();
             groovyViewer.dispose();
         }
         super.dispose();
@@ -107,13 +111,16 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         getSourceViewer().getTextWidget().setData(ContractInputCompletionProposalComputer.INPUTS, inputs);
         getSourceViewer().getDocument().addDocumentListener(this);
 
-        expressionContentObservable = EMFObservables.observeValue(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
+        expressionContentObservable = EMFObservables.observeValue(constraint,
+                ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
 
-        final IObservableList inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
+        final IObservableList inputsObservable = EMFObservables.observeList(constraint,
+                ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
-        context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
-                .getGroovyCompilationUnit(), new CompilationProblemRequestor()));
+        context.addValidationStatusProvider(
+                new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
+                        .getGroovyCompilationUnit(), new CompilationProblemRequestor()));
 
         final CLabel contentAssistHint = new CLabel(container, SWT.NONE);
         contentAssistHint.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
@@ -127,11 +134,13 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
     protected GroovyViewer createSourceViewer(final Composite container) {
         groovyViewer = groovyViewerFactory.createSourceViewer(container, editorFactory.newInstance());
+        groovyViewer.disableSyntaxHighligthing();
         ContractContainer contractContainer = null;
         if (!inputs.isEmpty()) {
             contractContainer = ModelHelper.getFirstContainerOfType(inputs.get(0), ContractContainer.class);
         }
-        groovyViewer.setContext(null, contractContainer, null, null);
+        groovyViewer.setContext(null, contractContainer,
+                new ViewerFilter[] { new AvailableExpressionTypeFilter(ExpressionConstants.CONTRACT_INPUT_TYPE) }, null);
         return groovyViewer;
     }
 
@@ -158,9 +167,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         }
     }
 
-    public boolean performFinish(final ContractConstraint constraintToUpdate, final IPropertySourceProvider propertySourceProvider) {
+    public boolean performFinish(final ContractConstraint constraintToUpdate,
+            final IPropertySourceProvider propertySourceProvider) {
         final IPropertySource constraintPropertySource = propertySourceProvider.getPropertySource(constraintToUpdate);
-        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION, constraint.getExpression());
+        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION,
+                constraint.getExpression());
         if (inputIndexer != null) {
             try {
                 inputIndexer.join();
@@ -169,7 +180,8 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
                 return false;
             }
         }
-        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES, constraint.getInputNames());
+        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES,
+                constraint.getInputNames());
         return true;
     }
 

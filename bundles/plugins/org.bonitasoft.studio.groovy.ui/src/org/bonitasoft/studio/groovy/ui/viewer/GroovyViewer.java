@@ -47,22 +47,19 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -76,6 +73,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.FileEditorInput;
@@ -101,8 +99,6 @@ public class GroovyViewer implements IDocumentListener {
     private IEditorInput input;
 
     private List<ScriptVariable> nodes;
-
-    private GroovyFileStore tmpGroovyFileStore;
 
     private Set<String> knowVariables;
 
@@ -133,9 +129,7 @@ public class GroovyViewer implements IDocumentListener {
     public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor,
             boolean restrictScriptSize) {
         this.restrictScriptSize = restrictScriptSize;
-        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
-        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
-        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        enbaleSyntaxHighligthing();
         if (input == null) {
             final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
@@ -151,7 +145,7 @@ public class GroovyViewer implements IDocumentListener {
         }
         editor = groovyEditor;
         if (editor == null) {
-            editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+            editor = new BonitaGroovyEditor();
         }
         try {
             groovyEditorContext = createGroovyEditorContext();
@@ -159,7 +153,11 @@ public class GroovyViewer implements IDocumentListener {
             groovyEditorContext.set(ISources.ACTIVE_SITE_NAME, site);
             editor.init(site, this.input);
             editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+            ASTProvider astProvider = JavaPlugin.getDefault().getASTProvider();
+            org.eclipse.jdt.groovy.core.util.ReflectionUtils.executePrivateMethod(ASTProvider.class,
+                    "activeJavaEditorChanged", new Class[] { IWorkbenchPart.class }, astProvider, new Object[] { editor });
             editor.createPartControl(mainComposite);
+
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }
@@ -168,25 +166,6 @@ public class GroovyViewer implements IDocumentListener {
         if (restrictScriptSize) {
             styledText.setTextLimit(MAX_SCRIPT_LENGTH);
         }
-
-        getSourceViewer().addTextListener(new ITextListener() {
-
-            private boolean isReconciling;
-
-            @Override
-            public void textChanged(final TextEvent event) {
-                if (!isReconciling) {
-                    isReconciling = true;
-                    try {
-                        JavaModelUtil.reconcile(editor.getGroovyCompilationUnit());
-                    } catch (final JavaModelException e) {
-
-                    } finally {
-                        isReconciling = false;
-                    }
-                }
-            }
-        });
 
         styledText.setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
         styledText.addFocusListener(new FocusListener() {
@@ -374,6 +353,18 @@ public class GroovyViewer implements IDocumentListener {
     public void documentAboutToBeChanged(DocumentEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void disableSyntaxHighligthing() {
+        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
+        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
+    }
+
+    public void enbaleSyntaxHighligthing() {
+        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
+        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
+        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
     }
 
 }
