@@ -249,7 +249,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
 
-        final Button addButton = createAddButton(ctx, viewerObservableValue, buttonsComposite);
+        final Button addButton = createAddButton(buttonsComposite);
         final Button deleteButton = createDeleteButton(buttonsComposite);
 
         final TableViewer queriesTableViewer = new TableViewer(composite,

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectNameCellEditorValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
@@ -56,6 +57,8 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
 
     private final IObservableValue panelTextObservable;
 
+    private IDiffLogger diffLogger;
+
     /**
      * @param viewer
      * @param dbc
@@ -65,9 +68,11 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
             IObservableValue packageNameObservableValue,
             IObservableValue panelTextObservable,
             ColumnViewer viewer,
-            DataBindingContext dbc) {
+            DataBindingContext dbc,
+            IDiffLogger diffLogger) {
         super(viewer, dbc);
         this.dbc = dbc;
+        this.diffLogger = diffLogger;
         this.packageNameObservableValue = packageNameObservableValue;
         this.businessObjectModel = businessObjectModel;
         this.panelTextObservable = panelTextObservable;
@@ -98,6 +103,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
                 final BusinessObject businessObject = (BusinessObject) businessObjectObservableValue.getValue();
                 final String oldName = (String) event.diff.getOldValue();
                 final String newName = (String) event.diff.getNewValue();
+                diffLogger.boRenamed(oldName, newName);
                 for (final Query q : businessObject.getQueries()) {
                     if (q.getReturnType().equals(oldName)) {
                         q.setReturnType(newName);

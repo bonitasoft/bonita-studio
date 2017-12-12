@@ -53,6 +53,10 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
+    public T getWorkingCopy() {
+        return workingCopy;
+    }
+
     @Override
     protected void addPages() {
         createFormPage();
@@ -145,6 +149,10 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     public StructuredTextEditor getSourceEditor() {
         return fSourceEditor;
+    }
+
+    public AbstractFormPage<T> getFormPage() {
+        return formPage;
     }
 
     public IEclipseContext getContext() {

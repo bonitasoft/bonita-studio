@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.studio.businessobject.core.difflog.NullDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldTypeLabelProvider;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -54,7 +55,7 @@ public class FieldTypeEditingSupportTest {
 
     private FieldTypeEditingSupport createEditingSupport() {
         return new FieldTypeEditingSupport(new TableViewer(realm.createComposite()), new BusinessObjectModel(),
-                new WritableList(), new WritableValue());
+                new WritableList(), new WritableValue(), new WritableValue(), new NullDiffLogger());
     }
 
 }
