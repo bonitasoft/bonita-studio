@@ -26,6 +26,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.FieldTypeLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -45,26 +46,34 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     public static final String TYPE_COMBO_EDITOR_ID = "FieldTypeEditingSupport.Combo";
 
-	private final BusinessObjectModel bom;
+    private final BusinessObjectModel bom;
 
     private final IObservableList fieldsList;
 
     private final IObservableValue selectedFieldObservableValue;
 
+    private IDiffLogger diffLogger;
+
+    private IObservableValue boObservableValue;
+
     public FieldTypeEditingSupport(final ColumnViewer viewer, final BusinessObjectModel bom,
             final IObservableList fieldsList,
-            final IObservableValue selectedFieldObservableValue) {
+            final IObservableValue selectedFieldObservableValue,
+            IObservableValue boObservableValue,
+            IDiffLogger diffLogger) {
         super(viewer);
         this.bom = bom;
         this.fieldsList = fieldsList;
         this.selectedFieldObservableValue = selectedFieldObservableValue;
+        this.boObservableValue = boObservableValue;
+        this.diffLogger = diffLogger;
     }
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
         final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
                 SWT.READ_ONLY);
-        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,TYPE_COMBO_EDITOR_ID);
+        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, TYPE_COMBO_EDITOR_ID);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
         cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().getParent().setFocus());
@@ -110,18 +119,23 @@ public class FieldTypeEditingSupport extends EditingSupport {
     protected void setValue(final Object element, final Object value) {
         if (element instanceof SimpleField) {
             if (value instanceof FieldType) {
+                FieldType oldType = ((SimpleField) element).getType();
                 ((SimpleField) element).setType((FieldType) value);
                 selectedFieldObservableValue.setValue(null);
                 selectedFieldObservableValue.setValue(element);
+                diffLogger.fieldTypeChanged(((BusinessObject) boObservableValue.getValue()).getQualifiedName(),
+                        ((SimpleField) element).getName(), oldType, value);
             } else if (value instanceof BusinessObject) {
-                updateToRelationField((SimpleField) element, (BusinessObject) value);
+                updateToRelationField((SimpleField) element, (BusinessObject) value,
+                        (BusinessObject) boObservableValue.getValue());
             }
         }
         if (element instanceof RelationField) {
             if (value instanceof BusinessObject) {
                 ((RelationField) element).setReference((BusinessObject) value);
             } else if (value instanceof FieldType) {
-                updateToSimpleField((RelationField) element, (FieldType) value);
+                updateToSimpleField((RelationField) element, (FieldType) value,
+                        (BusinessObject) boObservableValue.getValue());
             }
         }
         getViewer().getControl().getDisplay().asyncExec(new Runnable() {
@@ -134,9 +148,10 @@ public class FieldTypeEditingSupport extends EditingSupport {
     }
 
     @SuppressWarnings("unchecked")
-    private void updateToSimpleField(final RelationField field, final FieldType type) {
+    private void updateToSimpleField(final RelationField field, final FieldType type, BusinessObject parent) {
         final int index = fieldsList.indexOf(field);
         if (index != -1 && fieldsList.remove(field)) {
+            String oldType = field.getReference().getQualifiedName();
             final SimpleField simpleField = new SimpleField();
             simpleField.setType(type);
             simpleField.setCollection(field.isCollection());
@@ -145,13 +160,15 @@ public class FieldTypeEditingSupport extends EditingSupport {
             simpleField.setLength(255);
             fieldsList.add(index, simpleField);
             selectedFieldObservableValue.setValue(simpleField);
+            diffLogger.fieldTypeChanged(parent.getQualifiedName(), simpleField.getName(), oldType, type);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void updateToRelationField(final SimpleField field, final BusinessObject reference) {
+    private void updateToRelationField(final SimpleField field, final BusinessObject reference, BusinessObject parent) {
         final int index = fieldsList.indexOf(field);
         if (index != -1 && fieldsList.remove(field)) {
+            FieldType oldType = field.getType();
             final RelationField realtionField = new RelationField();
             realtionField.setType(Type.COMPOSITION);
             realtionField.setFetchType(FetchType.LAZY);
@@ -161,6 +178,9 @@ public class FieldTypeEditingSupport extends EditingSupport {
             realtionField.setNullable(field.isNullable());
             fieldsList.add(index, realtionField);
             selectedFieldObservableValue.setValue(realtionField);
+            diffLogger.fieldTypeChanged(parent.getQualifiedName(),
+                    realtionField.getName(), oldType,
+                    reference.getQualifiedName());
         }
 
     }

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.core.difflog.NullDiffLogger;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -48,7 +49,7 @@ public class BusinessDataModelWizardPageTest {
      */
     @Before
     public void setUp() throws Exception {
-        wizardPage = spy(new BusinessDataModelWizardPage(businessObjectModel));
+        wizardPage = spy(new BusinessDataModelWizardPage(businessObjectModel, new NullDiffLogger()));
     }
 
     @Test

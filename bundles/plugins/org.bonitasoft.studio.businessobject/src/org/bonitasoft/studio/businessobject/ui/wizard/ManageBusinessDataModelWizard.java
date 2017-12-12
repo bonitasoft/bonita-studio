@@ -27,6 +27,7 @@ import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.validator.BusinessObjectModelValidator;
 import org.bonitasoft.engine.bdm.validator.ValidationStatus;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -63,13 +64,16 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
     private boolean newBdm = false;
 
-    public ManageBusinessDataModelWizard(final BusinessObjectModelFileStore fStore) {
+    private IDiffLogger diffLogger;
+
+    public ManageBusinessDataModelWizard(final BusinessObjectModelFileStore fStore, IDiffLogger diffLogger) {
         this.fStore = fStore;
         businessObjectModel = fStore.getContent();
         if (businessObjectModel == null) {
             newBdm = true;
             businessObjectModel = new BusinessObjectModel();
         }
+        this.diffLogger = diffLogger;
         setDefaultPageImageDescriptor(Pics.getWizban());
         setWindowTitle(Messages.manageBusinessDataModelTitle);
         setNeedsProgressMonitor(true);
@@ -81,7 +85,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
      */
     @Override
     public void addPages() {
-        page = new BusinessDataModelWizardPage(businessObjectModel);
+        page = new BusinessDataModelWizardPage(businessObjectModel, diffLogger);
         page.setTitle(Messages.manageBusinessDataModelTitle);
         page.setDescription(Messages.manageBusinessDataModelDesc);
         addPage(page);
@@ -161,12 +165,12 @@ public class ManageBusinessDataModelWizard extends Wizard {
                             });
                             throw new InterruptedException();
                         } else {
-                            monitor.setTaskName(Messages.saving);
-                            fStore.save(businessObjectModel);
-                            monitor.done();
+                            save(monitor);
                         }
+                        monitor.done();
                     }
                 }
+
             });
         } catch (final InvocationTargetException e) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelValidationFailedTitle,
@@ -179,7 +183,12 @@ public class ManageBusinessDataModelWizard extends Wizard {
         return true;
     }
 
-    private boolean installBDM() {
+    protected void save(final IProgressMonitor monitor) {
+        monitor.setTaskName(Messages.saving);
+        fStore.save(businessObjectModel);
+    }
+
+    protected boolean installBDM() {
         try {
             getContainer().run(true, false, new IRunnableWithProgress() {
 
@@ -198,6 +207,10 @@ public class ManageBusinessDataModelWizard extends Wizard {
             return false;
         }
         return true;
+    }
+
+    protected IDiffLogger getDiffLogger() {
+        return diffLogger;
     }
 
     private Throwable handleTargetExceptionStacktrace(final InvocationTargetException e) {

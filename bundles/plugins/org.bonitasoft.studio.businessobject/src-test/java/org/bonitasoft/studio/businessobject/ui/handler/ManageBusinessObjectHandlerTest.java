@@ -65,17 +65,18 @@ public class ManageBusinessObjectHandlerTest {
     public void setUp() throws Exception {
         Mockito.doReturn(businessStore).when(repositoryAccessor)
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        Mockito.doReturn(wizard).when(handlerUnderTest).createWizard();
+        Mockito.doReturn(wizard).when(handlerUnderTest).createWizard(repositoryAccessor);
         when(wizardDialog.open()).thenReturn(IDialogConstants.OK_ID);
-        Mockito.doReturn(wizardDialog).when(handlerUnderTest).createWizardDialog(wizard, IDialogConstants.FINISH_LABEL);
-        doNothing().when(handlerUnderTest).openSuccessDialog();
+        Mockito.doReturn(wizardDialog).when(handlerUnderTest).createWizardDialog(wizard, IDialogConstants.FINISH_LABEL,
+                shell);
+        doNothing().when(handlerUnderTest).openSuccessDialog(shell);
     }
 
     @Test
     public void shouldExecute_SaveArtifactWithEditorContent() throws Exception {
         assertThat(handlerUnderTest.execute(repositoryAccessor, shell)).isEqualTo(IDialogConstants.OK_ID);
         verify(wizardDialog).open();
-        verify(handlerUnderTest).openSuccessDialog();
+        verify(handlerUnderTest).openSuccessDialog(shell);
     }
 
 }

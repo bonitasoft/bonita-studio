@@ -16,6 +16,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.FieldNameCellEditorValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
@@ -23,6 +24,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.internal.databinding.beans.BeanObservableValueDecorator;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
@@ -43,11 +46,14 @@ public class FieldNameEditingSupport extends ObservableValueEditingSupport {
 
     private final IObservableValue viewerObservableValue;
 
+    private IDiffLogger diffLogger;
+
     public FieldNameEditingSupport(final IObservableValue viewerObservableValue, final ColumnViewer viewer,
-            final DataBindingContext dbc) {
+            final DataBindingContext dbc, IDiffLogger diffLogger) {
         super(viewer, dbc);
         this.dbc = dbc;
         this.viewerObservableValue = viewerObservableValue;
+        this.diffLogger = diffLogger;
     }
 
     @Override
@@ -62,6 +68,14 @@ public class FieldNameEditingSupport extends ObservableValueEditingSupport {
     protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
         final IObservableValue observeValue = PojoObservables.observeValue(element, "name");
         observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
+        observeValue.addValueChangeListener(new IValueChangeListener<String>() {
+
+            @Override
+            public void handleValueChange(ValueChangeEvent<? extends String> event) {
+                diffLogger.fieldRenamed(((BusinessObject) viewerObservableValue.getValue()).getQualifiedName(),
+                        event.diff.getOldValue(), event.diff.getNewValue());
+            }
+        });
         return observeValue;
     }
 

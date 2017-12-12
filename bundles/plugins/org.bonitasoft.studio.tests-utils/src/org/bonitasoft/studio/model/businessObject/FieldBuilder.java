@@ -187,47 +187,47 @@ public abstract class FieldBuilder {
             super(new RelationField());
         }
 
-        public FieldBuilder ofType(final Type type) {
+        public RelationFieldBuilder ofType(final Type type) {
             ((RelationField) field).setType(type);
             return this;
         }
 
-        public FieldBuilder composition() {
+        public RelationFieldBuilder composition() {
             ((RelationField) field).setType(Type.COMPOSITION);
             return this;
         }
 
-        public FieldBuilder aggregation() {
+        public RelationFieldBuilder aggregation() {
             ((RelationField) field).setType(Type.AGGREGATION);
             return this;
         }
 
-        public FieldBuilder lazy() {
+        public RelationFieldBuilder lazy() {
             ((RelationField) field).setFetchType(LAZY);
             return this;
         }
 
-        public FieldBuilder fetchType(final FetchType fetchType) {
+        public RelationFieldBuilder fetchType(final FetchType fetchType) {
             ((RelationField) field).setFetchType(fetchType);
             return this;
         }
 
         @Override
-        public FieldBuilder withName(final String name) {
-            return super.withName(name);
+        public RelationFieldBuilder withName(final String name) {
+            return (RelationFieldBuilder) super.withName(name);
         }
 
         @Override
-        public FieldBuilder multiple() {
-            return super.multiple();
+        public RelationFieldBuilder multiple() {
+            return (RelationFieldBuilder) super.multiple();
         }
 
         @Override
-        public FieldBuilder multiple(final boolean collection) {
-            return super.multiple(collection);
+        public RelationFieldBuilder multiple(final boolean collection) {
+            return (RelationFieldBuilder) super.multiple(collection);
         }
 
-        public FieldBuilder referencing(final BusinessObject bo) {
+        public RelationFieldBuilder referencing(final BusinessObject bo) {
             ((RelationField) field).setReference(bo);
             return this;
         }

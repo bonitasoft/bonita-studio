@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.handler;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.difflog.NullDiffLogger;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -41,23 +42,20 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ManageBusinessObjectHandler {
 
     private static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
-    private Shell shell;
-    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore;
 
     @Execute
     public Object execute(RepositoryAccessor repositoryAccessor, Shell shell) throws ExecutionException {
-        this.repositoryStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        this.shell = shell;
-        final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
-        final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL);
+        final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard(repositoryAccessor);
+        final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL,
+                shell);
         if (dialog.open() == IDialogConstants.OK_ID) {
-            openSuccessDialog();
+            openSuccessDialog(shell);
             return IDialogConstants.OK_ID;
         }
         return IDialogConstants.CANCEL_ID;
     }
 
-    protected void openSuccessDialog() {
+    protected void openSuccessDialog(Shell shell) {
         final IPreferenceStore preferenceStore = BusinessObjectPlugin.getDefault().getPreferenceStore();
         if (!preferenceStore.getBoolean(DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG)) {
             MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
@@ -73,7 +71,7 @@ public class ManageBusinessObjectHandler {
         }
     }
 
-    protected CustomWizardDialog createWizardDialog(final IWizard wizard, final String finishLabel) {
+    protected CustomWizardDialog createWizardDialog(final IWizard wizard, final String finishLabel, Shell shell) {
         final CustomWizardDialog dialog = new CustomWizardDialog(shell, wizard, finishLabel) {
 
             @Override
@@ -91,13 +89,20 @@ public class ManageBusinessObjectHandler {
         return dialog;
     }
 
-    protected ManageBusinessDataModelWizard createWizard() {
-        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+    protected ManageBusinessDataModelWizard createWizard(RepositoryAccessor repositoryAccessor) {
+        return new ManageBusinessDataModelWizard(getFileStore(repositoryAccessor), new NullDiffLogger());
+    }
+
+    protected BusinessObjectModelFileStore getFileStore(RepositoryAccessor repositoryAccessor) {
+        BusinessObjectModelRepositoryStore repositoryStore = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) repositoryStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (fileStore == null) {
             fileStore = (BusinessObjectModelFileStore) repositoryStore
                     .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
         }
-        return new ManageBusinessDataModelWizard(fileStore);
+        return fileStore;
     }
 
 }
