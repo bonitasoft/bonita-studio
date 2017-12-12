@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.control.AttributesTabItemControl;
 import org.bonitasoft.studio.businessobject.ui.wizard.control.IndexesTabItemControl;
@@ -101,9 +102,12 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     private TableViewer boTableViewer;
 
-    protected BusinessDataModelWizardPage(final BusinessObjectModel businessObjectModel) {
+    private IDiffLogger diffLogger;
+
+    protected BusinessDataModelWizardPage(final BusinessObjectModel businessObjectModel, IDiffLogger diffLogger) {
         super(BusinessDataModelWizardPage.class.getName());
         this.businessObjectModel = businessObjectModel;
+        this.diffLogger = diffLogger;
     }
 
     /*
@@ -153,7 +157,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 viewerObservableValue, PojoObservables.observeValue(
                         this, "packageName"),
                 groupTextObservable,
-                boTableViewer, ctx));
+                boTableViewer, ctx, diffLogger));
         ctx.bindValue(observeDetailValue,
                 groupTextObservable,
                 updateValueStrategy().withConverter(toPaneDescripitonlTitle()).create(),
@@ -184,7 +188,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         final TabItem attributeItem = new TabItem(tabFolder, SWT.BORDER);
         attributeItem.setText(Messages.attributes);
         attributeItem.setControl(
-                new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+                new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel,
+                        diffLogger));
     }
 
     protected void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
@@ -362,11 +367,12 @@ public class BusinessDataModelWizardPage extends WizardPage {
         });
         final IObservableValue packageNameObserveValue = PojoObservables.observeValue(this, "packageName");
         final ISWTObservableValue packageNameObserveText = SWTObservables.observeText(packageNameText, SWT.Modify);
-        ctx.bindValue(packageNameObserveText, packageNameObserveValue, targetToModel, null);
-        packageNameObserveText.addValueChangeListener(new IValueChangeListener() {
+        ctx.bindValue(SWTObservables.observeDelayedValue(200, packageNameObserveText), packageNameObserveValue,
+                targetToModel, null);
+        packageNameObserveValue.addValueChangeListener(new IValueChangeListener<String>() {
 
             @Override
-            public void handleValueChange(final ValueChangeEvent event) {
+            public void handleValueChange(ValueChangeEvent<? extends String> event) {
                 String newPackageName = (String) event.diff.getNewValue();
                 if (newPackageName.isEmpty()) {
                     newPackageName = DEFAULT_PACKAGE_NAME;
@@ -377,14 +383,15 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
                     final String previousName = bo.getQualifiedName();
                     final String qualifiedName = newPackageName + "." + NamingUtils.getSimpleName(bo.getQualifiedName());
+                    diffLogger.boRenamed(bo.getQualifiedName(), qualifiedName);
                     bo.setQualifiedName(qualifiedName);
+
                     for (final Query q : bo.getQueries()) {
                         if (previousName.equals(q.getReturnType())) {
                             q.setReturnType(qualifiedName);
                         }
                     }
                 }
-
             }
         });
         if (businessObjectModel.getBusinessObjects().isEmpty()) {
@@ -399,6 +406,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         final BusinessObject businessObject = new BusinessObject();
         businessObject.setQualifiedName(generateObjectName());
         businessObjectsObserveList.add(businessObject);
+        diffLogger.boAdded(businessObject.getQualifiedName());
         boTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
 
             @Override
@@ -437,6 +445,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 Messages.bind(Messages.deleteBOConfirmMessage, NamingUtils.getSimpleName(bo.getQualifiedName())))) {
             for (final Object selected : selection.toList()) {
                 businessObjectsObserveList.remove(selected);
+                diffLogger.boRemoved(((BusinessObject) selected).getQualifiedName());
             }
             if (businessObjectsObserveList.isEmpty()) {
                 observeSingleSelection.setValue(null);

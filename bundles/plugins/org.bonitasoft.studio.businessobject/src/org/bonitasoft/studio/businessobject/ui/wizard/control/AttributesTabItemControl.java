@@ -28,6 +28,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldNameEditingSupport;
@@ -84,7 +85,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
@@ -104,14 +104,17 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     private Composite dateOnlyFieldContent;
     private Composite datTimeFieldContent;
     private Composite datTimeInTimezoneFieldContent;
+    private IDiffLogger diffLogger;
 
     public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
-            final BusinessObjectModel businessObjectModel) {
+            final BusinessObjectModel businessObjectModel,
+            IDiffLogger diffLogger) {
         super(parent, SWT.NONE);
         this.businessObjectModel = businessObjectModel;
         this.fieldsList = fieldsList;
+        this.diffLogger = diffLogger;
         createControl(ctx, viewerObservableValue);
     }
 
@@ -282,8 +285,28 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         relationComboViewer.setLabelProvider(new RelationKindLabelProvider());
         relationComboViewer.setInput(RelationField.Type.values());
 
-        ctx.bindValue(ViewersObservables.observeSingleSelection(relationComboViewer),
-                PojoObservables.observeDetailValue(attributeSelectionObservable, "type", Type.class));
+        IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(relationComboViewer);
+        ctx.bindValue(observeSingleSelection,
+                PojoObservables.observeDetailValue(attributeSelectionObservable, "type",
+                        Type.class));
+        observeSingleSelection.addValueChangeListener(new IValueChangeListener<RelationField.Type>() {
+
+            @Override
+            public void handleValueChange(ValueChangeEvent<? extends RelationField.Type> event) {
+                if (attributeSelectionObservable != null
+                        && attributeSelectionObservable.getValue() instanceof RelationField) {
+                    Type oldValue = event.diff.getOldValue() instanceof Type ? event.diff.getOldValue() : null;
+                    Type newValue = event.diff.getNewValue() instanceof Type ? event.diff.getNewValue() : null;
+                    if (oldValue != null && newValue != null) {
+                        diffLogger.fieldRelationTypeChanged(
+                                ((BusinessObject) viewerObservableValue.getValue()).getQualifiedName(),
+                                ((Field) attributeSelectionObservable.getValue()).getName(),
+                                ((RelationField) attributeSelectionObservable.getValue()).getReference().getQualifiedName(),
+                                oldValue, newValue);
+                    }
+                }
+            }
+        });
 
         new Label(composite, SWT.NONE);
 
@@ -329,12 +352,12 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     private IViewerObservableValue createAttributeTableControl(final DataBindingContext ctx,
-            final IViewerObservableValue viewerObservableValue) {
+            final IObservableValue<BusinessObject> viewerObservableValue) {
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 3).create());
 
-        final Button addButton = createAddButton(ctx, viewerObservableValue, buttonsComposite);
+        final Button addButton = createAddButton(buttonsComposite);
 
         UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
@@ -373,8 +396,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         featuresTableViewer.getTable().setLayout(tableLayout);
 
         createFieldNameColumn(ctx, featuresTableViewer, viewerObservableValue);
-        createFieldTypeColumn(ctx, featuresTableViewer, observeAttributeSelection);
-        createMultipleColumn(featuresTableViewer);
+        createFieldTypeColumn(ctx, featuresTableViewer, observeAttributeSelection, viewerObservableValue);
+        createMultipleColumn(featuresTableViewer, viewerObservableValue);
         createMandatoryColumn(featuresTableViewer);
 
         //Resetting viewer input to avoid BS-16262
@@ -518,7 +541,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createFieldNameColumn(final DataBindingContext ctx, final TableViewer featuresTableViewer,
-            final IViewerObservableValue viewerObservableValue) {
+            final IObservableValue<BusinessObject> viewerObservableValue) {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.FILL);
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name);
@@ -537,18 +560,19 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
             }
         });
         nameColumnViewer
-                .setEditingSupport(new FieldNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
+                .setEditingSupport(
+                        new FieldNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx, diffLogger));
     }
 
     protected void createFieldTypeColumn(final DataBindingContext ctx, final TableViewer featuresTableViewer,
-            final IViewerObservableValue fieldSingSelectionObervableValue) {
+            final IViewerObservableValue fieldSingSelectionObervableValue, IObservableValue viewerObservableValue) {
         final TableViewerColumn typeColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.FILL);
         final TableColumn column = typeColumnViewer.getColumn();
         column.setText(Messages.type);
         typeColumnViewer.setLabelProvider(new FieldTypeLabelProvider());
         typeColumnViewer
                 .setEditingSupport(new FieldTypeEditingSupport(typeColumnViewer.getViewer(), businessObjectModel, fieldsList,
-                        fieldSingSelectionObervableValue));
+                        fieldSingSelectionObervableValue, viewerObservableValue, diffLogger));
     }
 
     protected void createMandatoryColumn(final TableViewer featuresTableViewer) {
@@ -559,15 +583,18 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         mandatoryColumnViewer.setEditingSupport(new MandatoryEditingSupport(mandatoryColumnViewer.getViewer()));
     }
 
-    protected void createMultipleColumn(final TableViewer featuresTableViewer) {
+    protected void createMultipleColumn(final TableViewer featuresTableViewer,
+            IObservableValue<BusinessObject> boObservable) {
         final TableViewerColumn multipleColumnViewer = new TableViewerColumn(featuresTableViewer, SWT.CENTER);
         final TableColumn column = multipleColumnViewer.getColumn();
         column.setText(Messages.multiple);
         multipleColumnViewer.setLabelProvider(new MultipleCheckboxLabelProvider(multipleColumnViewer.getViewer()));
-        multipleColumnViewer.setEditingSupport(new MultipleEditingSupport(multipleColumnViewer.getViewer()));
+        multipleColumnViewer
+                .setEditingSupport(new MultipleEditingSupport(multipleColumnViewer.getViewer()));
     }
 
-    protected void addField(final IViewerObservableValue viewerObservableValue, final TableViewer featuresTableViewer,
+    protected void addField(final IObservableValue<BusinessObject> viewerObservableValue,
+            final TableViewer featuresTableViewer,
             final IViewerObservableValue observeAttributeSelection) {
         final SimpleField field = new SimpleField();
         field.setName(generateAttributeName(viewerObservableValue));
@@ -576,6 +603,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         field.setCollection(Boolean.FALSE);
         field.setNullable(Boolean.TRUE);
         fieldsList.add(field);
+        diffLogger.fieldAdded(((BusinessObject) viewerObservableValue.getValue()).getQualifiedName(), field.getName());
         observeAttributeSelection.setValue(field);
         featuresTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
 
@@ -589,6 +617,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     protected void deleteField(final TableViewer featuresTableViewer, final IObservableValue viewerObservableValue) {
         final IStructuredSelection selection = (IStructuredSelection) featuresTableViewer.getSelection();
+        selection.toList().stream().forEach(field -> diffLogger.fieldRemoved(
+                ((BusinessObject) viewerObservableValue.getValue()).getQualifiedName(), ((Field) field).getName()));
         fieldsList.removeAll(selection.toList());
     }
 
@@ -617,9 +647,9 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         observeSingleSelection.setValue(selectedFeature);
     }
 
-    protected String generateAttributeName(final IViewerObservableValue viewerObseravble) {
+    protected String generateAttributeName(final IObservableValue<BusinessObject> viewerObservableValue) {
         final Set<String> existingNames = new HashSet<>();
-        final BusinessObject businessObject = (BusinessObject) viewerObseravble.getValue();
+        final BusinessObject businessObject = viewerObservableValue.getValue();
         for (final Field feature : businessObject.getFields()) {
             existingNames.add(feature.getName());
         }
