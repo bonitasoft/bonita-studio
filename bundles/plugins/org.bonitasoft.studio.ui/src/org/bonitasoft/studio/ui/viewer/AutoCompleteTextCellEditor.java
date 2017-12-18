@@ -23,6 +23,8 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -68,6 +70,13 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
         proposalAdapter.setPropagateKeys(true);
         proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
         proposalAdapter.setAutoActivationDelay(0);
+        proposalAdapter.getControl().addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                AutoCompleteTextCellEditor.this.focusLost();
+            }
+        });
     }
 
     @Override
