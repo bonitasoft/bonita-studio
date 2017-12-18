@@ -48,6 +48,10 @@
                name="applicationXMI"
                value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
          </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.LifeCycleManager">
+         </property>
          
       </product>
    </extension> 
