@@ -184,7 +184,7 @@
                         <product>
                             <id>${productId}</id>
                             <rootFolders>
-                                <macosx>${product.short.name}.app</macosx>
+                                <macosx>${product.short.name}-${project.version}.app</macosx>
                             </rootFolders>
                         </product>
                     </products>
@@ -434,7 +434,7 @@
                                     <property name="mac.studio.dir"
                                             value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
                                         <property name="studio.dir"
-                                            value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Eclipse" />
+                                            value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse" />
                                         <property name="enable.uninstaller" value="0" />
                                         <property name="bitrock.install" value="${project.build.directory}/installers" />
                                         <property name="os_arch" value="64" />
@@ -611,7 +611,7 @@
                                 <configuration>
                                     <tasks>
                                         <get src="${jre.url}/${jre.osx.url}.tar.gz"
-                                            dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}.app/Contents/Eclipse/${jre.osx.url}.tar.gz" />
+                                            dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse/${jre.osx.url}.tar.gz" />
                                     </tasks>
                                 </configuration>
                             </execution>

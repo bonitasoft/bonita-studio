@@ -57,7 +57,7 @@ public class ImportWorkspaceOperation implements IRunnableWithProgress {
             workingCopy.setAttribute(IPDELauncherConstants.APPLICATION,
                     applicationId());
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-                    String.format("-export=%s", workspaceModel.getRepositories()
+                    String.format("-export=\"%s\"", workspaceModel.getRepositories()
                             .filter(repo -> repo.getStatus().isOK())
                             .map(ImportRepositoryModel::getName)
                             .collect(Collectors.joining(":"))));
