@@ -45,7 +45,6 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * @author Romain Bioteau
- * 
  */
 
 public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
@@ -71,9 +70,12 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
 
         createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage), false);
 
-        studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, Messages.bind(Messages.studioLocalLabel,
-                new Object[] { bonitaStudioModuleName }), toLocales(LocaleUtil.getStudioLocales()), getFieldEditorParent());
-        webLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, Messages.consoleLocaleLabel, toLocales(LocaleUtil.getProtalLocales()),
+        studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE,
+                Messages.bind(Messages.studioLocalLabel,
+                        new Object[] { bonitaStudioModuleName }),
+                toLocales(LocaleUtil.getStudioLocales()), getFieldEditorParent());
+        webLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, Messages.consoleLocaleLabel,
+                toLocales(LocaleUtil.getProtalLocales()),
                 getFieldEditorParent());
 
         addField(studioLocale);
@@ -114,11 +116,11 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
         }
         super.propertyChange(event);
     }
-    
+
     @Override
     protected void performDefaults() {
-    	super.performDefaults();
-    	newLocale = getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE);
+        super.performDefaults();
+        newLocale = getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE);
     }
 
     /*
@@ -135,7 +137,8 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
         }
         if (newLocale != null && !newLocale.isEmpty()) {
             changeLocale(newLocale);
-            if (MessageDialog.openQuestion(getShell(), Messages.bind(Messages.restartQuestion_title, new Object[] { bonitaStudioModuleName }),
+            if (MessageDialog.openQuestion(getShell(),
+                    Messages.bind(Messages.restartQuestion_title, new Object[] { bonitaStudioModuleName }),
                     Messages.bind(Messages.restartQuestion_msg, new Object[] { bonitaStudioModuleName }))) {
                 PlatformUI.getWorkbench().restart();
             }
@@ -157,8 +160,9 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
             return;
         }
         try {
-            File configIniFile = new File(new URL(configArea.getURL().toExternalForm() + File.separatorChar + "configuration" + File.separatorChar
-                    + "config.ini").getFile());
+            File configIniFile = new File(
+                    new URL(configArea.getURL().toExternalForm() + File.separatorChar + "configuration" + File.separatorChar
+                            + "config.ini").getFile());
             if (configIniFile.exists()) {
                 Properties configIniProperties = new Properties();
                 final FileInputStream inStream = new FileInputStream(configIniFile);
@@ -173,6 +177,15 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
             BonitaStudioLog.error(e1);
         } catch (FileNotFoundException e) {
             BonitaStudioLog.error(e);
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+
+        File installFolder = new File(configArea.getURL().getFile());
+        File clearStateFile = installFolder.toPath().resolve(".clearState").toFile();
+        try {
+            clearStateFile.delete();
+            clearStateFile.createNewFile();
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
