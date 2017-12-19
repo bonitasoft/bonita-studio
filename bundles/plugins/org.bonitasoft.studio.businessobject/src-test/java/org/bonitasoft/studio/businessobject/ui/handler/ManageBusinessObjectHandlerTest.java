@@ -65,7 +65,7 @@ public class ManageBusinessObjectHandlerTest {
     public void setUp() throws Exception {
         Mockito.doReturn(businessStore).when(repositoryAccessor)
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        Mockito.doReturn(wizard).when(handlerUnderTest).createWizard(repositoryAccessor);
+        Mockito.doReturn(wizard).when(handlerUnderTest).createWizard();
         when(wizardDialog.open()).thenReturn(IDialogConstants.OK_ID);
         Mockito.doReturn(wizardDialog).when(handlerUnderTest).createWizardDialog(wizard, IDialogConstants.FINISH_LABEL,
                 shell);
