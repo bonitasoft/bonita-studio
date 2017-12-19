@@ -42,10 +42,12 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ManageBusinessObjectHandler {
 
     private static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
+    protected RepositoryAccessor repositoryAccessor;
 
     @Execute
     public Object execute(RepositoryAccessor repositoryAccessor, Shell shell) throws ExecutionException {
-        final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard(repositoryAccessor);
+        this.repositoryAccessor = repositoryAccessor;
+        final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL,
                 shell);
         if (dialog.open() == IDialogConstants.OK_ID) {
@@ -89,11 +91,11 @@ public class ManageBusinessObjectHandler {
         return dialog;
     }
 
-    protected ManageBusinessDataModelWizard createWizard(RepositoryAccessor repositoryAccessor) {
-        return new ManageBusinessDataModelWizard(getFileStore(repositoryAccessor), new NullDiffLogger());
+    protected ManageBusinessDataModelWizard createWizard() {
+        return new ManageBusinessDataModelWizard(getFileStore(), new NullDiffLogger());
     }
 
-    protected BusinessObjectModelFileStore getFileStore(RepositoryAccessor repositoryAccessor) {
+    protected BusinessObjectModelFileStore getFileStore() {
         BusinessObjectModelRepositoryStore repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) repositoryStore
