@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
@@ -124,7 +125,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 selectedFieldObservableValue.setValue(null);
                 selectedFieldObservableValue.setValue(element);
                 diffLogger.fieldTypeChanged(((BusinessObject) boObservableValue.getValue()).getQualifiedName(),
-                        ((SimpleField) element).getName(), oldType, value);
+                        ((Field) element).getName(), oldType, value);
             } else if (value instanceof BusinessObject) {
                 updateToRelationField((SimpleField) element, (BusinessObject) value,
                         (BusinessObject) boObservableValue.getValue());
@@ -132,7 +133,10 @@ public class FieldTypeEditingSupport extends EditingSupport {
         }
         if (element instanceof RelationField) {
             if (value instanceof BusinessObject) {
+                BusinessObject oldType = ((RelationField) element).getReference();
                 ((RelationField) element).setReference((BusinessObject) value);
+                diffLogger.fieldTypeChanged(((BusinessObject) boObservableValue.getValue()).getQualifiedName(),
+                        ((Field) element).getName(), oldType, value);
             } else if (value instanceof FieldType) {
                 updateToSimpleField((RelationField) element, (FieldType) value,
                         (BusinessObject) boObservableValue.getValue());
@@ -151,7 +155,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
     private void updateToSimpleField(final RelationField field, final FieldType type, BusinessObject parent) {
         final int index = fieldsList.indexOf(field);
         if (index != -1 && fieldsList.remove(field)) {
-            String oldType = field.getReference().getQualifiedName();
+            BusinessObject oldType = field.getReference();
             final SimpleField simpleField = new SimpleField();
             simpleField.setType(type);
             simpleField.setCollection(field.isCollection());
@@ -180,7 +184,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
             selectedFieldObservableValue.setValue(realtionField);
             diffLogger.fieldTypeChanged(parent.getQualifiedName(),
                     realtionField.getName(), oldType,
-                    reference.getQualifiedName());
+                    reference);
         }
 
     }

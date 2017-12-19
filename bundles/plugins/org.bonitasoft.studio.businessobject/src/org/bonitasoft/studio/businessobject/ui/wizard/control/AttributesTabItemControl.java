@@ -44,9 +44,11 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
@@ -264,6 +266,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return values.toArray(new String[values.size()]);
     }
 
+    @SuppressWarnings("unchecked")
     private Composite createRelationFieldDetailContent(final Group detailGroup, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
@@ -285,14 +288,10 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         relationComboViewer.setLabelProvider(new RelationKindLabelProvider());
         relationComboViewer.setInput(RelationField.Type.values());
 
-        IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(relationComboViewer);
-        ctx.bindValue(observeSingleSelection,
-                PojoObservables.observeDetailValue(attributeSelectionObservable, "type",
-                        Type.class));
-        observeSingleSelection.addValueChangeListener(new IValueChangeListener<RelationField.Type>() {
+        attributeSelectionObservable.addValueChangeListener(new IValueChangeListener<Field>() {
 
-            @Override
-            public void handleValueChange(ValueChangeEvent<? extends RelationField.Type> event) {
+            private IObservableValue<Type> typeObservable;
+            private IValueChangeListener<Type> changeRelationTypeListener = event -> {
                 if (attributeSelectionObservable != null
                         && attributeSelectionObservable.getValue() instanceof RelationField) {
                     Type oldValue = event.diff.getOldValue() instanceof Type ? event.diff.getOldValue() : null;
@@ -305,6 +304,25 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                                 oldValue, newValue);
                     }
                 }
+            };
+            private Binding bindValue;
+
+            @Override
+            public void handleValueChange(ValueChangeEvent<? extends Field> event) {
+                Field selectedField = event.diff.getNewValue();
+                if (selectedField instanceof RelationField) {
+                    if (typeObservable != null) {
+                        typeObservable.removeValueChangeListener(changeRelationTypeListener);
+                    }
+                    if (bindValue != null) {
+                        bindValue.dispose();
+                    }
+                    typeObservable = PojoProperties.value("type").observe(selectedField);
+                    typeObservable.addValueChangeListener(changeRelationTypeListener);
+                    bindValue = ctx.bindValue(ViewersObservables.observeSingleSelection(relationComboViewer),
+                            typeObservable);
+                }
+
             }
         });
 
