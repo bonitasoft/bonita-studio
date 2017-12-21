@@ -75,4 +75,9 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
 
     protected abstract Collection<T> getInput();
 
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
+
 }
