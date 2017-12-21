@@ -118,5 +118,9 @@ public abstract class ControlWidget extends Composite {
         return LayoutConstants.getSpacing().x;
     }
 
+    public Control getControl() {
+        return control;
+    }
+
     protected abstract Control createControl();
 }
