@@ -60,10 +60,6 @@ public class SearchWidget extends TextWidget {
                 message, labelButton, false, null, toolkit, Optional.empty());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#newText(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected Text newText(Composite textContainer) {
         final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL);
@@ -74,7 +70,8 @@ public class SearchWidget extends TextWidget {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite, org.eclipse.swt.widgets.Event)
+     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite,
+     * org.eclipse.swt.widgets.Event)
      */
     @Override
     protected void drawBorder(Composite container, Event e) {
