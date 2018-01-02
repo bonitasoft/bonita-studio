@@ -89,9 +89,7 @@ public class DatabaseHandler {
     public File createBitronixConfFile() throws IOException {
         final Properties databaseProperties = readDatabaseProperties();
         final File confFile = new File(getDBLocation(), "conf" + File.separator + BITRONIX_RESOURCES_PROPERTIES);
-        confFile.delete();
         confFile.getParentFile().mkdirs();
-
         final Properties bitronixResources = new Properties();
         bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
         final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
