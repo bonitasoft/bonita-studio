@@ -26,7 +26,7 @@ public class ProductVersion {
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String CURRENT_VERSION = manifestVersion();
 
-    public static final String CURRENT_YEAR = "2017";
+    public static final String CURRENT_YEAR = "2018";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
