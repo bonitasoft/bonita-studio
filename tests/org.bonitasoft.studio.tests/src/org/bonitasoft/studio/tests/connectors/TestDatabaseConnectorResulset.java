@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -58,6 +59,7 @@ import org.junit.Test;
  *         - the running machine need to be authorized in pg_hba.conf (IP network mask)
  *         - the provided .bos hardly point to the machine containing the postgresSQL
  */
+@Ignore
 public class TestDatabaseConnectorResulset {
 
     private HumanTaskInstance newTask;
