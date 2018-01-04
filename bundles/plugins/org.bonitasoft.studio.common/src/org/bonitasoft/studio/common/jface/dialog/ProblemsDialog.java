@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -50,9 +52,10 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         problemsViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(350, 100).indent(0, 10).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
+        problemsViewer.setComparator(getComparator());
         final TypedLabelProvider<T> typedLabelProvider = getTypedLabelProvider();
         Assert.isNotNull(typedLabelProvider);
-        problemsViewer.setLabelProvider(new LabelProvider() {
+        problemsViewer.setLabelProvider(new ColumnLabelProvider() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -65,10 +68,21 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
             public Image getImage(Object element) {
                 return typedLabelProvider.getImage((T) element);
             }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public String getToolTipText(Object element) {
+                return typedLabelProvider.getToolTipText((T) element);
+            }
         });
 
         problemsViewer.setInput(input);
+        ColumnViewerToolTipSupport.enableFor(problemsViewer);
         return problemsViewer.getControl();
+    }
+
+    protected ViewerComparator getComparator() {
+        return new ViewerComparator();
     }
 
     protected abstract TypedLabelProvider<T> getTypedLabelProvider();
