@@ -212,7 +212,6 @@ public class BOSWebServerManager {
             } catch (final CoreException e) {
                 handleCoreExceptionWhileStartingTomcat(e);
             }
-
         }
     }
 
