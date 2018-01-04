@@ -153,6 +153,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
                                                 public Image getImage(String element) {
                                                     return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
                                                 }
+
                                             };
                                         }
 
