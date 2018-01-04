@@ -17,7 +17,10 @@ package org.bonitasoft.studio.common.repository.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
@@ -86,10 +89,12 @@ public class DatabaseHandler {
         return new File(project.getLocation().toFile(), H2_DATABASE_FOLDER_NAME);
     }
 
-    public File createBitronixConfFile() throws IOException {
+    public Path createBitronixConfFile() throws IOException {
         final Properties databaseProperties = readDatabaseProperties();
-        final File confFile = new File(getDBLocation(), "conf" + File.separator + BITRONIX_RESOURCES_PROPERTIES);
-        confFile.getParentFile().mkdirs();
+        final Path confFile = getDBLocation().toPath().resolve(Paths.get("conf", BITRONIX_RESOURCES_PROPERTIES));
+        if (!confFile.getParent().toFile().exists()) {
+            confFile.getParent().toFile().mkdirs();
+        }
         final Properties bitronixResources = new Properties();
         bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
         final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
@@ -103,8 +108,10 @@ public class DatabaseHandler {
         businessDataDS.setMinPoolSize(0);
         businessDataDS.setMaxPoolSize(5);
         bitronixResources.putAll(businessDataDS.toMap("ds2"));
-        bitronixResources.store(java.nio.file.Files.newOutputStream(confFile.toPath(), StandardOpenOption.CREATE), null);
-
+        try (OutputStream newOutputStream = java.nio.file.Files.newOutputStream(confFile,
+                StandardOpenOption.CREATE)) {
+            bitronixResources.store(newOutputStream, null);
+        }
         return confFile;
     }
 

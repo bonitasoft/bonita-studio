@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
@@ -51,11 +51,11 @@ public class DatabaseHandlerTest {
         dbProperties.put(DatabaseHandler.BUSINESS_DATA_DB_NAME_PROPERTY, "business_data.db");
         doReturn(dbProperties).when(databaseHandler).readDatabaseProperties();
 
-        final File file = databaseHandler.createBitronixConfFile();
+        final Path file = databaseHandler.createBitronixConfFile();
 
         final Properties properties = new Properties();
 
-        try (InputStream is = java.nio.file.Files.newInputStream(file.toPath())) {
+        try (InputStream is = java.nio.file.Files.newInputStream(file)) {
             properties.load(is);
         }
         assertThat(properties).contains(
