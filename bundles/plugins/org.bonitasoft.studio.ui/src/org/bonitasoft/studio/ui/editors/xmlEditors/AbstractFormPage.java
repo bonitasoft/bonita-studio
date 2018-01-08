@@ -108,11 +108,6 @@ public abstract class AbstractFormPage<T> extends FormPage {
         scrolledForm.reflow(true);
     }
 
-    @Override
-    public void setActive(boolean active) {
-        super.setActive(active);
-    }
-
     public void update() {
         IDocument document = getEditor().getSourceEditor() != null
                 ? getEditor().getSourceEditor().getDocumentProvider().getDocument(getEditorInput())
