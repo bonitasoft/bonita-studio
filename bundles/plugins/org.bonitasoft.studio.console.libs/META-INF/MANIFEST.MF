@@ -109,23 +109,24 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  file.xml;version="0.0.0",org.bonitasoft.engine.search;version="0.0.0",o
  rg.bonitasoft.engine.search.impl;version="0.0.0",org.bonitasoft.engine.
  session;version="0.0.0",org.bonitasoft.engine.session.impl;version="0.0
- .0",org.bonitasoft.engine.theme;version="0.0.0",org.bonitasoft.engine.t
- heme.exception;version="0.0.0",org.bonitasoft.engine.theme.impl;version
- ="0.0.0",org.bonitasoft.engine.util;version="0.0.0",org.bonitasoft.engi
- ne.xml;version="0.0.0",org.bonitasoft.engine.xml.parser;version="0.0.0"
- ,org.bonitasoft.forms.client.model;version="0.0.0",org.bonitasoft.forms
- .server.accessor;version="0.0.0",org.bonitasoft.forms.server.accessor.i
- mpl.util;version="0.0.0",org.bonitasoft.forms.server.api;version="0.0.0
- ",org.bonitasoft.forms.server.builder;version="0.0.0",org.bonitasoft.fo
- rms.server.builder.impl;version="0.0.0",org.bonitasoft.forms.server.exc
- eption;version="0.0.0",org.bonitasoft.forms.server.provider.impl.util;v
- ersion="0.0.0",org.bonitasoft.forms.server.validator;version="0.0.0",or
- g.bonitasoft.theme;version="0.0.0",org.bonitasoft.theme.builder;version
- ="0.0.0",org.bonitasoft.theme.builder.impl;version="0.0.0",org.bonitaso
- ft.theme.constants;version="0.0.0",org.bonitasoft.theme.css;version="0.
- 0.0",org.bonitasoft.theme.css.impl;version="0.0.0",org.bonitasoft.theme
- .exception;version="0.0.0",org.bonitasoft.theme.impl;version="0.0.0",or
- g.bonitasoft.theme.model;version="0.0.0"
+ .0",org.bonitasoft.engine.tenant;version="0.0.0",org.bonitasoft.engine.
+ theme;version="0.0.0",org.bonitasoft.engine.theme.exception;version="0.
+ 0.0",org.bonitasoft.engine.theme.impl;version="0.0.0",org.bonitasoft.en
+ gine.util;version="0.0.0",org.bonitasoft.engine.xml;version="0.0.0",org
+ .bonitasoft.engine.xml.parser;version="0.0.0",org.bonitasoft.forms.clie
+ nt.model;version="0.0.0",org.bonitasoft.forms.server.accessor;version="
+ 0.0.0",org.bonitasoft.forms.server.accessor.impl.util;version="0.0.0",o
+ rg.bonitasoft.forms.server.api;version="0.0.0",org.bonitasoft.forms.ser
+ ver.builder;version="0.0.0",org.bonitasoft.forms.server.builder.impl;ve
+ rsion="0.0.0",org.bonitasoft.forms.server.exception;version="0.0.0",org
+ .bonitasoft.forms.server.provider.impl.util;version="0.0.0",org.bonitas
+ oft.forms.server.validator;version="0.0.0",org.bonitasoft.theme;version
+ ="0.0.0",org.bonitasoft.theme.builder;version="0.0.0",org.bonitasoft.th
+ eme.builder.impl;version="0.0.0",org.bonitasoft.theme.constants;version
+ ="0.0.0",org.bonitasoft.theme.css;version="0.0.0",org.bonitasoft.theme.
+ css.impl;version="0.0.0",org.bonitasoft.theme.exception;version="0.0.0"
+ ,org.bonitasoft.theme.impl;version="0.0.0",org.bonitasoft.theme.model;v
+ ersion="0.0.0"
 Include-Resource: , lib/bonita-client.jar=C:\Users\Adrien\.m2\repository
  \org\bonitasoft\engine\bonita-client\7.7.0-SNAPSHOT\bonita-client-7.7.0
  -SNAPSHOT.jar,lib/httpclient.jar=C:\Users\Adrien\.m2\repository\org\apa
