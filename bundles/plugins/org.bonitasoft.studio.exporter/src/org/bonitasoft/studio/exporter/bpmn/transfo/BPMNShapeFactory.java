@@ -175,7 +175,7 @@ public class BPMNShapeFactory {
         int index = lanes.indexOf(lane);
         int y = 0;
         while (index > 0) {
-            y = +modelExporter.getBounds(modelExporter.getElementNotationNode(lanes.get(index - 1))).getHeight();
+            y = y + modelExporter.getBounds(modelExporter.getElementNotationNode(lanes.get(index - 1))).getHeight();
             index--;
         }
         return y;
