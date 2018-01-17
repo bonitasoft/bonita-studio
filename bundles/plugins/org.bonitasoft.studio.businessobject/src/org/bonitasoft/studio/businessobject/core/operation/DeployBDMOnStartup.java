@@ -20,6 +20,8 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 
 /**
  * @author Romain Bioteau
@@ -35,10 +37,11 @@ public class DeployBDMOnStartup implements IEngineAction {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
-        if (fileStore != null) {
-            final DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fileStore);
-            deployBDMOperation.setSession(session);
-            deployBDMOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        if (fileStore != null && EnginePlugin.getDefault().getPreferenceStore()
+                .getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF)) {
+            new DeployBDMOperation(fileStore)
+                    .reuseSession(session)
+                    .run(Repository.NULL_PROGRESS_MONITOR);
         }
     }
 
