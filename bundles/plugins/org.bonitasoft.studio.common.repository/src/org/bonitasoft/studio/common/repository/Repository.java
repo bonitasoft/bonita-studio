@@ -739,4 +739,13 @@ public class Repository implements IRepository, IJavaContainer {
         return new DatabaseHandler(getProject());
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepository#isShared(java.lang.String)
+     */
+    @Override
+    public boolean isShared(String providerId) {
+        return false;
+    }
+
 }
