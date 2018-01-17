@@ -55,7 +55,8 @@ public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory 
         if (editorInput instanceof IFileEditorInput) {
             try {
                 final IFile file = ((IFileEditorInput) editorInput).getFile();
-                return file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID) || Objects.equals(file.getName(), CUSTOM_PERMISSIONS_MAPPING_FILE);
+                return file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID)
+                        || Objects.equals(file.getName(), CUSTOM_PERMISSIONS_MAPPING_FILE);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
