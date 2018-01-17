@@ -42,6 +42,8 @@ public interface IRepository extends IFileStoreChangeListener {
 
     boolean isShared();
 
+    boolean isShared(String providerId);
+
     IProject getProject();
 
     void delete(IProgressMonitor monitor);

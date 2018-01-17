@@ -16,6 +16,7 @@ package org.bonitasoft.studio.diagram.custom.perspective;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.views.BPMNPaletteView;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
@@ -37,13 +38,13 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         // Editors are placed for free.
         final String editorArea = layout.getEditorArea();
         // Bottom left.
-        final IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.65,//$NON-NLS-1$
+        final IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.65, //$NON-NLS-1$
                 editorArea);//$NON-NLS-1$
         bottomLeft.addView("org.bonitasoft.studio.views.overview.tree");
         bottomLeft.addView("org.bonitasoft.studio.views.overview");
 
         // Bottom right.
-        final IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.RIGHT, (float) 0.3,//$NON-NLS-1$
+        final IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.RIGHT, (float) 0.3, //$NON-NLS-1$
                 "bottomLeft");
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.general");
         bottomRight.addView("org.bonitasoft.studio.views.properties.process.data");
@@ -54,9 +55,12 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         for (final String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(PROCESS_PERSPECTIVE_ID)) {
             bottomRight.addView(viewId);
         }
+        bottomRight.addView("org.bonitasoft.studio.validation.view");
+        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
+            bottomRight.addView("org.eclipse.egit.ui.StagingView");
+        }
 
         createLeftViewFolder(layout, editorArea);
-        bottomRight.addView("org.bonitasoft.studio.validation.view");
     }
 
     protected void configureIntroView(final IPageLayout layout) {
