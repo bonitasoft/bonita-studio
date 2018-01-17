@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -43,26 +44,27 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
-
+import org.eclipse.ui.internal.Workbench;
 
 public class DeployBDMOperation implements IRunnableWithProgress {
 
+    private static final String UNINSTALL_BDM_AC_CMD = "org.bonitasoft.studio.bdm.access.control.command.uninstall.headless";
     private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
-
     private static final String BDM_CLIENT = "bdm-client";
-
     private static final String BDM_DAO = "bdm-dao";
-
     private static final String MODEL = "model";
 
     private final BusinessObjectModelFileStore fileStore;
-
     private APISession session;
 
     private boolean flushSession = false;
@@ -73,8 +75,9 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         this.fileStore = fileStore;
     }
 
-    public void setSession(final APISession session) {
+    public DeployBDMOperation reuseSession(final APISession session) {
         this.session = session;
+        return this;
     }
 
     /*
@@ -85,16 +88,42 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         login(monitor);
         synchronized (deployLock) {
+            uninstallBDMAccessControl(monitor);
             doDeployBDM(monitor);
         }
     }
 
+    protected void uninstallBDMAccessControl(IProgressMonitor monitor) {
+        EHandlerService handlerService = handlerService();
+        IEclipseContext e4Context = e4Context();
+        e4Context.set(APISession.class, session);
+        Optional.ofNullable(ParameterizedCommand.generateCommand(
+                commandService().getCommand(UNINSTALL_BDM_AC_CMD), null))
+                .filter(cmd -> handlerService.canExecute(cmd))
+                .ifPresent(handlerService::executeHandler);
+    }
+
+    protected IEclipseContext e4Context() {
+        Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+        return workbench.getContext();
+    }
+
+    protected EHandlerService handlerService() {
+        Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+        return workbench.getService(EHandlerService.class);
+    }
+
+    protected ECommandService commandService() {
+        Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+        return workbench.getService(ECommandService.class);
+    }
+
     protected void login(final IProgressMonitor monitor) throws InvocationTargetException {
-        final BOSEngineManager engineManagerEx = getBOSEngineManagerEx();
+        final BOSEngineManager engineManager = getEngineManager();
         flushSession = false;
         if (session == null) {
             try {
-                session = engineManagerEx.loginDefaultTenant(monitor);
+                session = engineManager.loginDefaultTenant(monitor);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
             }
@@ -115,7 +144,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         final String progressMessage = progressMessage(bom);
         monitor.beginTask(progressMessage, IProgressMonitor.UNKNOWN);
         BonitaStudioLog.debug(progressMessage, BusinessObjectPlugin.PLUGIN_ID);
-        final BOSEngineManager engineManagerEx = getBOSEngineManagerEx();
+        final BOSEngineManager engineManagerEx = getEngineManager();
         TenantAdministrationAPI tenantManagementAPI = null;
         try {
             tenantManagementAPI = engineManagerEx.getTenantAdministrationAPI(session);
@@ -179,7 +208,8 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     protected void removeDependency() {
         final DependencyRepositoryStore dependencyRepositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-        final DependencyFileStore bdmFileStore = dependencyRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        final DependencyFileStore bdmFileStore = dependencyRepositoryStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
         if (bdmFileStore != null) {
             bdmFileStore.delete();
         }
@@ -228,11 +258,11 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         return result;
     }
 
-
     protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {
         ByteArrayInputStream is = null;
         try {
-            final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+            final DependencyRepositoryStore store = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
             is = new ByteArrayInputStream(jarContent);
             final DependencyFileStore depFileStore = store.getChild(fileStore.getDependencyName());
             if (depFileStore != null) {
@@ -256,7 +286,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         return ProjectUtil.getBonitaStudioWorkFolder();
     }
 
-    protected BOSEngineManager getBOSEngineManagerEx() {
+    protected BOSEngineManager getEngineManager() {
         return BOSEngineManager.getInstance();
     }
 
