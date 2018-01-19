@@ -33,16 +33,20 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.la.application.ui.control.DeployApplicationStatusDialog;
 import org.bonitasoft.studio.la.application.ui.provider.DeployApplicationFileStoreLabelProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.page.SelectionSinglePage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -129,11 +133,14 @@ public class DeployApplicationAction {
 
     protected int openStatusDialog(Shell shell, final DeployApplicationDescriptorRunnable deployOperation,
             String[] onFinishButtons) {
-        return new DeployApplicationStatusDialog(shell, deployOperation.getStatus(), onFinishButtons,
-                Messages.deployDoneMessage)
-                        .open();
+        MultiStatus status = deployOperation.getStatus() instanceof MultiStatus ? (MultiStatus) deployOperation.getStatus()
+                : new MultiStatus(LivingApplicationPlugin.PLUGIN_ID, 0, new IStatus[] { deployOperation.getStatus() }, "",
+                        null);
+        return new MultiStatusDialog(shell, Messages.deployDoneTitle, Messages.deployDoneMessage, MessageDialog.INFORMATION,
+                onFinishButtons, status).open();
     }
 
+    @SuppressWarnings("unused")
     protected DeployApplicationDescriptorRunnable getDeployOperation(APISession apiSession,
             final ApplicationAPI applicationAPI, final ApplicationNodeContainer applicationDescriptor)
             throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
