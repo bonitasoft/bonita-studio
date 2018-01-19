@@ -29,6 +29,7 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +39,7 @@ public class DeleteApplicationContainerRunnable implements IRunnableWithProgress
 
     private final ApplicationAPI applicationAPI;
     private final ApplicationNodeContainer applicationNodeContainer;
-    private IStatus status;
+    private IStatus status = ValidationStatus.ok();
     private boolean ignoreErrors = false;
 
     public DeleteApplicationContainerRunnable(ApplicationAPI applicationAPI,

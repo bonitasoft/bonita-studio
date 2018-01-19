@@ -59,7 +59,8 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+     * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String,
+     * boolean)
      */
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
@@ -105,10 +106,11 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
                 switch (element.getSeverity()) {
                     case IStatus.WARNING:
                         return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-                    case IStatus.INFO:
-                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
-                    default:
+                    case IStatus.ERROR:
                         return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+                    case IStatus.INFO:
+                    default:
+                        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
                 }
             }
         };
