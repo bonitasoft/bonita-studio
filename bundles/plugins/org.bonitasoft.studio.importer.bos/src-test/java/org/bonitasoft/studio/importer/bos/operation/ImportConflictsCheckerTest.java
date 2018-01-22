@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,7 +90,7 @@ public class ImportConflictsCheckerTest {
                 .orElseThrow(() -> new Exception(fileName + " diagram not found"));
     }
 
-    private Repository createRepository() throws CoreException {
+    private Repository createRepository() throws Exception {
         final IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
         when(fileStore.getName()).thenReturn("Customer Support-2.0.proc");
 
@@ -167,7 +169,7 @@ public class ImportConflictsCheckerTest {
         return bosArchive;
     }
 
-    private IRepositoryStore<IRepositoryFileStore> createRepositoryStore(String name) {
+    private IRepositoryStore<IRepositoryFileStore> createRepositoryStore(String name) throws UnsupportedEncodingException {
         final IRepositoryStore<IRepositoryFileStore> store = mock(IRepositoryStore.class);
         final IFolder folder = createIFolder(name);
 
@@ -176,7 +178,7 @@ public class ImportConflictsCheckerTest {
         return store;
     }
 
-    private IFolder createIFolder(String name) {
+    private IFolder createIFolder(String name) throws UnsupportedEncodingException {
         final IFolder folder = mock(IFolder.class);
         when(folder.getName()).thenReturn(name);
         final IPath path = createIPath(name);
@@ -184,21 +186,21 @@ public class ImportConflictsCheckerTest {
         return folder;
     }
 
-    private IPath createIPath(String name) {
+    private IPath createIPath(String name) throws UnsupportedEncodingException {
         final IPath path = mock(IPath.class);
         final File file = createFile(name);
         when(path.toFile()).thenReturn(file);
         return path;
     }
 
-    private File createFile(String name) {
+    private File createFile(String name) throws UnsupportedEncodingException {
         if (Objects.equals(name, "diagrams")) {
             return loadFile("/folder");
         }
         return loadFile("/emptyFolder");
     }
 
-    private File loadFile(String filePath) {
-        return new File(BosArchiveTest.class.getResource(filePath).getFile());
+    private File loadFile(String filePath) throws UnsupportedEncodingException {
+        return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(),"UTF-8"));
     }
 }
