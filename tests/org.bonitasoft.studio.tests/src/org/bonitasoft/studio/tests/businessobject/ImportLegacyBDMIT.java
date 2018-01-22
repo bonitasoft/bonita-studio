@@ -28,6 +28,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class ImportLegacyBDMIT {
                         .getAbsolutePath());
         operation.run(Repository.NULL_PROGRESS_MONITOR);
 
-        StatusAssert.assertThat(operation.getStatus()).isOK();
+        StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
         assertThat(defStore.getResource().getFile(BusinessObjectModelFileStore.ZIP_FILENAME).getLocation().toFile().exists())
                 .isFalse();
         assertThat(defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).isNotNull();

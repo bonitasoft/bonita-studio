@@ -72,5 +72,6 @@ public class Messages extends NLS {
     public static String workspaceTips;
     public static String importWorkspaceOverwriteBehavior;
     public static String moreInfo;
+    public static String bdmDeployedInfo;
 
 }

@@ -28,6 +28,8 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -80,6 +82,17 @@ public class ImportStatusDialog extends MessageDialog {
         final TableViewer problemsViewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
         problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, 10).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
+        problemsViewer.setComparator(new ViewerComparator() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+             */
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                return Integer.compare(((IStatus) e2).getSeverity(), ((IStatus) e1).getSeverity());
+            }
+        });
         problemsViewer.setLabelProvider(new LabelProvider() {
 
             /*
