@@ -27,14 +27,14 @@ import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationO
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class DiagramValidator implements BosImporterValidator {
+public class DiagramValidator implements BosImporterStatusProvider {
 
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.bos.validator.BosImporterValidator#validate(org.bonitasoft.studio.importer.bos.operation.IResourceImporter)
      */
     @Override
-    public ImportBosArchiveStatusBuilder validate(ImportBosArchiveOperation operation,
+    public ImportBosArchiveStatusBuilder buildStatus(ImportBosArchiveOperation operation,
             ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
             throws ValidationException {
         for (final IRepositoryFileStore diagramFileStore : operation.getImportedProcesses()) {

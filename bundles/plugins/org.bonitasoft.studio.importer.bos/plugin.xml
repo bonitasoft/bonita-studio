@@ -8,6 +8,9 @@
       <bosImporterValidator
             class="org.bonitasoft.studio.importer.bos.validator.DiagramValidator">
       </bosImporterValidator>
+       <bosImporterValidator
+            class="org.bonitasoft.studio.importer.bos.validator.BDMBosImporterStatusProvider">
+      </bosImporterValidator>
    </extension>
    <extension
          id="org.bonitasoft.studio.importer.bos.fragment"

@@ -45,7 +45,8 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
         if (importStatus.isOK()) {
             MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
-        } else if (importStatus.getSeverity() == IStatus.WARNING) {
+        } else if (importStatus.getSeverity() == IStatus.WARNING
+                && (importStatus.getChildren() == null || importStatus.getChildren().length == 0)) {
             MessageDialog.openWarning(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     importStatus.getMessage());
         } else {
