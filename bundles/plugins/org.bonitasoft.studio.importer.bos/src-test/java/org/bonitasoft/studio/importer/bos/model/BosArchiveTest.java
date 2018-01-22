@@ -17,6 +17,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,8 +124,8 @@ public class BosArchiveTest {
         return store;
     }
 
-    private File loadArchiveFile(String filePath) {
-        return new File(BosArchiveTest.class.getResource(filePath).getFile());
+    private File loadArchiveFile(String filePath) throws UnsupportedEncodingException {
+        return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(),"UTF-8"));
     }
 
     private Repository createRepository() throws CoreException {
