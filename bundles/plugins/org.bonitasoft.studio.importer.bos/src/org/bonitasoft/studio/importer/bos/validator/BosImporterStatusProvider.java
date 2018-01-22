@@ -18,9 +18,9 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public interface BosImporterValidator {
+public interface BosImporterStatusProvider {
 
-    ImportBosArchiveStatusBuilder validate(ImportBosArchiveOperation importBosArchiveOperation,
+    ImportBosArchiveStatusBuilder buildStatus(ImportBosArchiveOperation importBosArchiveOperation,
             ImportBosArchiveStatusBuilder statusBuilder,
             IProgressMonitor monitor)
             throws ValidationException;

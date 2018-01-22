@@ -42,7 +42,7 @@ import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportableUnit;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
-import org.bonitasoft.studio.importer.bos.validator.BosImporterValidator;
+import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
 import org.bonitasoft.studio.importer.bos.validator.ValidationException;
 import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -192,10 +192,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
-            final List<BosImporterValidator> validators = getValidators();
-            for (final BosImporterValidator validator : validators) {
+            final List<BosImporterStatusProvider> validators = getValidators();
+            for (final BosImporterStatusProvider validator : validators) {
                 try {
-                    validator.validate(this, statusBuilder, monitor);
+                    validator.buildStatus(this, statusBuilder, monitor);
                 } catch (final ValidationException e) {
                     statusBuilder
                             .addStatus(new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, "Validation error", e));
@@ -208,12 +208,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                         .done();
     }
 
-    protected List<BosImporterValidator> getValidators() {
-        final List<BosImporterValidator> validators = newArrayList();
+    protected List<BosImporterStatusProvider> getValidators() {
+        final List<BosImporterStatusProvider> validators = newArrayList();
         for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements("org.bonitasoft.studio.importer.bos.validator")) {
             try {
-                validators.add((BosImporterValidator) element.createExecutableExtension("class"));
+                validators.add((BosImporterStatusProvider) element.createExecutableExtension("class"));
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
