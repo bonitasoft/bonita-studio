@@ -56,7 +56,7 @@
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                         <fileset>
-                             <directory>${project.parent.basedir}/lé test</directory>
+                             <directory>${test.workspace.dir}</directory>
                              <includes>
                                 <include>**</include>
                                 </includes>
@@ -79,7 +79,7 @@
                     </includes>
                     <argLine>${javaOPTS} ${additionalArgs}</argLine>
                     <appArgLine>-nl en -clean</appArgLine>
-                    <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
+                    <osgiDataDirectory>${test.workspace.dir}</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>
                             <id>org.eclipse.equinox.ds</id>
