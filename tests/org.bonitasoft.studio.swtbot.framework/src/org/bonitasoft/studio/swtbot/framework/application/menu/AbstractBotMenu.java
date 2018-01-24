@@ -33,4 +33,11 @@ public class AbstractBotMenu extends BotBase {
                 RepositoryManager.getInstance().getCurrentRepository().getName());
         bot.menu(menuLabel).click();
     }
+
+    public boolean isEnabled(final String menuLabel) {
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
+                RepositoryManager.getInstance().getCurrentRepository().getName());
+        return bot.menu(menuLabel).isEnabled();
+    }
+
 }
