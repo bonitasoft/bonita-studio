@@ -144,7 +144,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
     protected void initDefaultDebugPreferences() {
         DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
         DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
-        DebugPlugin.getDefault().getPluginPreferences().setDefault(IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS, false);
+        DebugPlugin.getDefault().getPluginPreferences().setDefault(IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
+                false);
     }
 
 }
