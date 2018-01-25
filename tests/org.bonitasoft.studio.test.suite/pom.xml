@@ -15,6 +15,7 @@
     <properties>
         <javaOPTS>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=TestSuite.hprof</javaOPTS>
         <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
+		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
     </properties>
 
     <build>
@@ -46,7 +47,6 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                       
                             <directory>${basedir}</directory>
                             <includes>
                                 <include>*.log</include>
@@ -56,7 +56,7 @@
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                         <fileset>
-                             <directory>${test.workspace.dir}</directory>
+                             <directory>${target.test.dir}</directory>
                              <includes>
                                 <include>**</include>
                                 </includes>
@@ -79,7 +79,7 @@
                     </includes>
                     <argLine>${javaOPTS} ${additionalArgs}</argLine>
                     <appArgLine>-nl en -clean</appArgLine>
-                    <osgiDataDirectory>${test.workspace.dir}</osgiDataDirectory>
+                    <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>
                             <id>org.eclipse.equinox.ds</id>
