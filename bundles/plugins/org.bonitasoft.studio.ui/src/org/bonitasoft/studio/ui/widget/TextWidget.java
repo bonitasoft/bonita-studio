@@ -268,8 +268,8 @@ public class TextWidget extends EditableControlWidget {
                         .span(labelAbove ? 2 : 1, 1)
                         .create());
         readOnly = readOnly || transactionalEdit;
-        toolkit.ifPresent(tlkit -> tlkit.adapt(textContainer));
-
+        configureBackground(textContainer);
+        
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
         text = newText(textContainer);
@@ -480,16 +480,18 @@ public class TextWidget extends EditableControlWidget {
         text.addListener(eventType, listener);
     }
 
-    // Do not call on a composite !
     protected void configureBackground(Control control) {
         final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
         final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
         if (toolkit.isPresent()) {
-            toolkit.get().adapt(control, true, true);
+            if(control instanceof Composite) {
+                toolkit.get().adapt((Composite) control);
+            }else {
+                toolkit.get().adapt(control, true, true);
+            }
         }
         control.setBackground(readOnly ? backgroundColor : whiteColor);
         control.setEnabled(!readOnly);
-
     }
 
     public TextWidget setText(String text) {
