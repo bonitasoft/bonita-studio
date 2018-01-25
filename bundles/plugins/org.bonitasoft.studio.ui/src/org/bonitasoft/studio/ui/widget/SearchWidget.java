@@ -68,22 +68,20 @@ public class SearchWidget extends TextWidget {
         return newText;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.swt.widgets.Event)
-     */
     @Override
     protected void drawBorder(Composite container, Event e) {
-
+        // SWT.SEARCH provides a border 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#configureBackground(org.eclipse.swt.widgets.Control)
-     */
     @Override
     protected void configureBackground(Control control) {
+        if (toolkit.isPresent()) {
+            if (control instanceof Composite) {
+                toolkit.get().adapt((Composite) control);
+            } else {
+                toolkit.get().adapt(control, true, true);
+            }
+        }
     }
 
 }
