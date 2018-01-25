@@ -6,12 +6,16 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.tests</groupId>
 		<artifactId>tests</artifactId>
-<version>7.7.0-SNAPSHOT</version>
-
+		<version>7.7.0-SNAPSHOT</version>
 	</parent>
+	
 	<groupId>org.bonitasoft.studio.tests</groupId>
 	<artifactId>org.bonitasoft.studio.test.swtbot.suite</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
+	
+	<properties>
+		<target.test.dir>${test.workspace.dir}/community/swtbot/lé test</target.test.dir>
+	</properties>
 
 	<build>
 		<plugins>
@@ -50,7 +54,7 @@
 					</includes>
 					<argLine>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
 					<appArgLine>-nl en -clean</appArgLine>
-					<osgiDataDirectory>${test.workspace.dir}</osgiDataDirectory>
+					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
 					<bundleStartLevel>
 						<bundle>
 							<id>org.eclipse.equinox.ds</id>
@@ -63,13 +67,19 @@
 			<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
     			<artifactId>maven-clean-plugin</artifactId>
-    			<version>2.4.1</version>
     			<configuration>
       			<filesets>
        			 	<fileset>
          				<directory>screenshots</directory>
           				<followSymlinks>false</followSymlinks>
         			</fileset>
+        			 <fileset>
+                             <directory>${target.test.dir}</directory>
+                             <includes>
+                                <include>**</include>
+                                </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
       			</filesets>
     			</configuration>
   			</plugin>
