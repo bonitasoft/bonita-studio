@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URLDecoder;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -88,9 +89,10 @@ public class OpenH2ConsoleHandlerTest {
 
     @Test
     public void should_throw_FileNotFoundException_if_h2_jar_is_missing() throws Exception {
-        doReturn(new File(FileLocator.toFileURL(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2")).getFile()))
-                .when(openH2ConsoleHandler)
-                .rootFile(repositoryAccessor);
+        doReturn(new File(URLDecoder.decode(OpenH2ConsoleHandlerTest.class.getResource("/workspaceWithoutH2").getFile(),
+                "UTF-8")))
+                        .when(openH2ConsoleHandler)
+                        .rootFile(repositoryAccessor);
 
         expectedException.expect(FileNotFoundException.class);
 

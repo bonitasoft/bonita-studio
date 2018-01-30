@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
@@ -73,6 +74,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
@@ -87,6 +89,14 @@ public class GroovyUtil {
     public static final String GROOVY_CONSTANT_SEPARATOR = "\'";
 
     private static Map<String, Expression> expressions;
+
+    private static ViewerFilter NO_FILTER = new ViewerFilter() {
+
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            return true;
+        }
+    };
 
     public static ScriptVariable createScriptVariable(final SimulationData d) {
         String type = Object.class.getName();
@@ -238,14 +248,10 @@ public class GroovyUtil {
     public static List<ExpressionConstants> getBonitaConstantsFor(
             EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ExpressionConstants> result = new ArrayList<>();
-        DisplayEngineExpressionWithName engineFilter = null;
-        if (filters != null) {
-            for (final ViewerFilter f : filters) {
-                if (f instanceof DisplayEngineExpressionWithName) {
-                    engineFilter = (DisplayEngineExpressionWithName) f;
-                }
-            }
-        }
+        ViewerFilter engineFilter = filters != null ? Stream.of(filters)
+                .filter(DisplayEngineExpressionWithName.class::isInstance)
+                .findFirst()
+                .orElse(NO_FILTER) : NO_FILTER;
 
         result.add(ExpressionConstants.API_ACCESSOR);
         result.add(ExpressionConstants.PROCESS_DEFINITION_ID);

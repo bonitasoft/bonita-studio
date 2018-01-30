@@ -101,6 +101,8 @@ public class BonitaStudioLog {
         final Logger logger = getLogger(bundleId);
         if (logger != null) {
             logger.info(message);
+        }else {
+            System.out.println(message);
         }
     }
 
