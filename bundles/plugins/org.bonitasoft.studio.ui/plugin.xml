@@ -50,4 +50,19 @@
             class="org.bonitasoft.studio.ui.editors.DefaultEditorAssociationContribution">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.statusHandlers">
+      <statusHandler
+            class="org.bonitasoft.studio.ui.handler.BonitaStatusHandler"
+            id="org.bonitasoft.studio.ui.statusHandler">
+      </statusHandler>
+      <statusHandlerProductBinding
+            handlerId="org.bonitasoft.studio.ui.statusHandler"
+            productId="org.bonitasoft.studio.product">
+      </statusHandlerProductBinding>
+      <statusHandlerProductBinding
+            handlerId="org.bonitasoft.studio.ui.statusHandler"
+            productId="org.bonitasoft.studioEx.product">
+      </statusHandlerProductBinding>
+   </extension>
 </plugin>
