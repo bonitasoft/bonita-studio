@@ -319,6 +319,28 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
         editingSupport.setInput(context);
         this.inputExpression = inputExpression;
 
+        final QueryExpressionModel expressionModel = getQueryExpressionModel();
+        final String queryName = inputExpression.getName();
+        if (queryName == null || queryName.isEmpty()) {
+            if (!expressionModel.getBusinessObjects().isEmpty()) {
+                final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel.getBusinessObjects()
+                        .get(0);
+                observeBOSingleSelection.setValue(businessObjectExpressionQuery);
+                observeQuerySingleSelection.setValue(businessObjectExpressionQuery.getQueryExpressions().get(0));
+            }
+        } else {
+            for (final BusinessObjectExpressionQuery bo : expressionModel.getBusinessObjects()) {
+                for (final Expression exp : bo.getQueryExpressions()) {
+                    if (exp.getName().equals(queryName)) {
+                        observeBOSingleSelection.setValue(bo);
+                        synchronizeQueryParameterExpressions(inputExpression, exp);
+                        observeQuerySingleSelection.setValue(exp);
+                        break;
+                    }
+                }
+            }
+        }
+        
         dataBindingContext.bindValue(
                 EMFObservables.observeDetailValue(Realm.getDefault(), observeQuerySingleSelection,
                         ExpressionPackage.Literals.EXPRESSION__NAME),
@@ -349,28 +371,6 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                 EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE), null,
                 new UpdateValueStrategy(
                         UpdateValueStrategy.POLICY_NEVER));
-
-        final QueryExpressionModel expressionModel = getQueryExpressionModel();
-        final String queryName = inputExpression.getName();
-        if (queryName == null || queryName.isEmpty()) {
-            if (!expressionModel.getBusinessObjects().isEmpty()) {
-                final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel.getBusinessObjects()
-                        .get(0);
-                observeBOSingleSelection.setValue(businessObjectExpressionQuery);
-                observeQuerySingleSelection.setValue(businessObjectExpressionQuery.getQueryExpressions().get(0));
-            }
-        } else {
-            for (final BusinessObjectExpressionQuery bo : expressionModel.getBusinessObjects()) {
-                for (final Expression exp : bo.getQueryExpressions()) {
-                    if (exp.getName().equals(queryName)) {
-                        observeBOSingleSelection.setValue(bo);
-                        synchronizeQueryParameterExpressions(inputExpression, exp);
-                        observeQuerySingleSelection.setValue(exp);
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     private void synchronizeQueryParameterExpressions(final Expression inputExpression, final Expression exp) {

@@ -22,6 +22,7 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import java.util.List;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.junit.Test;
 
 public class GroovyUtilTest {
@@ -34,6 +35,17 @@ public class GroovyUtilTest {
         assertThat(bonitaVariables).extracting("name", "type").contains(
                 tuple(ExpressionConstants.TASK_ASSIGNEE_ID.getEngineConstantName(),
                         ExpressionConstants.TASK_ASSIGNEE_ID.getReturnType()));
+    }
+
+    @Test
+    public void should_add_loopcounter_for_operation_context() throws Exception {
+        final List<ScriptVariable> bonitaVariables = GroovyUtil.getBonitaVariables(
+                anOperation().in(aTask().withMultiInstanceType(MultiInstanceType.STANDARD)).build(), null,
+                false);
+
+        assertThat(bonitaVariables).extracting("name", "type").contains(
+                tuple(ExpressionConstants.LOOP_COUNTER.getEngineConstantName(),
+                        ExpressionConstants.LOOP_COUNTER.getReturnType()));
     }
 
 }
