@@ -97,6 +97,7 @@ public abstract class ControlWidget extends Composite {
                     .align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment)
                     .span(labelAbove ? 2 : 1, 1).create());
             lab.setText(text);
+            toolkit.ifPresent(tk -> tk.adapt(lab, false, false));
             label = Optional.of(lab);
         });
 

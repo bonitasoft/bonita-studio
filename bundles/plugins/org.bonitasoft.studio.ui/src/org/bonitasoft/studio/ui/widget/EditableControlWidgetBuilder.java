@@ -22,6 +22,7 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
     protected int horizontalLabelAlignment = SWT.RIGHT;
     protected int verticalLabelAlignment = SWT.CENTER;
     protected String message;
+    protected boolean useNativeRender = false;
 
     /**
      * Set the control in read-only mode.
@@ -64,6 +65,11 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
      */
     public T alignLabelTop() {
         this.verticalLabelAlignment = SWT.TOP;
+        return (T) this;
+    }
+
+    public T useNativeRender() {
+        this.useNativeRender = true;
         return (T) this;
     }
 }
