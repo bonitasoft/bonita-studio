@@ -54,10 +54,13 @@ public class PublishActiveOrganizationAction implements IEngineAction {
     @Override
     public void run(final APISession session) throws Exception {
         if (noOrganizationDeployed(session)
-                || BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
+                || BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
             final String artifactId = activeOrganizationProvider.getActiveOrganization();
-            final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-            final OrganizationFileStore organizationFileStore = store.getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+            final OrganizationRepositoryStore store = RepositoryManager.getInstance()
+                    .getRepositoryStore(OrganizationRepositoryStore.class);
+            final OrganizationFileStore organizationFileStore = store
+                    .getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
             if (organizationFileStore == null) {
                 throw new FileNotFoundException(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
             }
@@ -68,10 +71,20 @@ public class PublishActiveOrganizationAction implements IEngineAction {
     }
 
     private boolean noOrganizationDeployed(final APISession session)
-            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, SearchException {
+            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
+            SearchException {
         final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
         return identityAPI.searchUsers(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
                 && identityAPI.searchGroups(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
                 && identityAPI.searchRoles(new SearchOptionsBuilder(0, 1).done()).getCount() == 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.extension.IEngineAction#shouldRun()
+     */
+    @Override
+    public boolean shouldRun() {
+        return true;
     }
 }

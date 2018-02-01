@@ -20,8 +20,8 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Romain Bioteau
@@ -37,12 +37,21 @@ public class DeployBDMOnStartup implements IEngineAction {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
-        if (fileStore != null && EnginePlugin.getDefault().getPreferenceStore()
-                .getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF)) {
+        if (fileStore != null) {
             new DeployBDMOperation(fileStore)
                     .reuseSession(session)
                     .run(Repository.NULL_PROGRESS_MONITOR);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.extension.IEngineAction#shouldRun()
+     */
+    @Override
+    public boolean shouldRun() {
+        Bundle bundle = Platform.getBundle("org.bonitasoft.studio.bdm.access.control");
+        return bundle == null || bundle.getState() != Bundle.ACTIVE;
     }
 
 }
