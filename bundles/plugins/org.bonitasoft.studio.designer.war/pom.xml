@@ -31,15 +31,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <overlays>
-                        <overlay>
-                            <groupId>org.bonitasoft.web</groupId>
-                            <artifactId>ui-designer-backend-webapp</artifactId>
-                            <excludes>
-                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
-                            </excludes>
-                        </overlay>
-                    </overlays>
                     <workDirectory>target/overlay-war-folder</workDirectory>
                     <warName>designer</warName>
                     <outputDirectory>${webapp.dir}</outputDirectory>

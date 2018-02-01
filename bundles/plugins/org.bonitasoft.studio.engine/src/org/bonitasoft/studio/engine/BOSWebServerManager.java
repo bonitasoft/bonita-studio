@@ -22,7 +22,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -525,6 +529,31 @@ public class BOSWebServerManager {
             }
         }
         return lastLogFile;
+    }
+
+    public Optional<File> getUIDLogFile() {
+        final File logDir = new File(tomcatInstanceLocation, "logs");
+        final List<File> list = Arrays.asList(logDir.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(final File file, final String fileName) {
+                return fileName.contains("ui-designer");
+            }
+        }));
+
+        return list.stream()
+                .sorted(new Comparator<File>() {
+
+                    @Override
+                    public int compare(File file1, File file2) {
+                        return file1.lastModified() > file2.lastModified()
+                                ? -1
+                                : file1.lastModified() < file2.lastModified()
+                                        ? 1
+                                        : 0;
+                    }
+                })
+                .findFirst();
     }
 
     private boolean dropBusinessDataDBOnExit() {

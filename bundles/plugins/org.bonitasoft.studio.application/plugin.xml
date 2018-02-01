@@ -344,6 +344,12 @@
                   label="%openEngineLog_label"
                   style="push">
             </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.openUidLog"
+                  icon="icons/log.png"
+                  label="%openUidLog"
+                  style="push">
+            </command>
             <separator
                   name="org.bonitasoft.studio.application.help.separator2"
                   visible="true">
@@ -458,6 +464,11 @@
             defaultHandler="org.bonitasoft.studio.application.handler.ImportArtifactsFromZipHandler"
             id="org.bonitasoft.studio.repository.importArtifacts"
             name="import artifacts">
+      </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.application.actions.OpenUIDLogCommand"
+            id="org.bonitasoft.studio.application.openUidLog"
+            name="%openUidLog">
       </command>
    </extension>
    <extension
