@@ -128,7 +128,7 @@ public class TextWidget extends EditableControlWidget {
                 throw new IllegalStateException(
                         "Target to model strategy must have a POLICY_CONVERT strategy with transactionalEdit");
             }
-            final TextWidget control = new TextWidget(container,
+            final TextWidget control = useNativeRender ? new NativeTextWidget(container,
                     id,
                     labelAbove,
                     horizontalLabelAlignment,
@@ -141,7 +141,21 @@ public class TextWidget extends EditableControlWidget {
                     transactionalEdit,
                     onEdit,
                     toolkit,
-                    proposalProvider);
+                    proposalProvider)
+                    : new TextWidget(container,
+                            id,
+                            labelAbove,
+                            horizontalLabelAlignment,
+                            verticalLabelAlignment,
+                            labelWidth,
+                            readOnly,
+                            label,
+                            message,
+                            labelButton,
+                            transactionalEdit,
+                            onEdit,
+                            toolkit,
+                            proposalProvider);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
@@ -269,7 +283,7 @@ public class TextWidget extends EditableControlWidget {
                         .create());
         readOnly = readOnly || transactionalEdit;
         configureBackground(textContainer);
-        
+
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
         text = newText(textContainer);
@@ -484,9 +498,9 @@ public class TextWidget extends EditableControlWidget {
         final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
         final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
         if (toolkit.isPresent()) {
-            if(control instanceof Composite) {
+            if (control instanceof Composite) {
                 toolkit.get().adapt((Composite) control);
-            }else {
+            } else {
                 toolkit.get().adapt(control, true, true);
             }
         }

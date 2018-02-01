@@ -237,12 +237,14 @@ public class BOSEngineManager {
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
-            final APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
-            try {
-                contrib.run(session);
-            } finally {
-                if (session != null) {
-                    logoutDefaultTenant(session);
+            if (contrib.shouldRun()) {
+                final APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
+                try {
+                    contrib.run(session);
+                } finally {
+                    if (session != null) {
+                        logoutDefaultTenant(session);
+                    }
                 }
             }
         }
