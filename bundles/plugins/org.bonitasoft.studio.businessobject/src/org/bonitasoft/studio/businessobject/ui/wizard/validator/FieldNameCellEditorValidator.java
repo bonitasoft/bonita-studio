@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
+import java.util.Objects;
+
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
@@ -59,7 +61,7 @@ public class FieldNameCellEditorValidator implements ICellEditorValidator, IVali
     }
 
     protected IStatus doValidate(Object value) {
-        IStatus status = JavaConventions.validateFieldName((String) value, JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
+        IStatus status = JavaConventions.validateFieldName((String) value, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
         if (!status.isOK()) {
             return status;
         }
@@ -82,6 +84,9 @@ public class FieldNameCellEditorValidator implements ICellEditorValidator, IVali
             if (field.getName().equalsIgnoreCase(value.toString()) && !this.field.equals(field)) {
                 return ValidationStatus.error(Messages.fieldNameAlreadyExists);
             }
+        }
+        if (!Objects.equals(value.toString().substring(0, 1), value.toString().substring(0, 1).toLowerCase())) {
+            return ValidationStatus.warning(Messages.fieldNameShouldStartsWithLowercase);
         }
         return ValidationStatus.ok();
     }
