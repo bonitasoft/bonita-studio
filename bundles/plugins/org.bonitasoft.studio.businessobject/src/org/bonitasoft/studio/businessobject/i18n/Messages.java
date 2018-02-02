@@ -339,6 +339,8 @@ public class Messages extends NLS {
 
     public static String dateTimeInTimezoneDetails;
 
+    public static String fieldNameShouldStartsWithLowercase;
+
     private Messages() {
     }
 
