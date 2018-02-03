@@ -7,32 +7,32 @@ Require-Bundle: org.eclipse.ui.forms;bundle-version="[3.3.0,4.0.0)";visibility:=
  org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
  org.eclipse.ui;bundle-version="[3.3.0,4.0.0)";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.e4.ui.workbench;bundle-version="1.5.0",
+ org.eclipse.e4.ui.css.core;bundle-version="0.12.100",
+ org.eclipse.e4.ui.css.swt,
  org.eclipse.e4.core.contexts;bundle-version="1.6.0",
- org.eclipse.e4.core.di;bundle-version="1.6.100"
+ org.eclipse.e4.core.di;bundle-version="1.6.100",
+ org.eclipse.e4.ui.workbench;bundle-version="1.5.1"
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ActivationPolicy: lazy
 Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/platfo
  rm/eclipse.platform.ui.git;path="bundles/org.eclipse.ui.views.propert
- ies.tabbed";tag="I20170516-2000";commitId=d786bd652250609bcd4dbff6a92
- 91e3ba1824dd9
+ ies.tabbed";tag="M20170719-0400";commitId=36224d3f8a411456721b9a78870
+ 2b591adfbd20b
 Bundle-Vendor: Bonitasoft S.A.
 Import-Package: com.ibm.icu.text
 Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
+ rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.css;x-inte
  rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.l10n;x-int
  ernal:=true,org.eclipse.ui.internal.views.properties.tabbed.view;x-in
  ternal:=true,org.eclipse.ui.views.properties.tabbed
 Bundle-Name: %Plugin.name
-Bundle-Version: 3.8.0.v20170516-1617
+Bundle-Version: 3.8.1.v20170713-0803
 Bundle-Localization: plugin
-Bundle-Activator: org.eclipse.ui.internal.views.properties.tabbed.Tabb
- edPropertyViewPlugin
 Created-By: Apache Maven 3.3.3
 Build-Jdk: 1.8.0_121
 
 Name: plugin.xml
-SHA-256-Digest: /xwaZK4P8KhV7b5X/79TK6qlsWCFefxkDYMvan/0stU=
+SHA-256-Digest: UcHmXR2O4yPWZLCqGPbyH/trpHvxxRihLdZmLNMPzUQ=
 
 Name: org/eclipse/ui/views/properties/tabbed/ITypeMapper.class
 SHA-256-Digest: 444K1Qs21j+O0gtDTXX7p2jz8JzRYDq0qRo1VqVOZNc=
@@ -54,7 +54,7 @@ SHA-256-Digest: Tcs+BAOsiY+rojv2WTAcqwvPdT5q4sN0sBR/LplzrMo=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabDescript
  or.class
-SHA-256-Digest: PxIOaLYCwWtYDPZ3t/xKHh3p7mZPCzLgSTbUliZLGak=
+SHA-256-Digest: hJS5vguqWdRorc1xIjFI7u9GbsP9u6DJuB690VHH9tE=
 
 Name: org/eclipse/ui/views/properties/tabbed/ITabbedPropertySheetPageC
  ontributor.class
@@ -75,6 +75,10 @@ SHA-256-Digest: /FXMIEr+clGFk1/JZunfFBdQyEfeihqp808DWSLpjMw=
 Name: org/eclipse/ui/views/properties/tabbed/ISectionDescriptor.class
 SHA-256-Digest: Km8A38PlonBrDu502HJVy1XMkQXPUXoJRWyjrvaq6pM=
 
+Name: org/eclipse/ui/internal/views/properties/tabbed/css/TabbedProper
+ tyListCssPropertyHandler.class
+SHA-256-Digest: MCQyd/MXCEcvwOBellWgMwm+JS/3kDAOuEUz9CPWC3M=
+
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyRegistryFactory$CacheData.class
 SHA-256-Digest: jgo/OV+/wiK3cmsVSsBJR8aqp8CKEWm/c7m2oJQnzNI=
@@ -89,7 +93,7 @@ SHA-256-Digest: zp2NqW+L+O+ms/vozYvEb0IJqcJQHc/Zy3OO7QUlt6o=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$4.class
-SHA-256-Digest: W9iKJzM60feaqEFHC/YPKvdQeNDkcC0Tl+OIlETAhiU=
+SHA-256-Digest: yEnxXT+SBzgoJtY2hf9p/6KPm5Q/CHOKBuwtNHWGPfc=
 
 Name: org/eclipse/ui/views/properties/tabbed/AdvancedPropertySection.c
  lass
@@ -97,10 +101,6 @@ SHA-256-Digest: xp2oiPg5sg79Fw9A2W17Avy0nN4YBsWaeaptJs6034Y=
 
 Name: plugin.properties
 SHA-256-Digest: HW0AjE4Tnmv7NTIKAjrnZ+zixaBiOc/Sgcko+0TIMPM=
-
-Name: org/eclipse/ui/internal/views/properties/tabbed/TabbedPropertyVi
- ewPlugin.class
-SHA-256-Digest: ZfXGFdmwIgyw19YHMNiZc4OVaIqBzyGh0gPK6BYFg50=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$ListElement$1.class
@@ -119,11 +119,11 @@ SHA-256-Digest: NAhCUIhhNi6RWLgh89LILDSEo0CqkEsbc4SSazUvBZI=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$7.class
-SHA-256-Digest: htjnC5StD+aFQgH74PZQvG57cyztk7NM89Xick9lOdQ=
+SHA-256-Digest: KLR6UTgyUHVEeYyY0XBz2Q0Diw4bh3tv4yvaGViz/8Y=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList.class
-SHA-256-Digest: GxDmyrYFvAkjwHuOe1w4dlr3KGIH1CjQgNv9ltdN0FM=
+SHA-256-Digest: Aca8yiTtrqbbriHUZLd3IVQm8vhVnWPqDS8hRGJXAzA=
 
 Name: org/eclipse/ui/views/properties/tabbed/AbstractOverridableTabLis
  tPropertySection.class
@@ -141,7 +141,7 @@ Name: org/eclipse/ui/internal/views/properties/tabbed/TabbedPropertyVi
 SHA-256-Digest: YIHwZiaCaou3R4xu6F+UkhcxrYiG38RpkafLvhUKNH8=
 
 Name: .api_description
-SHA-256-Digest: 6DG7yf8YFCZvXsjxTpVyqHOc4Moqdr0Rz7w2/c8Ra+Y=
+SHA-256-Digest: 2QM8OgnL62TMD3fzH5fLeTrkUalpyEXMbTYfh8vFa44=
 
 Name: org/eclipse/ui/views/properties/tabbed/ISection.class
 SHA-256-Digest: bMYZ8kABX21vamzw1+grbq6OYbjWLRPWLiuYJWZeARY=
@@ -174,7 +174,7 @@ SHA-256-Digest: 0ZV3wY/D6n4DSiPGseUKKMOn8CyfqD7BfCBb+CFXt/E=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$6.class
-SHA-256-Digest: g4YZ8T7k2kwN93pbdQkLr5fP4/W+19bj0J2hBYL4RYE=
+SHA-256-Digest: xxn8dqK1FYh/YC2pWX3LYNYKzoMyZq2WIIdz2k/SO80=
 
 Name: org/eclipse/ui/views/properties/tabbed/IActionProvider.class
 SHA-256-Digest: ToHlf8jLLxhDmCWMTt9kAtFEZgXDvYtNCAdyfcWOIBE=
@@ -192,6 +192,10 @@ SHA-256-Digest: X4AC0m77f49dvzSmr4FfLmRnZ8oqZijQcJd/a/n9rWk=
 
 Name: org/eclipse/ui/views/properties/tabbed/TabContents$3.class
 SHA-256-Digest: nuKVYyCVUSyLb1woumnRRqvdnOuGwe8Zx92CZI03PMc=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/css/TabbedProper
+ tyTitleCssPropertyHandler.class
+SHA-256-Digest: Q83TQsved+WQslo9aJVW9bMa56IdopNvoU/OxbMqLzI=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$BottomNavigationElement$2.class
@@ -211,7 +215,7 @@ SHA-256-Digest: /oamIkBxZqb+LCy82keGHLuwKG6dkUhnsfFDYjuJV70=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyRegistry.class
-SHA-256-Digest: C/ni4EZMVPhECkW9rZD32HSBIEvuDGl/IlaVnpHyNik=
+SHA-256-Digest: 3PH0wbPF9z/flLE+4P9to7dkEffdoTRYKWxsihdr40c=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$ListElement.class
@@ -254,12 +258,16 @@ SHA-256-Digest: rXonZitMCKCye+bGlFoHU3SLDoV07jobQbnb/mNzzyg=
 Name: org/eclipse/ui/views/properties/tabbed/TabContents$1.class
 SHA-256-Digest: DpJQ6ruNs1xfn5cDYHq0k9dj/J4QIfg9F6TkvMgnvQE=
 
+Name: org/eclipse/ui/internal/views/properties/tabbed/css/TabbedProper
+ tyElementProvider.class
+SHA-256-Digest: 4EHakJJz+nZtjKDsS5XAOIBkP4AiNS5GIRuZj8jZE74=
+
 Name: org/eclipse/ui/views/properties/tabbed/TabContents$4.class
 SHA-256-Digest: /cctOpXQyvCBSSEwofGV46z51/ccDKpZSo4hWSEzc7c=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyTitle.class
-SHA-256-Digest: Ngg46QO2O14dZBSW3pYqW6V5kkknbtM/lA/tGNFqaEs=
+SHA-256-Digest: wvpB7pI5IErN9aJHlvTaUWJVztkM5rrnrrj5AmH2hG8=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyRegistry$2.class
@@ -277,21 +285,29 @@ Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$ListElement$2.class
 SHA-256-Digest: ov+s2H47nCCl1G2juwT54YmqS+gEsn2J0ncO0ot3E1Y=
 
+Name: org/eclipse/ui/internal/views/properties/tabbed/css/TabbedProper
+ tyTitleAdapter.class
+SHA-256-Digest: VLghf8P3zhhdHW5QvSzOkaK4Rt7dxJfGwrbseAlVUac=
+
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$TopNavigationElement$1.class
 SHA-256-Digest: grh0OBMTA5g6o2gezm674bqLH3pp5L1LsNPnEBMzBuY=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/SectionDesc
  riptor.class
-SHA-256-Digest: hduwQx8V5vOnbwe5M9M4aAUiQPKfCr3z7vma1sHQhu4=
+SHA-256-Digest: qa5HLsX5fRuYLXw43b4IqSPbeJx+d3Xkmz3Pmp6lGuA=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$5.class
-SHA-256-Digest: d0KGLNBsAn9GjZuU3of+I5z1mX+uwEcQu7ylaLR+2YA=
+SHA-256-Digest: xmQU2NeNAd+3uP0qmlb4DvncIhrQAVPVzrjVmalsWM8=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyList$2.class
 SHA-256-Digest: +QAGXx7ywqjSu8CXRwCN9qWIQ4RST75qVCTAyNNhadg=
+
+Name: org/eclipse/ui/internal/views/properties/tabbed/css/TabbedProper
+ tyListAdapter.class
+SHA-256-Digest: r8rlG2kzu+jskuWu4dKFGFhh47lY20Wm65DXX/PQbIQ=
 
 Name: org/eclipse/ui/views/properties/tabbed/TabbedPropertySheetWidget
  Factory.class
@@ -306,9 +322,9 @@ SHA-256-Digest: HQ4WbQvNbIfBRUE0husAYjPK3LcemmmGACJejvISq+4=
 
 Name: org/eclipse/ui/views/properties/tabbed/AbstractTabDescriptor.cla
  ss
-SHA-256-Digest: lyvv1LgJUKnknmvZZfoi9ocXXxiOl00RyxESnmhUWfs=
+SHA-256-Digest: fkqAluL1dGKUtu0URYMVVUMXrJpew6VmXiJNacfPsEw=
 
 Name: org/eclipse/ui/internal/views/properties/tabbed/view/TabbedPrope
  rtyTitle$1.class
-SHA-256-Digest: BUqtf4l/5JXN7A7WrMNrBIbZlsipAzHCJlDJMCaHXrs=
+SHA-256-Digest: oeY1r7rEL3M7m7PvRRd3B5TpJeNnEsbI+ccL8sKScA8=
 
