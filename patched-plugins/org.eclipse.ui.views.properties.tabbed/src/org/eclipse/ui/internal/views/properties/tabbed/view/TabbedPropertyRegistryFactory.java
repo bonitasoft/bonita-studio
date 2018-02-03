@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.views.properties.tabbed.view;
 
@@ -25,89 +24,92 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
  */
 public class TabbedPropertyRegistryFactory {
 
-	class CacheData {
-		TabbedPropertyRegistry registry;
-		List references;
-	}
+    class CacheData {
 
-	/**
-	 * singleton instance of this class
-	 */
-	private static TabbedPropertyRegistryFactory INSTANCE = new TabbedPropertyRegistryFactory();
+        TabbedPropertyRegistry registry;
+        List references;
+    }
 
-	/**
-	 * get the singleton instance of this class.
-	 *
-	 * @return the TabbedPropertyRegistryFactory instance.
-	 */
-	public static TabbedPropertyRegistryFactory getInstance() {
-		return INSTANCE;
-	}
+    /**
+     * singleton instance of this class
+     */
+    private static TabbedPropertyRegistryFactory INSTANCE = new TabbedPropertyRegistryFactory();
 
-	/**
-	 * private constructor.
-	 */
-	private TabbedPropertyRegistryFactory() {
-		super();
-		idToCacheData = new HashMap();
-	}
+    /**
+     * get the singleton instance of this class.
+     *
+     * @return the TabbedPropertyRegistryFactory instance.
+     */
+    public static TabbedPropertyRegistryFactory getInstance() {
+        return INSTANCE;
+    }
 
-	protected Map idToCacheData; // cache
+    /**
+     * private constructor.
+     */
+    private TabbedPropertyRegistryFactory() {
+        super();
+        idToCacheData = new HashMap();
+    }
 
-	/**
-	 * Creates a registry for the given contributor.
-	 *
-	 * @param target
-	 *            the contributor.
-	 * @return a registry for the given contributor.
-	 */
-	public TabbedPropertyRegistry createRegistry(
-			ITabbedPropertySheetPageContributor target) {
-		/**
-		 * Get the contributor id from the ITabbedPropertySheetPageContributor
-		 * interface
-		 */
-		String key = target.getContributorId();
-		CacheData data = (CacheData) idToCacheData.get(key);
-		if (data == null) {
-			data = new CacheData();
-			/*use here custom TabbedPropertyRegistry
-			 * that are aware of viewID in which they are used*/
-			if(key.equals("org.bonitasoft.studio.diagram") //$NON-NLS-1$
-					|| key.equals("org.bonitasoft.studio.diagram.form")){ //$NON-NLS-1$
-				data.registry = new TabbedPropertyRegistryViewAware(key);
-			} else {	
-			data.registry = new TabbedPropertyRegistry(key);
-			}
-			data.references = new ArrayList(5);
-			idToCacheData.put(key, data);
-		}
-		data.references.add(target);
-		// keeps track of contributor using the same registry
-		return data.registry;
-	}
+    protected Map idToCacheData; // cache
 
-	/**
-	 * Indicates that the given contributor no longer needs a registry. The
-	 * registry will be disposed when no other contributor of the same type
-	 * needs it.
-	 *
-	 * @param target
-	 *            the contributor;
-	 */
-	public void disposeRegistry(ITabbedPropertySheetPageContributor target) {
-		/**
-		 * Get the contributor id from the ITabbedPropertySheetPageContributor
-		 * interface
-		 */
-		String key = target.getContributorId();
-		CacheData data = (CacheData) idToCacheData.get(key);
-		if (data != null) {
-			data.references.remove(target);
-			if (data.references.isEmpty()) {
-				data.registry.dispose();
-				idToCacheData.remove(key);
-			}
-		}
-	}
+    /**
+     * Creates a registry for the given contributor.
+     *
+     * @param target
+     *        the contributor.
+     * @return a registry for the given contributor.
+     */
+    public TabbedPropertyRegistry createRegistry(
+            ITabbedPropertySheetPageContributor target) {
+        /**
+         * Get the contributor id from the ITabbedPropertySheetPageContributor
+         * interface
+         */
+        String key = target.getContributorId();
+        CacheData data = (CacheData) idToCacheData.get(key);
+        if (data == null) {
+            data = new CacheData();
+            /*
+             * use here custom TabbedPropertyRegistry
+             * that are aware of viewID in which they are used
+             */
+            if (key.equals("org.bonitasoft.studio.diagram") //$NON-NLS-1$
+                    || key.equals("org.bonitasoft.studio.diagram.form")) { //$NON-NLS-1$
+                data.registry = new TabbedPropertyRegistryViewAware(key);
+            } else {
+                data.registry = new TabbedPropertyRegistry(key);
+            }
+            data.references = new ArrayList(5);
+            idToCacheData.put(key, data);
+        }
+        data.references.add(target);
+        // keeps track of contributor using the same registry
+        return data.registry;
+    }
+
+    /**
+     * Indicates that the given contributor no longer needs a registry. The
+     * registry will be disposed when no other contributor of the same type
+     * needs it.
+     *
+     * @param target
+     *        the contributor;
+     */
+    public void disposeRegistry(ITabbedPropertySheetPageContributor target) {
+        /**
+         * Get the contributor id from the ITabbedPropertySheetPageContributor
+         * interface
+         */
+        String key = target.getContributorId();
+        CacheData data = (CacheData) idToCacheData.get(key);
+        if (data != null) {
+            data.references.remove(target);
+            if (data.references.isEmpty()) {
+                data.registry.dispose();
+                idToCacheData.remove(key);
+            }
+        }
+    }
 }

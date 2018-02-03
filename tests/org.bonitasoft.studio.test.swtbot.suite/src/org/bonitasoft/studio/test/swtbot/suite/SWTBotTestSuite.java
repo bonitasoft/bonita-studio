@@ -78,6 +78,11 @@ import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.duplicate.TestDuplicate;
 import org.bonitasoft.studio.tests.exporter.ExportBosArchiveIT;
+import org.bonitasoft.studio.tests.exporter.bpmn.BPMNConnectorExportImportTest;
+import org.bonitasoft.studio.tests.exporter.bpmn.BPMNEventSubProcessExportImportTest;
+import org.bonitasoft.studio.tests.exporter.bpmn.BPMNExportTests;
+import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
+import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
@@ -111,11 +116,11 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        DiagramTests.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
         TestBugsSWTBot.class,
-        DiagramTests.class,
         TestRenameDiagram.class,
         TestDatabaseConnectorOutputMode.class,
         TestPatternExpressionViewer.class,
@@ -184,6 +189,11 @@ import org.junit.runners.Suite;
         CallActivityMappingIT.class,
         CreateDeployExportBusinessObjectIT.class,
         ConvertActivityTypeWithBoundariesIT.class,
+        BPMNExportTests.class,
+        BPMNSequenceFlowDefaultFlowExportImportTest.class,
+        BPMNConnectorExportImportTest.class,
+        BPMNGatewayExportImportTest.class,
+        BPMNEventSubProcessExportImportTest.class,
         OrganizationCreationTest.class
 })
 

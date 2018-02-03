@@ -24,12 +24,13 @@ import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewPlugin;
 import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewStatusCodes;
 import org.eclipse.ui.internal.views.properties.tabbed.l10n.TabbedPropertyMessages;
 import org.eclipse.ui.views.properties.tabbed.AbstractSectionDescriptor;
 import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.eclipse.ui.views.properties.tabbed.ITypeMapper;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -111,7 +112,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
      * @param exception
      *        an optional CoreException
      */
-    private void handleSectionError(Throwable exception) {
+    private void handleSectionError(CoreException exception) {
         String pluginId = getConfigurationElement().getDeclaringExtension()
                 .getNamespaceIdentifier();
         String message = TabbedPropertyMessages.SectionDescriptor_Section_error;
@@ -122,7 +123,8 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
         }
         IStatus status = new Status(IStatus.ERROR, pluginId,
                 TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
-        TabbedPropertyViewPlugin.getPlugin().getLog().log(status);
+        Bundle bundle = FrameworkUtil.getBundle(SectionDescriptor.class);
+        Platform.getLog(bundle).log(status);
     }
 
     /**
@@ -191,12 +193,9 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
                             .loadClass(
                                     getConfigurationElement().getAttribute(ATT_CLASS)),
                             workbench.getContext());
-        } catch (final InjectionException e) {
-            handleSectionError(e);
-        } catch (final ClassNotFoundException e) {
-            handleSectionError(e);
-        } catch (final InvalidRegistryObjectException e) {
-            handleSectionError(e);
+        } catch (final InjectionException | ClassNotFoundException | InvalidRegistryObjectException e) {
+            handleSectionError(new CoreException(
+                    new Status(IStatus.ERROR, "org.eclipse.ui.views.properties.tabbed", e.getMessage(), e)));
         }
 
         return section;

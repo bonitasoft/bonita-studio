@@ -23,15 +23,24 @@ import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType_task;
 import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.bonitasoft.engine.api.IdentityAPI;
+import org.bonitasoft.engine.identity.User;
+import org.bonitasoft.engine.identity.UserNotFoundException;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Element;
@@ -62,7 +71,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
