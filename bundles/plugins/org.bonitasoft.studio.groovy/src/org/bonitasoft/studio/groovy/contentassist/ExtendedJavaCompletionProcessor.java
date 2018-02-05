@@ -16,7 +16,8 @@ import org.eclipse.ui.IEditorPart;
 
 public class ExtendedJavaCompletionProcessor extends JavaCompletionProcessor {
 
-    public ExtendedJavaCompletionProcessor(final IEditorPart editor, final ContentAssistant assistant, final String partition) {
+    public ExtendedJavaCompletionProcessor(final IEditorPart editor, final ContentAssistant assistant,
+            final String partition) {
         super(editor, assistant, partition);
     }
 
