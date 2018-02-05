@@ -14,42 +14,52 @@ import org.eclipse.emf.validation.IValidationContext;
 
 public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerConstraint {
 
-	public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorexistence";
+    private static final String JASPER_DEF_ID = "jasper";
+    public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorexistence";
 
-	@Override
-	protected IStatus performLiveValidation(IValidationContext context) {
-		return null;
-	}
+    @Override
+    protected IStatus performLiveValidation(IValidationContext context) {
+        return null;
+    }
 
-	@Override
-	protected IStatus performBatchValidation(IValidationContext context) {
-		Connector connector = (Connector)context.getTarget();
-		AbstractDefinitionRepositoryStore<?> connectorDefStore = null;
-		boolean isConnector = true;
-		if(!(connector instanceof ActorFilter)){
-			 connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
-						.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		}else{
-			isConnector = false;
-			connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
-					.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
-		}
-		ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion());
-		if (def!=null){
-			return context.createSuccessStatus();
-		}  else {
-			if(isConnector){
-				return context.createFailureStatus( Messages.bind(Messages.Validation_noConnectorDefFound,connector.getName(),connector.getDefinitionId()+"--"+connector.getDefinitionVersion()));
-			}else{
-				return context.createFailureStatus( Messages.bind(Messages.Validation_noActorFilterDefFound,connector.getName(),connector.getDefinitionId()+"--"+connector.getDefinitionVersion()));
-			}
-			
-		}
-	}
+    @Override
+    protected IStatus performBatchValidation(IValidationContext context) {
+        Connector connector = (Connector) context.getTarget();
+        AbstractDefinitionRepositoryStore<?> connectorDefStore = null;
+        boolean isConnector = true;
+        if (!(connector instanceof ActorFilter)) {
+            connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
+                    .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        } else {
+            isConnector = false;
+            connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
+                    .getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
+        }
+        ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),
+                connector.getDefinitionVersion());
+        if (def != null) {
+            return context.createSuccessStatus();
+        } else {
+            if (isConnector) {
+                if (JASPER_DEF_ID.equals(connector.getDefinitionId())) {
+                    return context.createFailureStatus(
+                            String.format(Messages.Validation_jasperConnectorRemoved, connector.getName()));
+                } else {
+                    return context.createFailureStatus(Messages.bind(Messages.Validation_noConnectorDefFound,
+                            connector.getName(), connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
+                }
 
-	@Override
-	protected String getConstraintId() {
-		return ID;
-	}
+            } else {
+                return context.createFailureStatus(Messages.bind(Messages.Validation_noActorFilterDefFound,
+                        connector.getName(), connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
+            }
+
+        }
+    }
+
+    @Override
+    protected String getConstraintId() {
+        return ID;
+    }
 
 }
