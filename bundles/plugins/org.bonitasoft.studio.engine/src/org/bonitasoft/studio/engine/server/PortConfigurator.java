@@ -73,7 +73,8 @@ public class PortConfigurator {
         try {
             clientBonitaHomeBuildler.withHTTPAPIType().withHost("localhost").withPort(tomcatPort).writeClientProperties();
         } catch (final IOException e) {
-            throw new CoreException(new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, "Failed to write bonita home client property file", e));
+            throw new CoreException(new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
+                    "Failed to write bonita home client property file", e));
         }
         preferenceStore.setValue(BonitaPreferenceConstants.CONSOLE_PORT,
                 tomcatPort);
@@ -87,7 +88,6 @@ public class PortConfigurator {
         throw new IllegalStateException(String.format("Unbable to retrieve TomcatServer from server: %s", server.getId()));
     }
 
-
     private void configurePort(final ServerPort port, final IProgressMonitor monitor) throws CoreException {
         final int tomcatPort = preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
         if (TOMCAT_PORT_ID.equals(port.getId())) {
@@ -100,9 +100,11 @@ public class PortConfigurator {
         }
     }
 
-    private void updatePort(final ServerPort serverPort, final int newPort, final IProgressMonitor monitor) throws CoreException {
+    private void updatePort(final ServerPort serverPort, final int newPort, final IProgressMonitor monitor)
+            throws CoreException {
         BonitaStudioLog.debug(
-                String.format("Unable to use port %s for %s, port %s will be used instead.", serverPort.getPort(), serverPort.getName(), newPort),
+                String.format("Unable to use port %s for %s, port %s will be used instead.", serverPort.getPort(),
+                        serverPort.getName(), newPort),
                 EnginePlugin.PLUGIN_ID);
         final IServerWorkingCopy workingCopy = server.createWorkingCopy();
         final TomcatServer loadAdapter = (TomcatServer) workingCopy.loadAdapter(TomcatServer.class, monitor);
