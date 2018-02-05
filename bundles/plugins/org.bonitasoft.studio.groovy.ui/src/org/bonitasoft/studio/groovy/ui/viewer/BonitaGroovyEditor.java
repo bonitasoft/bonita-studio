@@ -30,7 +30,7 @@ public class BonitaGroovyEditor extends GroovyEditor {
 
     @Override
     public void editorContextMenuAboutToShow(final IMenuManager menu) {
-        menu.dispose();
+
     }
 
     /*
