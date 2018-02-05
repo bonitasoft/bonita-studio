@@ -58,6 +58,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         bottomRight.addView("org.bonitasoft.studio.validation.view");
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
             bottomRight.addView("org.eclipse.egit.ui.StagingView");
+            bottomRight.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
         }
 
         createLeftViewFolder(layout, editorArea);
