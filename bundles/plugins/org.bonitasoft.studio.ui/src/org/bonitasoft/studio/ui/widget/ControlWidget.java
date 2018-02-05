@@ -20,6 +20,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -29,7 +30,7 @@ public abstract class ControlWidget extends Composite {
 
     protected static final String SWTBOT_WIDGET_ID_KEY = "org.eclipse.swtbot.widget.key";
 
-    protected Optional<Label> label = Optional.empty();
+    protected Optional<CLabel> label = Optional.empty();
     protected Optional<Label> filler = Optional.empty();
     protected Optional<FormToolkit> toolkit = Optional.empty();
     protected Optional<String> message = Optional.empty();
@@ -92,10 +93,13 @@ public abstract class ControlWidget extends Composite {
 
         final Optional<String> labelText = Optional.ofNullable(labelValue);
         labelText.ifPresent(text -> {
-            final Label lab = new Label(this, SWT.NONE);
+            final CLabel lab = new CLabel(this, SWT.NONE);
             lab.setLayoutData(GridDataFactory.swtDefaults()
                     .align(labelAbove ? SWT.LEFT : horizontalLabelAlignment, verticalLabelAlignment)
-                    .span(labelAbove ? 2 : 1, 1).create());
+                    .span(labelAbove ? 2 : 1, 1)
+                    .create());
+            lab.setAlignment(SWT.LEFT);
+            lab.setMargins(0, 0, 0, 0);
             lab.setText(text);
             toolkit.ifPresent(tk -> tk.adapt(lab, false, false));
             label = Optional.of(lab);

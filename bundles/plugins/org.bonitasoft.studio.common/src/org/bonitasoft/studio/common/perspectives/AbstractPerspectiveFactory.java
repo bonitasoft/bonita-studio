@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPerspectiveFactory;
 
 /**
@@ -52,9 +51,9 @@ public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory 
 
     protected boolean isInsideprojectWithREStApiExtensionNature(final IEditorPart part) {
         final IEditorInput editorInput = part.getEditorInput();
-        if (editorInput instanceof IFileEditorInput) {
+        IFile file = editorInput.getAdapter(IFile.class);
+        if (file != null) {
             try {
-                final IFile file = ((IFileEditorInput) editorInput).getFile();
                 return file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID)
                         || Objects.equals(file.getName(), CUSTOM_PERMISSIONS_MAPPING_FILE);
             } catch (final CoreException e) {
