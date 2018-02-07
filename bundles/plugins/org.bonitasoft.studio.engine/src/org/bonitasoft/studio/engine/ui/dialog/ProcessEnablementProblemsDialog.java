@@ -23,13 +23,13 @@ import java.util.Map;
 
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.Problem.Level;
-import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
-import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.handler.ConfigureHandler;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.ui.dialog.ProblemsDialog;
+import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

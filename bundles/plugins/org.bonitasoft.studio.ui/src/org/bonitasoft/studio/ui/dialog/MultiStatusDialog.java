@@ -19,8 +19,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
-import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
+import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
