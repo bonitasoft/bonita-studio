@@ -49,10 +49,16 @@ public class LabelProviderBuilder<T> {
     private Optional<Function<T, Image>> imageFunction = Optional.empty();
     private Optional<Function<T, IStatus>> statusProvider = Optional.empty();
     private Optional<Function<T, Font>> fontProvider = Optional.empty();
+    private Optional<Function<T, String>> tooltipFunction = Optional.empty();
     private List<ColumnViewer> viewersToUpdate = new ArrayList<>();
 
     public LabelProviderBuilder<T> withTextProvider(Function<T, String> textFunction) {
         this.textFunction = Optional.ofNullable(textFunction);
+        return this;
+    }
+
+    public LabelProviderBuilder<T> withTooltipProvider(Function<T, String> tooltipFunction) {
+        this.tooltipFunction = Optional.ofNullable(tooltipFunction);
         return this;
     }
 
@@ -296,6 +302,9 @@ public class LabelProviderBuilder<T> {
                     }
                     return Optional.ofNullable(status.getMessage());
                 }
+            }
+            if (tooltipFunction.isPresent()) {
+                return Optional.ofNullable(tooltipFunction.get().apply(element));
             }
             return Optional.empty();
         };

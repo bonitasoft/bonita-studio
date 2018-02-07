@@ -33,12 +33,12 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
-import org.bonitasoft.studio.common.jface.dialog.ProblemsDialog;
-import org.bonitasoft.studio.common.jface.dialog.TypedLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.ui.dialog.ProblemsDialog;
+import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
