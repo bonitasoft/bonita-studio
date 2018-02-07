@@ -45,7 +45,8 @@ Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.eclipse.debug.ui,
  org.eclipse.jst.server.core;bundle-version="1.2.400",
  org.apache.httpcomponents.httpclient;bundle-version="4.3.6";visibility:=reexport,
- org.apache.httpcomponents.httpcore;bundle-version="4.3.3";visibility:=reexport
+ org.apache.httpcomponents.httpcore;bundle-version="4.3.3";visibility:=reexport,
+ org.bonitasoft.studio.ui
 Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.command,
  org.bonitasoft.studio.engine.config,

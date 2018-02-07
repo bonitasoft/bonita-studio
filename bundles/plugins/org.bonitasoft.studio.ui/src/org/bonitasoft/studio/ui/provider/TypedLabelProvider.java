@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.common.jface.dialog;
+package org.bonitasoft.studio.ui.provider;
 
 import org.eclipse.swt.graphics.Image;
 

@@ -12,20 +12,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.jface.dialog;
+package org.bonitasoft.studio.ui.dialog;
 
 import java.util.Collection;
 
+import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -48,33 +51,25 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         if (input.isEmpty()) {
             return super.createCustomArea(parent);
         }
-        TableViewer problemsViewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        TableViewer problemsViewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         problemsViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(350, 100).indent(0, 10).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
         problemsViewer.setComparator(getComparator());
-        final TypedLabelProvider<T> typedLabelProvider = getTypedLabelProvider();
+
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(1, true));
+        problemsViewer.getTable().setLayout(layout);
+
+        TableViewerColumn tableViewerColumn = new TableViewerColumn(problemsViewer, SWT.NONE);
+
+        TypedLabelProvider<T> typedLabelProvider = getTypedLabelProvider();
         Assert.isNotNull(typedLabelProvider);
-        problemsViewer.setLabelProvider(new ColumnLabelProvider() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public String getText(Object element) {
-                return typedLabelProvider.getText((T) element);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Image getImage(Object element) {
-                return typedLabelProvider.getImage((T) element);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public String getToolTipText(Object element) {
-                return typedLabelProvider.getToolTipText((T) element);
-            }
-        });
+        tableViewerColumn.setLabelProvider(new LabelProviderBuilder<T>()
+                .withTextProvider(typedLabelProvider::getText)
+                .withImageProvider(typedLabelProvider::getImage)
+                .withTooltipProvider(typedLabelProvider::getToolTipText)
+                .createColumnLabelProvider());
 
         problemsViewer.setInput(input);
         ColumnViewerToolTipSupport.enableFor(problemsViewer);
