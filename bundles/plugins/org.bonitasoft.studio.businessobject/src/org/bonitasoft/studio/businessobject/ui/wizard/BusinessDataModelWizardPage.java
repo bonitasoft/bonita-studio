@@ -168,6 +168,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         final TabFolder tabFolder = new TabFolder(businessObjectDescriptionGroup, SWT.NONE);
         tabFolder.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 350).span(2, 1).create());
+        tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         fieldsList = PojoObservables.observeDetailList(viewerObservableValue, "fields", null);
         createAttributeTabItem(ctx, viewerObservableValue, tabFolder);
         createConstraintsTabItem(ctx, viewerObservableValue, tabFolder);
@@ -373,7 +374,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
             @Override
             public void handleValueChange(ValueChangeEvent<? extends String> event) {
-                String newPackageName = (String) event.diff.getNewValue();
+                String newPackageName = event.diff.getNewValue();
                 if (newPackageName.isEmpty()) {
                     newPackageName = DEFAULT_PACKAGE_NAME;
                 }
