@@ -174,7 +174,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
         if (index != -1 && fieldsList.remove(field)) {
             FieldType oldType = field.getType();
             final RelationField realtionField = new RelationField();
-            realtionField.setType(Type.COMPOSITION);
+            realtionField.setType(Type.AGGREGATION);
             realtionField.setFetchType(FetchType.LAZY);
             realtionField.setReference(reference);
             realtionField.setCollection(field.isCollection());
