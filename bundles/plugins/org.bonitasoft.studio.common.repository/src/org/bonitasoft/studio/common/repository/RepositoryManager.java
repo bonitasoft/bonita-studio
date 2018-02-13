@@ -174,7 +174,6 @@ public class RepositoryManager {
                 public void run(final IProgressMonitor monitor) throws CoreException {
                     result.add(repository);
                     workspace.getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-                    workspace.getRoot().getProjects();
                     for (final IProject p : workspace.getRoot().getProjects()) {
                         if (p.exists() && p.getLocation() != null && p.getLocation().toFile().exists()) {
                             try {

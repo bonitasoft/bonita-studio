@@ -66,6 +66,9 @@ public final class Messages extends NLS {
 
     public static String unvalidBossArchive;
 
+    public static String repositoryError;
+    public static String repositoryVersionErrorMsg;
+
     private Messages() {
         // Do not instantiate
     }
