@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.application;
 
-import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
-import static org.bonitasoft.studio.common.Messages.bosProductName;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -30,21 +27,16 @@ import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
-import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
@@ -71,7 +63,6 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -403,7 +394,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         disableInternalWebBrowser();
         disableGroovyDSL();
-        checkCurrentRepository(monitor);
         doInitWorkspace();
         if (!PlatformUtil.isHeadless()) {
             doStartEngine();
@@ -422,46 +412,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void doInitWorkspace() {
-        new WorkspaceInitializationJob(repositoryAccessor).schedule();
-    }
-
-    private void checkCurrentRepository(final IProgressMonitor monitor) {
-        final IPreferenceStore preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
-        final String current = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-        if (!RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(current)
-                && !ResourcesPlugin.getWorkspace().getRoot().getProject(current).exists()) {
-            preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,
-                    RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
-        }
-        final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
-        if (repository.getProject().exists()
-                && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
-            if (!repository.getProject().isOpen()) {
-                repository.open(monitor);
-            }
-            if (!repository.isOnline()) {
-                MessageDialog.openWarning(
-                        Display.getDefault().getActiveShell(),
-                        Messages.offlineRepositoryTitle,
-                        Messages.bind(Messages.offlineRepositoryMessage, current));
-            }
-            final String version = repository.getVersion();
-            if (!ProductVersion.sameMinorVersion(version)) {
-                MessageDialog.openWarning(
-                        Display.getDefault().getActiveShell(),
-                        Messages.badWorkspaceVersionTitle,
-                        Messages.bind(Messages.badWorkspaceVersionMessage,
-                                new Object[] { current, version, bonitaStudioModuleName,
-                                        ProductVersion.CURRENT_VERSION, bosProductName }));
-                resetToDefaultRepository(monitor);
-            }
-
-        }
-    }
-
-    protected void resetToDefaultRepository(final IProgressMonitor monitor) {
-        CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
-        RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME, monitor);
+        new WorkspaceInitializationJob(repositoryAccessor)
+                .schedule();
     }
 
     private void executeContributions() {

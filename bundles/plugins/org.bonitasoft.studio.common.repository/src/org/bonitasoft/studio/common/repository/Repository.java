@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.DateUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -63,6 +64,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -84,6 +89,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -119,6 +125,42 @@ public class Repository implements IRepository, IJavaContainer {
     private final ProjectClasspathFactory bonitaBPMProjectClasspath;
 
     private boolean isLoaded = false;
+
+    private IResourceChangeListener projectFileListener = new IResourceChangeListener() {
+
+        @Override
+        public void resourceChanged(IResourceChangeEvent event) {
+            try {
+                if (event != null && event.getDelta() != null) {
+                    event.getDelta().accept(new IResourceDeltaVisitor() {
+
+                        @Override
+                        public boolean visit(IResourceDelta delta) throws CoreException {
+                            IProject project = getProject();
+                            if (project.isAccessible()) {
+                                IFile projectFile = project.getFile(".project");
+                                final IResource resource = delta.getResource();
+                                if (Objects.equals(resource, projectFile)) {
+                                    String version = getVersion();
+                                    if (!ProductVersion.CURRENT_VERSION.equals(version)) {
+                                        Display.getDefault().asyncExec(() -> MessageDialog
+                                                .openError(Display.getDefault().getActiveShell(),
+                                                        Messages.repositoryError,
+                                                        String.format(Messages.repositoryError, project.getName(), version,
+                                                                ProductVersion.CURRENT_VERSION)));
+                                        return false;
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    };
 
     public Repository(final IWorkspace workspace,
             final IProject project,
@@ -165,6 +207,14 @@ public class Repository implements IRepository, IJavaContainer {
             }
         }
         return this;
+    }
+
+    protected void hookResourceListeners() {
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(projectFileListener);
+    }
+
+    protected void removeResourceListeners() {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectFileListener);
     }
 
     protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName,
@@ -241,6 +291,7 @@ public class Repository implements IRepository, IJavaContainer {
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
+        hookResourceListeners();
         return this;
     }
 
@@ -278,6 +329,7 @@ public class Repository implements IRepository, IJavaContainer {
             stores = null;
         }
         isLoaded = false;
+        removeResourceListeners();
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {

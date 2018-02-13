@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -93,9 +94,12 @@ public class RepositoryTest {
     }
 
     private Repository newRepository() {
-        final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
+        final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory,
+                jdtTypeHierarchyManager, projectManifestFactory,
                 bonitaBPMProjectClasspath, true));
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
+        doNothing().when(repo).hookResourceListeners();
+        doNothing().when(repo).removeResourceListeners();
         return repo;
     }
 
