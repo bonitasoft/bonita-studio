@@ -51,6 +51,9 @@ public class ComboWidget extends EditableControlWidget {
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy,
                         modelToTargetStrategy);
+                validator.ifPresent(v -> control.bindValidator(ctx, control.observeComboText(),
+                        modelObservable,
+                        v));
             }
             return control;
         }
