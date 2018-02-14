@@ -8,3 +8,4 @@ screenshots
 *.orig
 *.tmp
 *.iml
+/workspace
