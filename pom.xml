@@ -21,6 +21,20 @@
 		<watchdog.version>7.2.0</watchdog.version>
         <p2MirrorUrl>http://repositories.rd.lan/p2/7.7</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.exclusions>
+            **/patched-plugins/**/*,
+            **/org.bonitasoft.studio.model/**/*,
+            **/org.bonitasoft.studio.model.edit/**/*,
+            **/org.bonitasoft.studio.diagram/**/*,
+            **/org.bonitasoft.studio.diagram.form/**/*,
+            **/org.bonitasoft.studio.exporter/src/org/w3/**/*,
+            **/src-gen/**/*,
+            **/xtend-gen/**/*,
+            **/org.bonitasoft.studio.actors/src/org/bonitasoft/studio/actors/model/**/*,
+            **/org.omg.schema.spec.bpmn/**/*
+        </sonar.exclusions>
+        <sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -29,6 +43,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+              <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.4.0.905</version>
+              </plugin>
 				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
 					<artifactId>image-overlay-plugin</artifactId>
