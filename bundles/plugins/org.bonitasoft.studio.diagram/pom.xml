@@ -7,7 +7,13 @@
         <artifactId>plugins</artifactId>
         <version>7.7.0-SNAPSHOT</version>
     </parent>
+
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.diagram</artifactId>
     <packaging>eclipse-plugin</packaging>
+
+    <properties>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
 </project>

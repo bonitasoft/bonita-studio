@@ -10,6 +10,10 @@
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.model</artifactId>
     <packaging>eclipse-plugin</packaging>
+    
+     <properties>
+        <sonar.skip>true</sonar.skip>
+    </properties>
 
     <build>
         <sourceDirectory>${basedir}/src</sourceDirectory>
