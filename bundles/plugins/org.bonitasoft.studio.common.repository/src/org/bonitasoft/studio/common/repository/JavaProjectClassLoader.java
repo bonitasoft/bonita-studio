@@ -20,6 +20,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -55,10 +56,12 @@ public class JavaProjectClassLoader extends ClassLoader {
             final URL[] urls = new URL[classPaths.length];
             for (int i = 0; i < classPaths.length; i++)
                 urls[i] = new URL(PROTOCOL_PREFIX + computeForURLClassLoader(classPaths[i]));
-            final ClassLoader loader = new URLClassLoader(urls);
-            final Class classObject = loader.loadClass(className);
-            return classObject;
+            try (final URLClassLoader loader = new URLClassLoader(urls);) {
+                final Class<?> classObject = loader.loadClass(className);
+                return classObject;
+            }
         } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
         return null;
     }

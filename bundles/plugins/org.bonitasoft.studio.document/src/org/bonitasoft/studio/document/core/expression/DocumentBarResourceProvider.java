@@ -47,12 +47,14 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
      * org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
      */
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+            final Configuration configuration,
             final Set<EObject> excludedObjects) {
         final List<BarResource> resources = new ArrayList<BarResource>();
         if (process instanceof Pool) {
             final List<Document> documents = ((Pool) process).getDocuments();
-            final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+            final DocumentRepositoryStore store = RepositoryManager.getInstance()
+                    .getRepositoryStore(DocumentRepositoryStore.class);
             for (final Document document : documents) {
                 if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
                     final String documentID = document.getDefaultValueIdOfDocumentStore();
@@ -77,16 +79,17 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private void addFileContents(final List<BarResource> resources, final File file, String barPathPrefix) throws FileNotFoundException, IOException {
+    private void addFileContents(final List<BarResource> resources, final File file, String barPathPrefix)
+            throws FileNotFoundException, IOException {
         if (file.exists()) {
-            final byte[] jarBytes = new byte[(int) file.length()];
-            final InputStream stream = new FileInputStream(file);
-            stream.read(jarBytes);
-            stream.close();
-            if (barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")) {
-                barPathPrefix = barPathPrefix + "/";
+            try (final InputStream stream = new FileInputStream(file);) {
+                final byte[] jarBytes = new byte[(int) file.length()];
+                stream.read(jarBytes);
+                if (barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")) {
+                    barPathPrefix = barPathPrefix + "/";
+                }
+                resources.add(new BarResource(barPathPrefix + file.getName(), jarBytes));
             }
-            resources.add(new BarResource(barPathPrefix + file.getName(), jarBytes));
         }
     }
 

@@ -34,7 +34,7 @@ public class DocumentProposalListener implements IProposalListener {
         final DocumentWizard documentWizard = createDocumentWizard(context);
         final Dialog documentWizardDialog = createDocumentWizardDialog(documentWizard);
         if (documentWizardDialog.open() == Dialog.OK) {
-            final Document document = documentWizard.getDocument();
+            final Document document = documentWizard.getDocumentWorkingCopy();
             if (document != null) {
                 return document.getName();
             }

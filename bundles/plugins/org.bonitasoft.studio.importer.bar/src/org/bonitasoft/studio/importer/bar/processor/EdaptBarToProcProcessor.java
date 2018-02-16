@@ -307,28 +307,30 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             throws ZipException, IOException {
         final DependencyRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        final Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            final File currentFile = new File(zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar")) {
-                final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
-                        zipfile.getInputStream(zipEntry));
-                if (dependencyFileStore == null) {
-                    BonitaStudioLog.debug("Failed to import application dependency " + currentFile.getName(),
-                            BarImporterPlugin.PLUGIN_ID);
+        try (final ZipFile zipfile = new ZipFile(archiveFile);) {
+            final Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                final File currentFile = new File(zipEntry.getName());
+                if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS)
+                        && zipEntry.getName().endsWith(".jar")) {
+                    final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
+                            zipfile.getInputStream(zipEntry));
+                    if (dependencyFileStore == null) {
+                        BonitaStudioLog.debug("Failed to import application dependency " + currentFile.getName(),
+                                BarImporterPlugin.PLUGIN_ID);
+                    }
                 }
-            }
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar")) {
-                if (store.getChild(currentFile.getName()) == null) {
-                    store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS)
+                        && zipEntry.getName().endsWith(".jar")) {
+                    if (store.getChild(currentFile.getName()) == null) {
+                        store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                    }
+                    importValidatorSource(currentFile, monitor);
                 }
-                importValidatorSource(currentFile, monitor);
             }
         }
-        zipfile.close();
     }
 
     private void importValidatorSource(final File currentFile, final IProgressMonitor monitor) {
@@ -339,25 +341,25 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             throws ZipException, IOException {
         final DependencyRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        final Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            final File currentFile = new File(zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar")) {
-                if (!customConnectorMigrator.getImportedJarNames().contains(currentFile.getName())
-                        && store.getChild(currentFile.getName()) == null) {
-                    final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
-                            zipfile.getInputStream(zipEntry));
-                    if (dependencyFileStore == null) {
-                        BonitaStudioLog.debug("Failed to import process dependency " + currentFile.getName(),
-                                BarImporterPlugin.PLUGIN_ID);
+        try (final ZipFile zipfile = new ZipFile(archiveFile);) {
+            final Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                final File currentFile = new File(zipEntry.getName());
+                if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar")) {
+                    if (!customConnectorMigrator.getImportedJarNames().contains(currentFile.getName())
+                            && store.getChild(currentFile.getName()) == null) {
+                        final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(),
+                                zipfile.getInputStream(zipEntry));
+                        if (dependencyFileStore == null) {
+                            BonitaStudioLog.debug("Failed to import process dependency " + currentFile.getName(),
+                                    BarImporterPlugin.PLUGIN_ID);
+                        }
                     }
                 }
             }
         }
-        zipfile.close();
     }
 
     private boolean displayMigrationWarningPopup() {
@@ -368,18 +370,18 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     private void importAttachment(final File archiveFile, final IProgressMonitor monitor) throws IOException {
         final DocumentRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(DocumentRepositoryStore.class);
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        final Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            final File currentFile = new File(zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(ATTACHMENTS_FOLDER)) {
-                store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
-            }
+        try (final ZipFile zipfile = new ZipFile(archiveFile);) {
+            final Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                final File currentFile = new File(zipEntry.getName());
+                if (!zipEntry.isDirectory() && zipEntry.getName().contains(ATTACHMENTS_FOLDER)) {
+                    store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                }
 
+            }
         }
-        zipfile.close();
     }
 
     /*

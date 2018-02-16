@@ -53,9 +53,9 @@ public abstract class ImporterFactory {
                 final Bundle b = Platform.getBundle(desc.getContributor().getName());
                 final URL iconURL = b.getResource(menuIcon);
                 final File imageFile = new File(FileLocator.toFileURL(iconURL).getFile());
-                final FileInputStream inputStream = new FileInputStream(imageFile);
-                descriptionImage = new Image(Display.getDefault(), inputStream);
-                inputStream.close();
+                try (final FileInputStream inputStream = new FileInputStream(imageFile);) {
+                    descriptionImage = new Image(Display.getDefault(), inputStream);
+                }
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);

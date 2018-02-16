@@ -15,8 +15,6 @@
 
 package org.bonitasoft.studio.common.platform.tools;
 
-import static org.assertj.core.api.Assertions.filter;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -44,7 +42,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -420,16 +417,14 @@ public class PlatformUtil {
                 if (!f.getParentFile().exists()) {
                     f.getParentFile().mkdirs();
                 }
-                final InputStream is = zip.getInputStream(file); // get the input stream
-                final FileOutputStream fos = new FileOutputStream(f);
-                while ((bytesIn = is.read(readBuffer)) != -1) { // write contents of 'is' to 'fos'
-                    fos.write(readBuffer, 0, bytesIn);
+                try (final InputStream is = zip.getInputStream(file);
+                        final FileOutputStream fos = new FileOutputStream(f);) {
+                    while ((bytesIn = is.read(readBuffer)) != -1) { // write contents of 'is' to 'fos'
+                        fos.write(readBuffer, 0, bytesIn);
+                    }
                 }
-                fos.close();
-                is.close();
             }
             monitor.worked(1);
-
         } finally {
             if (zip != null) {
                 zip.close();
@@ -491,11 +486,9 @@ public class PlatformUtil {
     public static Properties getStudioGlobalProperties() {
         final File res = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "studio.properties");
         if (res.exists()) {
-            try {
-                final InputStream is = new FileInputStream(res);
-                final Properties properties = new Properties();
+            final Properties properties = new Properties();
+            try (final InputStream is = new FileInputStream(res);) {
                 properties.load(is);
-                is.close();
                 return properties;
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);

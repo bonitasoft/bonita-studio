@@ -107,13 +107,9 @@ public class RepositoryManager {
      * @deprecated See {@link RepositoryAccessor}
      */
     @Deprecated
-    public static RepositoryManager getInstance() {
-        if (RepositoryManager.INSTANCE == null) {
-            synchronized (RepositoryManager.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new RepositoryManager();
-                }
-            }
+    public static synchronized RepositoryManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new RepositoryManager();
         }
         return INSTANCE;
     }
