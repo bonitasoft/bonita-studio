@@ -85,9 +85,11 @@ public class BusinessObjectModelRepositoryStoreTest {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
         doReturn(true).when(storeUnderTest).isDeployable();
         doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
+        doNothing().when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);
 
+        verify(storeUnderTest).generateJar(businessObjectFileStore);
         verify(storeUnderTest).deploy(businessObjectFileStore);
     }
 
@@ -96,9 +98,11 @@ public class BusinessObjectModelRepositoryStoreTest {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
         doReturn(false).when(storeUnderTest).isDeployable();
         doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
+        doNothing().when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);
 
+        verify(storeUnderTest).generateJar(businessObjectFileStore);
         verify(storeUnderTest, never()).deploy(businessObjectFileStore);
     }
 }

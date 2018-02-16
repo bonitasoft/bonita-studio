@@ -14,18 +14,11 @@
  */
 package org.bonitasoft.studio.businessobject.core.operation;
 
-import static com.google.common.io.ByteStreams.toByteArray;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -45,7 +38,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -59,10 +51,6 @@ import org.eclipse.ui.internal.Workbench;
 public class DeployBDMOperation implements IRunnableWithProgress {
 
     private static final String UNINSTALL_BDM_AC_CMD = "org.bonitasoft.studio.bdm.access.control.command.uninstall.headless";
-    private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
-    private static final String BDM_CLIENT = "bdm-client";
-    private static final String BDM_DAO = "bdm-dao";
-    private static final String MODEL = "model";
 
     private final BusinessObjectModelFileStore fileStore;
     private APISession session;
@@ -163,22 +151,8 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             if (containsBusinessObjects(bom)) {
                 tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
             }
-
             tenantManagementAPI.resume();
-
-            if (containsBusinessObjects(bom)) {
-                final byte[] zipContent = tenantManagementAPI.getClientBDMZip();
-                final Map<String, byte[]> jarContent = retrieveContent(zipContent);
-                updateDependency(jarContent.get(BDM_CLIENT));
-                final Map<String, Object> data = new HashMap<>();
-                data.put(MODEL, bom);
-                data.put(BDM_DAO, jarContent.get(BDM_DAO));
-                eventBroker().send(BDM_DEPLOYED_TOPIC, data);
-            } else {
-                removeDependency();
-            }
         } catch (final Exception e) {
-            BonitaStudioLog.error(e);
             try {
                 tenantManagementAPI.uninstallBusinessDataModel();
             } catch (final BusinessDataRepositoryDeploymentException e1) {
@@ -222,40 +196,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     protected boolean dropDBOnInstall() {
         final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
-    }
-
-    protected Map<String, byte[]> retrieveContent(final byte[] zipContent) throws IOException {
-        Assert.isNotNull(zipContent);
-        ByteArrayInputStream is = null;
-        ZipInputStream zis = null;
-        final ByteArrayOutputStream out = null;
-        final Map<String, byte[]> result = new HashMap<>();
-        try {
-            is = new ByteArrayInputStream(zipContent);
-            zis = new ZipInputStream(is);
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                final String entryName = entry.getName();
-                if (entryName.contains(MODEL) && entryName.endsWith(".jar")) {
-                    result.put(BDM_CLIENT, toByteArray(zis));
-                }
-                if (entryName.contains("dao") && entryName.endsWith(".jar")) {
-                    result.put(BDM_DAO, toByteArray(zis));
-                }
-            }
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-            if (zis != null) {
-                zis.close();
-            }
-            if (out != null) {
-                out.close();
-            }
-        }
-
-        return result;
     }
 
     protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {

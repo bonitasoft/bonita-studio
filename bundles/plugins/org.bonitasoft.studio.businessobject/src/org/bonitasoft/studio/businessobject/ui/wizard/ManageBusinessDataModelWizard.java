@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -29,6 +26,8 @@ import org.bonitasoft.engine.bdm.validator.BusinessObjectModelValidator;
 import org.bonitasoft.engine.bdm.validator.ValidationStatus;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
+import org.bonitasoft.studio.businessobject.core.operation.DeployBDMStackTraceResolver;
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -195,13 +194,14 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    new GenerateBDMOperation(fStore).run(monitor);
                     new DeployBDMOperation(fStore).run(monitor);
                 }
             });
         } catch (final InvocationTargetException e) {
             new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle,
                     Messages.installFailedMessage,
-                    handleTargetExceptionStacktrace(e))
+                    new DeployBDMStackTraceResolver().reduceHibernateException(e))
                             .open();
             return false;
         } catch (final InterruptedException e) {
@@ -212,24 +212,6 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
     protected IDiffLogger getDiffLogger() {
         return diffLogger;
-    }
-
-    private Throwable handleTargetExceptionStacktrace(final InvocationTargetException e) {
-        final Throwable targetException = e.getTargetException();
-        int index = -1;
-        for (int i = 0; i < targetException.getStackTrace().length; i++) {
-            final StackTraceElement element = targetException.getStackTrace()[i];
-            final String className = element.getClassName();
-            if (!isNullOrEmpty(className) && className.contains("org.hibernate.HibernateException")) {
-                index = i;
-                break;
-            }
-        }
-        if (index > -1) {
-            targetException.setStackTrace(
-                    Arrays.copyOfRange(targetException.getStackTrace(), index, targetException.getStackTrace().length));
-        }
-        return targetException;
     }
 
     protected IPreferenceStore getPreferenceStore() {
