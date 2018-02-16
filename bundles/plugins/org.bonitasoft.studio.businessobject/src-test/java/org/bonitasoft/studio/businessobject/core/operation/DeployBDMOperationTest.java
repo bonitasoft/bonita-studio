@@ -16,8 +16,6 @@ package org.bonitasoft.studio.businessobject.core.operation;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
@@ -40,7 +38,6 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,9 +67,6 @@ public class DeployBDMOperationTest {
 
     private BusinessObjectModel bom;
 
-    @Mock
-    private IEventBroker eventBroker;
-
     /**
      * @throws java.lang.Exception
      */
@@ -87,16 +81,12 @@ public class DeployBDMOperationTest {
         bo.getFields().add(firstName);
         bom.getBusinessObjects().add(bo);
         operationUnderTest = spy(new DeployBDMOperation(bdmFileStore));
-        doReturn(eventBroker).when(operationUnderTest).eventBroker();
         doReturn(bom).when(bdmFileStore).getContent();
         final Map<String, byte[]> result = new HashMap<>();
         result.put("bdm-client", new byte[512]);
-        doReturn(result).when(operationUnderTest).retrieveContent(any(byte[].class));
         doReturn(false).when(operationUnderTest).dropDBOnInstall();
         when(manager.getTenantAdministrationAPI((APISession) anyObject())).thenReturn(tenantAdminAPI);
         doReturn(manager).when(operationUnderTest).getEngineManager();
-        doNothing().when(operationUnderTest).updateDependency(any(byte[].class));
-        doNothing().when(operationUnderTest).removeDependency();
         doNothing().when(operationUnderTest).uninstallBDMAccessControl(any(IProgressMonitor.class));
         parentFolder = new File("test");
         parentFolder.mkdirs();
@@ -128,7 +118,6 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();
-        verify(tenantAdminAPI).getClientBDMZip();
     }
 
     @Test
@@ -138,13 +127,11 @@ public class DeployBDMOperationTest {
         operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
         verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
-        final InOrder inOrder = inOrder(tenantAdminAPI, eventBroker);
+        final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();
         inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();
-        inOrder.verify(eventBroker).send(eq("bdm/deployed"), notNull(Map.class));
-        verify(tenantAdminAPI).getClientBDMZip();
     }
 
     @Test
@@ -159,7 +146,6 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).pause();
         inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).resume();
-        verify(operationUnderTest).removeDependency();
         verify(tenantAdminAPI, never()).installBusinessDataModel(any(byte[].class));
     }
 

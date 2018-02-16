@@ -29,6 +29,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
+ org.bonitasoft.engine.tenant,
  org.bonitasoft.theme.model
 Require-Bundle: org.eclipse.ui.workbench,
  org.junit,

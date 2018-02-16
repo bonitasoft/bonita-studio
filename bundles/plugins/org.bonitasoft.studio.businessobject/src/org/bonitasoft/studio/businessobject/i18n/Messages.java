@@ -338,8 +338,10 @@ public class Messages extends NLS {
     public static String dateTimeDetails;
 
     public static String dateTimeInTimezoneDetails;
-
     public static String fieldNameShouldStartsWithLowercase;
+    public static String generatingJarFromBDMModel;
+
+    public static String deployBDMJobName;
 
     private Messages() {
     }
