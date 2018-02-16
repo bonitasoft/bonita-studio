@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Business Object Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
 Bundle-Version: 7.7.0.qualifier
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/bonita-business-data-generator.jar
 Bundle-Activator: org.bonitasoft.studio.businessobject.BusinessObjectPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -63,7 +64,8 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.eclipse.core.runtime,
  org.eclipse.e4.core.commands;bundle-version="0.12.100",
  org.eclipse.e4.core.contexts;bundle-version="1.6.0",
- org.eclipse.e4.ui.workbench;bundle-version="1.5.0"
+ org.eclipse.e4.ui.workbench;bundle-version="1.5.0",
+ org.apache.commons.io;bundle-version="2.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
@@ -73,6 +75,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bdm.validator,
  org.bonitasoft.engine.business.data,
+ org.bonitasoft.engine.command,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.session

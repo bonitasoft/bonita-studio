@@ -37,6 +37,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -45,7 +46,10 @@ import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -158,10 +162,19 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
 
+        generateJar(fileStore);
         if (isDeployable()) {
             deploy((BusinessObjectModelFileStore) fileStore);
         }
         return fileStore;
+    }
+
+    protected void generateJar(F fileStore) {
+        try {
+            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     @Override
@@ -192,13 +205,18 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     protected void deploy(final BusinessObjectModelFileStore fileStore) {
-        try {
-            new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
-        } catch (final InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-        } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
+        new Job("Deploy Business Data Model") {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+                } catch (final InvocationTargetException | InterruptedException e) {
+                    return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to deploy BDM", e);
+                }
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     protected boolean isDeployable() {

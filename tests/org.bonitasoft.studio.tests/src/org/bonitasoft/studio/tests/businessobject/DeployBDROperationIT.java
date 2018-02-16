@@ -18,7 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.tenant.TenantResourceState;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -74,13 +76,8 @@ public class DeployBDROperationIT {
     }
 
     @Test
-    public void shouldRun_DeployBDRInEngine() throws Exception {
-        final DeployBDMOperation operation = new DeployBDMOperation(businessObjectDefinitionFileStore);
-        operation.run(null);
-
-        apiSession = managerEx.loginDefaultTenant(null);
-        final TenantAdministrationAPI tenantManagementAPI = managerEx.getTenantAdministrationAPI(apiSession);
-        assertThat(tenantManagementAPI.isPaused()).isFalse();
+    public void should_generate_and_deploy_bdm() throws Exception {
+        new GenerateBDMOperation(businessObjectDefinitionFileStore).run(null);
 
         final String dependencyName = businessObjectDefinitionFileStore.getDependencyName();
         final DependencyFileStore fileStore = depStore.getChild(dependencyName);
@@ -90,6 +87,15 @@ public class DeployBDROperationIT {
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         final IType iType = javaProject.findType("org.bonita.CompanyUser");
         assertThat(iType).isNotNull();
+
+        final DeployBDMOperation operation = new DeployBDMOperation(businessObjectDefinitionFileStore);
+        operation.run(null);
+
+        apiSession = managerEx.loginDefaultTenant(null);
+        final TenantAdministrationAPI tenantManagementAPI = managerEx.getTenantAdministrationAPI(apiSession);
+        assertThat(tenantManagementAPI.getBusinessDataModelResource().getState()).isEqualTo(TenantResourceState.INSTALLED);
+        assertThat(tenantManagementAPI.isPaused()).isFalse();
+
     }
 
 }
