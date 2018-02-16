@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,7 +40,8 @@ public class ImportLibsOperation implements IRunnableWithProgress {
     private final String[] jarAndZips;
     private final String filterPath;
 
-    public ImportLibsOperation(final DependencyRepositoryStore libStore, final String[] jarAndZips, final String filterPath) {
+    public ImportLibsOperation(final DependencyRepositoryStore libStore, final String[] jarAndZips,
+            final String filterPath) {
         this.libStore = libStore;
         this.jarAndZips = jarAndZips;
         this.filterPath = filterPath;
@@ -52,15 +51,13 @@ public class ImportLibsOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.beginToAddJars, jarAndZips.length);
         final Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
-        FileInputStream fis = null;
         for (final String filePath : jarAndZips) {
-            try {
-                if (monitor.isCanceled()) {
-                    return;
-                }
-                final File file = getFile(filePath);
-                fis = new FileInputStream(file);
-                final String fileName = file.getName();
+            if (monitor.isCanceled()) {
+                return;
+            }
+            final File file = getFile(filePath);
+            final String fileName = file.getName();
+            try (FileInputStream fis = new FileInputStream(file);) {
                 if (fileName.endsWith(JAR_EXTENSION)) { //$NON-NLS-1$
                     monitor.setTaskName(Messages.addingJar + " " + fileName);
                     jarsToImportMap.put(fileName, fis);
@@ -101,13 +98,15 @@ public class ImportLibsOperation implements IRunnableWithProgress {
         }
     }
 
-    private void importJarsFromZip(final IProgressMonitor monitor, final FileInputStream fis) throws IOException, InvocationTargetException {
+    private void importJarsFromZip(final IProgressMonitor monitor, final FileInputStream fis)
+            throws IOException, InvocationTargetException {
         ZipInputStreamIFileFriendly zip = null;
         zip = new ZipInputStreamIFileFriendly(fis);
         ZipEntry entry = zip.getNextEntry();
         if (entry == null) {
             zip.close();
-            throw new InvocationTargetException(new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),
+            throw new InvocationTargetException(
+                    new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),
                     org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted);
         }
         while (entry != null) {

@@ -61,7 +61,8 @@ public class DocumentWizard extends Wizard {
         final Expression urlExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
         urlExpression.setReturnTypeFixed(true);
         documentWorkingCopy.setUrl(urlExpression);
-        final Expression multipleInitialContentExpression = ExpressionHelper.createConstantExpression("", List.class.getName());
+        final Expression multipleInitialContentExpression = ExpressionHelper.createConstantExpression("",
+                List.class.getName());
         multipleInitialContentExpression.setReturnTypeFixed(true);
         documentWorkingCopy.setInitialMultipleContent(multipleInitialContentExpression);
 
@@ -138,7 +139,8 @@ public class DocumentWizard extends Wizard {
     }
 
     private RefactorDocumentOperation createRefactorOperation(final TransactionalEditingDomain editingDomain) {
-        final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(
+                RefactoringOperationType.UPDATE);
         refactorDocumentOperation.setEditingDomain(editingDomain);
         refactorDocumentOperation.addItemToRefactor(documentWorkingCopy, document);
         refactorDocumentOperation.setAskConfirmation(isEdited());
@@ -149,19 +151,21 @@ public class DocumentWizard extends Wizard {
      * @return
      */
     protected boolean isEdited() {
-        return !(documentWorkingCopy.getName().equals(document.getName()) && documentWorkingCopy.isMultiple() == document.isMultiple());
+        return !(documentWorkingCopy.getName().equals(document.getName())
+                && documentWorkingCopy.isMultiple() == document.isMultiple());
     }
 
     private void refreshProject() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-            .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(),
+                            null);
         } catch (final CoreException e1) {
             BonitaStudioLog.error(e1, DocumentPlugin.PLUGIN_ID);
         }
     }
 
-    public Document getDocument() {
+    public Document getDocumentWorkingCopy() {
         return documentWorkingCopy;
     }
 

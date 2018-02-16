@@ -70,7 +70,8 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 /**
  * @author Aurelien Pupier
  */
-public class DocumentPropertySection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener, IDoubleClickListener {
+public class DocumentPropertySection extends AbstractBonitaDescriptionSection
+        implements ISelectionChangedListener, IDoubleClickListener {
 
     private ListViewer documentListViewer;
     private EMFDataBindingContext emfDataBindingContext;
@@ -120,7 +121,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     private ListViewer createList(final Composite mainComposite) {
-        final List list = getWidgetFactory().createList(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+        final List list = getWidgetFactory().createList(mainComposite,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         list.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final ListViewer documentListViewer = new ListViewer(list);
         documentListViewer.setLabelProvider(new ElementForIdLabelProvider());
@@ -154,7 +156,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     private void createAddButton(final Composite buttonComposite) {
-        final Button addButton = getWidgetFactory().createButton(buttonComposite, org.bonitasoft.studio.document.i18n.Messages.AddSimple, SWT.FLAT);
+        final Button addButton = getWidgetFactory().createButton(buttonComposite,
+                org.bonitasoft.studio.document.i18n.Messages.AddSimple, SWT.FLAT);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -165,7 +168,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
                 final DocumentWizard documentWizard = new DocumentWizard(getEObject());
                 final Dialog dialog = new DocumentWizardDialog(Display.getDefault().getActiveShell(), documentWizard, true);
                 if (IDialogConstants.OK_ID == dialog.open()) {
-                    final Document newDocument = documentWizard.getDocument();
+                    final Document newDocument = documentWizard.getDocumentWorkingCopy();
                     documentListViewer.setSelection(new StructuredSelection(newDocument));
                 }
             }
@@ -183,7 +186,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
                 super.widgetSelected(e);
                 final int ok = 0;
                 if (ok == openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())) {
-                    final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
+                    final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection())
+                            .iterator();
                     if (selection.hasNext()) {
                         final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
                         executeDeleteReactorOperation(rdo);
@@ -223,7 +227,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     protected void bindList() {
-        final IObservableList documentsListObserved = EMFEditProperties.list(getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS).observe(getPool());
+        final IObservableList documentsListObserved = EMFEditProperties
+                .list(getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS).observe(getPool());
         documentListViewer.setInput(documentsListObserved);
     }
 
@@ -269,10 +274,11 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         if (!selection.isEmpty()) {
             final Document selectedDocument = (Document) ((IStructuredSelection) selection).getFirstElement();
             final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument, true);
-            final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard, IDialogConstants.OK_LABEL);
+            final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard,
+                    IDialogConstants.OK_LABEL);
             dialog.open();
             documentListViewer.refresh();
-            documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+            documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocumentWorkingCopy()));
         }
     }
 
@@ -288,8 +294,10 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         }
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final java.util.List<Object> selectionList = ((IStructuredSelection) documentListViewer.getSelection()).toList();
-        final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
-                .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
+        final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                removalConfirmationDialogTitle, Display
+                        .getCurrent().getSystemImage(SWT.ICON_WARNING),
+                NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
                 1, selectionList);
         return dialog.open();
     }

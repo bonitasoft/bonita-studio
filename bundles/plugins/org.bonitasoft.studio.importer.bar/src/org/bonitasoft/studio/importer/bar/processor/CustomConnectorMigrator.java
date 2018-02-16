@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -52,7 +50,6 @@ import org.ow2.bonita.connector.core.ConnectorDescription;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class CustomConnectorMigrator {
 
@@ -84,16 +81,18 @@ public class CustomConnectorMigrator {
             while (enumEntries.hasMoreElements()) {
                 zipEntry = (ZipEntry) enumEntries.nextElement();
                 final File currentFile = new File(zipEntry.getName());
-                if (!zipEntry.isDirectory() && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS))
+                if (!zipEntry.isDirectory()
+                        && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS))
                         && zipEntry.getName().endsWith(".jar")) {
                     try {
-                        proceedCustomConnector(currentFile.getName(), zipfile.getInputStream(zipEntry), businessArchiveFile, progressMonitor);
+                        proceedCustomConnector(currentFile.getName(), zipfile.getInputStream(zipEntry), businessArchiveFile,
+                                progressMonitor);
                     } finally {
                     }
                 }
             }
             RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class).getResourceProvider()
-            .loadDefinitionsCategories(progressMonitor);
+                    .loadDefinitionsCategories(progressMonitor);
             RepositoryManager.getInstance().getCurrentRepository().build(progressMonitor);
         } finally {
             FileActionDialog.deactivateYesNoToAll();
@@ -104,7 +103,8 @@ public class CustomConnectorMigrator {
 
     }
 
-    private void proceedCustomConnector(final String fileName, final InputStream inputStream, final File archiveFile,final IProgressMonitor progressMonitor) throws Exception {
+    private void proceedCustomConnector(final String fileName, final InputStream inputStream, final File archiveFile,
+            final IProgressMonitor progressMonitor) throws Exception {
         final File tmpConnectorJarFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), fileName);
         if (tmpConnectorJarFile.exists()) {
             tmpConnectorJarFile.delete();
@@ -119,7 +119,8 @@ public class CustomConnectorMigrator {
             }
         }
 
-        BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...",
+                BarImporterPlugin.PLUGIN_ID);
         if (tmpConnectorJarFile.length() == 0) {
             BonitaStudioLog.debug(tmpConnectorJarFile.getName() + " is empty.", BarImporterPlugin.PLUGIN_ID);
             return;
@@ -127,16 +128,20 @@ public class CustomConnectorMigrator {
         final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
         final List<String> connectorClassnames = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
         if (connectorClassnames.isEmpty()) {
-            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
+            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(),
+                    BarImporterPlugin.PLUGIN_ID);
         } else {
             for (final String connectorClassname : connectorClassnames) {
-                BonitaStudioLog.debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(),
+                BonitaStudioLog.debug(
+                        "Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(),
                         BarImporterPlugin.PLUGIN_ID);
                 connectorsJars.add(tmpConnectorJarFile.getName());
-                final Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
+                final Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader
+                        .loadClass(connectorClassname);
                 try {
                     final ConnectorDescription descriptor = new ConnectorDescription(instanceClass, Locale.ENGLISH);
-                    final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor, tmpConnectorJarFile,
+                    final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(
+                            descriptor, tmpConnectorJarFile,
                             progressMonitor);
                     cdtocd.importConnectorDefinitionResources();
                     cdtocd.createConnectorDefinition();
@@ -166,8 +171,9 @@ public class CustomConnectorMigrator {
      * @throws IOException
      * @throws FileNotFoundException
      */
-    protected URLClassLoader createBarClassloader(final File archiveFile, final File tmpConnectorJarFile) throws MalformedURLException,
-    ZipException, IOException, FileNotFoundException {
+    protected URLClassLoader createBarClassloader(final File archiveFile, final File tmpConnectorJarFile)
+            throws MalformedURLException,
+            ZipException, IOException, FileNotFoundException {
         final List<URL> urls = new ArrayList<URL>();
         urls.add(tmpConnectorJarFile.toURI().toURL());
         final Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
@@ -175,28 +181,27 @@ public class CustomConnectorMigrator {
             final URL type = urlEnum.nextElement();
             urls.add(type);
         }
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        final Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".jar")) {
-                final InputStream is = zipfile.getInputStream(zipEntry);
-                final File tmpJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), System.currentTimeMillis() + ".jar");
-                tmpJar.createNewFile();
-                final FileOutputStream os = new FileOutputStream(tmpJar);
-                FileUtil.copy(is, os);
-                is.close();
-                os.close();
-                urls.add(tmpJar.toURI().toURL());
-                toDelete.add(tmpJar);
+        try (final ZipFile zipfile = new ZipFile(archiveFile);) {
+            final Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".jar")) {
+                    final InputStream is = zipfile.getInputStream(zipEntry);
+                    final File tmpJar = new File(ProjectUtil.getBonitaStudioWorkFolder(),
+                            System.currentTimeMillis() + ".jar");
+                    tmpJar.createNewFile();
+                    final FileOutputStream os = new FileOutputStream(tmpJar);
+                    FileUtil.copy(is, os);
+                    is.close();
+                    os.close();
+                    urls.add(tmpJar.toURI().toURL());
+                    toDelete.add(tmpJar);
+                }
             }
         }
-        zipfile.close();
-
-        //TODO: also add bonita and all its dependencies, but they should already be there with getClass().getClassLoader()?
-
-        final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
+        final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+                getClass().getClassLoader());
         return customURLClassLoader;
     }
 
