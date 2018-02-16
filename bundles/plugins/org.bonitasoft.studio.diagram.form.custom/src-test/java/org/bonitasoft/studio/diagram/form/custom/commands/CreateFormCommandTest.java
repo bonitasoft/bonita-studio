@@ -207,7 +207,8 @@ public class CreateFormCommandTest {
     @Test
     public void shouldGetVerticalSpan_ReturnOneIfWidgetIsNotAGroup() throws Exception {
         for (final EClassifier eClass : FormFactory.eINSTANCE.getEPackage().getEClassifiers()) {
-            if (eClass instanceof EClass && !((EClass) eClass).isAbstract() && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)) {
+            if (eClass instanceof EClass && !((EClass) eClass).isAbstract()
+                    && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)) {
                 final Widget w = (Widget) FormFactory.eINSTANCE.create((EClass) eClass);
                 if (!(w instanceof Group)) {
                     assertThat(commandUnderTest.getVerticalSpan(w)).isEqualTo(1);
@@ -301,7 +302,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_null_and_widget_is_in_a_Group() throws Exception {
+    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_null_and_widget_is_in_a_Group()
+            throws Exception {
 
         commandUnderTest = new CreateFormCommand(null,
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
@@ -321,7 +323,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_null_and_widget_is_not_in_a_Group() throws Exception {
+    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_null_and_widget_is_not_in_a_Group()
+            throws Exception {
 
         commandUnderTest = new CreateFormCommand(null,
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
@@ -340,7 +343,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_not_null_and_widget_is_in_a_Group() throws Exception {
+    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_not_null_and_widget_is_in_a_Group()
+            throws Exception {
 
         final Widget w1 = FormFactory.eINSTANCE.createTextFormField();
         final Group group = FormFactory.eINSTANCE.createGroup();
@@ -353,7 +357,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_not_null_and_widget_is_not_in_a_Group() throws Exception {
+    public void should_computeWidgetId_return_key_without_number_when_pageflow_is_not_null_and_widget_is_not_in_a_Group()
+            throws Exception {
 
         final Widget w1 = FormFactory.eINSTANCE.createTextFormField();
         final Form form = FormFactory.eINSTANCE.createForm();
@@ -401,7 +406,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_addInputExpressionForData_set_widget_input_expression_with_fixed_return_type_if_widget_is_CheckBoxSingleFormField() throws Exception {
+    public void should_addInputExpressionForData_set_widget_input_expression_with_fixed_return_type_if_widget_is_CheckBoxSingleFormField()
+            throws Exception {
         final Data data = ProcessFactory.eINSTANCE.createData();
         data.setName("amazingData");
         final CheckBoxSingleFormField widget = FormFactory.eINSTANCE.createCheckBoxSingleFormField();
@@ -410,7 +416,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_addInputExpressionForData_set_widget_input_expression_with_not_fixed_return_type_if_widget_is_CheckBoxSingleFormField() throws Exception {
+    public void should_addInputExpressionForData_set_widget_input_expression_with_not_fixed_return_type_if_widget_is_CheckBoxSingleFormField()
+            throws Exception {
         final Data data = ProcessFactory.eINSTANCE.createData();
         data.setName("amazingData");
         final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
@@ -420,7 +427,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_isAnEnumOnAMultipleValuatedFormField_return_false_if_widget_is_not_MultipleValuatedFormField() throws Exception {
+    public void should_isAnEnumOnAMultipleValuatedFormField_return_false_if_widget_is_not_MultipleValuatedFormField()
+            throws Exception {
         final Data data = ProcessFactory.eINSTANCE.createData();
         final DataType value = ProcessFactory.eINSTANCE.createEnumType();
         data.setDataType(value);
@@ -439,7 +447,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_isAnEnumOnAMultipleValuatedFormField_return_true_if_data_is_EnumType_and_widge_is_MultipleValuatedFormField() throws Exception {
+    public void should_isAnEnumOnAMultipleValuatedFormField_return_true_if_data_is_EnumType_and_widge_is_MultipleValuatedFormField()
+            throws Exception {
         final Data data = ProcessFactory.eINSTANCE.createData();
         final DataType value = ProcessFactory.eINSTANCE.createEnumType();
         data.setDataType(value);
@@ -503,7 +512,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_createWidgetExpression_return_expression_with_name_start_with_prefix_and_type_is_FORM_FIELD_TYPE() throws Exception {
+    public void should_createWidgetExpression_return_expression_with_name_start_with_prefix_and_type_is_FORM_FIELD_TYPE()
+            throws Exception {
         final TextFormField text = FormFactory.eINSTANCE.createTextFormField();
         text.setName("myTextForm");
         final Expression resExpr = commandUnderTest.createWidgetExpression(text);
@@ -512,7 +522,8 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_createDataOutputOperation_returns_Operation_with_assignement_with_ASSIGNMENT_OPERATOR_type() throws Exception {
+    public void should_createDataOutputOperation_returns_Operation_with_assignement_with_ASSIGNMENT_OPERATOR_type()
+            throws Exception {
         final TextFormField text = FormFactory.eINSTANCE.createTextFormField();
         text.setName("myTextForm");
         final Data data = ProcessFactory.eINSTANCE.createData();
@@ -521,8 +532,8 @@ public class CreateFormCommandTest {
         final Operation ope = commandUnderTest.createDataOutputOperation(text, data);
         assertThat(ope.getOperator()).isNotNull();
         assertThat(ope.getOperator().getType()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
-        assertThat(ope.getLeftOperand().getType().equals(ExpressionConstants.VARIABLE_TYPE));
-        assertThat(ope.getRightOperand().getType().equals(ExpressionConstants.FORM_FIELD_TYPE));
+        assertThat(ope.getLeftOperand().getType()).isEqualTo(ExpressionConstants.VARIABLE_TYPE);
+        assertThat(ope.getRightOperand().getType()).isEqualTo(ExpressionConstants.FORM_FIELD_TYPE);
     }
 
     @Test

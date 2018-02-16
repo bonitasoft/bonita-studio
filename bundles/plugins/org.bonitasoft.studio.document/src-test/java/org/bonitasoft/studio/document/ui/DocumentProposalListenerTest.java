@@ -75,7 +75,7 @@ public class DocumentProposalListenerTest extends DocumentProposalListener {
     @Test
     public void test_HandleEvent_Returns_DocumentName() {
         when(mockedDocumentWizardDialog.open()).thenReturn(Dialog.OK);
-        when(mockedDocumentWizard.getDocument()).thenReturn(documentToReturn);
+        when(mockedDocumentWizard.getDocumentWorkingCopy()).thenReturn(documentToReturn);
 
         final String result = documentProposalListener.handleEvent(context, null);
         assertThat(result).isEqualTo(documentToReturn.getName());
@@ -86,7 +86,7 @@ public class DocumentProposalListenerTest extends DocumentProposalListener {
     public void test_HandleEvent_Returns_Null() {
 
         when(mockedDocumentWizardDialog.open()).thenReturn(Dialog.OK);
-        when(mockedDocumentWizard.getDocument()).thenReturn(null);
+        when(mockedDocumentWizard.getDocumentWorkingCopy()).thenReturn(null);
         String result = documentProposalListener.handleEvent(context, null);
         assertThat(result).isNull();
 

@@ -95,13 +95,15 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
 
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore newFildeStore = null;
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             newFildeStore = copyDiagram();
         }
         if (newFildeStore == null) {
-            newFildeStore = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+            newFildeStore = diagramStore
+                    .createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         }
         final MainProcess newDiagram = newFildeStore.getContent();
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
@@ -120,7 +122,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                     if (element.getName().equals(fromPoolName)
                             && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
                         if (!pnv.getNewName().equals(fromPoolName) || !pnv.getNewVersion().equals(fromPoolVersion)) {
-                            changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(), pnv.getNewVersion());
+                            changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(),
+                                    pnv.getNewVersion());
                             poolRenamed = true;
                             break;
                         }
@@ -135,26 +138,30 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
     }
 
     private DiagramFileStore copyDiagram() {
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
 
         final Copier copier = new Copier(true, false);
         final Collection<EObject> copiedElements = copier.copyAll(diagram.eResource().getContents());
         copier.copyReferences();//don't forget this line otherwise we loose link between diagrams and model
-        final DiagramFileStore store = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        final DiagramFileStore store = diagramStore
+                .createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         store.save(copiedElements);
 
         final MainProcess newDiagram = store.getContent();
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
         changeProcessNameAndVersion(newDiagram, editingDomain, diagramName, diagramVersion);
         editingDomain.getCommandStack().execute(
-                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider
-                        .getConfigurationIdProvider().getConfigurationId(newDiagram)));
+                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID,
+                        ConfigurationIdProvider
+                                .getConfigurationIdProvider().getConfigurationId(newDiagram)));
         try {
             OperationHistoryFactory.getOperationHistory().execute(
                     new AbstractTransactionalCommand(editingDomain, "Duplicate", Collections.EMPTY_LIST) {
 
                         @Override
-                        protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1) throws ExecutionException {
+                        protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1)
+                                throws ExecutionException {
                             try {
                                 changePathAndCopyResources(diagram, newDiagram, editingDomain, copier);
                             } catch (final IOException e) {
@@ -185,7 +192,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 ProcessConfigurationRepositoryStore.class);
         final List<Pool> pools = ModelHelper.getAllItemsOfType(sourceDiagram, ProcessPackage.Literals.POOL);
         for (final Pool p : pools) {
-            final ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+            final ProcessConfigurationFileStore file = confStore
+                    .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
             if (file != null) {
                 final Copier copier = new Copier(true, false);
                 final Collection<EObject> copiedElements = copier.copyAll(file.getContent().eResource().getContents());
@@ -193,8 +201,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 if (!copiedElements.isEmpty()) {
                     final int index = sourceDiagram.getElements().indexOf(p);
                     final Pool newPool = (Pool) newDiagram.getElements().get(index);
-                    final ProcessConfigurationFileStore newFile = confStore.createRepositoryFileStore(ModelHelper.getEObjectID(newPool) + "."
-                            + ProcessConfigurationRepositoryStore.CONF_EXT);
+                    final ProcessConfigurationFileStore newFile = confStore
+                            .createRepositoryFileStore(ModelHelper.getEObjectID(newPool) + "."
+                                    + ProcessConfigurationRepositoryStore.CONF_EXT);
                     newFile.save(copiedElements.iterator().next());
                 }
             }
@@ -232,7 +241,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             for (final ResourceFolder rf : oldProc.getResourceFolders()) {
                 final File resourceFolder = WebTemplatesUtil.getFile(rf.getPath());
                 if (resourceFolder != null) {
-                    WebTemplatesUtil.putResourcesInProcessTemplate(resourceFolder.getAbsolutePath(), null, createEditingDomain, newProc);
+                    WebTemplatesUtil.putResourcesInProcessTemplate(resourceFolder.getAbsolutePath(), null,
+                            createEditingDomain, newProc);
                 }
             }
             /* Duplicate Resources Files */
@@ -240,7 +250,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             for (final ResourceFile rf : oldProc.getResourceFiles()) {
                 final File resourceFile = WebTemplatesUtil.getFile(rf.getPath());
                 if (resourceFile != null) {
-                    WebTemplatesUtil.putResourcesInProcessTemplate(resourceFile.getAbsolutePath(), null, createEditingDomain, newProc);
+                    WebTemplatesUtil.putResourcesInProcessTemplate(resourceFile.getAbsolutePath(), null, createEditingDomain,
+                            newProc);
                 }
             }
 
@@ -253,7 +264,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                     if (confirmationFile != null) {
                         final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
                                 resourceStore, newProcId);
-                        final String confTemplateRelative = artifact.setConfirmationTemplate(confirmationFile.getAbsolutePath(), pageFlow);
+                        final String confTemplateRelative = artifact
+                                .setConfirmationTemplate(confirmationFile.getAbsolutePath(), pageFlow);
                         confirmationTemplate.setPath(confTemplateRelative);
                     } else {
                         pageFlow.setConfirmationTemplate(null);
@@ -268,7 +280,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 if (globalConsultationFile != null) {
                     final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
                             resourceStore, newProcId);
-                    final String globalConsultationTemplateRelative = artifact.setGlobalConsultationPage(globalConsultationFile.getAbsolutePath());
+                    final String globalConsultationTemplateRelative = artifact
+                            .setGlobalConsultationPage(globalConsultationFile.getAbsolutePath());
                     globalConsultationTemplate.setPath(globalConsultationTemplateRelative);
                 } else {
                     newProc.setConsultationTemplate(null);
@@ -310,7 +323,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 if (processTemplateFile != null) {
                     final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
                             resourceStore, newProcId);
-                    final String processTemplateRelative = artifact.setProcessTemplate(processTemplateFile.getAbsolutePath());
+                    final String processTemplateRelative = artifact
+                            .setProcessTemplate(processTemplateFile.getAbsolutePath());
                     processTemplate.setPath(processTemplateRelative);
                 } else {
                     newProc.setProcessTemplate(null);
@@ -341,7 +355,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                             if (imgPath != null) {
                                 final File imageFile = WebTemplatesUtil.getFile(imgPath);
                                 if (imageFile != null && imageFile.exists()) {
-                                    WebTemplatesUtil.putResourcesInProcessTemplate(imageFile.getAbsolutePath(), null, createEditingDomain, newProc);
+                                    WebTemplatesUtil.putResourcesInProcessTemplate(imageFile.getAbsolutePath(), null,
+                                            createEditingDomain, newProc);
                                 }
                             }
                         }
@@ -353,7 +368,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         }
     }
 
-    protected void updateFormCustomTemplate(final Copier copier, final ApplicationResourceRepositoryStore resourceStore, final AbstractProcess oldProc,
+    protected void updateFormCustomTemplate(final Copier copier, final ApplicationResourceRepositoryStore resourceStore,
+            final AbstractProcess oldProc,
             final AbstractProcess newProc)
             throws CoreException, IOException {
         final List<Form> allForms = ModelHelper.getAllItemsOfType(newProc, FormPackage.Literals.FORM);
@@ -376,7 +392,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 final IFile originalFile = resourceStore.getResource().getFile(path);
                 if (originalFile.exists()) {
                     final String newProcId = ModelHelper.getEObjectID(newProc);
-                    final String newPath = path.replace(ModelHelper.getEObjectID(oldProc), newProcId).replace(originalFormId, newFormId);
+                    final String newPath = path.replace(ModelHelper.getEObjectID(oldProc), newProcId).replace(originalFormId,
+                            newFormId);
                     final IFile newFile = resourceStore.getResource().getFile(newPath);
                     originalFile.copy(newFile.getFullPath(), true, Repository.NULL_PROGRESS_MONITOR);
                     htmlTemplate.setPath(newPath);
@@ -388,15 +405,14 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
     private void replaceIdInFile(final IFile file, final Copier copier) throws IOException, CoreException {
         final File fileToModify = file.getLocation().toFile();
-        final BufferedReader reader = new BufferedReader(new FileReader(fileToModify));
         StringBuilder sb = new StringBuilder();
         String line = ""; //$NON-NLS-1$
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-            sb.append("\r\n");//$NON-NLS-1$
+        try (final BufferedReader reader = new BufferedReader(new FileReader(fileToModify));) {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
         }
-        reader.close();
-
         for (final java.util.Map.Entry<EObject, EObject> entry : copier.entrySet()) {
             final String originalId = ModelHelper.getEObjectID(entry.getKey());
             final String newId = ModelHelper.getEObjectID(entry.getValue());
@@ -406,9 +422,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             }
         }
 
-        final FileWriter writer = new FileWriter(fileToModify.getAbsolutePath());
-        writer.write(sb.toString());
-        writer.close();
+        try (final FileWriter writer = new FileWriter(fileToModify.getAbsolutePath());) {
+            writer.write(sb.toString());
+        }
         file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
     }
 
@@ -421,11 +437,14 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         return artifact;
     }
 
-    private void changeProcessNameAndVersion(final AbstractProcess process, final TransactionalEditingDomain editingDomain, final String newProcessLabel,
+    private void changeProcessNameAndVersion(final AbstractProcess process, final TransactionalEditingDomain editingDomain,
+            final String newProcessLabel,
             final String newProcessVersion) {
-        editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
         editingDomain.getCommandStack()
-                .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
+                .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
+        editingDomain.getCommandStack()
+                .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION,
+                        newProcessVersion));
 
         //        try {
         //            process.eResource().save(Collections.EMPTY_MAP);

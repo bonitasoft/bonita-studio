@@ -163,8 +163,8 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
         final SelectionAdapter listener = page.createSelectAllListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
         assertThat(checkedElements.size()).isEqualTo(4);
-        assertThat(
-                checkedElements.containsAll(Lists.newArrayList(rootMapping1, rootMapping2, childMapping1, childMapping2)));
+        assertThat(checkedElements)
+                .containsAll(Lists.newArrayList(rootMapping1, rootMapping2, childMapping1, childMapping2));
     }
 
     @Test

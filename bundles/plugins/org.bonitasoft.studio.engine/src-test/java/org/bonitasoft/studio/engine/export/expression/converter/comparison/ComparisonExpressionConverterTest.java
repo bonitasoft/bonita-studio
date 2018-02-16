@@ -41,7 +41,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -60,9 +59,6 @@ public class ComparisonExpressionConverterTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-
     private Data variable;
     private Parameter parameter;
     private Expression binaryExpression;
@@ -77,7 +73,8 @@ public class ComparisonExpressionConverterTest {
     public void setUp() throws Exception {
         comparisonExpressionConverter = new ComparisonExpressionConverter(loader);
         variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.aDoubleDataType()).build();
-        validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.aBooleanDataType()).build();
+        validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.aBooleanDataType())
+                .build();
         parameter = ParameterBuilder.aParameter().withName("commission").withType(Double.class.getName()).build();
         binaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)
@@ -103,8 +100,9 @@ public class ComparisonExpressionConverterTest {
     public void should_appliesTo_Condition_expression_type() throws Exception {
         assertThat(comparisonExpressionConverter.appliesTo(binaryExpression)).isTrue();
         assertThat(comparisonExpressionConverter.appliesTo(null)).isFalse();
-        assertThat(comparisonExpressionConverter.appliesTo(ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build()))
-                .isFalse();
+        assertThat(comparisonExpressionConverter
+                .appliesTo(ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build()))
+                        .isFalse();
     }
 
     @Test
@@ -118,8 +116,10 @@ public class ComparisonExpressionConverterTest {
     }
 
     @Test
-    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail() throws Exception {
-        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenThrow(new ComparisonExpressionLoadException(""));
+    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail()
+            throws Exception {
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null))
+                .thenThrow(new ComparisonExpressionLoadException(""));
 
         thrown.expect(InvalidExpressionException.class);
 
@@ -140,7 +140,8 @@ public class ComparisonExpressionConverterTest {
 
         when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(binaryOperation);
 
-        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(binaryExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter
+                .convert(binaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONDITION.name());
         assertThat(engineExpression.getContent()).isEqualTo("<=");
@@ -166,7 +167,8 @@ public class ComparisonExpressionConverterTest {
 
         when(loader.loadConditionExpression(notUnaryExpression.getContent(), null)).thenReturn(operation_Compare);
 
-        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(notUnaryExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter
+                .convert(notUnaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONDITION.name());
         assertThat(engineExpression.getContent()).isEqualTo("!");
@@ -187,7 +189,8 @@ public class ComparisonExpressionConverterTest {
         operation_Compare.setOp(unaryOperation);
         when(loader.loadConditionExpression(unaryExpression.getContent(), null)).thenReturn(operation_Compare);
 
-        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(unaryExpression);
+        final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter
+                .convert(unaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
         assertThat(engineExpression.getContent()).isEqualTo("valid");

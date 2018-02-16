@@ -132,8 +132,10 @@ public class ConnectorDescriptorToConnectorDefinition {
         final String connectorVersion = BASE_VERSION;
         monitor.subTask(Messages.bind(Messages.migratingCustomConnector, connectorId));
         final List<org.ow2.bonita.connector.core.desc.Category> v5Categories = v5Descriptor.getCategories();
-        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final ConnectorDefFileStore connectorDefStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefFileStore connectorDefStore = store
+                .getChild(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
         if (connectorDefStore != null) {
             if (FileActionDialog.overwriteQuestion(connectorDefStore.getName())) {
                 initConnectorDefinition(connectorId, connectorVersion, v5Categories,
@@ -163,12 +165,14 @@ public class ConnectorDescriptorToConnectorDefinition {
         addOutputs(connectorDefinition);
         addPages(connectorDefinition);
 
-        final ConnectorDefFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
+        final ConnectorDefFileStore file = store
+                .createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
         file.save(connectorDefinition);
     }
 
     public void createConnectorImplementation() throws Exception {
-        final ConnectorImplementation connectorImplementation = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation();
+        final ConnectorImplementation connectorImplementation = ConnectorImplementationFactory.eINSTANCE
+                .createConnectorImplementation();
         final String implementationId = v5Descriptor.getId() + "-impl";
         connectorImplementation.setImplementationId(implementationId);
         connectorImplementation.setImplementationVersion(BASE_VERSION);
@@ -179,16 +183,20 @@ public class ConnectorDescriptorToConnectorDefinition {
         connectorImplementation.setImplementationClassname(getNewImplementationClassName());
         connectorImplementation.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies());
 
-        final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final ConnectorSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
-        final ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(connectorImplementation.getDefinitionId(),
+        final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorSourceRepositoryStore sourceStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+        final ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(
+                connectorImplementation.getDefinitionId(),
                 connectorImplementation.getDefinitionVersion());
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation, definition, AbstractConnector.class.getName(),
+                    ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation, definition,
+                            AbstractConnector.class.getName(),
                             sourceStore, Repository.NULL_PROGRESS_MONITOR);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
@@ -210,9 +218,11 @@ public class ConnectorDescriptorToConnectorDefinition {
                     sourceStore, definition);
         }
 
-        final ConnectorImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        final ConnectorImplRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorImplRepositoryStore.class);
         final ConnectorImplFileStore file = store
-                .createRepositoryFileStore(NamingUtils.toConnectorImplementationFilename(implementationId, BASE_VERSION, true));
+                .createRepositoryFileStore(
+                        NamingUtils.toConnectorImplementationFilename(implementationId, BASE_VERSION, true));
         file.save(connectorImplementation);
     }
 
@@ -226,7 +236,8 @@ public class ConnectorDescriptorToConnectorDefinition {
             @Override
             public void run() {
                 try {
-                    ClassGenerator.generateConnectorImplementationClass(connectorImplementation, definition, sourceStore, Repository.NULL_PROGRESS_MONITOR);
+                    ClassGenerator.generateConnectorImplementationClass(connectorImplementation, definition, sourceStore,
+                            Repository.NULL_PROGRESS_MONITOR);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                     throw new RuntimeException(e);
@@ -244,7 +255,8 @@ public class ConnectorDescriptorToConnectorDefinition {
         return name + "Impl";
     }
 
-    protected Map<String, String> mergeSourceFile(final String implementationClassname, final ConnectorSourceRepositoryStore sourceStore) throws ZipException,
+    protected Map<String, String> mergeSourceFile(final String implementationClassname,
+            final ConnectorSourceRepositoryStore sourceStore) throws ZipException,
             IOException, CoreException {
         final ZipFile zipfile = new ZipFile(tmpConnectorJarFile);
         final Enumeration<?> enumEntries = zipfile.entries();
@@ -285,7 +297,8 @@ public class ConnectorDescriptorToConnectorDefinition {
                             final IMethod executeMethod = implType.getMethod("executeBusinessLogic", new String[0]);
                             final ISourceRange range = executeMethod.getSourceRange();
                             final String toAdd = MIGRATION_COMMENT
-                                    + method.getSource().substring(method.getSource().indexOf("{") + 1, method.getSource().length() - 1);
+                                    + method.getSource().substring(method.getSource().indexOf("{") + 1,
+                                            method.getSource().length() - 1);
                             doc.set(implType.getCompilationUnit().getSource());
                             try {
                                 doc.replace(range.getOffset() + range.getLength() - 1, 0, toAdd);
@@ -299,7 +312,8 @@ public class ConnectorDescriptorToConnectorDefinition {
                 if (!doc.get().isEmpty()) {
                     BufferedWriter out = null;
                     try {
-                        out = new BufferedWriter(new FileWriter(implType.getCompilationUnit().getCorrespondingResource().getLocation().toFile()));
+                        out = new BufferedWriter(new FileWriter(
+                                implType.getCompilationUnit().getCorrespondingResource().getLocation().toFile()));
                         out.write(doc.get());
                         out.flush();
                     } finally {
@@ -392,7 +406,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected org.bonitasoft.studio.connector.model.definition.Component createGroupWidget(
             final Group component) {
-        final org.bonitasoft.studio.connector.model.definition.Group group = ConnectorDefinitionFactory.eINSTANCE.createGroup();
+        final org.bonitasoft.studio.connector.model.definition.Group group = ConnectorDefinitionFactory.eINSTANCE
+                .createGroup();
         group.setId(component.getLabelId());
         group.setOptional(component.isOptional());
         return group;
@@ -408,7 +423,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected org.bonitasoft.studio.connector.model.definition.Component createPasswordWidget(
             final Password component) {
-        final org.bonitasoft.studio.connector.model.definition.Password text = ConnectorDefinitionFactory.eINSTANCE.createPassword();
+        final org.bonitasoft.studio.connector.model.definition.Password text = ConnectorDefinitionFactory.eINSTANCE
+                .createPassword();
         text.setId(component.getLabelId());
         text.setInputName(toInputName(component.getSetter()));
         return text;
@@ -424,7 +440,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected org.bonitasoft.studio.connector.model.definition.Component createTableWidget(
             final Array component) {
-        final org.bonitasoft.studio.connector.model.definition.Array array = ConnectorDefinitionFactory.eINSTANCE.createArray();
+        final org.bonitasoft.studio.connector.model.definition.Array array = ConnectorDefinitionFactory.eINSTANCE
+                .createArray();
         array.setId(component.getLabelId());
         array.setInputName(toInputName(component.getSetter()));
         array.setCols(BigInteger.valueOf(component.getCols()));
@@ -439,7 +456,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected org.bonitasoft.studio.connector.model.definition.Component createSelectWidget(
             final Select component) {
-        final org.bonitasoft.studio.connector.model.definition.Select select = ConnectorDefinitionFactory.eINSTANCE.createSelect();
+        final org.bonitasoft.studio.connector.model.definition.Select select = ConnectorDefinitionFactory.eINSTANCE
+                .createSelect();
         select.setId(component.getLabelId());
         select.setInputName(toInputName(component.getSetter()));
         if (component.getTop() != null) {
@@ -457,7 +475,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected org.bonitasoft.studio.connector.model.definition.Component createCheckboxWidget(
             final Checkbox component) {
-        final org.bonitasoft.studio.connector.model.definition.Checkbox checkbox = ConnectorDefinitionFactory.eINSTANCE.createCheckbox();
+        final org.bonitasoft.studio.connector.model.definition.Checkbox checkbox = ConnectorDefinitionFactory.eINSTANCE
+                .createCheckbox();
         checkbox.setId(component.getLabelId());
         checkbox.setInputName(toInputName(component.getSetter()));
         return checkbox;
@@ -517,11 +536,14 @@ public class ConnectorDescriptorToConnectorDefinition {
                     connectorOutput.setType(((Class<?>) rawType).getName());
                     connectorDefinition.getOutput().add(connectorOutput);
                 } else {
-                    BonitaStudioLog.warning("Unknown connector output type " + outputType.toString() + " with Raw type:" + rawType.toString(),
+                    BonitaStudioLog.warning(
+                            "Unknown connector output type " + outputType.toString() + " with Raw type:"
+                                    + rawType.toString(),
                             BarImporterPlugin.PLUGIN_ID);
                 }
             } else {
-                BonitaStudioLog.warning("Unknown connector output type " + outputType.toString(), BarImporterPlugin.PLUGIN_ID);
+                BonitaStudioLog.warning("Unknown connector output type " + outputType.toString(),
+                        BarImporterPlugin.PLUGIN_ID);
             }
         }
     }
@@ -559,7 +581,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected List<Category> createCategories(
             final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) throws IOException {
-        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         final DefinitionResourceProvider resourceProvider = store.getResourceProvider();
         final Set<String> allCategories = resourceProvider.getProvidedCategoriesIds();
         allCategories.addAll(resourceProvider.getUserCategoriesIds());
@@ -591,7 +614,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     private Category createCategory(
             final org.ow2.bonita.connector.core.desc.Category c) throws IOException {
-        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         final Category category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
         category.setId(c.getName());
         if (c.getIconPath() != null && !c.getIconPath().isEmpty()) {
@@ -614,7 +638,8 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     public void importConnectorDefinitionResources() throws ZipException, IOException {
-        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         if (v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty()) {
             InputStream iconInputStream = v5Descriptor.getIcon();
             final String iconName = getIconName(v5Descriptor.getIconPath());
@@ -639,37 +664,40 @@ public class ConnectorDescriptorToConnectorDefinition {
             return Boolean.TRUE;
         } else {
             Display.getDefault().syncExec(
-                    new WarningMessageDialogRunnable(Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage, iconName)));
+                    new WarningMessageDialogRunnable(Messages.warningImageFormat,
+                            Messages.bind(Messages.warningImageFormatMessage, iconName)));
             return Boolean.FALSE;
         }
     }
 
     protected void importI18NFiles() throws ZipException, IOException {
-        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final ZipFile zipfile = new ZipFile(tmpConnectorJarFile);
-        final Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            final File currentFile = new File(zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".properties")) {
-                String name = currentFile.getName();
-                String locale = "";
-                if (name.indexOf("_") != -1) {
-                    locale = name.substring(name.lastIndexOf("_"), name.lastIndexOf("."));
-                    name = name.substring(0, name.lastIndexOf("_"));
-                }
-                if (name.endsWith(".properties")) {
-                    name = name.substring(0, name.lastIndexOf("."));
-                }
-                if (name.equals(v5Descriptor.getId())) {
-                    name = NamingUtils.toConnectorDefinitionFilename(v5Descriptor.getId(), BASE_VERSION, false) + locale + ".properties";
-                    final InputStream stream = transformPropertiesFile(name, zipfile.getInputStream(zipEntry));
-                    store.importInputStream(name, stream);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        try (final ZipFile zipfile = new ZipFile(tmpConnectorJarFile);) {
+            final Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                final File currentFile = new File(zipEntry.getName());
+                if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".properties")) {
+                    String name = currentFile.getName();
+                    String locale = "";
+                    if (name.indexOf("_") != -1) {
+                        locale = name.substring(name.lastIndexOf("_"), name.lastIndexOf("."));
+                        name = name.substring(0, name.lastIndexOf("_"));
+                    }
+                    if (name.endsWith(".properties")) {
+                        name = name.substring(0, name.lastIndexOf("."));
+                    }
+                    if (name.equals(v5Descriptor.getId())) {
+                        name = NamingUtils.toConnectorDefinitionFilename(v5Descriptor.getId(), BASE_VERSION, false) + locale
+                                + ".properties";
+                        final InputStream stream = transformPropertiesFile(name, zipfile.getInputStream(zipEntry));
+                        store.importInputStream(name, stream);
+                    }
                 }
             }
         }
-        zipfile.close();
     }
 
     private InputStream transformPropertiesFile(final String fileName, final InputStream inputStream) throws IOException {

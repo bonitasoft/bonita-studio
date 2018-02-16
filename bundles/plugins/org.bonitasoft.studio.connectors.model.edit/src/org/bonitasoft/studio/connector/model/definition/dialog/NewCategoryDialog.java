@@ -170,8 +170,7 @@ public class NewCategoryDialog extends Dialog {
                 dialog.setFilterPath(System.getProperty("user.home"));
                 String res = dialog.open();
                 if (res != null) {
-                    try {
-                        FileInputStream is = new FileInputStream(res);
+                    try (FileInputStream is = new FileInputStream(res);) {
                         iconFile = new File(res);
                         category.setIcon(iconFile.getName());
                         if (iconImage != null) {
@@ -180,7 +179,6 @@ public class NewCategoryDialog extends Dialog {
                         iconImage = new Image(Display.getDefault(), new ImageData(is).scaledTo(16, 16));
                         icon.setImage(iconImage);
                         icon.getParent().layout(true, true);
-                        is.close();
                     } catch (Exception ex) {
                         BonitaStudioLog.error(ex);
                     }

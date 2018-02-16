@@ -93,7 +93,8 @@ public class BonitaStudioApplicationTest {
     }
 
     @Test
-    public void should_start_add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready() throws Exception {
+    public void should_start_add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready()
+            throws Exception {
         doReturn("1.7").when(application).getJavaVersion();
 
         application.start(null);
@@ -112,13 +113,13 @@ public class BonitaStudioApplicationTest {
         };
 
         job.schedule();
-        Thread.sleep(500);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
         assertThat(job.getResult()).isNull();
 
         doReturn(true).when(application).isWorkbenchRunning();
         job.schedule();
-        Thread.sleep(500);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
         assertThat(job.getResult()).isEqualTo(Status.OK_STATUS);
 

@@ -136,10 +136,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
         if (files != null) {
             for (final File implFile : files) {
                 final IRepositoryStore implStore = getImplementationStore();
-                try {
-                    final FileInputStream fis = new FileInputStream(implFile);
+                try (final FileInputStream fis = new FileInputStream(implFile);) {
                     implStore.importInputStream(implFile.getName(), fis);
-                    fis.close();
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
@@ -149,7 +147,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                     final ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
                     if (impl.isHasSources()) {
                         final String implJarName = NamingUtils
-                                .toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
+                                .toConnectorImplementationFilename(impl.getImplementationId(),
+                                        impl.getImplementationVersion(), false)
                                 + ".jar";
                         importImplementationSources(tmpDir, implJarName);
                     }
@@ -178,10 +177,12 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                     } else {
                         final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName());
                         if (existingDef == null || !existingDef.isReadOnly()
-                                || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(), connectorDefinition.getVersion())) {
+                                || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(),
+                                        connectorDefinition.getVersion())) {
                             fileStore = defStore.importInputStream(defFile.getName(), fis);
                         } else {
-                            status = ValidationStatus.warning(Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
+                            status = ValidationStatus.warning(
+                                    Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
                         }
                     }
                 } catch (final Exception e) {
@@ -203,7 +204,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
     }
 
     protected ConnectorDefinition toConnectorDefinition(final File defFile) {
-        final Resource r = new ConnectorDefinitionResourceFactoryImpl().createResource(URI.createFileURI(defFile.getAbsolutePath()));
+        final Resource r = new ConnectorDefinitionResourceFactoryImpl()
+                .createResource(URI.createFileURI(defFile.getAbsolutePath()));
         try {
             r.load(Collections.emptyMap());
         } catch (final IOException e) {
@@ -219,7 +221,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
         return null;
     }
 
-    private boolean defintionHasIdAndVersion(IRepositoryFileStore definition, String id, String version) throws ReadFileStoreException {
+    private boolean defintionHasIdAndVersion(IRepositoryFileStore definition, String id, String version)
+            throws ReadFileStoreException {
         final ConnectorDefinition content = (ConnectorDefinition) definition.getContent();
         return Objects.equals(id, content.getId()) && Objects.equals(version, content.getVersion());
     }
@@ -287,7 +290,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
     }
 
     private String getClassName(final File root, final File sourceFile) {
-        return sourceFile.getAbsolutePath().substring(root.getAbsolutePath().length() + 1, sourceFile.getAbsolutePath().length());
+        return sourceFile.getAbsolutePath().substring(root.getAbsolutePath().length() + 1,
+                sourceFile.getAbsolutePath().length());
     }
 
     private void findSourceFiles(final File file, final List<File> files) {
@@ -354,6 +358,7 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     protected boolean isImplementationJar(final String jarName,
             final ConnectorImplementation impl) {
-        return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false) + ".jar").equals(jarName);
+        return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(),
+                false) + ".jar").equals(jarName);
     }
 }
