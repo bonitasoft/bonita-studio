@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.designer.core.WorkspaceApplication;
+import org.bonitasoft.studio.designer.core.resources.APIStatus;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,13 +44,16 @@ public class WorkspaceApplicationTest {
         final Router inboundRoot = (Router) workspaceApplication.createInboundRoot();
 
         assertThat(inboundRoot).isNotNull();
-        assertThat(inboundRoot.getRoutes()).hasSize(2);
+        assertThat(inboundRoot.getRoutes()).hasSize(3);
         final TemplateRoute route1 = (TemplateRoute) inboundRoot.getRoutes().get(0);
         assertThat(route1.getTemplate().getPattern()).isEqualTo("/workspace/{filePath}/{action}");
         assertThat(((Finder) route1.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
         final TemplateRoute route2 = (TemplateRoute) inboundRoot.getRoutes().get(1);
         assertThat(route2.getTemplate().getPattern()).isEqualTo("/workspace/{action}");
         assertThat(((Finder) route2.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
+        final TemplateRoute route3 = (TemplateRoute) inboundRoot.getRoutes().get(2);
+        assertThat(route3.getTemplate().getPattern()).isEqualTo("/workspace/status/");
+        assertThat(((Finder) route3.getNext()).getTargetClass()).isEqualTo(APIStatus.class);
     }
 
 }
