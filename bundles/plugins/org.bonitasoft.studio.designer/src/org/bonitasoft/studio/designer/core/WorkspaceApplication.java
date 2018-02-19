@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core;
 
+import org.bonitasoft.studio.designer.core.resources.APIStatus;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
@@ -31,6 +32,7 @@ public class WorkspaceApplication extends Application {
                 "/workspace/{filePath}/{action}",
                 WorkspaceServerResource.class);
         router.attach("/workspace/{action}", WorkspaceServerResource.class);
+        router.attach("/workspace/status/", APIStatus.class);
         return router;
     }
 
