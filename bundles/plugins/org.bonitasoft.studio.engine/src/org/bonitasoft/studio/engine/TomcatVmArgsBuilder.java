@@ -20,8 +20,6 @@ import java.io.IOException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
-import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
-import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.eclipse.core.runtime.Platform;
 
@@ -79,7 +77,6 @@ public class TomcatVmArgsBuilder {
             BonitaStudioLog.error(e);
         }
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
-        addUIDesignerOptions(args);
         final String res = args.toString();
         if (System.getProperty("log.tomcat.vm.args") != null) {
             BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
@@ -102,16 +99,6 @@ public class TomcatVmArgsBuilder {
     public void addWatchDogProperties(final StringBuilder args) {
         addSystemProperty(args, WATCHDOG_PORT_PROPERTY, String.valueOf(WatchdogManager.WATCHDOG_PORT));
         addSystemProperty(args, WATCHDOG_TIMER, System.getProperty(WATCHDOG_TIMER, "20000"));
-    }
-
-    public void addUIDesignerOptions(final StringBuilder args) {
-        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repositoryAccessor);
-        addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
-        addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
-        addSystemProperty(args,
-                workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
-        addSystemProperty(args, workspaceSystemProperties.activateSpringProfile("studio"));
     }
 
     protected void addMemoryOptions(final StringBuilder args) {

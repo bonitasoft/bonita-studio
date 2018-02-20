@@ -16,16 +16,16 @@ package org.bonitasoft.studio.designer.ui.handler;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
@@ -57,37 +57,18 @@ public class OpenUIDesignerHandler extends AbstractHandler {
         openUiDesignerInBrowser();
     }
 
-    protected boolean waitUntilTomcatIsReady(final URL url) {
+    protected boolean waitUntilTomcatIsReady(final PageDesignerURLFactory pageDesignerURLBuilder) {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
             service.busyCursorWhile(new IRunnableWithProgress() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.bind(Messages.waitingForTomcatServer, org.bonitasoft.studio.common.Messages.uiDesignerModuleName),
+                    monitor.beginTask(
+                            Messages.bind(Messages.waitingForUIDesigner,
+                                    org.bonitasoft.studio.common.Messages.uiDesignerModuleName),
                             IProgressMonitor.UNKNOWN);
-                    connectToURL(url, monitor);
-                }
-
-                private void connectToURL(final URL url, final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    try {
-                        if (monitor.isCanceled()) {
-                            throw new InterruptedException();
-                        }
-                        final HttpURLConnection connection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
-                        connection.setRequestMethod("HEAD");
-                        connection.setReadTimeout(200);
-                        final int responseCode = connection.getResponseCode();
-                        if (responseCode != HttpURLConnection.HTTP_OK) {
-                            connectToURL(url, monitor);
-                        }
-                    } catch (final IOException e) {
-                        try {
-                            Thread.sleep(500);
-                        } catch (final InterruptedException e1) {
-                        }
-                        connectToURL(url, monitor);
-                    }
+                    UIDesignerServerManager.getInstance().start(Repository.NULL_PROGRESS_MONITOR);
                 }
             });
         } catch (final InvocationTargetException e) {
@@ -101,9 +82,8 @@ public class OpenUIDesignerHandler extends AbstractHandler {
     protected void openUiDesignerInBrowser() throws ExecutionException {
         final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         try {
-            final URL openPageDesignerHomeURL = pageDesignerURLBuilder.openPageDesignerHome();
-            if (waitUntilTomcatIsReady(openPageDesignerHomeURL)) {
-                createOpenBrowserOperation(openPageDesignerHomeURL).execute();
+            if (waitUntilTomcatIsReady(pageDesignerURLBuilder)) {
+                createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();
             }
         } catch (final IOException e) {
             if (!FileActionDialog.getDisablePopup()) {

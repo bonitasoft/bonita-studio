@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
@@ -52,11 +53,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.sourcelookup.SourceLookupManager;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -395,9 +399,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         disableGroovyDSL();
         doInitWorkspace();
-        if (!PlatformUtil.isHeadless()) {
-            doStartEngine();
-        }
+
         executeContributions();
     }
 
@@ -412,8 +414,21 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void doInitWorkspace() {
-        new WorkspaceInitializationJob(repositoryAccessor)
-                .schedule();
+        WorkspaceInitializationJob workspaceInitializationJob = new WorkspaceInitializationJob(repositoryAccessor);
+        workspaceInitializationJob.addJobChangeListener(new JobChangeAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+             */
+            @Override
+            public void done(IJobChangeEvent event) {
+                if (event.getResult().isOK()) {
+                    UIDesignerServerManager.getInstance().start(new NullProgressMonitor());
+                }
+            }
+        });
+        workspaceInitializationJob.schedule();
     }
 
     private void executeContributions() {
@@ -552,6 +567,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
+        doStartEngine();
     }
 
     private void preLoad() {

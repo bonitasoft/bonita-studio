@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.designer.core;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
@@ -38,7 +37,8 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     private final IEclipsePreferences preferenceStore;
 
     @Inject
-    public PageDesignerURLFactory(@Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
+    public PageDesignerURLFactory(
+            @Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
         checkNotNull(preferenceStore);
         this.preferenceStore = preferenceStore;
     }
@@ -56,7 +56,8 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     public URL newPageFromContract(final FormScope scope, final String formName) throws MalformedURLException {
-        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/rest/pages/contract/" + scope.name().toLowerCase() + "/" + formName);
+        return new URL("http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME + "/rest/pages/contract/"
+                + scope.name().toLowerCase() + "/" + formName);
     }
 
     public URL exportPage(final String pageId) throws MalformedURLException {
@@ -64,9 +65,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String host() {
-        final String host = preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST);
-        checkNotNull(host);
-        return host;
+        return "localhost";
     }
 
     private String locale() {
@@ -76,12 +75,14 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String port() {
-        final int port = preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT);
-        checkArgument(port > 0);
-        return String.valueOf(port);
+        return String.valueOf(getUIDesignerServerManager().getPort());
     }
 
     private String baseURL() {
         return "http://" + host() + ":" + port() + "/" + WAR_CONTEXT_NAME;
+    }
+
+    protected UIDesignerServerManager getUIDesignerServerManager() {
+        return UIDesignerServerManager.getInstance();
     }
 }

@@ -16,10 +16,8 @@ package org.bonitasoft.studio.engine.preferences;
 
 import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -32,16 +30,16 @@ import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.bonitasoft.studio.repository.themes.UserXpFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
@@ -77,17 +75,20 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
 
         createTitleBar(Messages.BonitaPreferenceDialog_UserXP_Settings, Pics.getImage(PicsConstants.preferenceLogin), false);
 
-        port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel, getFieldEditorParent());
+        port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel,
+                getFieldEditorParent());
         port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
         addField(port);
-        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
+        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME,
+                Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
                 getAvailableThemes(), getFieldEditorParent());
         addField(defaultTheme);
 
     }
 
     private String[][] getAvailableThemes() {
-        final LookNFeelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(LookNFeelRepositoryStore.class);
         final List<UserXpFileStore> artifacts = store.getUserXPLookNFeels();
         final String[][] result = new String[artifacts.size()][];
         for (int i = 0; i < artifacts.size(); i++) {
@@ -105,7 +106,8 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
 
         if (newPort != -1) {
-            final String informationMessage = NLS.bind(Messages.updatePortWarningMessage, org.bonitasoft.studio.common.Messages.uiDesignerModuleName);
+            final String informationMessage = NLS.bind(Messages.updatePortWarningMessage,
+                    org.bonitasoft.studio.common.Messages.uiDesignerModuleName);
             if (!MessageDialog.openConfirm(getShell(), Messages.updatePortWarningTitle, informationMessage)) {
                 return false;
             }
@@ -120,26 +122,19 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
 
     private void updatePortConfiguration(final Integer newPort) {
         if (SocketUtil.isPortInUse(newPort)) {
-            MessageDialog.openWarning(getShell(), Messages.portAlreadyUseTitle, Messages.bind(Messages.portAlreadyUseMsg, newPort));
+            MessageDialog.openWarning(getShell(), Messages.portAlreadyUseTitle,
+                    Messages.bind(Messages.portAlreadyUseMsg, newPort));
             return;
         }
+        getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_PORT, newPort);
+        new Job(Messages.restartingWebServer) {
 
-        try {
-            getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_PORT, newPort);
-            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            service.run(true, false, new IRunnableWithProgress() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.updatingServerPort, IProgressMonitor.UNKNOWN);
-                    BOSWebServerManager.getInstance().resetServer(monitor);
-                }
-            });
-
-        } catch (final InvocationTargetException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                BOSWebServerManager.getInstance().resetServer(monitor);
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     @Override
