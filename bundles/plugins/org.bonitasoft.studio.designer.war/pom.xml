@@ -16,32 +16,33 @@
         <webapp.dir>${basedir}/webapp</webapp.dir>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-backend-webapp</artifactId>
-            <version>${ui.designer.version}</version>
-            <type>war</type>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <workDirectory>target/overlay-war-folder</workDirectory>
-                    <warName>designer</warName>
-                    <outputDirectory>${webapp.dir}</outputDirectory>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>Retrieve UI Designer Exec War</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>war</goal>
+                            <goal>copy</goal>
                         </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.web</groupId>
+                                    <artifactId>ui-designer-backend-webapp</artifactId>
+                                    <version>${ui.designer.version}</version>
+                                    <classifier>exec-war</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripClassifier>true</stripClassifier>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${webapp.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

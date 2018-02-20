@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -41,7 +41,7 @@ public class OpenUIDLogCommand extends AbstractHandler implements IHandler {
     @Override
     public Boolean execute(ExecutionEvent event) throws ExecutionException {
         final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        final Optional<File> logFile = BOSWebServerManager.getInstance().getUIDLogFile();
+        final Optional<File> logFile = UIDesignerServerManager.getInstance().getLogFile();
         if (logFile.isPresent() && logFile.get().exists()) {
             try {
                 IFileStore fileStore = EFS.getLocalFileSystem().getStore(logFile.get().toURI());

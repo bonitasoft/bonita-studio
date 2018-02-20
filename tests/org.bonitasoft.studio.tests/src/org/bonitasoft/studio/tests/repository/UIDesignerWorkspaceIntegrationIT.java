@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
@@ -32,7 +33,6 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
@@ -100,7 +100,7 @@ public class UIDesignerWorkspaceIntegrationIT {
     public void import_a_custom_page_trigger_a_refresh_on_the_workspace() throws Exception {
         waitForServer();
 
-        new ClientResource(String.format("http://localhost:%s/designer/import/page", tomcatPort()))
+        new ClientResource(String.format("http://localhost:%s/designer/import/page", uidPort()))
                 .post(formDataSetWithCustomPageZipFile());
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
@@ -119,9 +119,8 @@ public class UIDesignerWorkspaceIntegrationIT {
         return form;
     }
 
-    private int tomcatPort() {
-        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+    private int uidPort() {
+        return UIDesignerServerManager.getInstance().getPort();
     }
 
     private File customPageToImport() throws URISyntaxException, IOException {

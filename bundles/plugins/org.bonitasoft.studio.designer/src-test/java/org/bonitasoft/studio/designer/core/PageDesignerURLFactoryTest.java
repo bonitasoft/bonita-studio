@@ -16,6 +16,7 @@ package org.bonitasoft.studio.designer.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import java.net.URL;
 
@@ -36,6 +37,8 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     private PageDesignerURLFactory pageDesignerURLBuilder;
     @Mock
     private IEclipsePreferences preferenceStore;
+    @Mock
+    private UIDesignerServerManager uidesignerServerManager;
 
     /**
      * @throws java.lang.Exception
@@ -43,20 +46,24 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     @Before
     public void setUp() throws Exception {
         doReturn("localhost").when(preferenceStore).get(CONSOLE_HOST, DEFAULT_HOST);
-        doReturn(8080).when(preferenceStore).getInt(CONSOLE_PORT, DEFAULT_PORT);
         doReturn("en").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
-        pageDesignerURLBuilder = new PageDesignerURLFactory(preferenceStore);
+        pageDesignerURLBuilder = spy(new PageDesignerURLFactory(preferenceStore));
+        doReturn(8080).when(uidesignerServerManager).getPort();
+        doReturn(uidesignerServerManager).when(pageDesignerURLBuilder).getUIDesignerServerManager();
     }
 
     @Test
     public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
-        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/en/home"));
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome())
+                .isEqualTo(new URL("http://localhost:8080/designer/#/en/home"));
     }
 
     @Test
-    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp_withLanguageOfStudio() throws Exception {
+    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp_withLanguageOfStudio()
+            throws Exception {
         doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
-        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/designer/#/fr/home"));
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome())
+                .isEqualTo(new URL("http://localhost:8080/designer/#/fr/home"));
     }
 
     @Test
@@ -66,7 +73,8 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     }
 
     @Test
-    public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page_withLanguageOfStudio() throws Exception {
+    public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page_withLanguageOfStudio()
+            throws Exception {
         doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
         assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
                 new URL("http://localhost:8080/designer/#/fr/pages/page-id"));
@@ -85,7 +93,8 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     }
 
     @Test
-    public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract() throws Exception {
+    public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract()
+            throws Exception {
         assertThat(pageDesignerURLBuilder.newPageFromContract(FormScope.TASK, "myPageName")).isEqualTo(
                 new URL("http://localhost:8080/designer/rest/pages/contract/task/myPageName"));
     }

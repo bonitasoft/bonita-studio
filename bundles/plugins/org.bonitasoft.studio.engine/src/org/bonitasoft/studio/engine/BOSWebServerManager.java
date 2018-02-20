@@ -22,11 +22,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -38,8 +34,6 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
-import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
@@ -150,21 +144,11 @@ public class BOSWebServerManager {
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
                 addBonitaWar(tomcatFolderInWorkspace, monitor);
-                addPageBuilderWar(tomcatFolderInWorkspace, monitor);
             }
 
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
         }
-    }
-
-    protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
-        BonitaStudioLog.debug("Copying Designer war in tomcat/server/webapps...", EnginePlugin.PLUGIN_ID);
-        final URL url = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID).getResource("webapp");
-        final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "designer.war");
-        PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
-        BonitaStudioLog.debug("Designer war copied in tomcat/server/webapps.",
-                EnginePlugin.PLUGIN_ID);
     }
 
     protected void addBonitaWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
@@ -190,11 +174,6 @@ public class BOSWebServerManager {
                         EnginePlugin.PLUGIN_ID);
             }
             WatchdogManager.getInstance().startWatchdog();
-            try {
-                WorkspaceResourceServerManager.getInstance().start(org.eclipse.jdt.launching.SocketUtil.findFreePort());
-            } catch (final Exception e1) {
-                BonitaStudioLog.error(e1);
-            }
             if (tomcat != null) {
                 try {
                     tomcat.delete();
@@ -468,11 +447,6 @@ public class BOSWebServerManager {
                 BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
             }
             WatchdogManager.getInstance().stopWatchdog();
-            try {
-                WorkspaceResourceServerManager.getInstance().stop();
-            } catch (final Exception e1) {
-                BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
-            }
             tomcat.stop(true);
             try {
                 waitServerStopped(monitor);
@@ -529,31 +503,6 @@ public class BOSWebServerManager {
             }
         }
         return lastLogFile;
-    }
-
-    public Optional<File> getUIDLogFile() {
-        final File logDir = new File(tomcatInstanceLocation, "logs");
-        final List<File> list = Arrays.asList(logDir.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(final File file, final String fileName) {
-                return fileName.contains("ui-designer");
-            }
-        }));
-
-        return list.stream()
-                .sorted(new Comparator<File>() {
-
-                    @Override
-                    public int compare(File file1, File file2) {
-                        return file1.lastModified() > file2.lastModified()
-                                ? -1
-                                : file1.lastModified() < file2.lastModified()
-                                        ? 1
-                                        : 0;
-                    }
-                })
-                .findFirst();
     }
 
     private boolean dropBusinessDataDBOnExit() {
