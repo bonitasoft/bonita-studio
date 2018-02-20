@@ -58,7 +58,11 @@ Require-Bundle: org.eclipse.ui,
  com.fasterxml.jackson.dataformat.jackson-dataformat-xml;bundle-version="2.4.4",
  com.fasterxml.jackson.dataformat.jackson-dataformat-yaml;bundle-version="2.4.4",
  com.fasterxml.jackson.module.jackson-module-jaxb-annotations;bundle-version="2.4.4",
- stax2-api;bundle-version="3.1.4"
+ stax2-api;bundle-version="3.1.4",
+ org.eclipse.debug.core,
+ org.eclipse.core.externaltools,
+ org.eclipse.debug.ui,
+ org.eclipse.jdt.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -54,12 +55,14 @@ public class OpenUIDesignerHandlerTest {
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
         openPageDesignerHandler = spy(new OpenUIDesignerHandler());
-        when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST)).thenReturn("localhost");
-        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT)).thenReturn(8080);
+        when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST))
+                .thenReturn("localhost");
+        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT))
+                .thenReturn(8080);
         when(preferenceStore.get(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, "en")).thenReturn("en");
         doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
         doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
-        doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any(URL.class));
+        doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any(PageDesignerURLFactory.class));
     }
 
     /**
@@ -76,17 +79,4 @@ public class OpenUIDesignerHandlerTest {
         verify(openBrowserOperation).execute();
     }
 
-    @Test(expected = NullPointerException.class)
-    public void should_execute_throw_an_executionException_if_host_is_null() throws Exception {
-        when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST)).thenReturn(null);
-
-        openPageDesignerHandler.execute(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_execute_throw_an_executionException_if_port_is_zero_or_less() throws Exception {
-        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT)).thenReturn(0);
-
-        openPageDesignerHandler.execute(null);
-    }
 }
