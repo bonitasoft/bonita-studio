@@ -32,6 +32,7 @@ import java.util.Collections;
 import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.BoundaryEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.CatchMessageEventTriggerDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
@@ -42,7 +43,7 @@ import org.bonitasoft.engine.operation.Operation;
 import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
@@ -108,9 +109,11 @@ public class EngineFlowElementBuilderTest {
     private org.bonitasoft.engine.bpm.process.impl.CallActivityBuilder callActivityBuilder;
 
     @Mock
-    private IEngineDefinitionBuilder engineContractBuilder;
+    private IEngineDefinitionBuilder<FlowElementBuilder> engineContractBuilder;
+
     @Mock
-    private DiagramRepositoryStore diagramStore;
+    private IEngineDefinitionBuilderProvider builderProvider;
+
 
     /**
      * @throws java.lang.Exception
@@ -118,11 +121,12 @@ public class EngineFlowElementBuilderTest {
     @Before
     public void setUp() throws Exception {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
-        flowElementSwitch = spy(new EngineFlowElementBuilder(instance, Collections.<EObject> emptySet()));
-        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(EObject.class),
-                any(Contract.class));
+        flowElementSwitch = spy(
+                new EngineFlowElementBuilder(instance, builderProvider, new ModelSearch(Collections::emptyList),
+                Collections.<EObject> emptySet()));
+        doReturn(engineContractBuilder).when(builderProvider).getEngineDefinitionBuilder(any(EObject.class),
+                any(Contract.class), eq(FlowElementBuilder.class));
         doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
-        doReturn(diagramStore).when(flowElementSwitch).getDiagramRepositoryStore();
     }
 
     /**

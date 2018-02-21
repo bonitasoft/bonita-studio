@@ -32,7 +32,6 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.validation.IValidationContext;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,13 +62,6 @@ public class ConditionExpressionConstraintTest {
     public void setUp() throws Exception {
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
         when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test

@@ -18,14 +18,19 @@ package org.bonitasoft.studio.tests.conditions;
 
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Matchers.any;
 
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Equals;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
 import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionValidator;
+import org.bonitasoft.studio.condition.ui.expression.ProjectXtextResourceProvider;
 import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -48,7 +53,9 @@ public class XtextComparisonExpressionLoaderTest {
     @Ignore("can't make failing the test with the known bug... sometimes it seems to work")
     public void testLoadResourceWIthUTF8() throws ComparisonExpressionLoadException {
         final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = Mockito.spy(new XtextComparisonExpressionLoader(injector));
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = Mockito
+                .spy(new XtextComparisonExpressionLoader(injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                        new ModelSearch(Collections::emptyList), new ProjectXtextResourceProvider(injector)));
         Mockito.doReturn(Collections.singletonList("管理者")).when(xtextComparisonExpressionLoader).getAccessibleReferences(Mockito.any(EObject.class));
         final Resource resource = xtextComparisonExpressionLoader.loadResource("管理者 == \"test\"", null);
         final TreeIterator<EObject> allContents = resource.getAllContents();
@@ -71,8 +78,11 @@ public class XtextComparisonExpressionLoaderTest {
         final ComparisonExpressionValidator spy = Mockito.spy(comparisonExpressionValidator);
         Mockito.doReturn(new ResourceSetImpl()).when(spy).getContextResourceSet();
         final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = Mockito.spy(new XtextComparisonExpressionLoader(injector));
-        Mockito.doReturn(xtextComparisonExpressionLoader).when(spy).getXtextExpressionLoader(Mockito.any(Injector.class));
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = Mockito
+                .spy(new XtextComparisonExpressionLoader(injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                        new ModelSearch(Collections::emptyList), new ProjectXtextResourceProvider(injector)));
+        Mockito.doReturn(xtextComparisonExpressionLoader).when(spy).getXtextExpressionLoader(Mockito.any(Injector.class),
+                any(IModelSearch.class));
         Mockito.doReturn(Collections.singletonList("管理者")).when(xtextComparisonExpressionLoader).getAccessibleReferences(Mockito.any(EObject.class));
         spy.setInputExpression(createNewComparisonExpression(""));
 

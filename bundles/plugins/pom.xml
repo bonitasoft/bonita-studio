@@ -66,7 +66,6 @@
         <module>org.bonitasoft.studio.pics</module>
         <module>org.bonitasoft.studio.pics.bonitasoft</module>
         <module>org.bonitasoft.studio.preferences</module>
-        
         <module>org.bonitasoft.studio.properties</module>
         <module>org.bonitasoft.studio.properties.bos</module>
         <module>org.bonitasoft.studio.repository.themes</module>
@@ -86,7 +85,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -44,7 +44,7 @@ public class ProcResourceDescriptionManager extends
 	}
 	
 	protected IResourceDescription internalGetResourceDescription(Resource resource, IDefaultResourceDescriptionStrategy strategy) {
-		return new ProcResourceDescription(resource, (DefaultResourceDescriptionStrategy) strategy, getCache());
+        return new InEditoProcResourceDescription(resource, (DefaultResourceDescriptionStrategy) strategy, getCache());
 	}
 	
 	public void setStrategy(IDefaultResourceDescriptionStrategy strategy) {

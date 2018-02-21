@@ -33,10 +33,12 @@ import java.util.Collections;
 
 import org.bonitasoft.engine.bpm.process.impl.ActorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.BusinessDataDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ParameterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.Document;
@@ -56,14 +58,20 @@ public class EngineProcessBuilderTest {
 
     private EngineProcessBuilder engineProcessBuilder;
     @Mock
-    ProcessDefinitionBuilder processDefBuilder;
+    private ProcessDefinitionBuilder processDefBuilder;
     @Mock
-    BusinessDataDefinitionBuilder bDataBuilder;
+    private BusinessDataDefinitionBuilder bDataBuilder;
+    @Mock
+    private IEngineDefinitionBuilderProvider builderProvider;
+
 
     @Before
     public void setup() {
-        engineProcessBuilder = spy(new EngineProcessBuilder(processDefBuilder, Collections.<EObject> emptySet()));
+        engineProcessBuilder = spy(
+                new EngineProcessBuilder(processDefBuilder, builderProvider, new ModelSearch(Collections::emptyList),
+                        Collections.<EObject> emptySet()));
         doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(anyString(), anyString(), any(Expression.class));
+        
     }
 
     @Test
@@ -80,10 +88,13 @@ public class EngineProcessBuilderTest {
     }
 
     @Test
-    public void testAddSimpleDocumentInContext() {
+    public void testAddSimpleDocumentInContext() throws Exception {
         final Pool pool = PoolBuilder.aPool()
                 .havingDocuments(aDocument().withName("myDoc"))
                 .build();
+        final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
+        doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
+                any(Document.class), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -93,10 +104,13 @@ public class EngineProcessBuilderTest {
     }
 
     @Test
-    public void testAddSMultipleDocumentInContext() {
+    public void testAddSMultipleDocumentInContext() throws Exception {
         final Pool pool = PoolBuilder.aPool()
                 .havingDocuments(aDocument().withName("myDoc").multiple())
                 .build();
+        final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
+        doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
+                any(Document.class), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -106,11 +120,14 @@ public class EngineProcessBuilderTest {
     }
 
     @Test
-    public void testAddBusinessDataAndDocumentInContext() {
+    public void testAddBusinessDataAndDocumentInContext() throws Exception {
         final Pool pool = PoolBuilder.aPool()
                 .havingData(BusinessObjectDataBuilder.aBusinessData().withName("myBData").withClassname("my.classname"))
                 .havingDocuments(aDocument().withName("myDoc"))
                 .build();
+        final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
+        doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
+                any(Document.class), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -160,8 +177,8 @@ public class EngineProcessBuilderTest {
                 .havingDocuments(myDocument)
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
-        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool),
-                any(Document.class));
+        doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
+                any(Document.class), eq(ProcessDefinitionBuilder.class));
 
         engineProcessBuilder.casePool(pool);
 
@@ -175,8 +192,8 @@ public class EngineProcessBuilderTest {
                 .havingContract(myContract)
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
-        doReturn(engineDefinitionBuilder).when(engineProcessBuilder).getEngineDefinitionBuilder(eq(pool),
-                any(Contract.class));
+        doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
+                any(Contract.class), eq(FlowElementBuilder.class));
 
         engineProcessBuilder.casePool(pool);
 

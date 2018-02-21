@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,9 +25,11 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.i18n.Messages;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
@@ -167,7 +168,10 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
                 try {
                     final Injector injector = ConditionModelActivator.getInstance().getInjector(
                             ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-                    resource = (XtextResource) new XtextComparisonExpressionLoader(injector).loadResource("", context);
+                    resource = (XtextResource) new XtextComparisonExpressionLoader(
+                            injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                            new ModelSearch(Collections::emptyList), new ProjectXtextResourceProvider(injector))
+                                    .loadResource("", context);
                     resource.setValidationDisabled(false);
                     return resource;
                 } catch (final Exception e) {
@@ -392,12 +396,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
     @Override
     public void dispose() {
         if (resource != null) {
-            try {
-                resource.unload();
-                resource.delete(Collections.emptyMap());
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
+            resource.unload();
         }
     }
 

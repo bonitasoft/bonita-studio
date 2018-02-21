@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.core.bar;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,8 +28,8 @@ import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -52,12 +53,14 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
 
     private final CustomPageBarResourceFactory customPageBarResourceFactory;
     private final IEclipsePreferences preferenceStore;
+    private ModelSearch modelSearch;
 
     @Inject
     public FormMappingBarResourceProvider(final CustomPageBarResourceFactory customPageBarResourceFactory,
             @Preference(nodePath = "org.bonitasoft.studio.engine") final IEclipsePreferences preferenceStore) {
         this.customPageBarResourceFactory = customPageBarResourceFactory;
         this.preferenceStore = preferenceStore;
+        this.modelSearch = new ModelSearch(Collections::emptyList);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
 
     protected FormMappingModel newFormMappingModel(final BusinessArchiveBuilder builder, final AbstractProcess process) throws BarResourceCreationException,
             FormMappingException {
-        final List<FormMapping> allFormMappings = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FORM_MAPPING);
+        final List<FormMapping> allFormMappings = modelSearch.getAllItemsOfType(process, FormMapping.class);
         final FormMappingModel formMappingModel = new FormMappingModel();
         for (final FormMapping formMapping : allFormMappings) {
             addFormMapping(builder, formMappingModel, formMapping);
@@ -166,7 +169,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private boolean forceMapping() {
+    protected boolean forceMapping() {
         return preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true);
     }
 

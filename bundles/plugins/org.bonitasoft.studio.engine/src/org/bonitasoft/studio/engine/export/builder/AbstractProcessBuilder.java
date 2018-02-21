@@ -14,10 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
-import static com.google.common.collect.Iterables.find;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -31,10 +27,7 @@ import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -55,26 +48,22 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
-import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
  */
 public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
-    private static final String ENGINE_DEFINITION_BUILDER_EXTENSION_ID = "org.bonitasoft.studio.engine.definition.builder";
-
     protected final Set<EObject> eObjectNotExported;
 
-    private List<IEngineDefinitionBuilder<?>> engineDefinitionBuilders;
+    protected IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider;
+
+    protected IModelSearch modelSearch;
 
     public static final String DB_CONNECTOR_FOR_KPI_ID = "database-jdbc";
     public static final String DB_CONNECTOR_VERSION = "1.0.0";
@@ -86,43 +75,12 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
     private static final String SUFFIX_CONTEXT = "_ref";
 
-    public AbstractProcessBuilder(final Set<EObject> eObjectNotExported) {
+    public AbstractProcessBuilder(final Set<EObject> eObjectNotExported,
+            IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
+            IModelSearch modelSearch) {
         this.eObjectNotExported = eObjectNotExported;
-    }
-
-    protected List<IEngineDefinitionBuilder<?>> createEngineDefinitionBuilders() {
-        final List<IEngineDefinitionBuilder<?>> result = new ArrayList<IEngineDefinitionBuilder<?>>();
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                ENGINE_DEFINITION_BUILDER_EXTENSION_ID);
-        for (final IConfigurationElement cfgElement : elements) {
-            IEngineDefinitionBuilder<?> builder = null;
-            try {
-                builder = (IEngineDefinitionBuilder<?>) cfgElement.createExecutableExtension("class");
-            } catch (final CoreException e) {
-                BonitaStudioLog.error("Failed to initialize IEngineDefinitionBuilder: " + cfgElement, e, EnginePlugin.PLUGIN_ID);
-            }
-            if (builder != null) {
-                result.add(builder);
-            }
-        }
-        return result;
-    }
-
-    protected IEngineDefinitionBuilder<?> getEngineDefinitionBuilder(final EObject context, final EObject element) {
-        if (engineDefinitionBuilders == null) {
-            engineDefinitionBuilders = createEngineDefinitionBuilders();
-        }
-        return find(engineDefinitionBuilders, builderApplyingTo(context, element), null);
-    }
-
-    private Predicate<? super IEngineDefinitionBuilder<?>> builderApplyingTo(final EObject context, final EObject element) {
-        return new Predicate<IEngineDefinitionBuilder<?>>() {
-
-            @Override
-            public boolean apply(final IEngineDefinitionBuilder<?> builder) {
-                return builder.appliesTo(context, element);
-            }
-        };
+        this.engineDefinitionBuilderProvider = engineDefinitionBuilderProvider;
+        this.modelSearch = modelSearch;
     }
 
     protected void addActors(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
@@ -146,13 +104,14 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
             if (!eObjectNotExported.contains(connector)) {
                 final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
                 ConnectorConfiguration configuration = connector.getConfiguration();
-                if(configuration == null){
-                    throw new MissingConnectorConfigurationException(connector,element);
+                if (configuration == null) {
+                    throw new MissingConnectorConfigurationException(connector, element);
                 }
                 if (groovyConnectorConfigurationConverter.appliesTo(configuration)) {
                     configuration = groovyConnectorConfigurationConverter.convert(connector.getConfiguration());
                 }
-                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(),
+                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(),
+                        connector.getDefinitionId(),
                         connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
                 handleConnectorBehaviorOnFailure(connector, connectorBuilder);
                 handleConnectorInputs(configuration, connectorBuilder);
@@ -161,7 +120,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
         }
     }
 
-    private void handleConnectorBehaviorOnFailure(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+    private void handleConnectorBehaviorOnFailure(final Connector connector,
+            final ConnectorDefinitionBuilder connectorBuilder) {
         if (connector.isIgnoreErrors()) {
             connectorBuilder.ignoreError();
         } else if (connector.isThrowErrorEvent()) {
@@ -169,16 +129,12 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
         }
     }
 
-    private void handleConnectorInputs(final ConnectorConfiguration configuration, final ConnectorDefinitionBuilder connectorBuilder) {
+    private void handleConnectorInputs(final ConnectorConfiguration configuration,
+            final ConnectorDefinitionBuilder connectorBuilder) {
         for (final ConnectorParameter parameter : configuration.getParameters()) {
             final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
             if (inputExpression != null) {
                 connectorBuilder.addInput(parameter.getKey(), inputExpression);
-            } else {
-                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                    BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + configuration.getName(),
-                            EnginePlugin.PLUGIN_ID);
-                }
             }
         }
     }
@@ -198,7 +154,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
     protected void addKPIBinding(final FlowElementBuilder builder, final ConnectableElement element) {
         for (final AbstractKPIBinding kpiBinding : element.getKpis()) {
             if (kpiBinding instanceof DatabaseKPIBinding) {
-                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(kpiBinding.getName(), DB_CONNECTOR_FOR_KPI_ID, DB_CONNECTOR_VERSION,
+                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(kpiBinding.getName(),
+                        DB_CONNECTOR_FOR_KPI_ID, DB_CONNECTOR_VERSION,
                         ConnectorEvent.valueOf(kpiBinding.getEvent()));
                 if (kpiBinding.isIgnoreError()) {
                     connectorBuilder.ignoreError();
@@ -245,12 +202,15 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
         if (contractContainer != null) {
             final Contract contract = contractContainer.getContract();
             if (contract != null) {
-                final IEngineDefinitionBuilder contractBuilder = getEngineDefinitionBuilder(contractContainer, contract);
-                contractBuilder.setEngineBuilder(builder);
+
                 try {
+                    final IEngineDefinitionBuilder<FlowElementBuilder> contractBuilder = engineDefinitionBuilderProvider
+                            .getEngineDefinitionBuilder(contractContainer, contract, FlowElementBuilder.class);
+                    contractBuilder.setEngineBuilder(builder);
                     contractBuilder.build(contract);
-                } catch (final BuildProcessDefinitionException e) {
-                    throw new RuntimeException("Failed to export contract definition for " + ((Element) contractContainer).getName(), e);
+                } catch (final BuildProcessDefinitionException | EngineDefinitionBuilderNotFoundException e) {
+                    throw new RuntimeException(
+                            "Failed to export contract definition for " + ((Element) contractContainer).getName(), e);
                 }
             }
         }
@@ -259,21 +219,20 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
     protected void addDocuments(final ProcessDefinitionBuilder builder, final Pool pool) {
         if (pool != null) {
             for (final Document document : pool.getDocuments()) {
-                final IEngineDefinitionBuilder documentBuilder = getEngineDefinitionBuilder(pool, document);
-                if (documentBuilder != null) {
+                try {
+                    final IEngineDefinitionBuilder documentBuilder = engineDefinitionBuilderProvider
+                            .getEngineDefinitionBuilder(pool, document, ProcessDefinitionBuilder.class);
                     documentBuilder.setEngineBuilder(builder);
-                    try {
-                        documentBuilder.build(document);
-                    } catch (final BuildProcessDefinitionException e) {
-                        throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(), e);
-                    }
+                    documentBuilder.build(document);
+                } catch (final BuildProcessDefinitionException | EngineDefinitionBuilderNotFoundException e) {
+                    throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(), e);
                 }
             }
         }
     }
 
     protected void addContext(final Object contextBuilder, final Task task) {
-        final Pool pool = ModelHelper.getParentPool(task);
+        final Pool pool = modelSearch.getDirectParentOfType(task, Pool.class);
         addContext(contextBuilder, pool);
         addIteratorToContext(contextBuilder, task);
     }
@@ -291,7 +250,7 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
                 && task instanceof DataAware) {
             final String referenceName = iteratorExpression.getName() + SUFFIX_CONTEXT;
             final Data data = ExpressionHelper.dataFromIteratorExpression(task, iteratorExpression,
-                    ModelHelper.getMainProcess(task));
+                    modelSearch.getDirectParentOfType(task, MainProcess.class));
             if (data instanceof BusinessObjectData) {
                 final Expression expression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression(
                         (BusinessObjectData) data);
@@ -317,7 +276,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
         for (final Data data : pool.getData()) {
             if (data instanceof BusinessObjectData) {
                 final String referenceName = data.getName() + SUFFIX_CONTEXT;
-                final Expression referenceExpression = EngineExpressionUtil.createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
+                final Expression referenceExpression = EngineExpressionUtil
+                        .createBusinessObjectDataReferenceExpression((BusinessObjectData) data);
                 addContextEntry(contextBuilder, referenceName, referenceExpression);
             }
         }

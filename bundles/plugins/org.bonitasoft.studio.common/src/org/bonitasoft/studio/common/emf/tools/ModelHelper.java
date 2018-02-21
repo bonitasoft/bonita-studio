@@ -15,16 +15,9 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.find;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -474,26 +467,6 @@ public class ModelHelper {
         return null;
     }
 
-    public static DataType getDataTypeByClassName(final MainProcess dataTypeContainer, final String returnTypeClassname) {
-        checkArgument(dataTypeContainer != null);
-        checkArgument(returnTypeClassname != null);
-        if (returnTypeClassname.equals(Boolean.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
-        } else if (returnTypeClassname.equals(String.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))),
-                    null);
-        } else if (returnTypeClassname.equals(Double.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
-        } else if (returnTypeClassname.equals(Long.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(LongType.class), null);
-        } else if (returnTypeClassname.equals(Integer.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(IntegerType.class), null);
-        } else if (returnTypeClassname.equals(Date.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(DateType.class), null);
-        } else {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(JavaType.class), null);
-        }
-    }
 
     public static List<Data> getMessageSourceAccessibleData(final MessageFlow messageFlow) {
         final List<Data> datas = new ArrayList<Data>();

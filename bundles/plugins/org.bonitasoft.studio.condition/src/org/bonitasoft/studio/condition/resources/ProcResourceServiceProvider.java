@@ -35,6 +35,14 @@ public class ProcResourceServiceProvider extends GenericResourceServiceProvider 
 		resourceDescriptionManager.setContainerManager(new SimpleResourceDescriptionsBasedContainerManager());
 	}
 	
+    public ProcResourceServiceProvider(ProcResourceDescriptionManager manager) {
+        ProcResourceDescriptionStrategy startegy = new ProcResourceDescriptionStrategy();
+        resourceDescriptionManager = manager;
+        resourceDescriptionManager.setStrategy(startegy);
+        resourceDescriptionManager.setDescriptionUtils(new DescriptionUtils());
+        resourceDescriptionManager.setContainerManager(new SimpleResourceDescriptionsBasedContainerManager());
+    }
+
 	public IResourceDescription.Manager getResourceDescriptionManager() {
 		return resourceDescriptionManager;
 	}
