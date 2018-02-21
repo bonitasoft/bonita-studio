@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.FormScope;
@@ -77,7 +78,9 @@ public class CreateFormFromContractOperation implements IRunnableWithProgress {
 
     protected String doPost(final URL url, final org.bonitasoft.web.designer.model.contract.Contract contract) throws URISyntaxException,
             MalformedURLException, IOException {
-        return new ClientResource(url.toURI()).post(new JacksonRepresentation<org.bonitasoft.web.designer.model.contract.Contract>(contract)).getText();
+        ClientResource clientResource = new ClientResource(url.toURI());
+        clientResource.getLogger().setLevel(Level.OFF);
+        return clientResource.post(new JacksonRepresentation<org.bonitasoft.web.designer.model.contract.Contract>(contract)).getText();
     }
 
     public String getNewPageId() {

@@ -14,9 +14,14 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.util.Collections;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
+import org.bonitasoft.studio.condition.ui.expression.ProjectXtextResourceProvider;
 import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -26,6 +31,8 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
+
+import com.google.inject.Injector;
 
 /**
  * @author Romain Bioteau
@@ -56,8 +63,12 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
     }
 
     protected Operation_Compare getCompareOperation(final Expression conditionExpression) {
-        final XtextComparisonExpressionLoader comparisonExpressionConverter = new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance()
-                .getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL));
+        Injector injector = ConditionModelActivator.getInstance()
+                .getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        final XtextComparisonExpressionLoader comparisonExpressionConverter = new XtextComparisonExpressionLoader(
+                injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                new ModelSearch(Collections::emptyList),
+                new ProjectXtextResourceProvider(injector));
         try {
             return comparisonExpressionConverter.loadConditionExpression(conditionExpression.getContent(), conditionExpression);
         } catch (final ComparisonExpressionLoadException e) {

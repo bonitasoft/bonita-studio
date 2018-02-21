@@ -21,15 +21,15 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.engine.export.builder.AbstractProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineFlowElementBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineSequenceFlowBuilder;
+import org.bonitasoft.studio.engine.export.builder.IEngineDefinitionBuilderProvider;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.emf.ecore.EObject;
@@ -42,6 +42,14 @@ import org.eclipse.emf.ecore.EObject;
 public class DesignProcessDefinitionBuilder {
 
     private Set<EObject> eObjectNotExported = new HashSet<EObject>();
+    private IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider;
+    private IModelSearch modelSearch;
+
+    public DesignProcessDefinitionBuilder(IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
+            IModelSearch modelSearch) {
+        this.engineDefinitionBuilderProvider = engineDefinitionBuilderProvider;
+        this.modelSearch = modelSearch;
+    }
 
     public Set<EObject> geteObjectNotExported() {
         return eObjectNotExported;
@@ -49,6 +57,14 @@ public class DesignProcessDefinitionBuilder {
 
     public void seteObjectNotExported(final Set<EObject> eObjectNotExported) {
         this.eObjectNotExported = eObjectNotExported;
+    }
+
+    public IEngineDefinitionBuilderProvider getEngineDefinitionBuilderProvider() {
+        return engineDefinitionBuilderProvider;
+    }
+
+    public IModelSearch getModelSearch() {
+        return modelSearch;
     }
 
     public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
@@ -69,19 +85,19 @@ public class DesignProcessDefinitionBuilder {
     }
 
     protected EngineProcessBuilder newEngineProcessBuilder(final ProcessDefinitionBuilder processBuilder) {
-        return new EngineProcessBuilder(processBuilder, eObjectNotExported);
+        return new EngineProcessBuilder(processBuilder, engineDefinitionBuilderProvider, modelSearch, eObjectNotExported);
     }
 
     protected void processFlowElements(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
-        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
+        final List<FlowElement> flowElements = modelSearch.getAllItemsOfType(process, FlowElement.class);
         final AbstractProcessBuilder flowElementSwitch = newEngineFlowElementBuilder(processBuilder);
         for (final FlowElement flowElement : flowElements) {
-            if (!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)) {
+            if (!eObjectNotExported.contains(flowElement) && !modelSearch.isInEvenementialSubProcessPool(flowElement)) {
                 flowElementSwitch.doSwitch(flowElement);
             }
         }
-        final List<SubProcessEvent> elements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SUB_PROCESS_EVENT);
+        final List<SubProcessEvent> elements = modelSearch.getAllItemsOfType(process, SubProcessEvent.class);
         for (final SubProcessEvent flowElement : elements) {
             if (!eObjectNotExported.contains(flowElement)) {
                 flowElementSwitch.doSwitch(flowElement);
@@ -91,16 +107,17 @@ public class DesignProcessDefinitionBuilder {
 
     protected AbstractProcessBuilder newEngineFlowElementBuilder(
             final ProcessDefinitionBuilder processBuilder) {
-        return new EngineFlowElementBuilder(processBuilder, eObjectNotExported);
+        return new EngineFlowElementBuilder(processBuilder, engineDefinitionBuilderProvider, modelSearch,
+                eObjectNotExported);
     }
 
     protected void processSequenceFlows(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
-        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SOURCE_ELEMENT);
+        final List<SourceElement> sourceElements = modelSearch.getAllItemsOfType(process, SourceElement.class);
         final EngineSequenceFlowBuilder sequenceFlowSwitch = new EngineSequenceFlowBuilder(processBuilder);
         for (final SourceElement sourceElement : sourceElements) {
             for (final Connection connection : sourceElement.getOutgoing()) {
-                if (!ModelHelper.isInEvenementialSubProcessPool(connection.getSource())) {
+                if (!modelSearch.isInEvenementialSubProcessPool(connection.getSource())) {
                     sequenceFlowSwitch.doSwitch(connection);
                 }
             }

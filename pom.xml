@@ -31,6 +31,7 @@
         </sonar.exclusions>
         <sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <tycho.localArtifacts>ignore</tycho.localArtifacts>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>

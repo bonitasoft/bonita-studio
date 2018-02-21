@@ -24,9 +24,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescription;
@@ -52,7 +49,6 @@ public class ProcResourceDescription extends DefaultResourceDescription
 
     @Override
     protected List<IEObjectDescription> computeExportedObjects() {
-
         if (!getResource().isLoaded()) {
             try {
                 getResource().load(null);
@@ -77,22 +73,5 @@ public class ProcResourceDescription extends DefaultResourceDescription
         }
         return exportedEObjects;
     }
-
-    @Override
-    public Resource getResource() {
-        Resource resource = super.getResource();
-        if (resource != null && PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-            final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if (part != null) {
-                if (part instanceof DiagramEditor) {
-                    final Resource activeResource = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();
-                    if (activeResource != null && resource.getURI().equals(activeResource.getURI())) {
-                        resource = activeResource;
-                    }
-                }
-            }
-        }
-        return resource;
-    }
 }
+

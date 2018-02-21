@@ -16,7 +16,6 @@ package org.bonitasoft.studio.refactoring.core;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -26,7 +25,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -41,6 +39,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
@@ -200,7 +199,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     private void updateDataReferenceInVariableExpression(final CompoundCommand cc, final DataRefactorPair pairToRefactor,
             final Expression exp) {
         if (isReturnFixedOnExpressionWithUpdatedType(pairToRefactor, exp)) {
-            cc.append(ExpressionHelper.clearExpression(exp, getEditingDomain()));
+            cc.append(clearExpression(exp, getEditingDomain()));
             setAskConfirmation(true);
         } else {
             // update name and content
@@ -212,6 +211,32 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
             // update return type
             cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
                     DataUtil.getTechnicalTypeFor(newValue)));
+        }
+    }
+
+    private static CompoundCommand clearExpression(final Expression expr, final EditingDomain editingDomain) {
+        if (editingDomain != null) {
+            String returnType = expr.getReturnType();
+            if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
+                returnType = String.class.getName();
+            }
+            final CompoundCommand cc = new CompoundCommand("Clear Expression");
+            if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE,
+                        ExpressionConstants.CONSTANT_TYPE));
+            }
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+            cc.append(
+                    SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,
+                    expr.getConnectors()));
+            return cc;
+        } else {
+            ExpressionHelper.clearExpression(expr);
+            return null;
         }
     }
 

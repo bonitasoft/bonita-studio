@@ -51,8 +51,7 @@ import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -99,7 +98,6 @@ import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
@@ -121,8 +119,11 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     private final FlowElementBuilder builder;
 
-    public EngineFlowElementBuilder(final FlowElementBuilder processBuilder, final Set<EObject> eObjectNotExported) {
-        super(eObjectNotExported);
+    public EngineFlowElementBuilder(final FlowElementBuilder processBuilder,
+            IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
+            IModelSearch modelSearch,
+            final Set<EObject> eObjectNotExported) {
+        super(eObjectNotExported, engineDefinitionBuilderProvider, modelSearch);
         builder = processBuilder;
     }
 
@@ -130,16 +131,16 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true)
                 .getSubProcessBuilder();
-        final AbstractProcessBuilder subProcessSwitch = new EngineFlowElementBuilder(subProcessBuilder, eObjectNotExported);
-        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent,
-                ProcessPackage.Literals.FLOW_ELEMENT);
+        final AbstractProcessBuilder subProcessSwitch = new EngineFlowElementBuilder(subProcessBuilder,
+                engineDefinitionBuilderProvider, modelSearch, eObjectNotExported);
+        final List<FlowElement> flowElements = modelSearch.getAllItemsOfType(subProcessEvent, FlowElement.class);
         for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
                 subProcessSwitch.doSwitch(flowElement);
             }
         }
-        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent,
-                ProcessPackage.Literals.SOURCE_ELEMENT);
+        final List<SourceElement> sourceElements = modelSearch.getAllItemsOfType(subProcessEvent,
+                SourceElement.class);
         final EngineSequenceFlowBuilder sequenceFlowSwitch = new EngineSequenceFlowBuilder(subProcessBuilder);
         for (final SourceElement sourceElement : sourceElements) {
             for (final Connection connection : sourceElement.getOutgoing()) {
@@ -241,7 +242,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         if (message != null) {
             final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
-            if (ModelHelper.isInEvenementialSubProcessPool(object)) {
+            if (modelSearch.isInEvenementialSubProcessPool(object)) {
                 addMessageCorrelation(object, triggerBuilder);
             }
         }
@@ -463,7 +464,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         String subprocessTarget = mapping.getSubprocessTarget();
         builder.setName(subprocessTarget);
 
-        Optional<Data> targetData = findProcess(
+        Optional<Data> targetData = modelSearch.findProcess(
                 callActivity.getCalledActivityName() != null ? callActivity.getCalledActivityName().getContent() : null,
                 callActivity.getCalledActivityVersion() != null ? callActivity.getCalledActivityVersion().getContent()
                         : null)
@@ -486,12 +487,6 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         opBuilder.setLeftOperand(builder.done());
         opBuilder.setType(OperatorType.ASSIGNMENT);
         activityBuilder.addDataInputOperation(opBuilder.done());
-    }
-
-    protected Optional<AbstractProcess> findProcess(final String subprocessName, final String subprocessVersion) {
-        final DiagramRepositoryStore repositoryStore = getDiagramRepositoryStore();
-        return Optional
-                .ofNullable(ModelHelper.findProcess(subprocessName, subprocessVersion, repositoryStore.getAllProcesses()));
     }
 
     protected DiagramRepositoryStore getDiagramRepositoryStore() {
@@ -536,7 +531,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 actor = task.getActor().getName();
             }
         } else {
-            final Lane lane = ModelHelper.getParentLane(task);
+            final Lane lane = modelSearch.getDirectParentOfType(task, Lane.class);
             if (lane != null && lane.getActor() != null) {
                 actor = lane.getActor().getName();
             }
@@ -584,7 +579,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final StartEventDefinitionBuilder startTimerBuilder = builder.addStartEvent(startTimer.getName());
         final org.bonitasoft.engine.expression.Expression startConditionExpression = EngineExpressionUtil
                 .createExpression(startTimer.getCondition());
-        if (ModelHelper.isInEvenementialSubProcessPool(startTimer)) {
+        if (modelSearch.isInEvenementialSubProcessPool(startTimer)) {
             final TimerType timerType = getTimerType(startTimer);
             if (timerType != null) {
                 startTimerBuilder.addTimerEventTriggerDefinition(timerType, startConditionExpression);
@@ -633,12 +628,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                     return TimerType.DATE;
                 }
             } catch (final ClassNotFoundException e) {
-                BonitaStudioLog.error(e);
+                throw new IllegalArgumentException(
+                        String.format("Timer condition return type '%s' is not supported.", timerConditionReturnType), e);
             }
         }
-        BonitaStudioLog.error(
-                "Timer type can't be defined for timer " + timer.getName() + ". You might use a wrong return type. ",
-                "org.bonitasoft.studio.engine");
         return null;
     }
 
@@ -935,7 +928,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         if (collectionDataToMultiInstantiate instanceof BusinessObjectData) {
             taskBuilder.addBusinessData(iteratorExpression.getName(), iteratorExpression.getReturnType());
         } else {
-            final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
+            final FlowElement parentFlowElement = modelSearch.getDirectParentOfType(iteratorExpression, FlowElement.class);
             if (parentFlowElement instanceof DataAware
                     && !isDataAlreadyExists(iteratorExpression, (DataAware) parentFlowElement)) {
                 taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);

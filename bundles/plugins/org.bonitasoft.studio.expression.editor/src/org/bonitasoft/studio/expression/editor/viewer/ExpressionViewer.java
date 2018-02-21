@@ -89,6 +89,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -417,7 +418,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private void clearExpression(final Expression selectedExpression) {
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
-            final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
+            final CompoundCommand cc = clearExpression(selectedExpression, editingDomain);
             cc.append(SetCommand.create(editingDomain, selectedExpression,
                     ExpressionPackage.Literals.EXPRESSION__TYPE, defaultExpressionType()));
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
@@ -427,6 +428,32 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
             selectedExpression.setType(defaultExpressionType());
+        }
+    }
+
+    private static CompoundCommand clearExpression(final Expression expr, final EditingDomain editingDomain) {
+        if (editingDomain != null) {
+            String returnType = expr.getReturnType();
+            if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
+                returnType = String.class.getName();
+            }
+            final CompoundCommand cc = new CompoundCommand("Clear Expression");
+            if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
+                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE,
+                        ExpressionConstants.CONSTANT_TYPE));
+            }
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+            cc.append(
+                    SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,
+                    expr.getConnectors()));
+            return cc;
+        } else {
+            ExpressionHelper.clearExpression(expr);
+            return null;
         }
     }
 

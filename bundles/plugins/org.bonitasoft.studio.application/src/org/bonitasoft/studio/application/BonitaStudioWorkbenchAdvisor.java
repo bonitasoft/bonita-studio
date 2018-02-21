@@ -414,6 +414,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void doInitWorkspace() {
+        //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
+        DebugUIPlugin.getDefault().getProcessConsoleManager();
+        SourceLookupManager.getDefault();
         WorkspaceInitializationJob workspaceInitializationJob = new WorkspaceInitializationJob(repositoryAccessor);
         workspaceInitializationJob.addJobChangeListener(new JobChangeAdapter() {
 
