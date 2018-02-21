@@ -15,20 +15,10 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder.aBooleanDataType;
-import static org.bonitasoft.studio.model.process.builders.DateDataTypeBuilder.aDateDataType;
-import static org.bonitasoft.studio.model.process.builders.DoubleDataTypeBuilder.aDoubleDataType;
-import static org.bonitasoft.studio.model.process.builders.IntegerDataTypeBuilder.anIntegerDataType;
-import static org.bonitasoft.studio.model.process.builders.JavaDataTypeBuilder.aJavaDataType;
-import static org.bonitasoft.studio.model.process.builders.LongDataTypeBuilder.aLongDataType;
-import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
-import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -39,18 +29,11 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.IntegerType;
-import org.bonitasoft.studio.model.process.JavaType;
-import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -491,52 +474,4 @@ public class ModelHelperTest {
         assertFalse(ModelHelper.isSameElement(data, refData));
     }
 
-    @Test
-    public void should_get_StringType_for_String_classname() throws Exception {
-        final StringType stringDataType = aStringDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(stringDataType).build()
-                , String.class.getName())).isEqualTo(stringDataType);
-    }
-
-    @Test
-    public void should_get_BooleanType_for_Boolean_classname() throws Exception {
-        final BooleanType booleanDataType = aBooleanDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(booleanDataType).build()
-                , Boolean.class.getName())).isEqualTo(booleanDataType);
-    }
-
-    @Test
-    public void should_get_IntegerType_for_Integer_classname() throws Exception {
-        final IntegerType integerDataType = anIntegerDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(integerDataType).build()
-                , Integer.class.getName())).isEqualTo(integerDataType);
-    }
-
-    @Test
-    public void should_get_DoubleType_for_Double_classname() throws Exception {
-        final DoubleType doubleDataType = aDoubleDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(doubleDataType).build()
-                , Double.class.getName())).isEqualTo(doubleDataType);
-    }
-
-    @Test
-    public void should_get_LongType_for_Long_classname() throws Exception {
-        final LongType longDataType = aLongDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(longDataType).build()
-                , Long.class.getName())).isEqualTo(longDataType);
-    }
-
-    @Test
-    public void should_get_DateType_for_Date_classname() throws Exception {
-        final DateType dataDataType = aDateDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(dataDataType).build()
-                , Date.class.getName())).isEqualTo(dataDataType);
-    }
-
-    @Test
-    public void should_get_JavaType_for_Other_classname() throws Exception {
-        final JavaType javaDataType = aJavaDataType().build();
-        assertThat(ModelHelper.getDataTypeByClassName(aMainProcess().havingDatatypes(javaDataType).build()
-                , Object.class.getName())).isEqualTo(javaDataType);
-    }
 }

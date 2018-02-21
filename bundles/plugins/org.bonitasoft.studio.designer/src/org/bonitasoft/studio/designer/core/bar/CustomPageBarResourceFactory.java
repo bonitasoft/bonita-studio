@@ -18,6 +18,7 @@ import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 
 import javax.inject.Inject;
 
@@ -64,7 +65,9 @@ public class CustomPageBarResourceFactory {
     }
 
     protected InputStream get(final String exportURL) throws IOException {
-        final Representation representation = new ClientResource(exportURL).get();
+        ClientResource clientResource = new ClientResource(exportURL);
+        clientResource.getLogger().setLevel(Level.OFF);
+        final Representation representation = clientResource.get();
         return representation != null && representation.isAvailable() ? representation.getStream() : null;
     }
 }

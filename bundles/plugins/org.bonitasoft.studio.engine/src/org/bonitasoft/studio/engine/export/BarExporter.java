@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.gmf.tools.CopyToImageUtilEx;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -45,8 +46,10 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.export.builder.RCPEngineDefintionBuilderProvider;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
@@ -202,7 +205,9 @@ public class BarExporter {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
         }
-        return new DesignProcessDefinitionBuilder();
+        return new DesignProcessDefinitionBuilder(new RCPEngineDefintionBuilderProvider(),
+                new ModelSearch(() -> RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class)
+                        .getAllProcesses()));
     }
 
     /**

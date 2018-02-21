@@ -21,11 +21,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.engine.bpm.process.impl.ConnectorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.kpi.KpiFactory;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -46,10 +48,12 @@ public class AbstractProcessBuilderTest {
     @Mock
     private ConnectorDefinitionBuilder connectorBuilder;
 
+
     @Before
     public void setup() {
         doReturn(connectorBuilder).when(builder).addConnector(anyString(), anyString(), anyString(), any(ConnectorEvent.class));
-        abstractSwitch = spy(new AbstractProcessBuilder(new HashSet<EObject>()) {
+        abstractSwitch = spy(new AbstractProcessBuilder(new HashSet<EObject>(), new RCPEngineDefintionBuilderProvider(),
+                new ModelSearch(Collections::emptyList)) {
         });
     }
 

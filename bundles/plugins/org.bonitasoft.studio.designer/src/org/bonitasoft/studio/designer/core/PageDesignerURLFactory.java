@@ -34,13 +34,19 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
     private static final String WAR_CONTEXT_NAME = "designer";
 
-    private final IEclipsePreferences preferenceStore;
+    private IEclipsePreferences preferenceStore;
+
+    private int uidPort = -1;
 
     @Inject
     public PageDesignerURLFactory(
             @Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
         checkNotNull(preferenceStore);
         this.preferenceStore = preferenceStore;
+    }
+
+    public PageDesignerURLFactory(int uidPort) {
+        this.uidPort = uidPort;
     }
 
     public URL openPageDesignerHome() throws MalformedURLException {
@@ -75,7 +81,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String port() {
-        return String.valueOf(getUIDesignerServerManager().getPort());
+        return uidPort != -1 ? String.valueOf(uidPort) : String.valueOf(getUIDesignerServerManager().getPort());
     }
 
     private String baseURL() {

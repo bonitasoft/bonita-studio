@@ -14,10 +14,15 @@
  */
 package org.bonitasoft.studio.common.emf.tools;
 
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.find;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +33,6 @@ import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -36,27 +40,29 @@ import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
+import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
@@ -215,32 +221,6 @@ public class ExpressionHelper {
             ((Duplicable) widgetDependency).setDuplicate(((Duplicable) dependency).isDuplicate());
         }
         return widgetDependency;
-    }
-
-    public static CompoundCommand clearExpression(final Expression expr, final EditingDomain editingDomain) {
-        if (editingDomain != null) {
-            String returnType = expr.getReturnType();
-            if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
-                returnType = String.class.getName();
-            }
-            final CompoundCommand cc = new CompoundCommand("Clear Expression");
-            if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
-                cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__TYPE,
-                        ExpressionConstants.CONSTANT_TYPE));
-            }
-            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-            cc.append(
-                    SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
-            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                    expr.getReferencedElements()));
-            cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,
-                    expr.getConnectors()));
-            return cc;
-        } else {
-            clearExpression(expr);
-            return null;
-        }
     }
 
     public static void clearExpression(final Expression expr) {
@@ -466,9 +446,32 @@ public class ExpressionHelper {
     private static DataType getDataTypeFrom(final String returnType, final MainProcess mainProcess,
             final MultiInstantiable parentFlowElement) {
         if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
-            return find(mainProcess.getDatatypes(), instanceOf(BusinessObjectType.class), null);
+            return mainProcess.getDatatypes().stream()
+                    .filter(BusinessObjectType.class::isInstance)
+                    .findFirst().orElse(null);
         } else {
-            return ModelHelper.getDataTypeByClassName(mainProcess, returnType);
+            return getDataTypeByClassName(mainProcess, returnType);
+        }
+    }
+
+    static DataType getDataTypeByClassName(final MainProcess dataTypeContainer, final String returnTypeClassname) {
+        checkArgument(dataTypeContainer != null);
+        checkArgument(returnTypeClassname != null);
+        if (returnTypeClassname.equals(Boolean.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
+        } else if (returnTypeClassname.equals(String.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))),
+                    null);
+        } else if (returnTypeClassname.equals(Double.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
+        } else if (returnTypeClassname.equals(Long.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(LongType.class), null);
+        } else if (returnTypeClassname.equals(Integer.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(IntegerType.class), null);
+        } else if (returnTypeClassname.equals(Date.class.getName())) {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(DateType.class), null);
+        } else {
+            return find(dataTypeContainer.getDatatypes(), instanceOf(JavaType.class), null);
         }
     }
 

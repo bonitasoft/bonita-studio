@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.engine.export;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.expression.Expression;
@@ -30,11 +31,12 @@ import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
+import org.bonitasoft.studio.condition.ui.expression.ProjectXtextResourceProvider;
 import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
 import org.bonitasoft.studio.engine.export.expression.converter.comparison.ComparisonExpressionConverter;
 import org.bonitasoft.studio.model.expression.ListExpression;
@@ -51,6 +53,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import com.google.inject.Injector;
+
 /**
  * @author Romain Bioteau
  */
@@ -60,6 +64,20 @@ public class EngineExpressionUtil {
 
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
+    }
+
+    public static void addConverter(IExpressionConverter converter) {
+        if (converters == null) {
+            converters = new ArrayList<>();
+        }
+        converters.add(converter);
+    }
+
+    public static boolean hasConverter(Class<?> converterType) {
+        if (converters == null) {
+            return false;
+        }
+        return converters.stream().anyMatch(converterType::isInstance);
     }
 
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,
@@ -205,7 +223,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -224,7 +241,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -238,7 +254,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -357,7 +372,6 @@ public class EngineExpressionUtil {
         try {
             return exp.createListOfListExpression(expressionNames.toString(), expressions);
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -386,7 +400,6 @@ public class EngineExpressionUtil {
         try {
             return exp.createListExpression(expressionNames.toString(), expressions);
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -413,7 +426,6 @@ public class EngineExpressionUtil {
             try {
                 return converter.convert(expression);
             } catch (final InvalidExpressionException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
                 throw new RuntimeException(e);
             }
         }
@@ -453,7 +465,6 @@ public class EngineExpressionUtil {
                 expressionBuilder.setDependencies(createDependenciesList(expression));
                 return expressionBuilder.done();
             } catch (final InvalidExpressionException e) {
-                BonitaStudioLog.error(e);
                 throw new RuntimeException(e);
             }
         }
@@ -463,9 +474,11 @@ public class EngineExpressionUtil {
         if (converters == null) {
             converters = new ArrayList<IExpressionConverter>();
             if (ConditionModelActivator.getInstance() != null) {
+                Injector injector = ConditionModelActivator.getInstance().getInjector(
+                        ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
                 converters.add(new ComparisonExpressionConverter(
-                        new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
-                                ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
+                        new XtextComparisonExpressionLoader(injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                                new ModelSearch(Collections::emptyList), new ProjectXtextResourceProvider(injector))));
             }
         }
         for (final IExpressionConverter converter : converters) {
@@ -514,7 +527,6 @@ public class EngineExpressionUtil {
                     simpleExpression.getReturnType(),
                     dependencies.toArray(new Expression[dependencies.size()]));
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -524,7 +536,6 @@ public class EngineExpressionUtil {
             return new ExpressionBuilder().createGroovyScriptExpression("ExpressionNotDefinedSetAsNull", "null",
                     Object.class.getName());
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -535,7 +546,6 @@ public class EngineExpressionUtil {
         try {
             expression = exp.createDocumentReferenceExpression(simpleExpression.getName());
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
         }
         return expression;
@@ -547,7 +557,6 @@ public class EngineExpressionUtil {
         try {
             expression = exp.createDocumentListExpression(simpleExpression.getName());
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
         }
         return expression;
@@ -577,7 +586,6 @@ public class EngineExpressionUtil {
             exp.setDependencies(dependenciesList);
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -636,7 +644,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -650,7 +657,6 @@ public class EngineExpressionUtil {
             exp.setDependencies(createDependenciesList(expression));
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
         }
     }
@@ -675,7 +681,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -691,7 +696,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -706,7 +710,6 @@ public class EngineExpressionUtil {
         try {
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -722,7 +725,6 @@ public class EngineExpressionUtil {
         try {
             return new ExpressionBuilder().createBusinessDataReferenceExpression(data.getName());
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -736,7 +738,6 @@ public class EngineExpressionUtil {
                 documentReferenceExpression = new ExpressionBuilder().createDocumentReferenceExpression(document.getName());
             }
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e);
             throw new RuntimeException(e);
         }
         return documentReferenceExpression;

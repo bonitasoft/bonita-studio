@@ -16,14 +16,18 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
@@ -67,7 +71,8 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			return ValidationStatus.ok();
 		}
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = getXtextExpressionLoader(injector);
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = getXtextExpressionLoader(injector,
+                new ModelSearch(Collections::emptyList));
         Resource resource = null;
         try {
             resource = xtextComparisonExpressionLoader.loadResource(value.toString(), context);
@@ -105,9 +110,9 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
      * @param injector
      * @return
      */
-    public XtextComparisonExpressionLoader getXtextExpressionLoader(final Injector injector) {
-        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
-        return xtextComparisonExpressionLoader;
+    public XtextComparisonExpressionLoader getXtextExpressionLoader(final Injector injector, IModelSearch modelSearch) {
+        return new XtextComparisonExpressionLoader(injector.getInstance(ConditionModelGlobalScopeProvider.class),
+                modelSearch, new ProjectXtextResourceProvider(injector));
     }
 
     /**
