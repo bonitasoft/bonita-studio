@@ -56,19 +56,23 @@ public class FormalExpressionFunctionFactoryTest {
 
     @Test
     public void should_create_FormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.PARAMETER_TYPE)).hasSameClassAs(
+        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.PARAMETER_TYPE,
+                null)).hasSameClassAs(
                 new FormalExpressionFunction());
     }
 
     @Test
     public void should_create_ScriptFormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.SCRIPT_TYPE)).hasSameClassAs(
+        assertThat(
+                formalExpressionTransformerFactory.newFormalExpressionFunction(null, ExpressionConstants.SCRIPT_TYPE, null))
+                        .hasSameClassAs(
                 new ScriptFormalExpressionFunction());
     }
 
     @Test
     public void should_create_VariableFormalExpressionTransformer() throws Exception {
-        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(dataScope, ExpressionConstants.VARIABLE_TYPE)).hasSameClassAs(
-                new VariableFormalExpressionTransformer(dataScope));
+        assertThat(formalExpressionTransformerFactory.newFormalExpressionFunction(dataScope,
+                ExpressionConstants.VARIABLE_TYPE, null)).hasSameClassAs(
+                        new VariableFormalExpressionTransformer(dataScope, null));
     }
 }

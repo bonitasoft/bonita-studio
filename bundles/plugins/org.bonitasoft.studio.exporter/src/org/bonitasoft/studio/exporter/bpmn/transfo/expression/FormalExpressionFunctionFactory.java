@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 
 /**
@@ -25,12 +26,13 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
  */
 public class FormalExpressionFunctionFactory {
 
-    public FormalExpressionFunction newFormalExpressionFunction(final DataScope dataScope, final String expressionType) {
+    public FormalExpressionFunction newFormalExpressionFunction(final DataScope dataScope, final String expressionType,
+            IModelSearch modelSearch) {
         if (ExpressionConstants.SCRIPT_TYPE.equals(expressionType)) {
             return new ScriptFormalExpressionFunction();
         }
         if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
-            return new VariableFormalExpressionTransformer(dataScope);
+            return new VariableFormalExpressionTransformer(dataScope, modelSearch);
         }
         return new FormalExpressionFunction();
     }

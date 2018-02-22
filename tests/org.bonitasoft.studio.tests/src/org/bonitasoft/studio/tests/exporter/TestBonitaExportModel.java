@@ -15,8 +15,13 @@
 
 package org.bonitasoft.studio.tests.exporter;
 
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -42,7 +47,11 @@ public class TestBonitaExportModel extends TestCase {
                 .getActiveEditor();
         final String editorName = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$1");
         final String editorVersion = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$2");
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(artifact.getEMFResource());
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        IModelSearch modelSearch = new ModelSearch(() -> dStore.getAllProcesses(), () -> connectorDefStore.getDefinitions());
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(artifact.getEMFResource(), modelSearch);
         assertTrue("Bad diagram version in exporter", exporter.getMainProcess().getVersion().equals(editorVersion));
         assertEquals("Bad diagram name in exporter", exporter.getMainProcess().getName(), editorName);
         assertTrue("Bad pool number in exporter", exporter.getPools().size() == 1);

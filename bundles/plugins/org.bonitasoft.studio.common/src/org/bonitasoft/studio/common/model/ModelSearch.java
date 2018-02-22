@@ -15,10 +15,12 @@
 package org.bonitasoft.studio.common.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
@@ -30,9 +32,16 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class ModelSearch implements IModelSearch {
 
     private IProcessContextProvider processContextProvider;
+    private IConnectorDefContextProvider connectorDefContextProvider;
 
     public ModelSearch(IProcessContextProvider processContextProvider) {
         this.processContextProvider = processContextProvider;
+    }
+
+    public ModelSearch(IProcessContextProvider processContextProvider,
+            IConnectorDefContextProvider connectorDefContextProvider) {
+        this.processContextProvider = processContextProvider;
+        this.connectorDefContextProvider = connectorDefContextProvider;
     }
 
     /*
@@ -135,6 +144,18 @@ public class ModelSearch implements IModelSearch {
             return eResource.getURIFragment(eObject);
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.model.IModelSearch#getConnectorDefinitions()
+     */
+    @Override
+    public List<ConnectorDefinition> getConnectorDefinitions() {
+        if (connectorDefContextProvider == null) {
+            return Collections.emptyList();
+        }
+        return connectorDefContextProvider.getConnectorDefinitions();
     }
 
 }

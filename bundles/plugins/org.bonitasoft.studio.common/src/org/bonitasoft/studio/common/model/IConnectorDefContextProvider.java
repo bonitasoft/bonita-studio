@@ -15,26 +15,10 @@
 package org.bonitasoft.studio.common.model;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.emf.ecore.EObject;
 
-public interface IModelSearch {
-
-    <T> List<T> getAllItemsOfType(EObject parent, Class<T> type);
-
-    boolean isInEvenementialSubProcessPool(EObject element);
-
-    <T> T getDirectParentOfType(EObject element, Class<T> type);
-
-    Optional<AbstractProcess> findProcess(String name, String version);
-
-    String getEObjectID(EObject element);
-
-    List<Data> getAccessibleData(EObject context);
+public interface IConnectorDefContextProvider {
 
     List<ConnectorDefinition> getConnectorDefinitions();
 

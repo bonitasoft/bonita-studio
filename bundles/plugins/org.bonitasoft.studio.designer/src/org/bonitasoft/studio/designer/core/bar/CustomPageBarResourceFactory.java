@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.restlet.Context;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -38,6 +39,10 @@ public class CustomPageBarResourceFactory {
     private static final String BAR_CUSTOMPAGES_LOCATION = "customPages";
 
     private final PageDesignerURLFactory pageDesignerURLFactory;
+
+    static {
+        Context.getCurrentLogger().setLevel(Level.OFF);
+    }
 
     @Inject
     public CustomPageBarResourceFactory(final PageDesignerURLFactory pageDesignerURLFactory) {

@@ -18,7 +18,11 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
@@ -66,9 +70,16 @@ public class ExportAsBPMNHandler {
                             progressService.run(true, false, monitor -> {
                                 monitor.beginTask(Messages.exportingTo + " " + destFile.getName() + "...",
                                         IProgressMonitor.UNKNOWN);
+                                DiagramRepositoryStore diagramRepoStore = repositoryAccessor
+                                        .getRepositoryStore(DiagramRepositoryStore.class);
+                                ConnectorDefRepositoryStore connectorDefRepoStore = repositoryAccessor
+                                        .getRepositoryStore(ConnectorDefRepositoryStore.class);
+                                IModelSearch modelSearch = new ModelSearch(
+                                        () -> diagramRepoStore.getAllProcesses(),
+                                        () -> connectorDefRepoStore.getDefinitions());
                                 transformer.export(
-                                        new BonitaModelExporterImpl(diagram.eResource()),
-                                        repositoryAccessor,
+                                        new BonitaModelExporterImpl(diagram.eResource(), modelSearch),
+                                        modelSearch,
                                         destFile,
                                         monitor);
                             });

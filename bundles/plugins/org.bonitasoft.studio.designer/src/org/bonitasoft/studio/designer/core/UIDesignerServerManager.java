@@ -184,10 +184,13 @@ public class UIDesignerServerManager {
     }
 
     public synchronized void stop() {
-        try {
-            WorkspaceResourceServerManager.getInstance().stop();
-        } catch (Exception e1) {
-            BonitaStudioLog.error(e1);
+        WorkspaceResourceServerManager resourceServer = WorkspaceResourceServerManager.getInstance();
+        if (resourceServer.isRunning()) {
+            try {
+                resourceServer.stop();
+            } catch (Exception e1) {
+                BonitaStudioLog.error(e1);
+            }
         }
         if (launch != null) {
             try {
