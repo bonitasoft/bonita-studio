@@ -15,12 +15,11 @@
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
 import static java.util.Objects.requireNonNull;
-import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAccessibleData;
 
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -39,9 +38,11 @@ public class VariableFormalExpressionTransformer extends FormalExpressionFunctio
     private static final String DATA_OBJECT_PATTERN = "getDataObject('%s')";
     private static final String ACTIVITY_PROPERTY_PATTERN = "getActivityProperty('%s','%s')";
     private final DataScope dataScope;
+    private IModelSearch modelSearch;
 
-    public VariableFormalExpressionTransformer(final DataScope dataScope) {
+    public VariableFormalExpressionTransformer(final DataScope dataScope, IModelSearch modelSearch) {
         this.dataScope = dataScope;
+        this.modelSearch = modelSearch;
     }
 
     @Override
@@ -80,13 +81,13 @@ public class VariableFormalExpressionTransformer extends FormalExpressionFunctio
 
     private String createContentForTransientData(final TItemDefinition bpmnData, final Data bonitaData,
             final String expressionContent) {
-        final AbstractProcess parentProcess = ModelHelper.getParentProcess(bonitaData);
+        final AbstractProcess parentProcess = modelSearch.getDirectParentOfType(bonitaData, AbstractProcess.class);
         return String.format(ACTIVITY_PROPERTY_PATTERN, parentProcess.getName(),
                 bpmnData != null ? bpmnData.getId() : expressionContent);
     }
 
-    private static Data resolveData(final String referencedDataName, EObject context) {
-        return getAccessibleData(context).stream()
+    private Data resolveData(final String referencedDataName, EObject context) {
+        return modelSearch.getAccessibleData(context).stream()
                 .filter(data -> Objects.equals(data.getName(), referencedDataName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(

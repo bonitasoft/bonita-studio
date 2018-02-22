@@ -22,13 +22,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
@@ -61,9 +60,11 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 public class BonitaModelExporterImpl implements IBonitaModelExporter {
 
     private Resource resource;
+    private IModelSearch modelSearch;
 
-    public BonitaModelExporterImpl(Resource resource) {
+    public BonitaModelExporterImpl(Resource resource,IModelSearch modelSearch) {
         this.resource = requireNonNull(resource);
+        this.modelSearch = modelSearch;
     }
 
     /*
@@ -99,11 +100,11 @@ public class BonitaModelExporterImpl implements IBonitaModelExporter {
     }
 
     public List<FlowElement> getFlowElements(Container container) {
-        return ModelHelper.getAllItemsOfType(container, ProcessPackage.eINSTANCE.getFlowElement());
+        return modelSearch.getAllItemsOfType(container, FlowElement.class);
     }
 
     public List<Lane> getLanes(Pool pool) {
-        return ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getLane());
+        return modelSearch.getAllItemsOfType(pool, Lane.class);
     }
 
     public Node getElementNotationNode(EObject modelElement) {
@@ -195,6 +196,24 @@ public class BonitaModelExporterImpl implements IBonitaModelExporter {
             throw new IllegalStateException(String.format("No edge found for %s", connection));
         }
         return edgeOptional.get();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getEObjectID(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    public String getEObjectID(EObject eObject) {
+        return modelSearch.getEObjectID(eObject);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.exporter.extension.IBonitaModelExporter#getParentPool(org.bonitasoft.studio.model.process.Lane)
+     */
+    @Override
+    public Pool getParentPool(Lane lane) {
+        return modelSearch.getDirectParentOfType(lane, Pool.class);
     }
 
 }

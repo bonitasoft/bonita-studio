@@ -23,7 +23,11 @@ import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Activator;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
@@ -45,8 +49,14 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
             Resource eResource = process.eResource();
             if (eResource != null) {
                 destFile = File.createTempFile(process.getName() + "-" + process.getVersion(), ".bpmn");
-                RepositoryAccessor repositoryAccessor = new RepositoryAccessor().init();
-                new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource), repositoryAccessor, destFile,
+                DiagramRepositoryStore diagramRepoStore = RepositoryManager.getInstance()
+                        .getRepositoryStore(DiagramRepositoryStore.class);
+                ConnectorDefRepositoryStore connectorDefRepoStore = RepositoryManager.getInstance()
+                        .getRepositoryStore(ConnectorDefRepositoryStore.class);
+                IModelSearch modelSearch = new ModelSearch(
+                        () -> diagramRepoStore.getAllProcesses(),
+                        () -> connectorDefRepoStore.getDefinitions());
+                new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch, destFile,
                         new NullProgressMonitor());
                 builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));
             } else {

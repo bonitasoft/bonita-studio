@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.Version;
 
 /**
@@ -33,11 +35,11 @@ public class ProductVersion {
     }
 
     private static String manifestVersion() {
-        Activator activator = Activator.getDefault();
-        if (activator == null) {
+        Bundle bundle = FrameworkUtil.getBundle(ProductVersion.class);
+        if (bundle == null) {
             return "7.6.0";
         }
-        Version version = activator.getBundle().getVersion();
+        Version version = bundle.getVersion();
         return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro());
     }
 

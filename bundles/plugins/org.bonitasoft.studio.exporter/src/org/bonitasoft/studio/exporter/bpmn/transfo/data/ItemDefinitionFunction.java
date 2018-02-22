@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import javax.xml.namespace.QName;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BPMNConstants;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.XMLData;
@@ -37,8 +37,11 @@ public class ItemDefinitionFunction implements Function<Data, TItemDefinition>, 
 
     private final TDefinitions bpmnDefinitions;
     private final XMLNamespaceResolver xmlNamespaceResolver;
+    private IModelSearch modelSearch;
 
-    public ItemDefinitionFunction(final TDefinitions bpmnDefinitions, final XMLNamespaceResolver xmlNamespaceResolver) {
+    public ItemDefinitionFunction(final TDefinitions bpmnDefinitions, final XMLNamespaceResolver xmlNamespaceResolver,
+            IModelSearch modelSearch) {
+        this.modelSearch = modelSearch;
         this.bpmnDefinitions = requireNonNull(bpmnDefinitions);
         this.xmlNamespaceResolver = requireNonNull(xmlNamespaceResolver);
     }
@@ -47,7 +50,7 @@ public class ItemDefinitionFunction implements Function<Data, TItemDefinition>, 
     public TItemDefinition apply(final Data sourceElement) {
         final ModelFactory modelFactory = ModelFactory.eINSTANCE;
         final TItemDefinition dataItemDefinition = modelFactory.createTItemDefinition();
-        dataItemDefinition.setId(ModelHelper.getEObjectID(sourceElement));
+        dataItemDefinition.setId(modelSearch.getEObjectID(sourceElement));
         final String documentation = sourceElement.getDocumentation();
         if (documentation != null && !documentation.isEmpty()) {
             final TDocumentation doc = modelFactory.createTDocumentation();

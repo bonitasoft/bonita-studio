@@ -47,4 +47,8 @@ public interface IBonitaModelExporter {
 
     Edge getElementNotationEdge(EObject connection);
 
+    String getEObjectID(EObject eObject);
+
+    Pool getParentPool(Lane lane);
+
 }

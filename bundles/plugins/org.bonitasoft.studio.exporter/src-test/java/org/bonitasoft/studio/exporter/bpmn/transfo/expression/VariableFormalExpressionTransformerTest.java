@@ -23,7 +23,11 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BPMNConstants;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -49,12 +53,14 @@ public class VariableFormalExpressionTransformerTest {
 
     private VariableFormalExpressionTransformer variableFormalExpressionTransformer;
 
+    private IModelSearch modelSearch = new ModelSearch(Collections::emptyList);
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        variableFormalExpressionTransformer = new VariableFormalExpressionTransformer(dataScope);
+        variableFormalExpressionTransformer = new VariableFormalExpressionTransformer(dataScope, modelSearch);
     }
 
     @Test(expected = IllegalArgumentException.class)
