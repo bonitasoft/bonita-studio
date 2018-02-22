@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,15 +47,8 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefFileStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Activator;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
@@ -104,7 +98,6 @@ import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.ScriptTask;
 import org.bonitasoft.studio.model.process.SendTask;
@@ -233,15 +226,17 @@ public class BonitaToBPMNExporter {
     private XMLNamespaceResolver xmlNamespaceResolver;
     private final FormalExpressionFunctionFactory formalExpressionTransformerFactory = new FormalExpressionFunctionFactory();
     private MultiStatus status;
+    private IModelSearch modelSearch;
 
     public BonitaToBPMNExporter() {
         errors.add(Messages.formsNotExported);
     }
 
     public void export(final IBonitaModelExporter modelExporter,
-            RepositoryAccessor repositroyAccessor,
+            IModelSearch modelSearch,
             final File destFile,
             final IProgressMonitor monitor) {
+        this.modelSearch = modelSearch;
         final MainProcess mainProcess = modelExporter.getMainProcess();
 
         initializeDocumentRoot();
@@ -267,11 +262,11 @@ public class BonitaToBPMNExporter {
         destBpmnFile = destFile;
 
         configureNamespaces();
-        dataScope = new DataScope(new ItemDefinitionFunction(definitions, xmlNamespaceResolver));
+        dataScope = new DataScope(new ItemDefinitionFunction(definitions, xmlNamespaceResolver, modelSearch));
 
         BPMNShapeFactory shapeFactory = new BPMNShapeFactory(modelExporter, bpmnDiagram);
         modelExporter.getPools().stream()
-                .forEach(pool -> processPool(shapeFactory, pool, definitions, collaboration, repositroyAccessor));
+                .forEach(pool -> processPool(shapeFactory, pool, definitions, collaboration, modelSearch));
 
         populateWithMessageFlow(mainProcess);
         populateWithSignals(definitions);
@@ -283,8 +278,9 @@ public class BonitaToBPMNExporter {
         if (destFile.exists()) {
             destFile.delete();
         }
-        final Resource resource = resourceSet.createResource(URI.createFileURI(destFile.getAbsolutePath()),
-                "org.omg.schema.spec.bpmn.content-type");
+        Resource resource = new org.omg.spec.bpmn.di.util.DiResourceFactoryImpl()
+                .createResource(URI.createFileURI(destFile.getAbsolutePath()));
+        resourceSet.getResources().add(resource);
         resource.getContents().add(root);
         try {
             final Map<Object, Object> saveOptions = new HashMap<>();
@@ -294,7 +290,6 @@ public class BonitaToBPMNExporter {
 
             status = createOKStatus();
         } catch (final Exception ex) {
-            BonitaStudioLog.error(ex);
             status = createErrorStatus(ex);
         } finally {
             resource.unload();
@@ -328,10 +323,13 @@ public class BonitaToBPMNExporter {
         }
     }
 
-    private void handleBonitaConnectorDefinition(final String connectorDefId, RepositoryAccessor repositoryAccessor) {
-        final File connectorDefFile = createXSDForConnectorDef(connectorDefId, repositoryAccessor);
-
-        addConnectorDefInXsdIfNotYetIncluded(connectorDefFile);
+    private void handleBonitaConnectorDefinition(final String connectorDefId, IModelSearch modelSearch) {
+        try {
+            File connectorDefFile = createXSDForConnectorDef(connectorDefId, modelSearch);
+            addConnectorDefInXsdIfNotYetIncluded(connectorDefFile);
+        } catch (URISyntaxException | IOException | TransformerException e) {
+            throw new RuntimeException("Failed to create xsd for connector.", e);
+        }
 
         /* Handle input */
         final TMessage tMessageInputBonitaConnector = createConnectorDefInput(connectorDefId);
@@ -383,34 +381,24 @@ public class BonitaToBPMNExporter {
         return tMessageInputBonitaConnector;
     }
 
-    private File createXSDForConnectorDef(final String connectorDefId, RepositoryAccessor repositroyAccessor) {
+    private File createXSDForConnectorDef(final String connectorDefId, IModelSearch modelSearch)
+            throws URISyntaxException, IOException, TransformerException {
         final File connectorDefFolder = new File(
                 destBpmnFile.getParentFile().getAbsolutePath() + File.separator + "connectorDefs");
         /* Export the xsd */
         if (!connectorDefFolder.exists()) {
             connectorDefFolder.mkdirs();
         }
-        File connectorDefFile = null;
-        try {
-            final ConnectorDefRepositoryStore cdrs = repositroyAccessor
-                    .getRepositoryStore(ConnectorDefRepositoryStore.class);
-            for (final IRepositoryFileStore rfs : cdrs.getChildren()) {
-                final ConnectorDefFileStore cdfs = (ConnectorDefFileStore) rfs;
-                final ConnectorDefinition cd = cdfs.getContent();
-                if (cd.getId().equals(connectorDefId)) {
-                    connectorDefFile = new File(((ConnectorDefFileStore) rfs).getEMFResource().getURI().toFileString());
-                    break;
-                }
-            }
-            if (connectorDefFile != null) {
-                generateXSDForConnector(connectorDefFile/* child.getResource().getFullPath().toFile() */);
-            } else {
-                errors.add("The connector with id " + connectorDefId + " was not found.");
-            }
-        } catch (final URISyntaxException | IOException | TransformerException e) {
-            BonitaStudioLog.error(e);
+        Optional<File> connectorDefFile = modelSearch.getConnectorDefinitions().stream()
+                .filter(def -> Objects.equals(def.getId(), connectorDefId))
+                .map(def -> new File(def.eResource().getURI().toFileString()))
+                .findFirst();
+        if (connectorDefFile.isPresent()) {
+            generateXSDForConnector(connectorDefFile.get());
+        } else {
+            errors.add("The connector with id " + connectorDefId + " was not found.");
         }
-        return connectorDefFile;
+        return connectorDefFile.orElse(null);
     }
 
     private void addConnectorDefInXsdIfNotYetIncluded(final File connectorDefFile) {
@@ -481,7 +469,7 @@ public class BonitaToBPMNExporter {
     }
 
     private void processPool(BPMNShapeFactory shapeFactory, Pool pool, TDefinitions definitions,
-            final TCollaboration collaboration, RepositoryAccessor repositoryAccessor) {
+            final TCollaboration collaboration, IModelSearch modelSearch) {
         // create semantic process
         final TProcess bpmnProcess = ModelFactory.eINSTANCE.createTProcess();
         setCommonAttributes(pool, bpmnProcess);
@@ -505,8 +493,8 @@ public class BonitaToBPMNExporter {
 
         populateWithData(pool, bpmnProcess);//create data before in order to have them accessible after
         populateWithMessage(pool, bpmnProcess);
-        populate(shapeFactory, pool, ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getLane()), bpmnProcess,
-                processShape.getBounds(), repositoryAccessor);
+        populate(shapeFactory, pool, modelSearch.getAllItemsOfType(pool, Lane.class), bpmnProcess,
+                processShape.getBounds(), modelSearch);
         populateWithSequenceFlow(shapeFactory, pool, bpmnProcess);
         populateWithTextAnnotation(shapeFactory, pool, bpmnProcess, processShape.getBounds());
 
@@ -515,16 +503,15 @@ public class BonitaToBPMNExporter {
     private void populateWithTextAnnotation(final BPMNShapeFactory shapeFactory, final Pool pool,
             final TProcess bpmnProcess, Bounds poolBounds) {
         bpmnProcess.getArtifact()
-                .addAll(ModelHelper.getAllElementOfTypeIn(pool, TextAnnotation.class).stream().map(source -> {
+                .addAll(modelSearch.getAllItemsOfType(pool, TextAnnotation.class).stream().map(source -> {
                     final TTextAnnotation annotation = ModelFactory.eINSTANCE.createTTextAnnotation();
                     final TText text = ModelFactory.eINSTANCE.createTText();
                     text.getMixed().add(XMLTypePackage.Literals.XML_TYPE_DOCUMENT_ROOT__TEXT, source.getText());
                     annotation.setText(text);
                     annotation.setId(EcoreUtil.generateUUID());
-                    final List<TextAnnotationAttachment> textAnnotationAttachments = ModelHelper.getAllItemsOfType(
+                    final List<TextAnnotationAttachment> textAnnotationAttachments = modelSearch.getAllItemsOfType(
                             pool,
-                            ProcessPackage.Literals.TEXT_ANNOTATION_ATTACHMENT);
-
+                            TextAnnotationAttachment.class);
                     BPMNShape elementShape = shapeFactory.create(source, annotation.getId(), poolBounds);
                     bpmnPlane.getDiagramElement().add(elementShape);
 
@@ -550,15 +537,11 @@ public class BonitaToBPMNExporter {
     }
 
     private void populateWithMessage(final Pool pool, final TProcess bpmnProcess) {
-        //messageMap.clear();
-        final List<ThrowMessageEvent> thowMessageEvents = ModelHelper.getAllItemsOfType(pool,
-                ProcessPackage.eINSTANCE.getThrowMessageEvent());
+        final List<ThrowMessageEvent> thowMessageEvents = modelSearch.getAllItemsOfType(pool, ThrowMessageEvent.class);
         for (final ThrowMessageEvent throwMessageEvent : thowMessageEvents) {
             for (final Message message : throwMessageEvent.getEvents()) {
                 final TMessage tMessage = ModelFactory.eINSTANCE.createTMessage();
                 tMessage.setId(EcoreUtil.getID(message));
-                //				tMessage.setItemRef(value)
-                //				message.getMessageContent().getExpressions()
             }
         }
     }
@@ -733,7 +716,8 @@ public class BonitaToBPMNExporter {
     }
 
     private TFormalExpression convertExpression(final Expression bonitaExpression) {
-        return formalExpressionTransformerFactory.newFormalExpressionFunction(dataScope, bonitaExpression.getType())
+        return formalExpressionTransformerFactory
+                .newFormalExpressionFunction(dataScope, bonitaExpression.getType(), modelSearch)
                 .apply(bonitaExpression);
     }
 
@@ -749,7 +733,7 @@ public class BonitaToBPMNExporter {
 
     private void populateWithSequenceFlow(final BPMNShapeFactory shapeFactory, Pool pool,
             final TProcess bpmnProcess) {
-        ModelHelper.getAllElementOfTypeIn(pool, SequenceFlow.class).stream().forEach(bonitaFlow -> {
+        modelSearch.getAllItemsOfType(pool, SequenceFlow.class).stream().forEach(bonitaFlow -> {
             final TSequenceFlow bpmnFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
             setCommonAttributes(bonitaFlow, bpmnFlow);
             if (bonitaFlow.getCondition() != null
@@ -781,22 +765,15 @@ public class BonitaToBPMNExporter {
                             }
                         }
                     }
-                } else {
-                    BonitaStudioLog.log("Can't create the sequence flow named " + bonitaFlow.getName()
-                            + " because target element is null");
                 }
-            } else {
-                BonitaStudioLog.log(
-                        "Can't create the sequence flow named " + bonitaFlow.getName()
-                                + " because source element is null");
             }
         });
     }
 
     private void populate(BPMNShapeFactory shapeFactory, Pool pool, List<Lane> lanes, final TProcess bpmnProcess,
-            Bounds poolBounds, RepositoryAccessor repositoryAccessor) {
+            Bounds poolBounds, IModelSearch modelSearch) {
         if (lanes.isEmpty()) {
-            populateContainer(shapeFactory, pool, bpmnProcess, null, poolBounds, repositoryAccessor);
+            populateContainer(shapeFactory, pool, bpmnProcess, null, poolBounds, modelSearch);
         } else {
             TLaneSet laneSet = ModelFactory.eINSTANCE.createTLaneSet();
             laneSet.setId(bpmnProcess.getName() + "_laneSet");
@@ -810,20 +787,20 @@ public class BonitaToBPMNExporter {
                 // graphic
                 final BPMNShape laneShape = shapeFactory.createLane(bpmnLane.getId(), lane, poolBounds);
                 bpmnPlane.getDiagramElement().add(laneShape);
-                populateContainer(shapeFactory, lane, bpmnProcess, bpmnLane, laneShape.getBounds(), repositoryAccessor);
+                populateContainer(shapeFactory, lane, bpmnProcess, bpmnLane, laneShape.getBounds(), modelSearch);
             });
 
         }
     }
 
     private void populateContainer(BPMNShapeFactory shapeFactory, EObject container, TProcess bpmnProcess,
-            TLane bpmnParentLane, Bounds parentBounds, RepositoryAccessor repositoryAccessor) {
+            TLane bpmnParentLane, Bounds parentBounds, IModelSearch modelSearch) {
         final Map<Data, TItemDefinition> localDataMap = new HashMap<>();
         container.eAllContents().forEachRemaining(element -> {
             if (element instanceof FlowElement && Objects.equals(container, element.eContainer())) {
                 final FlowElement bonitaElement = (FlowElement) element;
                 // semantic
-                final TFlowElement bpmnElement = createTFlowElement(bonitaElement, repositoryAccessor);
+                final TFlowElement bpmnElement = createTFlowElement(bonitaElement, modelSearch);
                 bpmnProcess.getFlowElement().add(bpmnElement);
                 if (bpmnParentLane != null) {
                     bpmnParentLane.getFlowNodeRef().add(bpmnElement.getId());
@@ -839,7 +816,7 @@ public class BonitaToBPMNExporter {
             } else if (element instanceof SubProcessEvent) {
                 // semantic
                 final SubProcessEvent subProcEvent = (SubProcessEvent) element;
-                final TSubProcess bpmnSubProcess = (TSubProcess) createTFlowElement(subProcEvent, repositoryAccessor);
+                final TSubProcess bpmnSubProcess = (TSubProcess) createTFlowElement(subProcEvent, modelSearch);
                 bpmnProcess.getFlowElement().add(bpmnSubProcess);
                 if (bpmnParentLane != null) {
                     bpmnParentLane.getFlowNodeRef().add(bpmnSubProcess.getId());
@@ -850,7 +827,7 @@ public class BonitaToBPMNExporter {
                 final BPMNShape elementShape = shapeFactory.create(subProcEvent, bpmnSubProcess.getId(), parentBounds);
                 bpmnPlane.getDiagramElement().add(elementShape);
 
-                populateContainer(shapeFactory, subProcEvent, bpmnSubProcess, parentBounds, repositoryAccessor);
+                populateContainer(shapeFactory, subProcEvent, bpmnSubProcess, parentBounds, modelSearch);
             }
         });
     }
@@ -858,12 +835,12 @@ public class BonitaToBPMNExporter {
     private void populateContainer(final BPMNShapeFactory shapeFactory,
             SubProcessEvent container,
             TSubProcess bpmnSubProcess,
-            Bounds parentBounds, RepositoryAccessor repositoryAccessor) {
+            Bounds parentBounds, IModelSearch modelSearch) {
         container.eAllContents().forEachRemaining(element -> {
             if (element instanceof FlowElement) {
                 final FlowElement bonitaElement = (FlowElement) element;
                 // semantic
-                final TFlowElement bpmnElement = createTFlowElement(bonitaElement, repositoryAccessor);
+                final TFlowElement bpmnElement = createTFlowElement(bonitaElement, modelSearch);
                 bpmnSubProcess.getFlowElement().add(bpmnElement);
                 mapping.put(bonitaElement, bpmnElement);
 
@@ -986,7 +963,7 @@ public class BonitaToBPMNExporter {
     }
 
     private void setCommonAttributes(final Element bonitaElement, final TBaseElement bpmnElement) {
-        bpmnElement.setId(ModelHelper.getEObjectID(bonitaElement));
+        bpmnElement.setId(modelSearch.getEObjectID(bonitaElement));
         if (bpmnElement instanceof TFlowElement) {
             ((TFlowElement) bpmnElement).setName(bonitaElement.getName());
         } else if (bpmnElement instanceof TProcess) {
@@ -1002,20 +979,20 @@ public class BonitaToBPMNExporter {
         }
     }
 
-    private TFlowElement createTFlowElement(final Element child, RepositoryAccessor repositoryAccessor) {
+    private TFlowElement createTFlowElement(final Element child, IModelSearch modelSearch) {
         TFlowElement res = null;
         if (child instanceof Activity) {
-            res = createActivity((Activity) child, repositoryAccessor);
+            res = createActivity((Activity) child, modelSearch);
             final Activity activity = (Activity) child;
             if (child instanceof ServiceTask
                     && !activity.getConnectors().isEmpty()) {
                 final TServiceTask serviceTask = (TServiceTask) res;
-                handleConnectorOnServiceTask(activity, serviceTask, repositoryAccessor);
+                handleConnectorOnServiceTask(activity, serviceTask, modelSearch);
             } else if (child instanceof CallActivity) {
                 /* Do the mapping */
                 final CallActivity callActivity = (CallActivity) child;
                 final TCallActivity ca = (TCallActivity) res;
-                dataMappingWithCallActivity(callActivity, ca, repositoryAccessor);
+                dataMappingWithCallActivity(callActivity, ca, modelSearch);
             }
         } else if (child instanceof Gateway) {
             res = createGateway((Gateway) child);
@@ -1035,7 +1012,7 @@ public class BonitaToBPMNExporter {
             if (conditionExpression != null) {
                 final String condition = conditionExpression.getContent();//FIXME
                 final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
-                expression.setId(ModelHelper.getEObjectID(expression));
+                expression.setId(modelSearch.getEObjectID(expression));
                 if (condition != null) {
                     if (DateUtil.isDuration(condition)) {
                         eventDef.setTimeDuration(expression);
@@ -1181,7 +1158,7 @@ public class BonitaToBPMNExporter {
                 final String targetName = to.getName();
                 eventDef.setId(EcoreUtil.generateUUID());
                 eventDef.setName(to.getName() != null ? to.getName() : targetName);
-                eventDef.setTarget(QName.valueOf(ModelHelper.getEObjectID(to)));
+                eventDef.setTarget(QName.valueOf(modelSearch.getEObjectID(to)));
             } else {
                 eventDef.setId(EcoreUtil.generateUUID());
             }
@@ -1204,7 +1181,7 @@ public class BonitaToBPMNExporter {
     }
 
     private void dataMappingWithCallActivity(final CallActivity callActivity,
-            final TCallActivity ca, RepositoryAccessor repositoryAccessor) {
+            final TCallActivity ca, IModelSearch modelSearch) {
         final TDataInputAssociation dia = ModelFactory.eINSTANCE.createTDataInputAssociation();
         dia.setId(EcoreUtil.generateUUID());
         ca.getDataInputAssociation().add(dia);
@@ -1213,7 +1190,7 @@ public class BonitaToBPMNExporter {
             final Expression processSource = im.getProcessSource();
             if (processSource != null) {
                 inputAssignment.setFrom(createBPMNExpressionFromString(processSource.getName()));
-                final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget(), repositoryAccessor);
+                final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget(), modelSearch);
                 inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
                 dia.getAssignment().add(inputAssignment);
             }
@@ -1223,7 +1200,7 @@ public class BonitaToBPMNExporter {
         ca.getDataOutputAssociation().add(doa);
         for (final OutputMapping om : callActivity.getOutputMappings()) {
             final TAssignment outputAssignment = ModelFactory.eINSTANCE.createTAssignment();
-            final String dataFrom = getDataReferenceValue(callActivity, om.getSubprocessSource(), repositoryAccessor);
+            final String dataFrom = getDataReferenceValue(callActivity, om.getSubprocessSource(), modelSearch);
             outputAssignment.setFrom(createBPMNExpressionFromString(dataFrom));//FIXME: I think we need to search the real targeted data to find the correct id
             final Data processTarget = om.getProcessTarget();
             if (processTarget != null) {
@@ -1237,11 +1214,11 @@ public class BonitaToBPMNExporter {
     }
 
     private void handleConnectorOnServiceTask(final Activity activity, final TServiceTask serviceTask,
-            RepositoryAccessor repositoryAccessor) {
+            IModelSearch modelSearch) {
         final EList<Connector> connectors = activity.getConnectors();
         if (!connectors.isEmpty()) {
             final Connector connector = connectors.get(0);
-            handleBonitaConnectorDefinition(connector.getDefinitionId(), repositoryAccessor);
+            handleBonitaConnectorDefinition(connector.getDefinitionId(), modelSearch);
             /*
              * Service task should be used with a connector,
              * this connector will be the bpmn2 operation used
@@ -1305,9 +1282,8 @@ public class BonitaToBPMNExporter {
     }
 
     private String getDataReferenceValue(final CallActivity callActivity, final String bonitaReferenceString,
-            RepositoryAccessor repositroyAccessor) {
+            IModelSearch modelSearch) {
         String result = bonitaReferenceString;
-        final DiagramRepositoryStore drs = repositroyAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final Expression calledActivityName = callActivity.getCalledActivityName();
         if (calledActivityName != null
                 && calledActivityName.getType().equals(ExpressionConstants.CONSTANT_TYPE)
@@ -1319,11 +1295,12 @@ public class BonitaToBPMNExporter {
                     && calledActivityVersion.getContent() != null) {
                 version = calledActivityVersion.getContent();
             }
-            final AbstractProcess calledProcess = drs.findProcess(calledActivityName.getContent(), version);
-            if (calledProcess != null) {
-                for (final Data calledProcessData : calledProcess.getData()) {
+            final Optional<AbstractProcess> calledProcess = modelSearch.findProcess(calledActivityName.getContent(),
+                    version);
+            if (calledProcess.isPresent()) {
+                for (final Data calledProcessData : calledProcess.get().getData()) {
                     if (calledProcessData.getName().equals(bonitaReferenceString)) {
-                        result = ModelHelper.getEObjectID(calledProcessData);//it will be the id of the targeted date
+                        result = modelSearch.getEObjectID(calledProcessData);//it will be the id of the targeted date
                         break;
                     }
                 }
@@ -1339,7 +1316,7 @@ public class BonitaToBPMNExporter {
         final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
         final EList<QName> sourceLink = eventDef.getSource();
         for (final ThrowLinkEvent from : fromLinkEvent) {
-            sourceLink.add(QName.valueOf(ModelHelper.getEObjectID(from)));
+            sourceLink.add(QName.valueOf(modelSearch.getEObjectID(from)));
         }
         bpmnEvent.getEventDefinition().add(eventDef);
         return eventDef;
@@ -1405,7 +1382,7 @@ public class BonitaToBPMNExporter {
         return res;
     }
 
-    private TFlowElement createActivity(final FlowElement child, RepositoryAccessor repositroyAccessor) {
+    private TFlowElement createActivity(final FlowElement child, IModelSearch modelSearch) {
         // Tasks
         TFlowElement res = null;
         if (child instanceof CallActivity) {
@@ -1418,19 +1395,16 @@ public class BonitaToBPMNExporter {
             if (calledActivityName != null
                     && ExpressionConstants.CONSTANT_TYPE.equals(calledActivityName.getType())
                     && calledActivityName.getContent() != null) {
-                final DiagramRepositoryStore diagramStore = repositroyAccessor
-                        .getRepositoryStore(DiagramRepositoryStore.class);
                 final Expression calledVersion = cActivity.getCalledActivityVersion();
                 String version = null;
                 if (calledVersion != null && calledVersion.getContent() != null
                         && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
-                final AbstractProcess calledProcess = ModelHelper.findProcess(calledActivityName.getContent(), version,
-                        diagramStore.getAllProcesses());
-                if (calledProcess != null) {
-                    tCallActivity.setCalledElement(QName.valueOf(ModelHelper.getEObjectID(calledProcess)));
-                }
+                final Optional<AbstractProcess> calledProcess = modelSearch.findProcess(calledActivityName.getContent(),
+                        version);
+                calledProcess.ifPresent(process -> tCallActivity
+                        .setCalledElement(QName.valueOf(modelSearch.getEObjectID(process))));
             }
             res = tCallActivity;
         } else if (child instanceof ServiceTask) {
@@ -1444,7 +1418,7 @@ public class BonitaToBPMNExporter {
             if (actor != null) {
                 final EList<TResourceRole> resourceRoles = bpmnTask.getResourceRole();
                 final TPerformer role = ModelFactory.eINSTANCE.createTPerformer();
-                role.setResourceRef(QName.valueOf(ModelHelper.getEObjectID(actor)));
+                role.setResourceRef(QName.valueOf(modelSearch.getEObjectID(actor)));
                 role.setId(EcoreUtil.generateUUID());
                 resourceRoles.add(role);
                 //TODO: check that a performer is the well thing to use search in the whole inheritance of ResourceRole

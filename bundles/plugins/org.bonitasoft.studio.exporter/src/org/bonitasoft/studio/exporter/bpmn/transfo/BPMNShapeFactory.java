@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Element;
@@ -96,7 +95,7 @@ public class BPMNShapeFactory {
         processBounds.setX(bounds.getX());
         processBounds.setY(computePoolY(modelExporter.getPools(), pool, modelExporter));
         processShape.setBounds(processBounds);
-        processShape.setId(ModelHelper.getEObjectID(poolNode));
+        processShape.setId(modelExporter.getEObjectID(poolNode));
         processShape.setIsHorizontal(true);
         return processShape;
     }
@@ -146,7 +145,7 @@ public class BPMNShapeFactory {
         elementBounds.setX(bounds.getX() + parentBounds.getX());
         elementBounds.setY(bounds.getY() + parentBounds.getY());
         elementShape.setBounds(elementBounds);
-        elementShape.setId(ModelHelper.getEObjectID(node));
+        elementShape.setId(modelExporter.getEObjectID(node));
 
         attachLabel(node, bonitaElement instanceof Element ? ((Element) bonitaElement).getName() : "",
                 elementShape);
@@ -164,9 +163,9 @@ public class BPMNShapeFactory {
         laneBounds.setWidth(parentBounds.getWidth() - 30);
         laneBounds.setX(parentBounds.getX() + 30);
         laneBounds.setY(parentBounds.getY()
-                + computeLaneY(modelExporter.getLanes(ModelHelper.getParentPool(lane)), lane, modelExporter));
+                + computeLaneY(modelExporter.getLanes(modelExporter.getParentPool(lane)), lane, modelExporter));
         laneShape.setBounds(laneBounds);
-        laneShape.setId(ModelHelper.getEObjectID(laneNode));
+        laneShape.setId(modelExporter.getEObjectID(laneNode));
         laneShape.setIsHorizontal(true);
         return laneShape;
     }
@@ -200,7 +199,7 @@ public class BPMNShapeFactory {
         boundaryBounds.setX(parentBounds.getX() + xOffset);
         boundaryBounds.setY(parentBounds.getY() + yOffset);
         boundaryShape.setBounds(boundaryBounds);
-        boundaryShape.setId(ModelHelper.getEObjectID(boundaryNode));
+        boundaryShape.setId(modelExporter.getEObjectID(boundaryNode));
         attachLabel(boundaryNode, boundaryEvent.getName(), boundaryShape);
         return boundaryShape;
     }
@@ -292,7 +291,7 @@ public class BPMNShapeFactory {
         Edge bonitaEdge = modelExporter.getElementNotationEdge(bonitaElement);
         final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
         edge.setBpmnElement(QName.valueOf(bpmnFlowId));
-        edge.setId(ModelHelper.getEObjectID(bonitaEdge));
+        edge.setId(modelExporter.getEObjectID(bonitaEdge));
 
         PolylineConnectionEx conn = createConnectorFigure(bonitaEdge);
         PointList points = conn.getPoints();
@@ -350,8 +349,8 @@ public class BPMNShapeFactory {
 
     @SuppressWarnings("unchecked")
     private PolylineConnectionEx createConnectorFigure(Edge bonitaEdge) {
-        Bounds sourceLocation = getBPMNShapeBounds(ModelHelper.getEObjectID(bonitaEdge.getSource()));
-        Bounds targetLocation = getBPMNShapeBounds(ModelHelper.getEObjectID(bonitaEdge.getTarget()));
+        Bounds sourceLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getSource()));
+        Bounds targetLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getTarget()));
 
         PolylineConnectionEx conn = new PolylineConnectionEx();
         RectilinearRouter router = new RectilinearRouter();

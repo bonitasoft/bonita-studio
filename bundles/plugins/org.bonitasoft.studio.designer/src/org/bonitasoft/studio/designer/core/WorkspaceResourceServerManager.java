@@ -34,6 +34,7 @@ public class WorkspaceResourceServerManager {
             component.getDefaultHost().attach("/api", new WorkspaceApplication());
 
             BonitaStudioLog.debug("Starting RESTLET server on port " + port + "...", UIDesignerPlugin.PLUGIN_ID);
+            component.getLogger().setLevel(Level.WARNING);
             component.start();
         }
     }

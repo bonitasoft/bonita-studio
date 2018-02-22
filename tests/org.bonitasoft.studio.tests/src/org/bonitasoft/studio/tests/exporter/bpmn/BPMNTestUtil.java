@@ -9,7 +9,11 @@ import java.util.Map;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
@@ -79,11 +83,15 @@ public class BPMNTestUtil {
     }
 
     public static DocumentRoot exportToBpmn(final Resource resource) throws IOException {
-        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(resource);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
+        IModelSearch modelSearch = new ModelSearch(() -> dStore.getAllProcesses(), () -> connectorDefStore.getDefinitions());
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(resource, modelSearch);
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         bpmnFileExported.deleteOnExit();
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, new RepositoryAccessor().init(), bpmnFileExported,
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
                 new NullProgressMonitor());
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
