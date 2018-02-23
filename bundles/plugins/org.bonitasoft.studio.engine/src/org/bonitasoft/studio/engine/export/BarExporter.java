@@ -18,28 +18,23 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.collect.Maps.uniqueIndex;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.bar.InvalidBusinessArchiveFormatException;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
-import org.bonitasoft.studio.common.gmf.tools.CopyToImageUtilEx;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ModelSearch;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -58,19 +53,9 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
@@ -144,22 +129,6 @@ public class BarExporter {
                 provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
             } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Application resources from configuration.", e);
-            }
-        }
-
-        if (!(process instanceof SubProcessEvent)) {
-            if (addProcessImage) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            addProcessImage(builder, process);
-                        } catch (final CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
-                });
             }
         }
 
@@ -325,50 +294,6 @@ public class BarExporter {
         return res;
     }
 
-    protected void addProcessImage(final BusinessArchiveBuilder builder, final AbstractProcess process)
-            throws CoreException {
-        if (PlatformUI.isWorkbenchRunning()) {
-            final String processName = process.getName() + "_" + process.getVersion();
-            final String path = processName + ".png"; //$NON-NLS-1$
 
-            try {
-                Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process));
-                if (diagram == null) {
-                    return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
-                }
-                final ResourceSet resourceSet = new ResourceSetImpl();
-                final TransactionalEditingDomain editingDomain = CustomDiagramEditingDomainFactory.getInstance()
-                        .createEditingDomain(resourceSet);
-                final Resource resource = resourceSet.createResource(diagram.eResource().getURI());
-                try {
-                    resource.load(resourceSet.getLoadOptions());
-                } catch (final IOException e1) {
-                    BonitaStudioLog.error(e1);
-                }
-                diagram = (Diagram) resource.getEObject(diagram.eResource().getURIFragment(diagram));
-                final CopyToImageUtilEx copyToImageUtil = new CopyToImageUtilEx();
-                byte[] imageBytes = null;
-                try {
-                    imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG,
-                            Repository.NULL_PROGRESS_MONITOR,
-                            new PreferencesHint("exportToImage"), true);
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                    return;
-                } finally {
-                    editingDomain.dispose();
-                }
-                if (imageBytes != null) {
-                    try {
-                        builder.addExternalResource(new BarResource(path, imageBytes));
-                    } catch (final Exception e) {
-                        BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
-                    }
-                }
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
 
 }

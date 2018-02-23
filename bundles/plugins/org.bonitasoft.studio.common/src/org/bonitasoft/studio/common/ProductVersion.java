@@ -37,10 +37,21 @@ public class ProductVersion {
     private static String manifestVersion() {
         Bundle bundle = FrameworkUtil.getBundle(ProductVersion.class);
         if (bundle == null) {
-            return "7.6.0";
+            String implementationVersion = ProductVersion.class.getPackage().getImplementationVersion();
+            if(implementationVersion == null) {
+                throw new IllegalStateException("No product version set.");
+            }
+            return stripSnaphot(implementationVersion);
         }
         Version version = bundle.getVersion();
         return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro());
+    }
+
+    private static String stripSnaphot(String version) {
+        if(version.endsWith("-SNAPSHOT")) {
+            return version.substring(0, version.indexOf("-SNAPSHOT"));
+        }
+        return version;
     }
 
     public static boolean sameMinorVersion(final String version) {
