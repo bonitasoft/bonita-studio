@@ -196,11 +196,15 @@ public class BosArchive {
         if (version.contains("-")) {
             version = version.split("-")[0];
         }
-        if (!ProductVersion.canBeImported(version)) {
+        if (!canImport(version)) {
             return ValidationStatus
                     .error(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
         }
         return ValidationStatus.ok();
+    }
+
+    public boolean canImport(String version) {
+        return ProductVersion.canBeImported(version);
     }
 
     private Properties readManifest() throws IOException {

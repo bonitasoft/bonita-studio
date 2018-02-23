@@ -10,6 +10,7 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -64,7 +65,8 @@ public class BosArchiveTest {
     @Test
     public void should_fail_when_archiveFile_version_is_incompatible() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/archiveWithIncompatibleManifest.bos"));
-
+        doReturn(false).when(bosArchive).canImport("600.1.1");
+        
         final IStatus status = bosArchive.validate();
 
         StatusAssert.assertThat(status).isNotOK();
@@ -112,6 +114,7 @@ public class BosArchiveTest {
 
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
+        doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
 
