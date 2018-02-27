@@ -116,8 +116,8 @@ public class CreateDeployExportBusinessObjectIT {
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive("Validation failed"));
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.modelValidationFailedTitle));
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
         activeShell.setFocus();
         bdmWizardBot.editConstraint("Employee", "FIRSTLASTNAMEUNIQUE", "firstName -- STRING", "lastName -- STRING");
         bdmWizardBot.editIndex("Employee", "NAMEINDEX", "lastName -- STRING");

@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -24,6 +23,7 @@ import org.bonitasoft.engine.bdm.model.UniqueConstraint;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.validator.BusinessObjectModelValidator;
 import org.bonitasoft.engine.bdm.validator.ValidationStatus;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMStackTraceResolver;
@@ -36,19 +36,19 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.ui.dialog.ProblemsDialog;
-import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
@@ -121,7 +121,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
     private boolean validateAndSaveBDM() {
         try {
-            getContainer().run(true, false, new IRunnableWithProgress() {
+            getContainer().run(false, false, new IRunnableWithProgress() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -129,48 +129,25 @@ public class ManageBusinessDataModelWizard extends Wizard {
                         fStore.delete();
                     } else {
                         monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
-                        final ValidationStatus validate = new BusinessObjectModelValidator().validate(businessObjectModel);
-                        if (!validate.getErrors().isEmpty()) {
-                            Display.getDefault().asyncExec(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    new ProblemsDialog<String>(getShell(), Messages.modelValidationFailedTitle,
-                                            Messages.modelValidationFailedMsg, MessageDialog.ERROR,
-                                            new String[] { IDialogConstants.OK_LABEL }) {
-
-                                        @Override
-                                        protected TypedLabelProvider<String> getTypedLabelProvider() {
-                                            return new TypedLabelProvider<String>() {
-
-                                                @Override
-                                                public String getText(String element) {
-                                                    return element;
-                                                }
-
-                                                @Override
-                                                public Image getImage(String element) {
-                                                    return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
-                                                }
-
-                                            };
-                                        }
-
-                                        @Override
-                                        protected Collection<String> getInput() {
-                                            return validate.getErrors();
-                                        }
-                                    }.open();
-                                }
-                            });
-                            throw new InterruptedException();
-                        } else {
-                            save(monitor);
+                        ValidationStatus validate = new BusinessObjectModelValidator().validate(businessObjectModel);
+                        if (!(validate.getErrors().isEmpty() && validate.getWarnings().isEmpty())) {
+                            MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, "", null);
+                            validate.getErrors().stream()
+                                    .distinct()
+                                    .map(org.eclipse.core.databinding.validation.ValidationStatus::error)
+                                    .forEach(status::add);
+                            validate.getWarnings().stream()
+                                    .distinct()
+                                    .map(org.eclipse.core.databinding.validation.ValidationStatus::warning)
+                                    .forEach(status::add);
+                            if (!manageErrors(status, getShell())) {
+                                throw new InterruptedException();
+                            }
                         }
+                        save(monitor);
                         monitor.done();
                     }
                 }
-
             });
         } catch (final InvocationTargetException e) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelValidationFailedTitle,
@@ -181,6 +158,18 @@ public class ManageBusinessDataModelWizard extends Wizard {
             return false;
         }
         return true;
+    }
+
+    private boolean manageErrors(MultiStatus status, Shell shell) throws RuntimeException {
+        int open = new MultiStatusDialog(shell,
+                Messages.modelValidationFailedTitle,
+                Messages.modelValidationFailedMsg,
+                status.getSeverity() < IStatus.ERROR ? MessageDialog.WARNING : MessageDialog.ERROR,
+                new String[] { IDialogConstants.CANCEL_LABEL, Messages.continueDeploy },
+                status,
+                1,
+                s -> s.getSeverity() < IStatus.ERROR).open();
+        return open > 0; // continue
     }
 
     protected void save(final IProgressMonitor monitor) {
