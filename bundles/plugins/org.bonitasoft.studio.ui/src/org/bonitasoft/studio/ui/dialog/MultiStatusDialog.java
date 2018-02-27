@@ -23,7 +23,6 @@ import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +34,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
 
     private MultiStatus status;
     private Predicate<IStatus> canFinish;
+    private int finishId;
 
     public MultiStatusDialog(Shell parentShell, String dialogTitle,
             String dialogMessage,
@@ -50,10 +50,12 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             int dialogImageType,
             String[] dialogButtonLabels,
             MultiStatus status,
+            int finishId,
             Predicate<IStatus> canFinish) {
         super(parentShell, dialogTitle, dialogMessage, dialogImageType, dialogButtonLabels);
         this.status = status;
         this.canFinish = canFinish;
+        this.finishId = finishId;
     }
 
     /*
@@ -64,7 +66,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         Button button = super.createButton(parent, id, label, defaultButton);
-        if (IDialogConstants.OK_ID == id && canFinish != null) {
+        if (finishId == id && canFinish != null) {
             button.setEnabled(canFinish.test(status));
         }
         return button;
