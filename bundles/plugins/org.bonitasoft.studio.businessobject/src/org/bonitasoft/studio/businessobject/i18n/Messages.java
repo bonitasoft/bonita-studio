@@ -343,6 +343,8 @@ public class Messages extends NLS {
 
     public static String deployBDMJobName;
 
+    public static String continueDeploy;
+
     private Messages() {
     }
 
