@@ -143,12 +143,15 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         final XMLOptions options = new XMLOptionsImpl();
         options.setProcessAnyXML(true);
         loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+        String modelVersion = null;
         try {
             resource.load(loadOptions);
+            modelVersion = getModelVersion(resource);
         } catch (final IOException e) {
             BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+        } finally {
+            resource.unload();
         }
-        final String modelVersion = getModelVersion(resource);
         for (final Release release : targetMigrator.getReleases()) {
             if (release.getLabel().equals(modelVersion)) {
                 return release;
