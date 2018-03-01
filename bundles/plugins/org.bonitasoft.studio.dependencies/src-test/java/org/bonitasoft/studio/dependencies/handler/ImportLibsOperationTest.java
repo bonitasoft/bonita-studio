@@ -16,6 +16,7 @@ package org.bonitasoft.studio.dependencies.handler;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -76,9 +77,9 @@ public class ImportLibsOperationTest {
         final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
-        verify(libStore).createRepositoryFileStore(tmpFileWhichWillBeCopied1.getName());
+        verify(libStore, atLeast(1)).createRepositoryFileStore(tmpFileWhichWillBeCopied1.getName());
         verify(libStore).createRepositoryFileStore(tmpFileWhichWillBeCopied2.getName());
-        verify(libFileStore, times(2)).save(notNull(Object.class));
+        verify(libFileStore, atLeast(2)).save(notNull(Object.class));
     }
 
     @Test
@@ -145,9 +146,9 @@ public class ImportLibsOperationTest {
         verify(libStore).createRepositoryFileStore("test2.jar");
         verify(libStore).createRepositoryFileStore("test-2.jar");
         verify(libStore).createRepositoryFileStore("test2-2.jar");
-        verify(libStore).createRepositoryFileStore(tmpJarFileWhichWillBeCopied1.getName());
+        verify(libStore, atLeast(1)).createRepositoryFileStore(tmpJarFileWhichWillBeCopied1.getName());
         verify(libStore).createRepositoryFileStore(tmpJarFileWhichWillBeCopied2.getName());
-        verify(libFileStore, times(6)).save(notNull(Object.class));
+        verify(libFileStore, atLeast(6)).save(notNull(Object.class));
     }
 
     @Test
