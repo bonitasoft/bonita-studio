@@ -11451,6 +11451,104 @@
   </releases>
   <releases xmi:id="_15FkUGnREeaTLbmqFFisdA" date="2013-05-17T10:17:14.066+0200" label="6.0.0-ga-005">
     <changes xsi:type="history:MigrationChange" xmi:id="_15FkUWnREeaTLbmqFFisdA" migration="org.bonitasoft.studio.migration.custom.migration.FormConnectorEventMigration"/>
+    <changes xsi:type="history:OperationChange" xmi:id="_PO6H8BsCEeifUtXPilm_3g">
+      <changes xsi:type="history:Create" xmi:id="_PO6H8RsCEeifUtXPilm_3g" referenceName="eStructuralFeatures">
+        <target href="configuration.ecore#//Configuration"/>
+        <element href="configuration.ecore#//Configuration/anonymousUserName"/>
+        <changes xsi:type="history:Set" xmi:id="_PO6H8hsCEeifUtXPilm_3g" featureName="name" dataValue="anonymousUserName">
+          <element href="configuration.ecore#//Configuration/anonymousUserName"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_PO6H8xsCEeifUtXPilm_3g" featureName="eType">
+          <element href="configuration.ecore#//Configuration/anonymousUserName"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_PO6H9BsCEeifUtXPilm_3g" name="newAttribute">
+        <parameters xmi:id="_PO6H9RsCEeifUtXPilm_3g" name="eClass">
+          <referenceValue xmi:id="_PO6H9hsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6H9xsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6H-BsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_PO6H-RsCEeifUtXPilm_3g" name="name">
+          <dataValue>anonymousUserName</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6H-hsCEeifUtXPilm_3g" name="type">
+          <referenceValue xmi:id="_PO6H-xsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6H_BsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6H_RsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_PO6H_hsCEeifUtXPilm_3g" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6H_xsCEeifUtXPilm_3g" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6IABsCEeifUtXPilm_3g" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_PO6IARsCEeifUtXPilm_3g">
+      <changes xsi:type="history:Create" xmi:id="_PO6IAhsCEeifUtXPilm_3g" referenceName="eStructuralFeatures">
+        <target href="configuration.ecore#//Configuration"/>
+        <element href="configuration.ecore#//Configuration/anonymousPassword"/>
+        <changes xsi:type="history:Set" xmi:id="_PO6IAxsCEeifUtXPilm_3g" featureName="name" dataValue="anonymousPassword">
+          <element href="configuration.ecore#//Configuration/anonymousPassword"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_PO6IBBsCEeifUtXPilm_3g" featureName="eType">
+          <element href="configuration.ecore#//Configuration/anonymousPassword"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_PO6IBRsCEeifUtXPilm_3g" name="newAttribute">
+        <parameters xmi:id="_PO6IBhsCEeifUtXPilm_3g" name="eClass">
+          <referenceValue xmi:id="_PO6IBxsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6ICBsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6ICRsCEeifUtXPilm_3g">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_PO6IChsCEeifUtXPilm_3g" name="name">
+          <dataValue>anonymousPassword</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6ICxsCEeifUtXPilm_3g" name="type">
+          <referenceValue xmi:id="_PO6IDBsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6IDRsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_PO6IDhsCEeifUtXPilm_3g">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_PO6IDxsCEeifUtXPilm_3g" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6IEBsCEeifUtXPilm_3g" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_PO6IERsCEeifUtXPilm_3g" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
   </releases>
   <releases xmi:id="_15FkUmnREeaTLbmqFFisdA" date="2013-06-11T11:45:39.611+0200" label="6.0.1-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_15FkU2nREeaTLbmqFFisdA" migration="org.bonitasoft.studio.migration.custom.migration.timer.StartTimerConditionCustomMigration"/>
