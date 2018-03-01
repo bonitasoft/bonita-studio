@@ -509,7 +509,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
         DebugUIPlugin.getDefault().getProcessConsoleManager();
         SourceLookupManager.getDefault();
-        final StartEngineJob job = new StartEngineJob("Starting BOS Engine");
+        final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
         job.setPriority(Job.DECORATE);
         job.setUser(false);
         job.schedule();

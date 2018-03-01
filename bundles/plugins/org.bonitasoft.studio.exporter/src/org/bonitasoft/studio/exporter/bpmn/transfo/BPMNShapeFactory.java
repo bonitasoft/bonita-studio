@@ -29,9 +29,10 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.eclipse.draw2d.AbstractRouter;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.TextUtilities;
+import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -42,10 +43,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.RectilinearRouter;
-import org.eclipse.gmf.runtime.gef.ui.figures.SlidableAnchor;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
 import org.eclipse.gmf.runtime.notation.DecorationNode;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -57,7 +55,6 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
-import org.eclipse.jface.resource.JFaceResources;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNLabel;
@@ -223,8 +220,9 @@ public class BPMNShapeFactory {
                             org.eclipse.gmf.runtime.notation.Bounds absoluteBounds = NotationFactory.eINSTANCE
                                     .createBounds();
 
-                            Dimension dimension = TextUtilities.INSTANCE.getStringExtents(labelText,
-                                    JFaceResources.getFont(font.getName()));
+                            //Here we use some default constant values to avoid a dependency on a set Display
+                            //The output diemension values are sligthly the same between windows and linux
+                            Dimension dimension = new Dimension((int) (labelText.length() * 7.42), (int) (11 * 1.6));
                             absoluteBounds.setWidth(dimension.width);
                             absoluteBounds.setHeight(dimension.height);
 
@@ -293,7 +291,7 @@ public class BPMNShapeFactory {
         edge.setBpmnElement(QName.valueOf(bpmnFlowId));
         edge.setId(modelExporter.getEObjectID(bonitaEdge));
 
-        PolylineConnectionEx conn = createConnectorFigure(bonitaEdge);
+        PolylineConnection conn = createConnectorFigure(bonitaEdge);
         PointList points = conn.getPoints();
         for (int i = 0; i < points.size(); i++) {
             final org.omg.spec.dd.dc.Point sourcePoint = DcFactory.eINSTANCE.createPoint();
@@ -330,8 +328,11 @@ public class BPMNShapeFactory {
             Point referencePoint = PointListUtilities.calculatePointRelativeToLine(pList, 0,
                     LabelViewConstants.MIDDLE_LOCATION, true);
             Point location = LabelHelper.calculatePointRelativeToPointOnLine(pList, referencePoint, offSet);
-            Dimension dimension = TextUtilities.INSTANCE.getStringExtents(labelText,
-                    JFaceResources.getFont(font.getName()));
+            //Here we use some default constant values to avoid a dependency on a set Display
+            //The output diemension values are sligthly the same between windows and linux
+            Dimension dimension = new Dimension((int) (labelText.length() * 7.42), (int) (11 * 1.6));
+            absoluteBounds.setWidth(dimension.width);
+            absoluteBounds.setHeight(dimension.height);
             location.translate(-1 * dimension.width / 2, -1 * dimension.height / 2);
 
             absoluteBounds.setWidth(dimension.width);
@@ -348,12 +349,12 @@ public class BPMNShapeFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private PolylineConnectionEx createConnectorFigure(Edge bonitaEdge) {
+    private PolylineConnection createConnectorFigure(Edge bonitaEdge) {
         Bounds sourceLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getSource()));
         Bounds targetLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getTarget()));
 
-        PolylineConnectionEx conn = new PolylineConnectionEx();
-        RectilinearRouter router = new RectilinearRouter();
+        PolylineConnection conn = new PolylineConnection();
+        AbstractRouter router = new CustomRectilinearRouter();
         conn.setConnectionRouter(router);
         final List<RelativeBendpoint> pointList = ((RelativeBendpoints) bonitaEdge.getBendpoints()).getPoints();
         List<org.eclipse.draw2d.RelativeBendpoint> figureConstraint = new ArrayList<>();
@@ -363,8 +364,8 @@ public class BPMNShapeFactory {
             sourceFigure.setBounds(toRectangle(sourceLocation));
             IFigure targetFigure = new Figure();
             targetFigure.setBounds(toRectangle(targetLocation));
-            conn.setSourceAnchor(new SlidableAnchor(sourceFigure));
-            conn.setTargetAnchor(new SlidableAnchor(targetFigure));
+            conn.setSourceAnchor(new CustomAnchor(sourceFigure));
+            conn.setTargetAnchor(new CustomAnchor(targetFigure));
             org.eclipse.draw2d.RelativeBendpoint rbp = new org.eclipse.draw2d.RelativeBendpoint(conn);
             rbp.setRelativeDimensions(
                     new Dimension(relativeBendpoint.getSourceX(), relativeBendpoint.getSourceY()),

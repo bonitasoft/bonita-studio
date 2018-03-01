@@ -84,14 +84,7 @@ public class BarExporter {
     }
 
     public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObject)
-            throws BarCreationException {
-        return createBusinessArchive(process, configuration, excludedObject, true);
-    }
-
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObject,
-            final boolean addProcessImage) throws BarCreationException {
+            final Set<EObject> excludedObject) throws BarCreationException {
 
         checkArgument(configuration != null);
         BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...",

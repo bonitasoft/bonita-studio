@@ -73,6 +73,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -134,7 +135,8 @@ public class FormPreviewOperation implements IRunnableWithProgress {
                 undeployProcessOperation.addProcessToUndeploy(proc);
                 undeployProcessOperation.run(monitor);
 
-                final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration, Collections.EMPTY_SET, false);
+                final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration,
+                        Collections.<EObject> emptySet());
                 cleanResources(proc, resource);
                 final ProcessDefinition def = processApi.deploy(businessArchive);
                 procId = def.getId();

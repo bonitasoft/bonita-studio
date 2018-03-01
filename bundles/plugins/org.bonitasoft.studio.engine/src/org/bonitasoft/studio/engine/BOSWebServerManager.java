@@ -185,13 +185,13 @@ public class BOSWebServerManager {
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 
             try {
-                final IProject confProject = createServerConfigurationProject(monitor);
-                final IRuntime runtime = createServerRuntime(type, monitor);
+                final IProject confProject = createServerConfigurationProject(Repository.NULL_PROGRESS_MONITOR);
+                final IRuntime runtime = createServerRuntime(type, Repository.NULL_PROGRESS_MONITOR);
                 tomcat = createServer(monitor, confProject, runtime);
-                createLaunchConfiguration(tomcat, monitor);
-                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-                tomcat.start("run", monitor);
-                waitServerRunning(monitor);
+                createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
+                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+                tomcat.start("run", Repository.NULL_PROGRESS_MONITOR);
+                waitServerRunning();
             } catch (final CoreException e) {
                 handleCoreExceptionWhileStartingTomcat(e);
             }
@@ -237,7 +237,7 @@ public class BOSWebServerManager {
         }
     }
 
-    private void waitServerRunning(final IProgressMonitor monitor) {
+    private void waitServerRunning() {
         try {
             Thread.sleep(5000);
         } catch (final InterruptedException ex) {
