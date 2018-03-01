@@ -72,6 +72,8 @@ public class Messages extends NLS {
 
     public static String importWorkspace;
 
+    public static String startingEngineServer;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
