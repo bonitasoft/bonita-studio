@@ -64,35 +64,22 @@ public class ImportLibsOperation implements IRunnableWithProgress {
                 } else if (fileName.endsWith(ZIP_EXTENSION)) { //$NON-NLS-1$
                     importJarsFromZip(monitor, fis);
                 }
+                importJars(jarsToImportMap);
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
                 throw new InvocationTargetException(ex);
             }
         }
-        importJars(jarsToImportMap);
+
     }
 
     private void importJars(final Map<String, InputStream> jarsToImportMap) {
         for (final Entry<String, InputStream> entry : jarsToImportMap.entrySet()) {
-            Display.getDefault().syncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    InputStream is = null;
-                    try {
-                        is = entry.getValue();
-                        libStore.createRepositoryFileStore(entry.getKey()).save(is);
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        if (is != null) {
-                            try {
-                                is.close();
-                            } catch (final IOException e) {
-                                BonitaStudioLog.error(e);
-                            }
-                        }
-                    }
+            Display.getDefault().syncExec(() -> {
+                try (InputStream is = entry.getValue()) {
+                    libStore.createRepositoryFileStore(entry.getKey()).save(is);
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
                 }
             });
         }
