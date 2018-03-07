@@ -40,6 +40,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -804,8 +805,9 @@ public class SWTBotTestUtil implements SWTBotConstants {
         getKeybord().pressShortcut(Keystrokes.DELETE);
     }
 
-    public static void clickOnPenToEditExpression(final SWTGefBot bot, final int index) {
+    public static BotExpressionEditorDialog clickOnPenToEditExpression(final SWTGefBot bot, final int index) {
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, index).click();
+        return new BotExpressionEditorDialog(bot, bot.activeShell());
     }
 
     /**
