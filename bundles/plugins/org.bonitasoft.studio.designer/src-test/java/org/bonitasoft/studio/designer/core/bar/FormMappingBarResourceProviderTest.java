@@ -22,8 +22,10 @@ import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aF
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,8 +77,10 @@ public class FormMappingBarResourceProviderTest {
 
     @Before
     public void setUp() throws Exception {
-        formMappingBarResourceProvider = new FormMappingBarResourceProvider(customPageBarResourceFactory, preferenceStore);
+        formMappingBarResourceProvider = spy(
+                new FormMappingBarResourceProvider(customPageBarResourceFactory, preferenceStore));
         when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(false);
+        doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -129,6 +133,7 @@ public class FormMappingBarResourceProviderTest {
     @Test
     public void should_add_form_custom_page_as_a_bar_resource() throws Exception {
         //Given
+        doReturn("step-form-id").when(formMappingBarResourceProvider).resolveUUID("step-form-id");
         doReturn(taskFormCustomPage).when(customPageBarResourceFactory).newBarResource("custompage_StepForm", "step-form-id");
 
         //When
@@ -143,6 +148,7 @@ public class FormMappingBarResourceProviderTest {
     @Test
     public void should_not_add_form_custom_page_if_target_form_is_empty() throws Exception {
         //When
+        doReturn("").when(formMappingBarResourceProvider).resolveUUID("");
         formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(), aConfiguration()
                 .build(),
                 Collections.<EObject> emptySet());

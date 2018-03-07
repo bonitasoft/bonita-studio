@@ -89,9 +89,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
 
         legacyComposite = new InfoMessageComposite(stackedComposite, widgetFactory,IStatus.WARNING);
         noneComposite = new InfoMessageComposite(stackedComposite, widgetFactory,IStatus.INFO);
-        pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory, preferenceStore,
-                repositoryAccessor,
-                formReferenceExpressionValidator, createOrEditFormListener);
+        pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory,
+                repositoryAccessor, formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
         widgetFactory.adapt(this);
     }

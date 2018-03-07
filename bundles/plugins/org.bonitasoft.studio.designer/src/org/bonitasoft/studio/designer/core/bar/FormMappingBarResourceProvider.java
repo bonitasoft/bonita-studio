@@ -30,7 +30,10 @@ import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
+import org.bonitasoft.studio.designer.core.repository.PageUUIDResolver;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
@@ -86,8 +89,8 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         if (shouldAddFormMapping(formMapping)) {
             final FormMappingDefinition mappingDefinition = newFormMappingDefinition(formMapping);
             formMappingModel.addFormMapping(mappingDefinition);
-            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL && !isNullOrEmpty(formUUID(formMapping))) {
-                builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formUUID(formMapping)));
+            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL && !isNullOrEmpty(formId(formMapping))) {
+                builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formId(formMapping)));
             }
         }
     }
@@ -133,9 +136,14 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         return formMapping.getTargetForm().getName();
     }
 
-    private String formUUID(final FormMapping formMapping) {
+    private String formId(final FormMapping formMapping) {
         checkArgument(formMapping.getType() == org.bonitasoft.studio.model.process.FormMappingType.INTERNAL, "Only internal mapping has a form uuid");
-        return formMapping.getTargetForm().getContent();
+        return resolveUUID(formMapping.getTargetForm().getContent());
+    }
+
+    protected String resolveUUID(String uuid) {
+        return new PageUUIDResolver(RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class)
+                .getResource().getLocation().toFile()).resolveUUID(uuid);
     }
 
     private String taskName(final FormMapping formMapping) {

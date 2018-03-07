@@ -25,7 +25,6 @@ import static java.util.regex.Pattern.compile;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllItemsOfType;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -91,7 +90,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     @Override
     public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
             final Configuration configuration) {
-        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        final Set<IRepositoryFileStore> result = new HashSet<>();
         final List<FormMapping> allFormMappings = getAllItemsOfType(process, ProcessPackage.Literals.FORM_MAPPING);
         for (final WebPageFileStore fStore : transform(filter(allFormMappings, withInternalType()),
                 formMappingToFileStore())) {
@@ -111,12 +110,11 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
             throws BarResourceCreationException, IOException {
         final BarResource barResource = customPageBarResourceFactory.newBarResource(fStore.getName(), fStore.getId());
         final byte[] zipContent = barResource.getContent();
-        final Set<String> zipEntries = zipEntries(zipContent);
-        return zipEntries;
+        return zipEntries(zipContent);
     }
 
     private Set<String> zipEntries(final byte[] zipContent) throws IOException {
-        final Set<String> entries = new HashSet<String>();
+        final Set<String> entries = new HashSet<>();
         try (final ZipInputStream stream = new ZipInputStream(ByteSource.wrap(zipContent).openBufferedStream())) {
             ZipEntry entry;
             while ((entry = stream.getNextEntry()) != null) {
@@ -132,24 +130,14 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Predicate<WebWidgetFileStore> customWidgetOnly() {
-        return new Predicate<WebWidgetFileStore>() {
-
-            @Override
-            public boolean apply(final WebWidgetFileStore input) {
-                return input.canBeExported();
-            }
-        };
+        return WebWidgetFileStore::canBeExported;
     }
 
     private Function<String, WebWidgetFileStore> toWidgetFileStore(final Pattern widgetPattern) {
-        return new Function<String, WebWidgetFileStore>() {
-
-            @Override
-            public WebWidgetFileStore apply(final String matchingEntry) {
-                final Matcher matcher = widgetPattern.matcher(matchingEntry);
-                checkState(matcher.matches() == true);
-                return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1));
-            }
+        return matchingEntry -> {
+            final Matcher matcher = widgetPattern.matcher(matchingEntry);
+            checkState(matcher.matches());
+            return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1));
         };
     }
 
@@ -159,32 +147,23 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Function<String, WebFragmentFileStore> toFragmentFileStore(final Pattern fragmentPattern) {
-        return new Function<String, WebFragmentFileStore>() {
-
-            @Override
-            public WebFragmentFileStore apply(final String matchingEntry) {
-                final Matcher matcher = fragmentPattern.matcher(matchingEntry);
-                checkState(matcher.matches() == true);
-                return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
-                        .getChild(matcher.group(1));
-            }
+        return matchingEntry -> {
+            final Matcher matcher = fragmentPattern.matcher(matchingEntry);
+            checkState(matcher.matches());
+            return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
+                    .getChild(matcher.group(1));
         };
     }
 
     private Function<FormMapping, WebPageFileStore> formMappingToFileStore() {
-        return new Function<FormMapping, WebPageFileStore>() {
-
-            @Override
-            public WebPageFileStore apply(final FormMapping mapping) {
-                final String formUUID = mapping.getTargetForm().getContent();
-                final WebPageFileStore store = fileStoreFromFormUUID(formUUID);
-                if (store == null) {
-                    BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID),
-                            UIDesignerPlugin.PLUGIN_ID);
-                }
-                return store;
+        return mapping -> {
+            final String formUUID = mapping.getTargetForm().getContent();
+            final WebPageFileStore store = fileStoreFromFormUUID(formUUID);
+            if (store == null) {
+                BonitaStudioLog.warning(String.format("Page with id %s doesn't exist.", formUUID),
+                        UIDesignerPlugin.PLUGIN_ID);
             }
-
+            return store;
         };
     }
 
@@ -194,19 +173,13 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Predicate<FormMapping> withInternalType() {
-        return new Predicate<FormMapping>() {
-
-            @Override
-            public boolean apply(final FormMapping mapping) {
-                return mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
-            }
-        };
+        return mapping -> mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
     }
 
     public Set<IRepositoryFileStore> getRelatedFileStore(final WebPageFileStore webPageFileStore)
             throws BarResourceCreationException, IOException {
         final Set<String> zipEntries = findFormRelatedEntries(webPageFileStore);
-        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        final Set<IRepositoryFileStore> result = new HashSet<>();
         result.addAll(relatedFragments(zipEntries));
         result.addAll(relatedWidgets(zipEntries));
         return result;
