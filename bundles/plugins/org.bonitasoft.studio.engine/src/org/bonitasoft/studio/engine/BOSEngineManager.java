@@ -40,12 +40,10 @@ import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.exception.UpdateException;
-import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.platform.InvalidPlatformCredentialsException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.platform.PlatformLoginException;
 import org.bonitasoft.engine.platform.PlatformLogoutException;
-import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.engine.session.PlatformSession;
@@ -65,7 +63,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -102,6 +99,8 @@ public class BOSEngineManager {
     private boolean isRunning = false;
 
     private IProgressMonitor monitor;
+
+    private boolean isStarting = false;
 
     protected BOSEngineManager(final IProgressMonitor monitor) {
         if (monitor == null) {
@@ -152,11 +151,17 @@ public class BOSEngineManager {
 
     public synchronized void start() {
         if (!isRunning()) {
+            isStarting = true;
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
             initBonitaHome();
             BOSWebServerManager.getInstance().startServer(monitor);
             isRunning = postEngineStart();
+            isStarting = false;
         }
+    }
+
+    public boolean isStarting() {
+        return isStarting;
     }
 
     protected boolean postEngineStart() {
