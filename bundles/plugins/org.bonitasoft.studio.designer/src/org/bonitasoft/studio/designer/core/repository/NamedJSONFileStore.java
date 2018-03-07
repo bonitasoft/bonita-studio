@@ -27,6 +27,7 @@ import org.json.JSONException;
 public class NamedJSONFileStore extends JSONFileStore {
 
     private static final String NAME_KEY = "name";
+    private static final String UUID_KEY = "uuid";
     private static final String ID_KEY = "id";
 
     public NamedJSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
@@ -37,7 +38,20 @@ public class NamedJSONFileStore extends JSONFileStore {
         try {
             return getStringAttribute(ID_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
-            BonitaStudioLog.error(String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_KEY), UIDesignerPlugin.PLUGIN_ID);
+            BonitaStudioLog.error(
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_KEY),
+                    UIDesignerPlugin.PLUGIN_ID);
+            return null;
+        }
+    }
+
+    public String getUUID() {
+        try {
+            return getStringAttribute(UUID_KEY);
+        } catch (final JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), UUID_KEY),
+                    UIDesignerPlugin.PLUGIN_ID);
             return null;
         }
     }

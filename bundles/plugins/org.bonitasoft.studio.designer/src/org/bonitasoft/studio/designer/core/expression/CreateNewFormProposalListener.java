@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -83,8 +84,9 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewPageId();
-        repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId).open();
-        return newPageId;
+        WebPageFileStore pagStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId);
+        pagStore.open();
+        return pagStore.getUUID();
     }
 
     private FormScope formScopeFor(final EObject context) {

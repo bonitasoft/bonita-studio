@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.swt.SWT;
@@ -47,8 +46,6 @@ public class FormReferenceExpressionViewerTest {
     public RealmWithDisplay realmWithDisplay = new RealmWithDisplay();
     @Mock
     private RepositoryAccessor repositoryAccessor;
-    @Mock
-    private IEclipsePreferences preferenceStore;
     @Mock
     private FormReferenceExpressionValidator formReferenceExpressionValidator;
     @Mock
@@ -110,7 +107,7 @@ public class FormReferenceExpressionViewerTest {
 
     private InternalMappingComposite makeComposite() {
         return new InternalMappingComposite(realmWithDisplay.createComposite(),
-                new TabbedPropertySheetWidgetFactory(), preferenceStore, repositoryAccessor,
+                new TabbedPropertySheetWidgetFactory(), repositoryAccessor,
                 formReferenceExpressionValidator, createOrEditNewFormProposalListener);
     }
 }

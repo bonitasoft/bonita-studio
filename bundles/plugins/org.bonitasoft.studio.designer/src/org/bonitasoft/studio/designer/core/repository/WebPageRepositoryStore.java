@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -27,6 +30,10 @@ import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvide
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
+import org.json.JSONException;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -34,7 +41,7 @@ import org.eclipse.swt.graphics.Image;
 public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPageFileStore> {
 
     private static final String PAGE_ICON_PATH = "page.png";
-    private final static Set<String> extensions = new HashSet<>();
+    private static final Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
 
@@ -76,6 +83,47 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
         return getChildren().stream()
                 .filter(fStore -> Objects.equals(pageId, "custompage_" + fStore.getDisplayName()))
                 .findFirst();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#getChild(java.lang.String)
+     */
+    @Override
+    public WebPageFileStore getChild(String uuid) {
+        String id = new PageUUIDResolver(getResource().getLocation().toFile()).resolveUUID(uuid);
+        WebPageFileStore page = super.getChild(id);
+        if (page == null) {
+            return super.getChild(uuid);
+        }
+        return page;
+    }
+
+
+    public String getDisplayNameFor(String uuid) {
+        File pageFolder = getResource().getLocation().toFile();
+        String id = new PageUUIDResolver(pageFolder).resolveUUID(uuid);
+        return Stream.of(pageFolder.listFiles())
+                .filter(file -> file.getName().equals(id))
+                .map(file -> new File(file, file.getName() + ".json"))
+                .map(file -> {
+                    try {
+                        return new org.json.JSONObject(Files.toString(file, Charsets.UTF_8));
+                    } catch (JSONException | IOException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .map(json -> {
+                    try {
+                        return json.getString("name");
+                    } catch (JSONException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("");
     }
 
 }

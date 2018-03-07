@@ -17,7 +17,6 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.FormReferenceProposalLabelProvider;
@@ -32,7 +31,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -59,7 +57,6 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
 
     public InternalMappingComposite(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory,
-            final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor,
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
@@ -85,30 +82,29 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
         final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-        final FormReferenceExpressionViewer targetFormExpressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER, widgetFactory,
+        final FormReferenceExpressionViewer expressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER,
+                widgetFactory,
                 webPageRepositoryStore, createOrEditFormListener);
-        targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().hint(WIDTH_HINT, SWT.DEFAULT).grab(false, false).create());
-        targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
-        targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
-        targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
-        targetFormExpressionViewer.setProposalsFiltering(false);
-        targetFormExpressionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        expressionViewer.getControl()
+                .setLayoutData(GridDataFactory.swtDefaults().hint(WIDTH_HINT, SWT.DEFAULT).grab(false, false).create());
+        expressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
+        expressionViewer.addExpressionValidator(formReferenceExpressionValidator);
+        expressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.FORM_REFERENCE_TYPE));
+        expressionViewer.setProposalsFiltering(false);
+        expressionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 final Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (selection instanceof Expression) {
                     webPageNameResourceChangeListener.setExpression((Expression) selection);
-                    final String content = ((Expression) selection).getContent();
-                    final WebPageFileStore webPageFileStore = webPageRepositoryStore.getChild(content);
-                    if (webPageFileStore != null) {
-                        webPageNameResourceChangeListener.setWebPageFileStore(webPageFileStore);
-                        webPageNameResourceChangeListener.setJSONFile(webPageFileStore.getJSONIFile());
+                    if (webPageRepositoryStore != null) {
+                        webPageNameResourceChangeListener.setWebPageStore(webPageRepositoryStore);
                     }
                 }
             }
         });
-        return targetFormExpressionViewer;
+        return expressionViewer;
     }
 
     /*
