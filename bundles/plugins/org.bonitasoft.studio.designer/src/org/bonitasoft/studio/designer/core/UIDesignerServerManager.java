@@ -32,8 +32,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -73,10 +75,10 @@ public class UIDesignerServerManager {
     }
 
     private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> stop()));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
-    public synchronized static UIDesignerServerManager getInstance() {
+    public static synchronized UIDesignerServerManager getInstance() {
         if (INSTANCE == null) {
             RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
             repositoryAccessor.init();
@@ -91,6 +93,7 @@ public class UIDesignerServerManager {
                         .findFirst()
                         .map(IProcess::isTerminated)
                         .orElse(false)) {
+            monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             try {
                 if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
                     WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
@@ -107,7 +110,7 @@ public class UIDesignerServerManager {
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
                         Joiner.on(" ").join(buildCommand(repositoryAccessor)));
-                launch = workingCopy.launch(ILaunchManager.RUN_MODE, monitor);
+                launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
                 waitForUID(new PageDesignerURLFactory(getPreferenceStore()));
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/designer", port),
                         UIDesignerPlugin.PLUGIN_ID);
