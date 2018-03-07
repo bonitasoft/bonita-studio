@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.expression.FormReferenceExpressionProvider;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -83,6 +82,7 @@ public class FormReferenceExpressionProviderTest {
         final WebPageFileStore webPageFileStore = mock(WebPageFileStore.class);
         when(webPageFileStore.getDisplayName()).thenReturn(name);
         when(webPageFileStore.getId()).thenReturn(id);
+        when(webPageFileStore.getUUID()).thenReturn(id);
         return webPageFileStore;
     }
 }

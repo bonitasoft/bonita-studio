@@ -15,11 +15,10 @@
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -28,8 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class WebPageNameResourceChangeListener implements IResourceChangeListener {
 
-    private WebPageFileStore webPageFileStore;
-    private IFile jsonFile;
+    private WebPageRepositoryStore webPageStore;
     private Expression expression;
     private final ExpressionItemProvider expressionItemProvider;
 
@@ -43,7 +41,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
      */
     @Override
     public void resourceChanged(final IResourceChangeEvent event) {
-        if (jsonFile != null && webPageFileStore != null && expression != null) {
+        if (webPageStore != null && expression != null) {
             try {
                 event.getDelta().accept(resourceDeltaVisitor());
             } catch (final CoreException e) {
@@ -57,23 +55,22 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
 
             @Override
             public boolean visit(final IResourceDelta delta) throws CoreException {
-                if (jsonFile.getName().equals(delta.getResource().getName())) {
-                    expressionItemProvider.setPropertyValue(expression,
+                String name = delta.getResource().getName();
+                if (webPageStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
+                        && name.endsWith(".json")) {
+                        expressionItemProvider.setPropertyValue(expression,
                             ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
-                            jsonFile.exists() ? webPageFileStore.getDisplayName() : "");
+                            webPageStore.getDisplayNameFor(expression.getContent()));
                 }
                 return true;
             }
         };
     }
 
-    public void setWebPageFileStore(final WebPageFileStore webPageFileStore) {
-        this.webPageFileStore = webPageFileStore;
+    public void setWebPageStore(final WebPageRepositoryStore webPageStore) {
+        this.webPageStore = webPageStore;
     }
 
-    public void setJSONFile(final IFile jsonFile) {
-        this.jsonFile = jsonFile;
-    }
 
     public void setExpression(final Expression expression) {
         this.expression = expression;

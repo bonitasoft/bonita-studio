@@ -49,21 +49,21 @@ public class CustomPageBarResourceFactory {
         this.pageDesignerURLFactory = pageDesignerURLFactory;
     }
 
-    public BarResource newBarResource(final String targetFormCustomPageId, final String formPageTechnicalUUID)
+    public BarResource newBarResource(final String targetFormCustomPageId, final String formId)
             throws BarResourceCreationException {
         try {
             return new BarResource(BAR_CUSTOMPAGES_LOCATION + "/" + targetFormCustomPageId + ".zip",
-                    export(formPageTechnicalUUID));
+                    export(formId));
         } catch (ResourceException | IOException e) {
             throw new BarResourceCreationException(
                     String.format("Failed to create a BarResource for form %s", targetFormCustomPageId), e);
         }
     }
 
-    public byte[] export(final String formPageTechnicalUUID) throws IOException {
-        try (final InputStream is = get(pageDesignerURLFactory.exportPage(formPageTechnicalUUID).toString());) {
+    public byte[] export(final String formId) throws IOException {
+        try (final InputStream is = get(pageDesignerURLFactory.exportPage(formId).toString())) {
             if (is == null) {
-                throw new IOException(String.format("Failed to export custom page for form %s", formPageTechnicalUUID));
+                throw new IOException(String.format("Failed to export custom page for form %s", formId));
             }
             return toByteArray(is);
         }

@@ -66,6 +66,7 @@ public class CreateOrEditFormProposalListenerTest {
         when(operation.getNewPageId()).thenReturn("page-id");
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         when(pageStore.getChild("page-id")).thenReturn(fileStore);
+        when(fileStore.getUUID()).thenReturn("page-id");
 
         final String newPageId = listener.handleEvent(
                 TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression())).havingContract(aContract()).build()

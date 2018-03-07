@@ -83,6 +83,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     public void setUp() throws Exception {
         doReturn(formRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         formFileStore = mock(WebPageFileStore.class);
+        when(formFileStore.getUUID()).thenReturn("page-id");
         doReturn(formFileStore).when(formRepository).getChild("page-id");
 
         createNewFormProposal = spy(
