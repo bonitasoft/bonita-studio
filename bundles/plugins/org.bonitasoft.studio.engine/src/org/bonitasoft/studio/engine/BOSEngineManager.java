@@ -40,10 +40,12 @@ import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.exception.UpdateException;
+import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.platform.InvalidPlatformCredentialsException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.platform.PlatformLoginException;
 import org.bonitasoft.engine.platform.PlatformLogoutException;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.engine.session.PlatformSession;
@@ -63,8 +65,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.wst.server.core.IServer;
 
 /**
  * @author Romain Bioteau
@@ -101,15 +103,12 @@ public class BOSEngineManager {
 
     private IProgressMonitor monitor;
 
-    private BOSWebServerManager webServerManager;
-
     protected BOSEngineManager(final IProgressMonitor monitor) {
         if (monitor == null) {
             this.monitor = Repository.NULL_PROGRESS_MONITOR;
         } else {
             this.monitor = monitor;
         }
-        this.webServerManager = BOSWebServerManager.getInstance();
     }
 
     public static BOSEngineManager getInstance() {
@@ -155,7 +154,7 @@ public class BOSEngineManager {
         if (!isRunning()) {
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
             initBonitaHome();
-            webServerManager.startServer(monitor);
+            BOSWebServerManager.getInstance().startServer(monitor);
             isRunning = postEngineStart();
         }
     }
@@ -185,44 +184,43 @@ public class BOSEngineManager {
     }
 
     protected boolean tomcatServerIsRunning() {
-        return webServerManager.serverIsStarted();
+        return BOSWebServerManager.getInstance().serverIsStarted();
     }
 
     public synchronized void stop() {
-        if (webServerManager.getState() == IServer.STATE_STARTED) {
-            APISession session = null;
-            TenantAdministrationAPI tenantManagementAPI = null;
-            try {
-                session = loginDefaultTenant(null);
-                tenantManagementAPI = getTenantAdministrationAPI(session);
-                tenantManagementAPI.pause();
-                if (dropBusinessDataDBOnExit()) {
-                    tenantManagementAPI.cleanAndUninstallBusinessDataModel();
-                } else {
-                    tenantManagementAPI.uninstallBusinessDataModel();
+        APISession session = null;
+        TenantAdministrationAPI tenantManagementAPI = null;
+        try {
+            session = loginDefaultTenant(null);
+            tenantManagementAPI = getTenantAdministrationAPI(session);
+            tenantManagementAPI.pause();
+            if (dropBusinessDataDBOnExit()) {
+                tenantManagementAPI.cleanAndUninstallBusinessDataModel();
+            } else {
+                tenantManagementAPI.uninstallBusinessDataModel();
+            }
+            tenantManagementAPI.resume();
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        } finally {
+            if (tenantManagementAPI != null && tenantManagementAPI.isPaused()) {
+                try {
+                    tenantManagementAPI.resume();
+                } catch (final UpdateException e) {
+                    BonitaStudioLog.error(e);
                 }
-                tenantManagementAPI.resume();
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            } finally {
-                if (tenantManagementAPI != null && tenantManagementAPI.isPaused()) {
-                    try {
-                        tenantManagementAPI.resume();
-                    } catch (final UpdateException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-                if (session != null) {
-                    logoutDefaultTenant(session);
-                }
+            }
+            if (session != null) {
+                logoutDefaultTenant(session);
             }
         }
 
-        webServerManager.stopServer(monitor);
-        isRunning = false;
-
+        if (isRunning()) {
+            BOSWebServerManager.getInstance().stopServer(monitor);
+            isRunning = false;
+        }
         try {
-            webServerManager.cleanBeforeShutdown();
+            BOSWebServerManager.getInstance().cleanBeforeShutdown();
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
@@ -303,7 +301,7 @@ public class BOSEngineManager {
         BonitaStudioLog.debug("Attempt to login as " + login + ":" + password, EnginePlugin.PLUGIN_ID);
         final APISession session = getLoginAPI().login(requireNonNull(login), requireNonNull(password));
         if (session != null) {
-            BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
+             BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
         }
         return session;
     }
@@ -395,18 +393,23 @@ public class BOSEngineManager {
         final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
         APISession session;
         try {
+//            APISession loginDefaultTenant = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
+//            BonitaStudioLog.info("DEBUG: Found users:", EnginePlugin.PLUGIN_ID);
+//            BOSEngineManager.getInstance().getIdentityAPI(loginDefaultTenant).searchUsers(new SearchOptionsBuilder(0, 999).done()).getResult()
+//            .stream()
+//            .forEach(user -> {
+//                BonitaStudioLog.info("DEBUG: "+user.getUserName(), EnginePlugin.PLUGIN_ID);
+//            });
+//            BOSEngineManager.getInstance().logoutDefaultTenant(loginDefaultTenant);
             session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(),
                     monitor);
         } catch (final Exception e1) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
-                            process.getVersion() }),
-                    e1);
+                    new String[] { configuration.getUsername()+":"+configuration.getPassword(), process.getName(), process.getVersion() }), e1);
         }
         if (session == null) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
-                            process.getVersion() }));
+                    new String[] { configuration.getUsername()+":"+configuration.getPassword(), process.getName(), process.getVersion() }));
         }
         return session;
     }

@@ -107,7 +107,7 @@ public class BOSWebServerManager {
     private IServer tomcat;
     private PortConfigurator portConfigurator;
 
-    public static synchronized BOSWebServerManager getInstance() {
+    public synchronized static BOSWebServerManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = createInstance();
         }
@@ -420,6 +420,17 @@ public class BOSWebServerManager {
         return confProject;
     }
 
+    private void waitServerStopped(final IProgressMonitor monitor) throws CoreException {
+        while (tomcat != null
+                && tomcat.getServerState() != IServer.STATE_STOPPED) {
+            try {
+                Thread.sleep(1000);
+            } catch (final InterruptedException e) {
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+            }
+        }
+    }
+
     public boolean serverIsStarted() {
         return tomcat != null && tomcat.getServerState() == IServer.STATE_STARTED;
     }
@@ -430,31 +441,23 @@ public class BOSWebServerManager {
     }
 
     public synchronized void stopServer(final IProgressMonitor monitor) {
-        monitor.subTask(Messages.stoppingWebServer);
-        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-            BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
-        }
-        WatchdogManager.getInstance().stopWatchdog();
-        if (tomcat != null) {
-            tomcat.stop(true, result -> {
-                if (result.isOK()) {
-                    try {
-                        ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-
-                            @Override
-                            public void run(IProgressMonitor monitor) throws CoreException {
-                                tomcat.delete();
-                            }
-                        }, monitor);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            });
-        }
-        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-            BonitaStudioLog.debug("Tomcat server stopped",
-                    EnginePlugin.PLUGIN_ID);
+        if (serverIsStarted()) {
+            monitor.subTask(Messages.stoppingWebServer);
+            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
+            }
+            WatchdogManager.getInstance().stopWatchdog();
+            tomcat.stop(true);
+            try {
+                waitServerStopped(monitor);
+                tomcat.delete();
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+            }
+            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                BonitaStudioLog.debug("Tomcat server stopped",
+                        EnginePlugin.PLUGIN_ID);
+            }
         }
     }
 
@@ -505,10 +508,6 @@ public class BOSWebServerManager {
     private boolean dropBusinessDataDBOnExit() {
         final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
-    }
-
-    public int getState() {
-        return tomcat != null ? tomcat.getServerState() : IServer.STATE_STOPPED;
     }
 
 }
