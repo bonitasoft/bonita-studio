@@ -151,17 +151,11 @@ public class BOSEngineManager {
 
     public synchronized void start() {
         if (!isRunning()) {
-            isStarting = true;
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
             initBonitaHome();
             BOSWebServerManager.getInstance().startServer(monitor);
             isRunning = postEngineStart();
-            isStarting = false;
         }
-    }
-
-    public boolean isStarting() {
-        return isStarting;
     }
 
     protected boolean postEngineStart() {
