@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -125,12 +126,14 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     }
 
     public void updateEditorInput(IEditorInput input) {
-        fSourceEditor.setInput(input);
-        setInputWithNotify(input);
-        setPartName(input.getName());
-        initVariablesAndListeners();
-        formPage.recreateForm();
-        formPage.reflow();
+        Display.getDefault().asyncExec(() -> {
+            fSourceEditor.setInput(input);
+            setInputWithNotify(input);
+            setPartName(input.getName());
+            initVariablesAndListeners();
+            formPage.recreateForm();
+            formPage.reflow();
+        });
     }
 
     protected abstract void createFormPage();
