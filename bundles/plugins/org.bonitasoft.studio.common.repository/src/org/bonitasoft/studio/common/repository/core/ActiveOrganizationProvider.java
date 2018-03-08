@@ -21,14 +21,17 @@ import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenc
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.BackingStoreException;
 
 @Creatable
 public class ActiveOrganizationProvider {
 
     private static final String PLUGIN_ID = CommonRepositoryPlugin.PLUGIN_ID;
+    public static final String ACTIVE_ORGANIZATION_CHANGED = "activeOrganizationChanged";
 
     public String getActiveOrganization() {
         return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
@@ -72,6 +75,7 @@ public class ActiveOrganizationProvider {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION, organizationName);
         try {
             getPreferenceNode().flush();
+            PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED, organizationName);
         } catch (final BackingStoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -82,7 +86,8 @@ public class ActiveOrganizationProvider {
     }
 
     public String getPublishOrganizationState() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, MessageDialogWithToggle.NEVER);
+        return getPreferenceNode().get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,
+                MessageDialogWithToggle.NEVER);
     }
 
     public IPreferenceStore getPreferenceStore() {

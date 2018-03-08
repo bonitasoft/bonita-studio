@@ -17,9 +17,11 @@ package org.bonitasoft.studio.actors.ui.wizard;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.AbstractOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupsWizardPage;
@@ -64,6 +66,7 @@ public class ManageOrganizationWizard extends Wizard {
     private final OrganizationValidator validator = new OrganizationValidator();
     private Organization activeOrganization;
     private boolean activeOrganizationHasBeenModified = false;
+    private Optional<String> newActiveOrganizationName = Optional.empty();
     String userName;
     private final ActiveOrganizationProvider activeOrganizationProvider;
     private ECommandService commandService;
@@ -95,6 +98,9 @@ public class ManageOrganizationWizard extends Wizard {
                     public void notifyChanged(final Notification notification) {
                         super.notifyChanged(notification);
                         activeOrganizationHasBeenModified = true;
+                        if (notification.getFeatureID(Organization.class) == OrganizationPackage.ORGANIZATION__NAME) {
+                            newActiveOrganizationName = Optional.ofNullable((String) notification.getNewValue());
+                        }
                     }
                 };
                 activeOrganization.eAdapters().add(adapter);
@@ -190,6 +196,9 @@ public class ManageOrganizationWizard extends Wizard {
             openErrorStatusDialog(e);
             return false;
         }
+        if (activeOrganizationHasBeenModified && newActiveOrganizationName.isPresent()) {
+            activeOrganizationProvider.saveActiveOrganization(newActiveOrganizationName.get());
+        }
         final String pref = activeOrganizationProvider.getPublishOrganizationState();
         final boolean publishOrganization = activeOrganizationProvider.shouldPublishOrganization();
         if (publishOrganization && MessageDialogWithToggle.ALWAYS.equals(pref)) {
@@ -198,32 +207,29 @@ public class ManageOrganizationWizard extends Wizard {
             } finally {
                 publishOrganization();
             }
-        } else {
-            if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified) {
-                final String[] buttons = { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
-                final MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(),
-                        Messages.organizationHasBeenModifiedTitle,
-                        null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()),
-                        MessageDialog.WARNING, buttons, 0,
-                        Messages.doNotDisplayAgain, false);
-                mdwt.setPrefStore(activeOrganizationProvider.getPreferenceStore());
-                mdwt.setPrefKey(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
-                final int index = mdwt.open();
-                if (index == 2) {
-                    try {
-                        activeOrganizationProvider.savePublishOrganization(mdwt.getToggleState());
-                        return true;
-                    } finally {
-                        publishOrganization();
-                    }
-                } else {
-                    if (mdwt.getToggleState()) {
-                        activeOrganizationProvider.savePublishOrganization(false);
-                        activeOrganizationProvider.savePublishOrganizationState(MessageDialogWithToggle.ALWAYS);
-                    }
+        }
+        if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified) {
+            final String[] buttons = { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
+            final MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(),
+                    Messages.organizationHasBeenModifiedTitle,
+                    null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()),
+                    MessageDialog.WARNING, buttons, 0,
+                    Messages.doNotDisplayAgain, false);
+            mdwt.setPrefStore(activeOrganizationProvider.getPreferenceStore());
+            mdwt.setPrefKey(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
+            final int index = mdwt.open();
+            if (index == 2) {
+                try {
+                    activeOrganizationProvider.savePublishOrganization(mdwt.getToggleState());
+                    return true;
+                } finally {
+                    publishOrganization();
                 }
             }
-
+            if (mdwt.getToggleState()) {
+                activeOrganizationProvider.savePublishOrganization(false);
+                activeOrganizationProvider.savePublishOrganizationState(MessageDialogWithToggle.ALWAYS);
+            }
         }
         return true;
     }
