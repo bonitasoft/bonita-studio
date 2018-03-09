@@ -19,6 +19,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ConsoleColors;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
+import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -29,6 +37,10 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
 public final class BonitaSuite extends Suite {
+
+    static {
+        configurePreferencesForTests();
+    }
 
     private RunListener runListener;
 
@@ -160,6 +172,20 @@ public final class BonitaSuite extends Suite {
         }
 
         return runListener;
+    }
+
+
+    public static void configurePreferencesForTests() {
+        ConnectorEditPlugin.getPlugin().getPreferenceStore()
+                .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        WebBrowserUIPlugin.getInstance().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
+        FileActionDialog.setDisablePopup(true);
     }
 
 }

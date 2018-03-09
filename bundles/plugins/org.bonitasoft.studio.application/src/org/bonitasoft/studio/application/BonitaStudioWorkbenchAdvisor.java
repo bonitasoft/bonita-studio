@@ -39,6 +39,8 @@ import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJ
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
@@ -97,9 +99,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         @Override
         public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN);
+            UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
             executePreShutdownContribution();
-            BOSEngineManager.getInstance().stop();
+            if (BOSEngineManager.getInstance().isRunning()) {
+                BOSEngineManager.getInstance().stop();
+            }
             FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
             monitor.done();
         }
@@ -509,10 +514,13 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
         DebugUIPlugin.getDefault().getProcessConsoleManager();
         SourceLookupManager.getDefault();
-        final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
-        job.setPriority(Job.DECORATE);
-        job.setUser(false);
-        job.schedule();
+        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+        if (!preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE)) {
+            final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
+            job.setPriority(Job.DECORATE);
+            job.setUser(false);
+            job.schedule();
+        }
     }
 
     @Override

@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
-import org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage;
+import org.bonitasoft.studio.engine.preferences.ServerPreferencePage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
@@ -87,7 +87,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
                         if (refreshTheme) {
                             final String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                                     .getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME);
-                            final String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId();
+                            final String installedTheme = ServerPreferencePage.getInstalledThemeId();
                             if (installedTheme != null && !installedTheme.equals(currentTheme)) {
                                 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                                         .setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme);

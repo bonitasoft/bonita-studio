@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.pics.Pics;
@@ -34,6 +35,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -42,25 +44,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
-/**
- * @author Romain Bioteau This class represents a preference page that is
- *         contributed to the Preferences dialog. By subclassing
- *         <samp>FieldEditorPreferencePage</samp>, we can use the field support
- *         built into JFace that allows us to create a page that is small and
- *         knows how to save, restore and apply itself.
- *         <p>
- *         This page is used to modify preferences only. They are stored in the
- *         preference store that belongs to the main plug-in class. That way,
- *         preferences can be accessed directly via the preference store.
- */
 
-public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
+public class ServerPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
     private Integer newPort = new Integer(-1);
     private IntegerFieldEditor port;
     private ComboFieldEditor defaultTheme;
 
-    public BonitaUserXpPreferencePage() {
+    public ServerPreferencePage() {
         super(GRID);
         setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
     }
@@ -75,6 +66,11 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
 
         createTitleBar(Messages.BonitaPreferenceDialog_UserXP_Settings, Pics.getImage(PicsConstants.preferenceLogin), false);
 
+        BooleanFieldEditor lazyEditor = new BooleanFieldEditor(EnginePreferenceConstants.LAZYLOAD_ENGINE,
+                Messages.engineLazyLoad,
+                getFieldEditorParent());
+        addField(lazyEditor);
+        getContributedEditors().put(lazyEditor, EnginePlugin.getDefault().getPreferenceStore());
         port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel,
                 getFieldEditorParent());
         port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
@@ -146,6 +142,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         super.propertyChange(event);
     }
+
 
     /*
      * (non-Javadoc)

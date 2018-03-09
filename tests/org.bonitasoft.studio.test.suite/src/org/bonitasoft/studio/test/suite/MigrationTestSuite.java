@@ -14,15 +14,7 @@
  */
 package org.bonitasoft.studio.test.suite;
 
-import org.bonitasoft.studio.common.ConsoleColors;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.tests.CloseAllEditors;
-import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.importer.TestBarImporterInput;
 import org.bonitasoft.studio.tests.importer.TestSimpleMigrationUseCase;
 import org.bonitasoft.studio.tests.importer.attachmentDataImport.AttachmentDataImportTest;
@@ -32,15 +24,8 @@ import org.bonitasoft.studio.tests.importer.examples.Test59ExampleImport;
 import org.bonitasoft.studio.tests.importer.messagesImport.CorrelationMigrationTest;
 import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
 import org.bonitasoft.studio.util.test.BonitaSuite;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
-import junit.framework.TestSuite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
@@ -54,33 +39,6 @@ import junit.framework.TestSuite;
         CorrelationMigrationTest.class,
         CloseAllEditors.class
 })
-public class MigrationTestSuite extends TestSuite {
+public class MigrationTestSuite {
 
-    @BeforeClass
-    public static void setUp() {
-        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                MigrationTestSuite.class.getName(), ConsoleColors.RESET));
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        WebBrowserUIPlugin.getInstance().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        FileActionDialog.setDisablePopup(true);
-        BOSEngineManager.getInstance().start();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.tests.heapdump")) {
-            IHeapDumper dumper;
-            try {
-                dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(MigrationTestSuite.class.getSimpleName() + ".hprof", false);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
 }
