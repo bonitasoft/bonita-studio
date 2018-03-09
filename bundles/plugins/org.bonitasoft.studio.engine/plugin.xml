@@ -54,11 +54,11 @@
      <extension
          point="org.eclipse.ui.preferencePages">
          <page
-            class="org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage"
-            id="org.bonitasoft.studio.preferences.userXp"
-            name="userXp preference page">
+            class="org.bonitasoft.studio.engine.preferences.ServerPreferencePage"
+            id="org.bonitasoft.studio.preferences.server"
+            name="Server preference page">
          <keywordReference
-               id="org.bonitasoft.studio.preferences.keywordReference.userXP">
+               id="org.bonitasoft.studio.preferences.keywordReference.server">
          </keywordReference>       
       </page>
    </extension>

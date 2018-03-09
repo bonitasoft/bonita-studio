@@ -15,15 +15,6 @@
 
 package org.bonitasoft.studio.test.swtbot.suite;
 
-import org.bonitasoft.studio.common.ConsoleColors;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
-import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.actors.ActorDefinitionTranslationsTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionWizardPageTest;
@@ -103,14 +94,6 @@ import org.bonitasoft.studio.tests.validator.TestAddValidatorToProcessAndRun;
 import org.bonitasoft.studio.tests.validator.TestCreateValidatorWizard;
 import org.bonitasoft.studio.tests.validator.TestFormValidatorIT;
 import org.bonitasoft.studio.util.test.BonitaSuite;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -196,45 +179,6 @@ import org.junit.runners.Suite;
         BPMNEventSubProcessExportImportTest.class,
         OrganizationCreationTest.class
 })
-
 public class SWTBotTestSuite {
-
-    @BeforeClass
-    public static void setUp() {
-        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                SWTBotTestSuite.class.getName(), ConsoleColors.RESET));
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        ConnectorEditPlugin.getPlugin().getPreferenceStore()
-                .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
-        WebBrowserUIPlugin.getInstance().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        FileActionDialog.setDisablePopup(true);
-        UIThreadRunnable.syncExec(new VoidResult() {
-
-            @Override
-            public void run() {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
-                        .forceActive();
-            }
-        });
-
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.tests.heapdump")) {
-            IHeapDumper dumper;
-            try {
-                dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(SWTBotTestSuite.class.getSimpleName() + ".hprof", false);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
 
 }

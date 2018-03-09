@@ -157,6 +157,8 @@ public class Messages extends NLS {
     public static String resetEngine;
     public static String resetEngineSuccess;
 
+    public static String engineLazyLoad;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }

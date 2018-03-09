@@ -20,11 +20,12 @@ package org.bonitasoft.studio.engine.preferences;
 
 import org.bonitasoft.studio.common.BonitaConstants;
 
-/**
- * @author Romain Bioteau
- *
- */
+
 public class EnginePreferenceConstants {
+
+    private EnginePreferenceConstants() {
+        //implicit constructor
+    }
 
     public static final String REMOTE_DEPLOYMENT_CHOICE = BonitaConstants.API_TYPE_PROPERTY ;
     public static final String REMOTE_DEPLOYMENT_URL = BonitaConstants.PROVIDER_URL_PROPERTY;
@@ -42,5 +43,6 @@ public class EnginePreferenceConstants {
     public static final String TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR = "TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR";
     public static final String DROP_BUSINESS_DATA_DB_ON_EXIT_PREF = "DROP_BUSINESS_DATA_DB_ON_EXIT_PREF";
     public static final String DROP_BUSINESS_DATA_DB_ON_INSTALL = "DROP_BUSINESS_DATA_DB_ON_INSTALL";
+    public static final String LAZYLOAD_ENGINE = "LAZYLOAD_ENGINE";
 
 }

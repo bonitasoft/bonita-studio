@@ -31,7 +31,7 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.engine.operation.RunOperationExecutionContext;
 import org.bonitasoft.studio.engine.operation.RunProcessOperation;
-import org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage;
+import org.bonitasoft.studio.engine.preferences.ServerPreferencePage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -85,7 +85,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
         final String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME);
-        final String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId();
+        final String installedTheme = ServerPreferencePage.getInstalledThemeId();
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         if (installedTheme != null && !installedTheme.equals(currentTheme)) {
             BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme);

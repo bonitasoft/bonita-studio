@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -103,6 +104,16 @@ public class PlatformUtil {
                 .map(IWorkbench::getActiveWorkbenchWindow)
                 .map(IWorkbenchWindow::getActivePage)
                 .flatMap(activePage -> Optional.ofNullable(activePage.findView(INTROVIEW_ID)));
+    }
+
+    public static Optional<IEditorPart> findActiveEditor() {
+        if (PlatformUI.isWorkbenchRunning()) {
+            return Optional.ofNullable(PlatformUI.getWorkbench())
+                    .map(IWorkbench::getActiveWorkbenchWindow)
+                    .map(IWorkbenchWindow::getActivePage)
+                    .map(IWorkbenchPage::getActiveEditor);
+        }
+        return Optional.empty();
     }
 
     public static void hideIntroPart() {

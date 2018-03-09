@@ -231,9 +231,17 @@
 				<module>platform</module>
 				<module>tests-dependencies</module>
 				<module>bundles</module>
-				<module>all-in-one</module>
 			</modules>
 		</profile>
+        <profile>
+            <id>all-in-one</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>all-in-one</module>
+            </modules>
+        </profile>
 		<profile>
 			<id>it</id>
 			<modules>

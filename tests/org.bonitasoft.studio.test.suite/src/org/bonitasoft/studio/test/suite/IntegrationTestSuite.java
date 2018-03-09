@@ -14,16 +14,8 @@
  */
 package org.bonitasoft.studio.test.suite;
 
-import org.bonitasoft.studio.common.ConsoleColors;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
-import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.ProductVersionIT;
 import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
@@ -97,11 +89,6 @@ import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.tests.validation.TestTokenDispatcher;
 import org.bonitasoft.studio.tests.validation.TestValidationConstraints;
 import org.bonitasoft.studio.util.test.BonitaSuite;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -183,34 +170,5 @@ import org.junit.runners.Suite;
         CloseAllEditors.class
 })
 public class IntegrationTestSuite {
-
-    @BeforeClass
-    public static void setUp() {
-        System.out.println(String.format("\uD83D\uDC22 Running Test Suite %s%s%s", ConsoleColors.PURPLE_BOLD,
-                IntegrationTestSuite.class.getName(), ConsoleColors.RESET));
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(
-                BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
-                BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE,
-                BonitaPreferenceConstants.INTERNAL_BROWSER);
-        FileActionDialog.setDisablePopup(true);
-        BOSEngineManager.getInstance().start();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements("org.bonitasoft.studio.tests.heapdump")) {
-            IHeapDumper dumper;
-            try {
-                dumper = (IHeapDumper) elem.createExecutableExtension("class");
-                dumper.dumpHeap(IntegrationTestSuite.class.getSimpleName() + ".hprof", false);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
 
 }
