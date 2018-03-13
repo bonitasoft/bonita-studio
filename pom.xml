@@ -48,7 +48,7 @@
 				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
 					<artifactId>image-overlay-plugin</artifactId>
-					<version>1.0.3</version>
+					<version>1.0.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
