@@ -176,17 +176,17 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public OpenApplicationWizardBot openApplication() {
-        bot.menu("Development").menu("Application Descriptor").menu("Open...").click();
+        bot.menu("Development").menu("Application Descriptors").menu("Open...").click();
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public void newApplicationDescriptorFile() {
-        bot.menu("Development").menu("Application Descriptor").menu("New...").click();
+        bot.menu("Development").menu("Application Descriptors").menu("New...").click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
-        bot.menu("Development").menu("Application Descriptor").menu("Delete...").click();
+        bot.menu("Development").menu("Application Descriptors").menu("Delete...").click();
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
