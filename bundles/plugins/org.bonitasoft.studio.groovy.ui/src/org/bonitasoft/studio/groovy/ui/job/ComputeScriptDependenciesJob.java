@@ -33,8 +33,6 @@ import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
-import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -82,29 +80,26 @@ public class ComputeScriptDependenciesJob extends Job {
         }
         final String expression = groovyCompilationUnit.getSource();
         if (expression != null && cache.get(expression) == null) {
-            final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
-
-            org.codehaus.groovy.ast.ASTNode astNode = null;
-            if (assistContext != null) {
-                astNode = assistContext.containingCodeBlock;
-            }
-            if (astNode instanceof BlockStatement) {
-                final BlockStatement blockStatement = (BlockStatement) astNode;
-                final Set<String> referencedVariable = new HashSet<String>();
-                final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope().getReferencedClassVariablesIterator();
-                while (referencedClassVariablesIterator.hasNext()) {
-                    final Variable variable = referencedClassVariablesIterator.next();
-                    for (final ScriptVariable f : nodes) {
-                        if (f.getName().equals(variable.getName())) {
-                            referencedVariable.add(variable.getName());
+            if (groovyCompilationUnit.getModuleNode() != null) {
+                BlockStatement astNode = groovyCompilationUnit.getModuleNode().getStatementBlock();
+                if (astNode != null) {
+                    final BlockStatement blockStatement = (BlockStatement) astNode;
+                    final Set<String> referencedVariable = new HashSet<String>();
+                    final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope()
+                            .getReferencedClassVariablesIterator();
+                    while (referencedClassVariablesIterator.hasNext()) {
+                        final Variable variable = referencedClassVariablesIterator.next();
+                        for (final ScriptVariable f : nodes) {
+                            if (f.getName().equals(variable.getName())) {
+                                referencedVariable.add(variable.getName());
+                            }
                         }
-                    }
 
+                    }
+                    final List<EObject> deps = new ArrayList<EObject>();
+                    addDependenciesForFoundVariables(referencedVariable, deps);
+                    cache.put(expression, deps);
                 }
-                final List<EObject> deps = new ArrayList<EObject>();
-                addDependenciesForFoundVariables(referencedVariable, deps);
-                cache.put(expression, deps);
             }
         }
         return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
@@ -142,7 +137,8 @@ public class ComputeScriptDependenciesJob extends Job {
     }
 
     private Expression getDAOExpression(final String name) {
-        final IExpressionProvider daoExpressionProvider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final IExpressionProvider daoExpressionProvider = ExpressionProviderService.getInstance()
+                .getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider == null) {
             return null;
         }
