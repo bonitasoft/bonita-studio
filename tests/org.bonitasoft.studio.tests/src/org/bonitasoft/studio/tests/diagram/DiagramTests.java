@@ -23,24 +23,16 @@ import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType_task;
 import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Objects;
 
-import org.bonitasoft.engine.api.IdentityAPI;
-import org.bonitasoft.engine.identity.User;
-import org.bonitasoft.engine.identity.UserNotFoundException;
-import org.bonitasoft.engine.search.SearchOptionsBuilder;
-import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.engine.BOSWebServerManager;
-import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Element;
@@ -71,9 +63,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -165,12 +156,7 @@ public class DiagramTests {
         });
     }
 
-    /**
-     * Create & run a 4 tasks process
-     *
-     * @author Florine Boudin
-     * @throws Exception
-     */
+    @Ignore
     @Test
     public void test4TasksDiagram() throws Exception {
 
@@ -214,7 +200,7 @@ public class DiagramTests {
 
             setTaskAsHuman(gmfEditor, taskName);
 
-            if (taskName != "Step4") {
+            if (Objects.equals(taskName, "Step4")) {
                 // create new Task
                 Assert.assertNotNull("Error: No " + taskName + " task found.", gmfEditor.getEditPart(taskName));
                 SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, taskName, new Point(i, 110));
@@ -238,10 +224,10 @@ public class DiagramTests {
         int itmp = 0;
         // create a form
         for (final String nametask : taskNameList) {
-
-            if (nametask != "Step4") {
+            if (Objects.equals(nametask, "Step4")) {
                 gmfEditor.getEditPart(nametask).click();
                 bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
+                gmfEditor.getEditPart(nametask).click();
                 SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
                 gmfEditor.getEditPart(nametask).click();
                 // add a form

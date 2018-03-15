@@ -45,6 +45,9 @@ public class OpenUIDesignerHandlerTest {
     private IEclipsePreferences preferenceStore;
     @Mock
     private OpenBrowserOperation openBrowserOperation;
+    @Mock
+    private PageDesignerURLFactory urlFactory;
+
     private boolean disablePopup;
 
     /**
@@ -61,6 +64,7 @@ public class OpenUIDesignerHandlerTest {
                 .thenReturn(8080);
         when(preferenceStore.get(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, "en")).thenReturn("en");
         doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
+        doReturn(urlFactory).when(openPageDesignerHandler).urlFactory();
         doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
         doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any(PageDesignerURLFactory.class));
     }
