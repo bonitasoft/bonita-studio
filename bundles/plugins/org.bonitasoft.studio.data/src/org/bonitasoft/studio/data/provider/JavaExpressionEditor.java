@@ -386,14 +386,17 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         final UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
         final IConverter referencetoDataConverter = new Converter(List.class, Data.class) {
 
+            @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object dataList) {
-                final Data d = ((List<Data>) dataList).get(0);
-                final Collection<Data> inputData = (Collection<Data>) viewer.getInput();
-                for (final Data data : inputData) {
-                    if (data.getName().equals(d.getName())
-                            && data.getDataType().getName().equals(d.getDataType().getName())) {
-                        return data;
+                if (!((List<Data>) dataList).isEmpty()) {
+                    final Data d = ((List<Data>) dataList).get(0);
+                    final Collection<Data> inputData = (Collection<Data>) viewer.getInput();
+                    for (final Data data : inputData) {
+                        if (data.getName().equals(d.getName())
+                                && data.getDataType().getName().equals(d.getDataType().getName())) {
+                            return data;
+                        }
                     }
                 }
                 return null;
