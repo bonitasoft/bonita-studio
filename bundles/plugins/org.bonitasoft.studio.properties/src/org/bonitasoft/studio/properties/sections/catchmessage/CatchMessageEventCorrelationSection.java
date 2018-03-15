@@ -14,15 +14,14 @@
  */
 package org.bonitasoft.studio.properties.sections.catchmessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -43,8 +42,6 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -79,25 +76,9 @@ public class CatchMessageEventCorrelationSection extends
         ecv.setRemoveRowLabel(Messages.removeCorrelation);
         final IExpressionNatureProvider provider = new CorrelationIdNatureProvider();
         ecv.addExpressionNatureProvider(provider);
-        final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(1);
-        filters.add(new ViewerFilter() {
-
-            @Override
-            public boolean select(final Viewer viewer, final Object parentElement,
-                    final Object element) {
-                if (element instanceof Expression) {
-                    return ExpressionConstants.CONSTANT_TYPE
-                            .equals(((Expression) element).getType());
-                } else if (element instanceof IExpressionProvider) {
-                    return ExpressionConstants.CONSTANT_TYPE
-                            .equals(((IExpressionProvider) element)
-                                    .getExpressionType());
-                } else {
-                    return false;
-                }
-            }
-        });
-        ecv.setViewerFilters(filters);
+        ecv.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
+        ecv.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE));
     }
 
     private void createAutoFillButton(final Composite parent) {
@@ -205,6 +186,7 @@ public class CatchMessageEventCorrelationSection extends
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         if (ecv != null && getEObject() != null) {
+            ecv.setContext(getEObject());
             ecv.setInput(getEObject());
             TableExpression messageCorrelation = getCatchMessageEvent()
                     .getCorrelation();
