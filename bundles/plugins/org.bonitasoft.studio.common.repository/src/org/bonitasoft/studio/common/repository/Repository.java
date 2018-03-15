@@ -92,6 +92,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.svn.core.SVNTeamPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -545,8 +546,10 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public Image getIcon() {
-        if (isShared()) {
-            return Pics.getImage("shared-repository.png", CommonRepositoryPlugin.getDefault());
+        if (isShared(SVNTeamPlugin.NATURE_ID)) {
+            return Pics.getImage("svnIcon.png", CommonRepositoryPlugin.getDefault());
+        } else if (isShared()) {
+            return Pics.getImage("git.png", CommonRepositoryPlugin.getDefault());
         } else {
             return Pics.getImage("local-repository.png", CommonRepositoryPlugin.getDefault());
         }
