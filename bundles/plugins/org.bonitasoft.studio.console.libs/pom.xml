@@ -17,9 +17,10 @@
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<tomcat.version>8.5.23</tomcat.version>
-		<security.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
-		<console.config.file>${basedir}/tomcat/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
-	</properties>
+		<security.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
+		<console.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
+	    <context.config.file>${tomcat.bundle.dir}/server/conf/context.xml</context.config.file>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -386,6 +387,22 @@
 							</replacements>
 						</configuration>
 					</execution>
+                    <execution>
+                        <id>Configure session cookie path</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${context.config.file}</file>
+                            <replacements>
+                                <replacement>
+                                    <token>&lt;Context&gt;</token>
+                                    <value>&lt;Context sessionCookiePath=&quot;/&quot;&gt;</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
 				</executions>
 			</plugin>
 		</plugins>

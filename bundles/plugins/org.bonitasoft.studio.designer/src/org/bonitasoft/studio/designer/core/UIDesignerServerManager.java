@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -67,10 +68,14 @@ public class UIDesignerServerManager {
     private RepositoryAccessor repositoryAccessor;
     private int port = -1;
     private ILaunch launch;
+    private int portalPort;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
+    private static final String PORTAL_BASE_URL = "bonita.portal.origin";
 
     private UIDesignerServerManager(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
+        this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
         addShutdownHook();
     }
 
@@ -85,6 +90,14 @@ public class UIDesignerServerManager {
             INSTANCE = new UIDesignerServerManager(repositoryAccessor);
         }
         return INSTANCE;
+    }
+
+    public void setPortalPort(int portalPort) {
+        this.portalPort = portalPort;
+    }
+
+    public int getPortalPort() {
+        return portalPort;
     }
 
     public synchronized void start(IProgressMonitor monitor) {
@@ -233,6 +246,7 @@ public class UIDesignerServerManager {
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
+                String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
                 extractLocation().toFile().getAbsolutePath(),

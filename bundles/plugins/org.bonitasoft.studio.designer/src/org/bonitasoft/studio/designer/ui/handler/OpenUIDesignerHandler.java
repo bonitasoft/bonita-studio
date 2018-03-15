@@ -80,7 +80,7 @@ public class OpenUIDesignerHandler extends AbstractHandler {
     }
 
     protected void openUiDesignerInBrowser() throws ExecutionException {
-        final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+        final PageDesignerURLFactory pageDesignerURLBuilder = urlFactory();
         try {
             if (waitUntilTomcatIsReady(pageDesignerURLBuilder)) {
                 createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();
@@ -94,6 +94,10 @@ public class OpenUIDesignerHandler extends AbstractHandler {
             }
             throw new ExecutionException("Failed to open web browser", e);
         }
+    }
+
+    protected PageDesignerURLFactory urlFactory() {
+        return new PageDesignerURLFactory(getPreferenceStore());
     }
 
     protected OpenBrowserOperation createOpenBrowserOperation(final URL url) throws MalformedURLException {
