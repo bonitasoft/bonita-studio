@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
@@ -188,6 +189,11 @@ public class BOSWebServerManager {
                 final IProject confProject = createServerConfigurationProject(Repository.NULL_PROGRESS_MONITOR);
                 final IRuntime runtime = createServerRuntime(type, Repository.NULL_PROGRESS_MONITOR);
                 tomcat = createServer(monitor, confProject, runtime);
+                UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
+                if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
+                    uidManager.setPortalPort(portConfigurator.getHttpPort());
+                    uidManager.restart(monitor);
+                }
                 createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
                 tomcat.start("run", Repository.NULL_PROGRESS_MONITOR);

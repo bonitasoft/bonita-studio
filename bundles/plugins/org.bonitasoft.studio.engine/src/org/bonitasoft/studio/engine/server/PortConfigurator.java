@@ -134,4 +134,9 @@ public class PortConfigurator {
     protected int findUnusedPort(final int low, final int hight) {
         return SocketUtil.findUnusedPort(low, hight);
     }
+
+    public int getHttpPort() {
+        return preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+
+    }
 }
