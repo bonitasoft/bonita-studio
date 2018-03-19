@@ -40,7 +40,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-              <plugin>
+				<plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.4.0.905</version>
@@ -239,9 +239,9 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>all-in-one</module>
-            </modules>
-        </profile>
+				<module>all-in-one</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>it</id>
 			<modules>
