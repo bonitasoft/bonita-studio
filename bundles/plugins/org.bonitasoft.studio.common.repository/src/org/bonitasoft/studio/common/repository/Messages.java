@@ -69,6 +69,10 @@ public final class Messages extends NLS {
     public static String repositoryError;
     public static String repositoryVersionErrorMsg;
 
+    public static String sharedWithSvn;
+    public static String sharedWithGit;
+    public static String localRepository;
+
     private Messages() {
         // Do not instantiate
     }
