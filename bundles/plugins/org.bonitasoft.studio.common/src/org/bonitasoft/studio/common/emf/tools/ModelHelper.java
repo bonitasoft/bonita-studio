@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.emf.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -670,16 +669,10 @@ public class ModelHelper {
     public static AbstractProcess findProcess(final String subProcessName, final String version,
             final List<? extends Element> elements) {
         if (version == null || version.trim().isEmpty()) {// it's the latest version
-            final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+            final List<AbstractProcess> processes = new ArrayList<>();
             findProcessRecursivly(subProcessName, version, elements, processes);
-            if (processes.size() > 0) {
-                Collections.sort(processes, new Comparator<AbstractProcess>() {
-
-                    @Override
-                    public int compare(final AbstractProcess o1, final AbstractProcess o2) {
-                        return o1.getVersion().compareTo(o2.getVersion());
-                    }
-                });
+            if (!processes.isEmpty()) {
+                Collections.sort(processes, new ProcessVersionComparator());
                 return processes.get(processes.size() - 1);
             }
         } else {
