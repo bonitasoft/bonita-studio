@@ -106,6 +106,8 @@ public class SWTGefBotRule implements TestRule {
 
     protected void beforeStatement() {
         initPreferences();
+        bot.saveAllEditors();
+        bot.closeAllEditors();
     }
 
     protected void closeAllAndReturnToWelcomePage() {
