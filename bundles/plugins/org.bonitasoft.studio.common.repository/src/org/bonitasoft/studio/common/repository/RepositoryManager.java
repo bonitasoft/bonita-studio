@@ -207,7 +207,7 @@ public class RepositoryManager {
     public void setRepository(final String repositoryName, final boolean migrationEnabled, final IProgressMonitor monitor) {
         if (repository != null && repository.getName().equals(repositoryName)) {
             return;
-        } else {
+        } else if (repository != null) {
             repository.close();
         }
         repository = getRepository(repositoryName, migrationEnabled);
