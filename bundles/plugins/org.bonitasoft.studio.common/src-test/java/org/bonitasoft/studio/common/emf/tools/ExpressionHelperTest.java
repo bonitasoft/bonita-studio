@@ -270,9 +270,9 @@ public class ExpressionHelperTest {
         final Expression expression = ExpressionHelper.createExpressionFromEObject(document);
         assertThat(expression).hasContent(document.getName()).
                 hasInterpreter("").
-                hasType(ExpressionConstants.DOCUMENT_REF_TYPE).
+                hasType(ExpressionConstants.DOCUMENT_TYPE).
                 hasName(document.getName()).
-                hasReturnType(String.class.getName());
+                hasReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName());
         assertThat(expression.getReferencedElements()).hasSize(1);
         final EObject refElement = expression.getReferencedElements().get(0);
         assertThat(EcoreUtil.equals(document, refElement)).isTrue();

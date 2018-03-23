@@ -280,7 +280,7 @@ public class ExpressionHelper {
         } else if (element instanceof Widget) {
             return createWidgetExpression((Widget) element);
         } else if (element instanceof Document) {
-            return createDocumentReferenceExpression((Document) element);
+            return createDocumentExpressionWithDependency((Document) element);
         } else if (element instanceof GroupIterator) {
             return createGroupIteratorExpression((GroupIterator) element);
         } else if (element instanceof ContractInput) {
@@ -385,17 +385,19 @@ public class ExpressionHelper {
         return storageExpression;
     }
 
-    public static Expression createDocumentExpressionWithDependency(final String targetDocName) {
-        final Document document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName(targetDocName);
-        document.setMultiple(false);
-        final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
-        storageExpression.setContent(targetDocName);
-        storageExpression.setName(targetDocName);
-        storageExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
-        storageExpression.setReturnType(String.class.getName());
-        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        return storageExpression;
+    public static Expression createDocumentExpressionWithDependency(final Document document) {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setContent(document.getName());
+        expression.setName(document.getName());
+        expression.setType(ExpressionConstants.DOCUMENT_TYPE);
+        expression.setReturnType(String.class.getName());
+        if (document.isMultiple()) {
+            expression.setReturnType(List.class.getName());
+        } else {
+            expression.setReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName());
+        }
+        expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
+        return expression;
     }
 
     public static Operation createDefaultConnectorOutputOperation(final Output output) {

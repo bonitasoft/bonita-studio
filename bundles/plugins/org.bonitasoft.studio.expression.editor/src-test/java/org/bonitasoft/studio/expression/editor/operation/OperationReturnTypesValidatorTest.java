@@ -126,33 +126,6 @@ public class OperationReturnTypesValidatorTest {
 
     }
 
-    @Test
-    public void should_not_fail_for_SetDocument_Operation_with_DocumentValue() {
-        final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
-
-        final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myDocumentValue",
-                DocumentValue.class.getName());
-        rightOperand.setContent("new DocumentValue()");
-
-        createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
-        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final IStatus status = validator.validate(rightOperand);
-        Assertions.assertThat(status.isOK()).isTrue();
-    }
-
-    @Test
-    public void should_not_fail_for_SetDocument_Operation_with_FileInputValue() {
-        final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
-        final Expression rightOperand = ExpressionHelper
-                .createContractInputExpression(aContractInput().withType(ContractInputType.FILE).withName("myFile")
-                        .build());
-        createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
-        final IStatus status = new OperationReturnTypesValidator().validate(rightOperand);
-
-        assertThat(status).isOK();
-    }
 
     @Test
     public void testValidateSetDocumentListOperationInValid() {
@@ -230,34 +203,6 @@ public class OperationReturnTypesValidatorTest {
 
     }
 
-    @Test
-    public void shouldValidateSetDocumentOperation_add_info_message_when_rightOperandExpression_is_empty_in_Operation_of_Task_Or_Form()
-            throws Exception {
-        // set left operand
-        final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
-        // set right operand
-        final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
-        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
-        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-
-        // test in a task operation
-        final Task task = ProcessFactory.eINSTANCE.createTask();
-        task.getOperations().add(operation);
-
-        final IStatus status = validator.validateSetDocumentOperation(rightOperand, operation);
-        Assertions.assertThat(status.isOK()).isFalse();
-        Assertions.assertThat(status.getMessage()).isEqualTo(Messages.messageOperationWithDocumentInTask);
-
-        // test in a widget action
-        final FileWidget widget = FormFactory.eINSTANCE.createFileWidget();
-        widget.setAction(operation);
-
-        final IStatus widgetStatus = validator.validateSetDocumentOperation(rightOperand, operation);
-        Assertions.assertThat(widgetStatus.isOK()).isFalse();
-        Assertions.assertThat(widgetStatus.getMessage()).isEqualTo(Messages.messageOperationWithDocumentInForm);
-
-    }
 
     @Test
     public void should_fail_when_assigning_a_business_object_in_a_process_data() throws Exception {
