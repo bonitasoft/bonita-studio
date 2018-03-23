@@ -64,8 +64,6 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
                 ExpressionHelper.createConstantExpression("", ""))).isTrue();
         assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
-                ExpressionHelper.createDocumentExpressionWithDependency("doc"))).isTrue();
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
                 ExpressionHelper.createVariableExpression(aData().build()))).isTrue();
         assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
                 ExpressionHelper.createParameterExpression(aParameter().build()))).isTrue();
