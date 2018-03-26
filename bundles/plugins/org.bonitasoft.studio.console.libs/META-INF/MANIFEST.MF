@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor
- e.jar,lib/commons-logging.jar,lib/xstream.jar,lib/xmlpull.jar,lib/xpp3_
- min.jar,lib/httpmime.jar,lib/commons-codec.jar,lib/bonita-common.jar,li
+Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpmime.jar,lib/commons-c
+ odec.jar,lib/httpclient.jar,lib/httpcore.jar,lib/commons-logging.jar,li
+ b/xstream.jar,lib/xmlpull.jar,lib/xpp3_min.jar,lib/bonita-common.jar,li
  b/commons-lang3.jar,lib/jackson-annotations.jar,lib/commons-io.jar,lib/
  jackson-databind.jar,lib/jackson-core.jar,lib/slf4j-api.jar,lib/theme-b
  uilder.jar,lib/forms-server.jar,lib/forms-model.jar,lib/forms-rpc.jar,l
@@ -19,14 +19,14 @@ Embed-Directory: lib
 Embed-StripVersion: true
 Embed-Transitive: true
 Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
- onita-client";v="7.7.0-SNAPSHOT",lib/httpclient.jar;g="org.apache.httpc
- omponents";a="httpclient";v="4.5.2",lib/httpcore.jar;g="org.apache.http
- components";a="httpcore";v="4.4.4",lib/commons-logging.jar;g="commons-l
- ogging";a="commons-logging";v="1.2",lib/xstream.jar;g="com.thoughtworks
- .xstream";a="xstream";v="1.4.10",lib/xmlpull.jar;g="xmlpull";a="xmlpull
- ";v="1.1.3.1",lib/xpp3_min.jar;g="xpp3";a="xpp3_min";v="1.1.4c",lib/htt
- pmime.jar;g="org.apache.httpcomponents";a="httpmime";v="4.5.2",lib/comm
- ons-codec.jar;g="commons-codec";a="commons-codec";v="1.7",lib/bonita-co
+ onita-client";v="7.7.0-SNAPSHOT",lib/httpmime.jar;g="org.apache.httpcom
+ ponents";a="httpmime";v="4.5.2",lib/commons-codec.jar;g="commons-codec"
+ ;a="commons-codec";v="1.7",lib/httpclient.jar;g="org.apache.httpcompone
+ nts";a="httpclient";v="4.5.2",lib/httpcore.jar;g="org.apache.httpcompon
+ ents";a="httpcore";v="4.4.4",lib/commons-logging.jar;g="commons-logging
+ ";a="commons-logging";v="1.2",lib/xstream.jar;g="com.thoughtworks.xstre
+ am";a="xstream";v="1.4.10",lib/xmlpull.jar;g="xmlpull";a="xmlpull";v="1
+ .1.3.1",lib/xpp3_min.jar;g="xpp3";a="xpp3_min";v="1.1.4c",lib/bonita-co
  mmon.jar;g="org.bonitasoft.engine";a="bonita-common";v="7.7.0-SNAPSHOT"
  ,lib/commons-lang3.jar;g="org.apache.commons";a="commons-lang3";v="3.3.
  2",lib/jackson-annotations.jar;g="com.fasterxml.jackson.core";a="jackso
@@ -127,43 +127,44 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  css.impl;version="0.0.0",org.bonitasoft.theme.exception;version="0.0.0"
  ,org.bonitasoft.theme.impl;version="0.0.0",org.bonitasoft.theme.model;v
  ersion="0.0.0"
-Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/repository/or
- g/bonitasoft/engine/bonita-client/7.7.0-SNAPSHOT/bonita-client-7.7.0-SN
- APSHOT.jar,lib/httpclient.jar=/home/romain/.m2/repository/org/apache/ht
- tpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar,lib/httpcore.jar=/ho
- me/romain/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/httpc
- ore-4.4.4.jar,lib/commons-logging.jar=/home/romain/.m2/repository/commo
- ns-logging/commons-logging/1.2/commons-logging-1.2.jar,lib/xstream.jar=
- /home/romain/.m2/repository/com/thoughtworks/xstream/xstream/1.4.10/xst
- ream-1.4.10.jar,lib/xmlpull.jar=/home/romain/.m2/repository/xmlpull/xml
- pull/1.1.3.1/xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=/home/romain/.m2/repo
- sitory/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar,lib/httpmime.jar=/home/
- romain/.m2/repository/org/apache/httpcomponents/httpmime/4.5.2/httpmime
- -4.5.2.jar,lib/commons-codec.jar=/home/romain/.m2/repository/commons-co
- dec/commons-codec/1.7/commons-codec-1.7.jar,lib/bonita-common.jar=/home
- /romain/.m2/repository/org/bonitasoft/engine/bonita-common/7.7.0-SNAPSH
- OT/bonita-common-7.7.0-SNAPSHOT.jar,lib/commons-lang3.jar=/home/romain/
- .m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3
- .2.jar,lib/jackson-annotations.jar=/home/romain/.m2/repository/com/fast
- erxml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0.
- jar,lib/commons-io.jar=/home/romain/.m2/repository/commons-io/commons-i
- o/2.5/commons-io-2.5.jar,lib/jackson-databind.jar=/home/romain/.m2/repo
- sitory/com/fasterxml/jackson/core/jackson-databind/2.9.0/jackson-databi
- nd-2.9.0.jar,lib/jackson-core.jar=/home/romain/.m2/repository/com/faste
- rxml/jackson/core/jackson-core/2.9.0/jackson-core-2.9.0.jar,lib/slf4j-a
- pi.jar=/home/romain/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api
- -1.7.25.jar,lib/theme-builder.jar=/home/romain/.m2/repository/org/bonit
- asoft/web/theme-builder/1.1.0/theme-builder-1.1.0.jar,lib/forms-server.
- jar=/home/romain/.m2/repository/org/bonitasoft/forms/forms-server/7.7.0
- -SNAPSHOT/forms-server-7.7.0-SNAPSHOT.jar,lib/forms-model.jar=/home/rom
- ain/.m2/repository/org/bonitasoft/forms/forms-model/7.7.0-SNAPSHOT/form
- s-model-7.7.0-SNAPSHOT.jar,lib/forms-rpc.jar=/home/romain/.m2/repositor
- y/org/bonitasoft/forms/forms-rpc/7.7.0-SNAPSHOT/forms-rpc-7.7.0-SNAPSHO
- T.jar,lib/console-server.jar=/home/romain/.m2/repository/org/bonitasoft
- /console/console-server/7.7.0-SNAPSHOT/console-server-7.7.0-SNAPSHOT-cl
- asses.jar,lib/console-common.jar=/home/romain/.m2/repository/org/bonita
- soft/console/console-common/7.7.0-SNAPSHOT/console-common-7.7.0-SNAPSHO
- T.jar,javadoc.zip,plugin.xml,tomcat=tomcat
+Include-Resource: , lib/bonita-client.jar=C:\Users\Adrien\.m2\repository
+ \org\bonitasoft\engine\bonita-client\7.7.0-SNAPSHOT\bonita-client-7.7.0
+ -SNAPSHOT.jar,lib/httpmime.jar=C:\Users\Adrien\.m2\repository\org\apach
+ e\httpcomponents\httpmime\4.5.2\httpmime-4.5.2.jar,lib/commons-codec.ja
+ r=C:\Users\Adrien\.m2\repository\commons-codec\commons-codec\1.7\common
+ s-codec-1.7.jar,lib/httpclient.jar=C:\Users\Adrien\.m2\repository\org\a
+ pache\httpcomponents\httpclient\4.5.2\httpclient-4.5.2.jar,lib/httpcore
+ .jar=C:\Users\Adrien\.m2\repository\org\apache\httpcomponents\httpcore\
+ 4.4.4\httpcore-4.4.4.jar,lib/commons-logging.jar=C:\Users\Adrien\.m2\re
+ pository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar,li
+ b/xstream.jar=C:\Users\Adrien\.m2\repository\com\thoughtworks\xstream\x
+ stream\1.4.10\xstream-1.4.10.jar,lib/xmlpull.jar=C:\Users\Adrien\.m2\re
+ pository\xmlpull\xmlpull\1.1.3.1\xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=C
+ :\Users\Adrien\.m2\repository\xpp3\xpp3_min\1.1.4c\xpp3_min-1.1.4c.jar,
+ lib/bonita-common.jar=C:\Users\Adrien\.m2\repository\org\bonitasoft\eng
+ ine\bonita-common\7.7.0-SNAPSHOT\bonita-common-7.7.0-SNAPSHOT.jar,lib/c
+ ommons-lang3.jar=C:\Users\Adrien\.m2\repository\org\apache\commons\comm
+ ons-lang3\3.3.2\commons-lang3-3.3.2.jar,lib/jackson-annotations.jar=C:\
+ Users\Adrien\.m2\repository\com\fasterxml\jackson\core\jackson-annotati
+ ons\2.9.0\jackson-annotations-2.9.0.jar,lib/commons-io.jar=C:\Users\Adr
+ ien\.m2\repository\commons-io\commons-io\2.5\commons-io-2.5.jar,lib/jac
+ kson-databind.jar=C:\Users\Adrien\.m2\repository\com\fasterxml\jackson\
+ core\jackson-databind\2.9.0\jackson-databind-2.9.0.jar,lib/jackson-core
+ .jar=C:\Users\Adrien\.m2\repository\com\fasterxml\jackson\core\jackson-
+ core\2.9.0\jackson-core-2.9.0.jar,lib/slf4j-api.jar=C:\Users\Adrien\.m2
+ \repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar,lib/theme-b
+ uilder.jar=C:\Users\Adrien\.m2\repository\org\bonitasoft\web\theme-buil
+ der\1.1.0\theme-builder-1.1.0.jar,lib/forms-server.jar=C:\Users\Adrien\
+ .m2\repository\org\bonitasoft\forms\forms-server\7.7.0-SNAPSHOT\forms-s
+ erver-7.7.0-SNAPSHOT.jar,lib/forms-model.jar=C:\Users\Adrien\.m2\reposi
+ tory\org\bonitasoft\forms\forms-model\7.7.0-SNAPSHOT\forms-model-7.7.0-
+ SNAPSHOT.jar,lib/forms-rpc.jar=C:\Users\Adrien\.m2\repository\org\bonit
+ asoft\forms\forms-rpc\7.7.0-SNAPSHOT\forms-rpc-7.7.0-SNAPSHOT.jar,lib/c
+ onsole-server.jar=C:\Users\Adrien\.m2\repository\org\bonitasoft\console
+ \console-server\7.7.0-SNAPSHOT\console-server-7.7.0-SNAPSHOT-classes.ja
+ r,lib/console-common.jar=C:\Users\Adrien\.m2\repository\org\bonitasoft\
+ console\console-common\7.7.0-SNAPSHOT\console-common-7.7.0-SNAPSHOT.jar
+ ,javadoc.zip,plugin.xml,tomcat=tomcat
 Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  r.conf.Catalina.localhost,tomcat.server.conf,tomcat.server.lib,tomcat.s
  erver.lib.bonita,tomcat.server.logs,tomcat.server.temp,tomcat.server.we
@@ -179,39 +180,39 @@ Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  ripts,tomcat.setup.platform_conf.sql.h2,tomcat.setup.platform_conf.sql.
  mysql,tomcat.setup.platform_conf.sql.oracle,tomcat.setup.platform_conf.
  sql.postgres,tomcat.setup.platform_conf.sql.sqlserver,tomcat.setup.tomc
- at-templates,tomcat.setup.wildfly-templates,mozilla,org.apache.http.aut
- h,org.apache.http.auth.params,org.apache.http.client,org.apache.http.cl
- ient.config,org.apache.http.client.entity,org.apache.http.client.method
- s,org.apache.http.client.params,org.apache.http.client.protocol,org.apa
- che.http.client.utils,org.apache.http.conn,org.apache.http.conn.params,
- org.apache.http.conn.routing,org.apache.http.conn.scheme,org.apache.htt
- p.conn.socket,org.apache.http.conn.ssl,org.apache.http.conn.util,org.ap
- ache.http.cookie,org.apache.http.cookie.params,org.apache.http.impl.aut
- h,org.apache.http.impl.client,org.apache.http.impl.conn,org.apache.http
- .impl.conn.tsccm,org.apache.http.impl.cookie,org.apache.http.impl.execc
- hain,org.apache.http,org.apache.http.annotation,org.apache.http.concurr
- ent,org.apache.http.config,org.apache.http.entity,org.apache.http.impl,
- org.apache.http.impl.bootstrap,org.apache.http.impl.entity,org.apache.h
- ttp.impl.io,org.apache.http.impl.pool,org.apache.http.io,org.apache.htt
- p.message,org.apache.http.params,org.apache.http.pool,org.apache.http.p
- rotocol,org.apache.http.ssl,org.apache.http.util,org.apache.commons.log
- ging,org.apache.commons.logging.impl,com.thoughtworks.xstream,com.thoug
- htworks.xstream.annotations,com.thoughtworks.xstream.converters,com.tho
- ughtworks.xstream.converters.basic,com.thoughtworks.xstream.converters.
- collections,com.thoughtworks.xstream.converters.enums,com.thoughtworks.
- xstream.converters.extended,com.thoughtworks.xstream.converters.javabea
- n,com.thoughtworks.xstream.converters.reflection,com.thoughtworks.xstre
- am.converters.time,com.thoughtworks.xstream.core,com.thoughtworks.xstre
- am.core.util,com.thoughtworks.xstream.io,com.thoughtworks.xstream.io.bi
- nary,com.thoughtworks.xstream.io.copy,com.thoughtworks.xstream.io.json,
- com.thoughtworks.xstream.io.naming,com.thoughtworks.xstream.io.path,com
- .thoughtworks.xstream.io.xml,com.thoughtworks.xstream.io.xml.xppdom,com
- .thoughtworks.xstream.mapper,com.thoughtworks.xstream.persistence,com.t
- houghtworks.xstream.security,org.xmlpull.v1,org.xmlpull.mxp1,org.apache
- .http.entity.mime,org.apache.http.entity.mime.content,org.apache.common
- s.codec,org.apache.commons.codec.binary,org.apache.commons.codec.digest
- ,org.apache.commons.codec.language,org.apache.commons.codec.language.bm
- ,org.apache.commons.codec.net,com.bonitasoft.engine.api,com.bonitasoft.
+ at-templates,tomcat.setup.wildfly-templates,org.apache.http.entity.mime
+ ,org.apache.http.entity.mime.content,org.apache.commons.codec,org.apach
+ e.commons.codec.binary,org.apache.commons.codec.digest,org.apache.commo
+ ns.codec.language,org.apache.commons.codec.language.bm,org.apache.commo
+ ns.codec.net,mozilla,org.apache.http.auth,org.apache.http.auth.params,o
+ rg.apache.http.client,org.apache.http.client.config,org.apache.http.cli
+ ent.entity,org.apache.http.client.methods,org.apache.http.client.params
+ ,org.apache.http.client.protocol,org.apache.http.client.utils,org.apach
+ e.http.conn,org.apache.http.conn.params,org.apache.http.conn.routing,or
+ g.apache.http.conn.scheme,org.apache.http.conn.socket,org.apache.http.c
+ onn.ssl,org.apache.http.conn.util,org.apache.http.cookie,org.apache.htt
+ p.cookie.params,org.apache.http.impl.auth,org.apache.http.impl.client,o
+ rg.apache.http.impl.conn,org.apache.http.impl.conn.tsccm,org.apache.htt
+ p.impl.cookie,org.apache.http.impl.execchain,org.apache.http,org.apache
+ .http.annotation,org.apache.http.concurrent,org.apache.http.config,org.
+ apache.http.entity,org.apache.http.impl,org.apache.http.impl.bootstrap,
+ org.apache.http.impl.entity,org.apache.http.impl.io,org.apache.http.imp
+ l.pool,org.apache.http.io,org.apache.http.message,org.apache.http.param
+ s,org.apache.http.pool,org.apache.http.protocol,org.apache.http.ssl,org
+ .apache.http.util,org.apache.commons.logging,org.apache.commons.logging
+ .impl,com.thoughtworks.xstream,com.thoughtworks.xstream.annotations,com
+ .thoughtworks.xstream.converters,com.thoughtworks.xstream.converters.ba
+ sic,com.thoughtworks.xstream.converters.collections,com.thoughtworks.xs
+ tream.converters.enums,com.thoughtworks.xstream.converters.extended,com
+ .thoughtworks.xstream.converters.javabean,com.thoughtworks.xstream.conv
+ erters.reflection,com.thoughtworks.xstream.converters.time,com.thoughtw
+ orks.xstream.core,com.thoughtworks.xstream.core.util,com.thoughtworks.x
+ stream.io,com.thoughtworks.xstream.io.binary,com.thoughtworks.xstream.i
+ o.copy,com.thoughtworks.xstream.io.json,com.thoughtworks.xstream.io.nam
+ ing,com.thoughtworks.xstream.io.path,com.thoughtworks.xstream.io.xml,co
+ m.thoughtworks.xstream.io.xml.xppdom,com.thoughtworks.xstream.mapper,co
+ m.thoughtworks.xstream.persistence,com.thoughtworks.xstream.security,or
+ g.xmlpull.v1,org.xmlpull.mxp1,com.bonitasoft.engine.api,com.bonitasoft.
  engine.bdm,com.bonitasoft.engine.bdm.dao,org.apache.commons.lang3,org.a
  pache.commons.lang3.builder,org.apache.commons.lang3.concurrent,org.apa
  che.commons.lang3.event,org.apache.commons.lang3.exception,org.apache.c
