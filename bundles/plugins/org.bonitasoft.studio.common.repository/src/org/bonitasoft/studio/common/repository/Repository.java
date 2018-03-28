@@ -92,6 +92,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -296,14 +297,18 @@ public class Repository implements IRepository, IJavaContainer {
         return this;
     }
 
-    private void updateStudioShellText() {
+    protected void updateStudioShellText() {
         if (PlatformUI.isWorkbenchRunning()) {
             Optional.ofNullable(PlatformUI.getWorkbench())
                     .map(IWorkbench::getActiveWorkbenchWindow)
                     .map(IWorkbenchWindow::getShell)
-                    .map(ShellNameController::new)
+                    .map(this::createShellNameController)
                     .ifPresent(controller -> controller.update(RepositoryManager.getInstance().getCurrentRepository()));
         }
+    }
+
+    protected ShellNameController createShellNameController(Shell shell) {
+        return new ShellNameController(shell);
     }
 
     /*
