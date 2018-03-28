@@ -226,7 +226,9 @@ public class UIDesignerServerManager {
 
     protected String javaBinaryLocation() throws FileNotFoundException {
         File javaBinaryPath = StandardVMType.findJavaExecutable(JavaRuntime.getDefaultVMInstall().getInstallLocation());
-        if (javaBinaryPath == null || !javaBinaryPath.exists()) {
+        if (javaBinaryPath == null) {
+            throw new FileNotFoundException("Java binary not configured");
+        } else if (!javaBinaryPath.exists()) {
             throw new FileNotFoundException(
                     String.format("Java binary not found at '%s'", javaBinaryPath.getAbsolutePath()));
         }
@@ -238,20 +240,28 @@ public class UIDesignerServerManager {
         if (port == -1 || !isPortAvailable(port)) {
             port = SocketUtil.findFreePort();
         }
+        File cpJar = configureClasspath();
         return Arrays.asList(
-                "-jar",
-                "\"" + locateUIDjar() + "\"",
+                "-classpath",
+                cpJar == null ? "\"" + locateUIDjar() + "\""
+                        : "\"" + locateUIDjar() + "\":\"" + cpJar.getAbsolutePath() + "\"",
+                "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
+                "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
                 extractLocation().toFile().getAbsolutePath(),
                 "-httpPort",
                 String.valueOf(port));
+    }
+
+    private String getProductApplicationId() {
+        return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
 
     private static boolean isPortAvailable(int port) {
@@ -274,10 +284,38 @@ public class UIDesignerServerManager {
             throw new FileNotFoundException(
                     String.format("Cannot find ui designer jar file in %s folder.", webappFolder.getAbsolutePath()));
         }
-        return execJar.getAbsolutePath();
+        return execJar.getCanonicalFile().getAbsolutePath();
     }
 
     protected ILaunchManager getLaunchManager() {
         return DebugPlugin.getDefault().getLaunchManager();
+    }
+
+    protected File configureClasspath() {
+        final Bundle bundle = Platform.getBundle("org.bonitasoft.studio.common.ex");
+        if (bundle != null) {
+            if (Platform.inDevelopmentMode()) {
+                try {
+                    return new File(new File(FileLocator.getBundleFile(bundle), "lib"), "addons.jar").getCanonicalFile();
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            } else {
+                try {
+                    final URL fileUrl = bundle.loadClass("org.bonitasoft.studio.common.ex.contribution.SilentException")
+                            .getClassLoader()
+                            .getResource("com/bonitasoft/studio/logger/LoggerException.class");
+                    URL addonsResource = FileLocator.resolve(fileUrl);
+                    if (addonsResource.toString().startsWith("jar:file")) {
+                        addonsResource = new URL(addonsResource.toString().substring("jar:".length(),
+                                addonsResource.toString().lastIndexOf('!')));
+                    }
+                    return new File(addonsResource.getFile());
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+        return null;
     }
 }
