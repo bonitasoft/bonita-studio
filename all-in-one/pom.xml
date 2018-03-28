@@ -677,7 +677,7 @@
 								</configuration>
 							</execution>
 							<execution>
-								<id>move-exe-files</id>
+								<id>move-installer-exe-files</id>
 								<phase>package</phase>
 								<goals>
 									<goal>run</goal>
