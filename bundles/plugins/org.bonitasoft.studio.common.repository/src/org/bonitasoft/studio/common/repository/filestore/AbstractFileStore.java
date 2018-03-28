@@ -174,7 +174,11 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
         final boolean[] done = new boolean[1];
         display.asyncExec(() -> {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
-            activePart = doOpen();
+            try {
+                activePart = doOpen();
+            } catch (Throwable e) {
+                done[0] = true;
+            }
             registerPartListener(activePart, getActiveWindow());
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_OPEN, AbstractFileStore.this));
             done[0] = true;
