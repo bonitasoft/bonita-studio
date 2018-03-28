@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ShellNameController {
 
-    private Shell shell;
+    protected Shell shell;
 
     public ShellNameController(Shell shell) {
         this.shell = shell;
