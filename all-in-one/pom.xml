@@ -22,12 +22,14 @@
 
     <properties>
         <product.short.name>BonitaStudioCommunity</product.short.name>
+        <product.short.name.signed>BonitaStudioCommunity-signed</product.short.name.signed>
         <repositoryId>studio-repository</repositoryId>
         <productId>org.bonitasoft.studio.product</productId>
         <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
         <p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
         <root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
         <argLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</argLine>
+        <certifacteSecret></certifacteSecret>
     </properties>
 
 
@@ -131,7 +133,7 @@
                         <goals>
                             <goal>target-platform</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -146,7 +148,7 @@
                             <goal>publish-categories</goal>
                             <goal>attach-artifacts</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -166,7 +168,7 @@
                         <goals>
                             <goal>assemble-repository</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -195,46 +197,11 @@
                         <goals>
                             <goal>materialize-products</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- all-in-one assembly with all platforms -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-directory-assembly</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-                            </descriptors>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>${product.short.name}-${project.version}</finalName>
-                        </configuration>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>make-zip-assembly</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-                            </descriptors>
-                            <finalName>${product.short.name}-${project.version}</finalName>
-                        </configuration>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
 
             <!-- Create a proper bundles.info for all-in-one -->
@@ -246,7 +213,6 @@
                     <argLine>-Xmx512m -Xms256m</argLine>
                     <repositories>
                         <repository>
-                            <id>Bonita Studio P2 Repository</id>
                             <layout>p2</layout>
                             <url>${p2MirrorUrl}</url>
                         </repository>
@@ -273,7 +239,8 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
+                        <id>create bundles.info</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>eclipse-run</goal>
                         </goals>
@@ -281,10 +248,203 @@
                 </executions>
             </plugin>
 
+            <!-- all-in-one assembly with all platforms -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-directory-assembly</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
+                            </descriptors>
+                            <attach>false</attach>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>${product.short.name}-${project.version}</finalName>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>make-zip-assembly</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
+                            </descriptors>
+                            <finalName>${product.short.name}-${project.version}</finalName>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>get-certificate</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifact>com.bonitasoft.releng:selfsigned-certificate:1.0.0:pfx</artifact>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>set-permissions</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <chmod dir="${project.build.directory}/products/${productId}/win32/win32/x86_64/"
+                                            perm="777" />
+                                        <chmod dir="${project.build.directory}/products/${productId}/win32/win32/x86/"
+                                            perm="777" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>move-exe-files</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <move
+                                            file="${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name.signed}.exe"
+                                            tofile="${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.exe" />
+                                        <move
+                                            file="${project.build.directory}/products/${productId}/win32/win32/x86/${product.short.name.signed}.exe"
+                                            tofile="${project.build.directory}/products/${productId}/win32/win32/x86/${product.short.name}.exe" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-x86_64-exe</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <images>
+                                        <image>
+                                            <alias>osslsigncode</alias>
+                                            <name>sporsh/osslsigncode</name>
+                                            <run>
+                                                <log>
+                                                    <enabled>true</enabled>
+                                                </log>
+                                                <volumes>
+                                                    <bind>${project.build.directory}:/files</bind>
+                                                </volumes>
+                                                <cmd>
+                                                    <exec>
+                                                        <arg>sign</arg>
+                                                        <arg>-pkcs12</arg>
+                                                        <arg>/files/selfsigned-certificate-1.0.0.pfx</arg>
+                                                        <arg>-pass</arg>
+                                                        <arg>${certifacteSecret}</arg>
+                                                        <arg>-n</arg>
+                                                        <arg>BonitaStudio Community</arg>
+                                                        <arg>-i</arg>
+                                                        <arg>http://www.bonitasoft.com</arg>
+                                                        <arg>-t</arg>
+                                                        <arg> http://timestamp.digicert.com</arg>
+                                                        <arg>-in</arg>
+                                                        <arg>/files/products/${productId}/win32/win32/x86_64/${product.short.name}.exe</arg>
+                                                        <arg>-out</arg>
+                                                        <arg>/files/products/${productId}/win32/win32/x86_64/${product.short.name.signed}.exe</arg>
+                                                    </exec>
+                                                </cmd>
+                                                <wait>
+                                                    <exit>0</exit>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>sign-x86-exe</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <images>
+                                        <image>
+                                            <alias>osslsigncode</alias>
+                                            <name>sporsh/osslsigncode</name>
+                                            <run>
+                                                <log>
+                                                    <enabled>true</enabled>
+                                                </log>
+                                                <volumes>
+                                                    <bind>${project.build.directory}:/files</bind>
+                                                </volumes>
+                                                <cmd>
+                                                    <exec>
+                                                        <arg>sign</arg>
+                                                        <arg>-pkcs12</arg>
+                                                        <arg>/files/selfsigned-certificate-1.0.0.pfx</arg>
+                                                        <arg>-pass</arg>
+                                                        <arg>${certifacteSecret}</arg>
+                                                        <arg>-n</arg>
+                                                        <arg>BonitaStudio Community</arg>
+                                                        <arg>-i</arg>
+                                                        <arg>http://www.bonitasoft.com</arg>
+                                                        <arg>-t</arg>
+                                                        <arg> http://timestamp.digicert.com</arg>
+                                                        <arg>-in</arg>
+                                                        <arg>/files/products/${productId}/win32/win32/x86/${product.short.name}.exe</arg>
+                                                        <arg>-out</arg>
+                                                        <arg>/files/products/${productId}/win32/win32/x86/${product.short.name.signed}.exe</arg>
+                                                    </exec>
+                                                </cmd>
+                                                <wait>
+                                                    <exit>0</exit>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>buildInstaller</id>
             <activation>
@@ -385,8 +545,150 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>get-certificate</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifact>com.bonitasoft.releng:selfsigned-certificate:1.0.0:pfx</artifact>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <executions>
+                         <execution>
+                                <id>sign-installer-x86-exe</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <images>
+                                        <image>
+                                            <alias>osslsigncode</alias>
+                                            <name>sporsh/osslsigncode</name>
+                                            <run>
+                                                <log>
+                                                    <enabled>true</enabled>
+                                                </log>
+                                                <volumes>
+                                                    <bind>${project.build.directory}:/files</bind>
+                                                </volumes>
+                                                <cmd>
+                                                    <exec>
+                                                        <arg>sign</arg>
+                                                        <arg>-pkcs12</arg>
+                                                        <arg>/files/selfsigned-certificate-1.0.0.pfx</arg>
+                                                        <arg>-pass</arg>
+                                                        <arg>${certifacteSecret}</arg>
+                                                        <arg>-n</arg>
+                                                        <arg>BonitaStudio Community Installer</arg>
+                                                        <arg>-i</arg>
+                                                        <arg>http://www.bonitasoft.com</arg>
+                                                        <arg>-t</arg>
+                                                        <arg> http://timestamp.digicert.com</arg>
+                                                        <arg>-in</arg>
+                                                        <arg>/files/installers/output/${product.short.name}-${project.version}-x86.exe</arg>
+                                                        <arg>-out</arg>
+                                                        <arg>/files/installers/output/${product.short.name}-${project.version}-x86-signed.exe</arg>
+                                                    </exec>
+                                                </cmd>
+                                                <wait>
+                                                    <time>30000</time>
+                                                    <exit>0</exit>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>sign-installer-x86_64-exe</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <images>
+                                        <image>
+                                            <alias>osslsigncode</alias>
+                                            <name>sporsh/osslsigncode</name>
+                                            <run>
+                                                <volumes>
+                                                    <bind>${project.build.directory}:/files</bind>
+                                                </volumes>
+                                                <cmd>
+                                                    <exec>
+                                                        <arg>sign</arg>
+                                                        <arg>-pkcs12</arg>
+                                                        <arg>/files/selfsigned-certificate-1.0.0.pfx</arg>
+                                                        <arg>-pass</arg>
+                                                        <arg>${certifacteSecret}</arg>
+                                                        <arg>-n</arg>
+                                                        <arg>BonitaStudio Community Installer</arg>
+                                                        <arg>-i</arg>
+                                                        <arg>http://www.bonitasoft.com</arg>
+                                                        <arg>-t</arg>
+                                                        <arg> http://timestamp.digicert.com</arg>
+                                                        <arg>-in</arg>
+                                                        <arg>/files/installers/output/${product.short.name}-${project.version}-x86_64.exe</arg>
+                                                        <arg>-out</arg>
+                                                        <arg>/files/installers/output/${product.short.name}-${project.version}-x86_64-signed.exe</arg>
+                                                    </exec>
+                                                </cmd>
+                                                <wait>
+                                                    <time>30000</time>
+                                                    <exit>0</exit>
+                                                </wait>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
+                            <execution>
+                                <id>create-installer-output-folder</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/installers/output/" />
+                                        <chmod dir="${project.build.directory}/installers/output/" perm="777" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>move-exe-files</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <move
+                                            file="${project.build.directory}/installers/output/${product.short.name}-${project.version}-x86_64-signed.exe"
+                                            tofile="${project.build.directory}/installers/output/${product.short.name}-${project.version}-x86_64.exe" />
+                                        <move
+                                            file="${project.build.directory}/installers/output/${product.short.name}-${project.version}-x86-signed.exe"
+                                            tofile="${project.build.directory}/installers/output/${product.short.name}-${project.version}-x86.exe" />
+                                    </target>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>linux x86 installer file</id>
                                 <phase>generate-resources</phase>
@@ -412,7 +714,8 @@
                                 <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
-                                        <property name="studio.dir" value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
+                                        <property name="studio.dir"
+                                            value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
                                         <property name="bitrock.install" value="${project.build.directory}/installers" />
                                         <property name="os_arch" value="64" />
                                         <property name="enable.uninstaller" value="1" />
@@ -431,7 +734,7 @@
                                 <phase>generate-resources</phase>
                                 <configuration>
                                     <target>
-                                    <property name="mac.studio.dir"
+                                        <property name="mac.studio.dir"
                                             value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
                                         <property name="studio.dir"
                                             value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse" />
@@ -495,7 +798,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
                                         <available property="jre.present" file="${user.home}/${jre.winx86.url}" />
                                         <if>
@@ -514,7 +817,7 @@
                                         <copy todir="${project.build.directory}/products/${productId}/win32/win32/x86/jre">
                                             <fileset dir="${user.home}/${jre.winx86.url}/jre1.8.0_112" />
                                         </copy>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -524,7 +827,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
                                         <available property="jre.present" file="${user.home}/${jre.winx86.x64.url}" />
                                         <if>
@@ -543,7 +846,7 @@
                                         <copy todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
                                             <fileset dir="${user.home}/${jre.winx86.x64.url}/jre1.8.0_112" />
                                         </copy>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -553,7 +856,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
                                         <available property="jre.present" file="${user.home}/${jre.linuxx86.url}" />
                                         <if>
@@ -571,7 +874,7 @@
                                         <copy todir="${project.build.directory}/products/${productId}/linux/gtk/x86/jre">
                                             <fileset dir="${user.home}/${jre.linuxx86.url}/jre1.8.0_112" />
                                         </copy>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -581,7 +884,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
                                         <available property="jre.present" file="${user.home}/${jre.linuxx86.x64.url}" />
                                         <if>
@@ -599,7 +902,7 @@
                                         <copy todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
                                             <fileset dir="${user.home}/${jre.linuxx86.x64.url}/jre1.8.0_112" />
                                         </copy>
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                             <execution>
@@ -609,10 +912,10 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <get src="${jre.url}/${jre.osx.url}.tar.gz"
                                             dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse/${jre.osx.url}.tar.gz" />
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
