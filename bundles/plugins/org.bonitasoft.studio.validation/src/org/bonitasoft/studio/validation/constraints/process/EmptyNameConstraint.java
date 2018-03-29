@@ -25,6 +25,7 @@ import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -79,6 +80,9 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint 
                 .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create().validate(element.getName());
         if (!status.isOK()) {
             return ctx.createFailureStatus(status.getMessage());
+        }
+        if (element instanceof Task && element.getName().contains(" :")) {
+            return ctx.createFailureStatus(Messages.invalidColumnUsageInTaskName);
         }
         return ctx.createSuccessStatus();
     }

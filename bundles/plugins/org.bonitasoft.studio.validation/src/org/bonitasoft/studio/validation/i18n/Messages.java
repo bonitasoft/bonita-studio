@@ -232,6 +232,7 @@ public class Messages extends NLS {
     public static String instantiationFormMapping;
     public static String conflictingQueryNamesInBusinessObject;
     public static String Validation_jasperConnectorRemoved;
+    public static String invalidColumnUsageInTaskName;
 
     static {
         // initialize resource bundle
