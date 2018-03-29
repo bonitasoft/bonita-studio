@@ -244,7 +244,8 @@ public class UIDesignerServerManager {
         return Arrays.asList(
                 "-classpath",
                 cpJar == null ? "\"" + locateUIDjar() + "\""
-                        : "\"" + locateUIDjar() + "\":\"" + cpJar.getAbsolutePath() + "\"",
+                        : "\"" + locateUIDjar() + "\"" + System.getProperty("path.separator") + "\""
+                                + cpJar.getAbsolutePath() + "\"",
                 "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
