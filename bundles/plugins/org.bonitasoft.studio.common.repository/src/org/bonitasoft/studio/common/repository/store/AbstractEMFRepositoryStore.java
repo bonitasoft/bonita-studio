@@ -33,14 +33,11 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.migration.MigrationPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.internal.migration.execution.internal.BundleClassLoader;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
@@ -52,7 +49,6 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -65,7 +61,6 @@ import com.google.common.io.Files;
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
         extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
 
-    private static final String MIGRATION_HISTORY_PATH = "process.history";
 
     private AdapterFactoryLabelProvider labelProvider;
 
@@ -92,11 +87,8 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
      */
     public Migrator initializeMigrator() {
         if (migrator == null) {
-            final URI migratorURI = URI.createPlatformPluginURI(
-                    getMigrationHistoryPath(), true);
             try {
-                migrator = new Migrator(migratorURI, new BundleClassLoader(
-                        MigrationPlugin.getDefault().getBundle()));
+                migrator = new SingleResourceMigrator();
             } catch (final MigrationException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
@@ -104,12 +96,6 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
         return migrator;
     }
 
-    protected String getMigrationHistoryPath() {
-        return "/"
-                + Platform.getBundle("org.bonitasoft.studio-models")
-                        .getSymbolicName()
-                + "/" + MIGRATION_HISTORY_PATH;
-    }
 
     public AdapterFactoryLabelProvider getLabelProvider() {
         if (labelProvider != null) {
@@ -145,7 +131,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
                 || fileName.toLowerCase().endsWith(".jpg")
                 || fileName.toLowerCase().endsWith(".gif")
                 || fileName.toLowerCase().endsWith(".jpeg")
-                        | fileName.toLowerCase().endsWith(".xsd")) {// not an emf
+                || fileName.toLowerCase().endsWith(".xsd")) {// not an emf
                                                                                                                                                                                                                                                                                       // resource
             return is;
         }
@@ -237,17 +223,12 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
        return ReleaseUtils.getNamespaceURI(resourceURI);
     }
 
-    /**
-     * @param nsURI
-     * @return
-     */
+
     public Migrator getMigrator(final String nsURI) {
         Migrator targetMigrator = initializeMigrator();
-        if (migrator.getNsURIs().contains(nsURI)) {
-            targetMigrator = migrator;
-        } else {
-            targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
-        }
+        if (!targetMigrator.getNsURIs().contains(nsURI)) {
+            return MigratorRegistry.getInstance().getMigrator(nsURI);
+        } 
         return targetMigrator;
     }
 
