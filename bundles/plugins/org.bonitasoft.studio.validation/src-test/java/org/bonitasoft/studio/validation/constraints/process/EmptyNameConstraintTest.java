@@ -153,6 +153,15 @@ public class EmptyNameConstraintTest {
         }
     }
 
+    @Test
+    public void should_fail_task_name_with_space_column() throws Exception {
+        when(ctx.getTarget()).thenReturn(aTask().withName("Hello : Romain").build());
+
+        final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
+
+        assertThat(iStatus.isOK()).isFalse();
+    }
+
     private static String aStringWithLength(final int length) {
         final StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
