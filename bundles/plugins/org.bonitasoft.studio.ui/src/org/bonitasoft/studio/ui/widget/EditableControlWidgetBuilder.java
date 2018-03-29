@@ -32,6 +32,11 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
         return (T) this;
     }
 
+    public T readOnly(boolean isReadOnly) {
+        this.readOnly = isReadOnly;
+        return (T) this;
+    }
+
     /**
      * Adds a text message under the control. Should be use when additional user guidance is needed.
      */
