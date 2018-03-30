@@ -90,7 +90,7 @@ public class ExportBarIT {
         assertThat(importBosArchiveOperation.getFileStoresToOpen()).extracting("name")
                 .containsOnly("DiagramWithNewFormMapping-1.0.proc");
 
-        Thread.sleep(1000); // wait for assets folder ..
+        Thread.sleep(3000); // wait for assets folder ..
 
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
