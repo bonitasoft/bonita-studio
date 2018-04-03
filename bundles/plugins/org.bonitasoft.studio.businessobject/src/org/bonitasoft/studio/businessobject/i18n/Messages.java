@@ -345,6 +345,35 @@ public class Messages extends NLS {
 
     public static String continueDeploy;
 
+    public static String duplicateConstraintOrIndexName;
+    public static String emptyBdm;
+    public static String duplicateQueryName;
+    public static String businessObjectWithoutName;
+    public static String reservedPackageName;
+    public static String invalidJavaIdentifier;
+    public static String invalidCharacterInBusinessObjectName;
+    public static String businessObjectWithoutField;
+    public static String duplicateConstraintName;
+    public static String unknownFieldInConstraint;
+    public static String invalidFieldIdentifier;
+    public static String indexWithoutName;
+    public static String invalidSqlIdentifier;
+    public static String indexWithoutField;
+    public static String queryParameterWithoutName;
+    public static String forbiddenQueryParameterName;
+    public static String queryParameterWithoutClassName;
+    public static String queryWithoutName;
+    public static String queryNameLengthToHigh;
+    public static String queryWithoutContent;
+    public static String queryWithoutReturntype;
+    public static String fieldWithoutName;
+    public static String constraintWithoutName;
+    public static String constraintWithoutField;
+    public static String boUsedInCompositionAndAggregation;
+    public static String circularCompositionReference;
+    public static String severalCompositionReferenceForABusinessObject;
+    public static String multipleAggregationToItself;
+
     private Messages() {
     }
 
