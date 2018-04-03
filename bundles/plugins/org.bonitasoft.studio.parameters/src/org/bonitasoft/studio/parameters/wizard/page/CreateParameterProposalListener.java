@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Maxence Raoux
- *
  */
 public class CreateParameterProposalListener implements IProposalListener {
 
@@ -41,10 +40,10 @@ public class CreateParameterProposalListener implements IProposalListener {
     public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
         final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
-        final AddParameterWizard parameterWizard = new AddParameterWizard(parentProcess, TransactionUtil.getEditingDomain(context));
+        final AddParameterWizard parameterWizard = new AddParameterWizard(parentProcess,
+                TransactionUtil.getEditingDomain(context));
         final ParameterWizardDialog parameterDialog = new ParameterWizardDialog(
-                Display.getCurrent().getActiveShell().getParent().getShell(),
-                parameterWizard);
+                Display.getDefault().getActiveShell(), parameterWizard);
         if (parameterDialog.open() == Dialog.OK) {
             final Parameter param = parameterWizard.getNewParameter();
             if (param != null) {
@@ -76,7 +75,8 @@ public class CreateParameterProposalListener implements IProposalListener {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
+     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.
+     * EStructuralFeature)
      */
     @Override
     public void setEStructuralFeature(final EStructuralFeature feature) {
