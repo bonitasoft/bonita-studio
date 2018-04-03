@@ -16,6 +16,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.engine.api.result.Status;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Index;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMStackTraceResolver;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.status.BusinessDataModelStatusMapper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
@@ -130,16 +132,20 @@ public class ManageBusinessDataModelWizard extends Wizard {
                     } else {
                         monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
                         ValidationStatus validate = new BusinessObjectModelValidator().validate(businessObjectModel);
-                        if (!(validate.getErrors().isEmpty() && validate.getWarnings().isEmpty())) {
+                        validate.getStatuses().stream().map(Status::getMessage).forEach(System.out::println);
+                        if (!validate.getStatuses().isEmpty()) {
                             MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, "", null);
-                            validate.getErrors().stream()
-                                    .distinct()
-                                    .map(org.eclipse.core.databinding.validation.ValidationStatus::error)
-                                    .forEach(status::add);
-                            validate.getWarnings().stream()
-                                    .distinct()
-                                    .map(org.eclipse.core.databinding.validation.ValidationStatus::warning)
-                                    .forEach(status::add);
+                            for (Status engineStatus : validate.getStatuses()) {
+                                String translatedMessage = BusinessDataModelStatusMapper.instance()
+                                        .localizedMessage(engineStatus);
+                                if (engineStatus.getLevel().equals(Status.Level.ERROR)) {
+                                    status.add(org.eclipse.core.databinding.validation.ValidationStatus
+                                            .error(translatedMessage));
+                                } else {
+                                    status.add(org.eclipse.core.databinding.validation.ValidationStatus
+                                            .warning(translatedMessage));
+                                }
+                            }
                             if (!manageErrors(status, getShell())) {
                                 throw new InterruptedException();
                             }
