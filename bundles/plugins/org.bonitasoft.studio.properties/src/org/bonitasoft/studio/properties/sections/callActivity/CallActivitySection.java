@@ -17,26 +17,26 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.ProcessNamesExpressionNatureProvider;
 import org.bonitasoft.studio.properties.sections.general.ProcessVersionsExpressionNatureProvider;
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
@@ -96,12 +96,14 @@ public class CallActivitySection extends AbstractBonitaDescriptionSection {
                 ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE }));
         nameViewer.setExpressionNatureProvider(new ProcessNamesExpressionNatureProvider());
 
-        final IObservableValue callActivityNameObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
-                ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_NAME);
-
-        context.bindValue(ViewersObservables.observeInput(nameViewer), ViewersObservables.observeSingleSelection(selectionProvider));
-        context.bindValue(ViewersObservables.observeSingleSelection(nameViewer), callActivityNameObservable);
+        IObservableValue diagramSelection = ViewersObservables.observeSingleSelection(selectionProvider);
+        diagramSelection.addValueChangeListener(event -> {
+            Object value = (EObject) event.diff.getNewValue();
+            if (value instanceof CallActivity) {
+                nameViewer.setInput(value);
+                nameViewer.setSelection(new StructuredSelection(((CallActivity) value).getCalledActivityName()));
+            }
+        });
 
         GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(widgetFactory.createLabel(composite, Messages.version));
 
@@ -112,12 +114,13 @@ public class CallActivitySection extends AbstractBonitaDescriptionSection {
         versionViewer.setMessage(Messages.calledProcessVersionHint);
         versionViewer.setExpressionNatureProvider(new ProcessVersionsExpressionNatureProvider());
 
-        final IObservableValue callActivityVersionObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
-                ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_VERSION);
-
-        context.bindValue(ViewersObservables.observeInput(versionViewer), ViewersObservables.observeSingleSelection(selectionProvider));
-        context.bindValue(ViewersObservables.observeSingleSelection(versionViewer), callActivityVersionObservable);
+        diagramSelection.addValueChangeListener(event -> {
+            Object value = (EObject) event.diff.getNewValue();
+            if (value instanceof CallActivity) {
+                versionViewer.setInput(value);
+                versionViewer.setSelection(new StructuredSelection(((CallActivity) value).getCalledActivityVersion()));
+            }
+        });
 
         nameViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
