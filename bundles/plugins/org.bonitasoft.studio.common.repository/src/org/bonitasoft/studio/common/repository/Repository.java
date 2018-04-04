@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import java.util.stream.Collectors;
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.DateUtil;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -64,10 +64,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -89,7 +86,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -128,41 +126,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     private boolean isLoaded = false;
 
-    private IResourceChangeListener projectFileListener = new IResourceChangeListener() {
-
-        @Override
-        public void resourceChanged(IResourceChangeEvent event) {
-            try {
-                if (event != null && event.getDelta() != null) {
-                    event.getDelta().accept(new IResourceDeltaVisitor() {
-
-                        @Override
-                        public boolean visit(IResourceDelta delta) throws CoreException {
-                            IProject project = getProject();
-                            if (project.isAccessible()) {
-                                IFile projectFile = project.getFile(".project");
-                                final IResource resource = delta.getResource();
-                                if (Objects.equals(resource, projectFile)) {
-                                    String version = getVersion();
-                                    if (!ProductVersion.CURRENT_VERSION.equals(version)) {
-                                        Display.getDefault().asyncExec(() -> MessageDialog
-                                                .openError(Display.getDefault().getActiveShell(),
-                                                        Messages.repositoryError,
-                                                        String.format(Messages.repositoryError, project.getName(), version,
-                                                                ProductVersion.CURRENT_VERSION)));
-                                        return false;
-                                    }
-                                }
-                            }
-                            return true;
-                        }
-                    });
-                }
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    };
+    private IResourceChangeListener projectFileListener = new ProjectFileChangeListener(this);
 
     public Repository(final IWorkspace workspace,
             final IProject project,
@@ -751,6 +715,7 @@ public class Repository implements IRepository, IJavaContainer {
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
         for (final IRepositoryStore<?> store : getAllStores()) {
+            store.createRepositoryStore(this);
             store.migrate(monitor);
         }
         workspace.run(newProjectMigrationOperation(project), monitor);
@@ -768,6 +733,20 @@ public class Repository implements IRepository, IJavaContainer {
                 .addBuilder("org.eclipse.pde.ManifestBuilder")
                 .addBuilder("org.eclipse.pde.SchemaBuilder")
                 .addBuilder("org.eclipse.wst.validation.validationbuilder");
+    }
+
+    protected IRunnableWithProgress migrationRunnable() {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                try {
+                    migrate(monitor);
+                } catch (CoreException | MigrationException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
     }
 
     @Override
@@ -806,6 +785,18 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public boolean isShared(String providerId) {
         return false;
+    }
+
+    public void runMigrationInDialog() {
+        try {
+            new ProgressMonitorDialog(
+                    Display.getDefault().getActiveShell())
+                            .run(true, false, migrationRunnable());
+        } catch (InvocationTargetException | InterruptedException e) {
+            CommonRepositoryPlugin.getDefault().openErrorDialog(
+                    Display.getDefault().getActiveShell(),
+                    Messages.migrationFailedMessage, e);
+        }
     }
 
 }
