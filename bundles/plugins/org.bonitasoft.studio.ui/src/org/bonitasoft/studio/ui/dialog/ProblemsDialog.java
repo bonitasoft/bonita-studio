@@ -35,6 +35,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public abstract class ProblemsDialog<T> extends MessageDialog {
 
+    private TableViewerColumn tableViewerColumn;
+
     public ProblemsDialog(Shell parentShell, String dialogTitle, String dialogMessage, int dialogImageType,
             String[] dialogButtonLabels) {
         super(parentShell, dialogTitle, null, dialogMessage, dialogImageType, dialogButtonLabels, 0);
@@ -51,9 +53,9 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         if (input.isEmpty()) {
             return super.createCustomArea(parent);
         }
-        TableViewer problemsViewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
-        problemsViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(350, 100).indent(0, 10).create());
+        TableViewer problemsViewer = new TableViewer(parent,
+                SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
+        problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(350, 100).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
         problemsViewer.setComparator(getComparator());
 
@@ -61,8 +63,7 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         layout.addColumnData(new ColumnWeightData(1, true));
         problemsViewer.getTable().setLayout(layout);
 
-        TableViewerColumn tableViewerColumn = new TableViewerColumn(problemsViewer, SWT.NONE);
-
+        tableViewerColumn = new TableViewerColumn(problemsViewer, SWT.NONE);
         TypedLabelProvider<T> typedLabelProvider = getTypedLabelProvider();
         Assert.isNotNull(typedLabelProvider);
         tableViewerColumn.setLabelProvider(new LabelProviderBuilder<T>()
@@ -73,11 +74,18 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
 
         problemsViewer.setInput(input);
         ColumnViewerToolTipSupport.enableFor(problemsViewer);
+
         return problemsViewer.getControl();
     }
 
     protected ViewerComparator getComparator() {
         return new ViewerComparator();
+    }
+
+    @Override
+    public void create() {
+        super.create();
+        tableViewerColumn.getColumn().pack();
     }
 
     protected abstract TypedLabelProvider<T> getTypedLabelProvider();
