@@ -27,7 +27,6 @@ import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryConten
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.ReadOnlyQueryContentEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -41,7 +40,6 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -67,7 +65,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Romain Bioteau
@@ -113,8 +110,8 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
 
         final Composite radioComposite = new Composite(this, SWT.NONE);
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(2, 1).create());
@@ -134,8 +131,15 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         final Button customQueriesRadioButton = new Button(radioComposite, SWT.RADIO);
         customQueriesRadioButton.setText(Messages.customQueriesOption);
 
+        final ControlDecoration customControlDecoration = new ControlDecoration(customQueriesRadioButton, SWT.RIGHT);
+        customControlDecoration.setDescriptionText(Messages.countQueryInfo);
+        customControlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        customControlDecoration.setShowOnlyOnFocus(false);
+        customControlDecoration.setMarginWidth(-5);
+
+
         final Composite stackComposite = new Composite(this, SWT.NONE);
-        stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final StackLayout stackLayout = new StackLayout();
         stackComposite.setLayout(stackLayout);
 
@@ -239,11 +243,10 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     protected Composite createCustomQueriesControl(DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue, final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
-        final Well well = new Well(composite, Messages.countQueryInfo, new FormToolkit(getDisplay()), IStatus.INFO);
-        well.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(450, SWT.DEFAULT).create());
+
 
         final Composite buttonsComposite = new Composite(composite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
@@ -255,7 +258,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         final TableViewer queriesTableViewer = new TableViewer(composite,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         queriesTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         queriesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         queriesTableViewer.getTable().setLinesVisible(true);
         queriesTableViewer.getTable().setHeaderVisible(true);
@@ -343,13 +346,13 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     private Composite createDefaultQueriesControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
             final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
 
         final TableViewer queriesTableViewer = new TableViewer(composite,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         queriesTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         queriesTableViewer.getTable().setLinesVisible(true);
         queriesTableViewer.getTable().setHeaderVisible(true);
         queriesTableViewer.setContentProvider(new ObservableListContentProvider());
