@@ -30,11 +30,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
@@ -74,21 +71,18 @@ public class ManageBusinessObjectHandler {
     }
 
     protected CustomWizardDialog createWizardDialog(final IWizard wizard, final String finishLabel, Shell shell) {
-        final CustomWizardDialog dialog = new CustomWizardDialog(shell, wizard, finishLabel) {
+        return new CustomWizardDialog(shell, wizard, finishLabel) {
 
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
+             */
             @Override
-            protected Control createHelpControl(final Composite parent) {
-                final Control helpControl = super.createHelpControl(parent);
-                if (helpControl instanceof ToolBar) {
-                    final ToolItem toolItem = ((ToolBar) helpControl).getItem(0);
-                    toolItem.setToolTipText(Messages.howToUseBusinessObjects);
-                }
-                return helpControl;
-
+            protected Point getInitialSize() {
+                Point initialSize = super.getInitialSize();
+                return new Point(initialSize.x, 800);
             }
         };
-        dialog.setHelpAvailable(true);
-        return dialog;
     }
 
     protected ManageBusinessDataModelWizard createWizard() {

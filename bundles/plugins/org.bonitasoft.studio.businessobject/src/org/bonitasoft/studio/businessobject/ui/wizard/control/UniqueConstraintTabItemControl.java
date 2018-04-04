@@ -77,7 +77,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
@@ -90,15 +90,15 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         final TableViewer constraintsTableViewer = new TableViewer(this,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         constraintsTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         constraintsTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         constraintsTableViewer.getTable().setLinesVisible(true);
         constraintsTableViewer.getTable().setHeaderVisible(true);
         constraintsTableViewer.setContentProvider(new ObservableListContentProvider());
 
         final TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(1, 200));
         tableLayout.addColumnData(new ColumnWeightData(1));
-        tableLayout.addColumnData(new ColumnWeightData(2));
         constraintsTableViewer.getTable().setLayout(tableLayout);
 
         UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
