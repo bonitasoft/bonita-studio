@@ -76,7 +76,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
@@ -89,7 +89,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         final TableViewer indexesTableViewer = new TableViewer(this,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         indexesTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         indexesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         indexesTableViewer.getTable().setLinesVisible(true);
         indexesTableViewer.getTable().setHeaderVisible(true);

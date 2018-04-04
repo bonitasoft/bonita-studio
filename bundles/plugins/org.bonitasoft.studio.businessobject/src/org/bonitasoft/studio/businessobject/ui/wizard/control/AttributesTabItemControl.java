@@ -121,7 +121,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
 
         attributeSelectionObservable = createAttributeTableControl(ctx, viewerObservableValue);
@@ -394,7 +394,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final TableViewer featuresTableViewer = new TableViewer(this,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         featuresTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 200).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
+                        .create());
         featuresTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
         featuresTableViewer.getTable().setLinesVisible(true);
         featuresTableViewer.getTable().setHeaderVisible(true);
@@ -407,10 +408,10 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 .observeSingleSelection(featuresTableViewer);
 
         final TableLayout tableLayout = new TableLayout();
-        tableLayout.addColumnData(new ColumnWeightData(4));
-        tableLayout.addColumnData(new ColumnWeightData(4));
-        tableLayout.addColumnData(new ColumnWeightData(3));
-        tableLayout.addColumnData(new ColumnWeightData(3));
+        tableLayout.addColumnData(new ColumnWeightData(5, 100));
+        tableLayout.addColumnData(new ColumnWeightData(4, 80));
+        tableLayout.addColumnData(new ColumnWeightData(3, 20));
+        tableLayout.addColumnData(new ColumnWeightData(3, 20));
         featuresTableViewer.getTable().setLayout(tableLayout);
 
         createFieldNameColumn(ctx, featuresTableViewer, viewerObservableValue);

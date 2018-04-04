@@ -129,24 +129,16 @@ public class BusinessDataModelWizardPage extends WizardPage {
         if (!businessObjectModel.getBusinessObjects().isEmpty()) {
             viewerObservableValue.setValue(businessObjectModel.getBusinessObjects().get(0));
         }
-        createHelpControl(mainComposite);
-
         WizardPageSupport.create(this, ctx);
         setControl(mainComposite);
     }
 
-    protected void createHelpControl(final Composite mainComposite) {
-        helpLabel = new Label(mainComposite, SWT.WRAP);
-        helpLabel.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT).span(3, 1).indent(0, 10).create());
-        helpLabel.setVisible(false);
-        helpLabel.setText(Messages.howToUseBusinessObjectsContent);
-    }
 
     protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue) {
         final Group businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
-        businessObjectDescriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 2).create());
+        businessObjectDescriptionGroup.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).span(1, 2).minSize(500, 340).create());
         businessObjectDescriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
 
@@ -167,7 +159,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
         final TabFolder tabFolder = new TabFolder(businessObjectDescriptionGroup, SWT.NONE);
         tabFolder.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 350).span(2, 1).create());
+                GridDataFactory.fillDefaults().grab(true, true).minSize(500, 300).span(2, 1).create());
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         fieldsList = PojoObservables.observeDetailList(viewerObservableValue, "fields", null);
         createAttributeTabItem(ctx, viewerObservableValue, tabFolder);
@@ -496,9 +488,5 @@ public class BusinessDataModelWizardPage extends WizardPage {
         this.packageName = packageName;
     }
 
-    @Override
-    public void performHelp() {
-        helpLabel.setVisible(!helpLabel.isVisible());
-    }
 
 }
