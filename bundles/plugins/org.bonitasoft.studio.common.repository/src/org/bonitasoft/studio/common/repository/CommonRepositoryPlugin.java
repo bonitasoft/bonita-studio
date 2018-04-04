@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.common.repository;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
@@ -8,8 +9,13 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -97,6 +103,19 @@ public class CommonRepositoryPlugin extends AbstractUIPlugin {
 
     public static void setCurrentRepository(String repositoryName) {
         CommonRepositoryPlugin.getDefault().getPreferenceStore().setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, repositoryName);
+    }
+
+    public void openErrorDialog(Shell shell, String errorMessage, Throwable t) {
+        final Status status = createErrorStatus(t);
+        Platform.getLog(Platform.getBundle(PLUGIN_ID)).log(status);
+        new ErrorDialog(shell, Messages.errorTitle, errorMessage,
+                status, IStatus.ERROR).open();
+    }
+
+    private Status createErrorStatus(Throwable t) {
+        Throwable exception = InvocationTargetException.class.isInstance(t)
+                ? ((InvocationTargetException) t).getTargetException() : t;
+        return new Status(IStatus.ERROR, PLUGIN_ID, exception.getMessage(), exception);
     }
 
 

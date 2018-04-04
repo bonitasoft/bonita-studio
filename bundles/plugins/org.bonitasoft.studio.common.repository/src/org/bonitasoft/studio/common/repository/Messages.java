@@ -72,6 +72,11 @@ public final class Messages extends NLS {
     public static String sharedWithSvn;
     public static String sharedWithGit;
     public static String localRepository;
+    public static String migrate;
+    public static String mustMigrationMsg;
+    public static String migrationTitle;
+
+    public static String errorTitle;
 
     private Messages() {
         // Do not instantiate
