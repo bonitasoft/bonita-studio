@@ -10,6 +10,7 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,9 +55,11 @@ public class ImportBosArchiveOperationTest {
 
     @Test
     public void should_validate_all_imported_processes_at_the_end_of_import() throws Exception {
+        ImportBosArchiveStatusBuilder importBosArchiveStatusBuilder = new ImportBosArchiveStatusBuilder();
+        when(operationUnserTest.createStatusBuilder()).thenReturn(importBosArchiveStatusBuilder);
         operationUnserTest.setCurrentRepository(repostioty);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
-        verify(operationUnserTest).validateAllAfterImport(monitor);
+        verify(operationUnserTest).validateAllAfterImport(monitor, importBosArchiveStatusBuilder);
     }
 }
