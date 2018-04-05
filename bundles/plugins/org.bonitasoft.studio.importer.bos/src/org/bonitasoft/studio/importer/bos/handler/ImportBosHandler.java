@@ -61,7 +61,7 @@ public class ImportBosHandler {
     private void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(archive, progressManager, model);
+        final ImportBosArchiveOperation operation = createImportOperation(model, archive, progressManager);
         operation.setCurrentRepository(getTargetRepository(repositoryAccessor));
         try {
             progressManager.run(true, false, operation);
@@ -73,6 +73,11 @@ public class ImportBosHandler {
         activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation.getStatus(),
                 repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class), activeShell,
                 repositoryAccessor.getCurrentRepository().getName()));
+    }
+
+    protected ImportBosArchiveOperation createImportOperation(ImportArchiveModel model, File archive,
+            final SkippableProgressMonitorJobsDialog progressManager) {
+        return new ImportBosArchiveOperation(archive, progressManager, model);
     }
 
     protected void openEndImportDialog(IStatus status, DiagramRepositoryStore store, Shell activeShell,

@@ -98,6 +98,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
+        ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
         currentRepository.disableBuild();
@@ -118,8 +119,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
-            validateAllAfterImport(monitor);
+            validateAllAfterImport(monitor, statusBuilder);
         }
+    }
+
+    protected ImportBosArchiveStatusBuilder createStatusBuilder() {
+        return new ImportBosArchiveStatusBuilder();
     }
 
     private void doImport(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
@@ -185,12 +190,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         this.progressDialog = progressDialog;
     }
 
-    protected void validateAllAfterImport(final IProgressMonitor monitor)
-            throws InvocationTargetException, InterruptedException {
+    protected void validateAllAfterImport(final IProgressMonitor monitor, ImportBosArchiveStatusBuilder statusBuilder) {
         if (progressDialog != null) {
             progressDialog.canBeSkipped();
         }
-        final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
         if (validate) {
             final List<BosImporterStatusProvider> validators = getValidators();
             for (final BosImporterStatusProvider validator : validators) {
