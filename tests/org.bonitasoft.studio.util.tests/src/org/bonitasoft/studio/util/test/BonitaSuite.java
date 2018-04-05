@@ -18,14 +18,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -178,9 +184,20 @@ public final class BonitaSuite extends Suite {
     public static void configurePreferencesForTests() {
         ConnectorEditPlugin.getPlugin().getPreferenceStore()
                 .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+        IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+        preferenceStore.setValue(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE,
+                BonitaCoolBarPreferenceConstant.NORMAL);
+        Display.getDefault().asyncExec(() -> {
+            try {
+                new NormalCoolBarHandler().execute(null);
+            } catch (ExecutionException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+
+        preferenceStore
                 .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+        preferenceStore
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);

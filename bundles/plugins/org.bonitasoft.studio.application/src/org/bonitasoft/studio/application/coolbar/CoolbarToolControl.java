@@ -98,8 +98,8 @@ public class CoolbarToolControl
     @PostConstruct
     public void createControls(final Composite parent, final IEclipseContext context,
             final IWorkbenchActivitySupport activitySupport) {
-        if (isRendered(context)) {
-            initCoolBarPreferredSize();
+        if (isRendered(context) && toolbarContainer == null ) {
+            size = getCoolBarPreferredSize();
             final Composite parentShell = parent.getParent();
             final TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
             if (layout != null) {
@@ -270,14 +270,10 @@ public class CoolbarToolControl
         toolbarContainer.getParent().layout(true, true);
     }
 
-    private void initCoolBarPreferredSize() {
+    private CoolbarSize getCoolBarPreferredSize() {
         final String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE);
-        if (value.equals(BonitaCoolBarPreferenceConstant.SMALL)) {
-            size = CoolbarSize.SMALL;
-        } else if (value.equals(BonitaCoolBarPreferenceConstant.NORMAL)) {
-            size = CoolbarSize.NORMAL;
-        }
+        return value.equals(BonitaCoolBarPreferenceConstant.SMALL) ? CoolbarSize.SMALL : CoolbarSize.NORMAL;
     }
 
     public void refreshCoolBarButtons() {
