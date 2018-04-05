@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 public class ImportBosArchiveStatusBuilder {
 
     private final BosArchiveImportStatus status;
+    protected boolean accessControlInstalled = false;
 
     public ImportBosArchiveStatusBuilder() {
         status = new BosArchiveImportStatus();
@@ -40,6 +41,10 @@ public class ImportBosArchiveStatusBuilder {
     public ImportBosArchiveStatusBuilder addStatus(final IStatus status) {
         this.status.add(status);
         return this;
+    }
+
+    public boolean isAccessControlInstalled() {
+        return accessControlInstalled;
     }
 
 }
