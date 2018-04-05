@@ -54,7 +54,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         initDefaultLocalesPreference(store);
 
-        store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
+        store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.SMALL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
         store.setDefault(PREF_ENABLE_VALIDATION, true);
         store.setDefault(DEFAULT_USERXP_THEME, "default");
