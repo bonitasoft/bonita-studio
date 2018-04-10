@@ -261,7 +261,7 @@ public class Repository implements IRepository, IJavaContainer {
         return this;
     }
 
-    protected void updateStudioShellText() {
+    public void updateStudioShellText() {
         if (PlatformUI.isWorkbenchRunning()) {
             Optional.ofNullable(PlatformUI.getWorkbench())
                     .map(IWorkbench::getActiveWorkbenchWindow)
