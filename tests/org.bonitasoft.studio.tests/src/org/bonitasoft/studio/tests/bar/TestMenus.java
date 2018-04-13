@@ -41,7 +41,7 @@ public class TestMenus {
     @Test
     public void should_have_only_valid_menus() {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository().getName());
+                RepositoryManager.getInstance().getCurrentRepository());
         final SWTBotMenu mainMenu = bot.menu("File");
         Display.getDefault().syncExec(new Runnable() {
 
