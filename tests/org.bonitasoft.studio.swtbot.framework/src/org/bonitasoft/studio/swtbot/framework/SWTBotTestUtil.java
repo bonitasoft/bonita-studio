@@ -51,10 +51,16 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.egit.core.GitProvider;
+import org.eclipse.egit.core.RepositoryUtil;
+import org.eclipse.egit.ui.internal.GitLabels;
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
@@ -240,15 +246,29 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
     }
 
-    public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot, String repoName) {
+    public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot, Repository activeRepository) {
+        String repoName = activeRepository.getName();
         if (repoName == null || Objects.equals(repoName, "default")) {
             waitUntilBonitaBPmShellIsActive(bot);
             bot.shell("Bonita Studio").setFocus();
+        } else if (activeRepository.isShared(GitProvider.ID)) {
+            org.eclipse.jgit.lib.Repository gitRepository = getGitRepository(activeRepository);
+            String brancheInfo = GitLabels.getStyledLabelSafe(gitRepository).toString();
+            if (RepositoryUtil.hasChanges(gitRepository)) { // '> ' is added before the branch name, we do not want it
+                brancheInfo = brancheInfo.substring(2);
+            }
+            String shellTitle = String.format("Bonita Studio - %s", brancheInfo);
+            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(shellTitle), 40000);
+            bot.shell(shellTitle).setFocus();
         } else {
             bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio - " + repoName), 40000);
             bot.shell("Bonita Studio - " + repoName).setFocus();
         }
+    }
 
+    private static org.eclipse.jgit.lib.Repository getGitRepository(Repository repository) {
+        IStructuredSelection selection = new StructuredSelection(repository.getProject());
+        return SelectionUtils.getRepository(selection);
     }
 
     /**
@@ -290,7 +310,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     /**
-     * select an event in the overview tree. Becarefull, if treeViewer exists in other views SWTBot may not find the one in overview
+     * select an event in the overview tree. Becarefull, if treeViewer exists in other views SWTBot may not find the one in
+     * overview
      *
      * @param bot
      * @param poolName
