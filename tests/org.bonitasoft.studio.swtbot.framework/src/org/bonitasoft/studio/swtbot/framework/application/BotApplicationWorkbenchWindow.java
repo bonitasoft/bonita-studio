@@ -163,14 +163,14 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotImportOtherDialog importOther() {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository().getName());
+                RepositoryManager.getInstance().getCurrentRepository());
         bot.menu("File").menu("Import").menu("Other...").click();
         return new BotImportOtherDialog(bot);
     }
 
     public BotImportOtherDialog importFromOtherWorkspace() {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository().getName());
+                RepositoryManager.getInstance().getCurrentRepository());
         bot.menu("File").menu("Import").menu("From another Workspace...").click();
         return new BotImportOtherDialog(bot);
     }
