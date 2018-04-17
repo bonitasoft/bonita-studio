@@ -66,6 +66,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -83,6 +84,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
@@ -140,27 +142,38 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
         relationFieldContent = createRelationFieldDetailContent(detailGroup, ctx, viewerObservableValue);
         stringFieldContent = createStringFieldDetailContent(detailGroup, ctx);
-        dateFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateDetails);
+        dateFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateDetails, Messages.legacyDateTooltip);
         dateOnlyFieldContent = createFieldDescriptionContent(detailGroup,
-                String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY));
-        datTimeFieldContent = createFieldDescriptionContent(detailGroup,
-                String.format(Messages.dateTimeDetails, DateTypeLabels.DATE_AND_TIME,
-                        DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
+                String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY), null);
+                datTimeFieldContent = createFieldDescriptionContent(detailGroup,
+                        String.format(Messages.dateTimeDetails, DateTypeLabels.DATE_AND_TIME,
+                        DateTypeLabels.DATE_TIME_WITH_TIMEZONE),
+                null);
         datTimeInTimezoneFieldContent = createFieldDescriptionContent(detailGroup,
-                String.format(Messages.dateTimeInTimezoneDetails, DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
+                String.format(Messages.dateTimeInTimezoneDetails, DateTypeLabels.DATE_TIME_WITH_TIMEZONE), null);
         emptyContent = createNoDetailsContent(detailGroup);
-        textFieldContent = createFieldDescriptionContent(detailGroup, Messages.textDetails);
+        textFieldContent = createFieldDescriptionContent(detailGroup, Messages.textDetails, null);
         stackLayout.topControl = emptyContent;
         attributeSelectionObservable.addValueChangeListener(this::changeType);
     }
 
-    private Composite createFieldDescriptionContent(Group detailGroup, String description) {
+    private Composite createFieldDescriptionContent(Group detailGroup, String description, String tooltip) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 5).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
         final Label textLabel = new Label(composite, SWT.WRAP);
-        textLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(380, SWT.DEFAULT).create());
+        textLabel.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT)
+                .indent(tooltip != null ? 5 : 0, 0).create());
         textLabel.setText(description);
+        if (tooltip != null) {
+            ControlDecoration controlDecoration = new ControlDecoration(textLabel, SWT.LEFT | SWT.TOP);
+            controlDecoration.setMarginWidth(5);
+            controlDecoration.setShowOnlyOnFocus(false);
+            controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                    .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+            controlDecoration.setDescriptionText(tooltip);
+        }
         return composite;
     }
 
@@ -210,8 +223,9 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 5).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 0).create());
+        composite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
+        composite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
 
         final ComboWidget stringFieldCombo = new ComboWidget.Builder()
                 .withLabel(Messages.length)
@@ -231,7 +245,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 .createIn(composite);
 
         Label stringHelp = new Label(composite, SWT.NONE);
-        stringHelp.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 75).create());
+        stringHelp.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         stringHelp.setText(Messages.stringLengthTooltip);
 
         attributeSelectionObservable.addValueChangeListener(e -> stringFieldCombo.getValueBinding().updateModelToTarget());

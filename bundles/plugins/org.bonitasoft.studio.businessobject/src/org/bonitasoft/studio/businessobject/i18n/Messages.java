@@ -373,6 +373,7 @@ public class Messages extends NLS {
     public static String circularCompositionReference;
     public static String severalCompositionReferenceForABusinessObject;
     public static String multipleAggregationToItself;
+    public static String legacyDateTooltip;
 
     private Messages() {
     }
