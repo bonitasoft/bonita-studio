@@ -138,7 +138,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
             final IViewerObservableValue viewerObservableValue) {
         final Group businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
         businessObjectDescriptionGroup.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).span(1, 2).minSize(500, 340).create());
+                GridDataFactory.fillDefaults().grab(true, true).span(1, 2).create());
         businessObjectDescriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         businessObjectDescriptionGroup.setText(Messages.selectABusinessObjectToEdit);
 
