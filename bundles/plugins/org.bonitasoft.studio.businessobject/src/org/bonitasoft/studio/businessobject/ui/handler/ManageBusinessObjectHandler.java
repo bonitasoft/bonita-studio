@@ -30,7 +30,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -71,18 +70,7 @@ public class ManageBusinessObjectHandler {
     }
 
     protected CustomWizardDialog createWizardDialog(final IWizard wizard, final String finishLabel, Shell shell) {
-        return new CustomWizardDialog(shell, wizard, finishLabel) {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
-             */
-            @Override
-            protected Point getInitialSize() {
-                Point initialSize = super.getInitialSize();
-                return new Point(initialSize.x, 800);
-            }
-        };
+        return new CustomWizardDialog(shell, wizard, finishLabel);
     }
 
     protected ManageBusinessDataModelWizard createWizard() {

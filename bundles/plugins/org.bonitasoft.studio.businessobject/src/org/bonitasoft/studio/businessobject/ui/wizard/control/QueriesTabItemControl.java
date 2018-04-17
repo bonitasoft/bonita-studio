@@ -110,7 +110,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 0).create());
         setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
 
         final Composite radioComposite = new Composite(this, SWT.NONE);
