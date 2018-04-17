@@ -84,7 +84,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
@@ -123,7 +122,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 180).create());
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
 
         attributeSelectionObservable = createAttributeTableControl(ctx, viewerObservableValue);
@@ -164,11 +163,11 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final Label textLabel = new Label(composite, SWT.WRAP);
         textLabel.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(400, SWT.DEFAULT)
-                .indent(tooltip != null ? 5 : 0, 0).create());
+                        .indent(tooltip != null ? 10 : 0, 0).create());
         textLabel.setText(description);
         if (tooltip != null) {
-            ControlDecoration controlDecoration = new ControlDecoration(textLabel, SWT.LEFT | SWT.TOP);
-            controlDecoration.setMarginWidth(5);
+            ControlDecoration controlDecoration = new ControlDecoration(textLabel, SWT.LEFT | SWT.TOP, composite);
+            controlDecoration.setMarginWidth(2);
             controlDecoration.setShowOnlyOnFocus(false);
             controlDecoration.setImage(FieldDecorationRegistry.getDefault()
                     .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
@@ -225,7 +224,6 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 0).create());
         composite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
-        composite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
 
         final ComboWidget stringFieldCombo = new ComboWidget.Builder()
                 .withLabel(Messages.length)
@@ -244,7 +242,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
                 .inContext(ctx)
                 .createIn(composite);
 
-        Label stringHelp = new Label(composite, SWT.NONE);
+        Label stringHelp = new Label(composite, SWT.WRAP);
         stringHelp.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         stringHelp.setText(Messages.stringLengthTooltip);
 

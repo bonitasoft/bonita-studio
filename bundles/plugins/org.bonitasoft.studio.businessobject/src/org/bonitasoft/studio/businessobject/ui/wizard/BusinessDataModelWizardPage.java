@@ -172,7 +172,6 @@ public class BusinessDataModelWizardPage extends WizardPage {
             final TabFolder tabFolder) {
         final TabItem queriesItem = new TabItem(tabFolder, SWT.BORDER);
         queriesItem.setText(Messages.queries);
-
         queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
     }
 
