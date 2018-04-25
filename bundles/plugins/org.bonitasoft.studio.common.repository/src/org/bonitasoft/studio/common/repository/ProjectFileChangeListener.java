@@ -32,16 +32,12 @@ import org.eclipse.swt.widgets.Display;
 
 public class ProjectFileChangeListener implements IResourceChangeListener {
 
-    private Repository repository;
+    protected Repository repository;
 
     public ProjectFileChangeListener(Repository repository) {
         this.repository = repository;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     */
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
         try {
@@ -55,15 +51,7 @@ public class ProjectFileChangeListener implements IResourceChangeListener {
                             IFile projectFile = project.getFile(".project");
                             final IResource resource = delta.getResource();
                             if (Objects.equals(resource, projectFile)) {
-                                String version = repository.getVersion();
-                                if (!ProductVersion.CURRENT_VERSION.equals(version)) {
-                                    if (ProductVersion.canBeMigrated(version)) {
-                                        openMigrationDialog();
-                                    } else {
-                                        openErrorDialog(project, version);
-                                    }
-                                    return false;
-                                }
+                                return checkVersion(project);
                             }
                         }
                         return true;
@@ -73,7 +61,19 @@ public class ProjectFileChangeListener implements IResourceChangeListener {
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
+    }
 
+    public boolean checkVersion(IProject project) {
+        String version = repository.getVersion();
+        if (!ProductVersion.CURRENT_VERSION.equals(version)) {
+            if (ProductVersion.canBeMigrated(version)) {
+                openMigrationDialog();
+            } else {
+                openErrorDialog(project, version);
+            }
+            return false;
+        }
+        return true;
     }
 
     protected void openErrorDialog(IProject project, String version) {
