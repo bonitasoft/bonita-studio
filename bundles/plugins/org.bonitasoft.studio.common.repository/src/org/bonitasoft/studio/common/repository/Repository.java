@@ -64,7 +64,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -126,7 +125,7 @@ public class Repository implements IRepository, IJavaContainer {
 
     private boolean isLoaded = false;
 
-    private IResourceChangeListener projectFileListener = new ProjectFileChangeListener(this);
+    private ProjectFileChangeListener projectFileListener;
 
     public Repository(final IWorkspace workspace,
             final IProject project,
@@ -142,6 +141,11 @@ public class Repository implements IRepository, IJavaContainer {
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
         this.projectManifestFactory = projectManifestFactory;
         this.bonitaBPMProjectClasspath = bonitaBPMProjectClasspath;
+        this.projectFileListener = createProjectFileChangeListener();
+    }
+
+    protected ProjectFileChangeListener createProjectFileChangeListener() {
+        return new ProjectFileChangeListener(this);
     }
 
     @Override
@@ -797,6 +801,10 @@ public class Repository implements IRepository, IJavaContainer {
                     Display.getDefault().getActiveShell(),
                     Messages.migrationFailedMessage, e);
         }
+    }
+
+    public void validateRepositoryVersion() {
+        projectFileListener.checkVersion(getProject());
     }
 
 }
