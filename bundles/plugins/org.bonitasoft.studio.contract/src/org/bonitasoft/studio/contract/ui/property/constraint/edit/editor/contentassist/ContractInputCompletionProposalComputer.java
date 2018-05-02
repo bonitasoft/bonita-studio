@@ -60,7 +60,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         }
         final List<ContractInput> inputs = getContractInputs(context);
         if (inputs.isEmpty()) {
-            return java.util.Collections.emptyList();
+            return Collections.emptyList();
         }
         final JavaContentAssistInvocationContext javaContext = (JavaContentAssistInvocationContext) context;
         GroovyCompilationUnit compilationUnit = (GroovyCompilationUnit) javaContext.getCompilationUnit();
@@ -70,7 +70,9 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         final ContentAssistContext contentAssistContext = createContentAssistContext(
                 compilationUnit,
                 context.getInvocationOffset(), context.getDocument());
-
+        if (contentAssistContext == null) {
+            return Collections.emptyList();
+        }
         CharSequence computeIdentifierPrefix = "";
         try {
             computeIdentifierPrefix = javaContext.computeIdentifierPrefix();
@@ -86,7 +88,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
                 getProjectClassloader(monitor),
                 new GroovyCompletionProposalComputer(),
                 createMethodProposalCreator(),
-                getModuleNode(contentAssistContext));
+                compilationUnit.getModuleNode());
         final ContractInputProposalsCodeVisitorSupport codeVistor = new ContractInputProposalsCodeVisitorSupport(inputs,
                 codeVisitorSupportContext,
                 monitor);
