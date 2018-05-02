@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaCompletionProcessor;
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyConfiguration;
 import org.eclipse.jdt.groovy.core.util.ReflectionUtils;
+import org.eclipse.jdt.internal.ui.text.ContentAssistPreference;
 import org.eclipse.jdt.internal.ui.text.java.CompletionProposalCategory;
 import org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -49,14 +50,17 @@ public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfigu
         assistant.setStatusLineVisible(false);
 
         // retain only contract input categories
-        IContentAssistProcessor processor = assistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
-
+        final ExtendedJavaCompletionProcessor processor = new ExtendedJavaCompletionProcessor(getEditor(), assistant,
+                IDocument.DEFAULT_CONTENT_TYPE);
+        assistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
         List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils
                 .getPrivateField(ContentAssistProcessor.class, "fCategories", processor);
 
         ReflectionUtils.setPrivateField(ContentAssistProcessor.class, "fCategories", processor, categories.stream()
                 .filter(category -> Objects.equals(category.getId(), CONSTRAINT_CONTENT_ASSIST_CATEGORY_ID))
                 .collect(Collectors.toList()));
+
+        ContentAssistPreference.configure(assistant, fPreferenceStore);
 
         return assistant;
     }
