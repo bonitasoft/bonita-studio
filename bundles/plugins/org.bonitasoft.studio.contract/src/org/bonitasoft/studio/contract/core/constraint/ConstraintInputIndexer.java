@@ -24,8 +24,6 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
-import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,15 +61,12 @@ public class ConstraintInputIndexer extends Job {
             monitor.beginTask("Computing referenced inputs...", IProgressMonitor.UNKNOWN);
         }
         referencedInputs.clear();
-        final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", "");
-        final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
-        org.codehaus.groovy.ast.ASTNode astNode = null;
-        if (assistContext != null) {
-            astNode = assistContext.containingCodeBlock;
-        }
-        if (astNode instanceof BlockStatement) {
-            final BlockStatement blockStatement = (BlockStatement) astNode;
-            addRefrencedInputs(blockStatement);
+        if (groovyCompilationUnit.getModuleNode() != null) {
+            BlockStatement astNode = groovyCompilationUnit.getModuleNode().getStatementBlock();
+            if (astNode instanceof BlockStatement) {
+                final BlockStatement blockStatement = (BlockStatement) astNode;
+                addRefrencedInputs(blockStatement);
+            }
         }
         constraint.getInputNames().clear();
         constraint.getInputNames().addAll(getReferencedInputs());
