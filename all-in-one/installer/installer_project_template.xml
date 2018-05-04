@@ -13,6 +13,7 @@
     <wmImage>@titlebar.image@</wmImage>
     <windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
     <osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
+    <osxPlatforms>osx-intel osx-x86_64</osxPlatforms>
     <createUninstaller>@enable.uninstaller@</createUninstaller>
     <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
