@@ -417,18 +417,9 @@
                                     <goal>exec</goal>
                                 </goals>
                             </execution>
-                        </executions>
-                        <configuration>
-                            <executable>${BITROCK_HOME}/bin/builder</executable>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
                             <execution>
                                 <id>sign-installer-x86_64-exe</id>
-                                <phase>package</phase>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -440,7 +431,7 @@
                             </execution>
                             <execution>
                                 <id>sign-installer-x86-exe</id>
-                                <phase>package</phase>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -451,6 +442,9 @@
                                 </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <executable>${BITROCK_HOME}/bin/builder</executable>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
