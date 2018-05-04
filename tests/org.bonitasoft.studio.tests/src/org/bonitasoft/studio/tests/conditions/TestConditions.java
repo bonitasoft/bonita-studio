@@ -44,7 +44,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -71,11 +71,14 @@ public class TestConditions {
 
     private HumanTaskInstance newTask;
     private APISession session;
+    private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void setUp()
             throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @After
@@ -174,10 +177,10 @@ public class TestConditions {
     }
 
     private MainProcess importProcessToTest() throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();

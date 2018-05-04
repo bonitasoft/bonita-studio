@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -45,6 +46,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -64,6 +66,14 @@ public class TestDocumentRefactoring {
 
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
             .getRepositoryStore(DiagramRepositoryStore.class);
+
+    private RepositoryAccessor repositoryAccessor;
+
+    @Before
+    public void init() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
 
     @Test
     public void testDocumentRefactoring() throws IOException, InvocationTargetException, InterruptedException {
@@ -156,10 +166,10 @@ public class TestDocumentRefactoring {
     }
 
     public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestDocumentRefactoring.class.getResource(diagramName + ".bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild(diagramName + ".proc");
         diagramFileStore.open();

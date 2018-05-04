@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
@@ -56,6 +57,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    private RepositoryAccessor repositoryAccessor;
+
     @Override
     @Before
     public void setUp() throws Exception {
@@ -66,6 +69,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @Override
@@ -117,9 +122,9 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         //delete diagram
         diagramFileStore.delete();
 
-        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(false);
+        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(false, repositoryAccessor);
         importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
-        importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        importBosArchiveOperation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
         assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
 

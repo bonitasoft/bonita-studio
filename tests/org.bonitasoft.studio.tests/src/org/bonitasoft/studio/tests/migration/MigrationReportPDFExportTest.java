@@ -22,7 +22,7 @@ import java.net.URL;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.migration.utils.PDFMigrationReportWriter;
@@ -35,22 +35,25 @@ import org.junit.Test;
  */
 public class MigrationReportPDFExportTest {
 
+    private static RepositoryAccessor repositoryAccessor;
+
     @BeforeClass
     public static void disablePopup() {
         FileActionDialog.setDisablePopup(true);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @Test
     public void testExportAsPDF() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReportPDFExportTest.class.getResource("TestMigrationReport-1.0.bos");
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final PDFMigrationReportWriter writer = new PDFMigrationReportWriter(
                 store.getDiagram("MonDiagramme1", "1.0").getMigrationReport());
         final File targetFile = new File(

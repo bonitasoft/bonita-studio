@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URL;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
@@ -37,11 +37,13 @@ public class GroovyConnectorIT {
 
     @Test
     public void should_groovy_connector_configuration_be_converted_at_export() throws Exception {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
                 .toFileURL(TestDatabaseConnectorResulset.class.getResource("GroovyConnectorTest-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         for (final IRepositoryFileStore fStore : op.getFileStoresToOpen()) {
             fStore.open();

@@ -26,7 +26,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -71,6 +70,7 @@ public class UIDesignerServerManager {
     private int portalPort;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
+    private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
@@ -124,7 +124,8 @@ public class UIDesignerServerManager {
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
                         Joiner.on(" ").join(buildCommand(repositoryAccessor)));
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
-                waitForUID(new PageDesignerURLFactory(getPreferenceStore()));
+                pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+                waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/designer", port),
                         UIDesignerPlugin.PLUGIN_ID);
             } catch (final CoreException | IOException e) {
@@ -185,18 +186,14 @@ public class UIDesignerServerManager {
         }));
 
         return list.stream()
-                .sorted(new Comparator<File>() {
-
-                    @Override
-                    public int compare(File file1, File file2) {
-                        return file1.lastModified() > file2.lastModified()
-                                ? -1
-                                : file1.lastModified() < file2.lastModified()
-                                        ? 1
-                                        : 0;
-                    }
-                })
+                .sorted((file1, file2) -> file1.lastModified() > file2.lastModified()
+                        ? -1
+                        : compareLastModified(file1, file2))
                 .findFirst();
+    }
+
+    private int compareLastModified(File file1, File file2) {
+        return file1.lastModified() < file2.lastModified() ? 1 : 0;
     }
 
     public synchronized void stop() {
@@ -319,4 +316,9 @@ public class UIDesignerServerManager {
         }
         return null;
     }
+
+    public PageDesignerURLFactory getPageDesignerURLBuilder() {
+        return pageDesignerURLBuilder;
+    }
+
 }

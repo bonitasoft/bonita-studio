@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.IJobManager;
@@ -71,7 +70,7 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getCurrentRepository();
     }
 
-    public IRepository start(final IProgressMonitor monitor) throws CoreException {
+    public IRepository start(final IProgressMonitor monitor) {
         final IRepository repository = getCurrentRepository();
         if (!repository.exists()) {
             return repository.create(monitor);
