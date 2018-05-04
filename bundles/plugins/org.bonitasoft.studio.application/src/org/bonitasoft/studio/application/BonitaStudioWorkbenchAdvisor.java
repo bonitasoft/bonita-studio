@@ -106,7 +106,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 BOSEngineManager.getInstance().stop();
             }
             FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
+            deleteTomcatTempDir();
             monitor.done();
+        }
+
+        private void deleteTomcatTempDir() {
+            File tempDir = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator
+                    + "tomcat" + File.separator + "server" + File.separator + "temp");
+            if (tempDir.exists()) {
+                FileUtil.deleteDir(tempDir);
+            }
         }
 
         private void executePreShutdownContribution() {
@@ -139,7 +148,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     public void initialize(final IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
         configurer.setSaveAndRestore(true);
-        final IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+        final IContextService contextService = PlatformUI.getWorkbench().getService(IContextService.class);
         contextService.activateContext("org.bonitasoft.studio.context.id");
         initializeIDEImages(configurer);
     }
