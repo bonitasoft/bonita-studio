@@ -70,6 +70,10 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(baseURL() + "/export/page/" + pageId);
     }
 
+    public URL migrate() throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration");
+    }
+
     private String host() {
         return "localhost";
     }

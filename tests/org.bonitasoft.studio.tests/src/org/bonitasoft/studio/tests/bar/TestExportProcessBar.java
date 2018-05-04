@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
@@ -40,17 +40,19 @@ import junit.framework.TestCase;
 public class TestExportProcessBar extends TestCase {
 
     public void testExportProcessBarWithAttachmentAndSeveralPool() throws Exception {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+
         /* Import the processus */
         URL url = getClass().getResource("TestExportProcessBarWithDocument-1.0.bos");
         url = FileLocator.toFileURL(url);
         final File barToImport = new File(url.getFile());
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(barToImport.getAbsolutePath());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         /* Retrieve the AbstractProcess */
-        final DiagramRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument", "1.0");
         assertNotNull(diagram);
         final MainProcess diagramElement = diagram.getContent();
@@ -87,19 +89,21 @@ public class TestExportProcessBar extends TestCase {
     }
 
     public void testExportProcessBarApplicationResources() throws Exception {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+
         /* Import the processus */
         URL url = getClass().getResource("TestExportBarWithApplicationResources-1.0.bos");
         url = FileLocator.toFileURL(url);
         final File barToImport = new File(url.getFile());
 
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(barToImport.getAbsolutePath());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         assertTrue(op.getStatus().isOK());
         /* Retrieve the AbstractProcess */
-        final DiagramRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources", "1.0");
         assertNotNull(diagram);
         final MainProcess diagramElement = diagram.getContent();

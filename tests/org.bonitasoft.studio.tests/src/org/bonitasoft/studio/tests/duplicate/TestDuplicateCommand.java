@@ -19,6 +19,7 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
@@ -99,14 +100,16 @@ public class TestDuplicateCommand extends TestCase {
     public void setUp() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final DiagramRepositoryStore drs = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         if (initialPa == null) {
             /* import the process for the test */
-            final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+            final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
             final URL fileURL1 = FileLocator
                     .toFileURL(TestDuplicateCommand.class.getResource("TestDuplicateWithWebTemplates-1.0.bos")); //$NON-NLS-1$
             op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-            op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+            op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
             op.run(new NullProgressMonitor());
             initialPa = drs.getChild("MyDiagram2-1.0.proc");
             final MainProcess mainProcess = initialPa.getContent();

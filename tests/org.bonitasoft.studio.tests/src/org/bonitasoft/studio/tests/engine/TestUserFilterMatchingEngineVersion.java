@@ -30,7 +30,7 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -44,6 +44,7 @@ import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestUserFilterMatchingEngineVersion {
@@ -51,6 +52,14 @@ public class TestUserFilterMatchingEngineVersion {
     private APISession session;
 
     private HumanTaskInstance newTask;
+
+    private RepositoryAccessor repositoryAccessor;
+
+    @Before
+    public void init() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
 
     @After
     public void tearDown() {
@@ -69,11 +78,11 @@ public class TestUserFilterMatchingEngineVersion {
         final Long williamJobsID = williamJobsUser.getId();
         final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(williamJobsID, searchOptions).getResult();
 
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
                 .toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {

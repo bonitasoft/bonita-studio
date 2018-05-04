@@ -22,6 +22,7 @@ import java.net.URL;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -39,6 +40,8 @@ import org.junit.Test;
 
 public class MigrationReporTest {
 
+    private static RepositoryAccessor repositoryAccessor;
+
     private SWTGefBot bot = new SWTGefBot();
 
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
@@ -47,15 +50,17 @@ public class MigrationReporTest {
     @BeforeClass
     public static void disablePopup() {
         FileActionDialog.setDisablePopup(true);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @Test
     public void testAutomaticPerspectiveSwitch() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         store.getChild("MonDiagramme1-1.0.proc").open();
         assertEquals("Invalid perspective for process with migration report",
@@ -67,9 +72,9 @@ public class MigrationReporTest {
     public void testCompleteReport() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         store.getChild("MonDiagramme1-1.0.proc").open();
         bot.viewById("org.bonitasoft.studio.migration.view").bot().button(Messages.completeImport).click();
@@ -86,9 +91,9 @@ public class MigrationReporTest {
     public void testEditorSelectionSynchronization() throws Exception {
         FileActionDialog.setDisablePopup(true);
         final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         store.getChild("MonDiagramme1-1.0.proc").open();
         bot.viewById("org.bonitasoft.studio.migration.view").toolbarToggleButton("Link with Editor").select();

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -45,10 +46,12 @@ public class TestFileWidgetMigration {
     private final String mainProcessName = "MyDiagram7";
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
             .getRepositoryStore(DiagramRepositoryStore.class);
+    private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void before() {
-
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @After
@@ -64,10 +67,10 @@ public class TestFileWidgetMigration {
     }
 
     public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestFileWidgetMigration.class.getResource(diagramName + ".bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild(diagramName + ".proc");
         diagramFileStore.open();

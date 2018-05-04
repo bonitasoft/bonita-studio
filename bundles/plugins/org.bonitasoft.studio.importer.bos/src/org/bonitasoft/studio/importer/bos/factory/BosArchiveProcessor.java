@@ -18,6 +18,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -35,10 +36,17 @@ import org.eclipse.emf.common.util.URI;
 public class BosArchiveProcessor extends ToProcProcessor {
 
     private ImportBosArchiveOperation operation;
+    private RepositoryAccessor repositoryAccessor;
+
+    public BosArchiveProcessor() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL,
+     * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public File createDiagram(final URL sourceFileURL, final IProgressMonitor progressMonitor) throws Exception {
@@ -49,10 +57,10 @@ public class BosArchiveProcessor extends ToProcProcessor {
     }
 
     protected ImportBosArchiveOperation createOperation(final File archiveFile) {
-        operation = new ImportBosArchiveOperation();
+        operation = new ImportBosArchiveOperation(repositoryAccessor);
         operation.setProgressDialog(progressDialog);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
-        operation.setCurrentRepository(RepositoryManager.getInstance().getRepository(getRepository()));
+        operation.setCurrentRepository(repositoryAccessor.getRepository(getRepository()));
         return operation;
     }
 
@@ -61,10 +69,6 @@ public class BosArchiveProcessor extends ToProcProcessor {
         return operation.getStatus();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#getResources()
-     */
     @Override
     public List<File> getResources() {
         return null;
