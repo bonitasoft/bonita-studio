@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,7 +26,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -53,13 +50,16 @@ import org.junit.Test;
 
 /**
  * @author Mickael Istria
- *
  */
 public class TestProcessZoo {
+
+    private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void setUp() throws Exception {
         BOSEngineManager.getInstance().start();
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @Test
@@ -80,11 +80,12 @@ public class TestProcessZoo {
     }
 
     protected void applyTestsOnProcess(final URL url) throws Throwable {
-        final int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length;
+        final int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getEditorReferences().length;
         final File file = new File(FileLocator.toFileURL(url).getFile());
-        final ImportBosArchiveOperation ibao = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation ibao = new ImportBosArchiveOperation(repositoryAccessor);
         ibao.setArchiveFile(file.getAbsolutePath());
-        ibao.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        ibao.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         ibao.run(Repository.NULL_PROGRESS_MONITOR);
 
         for (final IRepositoryFileStore f : ibao.getFileStoresToOpen()) {
@@ -100,16 +101,17 @@ public class TestProcessZoo {
         final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
         /* for mickeyprocessses .proc will overrided (as it is sorted) when they come so need */
         if (url.toString().contains("mickeyProcesses/") && url.toString().contains(".proc")) {
-            assertEquals("Import should have opened another process editor but colsed another one for " + url, beforeImport, PlatformUI.getWorkbench()
-                    .getActiveWorkbenchWindow().getActivePage().getEditorReferences().length);
+            assertEquals("Import should have opened another process editor but colsed another one for " + url, beforeImport,
+                    PlatformUI.getWorkbench()
+                            .getActiveWorkbenchWindow().getActivePage().getEditorReferences().length);
         } else {
-            assertEquals("Import should have opened another process editor for " + url, beforeImport + 1, PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                    .getActivePage().getEditorReferences().length);
+            assertEquals("Import should have opened another process editor for " + url, beforeImport + 1,
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                            .getActivePage().getEditorReferences().length);
         }
         final AbstractProcess diagram = (AbstractProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
         if (file.getAbsolutePath().endsWith(".bos")) {// Check unresolved dependencies for BAR Files
-            final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
-                    DependencyRepositoryStore.class);
+            final DependencyRepositoryStore store = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
             for (final Element element : diagram.getElements()) {
                 if (element instanceof AbstractProcess) {
                     for (final Configuration config : ((AbstractProcess) element).getConfigurations()) {
@@ -129,12 +131,13 @@ public class TestProcessZoo {
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) diagram.getElements().get(0)));
         assertThat(runProcessCommand.getUrl()).isNotNull();
-        assertNotNull("There should be an application deployed and running for " + url, runProcessCommand.getUrl().getContent());
+        assertNotNull("There should be an application deployed and running for " + url,
+                runProcessCommand.getUrl().getContent());
     }
 
     /* attempt to be able to run the test locally */
     protected List<URL> getEntries() {
-        final List<URL> res = new ArrayList<URL>();
+        final List<URL> res = new ArrayList<>();
         final String[] nameForEntry = new String[] {
                 "toqa/Buy a NEW mini-6.4.bos",
                 "BPMN-ShowcaseToTestDynamicLabels-1.0.bos",

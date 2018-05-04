@@ -30,7 +30,7 @@ import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
@@ -55,10 +55,14 @@ public class ExportBarIT {
 
     private APISession session;
 
+    private RepositoryAccessor repositoryAccessor;
+
     @Before
     public void init() throws Exception {
         engineManager = BOSEngineManager.getInstance();
         session = engineManager.loginDefaultTenant(new NullProgressMonitor());
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @After
@@ -75,9 +79,10 @@ public class ExportBarIT {
                 .get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
                 .toFile();
 
-        ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation().disableValidation();
+        ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(repositoryAccessor)
+                .disableValidation();
         importBosArchiveOperation.setArchiveFile(bosToImportFile.getAbsolutePath());
-        importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        importBosArchiveOperation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         Display.getDefault().syncExec(() -> {
             try {
                 importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);

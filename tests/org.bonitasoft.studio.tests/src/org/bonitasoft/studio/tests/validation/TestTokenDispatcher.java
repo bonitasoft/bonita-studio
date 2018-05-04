@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.Connection;
@@ -40,12 +40,21 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.ui.IWorkbenchPart;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Florine Boudin
  */
 public class TestTokenDispatcher {
+
+    private RepositoryAccessor repositoryAccessor;
+
+    @Before
+    public void init() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
 
     @Test
     public void testReturnTokenOfNonInterruptedBoudaryTimerEvent() throws Exception {
@@ -98,10 +107,10 @@ public class TestTokenDispatcher {
 
     private ProcessDiagramEditor importBos(final String processResourceName)
             throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL = FileLocator.toFileURL(TestTokenDispatcher.class.getResource(processResourceName)); //$NON-NLS-1$
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
+        final URL fileURL = FileLocator.toFileURL(TestTokenDispatcher.class.getResource(processResourceName));
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         ProcessDiagramEditor processEditor = null;
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {

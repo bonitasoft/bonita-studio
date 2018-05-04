@@ -22,7 +22,7 @@ import java.net.URL;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.Document;
@@ -30,21 +30,29 @@ import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.FileLocator;
+import org.junit.Before;
 import org.junit.Test;
 
 public class DocumentMigrationIT {
 
+    private RepositoryAccessor repositoryAccessor;
+
+    @Before
+    public void init() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
+
     @Test
     public void testDocumentMigrationTypeFrom63() throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
-                .toFileURL(DocumentMigrationIT.class.getResource("DiagramToTestDocumentTypeMigration-1.0.bos")); //$NON-NLS-1$
+                .toFileURL(DocumentMigrationIT.class.getResource("DiagramToTestDocumentTypeMigration-1.0.bos"));
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
-        final DiagramRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final MainProcess mainProcess = store.getChild("DiagramToTestDocumentTypeMigration-1.0.proc").getContent();
         final Pool pool = (Pool) mainProcess.getElements().get(0);
         for (final Document document : pool.getDocuments()) {
@@ -65,14 +73,13 @@ public class DocumentMigrationIT {
     @Test
     public void should_migrate_multiple_document_attribute()
             throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL1 = FileLocator.toFileURL(DocumentMigrationIT.class.getResource("MultipleDocumentDiagram-1.0.bos")); //$NON-NLS-1$
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
+        final URL fileURL1 = FileLocator.toFileURL(DocumentMigrationIT.class.getResource("MultipleDocumentDiagram-1.0.bos"));
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
-        final DiagramRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final MainProcess mainProcess = store.getChild("MultipleDocumentDiagram-1.0.proc").getContent();
         final Pool pool = (Pool) mainProcess.getElements().get(0);
         assertThat(pool.getDocuments()).hasSize(1);

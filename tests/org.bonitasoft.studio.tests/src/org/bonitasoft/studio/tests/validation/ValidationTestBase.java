@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -29,12 +29,16 @@ import org.eclipse.emf.validation.service.ModelValidationService;
 public class ValidationTestBase {
 
     protected final IBatchValidator batchValidator;
+    private RepositoryAccessor repositoryAccessor;
 
     public ValidationTestBase() {
         batchValidator = ModelValidationService.getInstance().newValidator(
                 EvaluationMode.BATCH);
         batchValidator.setIncludeLiveConstraints(true);
         batchValidator.setReportSuccesses(true);
+
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     /**
@@ -71,7 +75,7 @@ public class ValidationTestBase {
      * @since 1.1
      */
     protected IStatus[] getStatuses(final IStatus[] statuses, final String id) {
-        final List<IStatus> result = new java.util.ArrayList<IStatus>();
+        final List<IStatus> result = new java.util.ArrayList<>();
 
         for (final IStatus element : statuses) {
             final IConstraintStatus next = (IConstraintStatus) element;
@@ -99,7 +103,7 @@ public class ValidationTestBase {
             return new IStatus[0];
         }
 
-        final List<IStatus> result = new java.util.ArrayList<IStatus>();
+        final List<IStatus> result = new java.util.ArrayList<>();
 
         collectStatuses(status, result);
 
@@ -119,7 +123,7 @@ public class ValidationTestBase {
     }
 
     protected List<IConstraintStatus> getStatusForConstraint(final IStatus[] statuses, final String constraintId) {
-        final List<IConstraintStatus> result = new java.util.ArrayList<IConstraintStatus>();
+        final List<IConstraintStatus> result = new java.util.ArrayList<>();
         for (final IStatus element : statuses) {
             final IModelConstraint next = ((IConstraintStatus) element).getConstraint();
             if (next.getDescriptor().getId().equals(constraintId)) {
@@ -132,13 +136,12 @@ public class ValidationTestBase {
     protected MainProcess getDiagramFromArchive(final String archiveName, final String diagramName,
             final String diagramVersion) throws IOException, InvocationTargetException, InterruptedException {
         final URL url = TestValidationConstraints.class.getResource(archiveName);
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.disableValidation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
-        final DiagramRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore fStore = store.getDiagram(diagramName, diagramVersion);
         assertNotNull(fStore);
         return fStore.getContent();

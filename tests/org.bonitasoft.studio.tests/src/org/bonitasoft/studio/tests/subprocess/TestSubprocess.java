@@ -36,6 +36,7 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -65,9 +66,13 @@ public class TestSubprocess {
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
             .getRepositoryStore(DiagramRepositoryStore.class);
 
+    private RepositoryAccessor repositoryAccessor;
+
     @Before
     public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @After
@@ -78,7 +83,7 @@ public class TestSubprocess {
     @Test
     public void testSubprocess() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("ActivityToAdmin-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
@@ -164,15 +169,15 @@ public class TestSubprocess {
     @Test
     public void testParametersMapping() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("Calculator-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
 
         final URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeCalculator-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         final MainProcess mainProcess = store.getChild("InvokeCalculator-1.0.proc").getContent();
         assertEquals("InvokeCalculator", mainProcess.getName());
@@ -218,11 +223,11 @@ public class TestSubprocess {
         final List<HumanTaskInstance> previoustasks = processApi
                 .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
         final int nbPreviousTasks = previoustasks.size();
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
 
         final URL fileURL = FileLocator.toFileURL(TestSubprocess.class.getResource("ParentSubProcEvent-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         final MainProcess mainProcess = store.getChild("ParentSubProcEvent-1.0.proc").getContent();
         RunProcessCommand runProcessCommand = new RunProcessCommand(true);

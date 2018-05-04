@@ -16,6 +16,8 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,11 +28,18 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.json.JSONException;
+import org.restlet.representation.EmptyRepresentation;
+import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -124,6 +133,22 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse("");
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#migrate(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+        monitor.subTask("Migrating UI designer artifacts");
+        try {
+            ClientResource clientResource = new ClientResource(
+                    UIDesignerServerManager.getInstance().getPageDesignerURLBuilder().migrate().toURI());
+            clientResource.post(new EmptyRepresentation());
+        } catch (MalformedURLException | URISyntaxException | ResourceException e) {
+            throw new MigrationException(e);
+        }
     }
 
 }

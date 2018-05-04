@@ -23,7 +23,7 @@ import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -40,6 +40,7 @@ public class ImportLegacyBDMIT {
 
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
     private DependencyRepositoryStore depStore;
+    private RepositoryAccessor repositoryAccessor;
 
     @After
     public void deleteFileStore() throws Exception {
@@ -49,14 +50,16 @@ public class ImportLegacyBDMIT {
     @Before
     public void setUp() throws Exception {
         BOSEngineManager.getInstance().start();
-        depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        defStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        depStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+        defStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 
     @Test
     public void should_import_a_legacy_bdm_and_convert_it_to_xml_file() throws Exception {
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
+        operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         operation.setArchiveFile(
                 new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/legacyBDM.bos")).getFile())
                         .getAbsolutePath());

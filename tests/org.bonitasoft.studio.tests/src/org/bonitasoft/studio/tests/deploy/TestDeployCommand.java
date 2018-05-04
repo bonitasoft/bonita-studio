@@ -34,7 +34,7 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -179,10 +179,12 @@ public class TestDeployCommand {
 
     private ProcessDiagramEditor importBos(final String processResourceName)
             throws IOException, InvocationTargetException, InterruptedException {
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
+        final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName));
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();

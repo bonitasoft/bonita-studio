@@ -87,7 +87,7 @@ public class ImportWorkspaceOperation implements IRunnableWithProgress {
                 status = workspaceModel.getRepositories()
                         .filter(repo -> repo.getStatus().isOK())
                         .map(repo -> {
-                            final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+                            final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
                             operation.setArchiveFile(repo.getArchiveFile().getAbsolutePath());
                             operation.disableValidation();
                             repositoryAccessor.setRepository(repo.getName());

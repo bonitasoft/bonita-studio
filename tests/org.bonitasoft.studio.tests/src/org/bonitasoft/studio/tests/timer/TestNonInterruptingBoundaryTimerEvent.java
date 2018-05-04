@@ -33,7 +33,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -56,10 +56,13 @@ import org.junit.Test;
 public class TestNonInterruptingBoundaryTimerEvent {
 
     private APISession session;
+    private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @After
@@ -70,11 +73,11 @@ public class TestNonInterruptingBoundaryTimerEvent {
     @Test
     public void testNonInterruptingBoundaryEvent() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
                 .toFileURL(TestNonInterruptingBoundaryTimerEvent.class.getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
