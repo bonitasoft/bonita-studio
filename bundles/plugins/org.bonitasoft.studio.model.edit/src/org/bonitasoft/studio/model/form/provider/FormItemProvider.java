@@ -1,22 +1,18 @@
 /**
  * Copyright (C) 2009-2015 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.model.form.provider;
-
 
 import java.util.Collection;
 import java.util.List;
@@ -50,612 +46,553 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * This is the item provider adapter for a {@link org.bonitasoft.studio.model.form.Form} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class FormItemProvider extends ConnectableElementItemProvider {
-	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public FormItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
 
-	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+    /**
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    public FormItemProvider(AdapterFactory adapterFactory) {
+        super(adapterFactory);
+    }
 
-			addUseDefaultValidatorPropertyDescriptor(object);
-			addBelowPropertyDescriptor(object);
-			addResourceJarsPropertyDescriptor(object);
-			addResourceValidatorsPropertyDescriptor(object);
-			addResourceFilesPropertyDescriptor(object);
-			addNColumnPropertyDescriptor(object);
-			addNLinePropertyDescriptor(object);
-			addShowPageLabelPropertyDescriptor(object);
-			addAllowHTMLInPageLabelPropertyDescriptor(object);
-			addVersionPropertyDescriptor(object);
-			addPageLabelPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+    /**
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-	/**
-	 * This adds a property descriptor for the Use Default Validator feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addUseDefaultValidatorPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Validable_useDefaultValidator_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Validable_useDefaultValidator_feature", "_UI_Validable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.VALIDABLE__USE_DEFAULT_VALIDATOR,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+            addUseDefaultValidatorPropertyDescriptor(object);
+            addBelowPropertyDescriptor(object);
+            addResourceJarsPropertyDescriptor(object);
+            addResourceValidatorsPropertyDescriptor(object);
+            addResourceFilesPropertyDescriptor(object);
+            addNColumnPropertyDescriptor(object);
+            addNLinePropertyDescriptor(object);
+            addShowPageLabelPropertyDescriptor(object);
+            addAllowHTMLInPageLabelPropertyDescriptor(object);
+            addVersionPropertyDescriptor(object);
+            addPageLabelPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
-	/**
-	 * This adds a property descriptor for the Below feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addBelowPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Validable_below_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Validable_below_feature", "_UI_Validable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.VALIDABLE__BELOW,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Use Default Validator feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addUseDefaultValidatorPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Validable_useDefaultValidator_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Validable_useDefaultValidator_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_Validable_type"), //$NON-NLS-1$
+                        FormPackage.Literals.VALIDABLE__USE_DEFAULT_VALIDATOR,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Resource Jars feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceJarsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceJars_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceJars_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_JARS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Below feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addBelowPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Validable_below_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Validable_below_feature", "_UI_Validable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.VALIDABLE__BELOW,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Resource Validators feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceValidatorsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceValidators_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceValidators_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_VALIDATORS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Resource Jars feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addResourceJarsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_ResourceContainer_resourceJars_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceJars_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_ResourceContainer_type"), //$NON-NLS-1$
+                        ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_JARS,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Resource Files feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceFilesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceFiles_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceFiles_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Resource Validators feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addResourceValidatorsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_ResourceContainer_resourceValidators_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceValidators_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_ResourceContainer_type"), //$NON-NLS-1$
+                        ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_VALIDATORS,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the NColumn feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addNColumnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_nColumn_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_nColumn_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__NCOLUMN,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Resource Files feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addResourceFilesPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_ResourceContainer_resourceFiles_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceFiles_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_ResourceContainer_type"), //$NON-NLS-1$
+                        ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES,
+                        true,
+                        false,
+                        true,
+                        null,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the NLine feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addNLinePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_nLine_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_nLine_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__NLINE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the NColumn feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addNColumnPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_nColumn_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_nColumn_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.FORM__NCOLUMN,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Show Page Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addShowPageLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_showPageLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_showPageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__SHOW_PAGE_LABEL,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the NLine feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addNLinePropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_nLine_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_nLine_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.FORM__NLINE,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Allow HTML In Page Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addAllowHTMLInPageLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_allowHTMLInPageLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_allowHTMLInPageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__ALLOW_HTML_IN_PAGE_LABEL,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Show Page Label feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addShowPageLabelPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_showPageLabel_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_showPageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.FORM__SHOW_PAGE_LABEL,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Version feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addVersionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_version_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_version_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__VERSION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Allow HTML In Page Label feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addAllowHTMLInPageLabelPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_allowHTMLInPageLabel_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_allowHTMLInPageLabel_feature", //$NON-NLS-1$//$NON-NLS-2$
+                                "_UI_Form_type"), //$NON-NLS-1$
+                        FormPackage.Literals.FORM__ALLOW_HTML_IN_PAGE_LABEL,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This adds a property descriptor for the Page Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addPageLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_pageLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_pageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__PAGE_LABEL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
+    /**
+     * This adds a property descriptor for the Version feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addVersionPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_version_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_version_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.FORM__VERSION,
+                        true,
+                        false,
+                        false,
+                        ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                        null,
+                        null));
+    }
 
-	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(FormPackage.Literals.VALIDABLE__VALIDATORS);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS);
-			childrenFeatures.add(FormPackage.Literals.FORM__STRING_ATTRIBUTES);
-			childrenFeatures.add(FormPackage.Literals.FORM__COLUMNS);
-			childrenFeatures.add(FormPackage.Literals.FORM__LINES);
-			childrenFeatures.add(FormPackage.Literals.FORM__WIDGETS);
-			childrenFeatures.add(FormPackage.Literals.FORM__ACTIONS);
-		}
-		return childrenFeatures;
-	}
+    /**
+     * This adds a property descriptor for the Page Label feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addPageLabelPropertyDescriptor(Object object) {
+        itemPropertyDescriptors
+                .add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+                        getResourceLocator(),
+                        getString("_UI_Form_pageLabel_feature"), //$NON-NLS-1$
+                        getString("_UI_PropertyDescriptor_description", "_UI_Form_pageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        FormPackage.Literals.FORM__PAGE_LABEL,
+                        true,
+                        false,
+                        false,
+                        null,
+                        null,
+                        null));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
+    /**
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(FormPackage.Literals.VALIDABLE__VALIDATORS);
+            childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE);
+            childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS);
+            childrenFeatures.add(FormPackage.Literals.FORM__STRING_ATTRIBUTES);
+            childrenFeatures.add(FormPackage.Literals.FORM__COLUMNS);
+            childrenFeatures.add(FormPackage.Literals.FORM__LINES);
+            childrenFeatures.add(FormPackage.Literals.FORM__WIDGETS);
+            childrenFeatures.add(FormPackage.Literals.FORM__ACTIONS);
+        }
+        return childrenFeatures;
+    }
 
-		return super.getChildFeature(object, child);
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    protected EStructuralFeature getChildFeature(Object object, Object child) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
 
-	/**
-	 * This returns Form.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Form")); //$NON-NLS-1$
-	}
+        return super.getChildFeature(object, child);
+    }
 
-	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getText(Object object) {
-		String label = ((Form)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Form_type") : //$NON-NLS-1$
-			getString("_UI_Form_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-	
+    /**
+     * This returns Form.gif.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public Object getImage(Object object) {
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Form")); //$NON-NLS-1$
+    }
 
-	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+    /**
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public String getText(Object object) {
+        String label = ((Form) object).getName();
+        return label == null || label.length() == 0 ? getString("_UI_Form_type") : //$NON-NLS-1$
+                getString("_UI_Form_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-		switch (notification.getFeatureID(Form.class)) {
-			case FormPackage.FORM__USE_DEFAULT_VALIDATOR:
-			case FormPackage.FORM__BELOW:
-			case FormPackage.FORM__RESOURCE_JARS:
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
-			case FormPackage.FORM__NCOLUMN:
-			case FormPackage.FORM__NLINE:
-			case FormPackage.FORM__SHOW_PAGE_LABEL:
-			case FormPackage.FORM__ALLOW_HTML_IN_PAGE_LABEL:
-			case FormPackage.FORM__VERSION:
-			case FormPackage.FORM__PAGE_LABEL:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case FormPackage.FORM__VALIDATORS:
-			case FormPackage.FORM__HTML_TEMPLATE:
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-			case FormPackage.FORM__STRING_ATTRIBUTES:
-			case FormPackage.FORM__COLUMNS:
-			case FormPackage.FORM__LINES:
-			case FormPackage.FORM__WIDGETS:
-			case FormPackage.FORM__ACTIONS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+    /**
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public void notifyChanged(Notification notification) {
+        updateChildren(notification);
 
-	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
+        switch (notification.getFeatureID(Form.class)) {
+            case FormPackage.FORM__USE_DEFAULT_VALIDATOR:
+            case FormPackage.FORM__BELOW:
+            case FormPackage.FORM__RESOURCE_JARS:
+            case FormPackage.FORM__RESOURCE_VALIDATORS:
+            case FormPackage.FORM__NCOLUMN:
+            case FormPackage.FORM__NLINE:
+            case FormPackage.FORM__SHOW_PAGE_LABEL:
+            case FormPackage.FORM__ALLOW_HTML_IN_PAGE_LABEL:
+            case FormPackage.FORM__VERSION:
+            case FormPackage.FORM__PAGE_LABEL:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+            case FormPackage.FORM__VALIDATORS:
+            case FormPackage.FORM__HTML_TEMPLATE:
+            case FormPackage.FORM__RESOURCE_FOLDERS:
+            case FormPackage.FORM__STRING_ATTRIBUTES:
+            case FormPackage.FORM__COLUMNS:
+            case FormPackage.FORM__LINES:
+            case FormPackage.FORM__WIDGETS:
+            case FormPackage.FORM__ACTIONS:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.VALIDABLE__VALIDATORS,
-				 FormFactory.eINSTANCE.createValidator()));
+    /**
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
+        super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createAssociatedFile()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.VALIDABLE__VALIDATORS,
+                FormFactory.eINSTANCE.createValidator()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFile()));
+        newChildDescriptors.add(createChildParameter(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
+                ProcessFactory.eINSTANCE.createAssociatedFile()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
+        newChildDescriptors.add(createChildParameter(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
+                ProcessFactory.eINSTANCE.createResourceFile()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
+        newChildDescriptors.add(createChildParameter(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
+                ProcessFactory.eINSTANCE.createResourceFolder()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__COLUMNS,
-				 FormFactory.eINSTANCE.createColumn()));
+        newChildDescriptors.add(createChildParameter(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS,
+                ProcessFactory.eINSTANCE.createResourceFolder()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__LINES,
-				 FormFactory.eINSTANCE.createLine()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__COLUMNS,
+                FormFactory.eINSTANCE.createColumn()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createGroup()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__LINES,
+                FormFactory.eINSTANCE.createLine()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createCheckBoxMultipleFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createGroup()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createComboFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createCheckBoxMultipleFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createDateFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createComboFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createListFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createDateFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createPasswordFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createListFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createRadioFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createPasswordFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createSelectFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createRadioFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createTextFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createSelectFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createTextAreaFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createTextFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createRichTextAreaFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createTextAreaFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createFormButton()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createRichTextAreaFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createSubmitFormButton()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createFormButton()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createPreviousFormButton()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createSubmitFormButton()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createNextFormButton()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createPreviousFormButton()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createInfo()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createNextFormButton()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createTextInfo()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createInfo()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createMessageInfo()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createTextInfo()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createCheckBoxSingleFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createMessageInfo()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createFileWidget()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createCheckBoxSingleFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createImageWidget()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createFileWidget()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createHiddenWidget()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createImageWidget()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createDurationFormField()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createHiddenWidget()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createTable()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createDurationFormField()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createDynamicTable()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createTable()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createIFrameWidget()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createDynamicTable()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createHtmlWidget()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createIFrameWidget()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__WIDGETS,
-				 FormFactory.eINSTANCE.createSuggestBox()));
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createHtmlWidget()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(FormPackage.Literals.FORM__ACTIONS,
-				 ExpressionFactory.eINSTANCE.createOperation()));
-	}
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__WIDGETS,
+                FormFactory.eINSTANCE.createSuggestBox()));
 
-	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-		Object childFeature = feature;
-		Object childObject = child;
+        newChildDescriptors.add(createChildParameter(FormPackage.Literals.FORM__ACTIONS,
+                ExpressionFactory.eINSTANCE.createOperation()));
+    }
 
-		boolean qualify =
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS;
+    /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
 
-		if (qualify) {
-			return getString
-				("_UI_CreateChild_text2", //$NON-NLS-1$
-				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-		}
-		return super.getCreateChildText(owner, feature, child, selection);
-	}
+        boolean qualify = childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE ||
+                childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS;
 
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        if (qualify) {
+            return getString("_UI_CreateChild_text2", //$NON-NLS-1$
+                    new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
+    }
+
+    /**
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public ResourceLocator getResourceLocator() {
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

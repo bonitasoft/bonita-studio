@@ -29,7 +29,8 @@ public class EmptyExpressionViewFilter extends ViewerFilter {
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     * java.lang.Object)
      */
     @Override
     public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
@@ -40,7 +41,8 @@ public class EmptyExpressionViewFilter extends ViewerFilter {
             }
             if (ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION.equals(expr.eContainingFeature())) {
                 final MultiInstantiable eContainer = (MultiInstantiable) expr.eContainer();
-                return (eContainer.getType() == MultiInstanceType.PARALLEL || eContainer.getType() == MultiInstanceType.SEQUENTIAL)
+                return (eContainer.getType() == MultiInstanceType.PARALLEL
+                        || eContainer.getType() == MultiInstanceType.SEQUENTIAL)
                         && !eContainer.isUseCardinality();
             }
         }
