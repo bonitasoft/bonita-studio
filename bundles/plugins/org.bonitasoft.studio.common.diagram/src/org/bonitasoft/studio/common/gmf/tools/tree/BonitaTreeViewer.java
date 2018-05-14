@@ -40,7 +40,6 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.RootTreeEditPart;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
@@ -89,12 +88,11 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
             }
             if (wordMatches(labelText)) {
                 return true;
-            } else {
-                for (final EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()) {
-                    final Object value = ((EObject) element).eGet(attribute);
-                    if (value != null && attribute.getEType().getName().equals("EString") && wordMatches(value.toString())) {
-                        return true;
-                    }
+            }
+            for (final EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()) {
+                final Object value = ((EObject) element).eGet(attribute);
+                if (value != null && attribute.getEType().getName().equals("EString") && wordMatches(value.toString())) {
+                    return true;
                 }
             }
             return false;
@@ -103,8 +101,10 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
 
     protected FilteredTree filteredTree;
     protected DiagramEditPart diagramEditPart;
-    private final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-    private final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(adapterFactory);
+    private final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+            ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+    private final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(
+            adapterFactory);
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory) {
 
         @Override
@@ -153,9 +153,10 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         treeViewer.setContentProvider(adapterFactoryContentProvider);
 
         addFilters(treeViewer);
-        treeViewer.addSelectionChangedListener(new TabbedPropertySynchronizerListener(editPartResolver, new TabbedPropertySelectionProviderRegistry(),
-                PlatformUI.getWorkbench()
-                        .getActiveWorkbenchWindow().getActivePage()));
+        treeViewer.addSelectionChangedListener(
+                new TabbedPropertySynchronizerListener(editPartResolver, new TabbedPropertySelectionProviderRegistry(),
+                        PlatformUI.getWorkbench()
+                                .getActiveWorkbenchWindow().getActivePage()));
         treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
 
             @Override
@@ -202,10 +203,13 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
                 @Override
                 public void selectionChanged(final SelectionChangedEvent event) {
                     final Object diagramSelectedPart = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                    if (diagramSelectedPart instanceof IGraphicalEditPart && filteredTree != null && !filteredTree.isDisposed()) {
-                        final EObject treeElementSelection = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+                    if (diagramSelectedPart instanceof IGraphicalEditPart && filteredTree != null
+                            && !filteredTree.isDisposed()) {
+                        final EObject treeElementSelection = (EObject) ((IStructuredSelection) filteredTree.getViewer()
+                                .getSelection()).getFirstElement();
                         try {
-                            final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart, treeElementSelection);
+                            final IGraphicalEditPart editPart = editPartResolver.findEditPart(diagramEditPart,
+                                    treeElementSelection);
                             if (!editPart.equals(diagramSelectedPart)) {
                                 selectTreeItem((IGraphicalEditPart) diagramSelectedPart);
                             }
@@ -267,7 +271,8 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         final URI uri = EcoreUtil.getURI(diag);
 
         /* open the form editor */
-        final DiagramEditor editor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, ((Element) element).getName()));
+        final DiagramEditor editor = (DiagramEditor) EditorService.getInstance()
+                .openEditor(new URIEditorInput(uri, ((Element) element).getName()));
         editor.getDiagramEditPart().getViewer().deselectAll();
         final EObject elem = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
         Element selectedElem = null;
@@ -328,9 +333,6 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
     protected void unhookControl() {
         if (getControl() == null) {
             return;
-        }
-        if (adapterFactoryContentProvider != null) {
-            adapterFactoryContentProvider.dispose();
         }
         if (adapterFactoryContentProvider != null) {
             adapterFactoryContentProvider.dispose();
