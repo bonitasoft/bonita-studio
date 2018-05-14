@@ -14,13 +14,9 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -38,33 +34,20 @@ public class ConstraintExpressionEditorValidatorTest {
 
     @Test
     public void should_fails_with_empty_content_error() throws Exception {
-        final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable(""), null, null, null);
+        final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(
+                anExpressionContentObservable(""), null);
 
         final IStatus status = validator.validate();
 
         StatusAssert.assertThat(status).isNotOK().hasMessage(Messages.emptyExpressionContent);
     }
 
-    @Test
-    public void should_fails_with_compilation_error() throws Exception {
-        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
-        final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true &&"), null,
-                mock(GroovyCompilationUnit.class), requestor);
-        when(requestor.isEmpty()).thenReturn(false);
-        when(requestor.toString()).thenReturn("requestor error");
 
-        final IStatus status = validator.validate();
-
-        StatusAssert.assertThat(status).isNotOK().hasMessage("requestor error");
-    }
 
     @Test
     public void should_warn_with_no_input_referenced() throws Exception {
-        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
-        when(requestor.isEmpty()).thenReturn(true);
         final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true;"),
-                anInputNamesListObservable(),
-                mock(GroovyCompilationUnit.class), requestor);
+                anInputNamesListObservable());
 
         final IStatus status = validator.validate();
 
@@ -73,11 +56,8 @@ public class ConstraintExpressionEditorValidatorTest {
 
     @Test
     public void should_pass_without_errors() throws Exception {
-        final CompilationProblemRequestor requestor = mock(CompilationProblemRequestor.class);
-        when(requestor.isEmpty()).thenReturn(true);
         final ConstraintExpressionEditorValidator validator = new ConstraintExpressionEditorValidator(anExpressionContentObservable("return true;"),
-                anInputNamesListObservable("input1"),
-                mock(GroovyCompilationUnit.class), requestor);
+                anInputNamesListObservable("input1"));
 
         final IStatus status = validator.validate();
 

@@ -119,8 +119,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(
-                new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable, viewer
-                        .getGroovyCompilationUnit(), new CompilationProblemRequestor()));
+                new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
 
         final CLabel contentAssistHint = new CLabel(container, SWT.NONE);
         contentAssistHint.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
