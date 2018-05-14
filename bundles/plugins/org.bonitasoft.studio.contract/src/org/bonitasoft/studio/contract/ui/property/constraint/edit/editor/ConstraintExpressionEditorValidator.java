@@ -14,17 +14,12 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.ui.javaeditor.CustomBufferFactory;
 
 import com.google.common.base.Strings;
 
@@ -35,17 +30,11 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
 
     private final IObservableValue expressionObservable;
     private final IObservableList dependenciesObservable;
-    private final GroovyCompilationUnit groovyCompilationUnit;
-    private final CompilationProblemRequestor compilationErrorRequestor;
 
     public ConstraintExpressionEditorValidator(final IObservableValue expressionObservable,
-            final IObservableList dependenciesObservable,
-            final GroovyCompilationUnit groovyCompilationUnit,
-            final CompilationProblemRequestor compilationErrorRequestor) {
+            final IObservableList dependenciesObservable) {
         this.expressionObservable = expressionObservable;
         this.dependenciesObservable = dependenciesObservable;
-        this.groovyCompilationUnit = groovyCompilationUnit;
-        this.compilationErrorRequestor = compilationErrorRequestor;
     }
 
     /*
@@ -58,23 +47,10 @@ public class ConstraintExpressionEditorValidator extends MultiValidator {
         if (Strings.isNullOrEmpty(text)) {
             return ValidationStatus.error(Messages.emptyExpressionContent);
         }
-        if (hasCompilationErrors()) {
-            return ValidationStatus.error(compilationErrorRequestor.toString());
-        }
         if (dependenciesObservable.isEmpty()) {
             return ValidationStatus.warning(Messages.noContractInputReferencedInExpression);
         }
         return ValidationStatus.ok();
-    }
-
-    private boolean hasCompilationErrors() {
-        try {
-            groovyCompilationUnit.getWorkingCopy(new NullProgressMonitor(), new CustomBufferFactory(), compilationErrorRequestor);
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error("Failed to retrieve compilation unit working copy", e);
-            return false;
-        }
-        return !compilationErrorRequestor.isEmpty();
     }
 
 }
