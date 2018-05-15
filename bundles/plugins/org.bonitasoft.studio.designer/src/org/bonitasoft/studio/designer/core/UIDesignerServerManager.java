@@ -256,7 +256,7 @@ public class UIDesignerServerManager {
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
-                extractLocation().toFile().getAbsolutePath(),
+                String.format("\"%s\"", extractLocation().toFile().getAbsolutePath()),
                 "-httpPort",
                 String.valueOf(port));
     }
