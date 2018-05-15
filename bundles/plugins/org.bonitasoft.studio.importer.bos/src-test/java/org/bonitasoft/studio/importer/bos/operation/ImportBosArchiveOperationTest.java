@@ -1,5 +1,7 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -46,12 +48,12 @@ public class ImportBosArchiveOperationTest {
     @Before
     public void setUp() throws Exception {
         operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
+        doNothing().when(operationUnserTest).migrateUID(any(IProgressMonitor.class));
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
         when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
         doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Matchers.any(File.class),
                 Matchers.any(Repository.class));
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
-        doReturn(webPageRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
     }
 
     @Test
@@ -60,6 +62,7 @@ public class ImportBosArchiveOperationTest {
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
         verify(repostioty).build(monitor);
+        verify(operationUnserTest).migrateUID(monitor);
     }
 
     @Test
@@ -70,5 +73,6 @@ public class ImportBosArchiveOperationTest {
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
         verify(operationUnserTest).validateAllAfterImport(monitor, importBosArchiveStatusBuilder);
+        verify(operationUnserTest).migrateUID(monitor);
     }
 }

@@ -69,6 +69,7 @@ public class Messages extends NLS {
     public static String overviewnoFormMessage;
     public static String waitingForUIDesigner;
     public static String startingUIDesigner;
+    public static String migratingUID;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

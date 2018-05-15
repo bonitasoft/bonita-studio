@@ -34,7 +34,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.MigrateUIDOperation;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 
@@ -68,11 +67,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     private boolean validate = true;
     private MultiStatus status;
     private SkippableProgressMonitorJobsDialog progressDialog;
-    private final Optional<ImportArchiveModel> archiveModel;
+    private Optional<ImportArchiveModel> archiveModel = Optional.empty();
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<>();
     private final List<IRepositoryFileStore> importedProcesses = new ArrayList<>();
     private final List<IRepositoryFileStore> importedFileStores = new ArrayList<>();
-    private RepositoryAccessor repositoryAccessor;
 
     public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
             ImportArchiveModel importArchiveModel, RepositoryAccessor repositoryAccessor) {
@@ -81,12 +79,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
             ImportArchiveModel root, boolean launchValidationafterImport, RepositoryAccessor repositoryAccessor) {
+        this(launchValidationafterImport, repositoryAccessor);
         progressDialog = progressManager;
         archive = selectedFile;
-        currentRepository = repositoryAccessor.getCurrentRepository();
         archiveModel = Optional.ofNullable(root);
-        this.repositoryAccessor = repositoryAccessor;
-        this.launchValidationafterImport = launchValidationafterImport;
     }
 
     public ImportBosArchiveOperation(RepositoryAccessor repositoryAccessor) {
@@ -95,8 +91,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public ImportBosArchiveOperation(final boolean launchValidationafterImport, RepositoryAccessor repositoryAccessor) {
         this.launchValidationafterImport = launchValidationafterImport;
-        this.archiveModel = Optional.empty();
-        this.repositoryAccessor = repositoryAccessor;
+        currentRepository = repositoryAccessor.getCurrentRepository();
     }
 
     @Override
@@ -141,9 +136,13 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     importUnit(unit, importArchiveModel.getBosArchive(), monitor);
                     monitor.worked(1);
                 });
+        migrateUID(monitor);
+    }
+
+    protected void migrateUID(IProgressMonitor monitor) {
         try {
-            repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).migrate(monitor);
-        } catch (CoreException | MigrationException e) {
+            new MigrateUIDOperation().run(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
     }
