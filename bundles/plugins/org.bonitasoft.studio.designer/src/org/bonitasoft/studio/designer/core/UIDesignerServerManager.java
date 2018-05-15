@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -34,6 +35,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.repository.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -128,7 +130,8 @@ public class UIDesignerServerManager {
                 waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/designer", port),
                         UIDesignerPlugin.PLUGIN_ID);
-            } catch (final CoreException | IOException e) {
+                new MigrateUIDOperation().run(monitor);
+            } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             }
         }
@@ -319,6 +322,10 @@ public class UIDesignerServerManager {
 
     public PageDesignerURLFactory getPageDesignerURLBuilder() {
         return pageDesignerURLBuilder;
+    }
+
+    public boolean isStarted() {
+        return launch != null;
     }
 
 }

@@ -16,8 +16,7 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,9 +36,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.json.JSONException;
-import org.restlet.representation.EmptyRepresentation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -141,13 +137,12 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
      */
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
-        monitor.subTask("Migrating UI designer artifacts");
-        try {
-            ClientResource clientResource = new ClientResource(
-                    UIDesignerServerManager.getInstance().getPageDesignerURLBuilder().migrate().toURI());
-            clientResource.post(new EmptyRepresentation());
-        } catch (MalformedURLException | URISyntaxException | ResourceException e) {
-            throw new MigrationException(e);
+        if (UIDesignerServerManager.getInstance().isStarted()) {
+            try {
+                new MigrateUIDOperation().run(monitor);
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new MigrationException(e);
+            }
         }
     }
 
