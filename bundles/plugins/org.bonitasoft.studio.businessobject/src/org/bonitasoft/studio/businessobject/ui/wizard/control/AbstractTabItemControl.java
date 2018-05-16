@@ -17,26 +17,23 @@ package org.bonitasoft.studio.businessobject.ui.wizard.control;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
 
 /**
  * @author Romain Bioteau
  */
 public abstract class AbstractTabItemControl extends Composite {
 
-    public AbstractTabItemControl(TabFolder parent, int style) {
+    public AbstractTabItemControl(Composite parent, int style) {
         super(parent, style);
     }
 
     protected Button createAddButton(final Composite buttonsComposite) {
         final Button addButton = new Button(buttonsComposite, SWT.FLAT);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         addButton.setText(Messages.add);
         addButton.setEnabled(false);
         return addButton;
@@ -44,8 +41,7 @@ public abstract class AbstractTabItemControl extends Composite {
 
     protected Button createDeleteButton(final Composite buttonsComposite) {
         final Button deleteButton = new Button(buttonsComposite, SWT.FLAT);
-        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        deleteButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         deleteButton.setText(Messages.delete);
         deleteButton.setEnabled(false);
         return deleteButton;
@@ -54,8 +50,7 @@ public abstract class AbstractTabItemControl extends Composite {
     protected Button createDownButton(final IObservableValue<BusinessObject> viewerObservableValue,
             final Composite buttonsComposite) {
         final Button downButton = new Button(buttonsComposite, SWT.FLAT);
-        downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         downButton.setText(Messages.down);
         downButton.setEnabled(viewerObservableValue.getValue() != null);
         return downButton;
@@ -64,8 +59,7 @@ public abstract class AbstractTabItemControl extends Composite {
     protected Button createUpButton(final IObservableValue<BusinessObject> viewerObservableValue,
             final Composite buttonsComposite) {
         final Button upButton = new Button(buttonsComposite, SWT.FLAT);
-        upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         upButton.setText(Messages.up);
         upButton.setEnabled(viewerObservableValue.getValue() != null);
         return upButton;

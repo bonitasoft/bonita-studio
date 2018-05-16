@@ -35,9 +35,11 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -51,6 +53,7 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -67,15 +70,17 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
@@ -133,7 +138,6 @@ public class BusinessDataModelWizardPage extends WizardPage {
         setControl(mainComposite);
     }
 
-
     protected void createBusinessObjectDescription(final Composite mainComposite, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue) {
         final Group businessObjectDescriptionGroup = new Group(mainComposite, SWT.NONE);
@@ -157,27 +161,31 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
         createDescription(ctx, viewerObservableValue, businessObjectDescriptionGroup);
 
-        final TabFolder tabFolder = new TabFolder(businessObjectDescriptionGroup, SWT.NONE);
+        CTabFolder tabFolder = new CTabFolder(businessObjectDescriptionGroup, SWT.BORDER);
         tabFolder.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).minSize(500, 300).span(2, 1).create());
+                GridDataFactory.fillDefaults().grab(true, true).hint(500, 300).span(2, 1).create());
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
+        tabFolder.setSelectionBackground(new Color[] { Display.getDefault().getSystemColor(SWT.COLOR_WHITE),
+                tabFolder.getBackground() }, new int[] { 100 }, true);
         fieldsList = PojoObservables.observeDetailList(viewerObservableValue, "fields", null);
+
         createAttributeTabItem(ctx, viewerObservableValue, tabFolder);
         createConstraintsTabItem(ctx, viewerObservableValue, tabFolder);
         createQueriesTabItem(ctx, viewerObservableValue, tabFolder);
         createIndexesTabItem(ctx, viewerObservableValue, tabFolder);
+        tabFolder.setSelection(tabFolder.getItem(0));
     }
 
     protected void createQueriesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
-            final TabFolder tabFolder) {
-        final TabItem queriesItem = new TabItem(tabFolder, SWT.BORDER);
+            final CTabFolder tabFolder) {
+        final CTabItem queriesItem = new CTabItem(tabFolder, SWT.BORDER);
         queriesItem.setText(Messages.queries);
         queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
     }
 
     protected void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
-            final TabFolder tabFolder) {
-        final TabItem attributeItem = new TabItem(tabFolder, SWT.BORDER);
+            final CTabFolder tabFolder) {
+        final CTabItem attributeItem = new CTabItem(tabFolder, SWT.NONE);
         attributeItem.setText(Messages.attributes);
         attributeItem.setControl(
                 new AttributesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel,
@@ -185,16 +193,16 @@ public class BusinessDataModelWizardPage extends WizardPage {
     }
 
     protected void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
-            final TabFolder tabFolder) {
-        final TabItem constraintsTabItem = new TabItem(tabFolder, SWT.BORDER);
+            final CTabFolder tabFolder) {
+        final CTabItem constraintsTabItem = new CTabItem(tabFolder, SWT.BORDER);
         constraintsTabItem.setText(Messages.constraints);
         constraintsTabItem.setControl(
                 new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
     }
 
     protected void createIndexesTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
-            final TabFolder tabFolder) {
-        final TabItem indexTabItem = new TabItem(tabFolder, SWT.BORDER);
+            final CTabFolder tabFolder) {
+        final CTabItem indexTabItem = new CTabItem(tabFolder, SWT.BORDER);
         indexTabItem.setText(Messages.indexes);
         indexTabItem.setControl(
                 new IndexesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
@@ -221,17 +229,19 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     protected void createDescription(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
             final Group descriptionGroup) {
-        final Label descriptionLabel = new Label(descriptionGroup, SWT.NONE);
-        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create());
-        descriptionLabel.setText(Messages.description);
+        IObservableValue<String> descriptionObservable = PojoProperties.value("description")
+                .observeDetail(viewerObservableValue);
 
-        final Text descriptionText = new Text(descriptionGroup, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
-        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create());
-        descriptionText.setEnabled(viewerObservableValue.getValue() != null);
-
-        final IObservableValue observeDetailValue = PojoObservables.observeDetailValue(viewerObservableValue, "description",
-                String.class);
-        ctx.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), observeDetailValue);
+        Control descriptionText = new TextAreaWidget.Builder()
+                .withLabel(Messages.description)
+                .labelAbove()
+                .heightHint(75)
+                .grabHorizontalSpace()
+                .fill()
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .createIn(descriptionGroup)
+                .getControl();
 
         final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
@@ -241,7 +251,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 return fromObject != null;
             }
         });
-        ctx.bindValue(SWTObservables.observeEnabled(descriptionText), viewerObservableValue, null, enableStrategy);
+        ctx.bindValue(WidgetProperties.enabled().observe(descriptionText), viewerObservableValue, null, enableStrategy);
     }
 
     protected void createSeparator(final Composite mainComposite) {
@@ -486,6 +496,5 @@ public class BusinessDataModelWizardPage extends WizardPage {
     public void setPackageName(final String packageName) {
         this.packageName = packageName;
     }
-
 
 }
