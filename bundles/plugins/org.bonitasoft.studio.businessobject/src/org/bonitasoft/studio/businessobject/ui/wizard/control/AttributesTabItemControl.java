@@ -79,14 +79,15 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
@@ -109,7 +110,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     private Composite datTimeInTimezoneFieldContent;
     private IDiffLogger diffLogger;
 
-    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
+    public AttributesTabItemControl(final CTabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel businessObjectModel,
@@ -122,10 +123,15 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     }
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 180).create());
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
+        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
-        attributeSelectionObservable = createAttributeTableControl(ctx, viewerObservableValue);
+        Composite attributeEditionComposite = new Composite(this, SWT.None);
+        attributeEditionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        attributeEditionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        attributeSelectionObservable = createAttributeTableControl(attributeEditionComposite, ctx, viewerObservableValue);
+
         createAttributeDetailControl(ctx, viewerObservableValue);
     }
 
@@ -134,8 +140,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         detailGroup = new Group(this, SWT.NONE);
         detailGroup.setText(Messages.details);
         detailGroup.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).indent(0, 10).span(2, 1)
-                        .create());
+                GridDataFactory.fillDefaults().grab(true, false).indent(0, 10).create());
         stackLayout = new StackLayout();
         detailGroup.setLayout(stackLayout);
 
@@ -144,8 +149,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         dateFieldContent = createFieldDescriptionContent(detailGroup, Messages.dateDetails, Messages.legacyDateTooltip);
         dateOnlyFieldContent = createFieldDescriptionContent(detailGroup,
                 String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY), null);
-                datTimeFieldContent = createFieldDescriptionContent(detailGroup,
-                        String.format(Messages.dateTimeDetails, DateTypeLabels.DATE_AND_TIME,
+        datTimeFieldContent = createFieldDescriptionContent(detailGroup,
+                String.format(Messages.dateTimeDetails, DateTypeLabels.DATE_AND_TIME,
                         DateTypeLabels.DATE_TIME_WITH_TIMEZONE),
                 null);
         datTimeInTimezoneFieldContent = createFieldDescriptionContent(detailGroup,
@@ -381,10 +386,10 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return composite;
     }
 
-    private IViewerObservableValue createAttributeTableControl(final DataBindingContext ctx,
+    private IViewerObservableValue createAttributeTableControl(Composite parent, final DataBindingContext ctx,
             final IObservableValue<BusinessObject> viewerObservableValue) {
-        final Composite buttonsComposite = new Composite(this, SWT.NONE);
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
+        final Composite buttonsComposite = new Composite(parent, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 3).create());
 
         final Button addButton = createAddButton(buttonsComposite);
@@ -403,7 +408,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final Button downButton = createDownButton(viewerObservableValue, buttonsComposite);
         final Button deleteButton = createDeleteButton(buttonsComposite);
 
-        final TableViewer featuresTableViewer = new TableViewer(this,
+        final TableViewer featuresTableViewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         featuresTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
@@ -634,7 +639,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         field.setCollection(Boolean.FALSE);
         field.setNullable(Boolean.TRUE);
         fieldsList.add(field);
-        diffLogger.fieldAdded(((BusinessObject) viewerObservableValue.getValue()).getQualifiedName(), field.getName());
+        diffLogger.fieldAdded(viewerObservableValue.getValue().getQualifiedName(), field.getName());
         observeAttributeSelection.setValue(field);
         featuresTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
 

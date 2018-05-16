@@ -55,13 +55,13 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
@@ -81,7 +81,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
     private static final String CUSTOM = "custom";
 
-    public QueriesTabItemControl(TabFolder parent, DataBindingContext ctx,
+    public QueriesTabItemControl(CTabFolder parent, DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue, IObservableList fieldsList) {
         super(parent, SWT.NONE);
         this.fieldsList = fieldsList;
@@ -112,6 +112,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
     protected void createControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 0).create());
         setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
+        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
         final Composite radioComposite = new Composite(this, SWT.NONE);
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(2, 1).create());
@@ -136,7 +137,6 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         customControlDecoration.setImage(Pics.getImage(PicsConstants.hint));
         customControlDecoration.setShowOnlyOnFocus(false);
         customControlDecoration.setMarginWidth(-5);
-
 
         final Composite stackComposite = new Composite(this, SWT.NONE);
         stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -245,8 +245,6 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
-
-
 
         final Composite buttonsComposite = new Composite(composite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());

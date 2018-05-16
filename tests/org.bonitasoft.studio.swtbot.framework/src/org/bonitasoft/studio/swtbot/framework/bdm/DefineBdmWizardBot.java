@@ -53,7 +53,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
 
     public DefineBdmWizardBot addAttribute(String businessObject, String attribute, String type) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.attributes).activate();
+        bot.cTabItem(Messages.attributes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         typeText(attribute);
         setType(businessObject, attribute, type);
@@ -124,7 +124,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
 
     public DefineBdmWizardBot addConstraint(String businessObject, String constraintName, String... selectFields) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.constraints).activate();
+        bot.cTabItem(Messages.constraints).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         typeText(constraintName);
         editConstraint(businessObject, constraintName, selectFields);
@@ -145,7 +145,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
 
     public DefineBdmWizardBot addIndex(String businessObject, String indexName, String... selectFields) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.indexes).activate();
+        bot.cTabItem(Messages.indexes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         typeText(indexName);
         editIndex(businessObject, indexName, selectFields);
@@ -226,25 +226,25 @@ public class DefineBdmWizardBot extends BotWizardDialog {
 
     private SWTBotTable getAttributeTable(String businessObject) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.attributes).activate();
+        bot.cTabItem(Messages.attributes).activate();
         return bot.tableInGroup(businessObject);
     }
 
     private SWTBotTable getConstraintsTable(String businessObject) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.constraints).activate();
+        bot.cTabItem(Messages.constraints).activate();
         return bot.tableInGroup(businessObject);
     }
 
     private SWTBotTable getIndexesTable(String businessObject) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.indexes).activate();
+        bot.cTabItem(Messages.indexes).activate();
         return bot.tableInGroup(businessObject);
     }
 
     private SWTBotTable getCustomQueriesTable(String businessObject) {
         getBusinessObjectTable().select(businessObject);
-        bot.tabItem(Messages.queries).activate();
+        bot.cTabItem(Messages.queries).activate();
         bot.radio(Messages.customQueriesOption).click();
         return bot.tableInGroup(businessObject);
     }
