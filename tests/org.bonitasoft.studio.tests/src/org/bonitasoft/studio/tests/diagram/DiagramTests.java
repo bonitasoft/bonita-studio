@@ -40,7 +40,6 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
@@ -100,7 +99,6 @@ public class DiagramTests {
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) gmfEditor.getReference().getEditor(false);
         final SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
         part.select();
         IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) part.part();
@@ -115,7 +113,8 @@ public class DiagramTests {
         gmfEditor.click(x, y);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
         bot.toolbarButton("Save").click();
-        graphicalEditPart = (IGraphicalEditPart) processEditor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
+        SWTBotGefEditPart editPart = gmfEditor.getEditPart("Step1");
+        graphicalEditPart = (IGraphicalEditPart) editPart.part();
         final Activity newModelElement = (Activity) graphicalEditPart.resolveSemanticElement();
         Assert.assertEquals("Step1", newModelElement.getName());
         Assert.assertNotSame(beforeClass, newModelElement.getClass());
