@@ -15,11 +15,8 @@ import org.bonitasoft.studio.ui.widget.BulletPointWidget.BulletPointState;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 public class BulletPointWidget extends Composite {
 
@@ -27,8 +24,9 @@ public class BulletPointWidget extends Composite {
         TODO, DONE, ABORTED
     }
 
-    private final String fullBullet = "\u26AB";
+    private final String doneBullet = "\u2713";
     private final String emptyBullet = "\u26AA";
+    private final String failedBullet = "\u274C";
 
     private List<BulletPoint> bulletPoints;
 
@@ -66,15 +64,13 @@ public class BulletPointWidget extends Composite {
         StyledText text = new StyledText(this, SWT.WRAP);
         text.setEditable(false);
         text.setEnabled(false);
-        text.setText(String.format("%s %s", bulletPoint.isTodo() ? emptyBullet : fullBullet, bulletPoint.getName()));
+        text.setText(String.format("%s %s", bulletPoint.isTodo()
+                ? emptyBullet
+                : bulletPoint.isDone()
+                        ? doneBullet
+                        : failedBullet,
+                bulletPoint.getName()));
         text.setBackground(getBackground());
-        if (!bulletPoint.isTodo()) {
-            Color color = bulletPoint.isDone()
-                    ? Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN)
-                    : Display.getDefault().getSystemColor(SWT.COLOR_RED);
-            StyleRange style = new StyleRange(0, 1, color, getBackground());
-            text.setStyleRange(style);
-        }
     }
 
 }
