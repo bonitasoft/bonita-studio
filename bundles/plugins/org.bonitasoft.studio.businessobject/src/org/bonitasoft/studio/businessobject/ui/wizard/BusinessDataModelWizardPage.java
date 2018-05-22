@@ -35,7 +35,6 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -43,7 +42,6 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -54,6 +52,7 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -228,26 +227,28 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     protected void createDescription(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
             final Group descriptionGroup) {
-        IObservableValue<String> descriptionObservable = PojoProperties.value("description")
+
+        final Label descriptionLabel = new Label(descriptionGroup, SWT.NONE);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create());
+        descriptionLabel.setText(Messages.description);
+
+        final Text descriptionText = new Text(descriptionGroup, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
+        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create());
+        descriptionText.setEnabled(viewerObservableValue.getValue() != null);
+
+        final IObservableValue<String> observeDetailValue = PojoProperties.value("description")
                 .observeDetail(viewerObservableValue);
-        ComputedValue<Boolean> enableStrategy = new ComputedValue<Boolean>() {
+        ctx.bindValue(WidgetProperties.text(SWT.Modify).observe(descriptionText), observeDetailValue);
+
+        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
-            protected Boolean calculate() {
-                return viewerObservableValue != null && viewerObservableValue.getValue() != null;
+            public Object convert(final Object fromObject) {
+                return fromObject != null;
             }
-        };
-
-        new TextAreaWidget.Builder()
-                .withLabel(Messages.description)
-                .labelAbove()
-                .heightHint(75)
-                .grabHorizontalSpace()
-                .fill()
-                .bindTo(descriptionObservable)
-                .withEditableStrategy(enableStrategy)
-                .inContext(ctx)
-                .createIn(descriptionGroup);
+        });
+        ctx.bindValue(WidgetProperties.enabled().observe(descriptionText), viewerObservableValue, null, enableStrategy);
     }
 
     protected void createSeparator(final Composite mainComposite) {
