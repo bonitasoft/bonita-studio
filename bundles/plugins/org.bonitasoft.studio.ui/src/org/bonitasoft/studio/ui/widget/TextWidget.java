@@ -23,7 +23,9 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -67,6 +69,12 @@ public class TextWidget extends EditableControlWidget {
         private BiConsumer<String, String> onEdit;
         private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
         private Optional<String> tooltip = Optional.empty();
+        protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
+
+        public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
+            this.editableStrategy = Optional.ofNullable(viewerObservableValue);
+            return this;
+        }
 
         /**
          * Adds a placeholder to the resulting {@link Text}
@@ -141,7 +149,9 @@ public class TextWidget extends EditableControlWidget {
                     transactionalEdit,
                     onEdit,
                     toolkit,
-                    proposalProvider)
+                    proposalProvider,
+                    editableStrategy,
+                    Optional.ofNullable(ctx))
                     : new TextWidget(container,
                             id,
                             labelAbove,
@@ -155,7 +165,9 @@ public class TextWidget extends EditableControlWidget {
                             transactionalEdit,
                             onEdit,
                             toolkit,
-                            proposalProvider);
+                            proposalProvider,
+                            editableStrategy,
+                            Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onCLickButton);
@@ -187,12 +199,15 @@ public class TextWidget extends EditableControlWidget {
     private final Color editingColor;
     private ToolItem okButton;
     private final Optional<IContentProposalProvider> proposalProvider;
+    private Optional<ComputedValue<Boolean>> enableStrategy;
+    private Optional<DataBindingContext> ctx;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
             boolean transactionalEdit, BiConsumer<String, String> onEdit, Optional<FormToolkit> toolkit,
-            Optional<IContentProposalProvider> proposalProvider) {
+            Optional<IContentProposalProvider> proposalProvider, Optional<ComputedValue<Boolean>> enableStrategy,
+            Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message,
                 labelButton,
@@ -201,6 +216,8 @@ public class TextWidget extends EditableControlWidget {
         this.onEdit = Optional.ofNullable(onEdit);
         this.proposalProvider = proposalProvider;
         this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
+        this.enableStrategy = enableStrategy;
+        this.ctx = ctx;
     }
 
     @Override
@@ -289,6 +306,9 @@ public class TextWidget extends EditableControlWidget {
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);
         configureBackground(text);
+
+        enableStrategy.ifPresent(strategy -> ctx.orElse(new DataBindingContext())
+                .bindValue(WidgetProperties.editable().observe(text), strategy));
 
         proposalProvider.ifPresent(provider -> {
             final TextContentAdapter controlContentAdapter = new TextContentAdapter();
