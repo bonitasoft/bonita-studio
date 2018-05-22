@@ -17,6 +17,8 @@ package org.bonitasoft.studio.ui.widget;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -31,21 +33,24 @@ public class NativeTextWidget extends TextWidget {
     protected NativeTextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
             Optional<String> labelButton, boolean transactionalEdit, BiConsumer<String, String> onEdit,
-            Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider) {
+            Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
+            Optional<ComputedValue<Boolean>> editableStrategy,
+            Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message,
-                labelButton, transactionalEdit, onEdit, toolkit, proposalProvider);
+                message, labelButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy, ctx);
     }
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite, org.eclipse.swt.widgets.Event)
+     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite,
+     * org.eclipse.swt.widgets.Event)
      */
     @Override
     protected void drawBorder(Composite container, Event e) {
 
     }
 
+    @Override
     protected Text newText(final Composite textContainer) {
         final Text newText = new Text(textContainer, SWT.SINGLE | SWT.BORDER);
         newText.setLayoutData(

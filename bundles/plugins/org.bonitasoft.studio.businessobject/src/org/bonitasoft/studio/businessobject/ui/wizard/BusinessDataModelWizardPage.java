@@ -43,6 +43,7 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -53,7 +54,6 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -77,7 +77,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -231,27 +230,24 @@ public class BusinessDataModelWizardPage extends WizardPage {
             final Group descriptionGroup) {
         IObservableValue<String> descriptionObservable = PojoProperties.value("description")
                 .observeDetail(viewerObservableValue);
+        ComputedValue<Boolean> enableStrategy = new ComputedValue<Boolean>() {
 
-        Control descriptionText = new TextAreaWidget.Builder()
+            @Override
+            protected Boolean calculate() {
+                return viewerObservableValue != null && viewerObservableValue.getValue() != null;
+            }
+        };
+
+        new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
                 .labelAbove()
                 .heightHint(75)
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(descriptionObservable)
+                .withEditableStrategy(enableStrategy)
                 .inContext(ctx)
-                .createIn(descriptionGroup)
-                .getControl();
-
-        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
-        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                return fromObject != null;
-            }
-        });
-        ctx.bindValue(WidgetProperties.enabled().observe(descriptionText), viewerObservableValue, null, enableStrategy);
+                .createIn(descriptionGroup);
     }
 
     protected void createSeparator(final Composite mainComposite) {
