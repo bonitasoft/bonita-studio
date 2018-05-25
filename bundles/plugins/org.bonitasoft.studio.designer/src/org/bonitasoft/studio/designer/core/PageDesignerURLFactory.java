@@ -32,7 +32,7 @@ import org.eclipse.e4.core.di.extensions.Preference;
 @Singleton
 public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
-    private static final String WAR_CONTEXT_NAME = "designer";
+    private static final String WAR_CONTEXT_NAME = "bonita";
 
     private IEclipsePreferences preferenceStore;
 
