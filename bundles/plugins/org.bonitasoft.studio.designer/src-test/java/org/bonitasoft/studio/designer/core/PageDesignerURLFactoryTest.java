@@ -55,7 +55,7 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
     @Test
     public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
         assertThat(pageDesignerURLBuilder.openPageDesignerHome())
-                .isEqualTo(new URL("http://localhost:8080/designer/#/en/home"));
+                .isEqualTo(new URL("http://localhost:8080/bonita/#/en/home"));
     }
 
     @Test
@@ -63,13 +63,13 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
             throws Exception {
         doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
         assertThat(pageDesignerURLBuilder.openPageDesignerHome())
-                .isEqualTo(new URL("http://localhost:8080/designer/#/fr/home"));
+                .isEqualTo(new URL("http://localhost:8080/bonita/#/fr/home"));
     }
 
     @Test
     public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page() throws Exception {
         assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
-                new URL("http://localhost:8080/designer/#/en/pages/page-id"));
+                new URL("http://localhost:8080/bonita/#/en/pages/page-id"));
     }
 
     @Test
@@ -77,26 +77,26 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
             throws Exception {
         doReturn("fr").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
         assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
-                new URL("http://localhost:8080/designer/#/fr/pages/page-id"));
+                new URL("http://localhost:8080/bonita/#/fr/pages/page-id"));
     }
 
     @Test
     public void should_newPage_return_URL_to_post_a_new_page() throws Exception {
         assertThat(pageDesignerURLBuilder.newPage()).isEqualTo(
-                new URL("http://localhost:8080/designer/rest/pages/"));
+                new URL("http://localhost:8080/bonita/rest/pages/"));
     }
 
     @Test
     public void should_exportPage_return_URL_to_export_the_page_with_given_id() throws Exception {
         assertThat(pageDesignerURLBuilder.exportPage("my-page-id")).isEqualTo(
-                new URL("http://localhost:8080/designer/export/page/my-page-id"));
+                new URL("http://localhost:8080/bonita/export/page/my-page-id"));
     }
 
     @Test
     public void should_exportPageFromContract_return_URL_to_create_the_page_with_given_name_from_a_contract()
             throws Exception {
         assertThat(pageDesignerURLBuilder.newPageFromContract(FormScope.TASK, "myPageName")).isEqualTo(
-                new URL("http://localhost:8080/designer/rest/pages/contract/task/myPageName"));
+                new URL("http://localhost:8080/bonita/rest/pages/contract/task/myPageName"));
     }
 
 }

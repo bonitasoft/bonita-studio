@@ -100,7 +100,7 @@ public class UIDesignerWorkspaceIntegrationIT {
     public void import_a_custom_page_trigger_a_refresh_on_the_workspace() throws Exception {
         waitForServer();
 
-        new ClientResource(String.format("http://localhost:%s/designer/import/page", uidPort()))
+        new ClientResource(String.format("http://localhost:%s/bonita/import/page", uidPort()))
                 .post(formDataSetWithCustomPageZipFile());
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
