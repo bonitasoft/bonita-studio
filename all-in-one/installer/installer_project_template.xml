@@ -337,8 +337,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
                 </copyFile>
                 <runProgram>
                     <program>genisoimage</program>
-                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
-                    </programArguments>
+                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output</programArguments>
                 </runProgram>
                 <deleteFile>
                     <path>${tempDir}</path>
