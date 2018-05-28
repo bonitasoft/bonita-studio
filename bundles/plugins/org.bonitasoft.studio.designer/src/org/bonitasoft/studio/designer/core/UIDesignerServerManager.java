@@ -128,7 +128,7 @@ public class UIDesignerServerManager {
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 waitForUID(pageDesignerURLBuilder);
-                BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/designer", port),
+                BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
                         UIDesignerPlugin.PLUGIN_ID);
                 new MigrateUIDOperation().run(monitor);
             } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
