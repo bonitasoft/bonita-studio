@@ -382,7 +382,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
                     <type>linux</type>
                 </platformTest>
             </ruleList>
-            <program>"${installdir}/@linux.shortcut.name@"</program>
+            <program>${installdir}/@linux.shortcut.name@</program>
             <programArguments>&amp;</programArguments>
             <progressText>${msg(launch)} ${product_fullname}</progressText>
         </runProgram>
@@ -520,6 +520,20 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
             <cliOptionName>prefix</cliOptionName>
             <mustBeWritable>yes</mustBeWritable>
             <mustExist>0</mustExist>
+             <validationActionList>
+        <throwError>
+            <text>${msg(not.enough.diskspace)}</text>
+            <ruleList>
+               <checkFreeDiskSpace>
+                  <logic>less</logic>
+                  <path>${installdir}</path>
+                  <!-- ${required_diskspace} is automatically calculated by
+                  InstallBuilder with all the files packed -->
+                  <size>${required_diskspace}</size>
+               </checkFreeDiskSpace>
+            </ruleList>
+        </throwError>
+     </validationActionList>
         </directoryParameter>
     </parameterList>
     <preUninstallationActionList>
