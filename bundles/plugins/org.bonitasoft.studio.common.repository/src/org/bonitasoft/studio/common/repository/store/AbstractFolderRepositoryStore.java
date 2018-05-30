@@ -64,7 +64,7 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     public List<T> getChildren() {
         refresh();
 
-        final List<T> result = new ArrayList<T>();
+        final List<T> result = new ArrayList<>();
         final IFolder folder = getResource();
         try {
             for (final IResource r : folder.members()) {
