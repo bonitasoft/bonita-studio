@@ -27,7 +27,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -125,6 +127,9 @@ public class UIDesignerServerManager {
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
                         Joiner.on(" ").join(buildCommand(repositoryAccessor)));
+                Map<String, String> env = new HashMap<>();
+                env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
+                workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 waitForUID(pageDesignerURLBuilder);
@@ -247,7 +252,6 @@ public class UIDesignerServerManager {
                         : "\"" + locateUIDjar() + "\"" + System.getProperty("path.separator") + "\""
                                 + cpJar.getAbsolutePath() + "\"",
                 "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
-                "-Dfile.encoding=UTF-8",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
