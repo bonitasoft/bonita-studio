@@ -78,7 +78,13 @@ public class ComputeScriptDependenciesJob extends Job {
         if (groovyCompilationUnit == null) {
             return Collections.<EObject> emptyList();
         }
-        final String expression = groovyCompilationUnit.getSource();
+        String expression = groovyCompilationUnit.getSource();
+        computeDependencies(expression);
+        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
+    }
+
+    protected List<EObject> computeDependencies(String expression) {
+        final List<EObject> deps = new ArrayList<EObject>();
         if (expression != null && cache.get(expression) == null) {
             if (groovyCompilationUnit.getModuleNode() != null) {
                 BlockStatement astNode = groovyCompilationUnit.getModuleNode().getStatementBlock();
@@ -96,13 +102,15 @@ public class ComputeScriptDependenciesJob extends Job {
                         }
 
                     }
-                    final List<EObject> deps = new ArrayList<EObject>();
+
                     addDependenciesForFoundVariables(referencedVariable, deps);
                     cache.put(expression, deps);
                 }
             }
+        } else if (cache.get(expression) != null) {
+            deps.addAll(cache.get(expression));
         }
-        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
+        return deps;
     }
 
     protected void addDependenciesForFoundVariables(
@@ -151,7 +159,11 @@ public class ComputeScriptDependenciesJob extends Job {
     }
 
     public List<EObject> getDependencies(final String expression) {
-        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
+        if (cache.containsKey(expression)) {
+            return cache.get(expression);
+        } else {
+            return computeDependencies(expression);
+        }
     }
 
     public List<ScriptVariable> getNodes() {

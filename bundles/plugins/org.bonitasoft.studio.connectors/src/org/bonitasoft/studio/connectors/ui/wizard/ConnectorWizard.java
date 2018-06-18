@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -138,6 +139,8 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
     private final AvailableExpressionTypeFilter expressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
+    private EMFModelUpdater<Connector> modelUpdater = new EMFModelUpdater<>();
+
     private final AvailableExpressionTypeFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(
             new String[] { ExpressionConstants.CONSTANT_TYPE,
                     ExpressionConstants.VARIABLE_TYPE,
@@ -172,7 +175,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         container = connector.eContainer();
         originalConnector = connector;
         this.connectorContainmentFeature = connectorContainmentFeature;
-        connectorWorkingCopy = EcoreUtil.copy(connector);
+        connectorWorkingCopy = modelUpdater.from(connector).getWorkingCopy();
         editMode = true;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
         setNeedsProgressMonitor(false);
@@ -738,8 +741,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         final EditingDomain editingDomain = AdapterFactoryEditingDomain
                 .getEditingDomainFor(container);
         if (editMode) {
-            final CompoundCommand cc = createPerformFinishCommandOnEdition(editingDomain);
-            editingDomain.getCommandStack().execute(cc);
+            modelUpdater.update();
         } else {
             editingDomain.getCommandStack().execute(
                     createPerformFinishCommandOnCreation(editingDomain));

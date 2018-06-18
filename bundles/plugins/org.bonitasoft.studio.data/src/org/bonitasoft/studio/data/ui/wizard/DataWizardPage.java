@@ -267,10 +267,14 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 copyDataFeature(xmlData);
                 data = xmlData;
             } else {
-                final Data simpleData = ProcessFactory.eINSTANCE.createData();
-                simpleData.setDataType(newType);
-                copyDataFeature(simpleData);
-                data = simpleData;
+                if (!data.eClass().equals(ProcessPackage.Literals.DATA)) {
+                    Data simpleData = ProcessFactory.eINSTANCE.createData();
+                    simpleData.setDataType(newType);
+                    copyDataFeature(simpleData);
+                    data = simpleData;
+                } else {
+                    data.setDataType(newType);
+                }
             }
 
             updateMoreSection(newType);
