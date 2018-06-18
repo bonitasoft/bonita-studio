@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -40,7 +41,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.Wizard;
@@ -73,6 +73,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     private boolean isPageFlowContext = false;
 
     private boolean isOverviewContext = false;
+
+    private EMFModelUpdater<Data> dataUpdater;
 
     private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
@@ -117,7 +119,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         setNeedsProgressMonitor(true);
         container = data.eContainer();
         originalData = data;
-        dataWorkingCopy = EcoreUtil.copy(data);
+        this.dataUpdater = new EMFModelUpdater<Data>().from(data);
+        dataWorkingCopy = dataUpdater.getWorkingCopy();
         editMode = true;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
         setWindowTitle(Messages.editVariable);
@@ -226,6 +229,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     protected RefactorDataOperation createRefactorOperation(final TransactionalEditingDomain editingDomain, final Data workingCopy) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
+        op.setUpdater(dataUpdater);
         op.addItemToRefactor(workingCopy, originalData);
         op.setDataContainer((DataAware) container);
         op.setDataContainmentFeature(dataContainmentFeature);

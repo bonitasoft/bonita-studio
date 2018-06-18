@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -52,6 +53,8 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
 
     private DataAware dataContainer;
 
+    private EMFModelUpdater<Data> updater;
+
     public RefactorDataOperation(final RefactoringOperationType operationType) {
         super(operationType);
     }
@@ -75,12 +78,16 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                     compoundCommand.append(AddCommand.create(getEditingDomain(), dataContainer, dataContainmentFeature,
                             pairToRefactor.getNewValue(), index));
                 } else {
-                    for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass()
-                            .getEAllStructuralFeatures()) {
-                        if (pairToRefactor.getNewValue().eClass().getEAllStructuralFeatures().contains(feature)) {
-                            compoundCommand.append(SetCommand.create(getEditingDomain(), pairToRefactor.getOldValue(),
-                                    feature, pairToRefactor.getNewValue()
-                                            .eGet(feature)));
+                    if (updater != null) {
+                        updater.update();
+                    } else {
+                        for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass()
+                                .getEAllStructuralFeatures()) {
+                            if (pairToRefactor.getNewValue().eClass().getEAllStructuralFeatures().contains(feature)) {
+                                compoundCommand.append(SetCommand.create(getEditingDomain(), pairToRefactor.getOldValue(),
+                                        feature, pairToRefactor.getNewValue()
+                                                .eGet(feature)));
+                            }
                         }
                     }
                 }
@@ -107,6 +114,10 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 }
             }
         }
+    }
+
+    public void setUpdater(EMFModelUpdater<Data> updater) {
+        this.updater = updater;
     }
 
     private boolean notASciptExpression(final Expression exp) {

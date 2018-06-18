@@ -114,9 +114,9 @@ public class DataWizardIT {
         final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
                 .activeProcessDiagramEditor();
         final SWTBotGefEditor gmfEditor = activeProcessDiagramEditor.getGmfEditor();
-        final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
-        final MainProcess model = (MainProcess) part.resolveSemanticElement();
-        final Pool pool = (Pool) model.getElements().get(0);
+        IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
+        MainProcess model = (MainProcess) part.resolveSemanticElement();
+        Pool pool = (Pool) model.getElements().get(0);
         gmfEditor.select(pool.getName());
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
@@ -129,9 +129,10 @@ public class DataWizardIT {
         final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         applicationWorkbenchWindow.save();
 
-        final Data firstData = pool.getData().get(0);
-        assertEquals("wrong rename", firstData.getName(), "anewName");
-        assertTrue("wrong change type", firstData.getDataType() instanceof IntegerType);
+        Data editedData = pool.getData().get(0);
+        assertEquals("wrong rename", editedData.getName(), "anewName");
+        assertTrue(String.format("wrong change type. Expected Inetger but have %s", editedData.getDataType()),
+                editedData.getDataType() instanceof IntegerType);
     }
 
     @Test

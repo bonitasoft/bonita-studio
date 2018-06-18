@@ -530,22 +530,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (dialog.open() == Dialog.OK) {
             final Expression newExpression = dialog.getExpression();
             executeOperation(newExpression.getName());
-            updateSelection(new CompoundCommand(), newExpression);
             final Expression selectedExpression = getSelectedExpression();
-            final EditingDomain editingDomain = getEditingDomain();
-            if (editingDomain == null) {
-                selectedExpression.setReturnType(newExpression.getReturnType());
-                selectedExpression.setType(newExpression.getType());
-            } else {
-                final CompoundCommand cc = new CompoundCommand();
-                cc.append(
-                        SetCommand.create(editingDomain, selectedExpression,
-                                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newExpression.getReturnType()));
-                cc.append(
-                        SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
-                                newExpression.getType()));
-                editingDomain.getCommandStack().execute(cc);
-            }
             refresh();
             fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
         }
@@ -580,7 +565,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
         final EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(), isPassword,
-                EcoreUtil.copy(getSelectedExpression()), editInput,
+                getSelectedExpression(), editInput,
                 getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
         dialog.setEditorFilters(filteredEditor);
         dialog.setExpressionNameResolver(expressionNameResolver);

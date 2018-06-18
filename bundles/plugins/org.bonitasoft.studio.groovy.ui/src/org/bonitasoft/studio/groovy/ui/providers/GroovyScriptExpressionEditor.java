@@ -57,9 +57,11 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jdt.core.JavaModelException;
@@ -561,10 +563,34 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             public void done(final IJobChangeEvent event) {
                 if (dependencyJob != null && GroovyScriptExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
                     final List<EObject> deps = dependencyJob.getDependencies(document.get());
-                    GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().clear();
-                    if (deps != null && !deps.isEmpty()) {
-                        GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().addAll(deps);
+                    EList<EObject> referencedElements = GroovyScriptExpressionEditor.this.inputExpression
+                            .getReferencedElements();
+                    if (deps != null) {
+                        mergeList(referencedElements, new ArrayList<>(deps));
                     }
+                }
+            }
+
+            private void mergeList(EList<EObject> referencedElements, List<EObject> deps) {
+                Set<EObject> removedDependencies = new HashSet<>();
+                Set<EObject> alreadyExistDependency = new HashSet<>();
+                for (EObject originalDep : referencedElements) {
+                    boolean removed = true;
+                    for (EObject newDep : deps) {
+                        if (EcoreUtil.equals(originalDep, newDep)) {
+                            removed = false;
+                            alreadyExistDependency.add(newDep);
+                        }
+                    }
+                    if (removed) {
+                        System.out.println(String.format("Removing %s", originalDep));
+                        removedDependencies.add(originalDep);
+                    }
+                }
+                deps.removeAll(alreadyExistDependency);
+                referencedElements.removeAll(removedDependencies);
+                for (EObject newDep : deps) {
+                    referencedElements.add(newDep);
                 }
             }
 
