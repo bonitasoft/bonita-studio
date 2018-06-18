@@ -14,15 +14,14 @@
  */
 package org.bonitasoft.studio.configuration.ui.wizard;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -36,27 +35,16 @@ import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceCo
 import org.bonitasoft.studio.configuration.ui.wizard.page.ApplicationDependenciesConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.ui.wizard.page.ProcessDependenciesConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.ui.wizard.page.RunConfigurationWizardPage;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.command.BasicCommandStack;
-import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -76,8 +64,8 @@ public class ConfigurationWizard extends Wizard {
     private AbstractProcess process;
     private Configuration configurationWorkingCopy;
     private String configurationName;
-    private ComposedAdapterFactory adapterFactory;
     private final ProcessConfigurationRepositoryStore processConfStore;
+    private EMFModelUpdater<Configuration> emfModelUpdater = new EMFModelUpdater();
 
     public ConfigurationWizard() {
         super();
@@ -165,50 +153,17 @@ public class ConfigurationWizard extends Wizard {
             final String id = ModelHelper.getEObjectID(process);
             if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
                 final String fileName = id + ".conf";
-                IRepositoryFileStore file = processConfStore.getChild(fileName);
+                ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
                 if (file == null) {
                     file = processConfStore.createRepositoryFileStore(fileName);
                 }
-                try {
-                    file.save(configuration);
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
+                file.save(configuration);
             } else {
-                EditingDomain editingDomain = TransactionUtil.getEditingDomain(process);
-                boolean dispose = false;
-                if (editingDomain == null) {
-                    dispose = true;
-                    editingDomain = initializeEditingDomain();
-                }
-                final CompoundCommand cc = new CompoundCommand();
-                for (final Configuration conf : process.getConfigurations()) {
-                    if (conf.getName().equals(configuration.getName())) {
-                        cc.append(RemoveCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, conf));
-                        break;
-                    }
-                }
-                cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, EcoreUtil.copy(configuration)));
-                editingDomain.getCommandStack().execute(cc);
-                if (dispose) {
-                    adapterFactory.dispose();
-                    try {
-                        process.eResource().save(Collections.EMPTY_MAP);
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
+                emfModelUpdater.update();
             }
         }
     }
 
-    protected AdapterFactoryEditingDomain initializeEditingDomain() {
-        adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        final BasicCommandStack commandStack = new BasicCommandStack();
-        final AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
-        return editingDomain;
-    }
 
     public AbstractProcess getProcess() {
         return process;
@@ -228,13 +183,10 @@ public class ConfigurationWizard extends Wizard {
                         new ConfigurationSynchronizer(process, configuration).synchronize(monitor);
                     }
                 });
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (final InterruptedException e) {
+            } catch (final InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
-
-            configurationWorkingCopy = EcoreUtil.copy(configuration);
+            configurationWorkingCopy = emfModelUpdater.from(configuration).getWorkingCopy();
         }
     }
 

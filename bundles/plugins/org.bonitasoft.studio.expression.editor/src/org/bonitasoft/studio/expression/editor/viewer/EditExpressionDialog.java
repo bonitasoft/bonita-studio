@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
@@ -121,6 +122,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private ExpressionNameResolver expressionNameResolver;
 
+    private EMFModelUpdater<Expression> expressionUpdater;
+
     @Override
     public void openTray(final DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
         super.openTray(tray);
@@ -139,10 +142,10 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         this.inputExpression = inputExpression;
         if (this.inputExpression == null) {
             this.inputExpression = ExpressionFactory.eINSTANCE.createExpression();
-        }
-        if (this.inputExpression.getType() == null) {
             this.inputExpression.setType(ExpressionConstants.CONSTANT_TYPE);
         }
+        expressionUpdater = new EMFModelUpdater<Expression>().from(this.inputExpression);
+        this.inputExpression = expressionUpdater.getWorkingCopy();
         this.context = context;
         this.domain = domain;
         this.viewerTypeFilters = viewerTypeFilters;
@@ -405,6 +408,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         if (currentExpressionEditor != null) {
             currentExpressionEditor.okPressed();
         }
+        expressionUpdater.update();
         super.okPressed();
     }
 
