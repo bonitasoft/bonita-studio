@@ -16,7 +16,6 @@ package org.bonitasoft.studio.swtbot.framework.application;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
@@ -162,36 +161,37 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotImportOtherDialog importOther() {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        waitForMainShell(bot);
         bot.menu("File").menu("Import").menu("Other...").click();
         return new BotImportOtherDialog(bot);
     }
 
     public BotImportOtherDialog importFromOtherWorkspace() {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        waitForMainShell(bot);
         bot.menu("File").menu("Import").menu("From another Workspace...").click();
         return new BotImportOtherDialog(bot);
     }
 
     public OpenApplicationWizardBot openApplication() {
+        waitForMainShell(bot);
         bot.menu("Development").menu("Application Descriptors").menu("Open...").click();
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public void newApplicationDescriptorFile() {
+        waitForMainShell(bot);
         bot.menu("Development").menu("Application Descriptors").menu("New...").click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
+        waitForMainShell(bot);
         bot.menu("Development").menu("Application Descriptors").menu("Delete...").click();
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
-    @SuppressWarnings("restriction")
     public DefineBdmWizardBot defineBDM() {
+        waitForMainShell(bot);
         bot.menu("Development").menu("Business Data Model").menu("Define...").click();
         bot.waitUntil(
                 Conditions.shellIsActive(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));

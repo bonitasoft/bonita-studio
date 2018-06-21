@@ -19,7 +19,6 @@ import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.ui.IEditorPart;
 import org.junit.Assert;
@@ -38,29 +37,12 @@ public class TestUndoRedoStackLimit {
         SWTBotEditor botEditor = bot.activeEditor();
         int limit = retrieveLimit(botEditor);
         Assert.assertEquals("process diagram editor: Undo/redo stack limit not good", 20, limit);
-
-        /* Open a form diagram editor */
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-
-        botEditor = bot.activeEditor();
-        limit = retrieveLimit(botEditor);
-        Assert.assertEquals("form diagram editor: Undo/redo stack limit not good", 20, limit);
-
-        /* Close the form editor */
-        botEditor.close();
-
-        /* Test the stack limit on the process diagram editor */
-        botEditor = bot.activeEditor();
-        limit = retrieveLimit(botEditor);
-        Assert.assertEquals("Reopened process diagram editor: Undo/redo stack limit not good", 20, limit);
-
     }
 
     private int retrieveLimit(SWTBotEditor botEditor) {
         IEditorPart editor = botEditor.getReference().getEditor(false);
-        IOperationHistory history = (IOperationHistory) editor.getAdapter(IOperationHistory.class);
-        IUndoContext context = (IUndoContext) editor.getAdapter(IUndoContext.class);
+        IOperationHistory history = editor.getAdapter(IOperationHistory.class);
+        IUndoContext context = editor.getAdapter(IUndoContext.class);
 
         if (history != null && context != null) {
             return history.getLimit(context);

@@ -27,8 +27,6 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormC
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormDataTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.ValidatorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ActorTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ApplicationFormTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.AssociatedFileTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ConnectorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ContractTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.DataTabbedPropertyProvider;
@@ -36,9 +34,6 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.Do
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.FormMappingTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.KPITabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.OperationTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowConnectorTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowDataTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.PageflowTransitionTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ParameterTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.SearchIndexTabbedPropertyProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -53,7 +48,6 @@ public class TabbedPropertySelectionProviderRegistry {
     static {
         registry = new HashSet<ITabbedPropertySelectionProvider>();
         registry.add(new ActorTabbedPropertyProvider());
-        registry.add(new AssociatedFileTabbedPropertyProvider());
         registry.add(new ButtonActionTabbedPropertyProvider());
         registry.add(new ConnectorTabbedPropertyProvider());
         registry.add(new ContractTabbedPropertyProvider());
@@ -62,14 +56,9 @@ public class TabbedPropertySelectionProviderRegistry {
         registry.add(new FormActionTabbedPropertyProvider());
         registry.add(new FormConnectorTabbedPropertyProvider());
         registry.add(new FormDataTabbedPropertyProvider());
-        // registry.add(new FormGeneralTabbedPropertyProvider());
         registry.add(new FormMappingTabbedPropertyProvider());
-        registry.add(new ApplicationFormTabbedPropertyProvider());
         registry.add(new KPITabbedPropertyProvider());
         registry.add(new OperationTabbedPropertyProvider());
-        registry.add(new PageflowDataTabbedPropertyProvider());
-        registry.add(new PageflowConnectorTabbedPropertyProvider());
-        registry.add(new PageflowTransitionTabbedPropertyProvider());
         registry.add(new ParameterTabbedPropertyProvider());
         registry.add(new SearchIndexTabbedPropertyProvider());
         registry.add(new ValidatorTabbedPropertyProvider());

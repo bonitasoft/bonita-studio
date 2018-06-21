@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.tests.document;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
@@ -30,16 +29,11 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotAddDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotEditDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotFileStoreSelectDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotRemoveDocumentDialog;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
-import org.bonitasoft.studio.swtbot.framework.draw.BotGefFormDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -294,74 +288,6 @@ public class TestDocument {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
         botAddDocumentDialog.finish();
 
-    }
-
-    @Test
-    public void test_UpdateReturnTypeInLeftOperandOperation_when_refactor_document() throws Exception {
-        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
-                .getDiagramPropertiesPart();
-        BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
-                .selectDocumentsTab();
-
-        final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
-        botAddDocumentDialog.setName("doc1");
-        botAddDocumentDialog.chooseMultipleContent();
-        botAddDocumentDialog.finish();
-
-        // create form with FileWidget
-
-        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        final BotPageflowPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder
-                .selectApplicationTab().selectPageflowTab();
-        final BotAddFormWizardDialog botAddFormWizardDialog = botOperationsPropertySection.addForm();
-
-        if (botAddFormWizardDialog.canFlipToNextPage()) {
-            botAddFormWizardDialog.next();
-        }
-
-        botAddFormWizardDialog.selectProcessDataTab();
-        botAddFormWizardDialog.selectAll();
-        assertEquals("File", botAddFormWizardDialog.getDataWidget("doc1"));
-
-        // check doc11 has a Multiple File widget
-        botAddFormWizardDialog.finish();
-
-        // Change name of the Document
-
-        // Select File widget Doc11
-        BotGefFormDiagramEditor botGef = botProcessDiagramPerspective.activeFormDiagramEditor();
-        botGef.selectWidget("Doc1");
-
-        // select Data Section in General Tab
-        BotDataFormPropertySection dataSection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab()
-                .selectDataTab();
-        Assertions.assertThat(dataSection.getOutputOperation().getLeftOperand()).isEqualTo("doc1");
-
-        // close form editor
-        botGef.closeGefFormDiagramEditor();
-
-        // change name of the document
-        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Pool");
-        botDocumentsPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab()
-                .selectDocumentsTab();
-
-        final BotEditDocumentDialog editDocDialog = botDocumentsPropertySection.editDocument("doc1");
-        editDocDialog.setName("docEdited");
-        editDocDialog.ok();
-
-        // check name has been changed in the Doc1 Widget in the form Data output
-        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        final BotPageflowPropertySection pageFlowPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart()
-                .selectApplicationTab()
-                .selectPageflowTab();
-        pageFlowPropertySection.editForm("Step1");
-
-        botGef = botProcessDiagramPerspective.activeFormDiagramEditor();
-        botGef.selectWidget("Doc1");
-        dataSection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
-        Assertions.assertThat(dataSection.getOutputOperation().getLeftOperand()).isEqualTo("docEdited");
     }
 
 }

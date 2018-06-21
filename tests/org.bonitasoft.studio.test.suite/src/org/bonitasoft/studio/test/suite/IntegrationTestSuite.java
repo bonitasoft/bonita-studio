@@ -17,7 +17,6 @@ package org.bonitasoft.studio.test.suite;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.ProductVersionIT;
-import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestInitialWorkspace;
 import org.bonitasoft.studio.tests.TestPathSize;
@@ -50,15 +49,9 @@ import org.bonitasoft.studio.tests.duplicate.TestDuplicateCommand;
 import org.bonitasoft.studio.tests.engine.TestJavaDoc;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
 import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
-import org.bonitasoft.studio.tests.exporter.TestAutoLogin;
-import org.bonitasoft.studio.tests.exporter.TestBonitaExportModel;
-import org.bonitasoft.studio.tests.exporter.TestFormsExporter;
-import org.bonitasoft.studio.tests.exporter.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowConditionExportImportTest;
-import org.bonitasoft.studio.tests.form.TestCommands;
-import org.bonitasoft.studio.tests.form.TestFileWidgetMigration;
 import org.bonitasoft.studio.tests.groovy.TestFunctionRepository;
 import org.bonitasoft.studio.tests.groovy.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.tests.importer.api.ProcBuilderTests;
@@ -71,10 +64,7 @@ import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
 import org.bonitasoft.studio.tests.migration.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
-import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
-import org.bonitasoft.studio.tests.properties.TestLookAndFeel;
-import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
 import org.bonitasoft.studio.tests.repository.TestAddJar;
 import org.bonitasoft.studio.tests.repository.TestExtensionProject;
 import org.bonitasoft.studio.tests.repository.TestImportExportAndDeleteRepository;
@@ -82,9 +72,6 @@ import org.bonitasoft.studio.tests.repository.TestImportRepository;
 import org.bonitasoft.studio.tests.repository.TestRepositoryLocation;
 import org.bonitasoft.studio.tests.repository.UIDesignerWorkspaceIntegrationIT;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
-import org.bonitasoft.studio.tests.theme.TestCSSModel;
-import org.bonitasoft.studio.tests.theme.TestDirtyState;
-import org.bonitasoft.studio.tests.theme.TestThemeRepository;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.tests.validation.TestTokenDispatcher;
 import org.bonitasoft.studio.tests.validation.TestValidationConstraints;
@@ -111,7 +98,6 @@ import org.junit.runners.Suite;
         TestDocumentRefactoring.class,
         TestConfigurationSynhronizer.class,
         TestImportExportAndDeleteRepository.class,
-        TestFileWidgetMigration.class,
         TestImportExtensionPoint.class,
         ProcBuilderTests.class,
         TestImportXPDL.class,
@@ -123,27 +109,16 @@ import org.junit.runners.Suite;
         TestOperationHistory.class,
         TestDecisionTableToGroovy.class,
         TestSubprocessEventExport.class,
-        TestBonitaExportModel.class,
         TestRepositoryLocation.class,
         TestShowEngineLog.class,
-        TestAutoLogin.class,
         DriverAssociationContributionIT.class,
-        TestBugSave.class,
         TestProcessZoo.class,
         TestProvidedDefinitionAndImplementation.class,
         TestProvidedActorFilterDefinitionAndImplementation.class,
-        TestFormsExporter.class,
-        TestHtmlTemplateGenerator.class,
-        TestCommands.class,
         TestDatabaseConnectorResulset.class,
-        TestAutomaticSwitchPerspective.class,
         TestBOSArchiveImport.class,
-        TestLookAndFeel.class,
         TestGroovyScriptExpressionEditor.class,
         TestExportProcessBar.class,
-        TestThemeRepository.class,
-        TestDirtyState.class,
-        TestCSSModel.class,
         TestDuplicateCommand.class,
         BPMNImportExportTest.class,
         BPMNDataExportImportTest.class,
@@ -156,7 +131,6 @@ import org.junit.runners.Suite;
         MigrationReportPDFExportTest.class,
         TestValidationConstraints.class,
         TestTestConnectorOperation.class,
-        TestRefactorWidgetOperation.class,
         TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
         DocumentMigrationIT.class,

@@ -272,30 +272,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     /**
-     * Create a new Form and save it
-     *
-     * @param bot
-     * @param gmfEditor
-     * @param nameOfStepOnwhichCreateTheForm
-     * @return
-     */
-    public static SWTBotEditor createFormWhenOnAProcessWithStep(final SWTGefBot bot,
-            final SWTBotGefEditor gmfEditor, final String nameOfStepOnwhichCreateTheForm) {
-        final SWTBotGefEditPart part = gmfEditor.getEditPart(nameOfStepOnwhichCreateTheForm);
-        part.click();
-        bot.viewById(VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-        final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        properties.bot().button("Add...").click();
-        bot.waitUntil(Conditions.shellIsActive("Add form..."));
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        final SWTBotEditor activeEditor = bot.activeEditor();
-        activeEditor.save();
-        return activeEditor;
-    }
-
-    /**
      * select an event on diagram with the given name
      *
      * @param bot

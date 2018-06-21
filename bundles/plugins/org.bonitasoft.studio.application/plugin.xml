@@ -483,26 +483,10 @@
       </view>
       <view
             category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.process.BonitaApplicationPropertiesView"
-            icon="icons/menuIcons/form.png"
-            id="org.bonitasoft.studio.views.properties.application"
-            name="%Application"
-            restorable="true">
-      </view>
-      <view
-            category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.application.views.process.BonitaGeneralProcessPropertiesView"
             icon="icons/details.png"
             id="org.bonitasoft.studio.views.properties.process.general"
             name="%General_process"
-            restorable="true">
-      </view>
-      <view
-            category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.form.BonitaGeneralFormPropertiesView"
-            icon="icons/details.png"
-            id="org.bonitasoft.studio.views.properties.form.general"
-            name="%General_form"
             restorable="true">
       </view>
       <view

@@ -154,7 +154,6 @@ public class TestWebPurchase implements SWTBotConstants {
         options.put("Approval", choices);
         bot.button(Messages.AddSimple).click();
         SWTBotTestUtil.addListOfOptionData(bot, "decision", "Text", options, false, "Approve");
-        createSalesReviewForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.configureSequenceFlow(bot, "customerOrder", "Web Purchase", false, "true",
@@ -171,31 +170,6 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Pool variables");
-    }
-
-    private void createSalesReviewForm(final SWTBotGefEditor gmfEditor) {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-        final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        properties.bot().button("Add...").click();
-        bot.waitUntil(Conditions.shellIsActive("Add form..."));
-        bot.tabItem(Messages.processData).activate();
-        bot.checkBox("Select all").select();
-        final SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
-        bot.tree().select("customerPhone1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("customerEmail1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("customerName1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("products1");
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Options");
-        bot.checkBox(2).select();
     }
 
     private void stepMoreInfo(final SWTBotGefEditor gmfEditor) {
@@ -215,7 +189,6 @@ public class TestWebPurchase implements SWTBotConstants {
         selectDataVariablesTabbedPropertyView();
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "comment", "Text", false, "add a comment");
-        createMoreInfoForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.configureSequenceFlow(bot, "add a comment", "Web Purchase", false, "decision==\"More info\"",
@@ -223,31 +196,6 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.addSequenceFlow(bot, gmfEditor, "More Info", "Gateway1", PositionConstants.SOUTH);
         SWTBotTestUtil.configureSequenceFlow(bot, "sequenceFlow2", "Web Purchase", false, "true",
                 ExpressionConstants.SCRIPT_TYPE);
-    }
-
-    private void createMoreInfoForm(final SWTBotGefEditor gmfEditor) {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-        final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        properties.bot().button("Add...").click();
-        bot.waitUntil(Conditions.shellIsActive("Add form..."));
-        bot.tabItem(Messages.processData).activate();
-        bot.checkBox("Select all").select();
-        final SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
-        bot.tree().select("customerPhone1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("customerEmail1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("customerName1");
-        bot.comboBoxWithLabel("Field type").setSelection("Text");
-        bot.tree().select("products1");
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Options");
-        bot.checkBox(2).select();
     }
 
     private void stepPay(final SWTBotGefEditor gmfEditor) {
@@ -274,47 +222,10 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotTestUtil.addNewData(bot, "creditCardNumber", "Text", false, "add your credit card number");
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "expirationDate", "Date", false, "Now");
-        createPayForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.configureSequenceFlow(bot, "if approved", "Web Purchase", false, "decision==\"Approve\"",
                 ExpressionConstants.SCRIPT_TYPE);
-    }
-
-    private void createPayForm(final SWTBotGefEditor gmfEditor) {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-        final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        properties.bot().button("Add...").click();
-        bot.waitUntil(Conditions.shellIsActive("Add form..."));
-        if (SWTBotTestUtil.testingBosSp()) {
-            final SWTBotButton nextButton = bot.button(IDialogConstants.NEXT_LABEL);
-            bot.waitUntil(Conditions.widgetIsEnabled(nextButton));
-            nextButton.click();
-        }
-        bot.tabItem(Messages.processData).activate();
-        bot.tree().getAllItems()[0].check();
-        bot.tree().getAllItems()[1].check();
-        bot.tree().getAllItems()[2].check();
-        final SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
-        final SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-        formEditor.activateTool("Message");
-        formEditor.click(500, 90);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-        bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON).click();
-        bot.table().select("Script");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
-        bot.textWithLabel("Name").setText("thankMessage");
-        bot.sleep(1000);
-        bot.styledText().setText(
-                "\"Thank you, \" + customerName +\", for your order of a \" +products + \".  Please enter your credit card information "
-                        + "and select a delivery method.\"");
-        bot.button(IDialogConstants.OK_LABEL).click();
     }
 
     private void stepReject(final SWTBotGefEditor gmfEditor) {
