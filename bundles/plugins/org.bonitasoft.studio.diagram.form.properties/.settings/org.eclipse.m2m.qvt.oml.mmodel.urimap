@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uriMap:MappingContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:uriMap="http:///www.eclipse.org/m2m/qvt/oml/MModelUriMap/1.0.0">
-  <mapping sourceURI="http://www.w3.org/1999/xhtml" targetURI="platform:/resource/org.bonitasoft.studio.exporter/model/xhtml.ecore"/>
-  <mapping sourceURI="http://www.bonitasoft.org/ns/studio/form" targetURI="platform:/resource/org.bonitasoft.studio-models/form.ecore"/>
-  <mapping sourceURI="http://www.bonitasoft.org/ns/studio/process" targetURI="platform:/resource/org.bonitasoft.studio-models/process.ecore"/>
-</uriMap:MappingContainer>

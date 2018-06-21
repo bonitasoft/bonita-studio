@@ -10,7 +10,6 @@ package org.bonitasoft.studio.swtbot.framework.diagram;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.BotFormDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefFormDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
@@ -53,10 +52,6 @@ public class BotProcessDiagramPerspective extends BotBase {
         view.show();
         view.setFocus();
         return new BotTreeView(bot);
-    }
-
-    public BotFormDiagramPropertiesViewFolder getFormPropertiesPart() {
-        return new BotFormDiagramPropertiesViewFolder(bot);
     }
 
     public BotGefFormDiagramEditor activeFormDiagramEditor() {

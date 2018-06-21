@@ -32,14 +32,12 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
-import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -65,7 +63,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.handlers.SaveHandler;
 import org.eclipse.ui.progress.IProgressService;
@@ -111,7 +108,6 @@ public class SaveCommandHandler extends SaveHandler {
     }
 
     protected void doSaveDiagram(final DiagramEditor editorPart) {
-        String formName = null;
         boolean changed = false;
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final MainProcess proc = findProc(editorPart);
@@ -122,12 +118,6 @@ public class SaveCommandHandler extends SaveHandler {
             editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
             final IEditorInput editorInput = editorPart.getEditorInput();
             final ResourceSet resourceSet = proc.eResource().getResourceSet();
-            final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if (editor instanceof FormDiagramEditor) {
-                editorsWithSameResourceSet.add((DiagramDocumentEditor) editor);
-                formName = ((FormDiagramEditor) editor).getPartName();
-            }
-
             maintainListOfEditorsWithSameResourceSet(editorsWithSameResourceSet, editorReferences, editorInput, resourceSet);
             oldArtifact = diagramStore.getChild(NamingUtils.toDiagramFilename(getOldProcess(proc)));
             changed = true;
@@ -144,11 +134,7 @@ public class SaveCommandHandler extends SaveHandler {
                     diagramDocumentEditor.close(true);
                 }
                 oldArtifact.rename(NamingUtils.toDiagramFilename(proc));
-                final IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
-
-                final List<EObject> forms = openDiagramsForFormsId(oldArtifact, formIds);
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
-                openFormDiagramWithNameIfInList(formName, forms);
+                oldArtifact.open();
             } else {
                 final EObject root = editorPart.getDiagramEditPart().resolveSemanticElement();
                 final Resource res = root.eResource();
@@ -168,31 +154,6 @@ public class SaveCommandHandler extends SaveHandler {
         }
     }
 
-    private void openFormDiagramWithNameIfInList(final String formName,
-            final List<EObject> forms) {
-        if (formName != null) {
-            for (final EObject form : forms) {
-                if (form instanceof Form && ((Form) form).getName().equals(formName)) {
-                    FormsUtils.openDiagram((Form) form, null);
-                    break;
-                }
-            }
-        }
-    }
-
-    private List<EObject> openDiagramsForFormsId(final DiagramFileStore oldArtifact,
-            final Set<String> formIds) {
-        final MainProcess diagram = oldArtifact.getContent();
-        final List<EObject> forms = ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
-        for (final EObject form : forms) {
-            final String id = ModelHelper.getEObjectID(form);
-            if (formIds.contains(id)) {
-                //TODO: find a way to just open the diagram without bringing them to top and make the UI blinking
-                FormsUtils.openDiagram((Form) form, null);
-            }
-        }
-        return forms;
-    }
 
     private MainProcess findProc(final IEditorPart editorPart) {
         MainProcess proc = null;
