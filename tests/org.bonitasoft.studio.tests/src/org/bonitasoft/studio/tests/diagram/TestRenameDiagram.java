@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.tests.diagram;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,13 +22,9 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
-import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -149,29 +144,6 @@ public class TestRenameDiagram {
 
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
-    }
-
-    @Test
-    public void testFormDiagramReopenedAfterRenaming() {
-        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        final SWTBotEditor diagramEditor = bot.activeEditor();
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm()
-                .finish();
-        diagramEditor.show();
-        diagramEditor.setFocus();
-        botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();
-
-        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("newName");
-
-        bot.waitUntil(new AssertionCondition() {
-
-            @Override
-            protected void makeAssert() throws Exception {
-                assertThat(((SWTWorkbenchBot) bot).editors()).hasSize(2);
-            }
-        });
     }
 
 }

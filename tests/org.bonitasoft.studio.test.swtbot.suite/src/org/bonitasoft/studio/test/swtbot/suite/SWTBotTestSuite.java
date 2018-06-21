@@ -26,7 +26,6 @@ import org.bonitasoft.studio.tests.actors.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
 import org.bonitasoft.studio.tests.bar.BarExporterTest;
 import org.bonitasoft.studio.tests.bar.TestMenus;
-import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
 import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
@@ -50,13 +49,9 @@ import org.bonitasoft.studio.tests.diagram.DeleteCommandTest;
 import org.bonitasoft.studio.tests.diagram.DiagramTests;
 import org.bonitasoft.studio.tests.diagram.DuplicateCommandTest;
 import org.bonitasoft.studio.tests.diagram.ExtractAsSubprocessTest;
-import org.bonitasoft.studio.tests.diagram.FormsDiagramTests;
 import org.bonitasoft.studio.tests.diagram.NewRunTest;
-import org.bonitasoft.studio.tests.diagram.SharedEditingDomainTests;
 import org.bonitasoft.studio.tests.diagram.TestBoundariesCreation;
-import org.bonitasoft.studio.tests.diagram.TestConvertToMessage;
 import org.bonitasoft.studio.tests.diagram.TestDeleteDiagrams;
-import org.bonitasoft.studio.tests.diagram.TestDeleteTaskWithForm;
 import org.bonitasoft.studio.tests.diagram.TestMoveBetweenLane;
 import org.bonitasoft.studio.tests.diagram.TestOpenDiagram;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
@@ -76,23 +71,16 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
-import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.migration.MigrationReporTest;
-import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
-import org.bonitasoft.studio.tests.properties.TestResources;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
-import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
-import org.bonitasoft.studio.tests.validator.TestAddValidatorToProcessAndRun;
-import org.bonitasoft.studio.tests.validator.TestCreateValidatorWizard;
-import org.bonitasoft.studio.tests.validator.TestFormValidatorIT;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -103,7 +91,6 @@ import org.junit.runners.Suite;
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
-        TestBugsSWTBot.class,
         TestRenameDiagram.class,
         TestDatabaseConnectorOutputMode.class,
         TestPatternExpressionViewer.class,
@@ -126,12 +113,8 @@ import org.junit.runners.Suite;
         TestDecisionTable.class,
         TestThrowCatchMessage.class,
         TestWebPurchase.class,
-        TestAddValidatorToProcessAndRun.class,
-        FormsDiagramTests.class,
-        PageTemplateEditionIT.class,
         TestUndoRedoStackLimit.class,
         TestOpenDiagram.class,
-        TestDeleteTaskWithForm.class,
         TestDebugFeature.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
         ConnectorDefinitionTranslationsTest.class,
@@ -139,17 +122,12 @@ import org.junit.runners.Suite;
         CopyPasteTests.class,
         DeleteCommandTest.class,
         NewRunTest.class,
-        DeleteWidgetWithContextMenuIT.class,
         DataWizardIT.class,
         SWTBOTTestConditions.class,
-        TestConvertToMessage.class,
         ExtractAsSubprocessTest.class,
-        SharedEditingDomainTests.class,
         TestBoundariesCreation.class,
-        TestResources.class,
         OpenNameAndVersionForDiagramDialogTest.class,
         TestDuplicate.class,
-        TestCreateValidatorWizard.class,
         TestLifeCycleWidget.class,
         TestConnectorExpression.class,
         MultiInstantiationIT.class,
@@ -165,8 +143,6 @@ import org.junit.runners.Suite;
         ConnectorEditedInAsingleCommandIT.class,
         ProcessDependenciesConfigurationIT.class,
         ContractIT.class,
-        RefactorWidgetIT.class,
-        TestFormValidatorIT.class,
         TestOrganizationPassword.class,
         BarImportReportIT.class,
         CallActivityMappingIT.class,

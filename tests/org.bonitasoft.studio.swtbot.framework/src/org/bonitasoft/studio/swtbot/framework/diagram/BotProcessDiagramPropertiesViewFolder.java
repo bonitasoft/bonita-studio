@@ -10,7 +10,6 @@ package org.bonitasoft.studio.swtbot.framework.diagram;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.BotApplicationDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.data.BotDataDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotGeneralDiagramPropertiesView;
@@ -50,17 +49,6 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
         final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_EXECUTION);
         view.show();
         return new BotExecutionDiagramPropertiesView(bot, view);
-    }
-
-    /**
-     * Select the application tab.
-     *
-     * @return
-     */
-    public BotApplicationDiagramPropertiesView selectApplicationTab() {
-        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        view.show();
-        return new BotApplicationDiagramPropertiesView(bot, view);
     }
 
     public void selectAppearanceTab() {

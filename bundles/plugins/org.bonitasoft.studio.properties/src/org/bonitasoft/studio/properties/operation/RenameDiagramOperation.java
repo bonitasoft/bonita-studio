@@ -31,18 +31,15 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -103,18 +100,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         fStore.save(null);
         IWorkbenchPart partToActivate = fStore.open();
-        final MainProcess mainProcess = fStore.getContent();
-        for (final Form form : forms) {
-            final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
-            for (final Form f : allItemsOfTypeForms) {
-                if (EcoreUtil.equals(form, f)) {
-                    final DiagramEditor ed = FormsUtils.openDiagram(f, TransactionUtil.getEditingDomain(mainProcess));
-                    if (partName.equals(ed.getTitle())) {
-                        partToActivate = ed;
-                    }
-                }
-            }
-        }
         partToActivate.getSite().getPage().activate(partToActivate);
     }
 

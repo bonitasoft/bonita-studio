@@ -15,15 +15,12 @@
 package org.bonitasoft.studio.tests.diagram;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
@@ -190,33 +187,4 @@ public class CopyPasteTests {
         }
     }
 
-    @Test
-    public void testCopyPasteWithForms() throws Exception {
-        // Test bug 3103
-        SWTBotTestUtil.createNewDiagram(bot);
-        final String title = bot.activeEditor().getTitle();
-        final SWTBotGefEditor editor1 = bot.gefEditor(title);
-        final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
-        final SWTBotGefEditPart poolPart = stepPart.parent().parent();
-        SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, editor1, "Step1");
-        editor1.show();
-        editor1.select(stepPart);
-
-        editor1.select(poolPart);
-        editor1.select(stepPart);
-        editor1.clickContextMenu("Copy");
-        editor1.select(poolPart);
-        editor1.clickContextMenu("Paste");
-
-        final SWTBotGefEditPart copyStepPart = editor1.getEditPart("Copy of Step1").parent();
-        editor1.select(copyStepPart);
-
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-
-        bot.treeWithId(SWTBotConstants.APPLICATION_SECTION_FORMS_SELECTION_TREE).getTreeItem("Step1").select();
-        bot.button("Edit").click();
-
-        assertTrue("Not form editor open", bot.activeEditor().getReference().getEditor(false) instanceof FormDiagramEditor);
-    }
 }

@@ -77,35 +77,6 @@
                label="%tab.throwMessage.label">
          </propertyTab>
          <propertyTab
-               category="domain"
-               id="tab.forms.entry"
-               label="%tab.forms.entry">
-         </propertyTab>
-         <propertyTab
-               afterTab="tab.forms.entry"
-               category="domain"
-               id="tab.forms.overview"
-               label="%tab.forms.overview">
-         </propertyTab>
-         <propertyTab
-               afterTab="tab.forms.overview"
-               category="domain"
-               id="tab.resource"
-               label="%tab.application.resource">
-         </propertyTab>
-         <propertyTab
-               afterTab="tab.resource"
-               category="domain"
-               id="tab.lookandfeel"
-               label="%tab.looknfeel">
-         </propertyTab>
-         <propertyTab
-               afterTab="tab.lookandfeel"
-               category="domain"
-               id="tab.confirmation"
-               label="%tab.forms.confirmation">
-         </propertyTab>
-         <propertyTab
                afterTab="tab.visibility"
                category="domain"
                id="tab.color.font"
@@ -241,30 +212,6 @@
               id="UserXPSection"
               tab="tab.userxp"
               viewID="org.bonitasoft.studio.views.properties.process.general">
-        </propertySection>
-        <propertySection
-              class="org.bonitasoft.studio.properties.sections.forms.ConfirmationPropertySection"
-              enablesFor="1"
-              filter="org.bonitasoft.studio.properties.filters.ConfirmationMessageFilter"
-              id="section.confirmation"
-              tab="tab.confirmation"
-              viewID="org.bonitasoft.studio.views.properties.application">
-        </propertySection>
-        <propertySection
-              class="org.bonitasoft.studio.properties.sections.resources.ResourcePropertySection"
-              enablesFor="1"
-              filter="org.bonitasoft.studio.properties.filters.LookNFeelFilter"
-              id="section.resource"
-              tab="tab.resource"
-              viewID="org.bonitasoft.studio.views.properties.application">
-        </propertySection>
-        <propertySection
-              class="org.bonitasoft.studio.properties.sections.lookandfeel.LookAndFeelPropertySection"
-              enablesFor="1"
-              filter="org.bonitasoft.studio.properties.filters.LookNFeelFilter"
-              id="section.lookandfeel"
-              tab="tab.lookandfeel"
-              viewID="org.bonitasoft.studio.views.properties.application">
         </propertySection>
         <propertySection
               class="org.bonitasoft.studio.properties.sections.appearance.ColorAndFontPropertySection"

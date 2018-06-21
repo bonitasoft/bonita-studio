@@ -36,8 +36,6 @@ public interface SWTBotConstants {
     public static final String VIEWS_PROPERTIES_PROCESS_DATA = "org.bonitasoft.studio.views.properties.process.data";
     public static final String VIEWS_PROPERTIES_PROCESS_EXECUTION = "org.bonitasoft.studio.views.properties.process.execution";
     public static final String VIEWS_PROPERTIES_SIMULATION = "org.bonitasoft.studio.views.properties.simulation";
-    public static final String VIEWS_PROPERTIES_APPLICATION = "org.bonitasoft.studio.views.properties.application";
-    public static final String VIEWS_PROPERTIES_FORM_GENERAL = "org.bonitasoft.studio.views.properties.form.general";
     public static final String VIEWS_PROPERTIES_APPEARANCE = "org.bonitasoft.studio.views.properties.appearance";
     public static final String VIEWS_PROPERTIES_VALIDATION_STATUS = "org.bonitasoft.studio.validation.view";
     public static final String VIEWS_PROPERTIES_PREVIEW = "org.bonitasoft.studio.views.properties.form.preview";

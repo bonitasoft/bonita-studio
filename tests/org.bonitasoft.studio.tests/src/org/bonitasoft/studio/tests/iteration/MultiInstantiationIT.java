@@ -35,13 +35,8 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.BotApplicationDiagramPropertiesView;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
-import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotDataBasedStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotMultiInstanceTypeStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotNumberBasedStackPanel;
@@ -214,42 +209,6 @@ public class MultiInstantiationIT implements SWTBotConstants {
         addDataBot.finish();
         drawDiagram.selectElement("Step1");
 
-        BotApplicationDiagramPropertiesView selectApplicationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()
-                .selectApplicationTab();
-        drawDiagram.selectElement("Step1");
-        BotPageflowPropertySection botPageflowPropertySection = selectApplicationTab.selectPageflowTab();
-        final BotAddFormWizardDialog botDialog = botPageflowPropertySection.addForm();
-        if (botDialog.canFlipToNextPage()) {
-            botDialog.next();
-        }
-        botDialog.selectProcessDataTab().selectAll();
-        botDialog.finish();
-
-        botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets Available");
-
-        final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
-                .selectGeneralTab().selectGeneralTab();
-        botGeneralPropertySection.setFieldType("Message");
-
-        final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
-                .selectGeneralTab().selectDataTab();
-        botDataPropertySection.editInitialValue().selectScriptTab().setName("nbTicketsAvailable")
-                .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"")
-                .setReturnType(String.class.getName()).ok();
-
-        botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets");
-        botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
-                .setDisplayName("Nbr de Tickets à reserver");
-
-        final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart()
-                .selectGeneralTab().selectDataTab();
-        dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
-        dataPropertySection.selectOutputVariable("nbTickets", Integer.class.getName());
-        dataPropertySection.getOutputOperation().editRightOperand().selectScriptTab().setName("nbTickets")
-                .setScriptContent("Integer.valueOf(field_nbTickets1)")
-                .setReturnType(Integer.class.getName()).ok();
-
-        // Save the form
         bot.saveAllEditors();
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());
