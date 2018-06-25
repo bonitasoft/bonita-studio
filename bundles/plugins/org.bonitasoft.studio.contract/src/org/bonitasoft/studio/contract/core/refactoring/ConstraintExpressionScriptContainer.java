@@ -29,7 +29,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public class ConstraintExpressionScriptContainer extends ScriptContainer<ContractConstraint> {
 
@@ -52,7 +52,8 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateScript(java.util.List, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateScript(java.util.List,
+     * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void updateScript(final List<ReferenceDiff> referenceDiffs, final IProgressMonitor monitor)
@@ -69,7 +70,7 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#updateDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand updateDependencies(final EditingDomain editingDomain,
+    public CompoundCommand updateDependencies(final TransactionalEditingDomain editingDomain,
             final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final ContractConstraint constraint = getModelElement();
@@ -94,7 +95,7 @@ public class ConstraintExpressionScriptContainer extends ScriptContainer<Contrac
      * @see org.bonitasoft.studio.refactoring.core.groovy.ScriptContainer#removeDependencies(java.util.List)
      */
     @Override
-    public CompoundCommand removeDependencies(final EditingDomain editingDomain,
+    public CompoundCommand removeDependencies(final TransactionalEditingDomain editingDomain,
             final List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor) {
         final CompoundCommand compoundCommand = new CompoundCommand();
         final ContractConstraint constraint = getModelElement();

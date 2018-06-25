@@ -43,7 +43,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +60,7 @@ public class RefactorContractInputOperationTest {
     @Mock
     private IScriptRefactoringOperationFactory scriptRefactorOperationFactory;
     @Mock
-    private EditingDomain domain;
+    private TransactionalEditingDomain domain;
 
     @Test
     public void should_update_contract_input_reference_in_contract_input_expressions() throws Exception {

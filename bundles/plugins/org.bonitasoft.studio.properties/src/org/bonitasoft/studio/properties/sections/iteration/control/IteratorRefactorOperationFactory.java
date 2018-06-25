@@ -28,7 +28,7 @@ import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public class IteratorRefactorOperationFactory implements IRefactorOperationFactory {
 
@@ -39,7 +39,7 @@ public class IteratorRefactorOperationFactory implements IRefactorOperationFacto
      */
     @Override
     public RefactorDataOperation createRefactorOperation(
-            final EditingDomain domain, final EObject item, final Object newValue) {
+            final TransactionalEditingDomain domain, final EObject item, final Object newValue) {
         checkArgument(item instanceof Expression);
         checkArgument(newValue instanceof String);
         final MultiInstantiable parentFlowElement = ModelHelper.getFirstContainerOfType(item, MultiInstantiable.class);
