@@ -365,7 +365,8 @@ public class ConnectorWizard extends ExtensibleWizard implements
     protected IWizardPage getNameAndDescriptionPage() {
         return useEvents ? new SelectEventConnectorNameAndDescWizardPage(container,
                 connectorWorkingCopy, originalConnector,
-                featureToCheckForUniqueID) : new SelectNameAndDescWizardPage(container,
+                featureToCheckForUniqueID)
+                : new SelectNameAndDescWizardPage(container,
                         connectorWorkingCopy, originalConnector,
                         featureToCheckForUniqueID);
     }
