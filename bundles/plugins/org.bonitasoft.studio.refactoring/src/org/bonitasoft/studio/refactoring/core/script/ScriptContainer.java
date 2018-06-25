@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 import com.google.common.base.Objects;
 
@@ -79,10 +80,10 @@ public abstract class ScriptContainer<T extends EObject> {
 
     public abstract String getName();
 
-    public abstract CompoundCommand updateDependencies(final EditingDomain editingDomain,
+    public abstract CompoundCommand updateDependencies(final TransactionalEditingDomain editingDomain,
             List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
 
-    public abstract CompoundCommand removeDependencies(final EditingDomain editingDomain,
+    public abstract CompoundCommand removeDependencies(final TransactionalEditingDomain editingDomain,
             List<? extends RefactorPair<? extends EObject, ? extends EObject>> pairsToRefactor);
 
     protected boolean scriptHasChanged() {

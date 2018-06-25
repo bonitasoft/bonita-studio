@@ -79,7 +79,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                             pairToRefactor.getNewValue(), index));
                 } else {
                     if (updater != null) {
-                        updater.update();
+                        compoundCommand.append(updater.createUpdateCommand(getEditingDomain()));
                     } else {
                         for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass()
                                 .getEAllStructuralFeatures()) {
@@ -102,14 +102,14 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
         return compoundCommand;
     }
 
-    private void updateDataReferenceInExpressions(final CompoundCommand finalCommand, boolean updateScriptExpressions) {
+    private void updateDataReferenceInExpressions(CompoundCommand compoundCommand, boolean updateScriptExpressions) {
         final List<Expression> expressions = ModelHelper.getAllItemsOfType(dataContainer,
                 ExpressionPackage.Literals.EXPRESSION);
         for (final Expression exp : expressions) {
             if (updateScriptExpressions || notASciptExpression(exp)) {
                 for (final EObject dependency : exp.getReferencedElements()) {
                     if (dependency instanceof Data) {
-                        updateDataReferenceInExpressions(finalCommand, exp, dependency);
+                        updateDataReferenceInExpressions(compoundCommand, exp, dependency);
                     }
                 }
             }
@@ -127,16 +127,14 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 && !ExpressionConstants.CONDITION_TYPE.equals(type);
     }
 
-    private void updateDataReferenceInExpressions(final CompoundCommand finalCommand, final Expression exp,
+    private void updateDataReferenceInExpressions(CompoundCommand compoundCommand, final Expression exp,
             final EObject oldDependency) {
         for (final DataRefactorPair pairToRefactor : pairsToRefactor) {
             if (((Data) oldDependency).getName().equals(pairToRefactor.getOldValue().getName())
                     && !isReturnFixedOnExpressionWithUpdatedType(pairToRefactor, exp)) {
-                finalCommand.append(RemoveCommand.create(getEditingDomain(), exp,
-                        ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, oldDependency));
-                final EObject newDependency = ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue());
-                finalCommand.append(AddCommand.create(getEditingDomain(), exp,
-                        ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, newDependency));
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<EObject>().from(oldDependency);
+                updater.editWorkingCopy(pairToRefactor.getNewValue());
+                compoundCommand.append(updater.createUpdateCommand(getEditingDomain()));
             }
         }
     }

@@ -17,12 +17,17 @@ package org.bonitasoft.studio.tests.data;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -39,17 +44,19 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
-import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,6 +71,7 @@ public class DataRefactorIT {
     private RefactorDataOperation refactorDataOperation;
     private Pool process;
     private TransactionalEditingDomain editingDomain;
+    private DiagramFileStore newDiagram;
 
     @Test
     public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() {
@@ -74,9 +82,10 @@ public class DataRefactorIT {
         final Activity activity = ProcessFactory.eINSTANCE.createActivity();
         activity.setCollectionDataToMultiInstantiate(processData);
         activity.setListDataContainingOutputResults(processData);
-        process.getElements().add(activity);
-
-        processData.setName(newDataName);
+        editingDomain.getCommandStack()
+                .execute(AddCommand.create(editingDomain, process, ProcessPackage.Literals.CONTAINER__ELEMENTS, activity));
+        editingDomain.getCommandStack()
+                .execute(SetCommand.create(editingDomain, processData, ProcessPackage.Literals.ELEMENT__NAME, newDataName));
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
@@ -94,12 +103,16 @@ public class DataRefactorIT {
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
         // Data referenced in multi-instanciation
-        final Activity activity = (Activity) process.getElements().get(0);
-        activity.setIteratorExpression(ExpressionHelper.createVariableExpression(localData));
-        activity.setOutputData(localData);
-        process.getElements().add(activity);
+        final Activity activity = getActivity(process);
+        editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
 
-        localData.setName(newDataName);
+            @Override
+            protected void doExecute() {
+                activity.setIteratorExpression(ExpressionHelper.createVariableExpression(localData));
+                activity.setOutputData(localData);
+                localData.setName(newDataName);
+            }
+        });
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
@@ -113,10 +126,10 @@ public class DataRefactorIT {
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
         // Data referenced in expression
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = getActivity(process);
         final Expression variableExpression = ExpressionHelper.createVariableExpression(localData);
-        activity.setCardinalityExpression(variableExpression);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION, variableExpression));
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
@@ -133,7 +146,7 @@ public class DataRefactorIT {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = getActivity(process);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -152,8 +165,8 @@ public class DataRefactorIT {
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         operationWithScriptUsingData.setRightOperand(scriptUsingData);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
 
         final String initialDataName = processData.getName();
 
@@ -199,7 +212,9 @@ public class DataRefactorIT {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
+                .getAllItemsOfType(process, Activity.class)
+                .get(0);
         final Expression scriptUsingData = createGroovyScriptConnectortWithDataReferenced(activity);
 
         final String initialDataName = processData.getName();
@@ -242,7 +257,8 @@ public class DataRefactorIT {
         groovyScriptConnectorConfiguration.getParameters().add(connectorParameter);
         groovyScriptConnector.setConfiguration(groovyScriptConnectorConfiguration);
 
-        activity.getConnectors().add(groovyScriptConnector);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS, groovyScriptConnector));
         return scriptUsingData;
     }
 
@@ -273,7 +289,7 @@ public class DataRefactorIT {
     public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = getActivity(process);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -292,8 +308,8 @@ public class DataRefactorIT {
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         operationWithScriptUsingData.setRightOperand(scriptUsingData);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 1, process.getData().size());
@@ -304,11 +320,17 @@ public class DataRefactorIT {
         assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
     }
 
+    protected Activity getActivity(final AbstractProcess process) {
+        return (Activity) new ModelSearch(Collections::emptyList)
+                .getAllItemsOfType(process, Activity.class)
+                .get(0);
+    }
+
     @Test
     public void testDeleteSeveralDataWithReferenceInScript() throws InvocationTargetException, InterruptedException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = getActivity(process);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -321,8 +343,8 @@ public class DataRefactorIT {
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         operationWithScriptUsingData.setRightOperand(scriptUsingData);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
 
         refactorDataOperation.addItemToRefactor(null, processData2);
 
@@ -340,7 +362,9 @@ public class DataRefactorIT {
     public void testDeleteDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
+                .getAllItemsOfType(process, Activity.class)
+                .get(0);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -359,8 +383,8 @@ public class DataRefactorIT {
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         operationWithScriptUsingData.setRightOperand(scriptUsingData);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 1, process.getData().size());
@@ -380,7 +404,9 @@ public class DataRefactorIT {
             throws InvocationTargetException, InterruptedException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
+                .getAllItemsOfType(process, Activity.class)
+                .get(0);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -400,8 +426,8 @@ public class DataRefactorIT {
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         operationWithScriptUsingData.setRightOperand(scriptUsingData);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
 
         refactorDataOperation.addItemToRefactor(null, processData2);
 
@@ -444,7 +470,7 @@ public class DataRefactorIT {
     }
 
     private Expression addOperationOnFirstActivity(final AbstractProcess process, final Data data) {
-        final Activity activity = (Activity) process.getElements().get(0);
+        final Activity activity = getActivity(process);
         final Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
         assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
@@ -456,8 +482,8 @@ public class DataRefactorIT {
         variableExpression.getReferencedElements().add(EcoreUtil.copy(data));
         variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(data));
         operationWithScriptUsingData.setLeftOperand(variableExpression);
-        activity.getOperations().add(operationWithScriptUsingData);
-        process.getElements().add(activity);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, activity,
+                ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operationWithScriptUsingData));
         return variableExpression;
     }
 
@@ -528,8 +554,8 @@ public class DataRefactorIT {
         connectorParameter.setExpression(patternExpr);
         groovyScriptConnectorConfiguration.getParameters().add(connectorParameter);
         mailConnector.setConfiguration(groovyScriptConnectorConfiguration);
-
-        process.getConnectors().add(mailConnector);
+        editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, process,
+                ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS, mailConnector));
         return patternExpr;
     }
 
@@ -567,25 +593,21 @@ public class DataRefactorIT {
         conditionExpression.setName("conditionExpression");
         conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
         sequenceFlow.setCondition(conditionExpression);
-        process.getConnections().add(sequenceFlow);
+        editingDomain.getCommandStack().execute(
+                new AddCommand(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONNECTIONS, sequenceFlow));
         return conditionExpression;
     }
 
-    private TransactionalEditingDomain createEditingDomain() {
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
-                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
-
-        // command stack that will notify this editor as commands are executed
-        final TransactionalCommandStackImpl commandStack = new TransactionalCommandStackImpl();
-
-        // Create the editing domain with our adapterFactory and command stack.
-        return new TransactionalEditingDomainImpl(adapterFactory, commandStack);
-    }
 
     @Before
     public void setUp() throws Exception {
+        createProcessWithData();
+    }
+
+    @After
+    public void tearDown() throws Exception {
         process = null;
+        newDiagram.delete();
         createProcessWithData();
     }
 
@@ -595,30 +617,34 @@ public class DataRefactorIT {
 
     private AbstractProcess createProcessWithData() {
         if (process == null) {
-            final MainProcess mainProcess = ProcessFactory.eINSTANCE.createMainProcess();
-            ModelHelper.addDataTypes(mainProcess);
-            process = ProcessFactory.eINSTANCE.createPool();
-            mainProcess.getElements().add(process);
-
+            newDiagram = new NewDiagramCommandHandler().newDiagram();
+            editingDomain = TransactionUtil.getEditingDomain(newDiagram.getEMFResource());
+            final MainProcess mainProcess = newDiagram.getContent();
+            process = (Pool) mainProcess.getElements().get(0);
             processData = ProcessFactory.eINSTANCE.createData();
             processData.setDatasourceId("BOS");
             processData.setName("globalData");
             processData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
-            process.getData().add(processData);
+            editingDomain.getCommandStack().execute(
+                    AddCommand.create(editingDomain, process, ProcessPackage.Literals.DATA_AWARE__DATA, processData));
 
             processData2 = ProcessFactory.eINSTANCE.createData();
             processData2.setDatasourceId("BOS");
             processData2.setName("globalData2");
             processData2.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
-            process.getData().add(processData2);
+            editingDomain.getCommandStack().execute(
+                    AddCommand.create(editingDomain, process, ProcessPackage.Literals.DATA_AWARE__DATA, processData2));
 
-            final Activity activity = ProcessFactory.eINSTANCE.createActivity();
+            final Activity activity = new ModelSearch(Collections::emptyList).getAllItemsOfType(mainProcess, Activity.class)
+                    .get(0);
             localData = ProcessFactory.eINSTANCE.createData();
             localData.setDatasourceId("BOS");
             localData.setName("localData");
             localData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
-            activity.getData().add(localData);
-            process.getElements().add(activity);
+            editingDomain.getCommandStack().execute(
+                    AddCommand.create(editingDomain, activity, ProcessPackage.Literals.DATA_AWARE__DATA, localData));
+
+
         }
         return process;
     }
@@ -651,11 +677,14 @@ public class DataRefactorIT {
         if (newDataName != null) {
             final Data newProcessData = createNewProcessData(newDataName, ModelHelper.getDataTypeForID(process, newDataType),
                     dataToRefactor);
+            EMFModelUpdater<Data> emfModelUpdater = new EMFModelUpdater<Data>();
+            Data workingCopy = emfModelUpdater.from(dataToRefactor).getWorkingCopy();
+            workingCopy.setName(newDataName);
+            refactorDataOperation.setUpdater(emfModelUpdater);
             refactorDataOperation.addItemToRefactor(newProcessData, dataToRefactor);
         } else {
             refactorDataOperation.addItemToRefactor(null, dataToRefactor);
         }
-        editingDomain = createEditingDomain();
         refactorDataOperation.setEditingDomain(editingDomain);
         return process;
     }

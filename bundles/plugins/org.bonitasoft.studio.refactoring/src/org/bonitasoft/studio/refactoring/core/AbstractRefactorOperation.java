@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.google.common.base.Function;
@@ -60,7 +60,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
-    private EditingDomain domain;
+    private TransactionalEditingDomain domain;
     private CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
@@ -226,7 +226,7 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
 
     protected ScriptRefactoringAction<T> createScriptExpressionRefactoringAction(final List<T> pairsToRefactor,
             final List<ScriptContainer<?>> scriptExpressions, final CompoundCommand compoundCommand,
-            final EditingDomain domain,
+            final TransactionalEditingDomain domain,
             final RefactoringOperationType operationType) {
         return new ScriptRefactoringAction<>(pairsToRefactor, scriptExpressions, compoundCommand, domain, operationType);
     }
@@ -259,11 +259,11 @@ public abstract class AbstractRefactorOperation<Y extends EObject, Z extends EOb
         };
     }
 
-    public void setEditingDomain(final EditingDomain domain) {
+    public void setEditingDomain(final TransactionalEditingDomain domain) {
         this.domain = domain;
     }
 
-    public EditingDomain getEditingDomain() {
+    public TransactionalEditingDomain getEditingDomain() {
         return domain;
     }
 
