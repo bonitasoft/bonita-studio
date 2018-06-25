@@ -24,7 +24,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
@@ -45,12 +45,12 @@ public class ScriptRefactoringAction<T extends RefactorPair<? extends EObject, ?
     private boolean cancelled;
     private final RefactoringOperationType operationType;
     protected List<T> pairsToRefactor;
-    private final EditingDomain domain;
+    private final TransactionalEditingDomain domain;
 
     public ScriptRefactoringAction(final List<T> pairsToRefactor,
             final List<ScriptContainer<?>> scriptExpressions,
             final CompoundCommand compoundCommand,
-            final EditingDomain domain,
+            final TransactionalEditingDomain domain,
             final RefactoringOperationType operationType) {
         this.scriptExpressions = scriptExpressions;
         this.compoundCommand = compoundCommand;

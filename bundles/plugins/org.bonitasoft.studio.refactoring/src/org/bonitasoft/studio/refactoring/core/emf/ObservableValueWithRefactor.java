@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -53,7 +54,7 @@ public class ObservableValueWithRefactor extends EditingDomainEObjectObservableV
         final Object oldValue = eObject.eGet(eStructuralFeature);
         if (needRefactor(oldValue, value)) {
             final AbstractRefactorOperation<? extends EObject, ? extends EObject, ? extends RefactorPair<? extends EObject, ? extends EObject>> refactorOperation = refactorOperationFactory
-                    .createRefactorOperation(domain, eObject, value);
+                    .createRefactorOperation((TransactionalEditingDomain) domain, eObject, value);
             refactorOperation.getCompoundCommand().append(SetCommand.create(domain, eObject, eStructuralFeature, value));
             try {
                 progressService.busyCursorWhile(refactorOperation);

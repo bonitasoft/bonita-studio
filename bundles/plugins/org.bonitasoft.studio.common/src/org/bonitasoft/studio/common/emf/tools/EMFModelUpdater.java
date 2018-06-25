@@ -32,7 +32,8 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
 /**
- * This class is responsible of updating a concerte EMF model (with uuids) using a uuid free representation (EMF copy) of that same model
+ * This class is responsible of updating a concerte EMF model (with uuids) using a uuid free representation (EMF copy) of
+ * that same model
  * The goal is to avoid uuid regeneration at each model changes when editing tyhe model using a Wizard
  */
 public class EMFModelUpdater<T extends EObject> {
@@ -62,17 +63,25 @@ public class EMFModelUpdater<T extends EObject> {
     public T update() {
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(source);
         if (editingDomain != null) {
-            editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
-
-                @Override
-                protected void doExecute() {
-                    deepEObjectUpdate(source, workingCopy);
-                }
-            });
+            editingDomain.getCommandStack().execute(createUpdateCommand(editingDomain));
         } else {
             deepEObjectUpdate(source, workingCopy);
         }
         return source;
+    }
+
+    public void editWorkingCopy(T value) {
+        deepEObjectUpdate(workingCopy, value);
+    }
+
+    public RecordingCommand createUpdateCommand(TransactionalEditingDomain editingDomain) {
+        return new RecordingCommand(editingDomain) {
+
+            @Override
+            protected void doExecute() {
+                deepEObjectUpdate(source, workingCopy);
+            }
+        };
     }
 
     private void deepEObjectUpdate(EObject source, EObject target) {
@@ -92,7 +101,8 @@ public class EMFModelUpdater<T extends EObject> {
                     } else {
                         Object sourceRef = source.eGet(feature);
                         Object targetRef = target.eGet(feature);
-                        if (sourceRef instanceof EObject && targetRef instanceof EObject && !synched.contains(sourceRef)) {
+                        if (sourceRef instanceof EObject && targetRef instanceof EObject && !synched.contains(sourceRef)
+                                && !EcoreUtil.equals((EObject) sourceRef, (EObject) targetRef)) {
                             synched.add((EObject) sourceRef);
                             if (Objects.equals(((EObject) sourceRef).eClass(), ((EObject) targetRef).eClass())) {
                                 deepEObjectUpdate((EObject) sourceRef, (EObject) targetRef);

@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.emf.tools;
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;

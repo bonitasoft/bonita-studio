@@ -17,11 +17,11 @@ package org.bonitasoft.studio.refactoring.core.emf;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public interface IRefactorOperationFactory {
 
     AbstractRefactorOperation<? extends EObject, ? extends EObject, ? extends RefactorPair<? extends EObject, ? extends EObject>> createRefactorOperation(
-            EditingDomain domain, EObject item, Object newValue);
+            TransactionalEditingDomain domain, EObject item, Object newValue);
 
 }

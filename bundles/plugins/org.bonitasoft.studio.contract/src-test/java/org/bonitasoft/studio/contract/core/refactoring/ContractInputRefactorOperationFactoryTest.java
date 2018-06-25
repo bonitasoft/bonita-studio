@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aCont
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,7 +29,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class ContractInputRefactorOperationFactoryTest {
 
     @Mock
-    private EditingDomain domain;
+    private TransactionalEditingDomain domain;
 
     @Test
     public void should_create_a_RefactorContractInpuyOperation() throws Exception {

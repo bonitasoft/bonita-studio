@@ -25,7 +25,7 @@ import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public class ContractInputRefactorOperationFactory implements IRefactorOperationFactory {
 
@@ -36,7 +36,7 @@ public class ContractInputRefactorOperationFactory implements IRefactorOperation
      */
     @Override
     public RefactorContractInputOperation createRefactorOperation(
-            final EditingDomain domain, final EObject item, final Object newValue) {
+            final TransactionalEditingDomain domain, final EObject item, final Object newValue) {
         checkArgument(item instanceof ContractInput);
         final RefactorContractInputOperation refactorContractInputOperation = new RefactorContractInputOperation(
                 ModelHelper.getFirstContainerOfType(item,

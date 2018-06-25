@@ -38,7 +38,7 @@ import org.bonitasoft.studio.refactoring.core.WidgetRefactorPair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -197,7 +197,7 @@ public class GroovyExpressionScriptContrainerTest {
                         ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory))).hasSize(1);
     }
 
-    private EditingDomain editingDomain() {
+    private TransactionalEditingDomain editingDomain() {
         return new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
     }
 }
