@@ -81,7 +81,9 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+     * @see
+     * org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.
+     * Composite)
      */
     @Override
     public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
@@ -151,15 +153,17 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.EMFDataBindingContext,
-     * org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.emf.edit.domain.EditingDomain)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.
+     * EMFDataBindingContext,
+     * org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression,
+     * org.eclipse.emf.edit.domain.EditingDomain)
      */
     @Override
     public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression,
             ViewerFilter[] filters,
             ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
-        Set<Output> input = new HashSet<Output>();
+        Set<Output> input = new HashSet<>();
         IExpressionProvider provider = ExpressionProviderService.getInstance()
                 .getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
         for (Expression e : provider.getExpressions(context)) {
@@ -172,6 +176,9 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
             }
         }
         viewer.setInput(input);
+        for (ViewerFilter filter : filters) {
+            viewer.addFilter(filter);
+        }
 
         IObservableValue contentObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__CONTENT);
@@ -232,12 +239,15 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
 
             @Override
             public Object convert(Object outputList) {
-                Output output = ((List<Output>) outputList).get(0);
-                for (int i = 0; i < viewer.getTable().getItemCount(); i++) {
-                    Output out = (Output) viewer.getElementAt(i);
-                    if (out.getName().equals(output.getName())
-                            && out.getType().equals(output.getType())) {
-                        return out;
+                List<Output> list = (List<Output>) outputList;
+                if (!list.isEmpty()) {
+                    Output output = list.get(0);
+                    for (int i = 0; i < viewer.getTable().getItemCount(); i++) {
+                        Output out = (Output) viewer.getElementAt(i);
+                        if (out.getName().equals(output.getName())
+                                && out.getType().equals(output.getType())) {
+                            return out;
+                        }
                     }
                 }
                 return null;
