@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.refactoring;
+package org.bonitasoft.studio.tests.document;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -22,9 +22,12 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory;
+import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.Document;
@@ -34,9 +37,10 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
-import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,13 +55,13 @@ public class RefactorDocumentOperationTest {
 
     @Before
     public void setUp() throws Exception {
-        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(),
-                new TransactionalCommandStackImpl());
-        parentProcess = ProcessFactory.eINSTANCE.createPool();
+        DiagramFileStore newDiagram = new NewDiagramCommandHandler().newDiagram();
+        domain = TransactionUtil.getEditingDomain(newDiagram.getEMFResource());
+        parentProcess = (Pool) newDiagram.getContent().getElements().get(0);
         document = ProcessFactory.eINSTANCE.createDocument();
         document.setName(INITIAL_DOC_NAME);
         document.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
-        parentProcess.getDocuments().add(document);
+        domain.getCommandStack().execute(new AddCommand(domain, parentProcess.getDocuments(), document));
     }
 
     private void createTaskWithOperationWithLeftOperandOfType(final String documentType) {
@@ -66,7 +70,7 @@ public class RefactorDocumentOperationTest {
         createLeftOperandWithType(documentType);
         operation.setLeftOperand(leftOperand);
         task.getOperations().add(operation);
-        parentProcess.getElements().add(task);
+        domain.getCommandStack().execute(new AddCommand(domain, parentProcess.getElements(), task));
     }
 
     private void createLeftOperandWithType(final String documentType) {
@@ -145,7 +149,7 @@ public class RefactorDocumentOperationTest {
         final Document secondDocument = ProcessFactory.eINSTANCE.createDocument();
         secondDocument.setName("secondDocument");
         secondDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
-        parentProcess.getDocuments().add(secondDocument);
+        domain.getCommandStack().execute(new AddCommand(domain, parentProcess.getDocuments(), secondDocument));
 
         final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
         rdo.addItemToRefactor(null, document);
@@ -298,7 +302,8 @@ public class RefactorDocumentOperationTest {
         rightOperand.setContent("hello ${" + document.getName() + "}");
         rightOperand.setType(ExpressionConstants.PATTERN_TYPE);
         rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
-        operation.setRightOperand(rightOperand);
+        domain.getCommandStack().execute(
+                new SetCommand(domain, operation, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, rightOperand));
         final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
         updatedDocument.setName("docNameUpdated");
         updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
