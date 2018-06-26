@@ -17,6 +17,7 @@ package org.bonitasoft.studio.refactoring.core.script;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
@@ -58,8 +59,8 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
                 final String oldValueName = pair.getOldValueName();
                 final EClass eClass = pair.getOldValue().eClass();
                 if (eClass.equals(dep.eClass()) && oldValueName.equals(dependencyName(dep))) {
-                    EMFModelUpdater<EObject> updater = new EMFModelUpdater<EObject>().from(dep);
-                    updater.editWorkingCopy(pair.getNewValue());
+                    EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(dep);
+                    updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(pair.getNewValue()));
                     compoundCommand.append(updater.createUpdateCommand(editingDomain));
                 }
             }

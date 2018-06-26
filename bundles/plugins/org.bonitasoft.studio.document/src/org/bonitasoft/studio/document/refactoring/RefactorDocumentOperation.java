@@ -17,19 +17,18 @@ package org.bonitasoft.studio.document.refactoring;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -42,7 +41,8 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
 
     @Override
     protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
-        final CompoundCommand deleteCommands = new CompoundCommand("Compound commands containing all delete operations to do at last step");
+        final CompoundCommand deleteCommands = new CompoundCommand(
+                "Compound commands containing all delete operations to do at last step");
         for (final DocumentRefactorPair pairToRefactor : pairsToRefactor) {
             doExecute(compoundCommand, deleteCommands, pairToRefactor);
         }
@@ -50,7 +50,8 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         return compoundCommand;
     }
 
-    private void doExecute(final CompoundCommand compoundCommand, final CompoundCommand deleteCommands, final DocumentRefactorPair pairToRefactor) {
+    private void doExecute(final CompoundCommand compoundCommand, final CompoundCommand deleteCommands,
+            final DocumentRefactorPair pairToRefactor) {
         if (pairToRefactor.getNewValue() != null) {
             doExecuteRefactorDocumentOperation(compoundCommand, pairToRefactor);
         } else {
@@ -58,22 +59,23 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         }
     }
 
-    private void doExecuteRefactorDocumentOperation(final CompoundCommand compoundCommand, final DocumentRefactorPair pairToRefactor) {
+    private void doExecuteRefactorDocumentOperation(final CompoundCommand compoundCommand,
+            final DocumentRefactorPair pairToRefactor) {
         updateDocumentInDocumentExpressions(compoundCommand, pairToRefactor);
-        final Pool container = getContainer(pairToRefactor.getOldValue());
-        final List<Document> documents = container.getDocuments();
-        final int index = documents.indexOf(pairToRefactor.getOldValue());
-        compoundCommand.append(RemoveCommand.create(getEditingDomain(), container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getOldValue()));
-        compoundCommand.append(AddCommand.create(getEditingDomain(), container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getNewValue(), index));
+        EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(pairToRefactor.getOldValue());
+        updater.editWorkingCopy(pairToRefactor.getNewValue());
+        compoundCommand.append(updater.createUpdateCommand(getEditingDomain()));
     }
 
-    private void doExecuteDeleteDocumentOperation(final CompoundCommand compoundCommand, final CompoundCommand deleteCommands,
+    private void doExecuteDeleteDocumentOperation(final CompoundCommand compoundCommand,
+            final CompoundCommand deleteCommands,
             final DocumentRefactorPair pairToRefactor) {
         removeAllDocumentReferences(compoundCommand, pairToRefactor);
         deleteCommands.append(DeleteCommand.create(getEditingDomain(), pairToRefactor.getOldValue()));
     }
 
-    protected void updateDocumentInDocumentExpressions(final CompoundCommand compoundCommand, final DocumentRefactorPair pairToRefactor) {
+    protected void updateDocumentInDocumentExpressions(final CompoundCommand compoundCommand,
+            final DocumentRefactorPair pairToRefactor) {
         final Document newValue = pairToRefactor.getNewValue();
         if (newValue != null) {
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
@@ -86,11 +88,14 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         }
     }
 
-    private void updateDocumentInExpression(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor, final Document newValue, final Expression exp) {
+    private void updateDocumentInExpression(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor,
+            final Document newValue, final Expression exp) {
         if (isMatchingDocumentExpression(pairToRefactor, exp)) {
             // update name and content
-            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, newValue.getName()));
-            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newValue.getName()));
+            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME,
+                    newValue.getName()));
+            cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT,
+                    newValue.getName()));
             updateReturnType(cc, newValue, exp);
             updateDependencies(cc, pairToRefactor, exp);
         }
@@ -107,16 +112,18 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
                 newReturnType = org.bonitasoft.engine.bpm.document.Document.class.getName();
             }
         }
-        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newReturnType));
+        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                newReturnType));
     }
 
-    private void updateDependencies(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor, final Expression exp) {
+    private void updateDependencies(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor,
+            final Expression exp) {
         for (final EObject dependency : exp.getReferencedElements()) {
             if (dependency instanceof Document
                     && ((Document) dependency).getName().equals(pairToRefactor.getOldValueName())) {
-                cc.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
-                cc.append(AddCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                        ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(dependency);
+                updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue()));
+                cc.append(updater.createUpdateCommand(getEditingDomain()));
             }
         }
     }
@@ -148,14 +155,18 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
         cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
         // update return type
-        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
-        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                String.class.getName()));
+        cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE,
+                ExpressionConstants.CONSTANT_TYPE));
         // update referenced document
-        cc.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
+        cc.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                exp.getReferencedElements()));
     }
 
     private List<Expression> retrieveExpressionsInTheContainer(final DocumentRefactorPair pairToRefactor) {
-        final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()), ExpressionPackage.Literals.EXPRESSION);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
+                ExpressionPackage.Literals.EXPRESSION);
         return expressions;
     }
 
