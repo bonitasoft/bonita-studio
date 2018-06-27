@@ -228,7 +228,7 @@ public class ExtractAsSubprocessTest {
                 .finish();
 
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 
 }

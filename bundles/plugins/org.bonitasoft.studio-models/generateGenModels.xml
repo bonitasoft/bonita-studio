@@ -33,7 +33,6 @@
 		               global="true" />
 		 <echo>Replace version in generation templates</echo>
 		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/process.gmfgen" />
-		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/form/form.gmfgen" />
 		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/edit/manifest.mfjet" />
 		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/model/manifest.mfjet" />
 		
@@ -42,15 +41,9 @@
 		<emf.Ecore2Java modelpluginid="org.bonitasoft.studio.model" modelproject="org.bonitasoft.studio.model" model="process.ecore" genmodel="process.genmodel" modelprojectfragmentpath="src" reconcilegenmodel="keep" generatejavacode="true" generatemodelproject="true" generateeditproject="true" generateeditorproject="false" generatetestsproject="false" templatepath="EMFTemplates/" autobuild="false" jdklevel="7.0">
 		</emf.Ecore2Java>
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />
-		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/form/form.gmfgen" />
-		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16">
-		</delete>
-		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16">
-		</delete>
-		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram.form/icons/obj16">
-		</delete>
-		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml">
-		</delete>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16"/>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16"/>
+		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml"/>
 		<copy todir="${basedir}/../org.bonitasoft.studio.model">
 			<fileset dir="${workspacePath}/org.bonitasoft.studio.model" />
 		</copy>
@@ -59,9 +52,6 @@
 		</copy>
 		<copy todir="${basedir}/../org.bonitasoft.studio.diagram">
 			<fileset dir="${workspacePath}/org.bonitasoft.studio.diagram" />
-		</copy>
-		<copy todir="${basedir}/../org.bonitasoft.studio.diagram.form">
-			<fileset dir="${workspacePath}/org.bonitasoft.studio.diagram.form" />
 		</copy>
 	</target>
 </project>

@@ -31,9 +31,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -160,10 +158,6 @@ public class SaveCommandHandler extends SaveHandler {
         if (editorPart instanceof ProcessDiagramEditor) {
             final DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
             proc = (MainProcess) diagram.resolveSemanticElement();
-        } else if (editorPart instanceof FormDiagramEditor) {
-            final DiagramEditPart formDiagram = ((DiagramDocumentEditor) editorPart).getDiagramEditPart();
-            final Form form = (Form) formDiagram.resolveSemanticElement();
-            proc = ModelHelper.getMainProcess(form.eContainer());
         }
         return proc;
     }

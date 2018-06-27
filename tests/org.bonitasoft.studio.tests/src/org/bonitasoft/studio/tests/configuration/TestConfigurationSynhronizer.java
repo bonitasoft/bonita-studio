@@ -62,7 +62,6 @@ public class TestConfigurationSynhronizer extends TestCase {
 
         boolean connectorFragmentFound = false ;
         boolean actorFilterFragmentFound = false ;
-        boolean validatorFragmentFound = false ;
         boolean groovyFragmentFound = false ;
         boolean otherFragmentFound = false ;
         for(FragmentContainer fc : configuration.getProcessDependencies()){
@@ -81,15 +80,9 @@ public class TestConfigurationSynhronizer extends TestCase {
             }
         }
 
-        for(FragmentContainer fc : configuration.getApplicationDependencies()){
-            if(fc.getId().equals(FragmentTypes.VALIDATOR)){
-                validatorFragmentFound = true ;
-            }
-        }
 
         assertTrue("Missing Connector fragment container",connectorFragmentFound);
         assertTrue("Missing Actor filter fragment container",actorFilterFragmentFound);
-        assertTrue("Missing Validator fragment container",validatorFragmentFound);
         assertTrue("Missing Groovy fragment container",groovyFragmentFound);
         assertTrue("Missing Other fragment container",otherFragmentFound);
     }

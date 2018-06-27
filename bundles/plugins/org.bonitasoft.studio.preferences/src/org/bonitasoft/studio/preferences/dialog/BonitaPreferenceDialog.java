@@ -69,7 +69,7 @@ public class BonitaPreferenceDialog extends Dialog {
     private static final int SHELL_WIDTH = 800;
     private static final int MARGIN_RIGHT = 80;
     private static final int MARGIN_LEFT = 25;
-    private static final int LABEL_WIDTH = 110;
+    private static final int LABEL_WIDTH = 180;
     private static final Color LIGHT_BACKGROUND = new Color(Display.getDefault(), new RGB(250, 250, 250)) ;
 
     private static final int SECTION_TITLE_MARGIN = -20;
@@ -84,8 +84,6 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
     public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
-    public static final String USER_PROFILE_PAGE_ID = "org.bonitasoft.studio.preferences.profiles"; //$NON-NLS-1$;
-    public static final String LEGACY6X_MODE_ID = "org.bonitasoft.studio.preferences.legacy6x"; //$NON-NLS-1$;
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
 
     private final Map keywordCache = new HashMap();
@@ -100,9 +98,10 @@ public class BonitaPreferenceDialog extends Dialog {
 
     private final List<IPreferencePage> applyOnBack;
 
-    private static  String[] pageIds = new String[]{USER_PROFILE_PAGE_ID,DATABASE_PAGE_ID,
+    private static String[] pageIds = new String[] { DATABASE_PAGE_ID,
         APPEARANCE_PAGE_ID,LANGUAGE_PAGE_ID,JAVA_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,
-            SERVER_SETTINGS_PAGE_ID, DB_CONNECTORS_PAGE_ID, REMOTE_ENGINE_PAGE_ID, WEB_BROWSER_PAGE_ID, PROXY_PAGE_ID, ADVANCED_PAGE_ID, LEGACY6X_MODE_ID,
+            SERVER_SETTINGS_PAGE_ID, DB_CONNECTORS_PAGE_ID, REMOTE_ENGINE_PAGE_ID, WEB_BROWSER_PAGE_ID, PROXY_PAGE_ID,
+            ADVANCED_PAGE_ID,
             ECLIPSE_PAGE_ID };
 
     /**
@@ -396,25 +395,12 @@ public class BonitaPreferenceDialog extends Dialog {
     }
 
     protected void createGeneralCategoryLine(final Composite menuComposite) {
-        Composite generalRow = null ;
-        if(PreferenceUtil.findNodeMatching(USER_PROFILE_PAGE_ID) != null){
-            generalRow = createRow(menuComposite,LIGHT_BACKGROUND,Messages.BonitaPreferenceDialog_general,5);
-        }else{
-            generalRow = createRow(menuComposite,LIGHT_BACKGROUND,Messages.BonitaPreferenceDialog_general,4);
-        }
-        if(PreferenceUtil.findNodeMatching(USER_PROFILE_PAGE_ID) != null){
-            final ToolItem tltmProfiles = createTool(generalRow,LIGHT_BACKGROUND, Pics.getImage(PicsConstants.preferenceUserProfile),Pics.getImage(PicsConstants.preferenceUserProfileDisabled),USER_PROFILE_PAGE_ID);
-            itemPerPreferenceNode.put(USER_PROFILE_PAGE_ID, tltmProfiles) ;
-        }
+        Composite generalRow = createRow(menuComposite, LIGHT_BACKGROUND, Messages.BonitaPreferenceDialog_general, 4);
+
         final ToolItem tltmDatabase = createTool(generalRow,LIGHT_BACKGROUND, Pics.getImage(PicsConstants.preferenceDB),Pics.getImage(PicsConstants.preferenceDBdisabled),DATABASE_PAGE_ID);
         final ToolItem tltmAppearance = createTool(generalRow,LIGHT_BACKGROUND,Pics.getImage(PicsConstants.preferenceAppearance),Pics.getImage(PicsConstants.preferenceAppearancedisabled),APPEARANCE_PAGE_ID) ;
         final ToolItem tltmLanguage = createTool(generalRow, LIGHT_BACKGROUND, Pics.getImage(PicsConstants.preferenceLanguage), Pics.getImage(PicsConstants.preferenceLanguagedisabled), LANGUAGE_PAGE_ID) ;
         final ToolItem tltmJava = createTool(generalRow, LIGHT_BACKGROUND, Pics.getImage(PicsConstants.preferenceJava), Pics.getImage(PicsConstants.preferenceJavadisabled), JAVA_PAGE_ID) ;
-
-        if(PreferenceUtil.findNodeMatching(USER_PROFILE_PAGE_ID) != null){
-            final Label lblProfiles = createItemLabel(generalRow,LIGHT_BACKGROUND,Messages.BonitaPreferenceDialog_userProfile);
-            labelPerPreferenceNode.put(USER_PROFILE_PAGE_ID, lblProfiles) ;
-        }
 
         final Label lblDatabase = createItemLabel(generalRow,LIGHT_BACKGROUND,Messages.BonitaPreferenceDialog_database);
 
@@ -500,11 +486,10 @@ public class BonitaPreferenceDialog extends Dialog {
     }
 
     protected void createOtherCategoryLine(final Composite menuComposite) {
-        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 3);
+        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 2);
 
         final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.preferenceAdvanced), Pics.getImage(PicsConstants.preferenceAdvanceddisabled), ADVANCED_PAGE_ID) ;
-        final ToolItem tltmLegacy6x = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.preferenceLegacy6x),
-                Pics.getImage(PicsConstants.preferenceLegacy6xDisabled), LEGACY6X_MODE_ID);
+
         final ToolItem eclipseItem = createTool(otherRowComposite, null,  Pics.getImage(PicsConstants.preferenceEclipse), Pics.getImage(PicsConstants.preferenceEclipseDisabled), null) ;
         eclipseItem.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -527,14 +512,10 @@ public class BonitaPreferenceDialog extends Dialog {
         });
 
         final Label lblAdvanced = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Advanced) ;
-        final Label lblLegacy6x = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_legacy6x);
         final Label eclipseLabel = createItemLabel(otherRowComposite, null, Messages.EclipsePreferences) ;
 
         putInItemPerPreferenceNode(ADVANCED_PAGE_ID, tltmAdvancedSettings);
         putInLabelPerPreferenceNode(ADVANCED_PAGE_ID, lblAdvanced);
-
-        putInItemPerPreferenceNode(LEGACY6X_MODE_ID, tltmLegacy6x);
-        putInLabelPerPreferenceNode(LEGACY6X_MODE_ID, lblLegacy6x);
 
         putInItemPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseItem);
         putInLabelPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseLabel);
@@ -560,6 +541,7 @@ public class BonitaPreferenceDialog extends Dialog {
     protected Label createItemLabel(final Composite composite,final Color backgroundColor, final String text) {
         final Composite labelContainer = new Composite(composite, SWT.NONE);
         GridDataFactory.fillDefaults().hint(LABEL_WIDTH, SWT.DEFAULT).applyTo(labelContainer);
+        labelContainer.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
         final GridLayout layout = new GridLayout(1, true);
         layout.marginWidth = 0;
         layout.marginHeight = 0;
@@ -567,7 +549,7 @@ public class BonitaPreferenceDialog extends Dialog {
         labelContainer.setBackground(backgroundColor);
         layout.marginBottom = 0;
         final Label label = new Label(labelContainer, SWT.CENTER);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(label);
+        GridDataFactory.fillDefaults().grab(true, false).align(SWT.CENTER, SWT.CENTER).applyTo(label);
         label.setText(text);
         label.setBackground(backgroundColor) ;
         return label;

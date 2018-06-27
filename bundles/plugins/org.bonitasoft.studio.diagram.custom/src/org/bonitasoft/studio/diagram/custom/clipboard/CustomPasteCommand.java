@@ -35,7 +35,6 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Actor;
@@ -54,8 +53,6 @@ import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart;
-import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorPlugin;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,7 +68,6 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -287,7 +283,6 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				View resView = copyView(retrieveTargetCompartment(selectedTargetEditPart).getNotationView(), part, res,toCopy);
 				mapping.put(part.resolveSemanticElement(), resView);
 				
-				copyFormsDiagram(res);
 				//Copy Boundary view
 				if(res instanceof Activity){
 					if(!((Activity) res).getBoundaryIntermediateEvents().isEmpty()){
@@ -344,19 +339,6 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 	}
 
-	private void copyFormsDiagram(Element res) {
-		/* Create form diagram related to form element */
-		Set<Form> formsToCreateDiagram = ModelHelper.getAllFormsContainedIn(res);
-		for (final Form form : formsToCreateDiagram) {
-			AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
-			AbstractProcess sourceProcess = ModelHelper.getParentProcess(form);
-			if(targetProcess == null || !targetProcess.equals(sourceProcess)){
-				ModelHelper.removedReferencedEObjects(form,targetElement);
-			}
-			final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
-			targetElement.eResource().getContents().add(diagram);
-		}
-	}
 
 	private void resetConnections(final Element toCopyElement, Element res,
 			final Container container) {

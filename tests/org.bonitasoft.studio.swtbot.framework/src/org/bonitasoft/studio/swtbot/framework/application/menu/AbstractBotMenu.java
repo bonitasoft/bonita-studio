@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application.menu;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -30,20 +29,17 @@ public class AbstractBotMenu extends BotBase {
     }
 
     protected void openMenu(final String menuLabel) {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         bot.menu(menuLabel).click();
     }
 
     public boolean isEnabled(final String menuLabel) {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         return bot.menu(menuLabel).isEnabled();
     }
 
     protected void waitForMainShell(SWTWorkbenchBot bot) {
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 
 }

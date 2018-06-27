@@ -26,23 +26,8 @@
       <tags>ViewMenu</tags>
     </menus>
   </descriptors>
-  <descriptors xmi:id="_70BYsPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.application" label="%Application" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/menuIcons/form.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_70BYsfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.application">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
   <descriptors xmi:id="_70D08PgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.general" label="%General_process" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/details.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
     <menus xmi:id="_70D08fgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.general">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
-  <descriptors xmi:id="_70GRMPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.general" label="%General_form" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/details.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_70GRMfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.general">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
-  <descriptors xmi:id="_70JUgPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.appearance" label="%Appearance" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/appearanceView.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_70JUgfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.appearance">
       <tags>ViewMenu</tags>
     </menus>
   </descriptors>
@@ -56,11 +41,6 @@
       <tags>ViewMenu</tags>
     </menus>
     <toolbar xmi:id="_70O0EvgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview.tree"/>
-  </descriptors>
-  <descriptors xmi:id="_rxX_APgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.preview" label="%Preview" iconURI="platform:/plugin/org.bonitasoft.studio.form.preview/icons/Preview-icon.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_rxX_AfgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.preview">
-      <tags>ViewMenu</tags>
-    </menus>
   </descriptors>
   <commands xmi:id="e4.exit" elementId="e4.exit" commandName="%command.name.exit" description=""/>
   <commands xmi:id="e4.show.view" elementId="e4.show.view" commandName="%command.name.showView">

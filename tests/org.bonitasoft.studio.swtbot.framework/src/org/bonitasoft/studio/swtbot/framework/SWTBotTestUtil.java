@@ -32,13 +32,13 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
-import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.core.commands.ExecutionException;
@@ -103,7 +103,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     private static final int X_MARGIN = 90;
     private static final int Y_MARGIN = 80;
-    private static final String PAGEFLOW_LABEL = "Pageflow";
     public static final int CONTEXTUALPALETTE_STEP = 0;
     public static final int CONTEXTUALPALETTE_GATEWAY = 1;
     public static final int CONTEXTUALPALETTE_SEQUENCEFLOW = 2;
@@ -150,7 +149,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
             @Override
             public boolean matches(final Object item) {
-                return item instanceof PoolEditPart || item instanceof FormEditPart;
+                return item instanceof PoolEditPart;
             }
 
             @Override
@@ -242,14 +241,10 @@ public class SWTBotTestUtil implements SWTBotConstants {
         });
     }
 
-    public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot) {
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
-    }
-
-    public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot, Repository activeRepository) {
+    public static void waitUntilRootShellIsActive(final SWTBot bot, Repository activeRepository) {
         String repoName = activeRepository.getName();
         if (repoName == null || Objects.equals(repoName, "default")) {
-            waitUntilBonitaBPmShellIsActive(bot);
+            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
             bot.shell("Bonita Studio").setFocus();
         } else if (activeRepository.isShared(GitProvider.ID)) {
             org.eclipse.jgit.lib.Repository gitRepository = getGitRepository(activeRepository);
@@ -264,6 +259,10 @@ public class SWTBotTestUtil implements SWTBotConstants {
             bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio - " + repoName), 40000);
             bot.shell("Bonita Studio - " + repoName).setFocus();
         }
+    }
+
+    public static void waitUntilRootShellIsActive(SWTBot bot) {
+        waitUntilRootShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository());
     }
 
     private static org.eclipse.jgit.lib.Repository getGitRepository(Repository repository) {
@@ -1092,5 +1091,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
             getKeybord().pressShortcut(SWT.CTRL, 'y');
         }
     }
+
 
 }

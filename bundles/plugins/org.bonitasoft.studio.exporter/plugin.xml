@@ -8,21 +8,6 @@
    <extension-point id="formsExporter" name="Forms Exporter" schema="schema/org.bonitasoft.studio.exporter.formsExporter.exsd"/>
 
    <extension
-         point="org.eclipse.emf.ecore.generated_package">
-      <package
-            genModel="model/xhtml.genmodel"
-            uri="http://www.w3.org/1999/xhtml"
-            class="org.w3._1999.xhtml.XhtmlPackage">
-      </package>
-   </extension>
-   <extension
-         point="org.eclipse.emf.ecore.extension_parser">
-      <parser
-            type="xhtml"
-            class="org.w3._1999.xhtml.util.XhtmlResourceFactoryImpl">
-      </parser>
-   </extension>
-   <extension
          point="org.eclipse.m2m.qvt.oml.runtime.qvtTransformation">
       <transformation
             file="transforms/Form2Xhtml.qvto"
@@ -91,28 +76,12 @@
       </exporterFactory>
    </extension>
    <extension
-         point="org.bonitasoft.studio.exporter.formsExporter">
-      <formsExporterExtension
-            class="org.bonitasoft.studio.exporter.form.FormsExporter">
-         <Priority
-               name="Low">
-         </Priority>
-      </formsExporterExtension>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.coolbarContributionItem">
       <coolbarItem
             priority="0"
             toolbarPosition="5"
             class="org.bonitasoft.studio.exporter.coolbar.ExportBarCoolbarItem">
       </coolbarItem>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.exporter.barApplicationResourceProvider">
-      <barResourceProvider
-            priority="0"
-            providerClass="org.bonitasoft.studio.exporter.ApplicationResourcesProvider">
-      </barResourceProvider>
    </extension>
    <extension
          point="org.bonitasoft.studio.common.barResourcesProvider">

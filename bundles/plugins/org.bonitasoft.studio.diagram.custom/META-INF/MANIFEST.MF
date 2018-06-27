@@ -20,13 +20,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.bonitasoft.studio.preferences;bundle-version="1.0.0",
  org.bonitasoft.studio.common.diagram;bundle-version="1.0.0",
- org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
  org.bonitasoft.studio.pics;bundle-version="1.0.0",
  org.eclipse.core.expressions,
  org.eclipse.gmf.runtime.diagram.ui.actions,
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.4.1",
- org.bonitasoft.studio.repository.themes;bundle-version="1.0.0",
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  com.google.guava;bundle-version="11.0.1",
@@ -38,16 +36,22 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.diagram.custom; x-friends:="org.
- bonitasoft.studio.properties.test,  org.bonitasoft.studio.tests,  org
- .bonitasoft.studio.diagram.test,  org.bonitasoft.studio.tests.ex",org
- .bonitasoft.studio.diagram.custom.actions,org.bonitasoft.studio.diagr
- am.custom.clipboard,org.bonitasoft.studio.diagram.custom.commands,org
- .bonitasoft.studio.diagram.custom.editPolicies,org.bonitasoft.studio.
- diagram.custom.figures,org.bonitasoft.studio.diagram.custom.i18n,org.
- bonitasoft.studio.diagram.custom.operation,org.bonitasoft.studio.diag
- ram.custom.part,org.bonitasoft.studio.diagram.custom.parts,org.bonita
- soft.studio.diagram.custom.perspective,org.bonitasoft.studio.diagram.
- custom.refactoring,org.bonitasoft.studio.diagram.custom.repository,or
- g.bonitasoft.studio.diagram.custom.resources,org.bonitasoft.studio.di
- agram.custom.wizard
+Export-Package: org.bonitasoft.studio.diagram.custom;
+  x-friends:="org.bonitasoft.studio.properties.test,
+   org.bonitasoft.studio.tests,
+   org.bonitasoft.studio.diagram.test,
+   org.bonitasoft.studio.tests.ex",
+ org.bonitasoft.studio.diagram.custom.actions,
+ org.bonitasoft.studio.diagram.custom.clipboard,
+ org.bonitasoft.studio.diagram.custom.commands,
+ org.bonitasoft.studio.diagram.custom.editPolicies,
+ org.bonitasoft.studio.diagram.custom.figures,
+ org.bonitasoft.studio.diagram.custom.i18n,
+ org.bonitasoft.studio.diagram.custom.operation,
+ org.bonitasoft.studio.diagram.custom.part,
+ org.bonitasoft.studio.diagram.custom.parts,
+ org.bonitasoft.studio.diagram.custom.perspective,
+ org.bonitasoft.studio.diagram.custom.providers,
+ org.bonitasoft.studio.diagram.custom.refactoring,
+ org.bonitasoft.studio.diagram.custom.repository,
+ org.bonitasoft.studio.diagram.custom.wizard
