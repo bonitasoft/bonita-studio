@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -274,21 +275,22 @@ public class ParameterEditor extends SelectionAwareExpressionEditor implements
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object parameterList) {
-                if (parameterList instanceof List && !((List) parameterList).isEmpty()) {
-                    if (!((List<Parameter>) parameterList).isEmpty()) {
-                        final Parameter p = ((List<Parameter>) parameterList).get(0);
-                        final Collection<Parameter> inputParameters = (Collection<Parameter>) viewer
-                                .getInput();
-                        for (final Parameter param : inputParameters) {
-                            if (param.getName().equals(p.getName())
-                                    && param.getTypeClassname().equals(
-                                            p.getTypeClassname())) {
-                                return param;
-                            }
-                        }
-                    }
-                }
-                return null;
+                final List<? extends EObject> list = parameterList != null
+                        ? (List<? extends EObject>) parameterList
+                        : Collections.emptyList();
+                return list.stream()
+                        .filter(Parameter.class::isInstance)
+                        .map(Parameter.class::cast)
+                        .findFirst()
+                        .map(parameterInput -> {
+                            return ((Collection<Parameter>) viewer.getInput()).stream()
+                                    .filter(parameter -> Objects.equals(parameterInput.getName(), parameter.getName()))
+                                    .filter(parameter -> Objects.equals(parameterInput.getTypeClassname(),
+                                            parameter.getTypeClassname()))
+                                    .findFirst()
+                                    .orElse(null);
+                        })
+                        .orElse(null);
             }
 
         };

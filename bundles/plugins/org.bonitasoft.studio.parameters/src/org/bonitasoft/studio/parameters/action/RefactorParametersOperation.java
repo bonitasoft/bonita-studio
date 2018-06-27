@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
@@ -36,8 +38,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
@@ -65,7 +65,7 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
             localeConfiguration = file.getContent();
             localConfigurationCopy = EcoreUtil.copy(localeConfiguration);
         }
-        final List<Configuration> configurations = new ArrayList<Configuration>();
+        final List<Configuration> configurations = new ArrayList<>();
         if (localeConfiguration != null) {
             configurations.add(localeConfiguration);
         }
@@ -75,10 +75,13 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
             for (final Parameter confParameter : parameters) {
                 for (final ParameterRefactorPair pairToRefactor : pairsToRefactor) {
                     if (pairToRefactor.getOldValueName().equals(confParameter.getName())) {
-                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__NAME, pairToRefactor.getNewValueName()));
-                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__DESCRIPTION, pairToRefactor
-                                .getNewValue().getDescription()));
-                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
+                        cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__NAME,
+                                pairToRefactor.getNewValueName()));
+                        cc.append(SetCommand.create(editingDomain, confParameter,
+                                ParameterPackage.Literals.PARAMETER__DESCRIPTION, pairToRefactor
+                                        .getNewValue().getDescription()));
+                        cc.append(SetCommand.create(editingDomain, confParameter,
+                                ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
                                 pairToRefactor.getNewValue().getTypeClassname()));
                     }
                 }
@@ -93,18 +96,33 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
         final List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
         for (final Expression exp : expressions) {
             for (final ParameterRefactorPair pairToRefactor : pairsToRefactor) {
-                if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType()) && pairToRefactor.getOldValueName().equals(exp.getName())) {
-                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValueName()));
-                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValueName()));
-                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, pairToRefactor.getNewValue()
-                            .getTypeClassname()));
-                    cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
-                    cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            EcoreUtil.copy(pairToRefactor.getNewValue())));
+                if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType())
+                        && pairToRefactor.getOldValueName().equals(exp.getName())) {
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME,
+                            pairToRefactor.getNewValueName()));
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT,
+                            pairToRefactor.getNewValueName()));
+                    cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            pairToRefactor.getNewValue()
+                                    .getTypeClassname()));
+
+                    updateDependencies(cc, pairToRefactor, exp);
                 }
             }
         }
 
+    }
+
+    private void updateDependencies(final CompoundCommand cc, final ParameterRefactorPair pairToRefactor,
+            final Expression exp) {
+        for (final EObject dependency : exp.getReferencedElements()) {
+            if (dependency instanceof Parameter
+                    && ((Parameter) dependency).getName().equals(pairToRefactor.getOldValueName())) {
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(dependency);
+                updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue()));
+                cc.append(updater.createUpdateCommand(getEditingDomain()));
+            }
+        }
     }
 
     @Override

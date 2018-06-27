@@ -209,18 +209,20 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object inputList) {
-                final List<ContractInput> list = inputList != null ? (List<ContractInput>) inputList
+                final List<? extends EObject> list = inputList != null
+                        ? (List<? extends EObject>) inputList
                         : Collections.emptyList();
-                if (!list.isEmpty()) {
-                    final ContractInput contractInput = list.get(0);
-                    final Collection<ContractInput> inputs = (Collection<ContractInput>) viewer.getInput();
-                    for (final ContractInput input : inputs) {
-                        if (EcoreUtil.equals(input, contractInput)) {
-                            return input;
-                        }
-                    }
-                }
-                return null;
+                return list.stream()
+                        .filter(ContractInput.class::isInstance)
+                        .map(ContractInput.class::cast)
+                        .findFirst()
+                        .map(contractInput -> {
+                            return ((Collection<ContractInput>) viewer.getInput()).stream()
+                                    .filter(input -> EcoreUtil.equals(contractInput, input))
+                                    .findFirst()
+                                    .orElse(null);
+                        })
+                        .orElse(null);
             }
 
         };
