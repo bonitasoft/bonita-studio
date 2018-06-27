@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.views;
 
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,8 +49,7 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         }
         IPropertySheetPage page;
         /* Use our own PropertySheetPage depending on the view */
-        if (part instanceof ProcessDiagramEditor
-                || part instanceof FormDiagramEditor) {
+        if (part instanceof ProcessDiagramEditor) {
             page = getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part);
         } else {
             page = (IPropertySheetPage) Adapters.adapt(part,

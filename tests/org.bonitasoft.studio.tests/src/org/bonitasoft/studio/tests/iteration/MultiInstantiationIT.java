@@ -277,7 +277,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
         Assert.assertTrue("Error: Output Collection is not erased !", bot.comboBox(3).getText().isEmpty());
 
         botApplicationWorkbenchWindow.save();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 
     @Test
@@ -361,7 +361,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab().processDataList()
                 .select("vipName -- Text");
         selectDataTab.remove();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
 
         bot.waitUntil(new AssertionCondition() {
 
@@ -390,7 +390,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
         Assert.assertTrue("Error: Output Collection is not empty !", bot.comboBox(3).getText().isEmpty());
 
         botApplicationWorkbenchWindow.save();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 
     @Test
@@ -475,6 +475,6 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 .ok();
 
         botApplicationWorkbenchWindow.save();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 }

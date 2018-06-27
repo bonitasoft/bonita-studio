@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
-import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
-import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -54,9 +52,7 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
         BONITA_KEYWORDS.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.LOOP_COUNTER.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());
-        BONITA_KEYWORDS.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
         BONITA_KEYWORDS.add(ExpressionConstants.TASK_ASSIGNEE_ID.getEngineConstantName());
-        BONITA_KEYWORDS.add(IFormExpressionsAPI.USER_LOCALE);
     }
 
     private RepositoryAccessor repositoryAccessor;

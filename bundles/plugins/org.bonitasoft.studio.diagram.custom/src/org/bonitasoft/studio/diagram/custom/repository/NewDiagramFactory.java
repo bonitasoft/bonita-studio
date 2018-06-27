@@ -50,15 +50,10 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPar
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
-import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.notation.Bounds;
@@ -98,7 +93,7 @@ public class NewDiagramFactory {
 
         final MainProcess mainProcess = (MainProcess) domainElements.get(MainProcess.class);
         saveNewResource(mainProcess, diagram, monitor);
-        createDefaultProcessArtifact(TransactionUtil.getEditingDomain(fileStore.getEMFResource()), mainProcess, monitor);
+        createDefaultProcessArtifact(mainProcess, monitor);
     }
 
     protected Diagram createViews(final Map<Class<?>, EObject> domainElements, final IProgressMonitor monitor) {
@@ -174,7 +169,7 @@ public class NewDiagramFactory {
         return newProcessName;
     }
 
-    protected void createDefaultProcessArtifact(final TransactionalEditingDomain editingDomain, final MainProcess diagram,
+    protected void createDefaultProcessArtifact(final MainProcess diagram,
             final IProgressMonitor monitor) {
         final Pool pool = (Pool) diagram.getElements().get(0);
         final String processUUID = ModelHelper.getEObjectID(pool);
@@ -185,25 +180,6 @@ public class NewDiagramFactory {
         conf.setVersion(ModelVersion.CURRENT_VERSION);
         createDefaultActorMapping(conf);
         confFile.save(conf);
-
-        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final LookNFeelRepositoryStore lookNFeelStore = RepositoryManager.getInstance()
-                .getRepositoryStore(LookNFeelRepositoryStore.class);
-        final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID);
-        if (artifact == null) {
-            final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME);
-            final ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId);
-            final CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
-            // add an empty application folder
-            editingDomain.getCommandStack().execute(templateCommand);
-            final org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil
-                    .createDefaultResourceFolders(editingDomain, pool);
-            if (createDefaultResourceFolders != null) {
-                editingDomain.getCommandStack().execute(createDefaultResourceFolders);
-            }
-        }
         monitor.worked(1);
     }
 

@@ -661,13 +661,6 @@
       </definition>
    </extension>
    <extension
-         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-      <propertyContributor
-            contributorId="org.bonitasoft.studio.diagram.custom.propertyContributor1">
-         <propertyCategory></propertyCategory>
-      </propertyContributor>
-   </extension>
-   <extension
          id="view-provider"
          point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
       <viewProvider
@@ -699,9 +692,6 @@
       </repositoryStore>
       <repositoryStore
             class="org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore">
-      </repositoryStore>
-      <repositoryStore
-            class="org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore">
       </repositoryStore>
    </extension>
    <extension
@@ -739,5 +729,14 @@
          name="%bpmnPalette"
          restorable="true">
    </view>
+</extension>
+<extension
+      point="org.eclipse.gmf.runtime.common.ui.services.editorProviders">
+   <EditorProvider
+         class="org.bonitasoft.studio.diagram.custom.providers.DiagramEditorProvider">
+      <Priority
+            name="Medium">
+      </Priority>
+   </EditorProvider>
 </extension>
 </plugin>

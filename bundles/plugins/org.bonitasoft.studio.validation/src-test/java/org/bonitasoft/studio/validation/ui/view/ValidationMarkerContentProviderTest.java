@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.eclipse.core.resources.IMarker;
@@ -50,17 +49,6 @@ public class ValidationMarkerContentProviderTest {
         assertThat(markers).containsExactly(errorMarker, warningMarker);
     }
 
-    @Test
-    public void should_find_form_markers_in_form_diagram_editor_input() throws Exception {
-        final ValidationMarkerContentProvider validationMarkerContentProvider = createContentProvider();
-
-        final IMarker errorMarker = mock(IMarker.class);
-        when(errorMarker.getAttribute("location")).thenReturn("::Step1::");
-        final IMarker warningMarker = mock(IMarker.class);
-        final Object[] markers = validationMarkerContentProvider.getElements(formDiagramEditorWithMarkers("Step1", errorMarker, warningMarker));
-
-        assertThat(markers).containsExactly(errorMarker);
-    }
 
     private IEditorPart processDiagramEditorWithMarkers(final IMarker... markers) throws CoreException {
         final ProcessDiagramEditor processDiagramEditor = mock(ProcessDiagramEditor.class);
@@ -73,19 +61,6 @@ public class ValidationMarkerContentProviderTest {
         return processDiagramEditor;
     }
 
-    private IEditorPart formDiagramEditorWithMarkers(final String inputName, final IMarker... markers) throws CoreException {
-        final FormDiagramEditor editor = mock(FormDiagramEditor.class);
-        final FileEditorInput editorInput = mock(FileEditorInput.class);
-        when(editorInput.getName()).thenReturn(inputName);
-        final IResource file = mock(IResource.class);
-        when(file.exists()).thenReturn(true);
-        when(
-                file.findMarkers(org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE, false,
-                        IResource.DEPTH_INFINITE)).thenReturn(markers);
-        when(editorInput.getAdapter(IResource.class)).thenReturn(file);
-        when(editor.getEditorInput()).thenReturn(editorInput);
-        return editor;
-    }
 
     private ValidationMarkerContentProvider createContentProvider() {
         return new ValidationMarkerContentProvider();

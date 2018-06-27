@@ -17,19 +17,12 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import java.util.List;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.i18n.Messages;
-import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
-import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -47,9 +40,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class BonitaRunPreferencePage extends AbstractBonitaPreferencePage  implements IWorkbenchPreferencePage{
 
-    private RadioGroupFieldEditor radioFiled;
-    private ComboFieldEditor defaultAppLookNFeel;
-
     public BonitaRunPreferencePage() {
         super(GRID);
         setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
@@ -62,27 +52,12 @@ public class BonitaRunPreferencePage extends AbstractBonitaPreferencePage  imple
      */
     @Override
     public void createFieldEditors() {
-
         createTitleBar(Messages.BonitaPreferenceDialog_RunMode, Pics.getImage(PicsConstants.preferenceDeploy),false) ;
 
         final CheckBoxFieldEditor validateBeforeRunEditor = new CheckBoxFieldEditor(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN, Messages.validateBeforeRun, getFieldEditorParent());
         addField(validateBeforeRunEditor) ;
-
-        defaultAppLookNFeel = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, Messages.defaultAppliThemeLabel,getAvailableThemes(), getFieldEditorParent()) ;
-        addField(defaultAppLookNFeel);
     }
 
-    private String[][] getAvailableThemes() {
-        final LookNFeelRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
-        final List<ApplicationLookNFeelFileStore> artifacts = store.getApplicationLookNFeels();
-        final String[][]  result = new String[artifacts.size()][] ;
-        for(int i = 0 ; i < artifacts.size() ; i++){
-            final String[] item = {  artifacts.get(i).getDisplayName(), artifacts.get(i).getName() };
-            result[i] = item ;
-        }
-
-        return result;
-    }
 
 
     /*

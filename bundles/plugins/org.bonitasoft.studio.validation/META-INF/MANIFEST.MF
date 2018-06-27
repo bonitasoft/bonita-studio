@@ -10,11 +10,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.2.1",
  org.eclipse.ui.ide;bundle-version="3.5.1",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.2.0",
- org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.eclipse.jdt.core,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
- org.bonitasoft.studio.validators;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors.model;bundle-version="1.0.0",
  org.bonitasoft.studio.actors;bundle-version="1.0.0",
@@ -46,9 +44,8 @@ Import-Package: org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.operation,
  org.bonitasoft.studio.businessobject.core.repository,
  org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.validation,org.bonitasoft.studio
- .validation.constraints,org.bonitasoft.studio.validation.constraints.
- connector,org.bonitasoft.studio.validation.constraints.form;x-friends
- :="org.bonitasoft.studio.validation.test",org.bonitasoft.studio.valid
- ation.constraints.process;x-friends:="org.bonitasoft.studio.validatio
- n.test",org.bonitasoft.studio.validation.i18n
+Export-Package: org.bonitasoft.studio.validation,
+ org.bonitasoft.studio.validation.constraints,
+ org.bonitasoft.studio.validation.constraints.connector,
+ org.bonitasoft.studio.validation.constraints.process;x-friends:="org.bonitasoft.studio.validation.test",
+ org.bonitasoft.studio.validation.i18n

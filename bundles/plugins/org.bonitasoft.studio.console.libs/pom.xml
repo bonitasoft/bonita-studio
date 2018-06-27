@@ -34,50 +34,6 @@
 			<version>${engine.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.bonitasoft.web</groupId>
-			<artifactId>theme-builder</artifactId>
-			<version>${theme.builder.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-server</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-model</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-rpc</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.bonitasoft.console</groupId>
 			<artifactId>console-server</artifactId>
 			<version>${bundle.version}</version>
@@ -204,13 +160,6 @@
 									<classifier>javadoc</classifier>
 									<type>jar</type>
 								</artifactItem>
-								<artifactItem>
-									<groupId>org.bonitasoft.forms</groupId>
-									<artifactId>forms-server</artifactId>
-									<version>${bundle.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${javadoc.dir}</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
@@ -310,17 +259,7 @@
 							org.bonitasoft.console.common.server.sso;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
-							org.bonitasoft.engine.*;version="0.0.0",
-							org.bonitasoft.forms.client.model;version="0.0.0",
-							org.bonitasoft.forms.server.accessor;version="0.0.0",
-							org.bonitasoft.forms.server.accessor.impl.util;version="0.0.0",
-							org.bonitasoft.forms.server.api;version="0.0.0",
-							org.bonitasoft.forms.server.builder;version="0.0.0",
-							org.bonitasoft.forms.server.builder.impl;version="0.0.0",
-							org.bonitasoft.forms.server.exception;version="0.0.0",
-							org.bonitasoft.forms.server.provider.impl.util;version="0.0.0",
-							org.bonitasoft.forms.server.validator;version="0.0.0",
-							org.bonitasoft.theme.*;version="0.0.0"
+							org.bonitasoft.engine.*;version="0.0.0"
 						</_exportcontents>
 						<_nouses>true</_nouses>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>

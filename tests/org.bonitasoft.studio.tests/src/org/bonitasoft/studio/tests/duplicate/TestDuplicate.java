@@ -14,23 +14,14 @@
  */
 package org.bonitasoft.studio.tests.duplicate;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -125,59 +116,6 @@ public class TestDuplicate {
                 return "Duplicate has failed !";
             }
         });
-
-        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final MainProcess originalDiagram = drs.getDiagram("Test confirmation template", "1.0").getContent();
-        final AbstractProcess originalProcess = (AbstractProcess) originalDiagram.getElements().get(0);
-        assertThat(originalProcess).isNotNull();
-        assertThat(originalProcess.getConfirmationTemplate()).isNotNull();
-
-        final MainProcess duplicatedDiagram = drs.getDiagram("Test confirmation template", "2.0").getContent();
-        final AbstractProcess duplicatedProcess = (AbstractProcess) duplicatedDiagram.getElements().get(0);
-        assertThat(duplicatedProcess).isNotNull();
-        assertThat(duplicatedProcess.getConfirmationTemplate()).isNotNull()
-                .isNotEqualTo(originalProcess.getConfirmationTemplate());
-        assertThat(duplicatedProcess.getConfirmationTemplate().getPath())
-                .isNotEqualTo(originalProcess.getConfirmationTemplate().getPath());
-
-        final ApplicationResourceRepositoryStore ars = RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final ApplicationResourceFileStore originalResources = ars.getChild(ModelHelper.getEObjectID(originalProcess));
-        final ApplicationResourceFileStore duplicatedResources = ars.getChild(ModelHelper.getEObjectID(duplicatedProcess));
-        assertThat(originalResources).isNotNull();
-        assertThat(duplicatedResources).isNotNull();
-
-        File originalConfirmationFile = WebTemplatesUtil.getFile(originalProcess.getConfirmationTemplate().getPath());
-        originalConfirmationFile.deleteOnExit();
-        File duplicatedConfirmationFile = WebTemplatesUtil.getFile(duplicatedProcess.getConfirmationTemplate().getPath());
-        duplicatedConfirmationFile.deleteOnExit();
-        assertThat(originalConfirmationFile).hasContentEqualTo(duplicatedConfirmationFile);
-
-        final List<PageFlow> pageFlows = ModelHelper.getAllItemsOfType(originalProcess, ProcessPackage.Literals.PAGE_FLOW);
-        PageFlow originalPageFlow = null;
-        for (final PageFlow pageFlow : pageFlows) {
-            if (pageFlow.getConfirmationTemplate() != null && !pageFlow.equals(originalProcess)) {
-                originalPageFlow = pageFlow;
-            }
-        }
-        assertThat(originalPageFlow).isNotNull();
-
-        final List<PageFlow> pageFlows2 = ModelHelper.getAllItemsOfType(duplicatedProcess,
-                ProcessPackage.Literals.PAGE_FLOW);
-        PageFlow duplicatedPageFlow = null;
-        for (final PageFlow pageFlow : pageFlows2) {
-            if (pageFlow.getConfirmationTemplate() != null && !pageFlow.equals(duplicatedProcess)) {
-                duplicatedPageFlow = pageFlow;
-            }
-        }
-        assertThat(duplicatedPageFlow).isNotNull();
-        assertThat(originalPageFlow.getConfirmationTemplate()).isNotNull();
-        assertThat(originalPageFlow.getConfirmationTemplate().getPath())
-                .isNotEqualTo(duplicatedPageFlow.getConfirmationTemplate().getPath());
-        originalConfirmationFile = WebTemplatesUtil.getFile(originalPageFlow.getConfirmationTemplate().getPath());
-        duplicatedConfirmationFile = WebTemplatesUtil.getFile(duplicatedPageFlow.getConfirmationTemplate().getPath());
-        assertThat(originalConfirmationFile).hasContentEqualTo(duplicatedConfirmationFile);
-
     }
 
 }
