@@ -15,15 +15,12 @@
 package org.bonitasoft.studio.importer.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,8 +28,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 public class ImportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
@@ -61,23 +56,14 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                try {
-                    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-                            .getActiveWorkbenchWindow().getActivePage().getActivePart().getSite()
-                            .getService(IHandlerService.class);
-                    final Command command = getCommand();
-                    command.executeWithChecks(handlerService.createExecutionEvent(command, null));
-                } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e1) {
-                    BonitaStudioLog.error(e1);
-                }
+                    ECommandService eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
+                    EHandlerService eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
+                    ParameterizedCommand importCommand = ParameterizedCommand.generateCommand(
+                            eCommandService.getCommand("org.bonitasoft.studio.importer.bos.command"), null);
+                    eHandlerService.executeHandler(importCommand);
             }
         });
 
-    }
-
-    private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        return service.getCommand("org.bonitasoft.studio.importer.bos.command");
     }
 
 }
