@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Objects.requireNonNull;
-import static org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createContractInputExpression;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllElementOfTypeIn;
 import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withExpressionType;
 
@@ -26,9 +25,11 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -42,6 +43,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.SetCommand;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -70,7 +72,8 @@ public class RefactorContractInputOperation
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#shouldUpdateReferencesInScripts(org.bonitasoft.studio.refactoring.core.RefactorPair)
+     * org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#shouldUpdateReferencesInScripts(org.bonitasoft.studio
+     * .refactoring.core.RefactorPair)
      */
     @Override
     protected boolean shouldUpdateReferencesInScripts(RefactorPair<ContractInput, ContractInput> pairRefactor) {
@@ -83,7 +86,9 @@ public class RefactorContractInputOperation
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#allScriptWithReferencedElement(org.bonitasoft.studio.refactoring.core.RefactorPair)
+     * @see
+     * org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation#allScriptWithReferencedElement(org.bonitasoft.studio.
+     * refactoring.core.RefactorPair)
      */
     @Override
     protected Set<ScriptContainer<?>> allScriptWithReferencedElement(
@@ -140,13 +145,34 @@ public class RefactorContractInputOperation
         for (final Expression exp : filter(getAllElementOfTypeIn(container, Expression.class),
                 withExpressionType(ExpressionConstants.CONTRACT_INPUT_TYPE))) {
             for (final ContractInputRefactorPair pairToRefactor : filter(pairsToRefactor, matches(exp))) {
-                final ContractInput newValue = pairToRefactor.getNewValue();
-                cc.append(new UpdateExpressionCommand(getEditingDomain(), exp,
-                        newValue != null ? createContractInputExpression(newValue)
-                                : createDefaultExpression(exp)));
+                if (pairToRefactor.getNewValue() != null) {
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME,
+                            pairToRefactor.getNewValue().getName()));
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT,
+                            pairToRefactor.getNewValue().getName()));
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            ExpressionHelper.getContractInputReturnType(pairToRefactor.getNewValue())));
+                    updateDependencies(cc, pairToRefactor, exp);
+                } else {
+                    EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(exp);
+                    updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(createDefaultExpression(exp)));
+                    cc.append(updater.createUpdateCommand(getEditingDomain()));
+                }
             }
         }
 
+    }
+
+    private void updateDependencies(final CompoundCommand cc, final ContractInputRefactorPair pairToRefactor,
+            final Expression exp) {
+        for (final EObject dependency : exp.getReferencedElements()) {
+            if (dependency instanceof ContractInput
+                    && ((ContractInput) dependency).getName().equals(pairToRefactor.getOldValueName())) {
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(dependency);
+                updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue()));
+                cc.append(updater.createUpdateCommand(getEditingDomain()));
+            }
+        }
     }
 
     private Expression createDefaultExpression(final Expression exp) {
