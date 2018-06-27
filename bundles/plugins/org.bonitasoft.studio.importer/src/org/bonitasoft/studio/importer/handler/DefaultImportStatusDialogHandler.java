@@ -42,7 +42,7 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
 
     @Override
     public void open(final Shell parentShell) {
-        if (importStatus.isOK()) {
+        if (importStatus.isOK() || importStatus.getSeverity() == IStatus.INFO) {
             MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
         } else if (importStatus.getSeverity() == IStatus.WARNING
