@@ -14,23 +14,15 @@
  */
 package org.bonitasoft.studio.validation.ui.view;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.toArray;
-import static com.google.common.collect.Lists.newArrayList;
-
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-
-import com.google.common.base.Predicate;
 
 public class ValidationMarkerContentProvider extends ArrayContentProvider {
 
@@ -42,8 +34,6 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
                 final IResource resource = EditorUtil.retrieveResourceFromEditorInput(editorInput);
                 if (isProcessEditor(inputElement)) {
                     return processMarkers(resource);
-                } else if (isFormEditor(inputElement)) {
-                    return formsMarkers(editorInput, resource);
                 }
             }
         } catch (final CoreException e) {
@@ -56,17 +46,6 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
         return inputElement instanceof ProcessDiagramEditor;
     }
 
-    private boolean isFormEditor(final Object inputElement) {
-        return inputElement instanceof FormDiagramEditor;
-    }
-
-    private Object[] formsMarkers(final IEditorInput editorInput, final IResource resource) throws CoreException {
-        if (resource != null && resource.exists()) {
-            return findFormMarkers(editorInput, resource);
-        }
-        return new Object[0];
-    }
-
     private Object[] processMarkers(final IResource resource) throws CoreException {
         if (resource != null && resource.exists()) {
             return resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE);
@@ -74,25 +53,5 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
         return new Object[0];
     }
 
-    private IMarker[] findFormMarkers(final IEditorInput input, final IResource file) throws CoreException {
-        final IMarker[] markerTab = file.findMarkers(
-                org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE);
-        return toArray(filter(newArrayList(markerTab), withMarkerLocationMatching(input.getName())), IMarker.class);
-    }
 
-    private Predicate<IMarker> withMarkerLocationMatching(final String locationToMatch) {
-        return new Predicate<IMarker>() {
-
-            @Override
-            public boolean apply(final IMarker marker) {
-                try {
-                    final String location = (String) marker.getAttribute("location");
-                    return location != null && location.matches(".*::" + locationToMatch + "::.*");
-                } catch (final CoreException e) {
-                    return false;
-                }
-            }
-
-        };
-    }
 }

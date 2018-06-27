@@ -19,25 +19,21 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -46,7 +42,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
@@ -83,12 +78,6 @@ public class DeleteHandler extends AbstractHandler {
                     }
                     if (semanticElement instanceof Lane) {
                         lanes.add((Lane) semanticElement);
-                    }
-                    if (semanticElement instanceof PageFlow) {
-
-                        final PageFlow element = (PageFlow) semanticElement;
-                        final List<Form> forms = element.getForm();
-                        closeFormsRelatedToDiagramElement(forms);
                     }
                     if (semanticElement instanceof MessageFlow) {
                         isMessageFlow = true;
@@ -141,23 +130,6 @@ public class DeleteHandler extends AbstractHandler {
         }
     }
 
-    private void closeFormsRelatedToDiagramElement(final List<Form> forms) {
-        for (final Form form : forms) {
-            final IEditorPart[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
-            for (final IEditorPart editor : editors) {
-                if (editor instanceof FormDiagramEditor) {
-                    final FormDiagramEditor formEditor = (FormDiagramEditor) editor;
-                    final DiagramEditPart diagramEditPart = formEditor.getDiagramEditPart();
-                    if (diagramEditPart != null) {
-                        final Form availableform = (Form) diagramEditPart.resolveSemanticElement();
-                        if (EcoreUtil.equals(availableform, form)) {
-                            ((FormDiagramEditor) editor).close(false);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     public void removeMessage(final MessageFlow flow) {
         final MainProcess diagram = ModelHelper.getMainProcess(flow);

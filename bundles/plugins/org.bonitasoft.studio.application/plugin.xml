@@ -489,14 +489,6 @@
             name="%General_process"
             restorable="true">
       </view>
-      <view
-            category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.form.BonitaAppearancePropertiesView"
-            icon="icons/appearanceView.png"
-            id="org.bonitasoft.studio.views.properties.form.appearance"
-            name="%Appearance"
-            restorable="true">
-      </view>
       <category
             id="org.bonitasoft.studio.application.bonita"
             name="Bonita">

@@ -160,7 +160,7 @@ public class DataWizardIT {
         bot.buttonWithId(SWTBotConstants.SWTBOT_ID_REMOVE_PROCESS_DATA).click();
         bot.button(IDialogConstants.OK_LABEL).click();
 
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         bot.menu("File");
         final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         applicationWorkbenchWindow.save();
@@ -189,7 +189,7 @@ public class DataWizardIT {
         bot.button(Messages.moveData).click();
         bot.tree().getTreeItem("Pool " + pool.getName()).getNode("Lane " + lane.getName()).select("Task Step1");
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         bot.menu("File").menu("Save").click();
         bot.waitUntil(new DefaultCondition() {
 
@@ -238,10 +238,10 @@ public class DataWizardIT {
         bot.textWithLabel(Messages.name + " *").setText(dataName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         applicationWorkbenchWindow.save();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 
     @Test

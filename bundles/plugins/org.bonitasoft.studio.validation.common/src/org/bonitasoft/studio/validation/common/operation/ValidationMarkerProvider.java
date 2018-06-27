@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.Triple;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.form.part.ProcessDiagramEditorUtil;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -122,11 +122,7 @@ public class ValidationMarkerProvider {
         if (target == null) {
             return;
         }
-        if (diagramEP.resolveSemanticElement() instanceof Form) {
-            addFormMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
-        } else {
-            addProcessMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
-        }
+        addProcessMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
     }
 
     private static void addProcessMarker(final String constraintId, final EditPartViewer viewer, final IFile
@@ -148,15 +144,6 @@ public class ValidationMarkerProvider {
         }
     }
 
-    private static void addFormMarker(final String constraintId, final EditPartViewer viewer, final IFile
-            target, final String elementId, final String location, final String message, final int statusSeverity) {
-        if (target == null) {
-            return;
-        }
-        final IMarker marker = org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.addMarker(
-                target, elementId, location, message, statusSeverity);
-        addConstraintId(constraintId, marker);
-    }
 
     private static int diagnosticToStatusSeverity(final int diagnosticSeverity) {
         if (diagnosticSeverity == Diagnostic.OK) {
@@ -217,7 +204,6 @@ public class ValidationMarkerProvider {
                     final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
                     if (target != null) {
                         org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
-                        org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
                         break;
                     }
                 }

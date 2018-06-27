@@ -14,11 +14,6 @@
  */
 package org.bonitasoft.studio.engine.preferences;
 
-import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
-
-import java.util.List;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -28,15 +23,12 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
-import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
-import org.bonitasoft.studio.repository.themes.UserXpFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
@@ -49,7 +41,6 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
     private Integer newPort = new Integer(-1);
     private IntegerFieldEditor port;
-    private ComboFieldEditor defaultTheme;
 
     public ServerPreferencePage() {
         super(GRID);
@@ -75,25 +66,8 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 getFieldEditorParent());
         port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
         addField(port);
-        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME,
-                Messages.defaultUserXPThemeLabel + " " + bonitaPortalModuleName,
-                getAvailableThemes(), getFieldEditorParent());
-        addField(defaultTheme);
-
     }
 
-    private String[][] getAvailableThemes() {
-        final LookNFeelRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(LookNFeelRepositoryStore.class);
-        final List<UserXpFileStore> artifacts = store.getUserXPLookNFeels();
-        final String[][] result = new String[artifacts.size()][];
-        for (int i = 0; i < artifacts.size(); i++) {
-            final String[] item = { artifacts.get(i).getDisplayName(), artifacts.get(i).getName() };
-            result[i] = item;
-        }
-
-        return result;
-    }
 
     @Override
     public boolean performOk() {
@@ -153,8 +127,5 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
     public void init(final IWorkbench workbench) {
     }
 
-    public static String getInstalledThemeId() {
-        return "default";
-    }
 
 }

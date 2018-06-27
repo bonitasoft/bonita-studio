@@ -25,18 +25,11 @@ import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
-import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 
@@ -50,8 +43,6 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
                 ProcessConfigurationRepositoryStore.class);
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
-        final LookNFeelRepositoryStore lookNFeelStore = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
 
         // Listen for changes to features.
         switch (notification.getFeatureID(AbstractProcess.class)) {
@@ -59,17 +50,17 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
                 if (NotificationUtil.isElementAddedToSlot(notification) || NotificationUtil.isElementRemovedFromSlot(notification)) {
                     final Object newValue = notification.getNewValue();
                     if (newValue instanceof Pool) { //Pool added
-                        handlePoolAdded(notification, processConfStore, resourceStore, lookNFeelStore);
+                        handlePoolAdded(notification, processConfStore);
                     } else if (newValue == null && notification.getOldValue() instanceof Pool) {//Pool removed
-                        handlePoolRemoved(processConfStore, diagramStore, resourceStore);
+                        handlePoolRemoved(processConfStore, diagramStore);
                     }
                 }
                 break;
         }
     }
 
-    protected IWorkspaceRunnable handlePoolRemoved(final ProcessConfigurationRepositoryStore processConfStore, final DiagramRepositoryStore diagramStore,
-            final ApplicationResourceRepositoryStore resourceStore) {
+    protected IWorkspaceRunnable handlePoolRemoved(final ProcessConfigurationRepositoryStore processConfStore,
+            final DiagramRepositoryStore diagramStore) {
         return new IWorkspaceRunnable() {
 
             @Override
@@ -82,27 +73,19 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
                         file.delete();
                     }
                 }
-
-                for (final IRepositoryFileStore file : resourceStore.getChildren()) {
-                    final String id = file.getName();
-                    if (!poolIds.contains(id)) {
-                        file.delete();
-                    }
-                }
             }
         };
 
     }
 
-    protected IWorkspaceRunnable handlePoolAdded(final Notification notification, final ProcessConfigurationRepositoryStore processConfStore,
-            final ApplicationResourceRepositoryStore resourceStore, final LookNFeelRepositoryStore lookNFeelStore) {
+    protected IWorkspaceRunnable handlePoolAdded(final Notification notification,
+            final ProcessConfigurationRepositoryStore processConfStore) {
         return new IWorkspaceRunnable() {
 
             @Override
             public void run(final IProgressMonitor arg0) throws CoreException {
                 final Pool pool = (Pool) notification.getNewValue();
                 pool.eAdapters().add(PoolNotificationListener.this);
-                final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool);
 
                 // check that process is not empty
                 final String processUUID = ModelHelper.getEObjectID(pool);
@@ -110,21 +93,6 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
                 final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
                 conf.setVersion(ModelVersion.CURRENT_VERSION);
                 confFile.save(conf);
-
-                final ApplicationResourceFileStore artifact = resourceStore.getChild(processUUID);
-                if (artifact == null) {
-                    final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                            .getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME);
-                    final ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId);
-                    final CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
-                    // add an empty application folder
-                    editingDomain.getCommandStack().execute(templateCommand);
-                    final org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain,
-                            pool);
-                    if (createDefaultResourceFolders != null) {
-                        editingDomain.getCommandStack().execute(createDefaultResourceFolders);
-                    }
-                }
             }
         };
 

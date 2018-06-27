@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
-import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -63,11 +62,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
                 for (final DiagramFileStore file : files) {
                     for (final AbstractProcess process : file.getProcesses()) {
                         final String uuid = ModelHelper.getEObjectID(process);
-                        final IRepositoryFileStore resourceFolder = getApplicationResourceRepositoryStore()
-                                .getChild(uuid);
-                        if (resourceFolder != null) {
-                            resourceFolder.delete();
-                        }
                         final IRepositoryFileStore confFile = getConfigurationRepositoryStore()
                                 .getChild(uuid + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
                         if (confFile != null) {
@@ -97,10 +91,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
             }
         }
         return false;
-    }
-
-    protected ApplicationResourceRepositoryStore getApplicationResourceRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
     }
 
     protected ProcessConfigurationRepositoryStore getConfigurationRepositoryStore() {

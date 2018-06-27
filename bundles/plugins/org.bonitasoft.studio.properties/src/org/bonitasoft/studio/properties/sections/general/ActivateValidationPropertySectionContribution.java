@@ -18,7 +18,7 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -78,8 +78,6 @@ public class ActivateValidationPropertySectionContribution implements
                             .getFile(process.eResource()) : null;
                     if (target != null) {
                         ProcessMarkerNavigationProvider.deleteMarkers(target);
-                        org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider
-                                .deleteMarkers(target);
                     }
                 }
             }

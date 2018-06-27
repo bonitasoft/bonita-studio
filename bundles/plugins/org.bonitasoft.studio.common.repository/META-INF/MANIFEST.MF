@@ -62,6 +62,4 @@ Bundle-ClassPath: lib/nlcl.jar,
  .
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.connector,
- org.bonitasoft.engine.filter,
- org.bonitasoft.forms.client.model,
- org.bonitasoft.forms.server.validator
+ org.bonitasoft.engine.filter

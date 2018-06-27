@@ -46,8 +46,6 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.expression,
- org.bonitasoft.forms.server.api,
- org.bonitasoft.forms.server.validator,
  org.eclipse.jdt.core,
  org.eclipse.ui.part
 Bundle-ActivationPolicy: lazy

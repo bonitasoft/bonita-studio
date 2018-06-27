@@ -21,7 +21,6 @@
         <module>org.bonitasoft.studio.model.edit</module>
         <module>org.bonitasoft.studio.tests-utils</module>
         <module>org.bonitasoft.studio.diagram</module>
-        <module>org.bonitasoft.studio.diagram.form</module>
         <module>org.bonitasoft.studio.actors</module>
         <module>org.bonitasoft.studio.businessobject</module>
         <module>org.bonitasoft.studio.common</module>
@@ -42,20 +41,16 @@
         <module>org.bonitasoft.studio.designer</module>
         <module>org.bonitasoft.studio.designer.war</module>
         <module>org.bonitasoft.studio.diagram.custom</module>
-        <module>org.bonitasoft.studio.diagram.form.custom</module>
         <module>org.bonitasoft.studio.document</module>
         <module>org.bonitasoft.studio.engine</module>
         <module>org.bonitasoft.studio.exporter</module>
         <module>org.bonitasoft.studio.expression.editor</module>
         <module>org.bonitasoft.studio.expression.editor.win32</module>
-        <module>org.bonitasoft.studio.form.preview</module>
         <module>org.bonitasoft.studio.groovy</module>
         <module>org.bonitasoft.studio.groovy.ui</module>
         <module>org.bonitasoft.studio.importer</module>
-        <module>org.bonitasoft.studio.importer.bar</module>
         <module>org.bonitasoft.studio.importer.bos</module>
         <module>org.bonitasoft.studio.la</module>
-        <module>org.bonitasoft.studio.legacy6x</module>
         <module>org.bonitasoft.studio.migration</module>
         <module>org.bonitasoft.studio.intro</module>
         <module>org.bonitasoft.studio.jpdl</module>
@@ -67,13 +62,10 @@
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
         <module>org.bonitasoft.studio.properties.bos</module>
-        <module>org.bonitasoft.studio.repository.themes</module>
-        <module>org.bonitasoft.studio.repository.themes.bonitasoft</module>
         <module>org.bonitasoft.studio.scripting</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
-        <module>org.bonitasoft.studio.validators</module>
         <module>org.bonitasoft.studio.xml</module>
         <module>org.bonitasoft.studio.xpdl</module>
         <module>org.omg.schema.spec.bpmn</module>

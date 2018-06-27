@@ -45,8 +45,6 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -61,7 +59,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.ui.URIEditorInput;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -410,29 +407,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         final Set<IRepositoryFileStore> result = new HashSet<>();
         final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository().getRepositoryStore(
                 ProcessConfigurationRepositoryStore.class);
-        final ApplicationResourceRepositoryStore appResourceRepositoryStore = getRepository().getRepositoryStore(
-                ApplicationResourceRepositoryStore.class);
 
         for (final AbstractProcess process : getProcesses()) {
             final String uuid = toUUID().apply(process);
             result.add(processConfigurationRepositoryStore
                     .getChild(String.format("%s.%s", uuid, ProcessConfigurationRepositoryStore.CONF_EXT)));
-            if (hasLegacyForms(process)) {
-                result.add(appResourceRepositoryStore.getChild(uuid));
-            }
         }
         return newHashSet(filter(result, Predicates.notNull()));
-    }
-
-    private boolean hasLegacyForms(AbstractProcess process) {
-        final TreeIterator<EObject> ti = process.eAllContents();
-        while (ti.hasNext()) {
-            final Object eObject = ti.next();
-            if (eObject instanceof FormMapping && ((FormMapping) eObject).getType() == FormMappingType.LEGACY) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private Function<AbstractProcess, String> toUUID() {

@@ -31,7 +31,6 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.engine.operation.RunOperationExecutionContext;
 import org.bonitasoft.studio.engine.operation.RunProcessOperation;
-import org.bonitasoft.studio.engine.preferences.ServerPreferencePage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -84,16 +83,10 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
-        final String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME);
-        final String installedTheme = ServerPreferencePage.getInstalledThemeId();
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-        if (installedTheme != null && !installedTheme.equals(currentTheme)) {
-            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme);
-        }
-
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
-            final List<AbstractProcess> processes = new ArrayList<AbstractProcess>(executableProcesses);
+            final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
             final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(new BatchValidationOperation(
                     new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()), new ValidationMarkerProvider()));
             validationOperation.addProcesses(processes);

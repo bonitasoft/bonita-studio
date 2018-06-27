@@ -60,13 +60,10 @@ public class BonitaPreferenceDialogTest {
         bpd.createOtherCategoryLine(composite);
 
         verify(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), eq(BonitaPreferenceDialog.ADVANCED_PAGE_ID));
-        verify(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), eq(BonitaPreferenceDialog.LEGACY6X_MODE_ID));
         verify(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), eq((String) null));
         verify(bpd).putInItemPerPreferenceNode(BonitaPreferenceDialog.ADVANCED_PAGE_ID, toolItem);
-        verify(bpd).putInItemPerPreferenceNode(BonitaPreferenceDialog.LEGACY6X_MODE_ID, toolItem);
         verify(bpd).putInItemPerPreferenceNode(BonitaPreferenceDialog.ECLIPSE_PAGE_ID, toolItem);
         verify(bpd).putInLabelPerPreferenceNode(BonitaPreferenceDialog.ADVANCED_PAGE_ID, label);
-        verify(bpd).putInLabelPerPreferenceNode(BonitaPreferenceDialog.LEGACY6X_MODE_ID, label);
         verify(bpd).putInLabelPerPreferenceNode(BonitaPreferenceDialog.ECLIPSE_PAGE_ID, label);
 
     }

@@ -23,7 +23,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import org.bonitasoft.forms.client.model.FormValidator;
+import org.bonitasoft.console.common.server.preferences.constants.WebBonitaConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspace;
@@ -115,7 +115,7 @@ public class ProjectUtil {
     }
 
 	public static Bundle getConsoleLibsBundle() {
-		return FrameworkUtil.getBundle(FormValidator.class);
+		return FrameworkUtil.getBundle(WebBonitaConstants.class);
 	}
 
 }

@@ -23,14 +23,11 @@ import java.util.Set;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
@@ -180,8 +177,6 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
     protected String getMarkerType(final DiagramEditor editor) {
         if (editor instanceof ProcessDiagramEditor) {
             return ProcessMarkerNavigationProvider.MARKER_TYPE;
-        } else if (editor instanceof FormDiagramEditor) {
-            return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
         }
         return null;
     }
@@ -195,15 +190,6 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
                     || validatedObject instanceof Container
                     || validatedObject instanceof Connection)) {
                 validatedObject = ModelHelper.getParentFlowElement(validatedObject);
-            }
-        } else if (editor instanceof FormDiagramEditor) {
-            if (!(validatedObject instanceof Widget
-            || validatedObject instanceof Form)) {
-                EObject result = ModelHelper.getParentWidget(validatedObject);
-                if (result == null) {
-                    result = ModelHelper.getParentForm(validatedObject);
-                }
-                validatedObject = result;
             }
         }
         for (final Object ep : editor.getDiagramGraphicalViewer().getEditPartRegistry().values()) {

@@ -21,13 +21,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
-import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
-import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
@@ -41,7 +38,6 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
-import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -319,14 +315,6 @@ public class GroovyUtil {
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             result.add(expressionConstants.getEngineConstantName());
         }
-        final Form form = ModelHelper.getParentForm(context);
-        if (form != null) {
-            result.add(IFormExpressionsAPI.USER_LOCALE);
-        }
-        if (context != null && context instanceof Validator) {
-            result.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
-        }
-
         return result;
     }
 
@@ -337,15 +325,6 @@ public class GroovyUtil {
             final ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
                     getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
             result.add(scriptVariable);
-        }
-        final Form form = ModelHelper.getParentForm(element);
-
-        if (form != null) {
-            result.add(new ScriptVariable(IFormExpressionsAPI.USER_LOCALE, Locale.class.getName()));
-        }
-        if (element != null && element instanceof Validator) {
-            result.add(new ScriptVariable(AbstractFormValidator.CLICKED_BUTTON_VARNAME,
-                    String.class.getName()));
         }
     }
 

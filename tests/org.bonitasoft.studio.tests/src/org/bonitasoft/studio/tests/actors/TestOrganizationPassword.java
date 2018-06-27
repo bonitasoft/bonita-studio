@@ -55,7 +55,7 @@ public class TestOrganizationPassword {
         manageOrganizationWizard.manageUsers().selectUser("User1").setPassword("updatedPassord");
         manageOrganizationWizard.finish();
 
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository());
 
         final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);

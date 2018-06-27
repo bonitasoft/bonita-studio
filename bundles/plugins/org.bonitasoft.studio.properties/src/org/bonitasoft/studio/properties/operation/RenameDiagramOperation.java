@@ -24,11 +24,10 @@ import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
-import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -105,17 +104,11 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
     protected void cleanOldFileStores(final DiagramFileStore diagramFileStore) {
         final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
-
-        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationResourceRepositoryStore.class);
         final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         for (final Pool p : allPools) {
-            IRepositoryFileStore fileStore = resourceStore.getChild(ModelHelper.getEObjectID(p));
-            if (fileStore != null) {
-                fileStore.delete();
-            }
-            fileStore = confStore.getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+            ProcessConfigurationFileStore fileStore = confStore
+                    .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
             if (fileStore != null) {
                 fileStore.delete();
             }

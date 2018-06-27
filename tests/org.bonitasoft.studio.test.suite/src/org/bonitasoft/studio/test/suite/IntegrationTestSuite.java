@@ -46,7 +46,6 @@ import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
-import org.bonitasoft.studio.tests.duplicate.TestDuplicateCommand;
 import org.bonitasoft.studio.tests.engine.TestJavaDoc;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
 import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
@@ -62,6 +61,7 @@ import org.bonitasoft.studio.tests.importer.bpmn2.TestImportBPMN2;
 import org.bonitasoft.studio.tests.importer.extensions.TestImportExtensionPoint;
 import org.bonitasoft.studio.tests.importer.jpdl.TestJBPMImport;
 import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
+import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
 import org.bonitasoft.studio.tests.migration.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
@@ -82,6 +82,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        EdaptHistoryIT.class,
         TestBugs.class, //must be the first (to check for zoomContributionItem at startup)
         ProductVersionIT.class,
         TestInitialWorkspace.class,
@@ -121,7 +122,6 @@ import org.junit.runners.Suite;
         TestBOSArchiveImport.class,
         TestGroovyScriptExpressionEditor.class,
         TestExportProcessBar.class,
-        TestDuplicateCommand.class,
         BPMNImportExportTest.class,
         BPMNDataExportImportTest.class,
         BPMNSequenceFlowConditionExportImportTest.class,

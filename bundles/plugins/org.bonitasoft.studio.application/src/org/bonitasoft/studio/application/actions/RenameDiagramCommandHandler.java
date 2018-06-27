@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
 import org.eclipse.core.commands.AbstractHandler;
@@ -83,7 +82,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
     protected MainProcess getMainProcess() {
         if (PlatformUI.isWorkbenchRunning()) {
             final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if (editor instanceof ProcessDiagramEditor || editor instanceof FormDiagramEditor) {
+            if (editor instanceof ProcessDiagramEditor) {
                 final EObject mainElement = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
                 final MainProcess diagram = ModelHelper.getMainProcess(mainElement);
                 return diagram;
