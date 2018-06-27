@@ -293,24 +293,24 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         final IConverter referencetoDataConverter = new Converter(List.class,
                 Data.class) {
 
+            @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object dataList) {
-                if (dataList != null) {
-                    final List<Data> list = (List<Data>) dataList;
-                    if (!list.isEmpty()) {
-                        final Data d = list.get(0);
-                        final Collection<Data> inputData = (Collection<Data>) viewer
-                                .getInput();
-                        for (final Data data : inputData) {
-                            if (data.getName().equals(d.getName())
-                                    && data.getDataType().getName()
-                                            .equals(d.getDataType().getName())) {
-                                return data;
-                            }
-                        }
-                    }
-                }
-                return null;
+                final List<? extends EObject> list = dataList != null
+                        ? (List<? extends EObject>) dataList
+                        : Collections.emptyList();
+                return list.stream()
+                        .filter(Data.class::isInstance)
+                        .map(Data.class::cast)
+                        .findFirst()
+                        .map(dataInput -> {
+                            return ((Collection<Data>) viewer.getInput()).stream()
+                                    .filter(data -> Objects.equals(dataInput.getName(), data.getName()))
+                                    .filter(data -> Objects.equals(dataInput.getDataType(), data.getDataType()))
+                                    .findFirst()
+                                    .orElse(null);
+                        })
+                        .orElse(null);
             }
 
         };
