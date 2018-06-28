@@ -29,7 +29,9 @@ import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -93,13 +95,14 @@ public class RepositoryTest {
         verify(project).refreshLocal(anyInt(), any(IProgressMonitor.class));
     }
 
-    private Repository newRepository() {
+    private Repository newRepository() throws CoreException, MigrationException {
         final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, projectManifestFactory,
                 bonitaBPMProjectClasspath, true));
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
         doNothing().when(repo).hookResourceListeners();
         doNothing().when(repo).removeResourceListeners();
+        doNothing().when(repo).migrate(any(IProgressMonitor.class));
         return repo;
     }
 

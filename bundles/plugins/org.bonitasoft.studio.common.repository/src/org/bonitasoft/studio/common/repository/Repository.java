@@ -94,6 +94,7 @@ import org.eclipse.team.svn.core.SVNTeamPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Version;
 import org.xml.sax.InputSource;
 
 /**
@@ -104,6 +105,17 @@ public class Repository implements IRepository, IJavaContainer {
     private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
+
+    public static final Set<String> LEGACY_REPOSITORIES = new HashSet<>();
+
+    static {
+        LEGACY_REPOSITORIES.add("application_resources");
+        LEGACY_REPOSITORIES.add("forms");
+        LEGACY_REPOSITORIES.add("widgets");
+        LEGACY_REPOSITORIES.add("looknfeels");
+        LEGACY_REPOSITORIES.add("validators");
+        LEGACY_REPOSITORIES.add("src-validators");
+    }
 
     private static final String CLASS = "class";
 
@@ -325,16 +337,16 @@ public class Repository implements IRepository, IJavaContainer {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration,
                             monitor);
-                    if (migrationEnabled()) {
-                        try {
-                            store.migrate(monitor);
-                        } catch (final MigrationException e) {
-                            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                        }
-                    }
                     stores.put(store.getClass(), store);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
+                }
+            }
+            if (migrationEnabled()) {
+                try {
+                    migrate(monitor);
+                } catch (final MigrationException | CoreException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
         }
@@ -722,7 +734,32 @@ public class Repository implements IRepository, IJavaContainer {
             store.createRepositoryStore(this);
             store.migrate(monitor);
         }
+        //Remove legacy repositories
+        Version oldVersion = null;
+        try {
+            oldVersion = Version.parseVersion(getVersion());
+        } catch (IllegalArgumentException e) {
+            oldVersion = new Version("6.0.0");
+        }
+        if (oldVersion.compareTo(new Version("7.8.0")) < 0) {
+            LEGACY_REPOSITORIES.stream().forEach(folderName -> removeFolder(folderName, monitor));
+        }
+
         workspace.run(newProjectMigrationOperation(project), monitor);
+    }
+
+    private void removeFolder(String folderName, final IProgressMonitor monitor){
+        IFolder resourceFolder = project.getFolder(folderName);
+        if (resourceFolder.exists()) {
+            try {
+                resourceFolder.delete(true, monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(String.format("Failed to delete folder %s during migration", folderName),
+                      CommonRepositoryPlugin.PLUGIN_ID);
+            }
+            BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folderName),
+                    CommonRepositoryPlugin.PLUGIN_ID);
+        }
     }
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {

@@ -69,9 +69,11 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
+import org.osgi.framework.Version;
 
 public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
+    private static final Version VERSION_7_8_0 = new Version("7.8.0");
     private static final int BUTTON_WIDTH = 80;
     private static final String BOS_EXTENSION = "*.bos";
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
@@ -288,15 +290,33 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
                 textWidget
-                        .setMessage(String.format("%s %s (%s)",
-                                Messages.bosArchiveName,
-                                myFile.getName(),
-                                archiveModel.getBosArchive().getVersion()));
+                        .setMessage(archiveStatusMessages(myFile.getName()));
                 importActionSelector.setArchiveModel(archiveModel);
                 viewer.setInput(archiveModel);
                 openTree();
             }
         });
+    }
+
+    private String archiveStatusMessages(String fileName) {
+        StringBuilder message = new StringBuilder(String.format("%s %s (%s)",
+                Messages.bosArchiveName,
+                fileName,
+                archiveModel.getBosArchive().getVersion()));
+        Version archiveVersion = null;
+        try {
+            archiveVersion = Version.parseVersion(archiveModel.getBosArchive().getVersion());
+        } catch (IllegalArgumentException e) {
+            //Version is not osgi friendly (eg: 6.0.0-ga)
+        }
+        if (archiveVersion == null || archiveVersion
+                .compareTo(VERSION_7_8_0) < 0) {
+            message.append(System.lineSeparator());
+            message.append(Messages.gwtFormsNotSupported);
+            message.append(System.lineSeparator());
+            message.append(Messages.formsRemovedFromStudio);
+        }
+        return message.toString();
     }
 
     protected ImportArchiveModel parseArchive(String path) {

@@ -14,10 +14,16 @@
  */
 package org.bonitasoft.studio.application.dialog;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -33,14 +39,13 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.AccessibleAdapter;
-import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -50,7 +55,8 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class StartupMessageDialog extends MessageDialogWithPrompt {
 
-    private Label startMessage;
+    private Link startMessage;
+    private Label title;
     public static int IMPORT_BUTTON_ID = 38;
 
     public StartupMessageDialog(Shell parentShell) {
@@ -67,8 +73,7 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     public static int open(Shell parent, int style, IPreferenceStore store, String key) {
         final StartupMessageDialog dialog = new StartupMessageDialog(parent);
-        style &= SWT.SHEET;
-        dialog.setShellStyle(dialog.getShellStyle() | style);
+        dialog.setShellStyle(dialog.getShellStyle() | style | SWT.ON_TOP);
         dialog.setPrefStore(store);
         dialog.setPrefKey(key);
         return dialog.open();
@@ -76,50 +81,76 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     @Override
     protected Control createMessageArea(Composite composite) {
-        // create composite
-        // create image
-        Image image = getImage();
-        if (image != null) {
-            imageLabel = new Label(composite, SWT.NULL);
-            image.setBackground(imageLabel.getBackground());
-            imageLabel.setImage(image);
-            addAccessibleListeners(imageLabel, image);
-            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
-                    .applyTo(imageLabel);
-        }
-        // create message
         if (message != null) {
-            startMessage = new Label(composite, getMessageLabelStyle());
-            startMessage.setText(Messages.startDialogMsg);
+
+
+            title = new Label(composite, SWT.CENTER);
+            title.setText(String.format(Messages.startDialogTitle, ProductVersion.CURRENT_VERSION));
             GridDataFactory
                     .fillDefaults()
+                    .span(2, 1)
+                    .grab(true, false)
+                    .applyTo(title);
+
+            GridDataFactory
+                    .fillDefaults()
+                    .span(2, 1)
+                    .grab(true, false)
+                    .applyTo(new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL));
+
+            startMessage = new Link(composite, SWT.WRAP | SWT.NO_FOCUS);
+            startMessage.setText(String.format(Messages.startDialogMsg, Messages.releaseNote, Messages.documentedHere));
+            GridDataFactory
+                    .fillDefaults()
+                    .span(2, 1)
                     .align(SWT.FILL, SWT.BEGINNING)
                     .grab(true, false)
                     .hint(
                             convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
                             SWT.DEFAULT)
                     .applyTo(startMessage);
+            startMessage.addListener(SWT.Selection, event -> openBrowser(event.text));
 
             createDetailsSection(composite);
         }
         return composite;
     }
 
+    private void openBrowser(String text) {
+        try {
+            java.awt.Desktop.getDesktop().browse(new URI(getLinkFor(text)));
+        } catch (IOException | URISyntaxException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected String getLinkFor(String text) {
+        if (Objects.equals(Messages.releaseNote, text)) {
+            return String.format(
+                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=676&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    ProductVersion.majorVersion());
+        }
+        if (Objects.equals(Messages.documentedHere, text)) {
+            return String.format(
+                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=675&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    ProductVersion.majorVersion());
+        }
+        throw new IllegalArgumentException("Unsupported link");
+    }
+
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         Button importButton = createButton(parent, IMPORT_BUTTON_ID, Messages.importWorkspace, false);
         super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setText(Messages.letsStart);
         importButton.addListener(SWT.Selection, e -> Display.getDefault().asyncExec(this::openImportWorkspaceDialog));
     }
 
     private void createDetailsSection(Composite parent) {
 
-        Label filer = new Label(parent, SWT.NONE);
-        filer.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        Section detailsSection = new Section(parent, Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
+        Section detailsSection = new Section(parent, Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX);
         detailsSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        detailsSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        detailsSection.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
         detailsSection.setText(org.bonitasoft.studio.common.Messages.moreDetails);
 
         Composite detailsComposite = new Composite(detailsSection, SWT.NONE);
@@ -153,20 +184,6 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
         } catch (ExecutionException | NotHandledException | NotDefinedException | NotEnabledException e1) {
             throw new RuntimeException("Failed to execute import workspace command", e1);
         }
-    }
-
-    private void addAccessibleListeners(Label label, final Image image) {
-        label.getAccessible().addAccessibleListener(new AccessibleAdapter() {
-
-            @Override
-            public void getName(AccessibleEvent event) {
-                final String accessibleMessage = getAccessibleMessageFor(image);
-                if (accessibleMessage == null) {
-                    return;
-                }
-                event.result = accessibleMessage;
-            }
-        });
     }
 
     private String getAccessibleMessageFor(Image image) {

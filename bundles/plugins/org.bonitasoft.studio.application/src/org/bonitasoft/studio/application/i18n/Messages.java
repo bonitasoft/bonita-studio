@@ -67,12 +67,12 @@ public class Messages extends NLS {
     public static String startDialogTitle;
     public static String doNotShowMeAgain;
     public static String startDialogMsg;
-
     public static String startDialogDetails;
-
     public static String importWorkspace;
-
     public static String startingEngineServer;
+    public static String releaseNote;
+    public static String documentedHere;
+    public static String letsStart;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

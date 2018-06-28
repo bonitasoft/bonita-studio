@@ -183,6 +183,9 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
     private void updateFilePath(String filePath) {
         if (!Objects.equals(textWidget.getText(), filePath)) {
             textWidget.setText(filePath);
+            if (statusSection.getClient() != null) {
+                statusSection.getClient().dispose();
+            }
             statusSection.setClient(createStatusControl(statusSection));
             if (workspaceModel.getStatus().isOK()) {
                 statusSection.setExpanded(true);

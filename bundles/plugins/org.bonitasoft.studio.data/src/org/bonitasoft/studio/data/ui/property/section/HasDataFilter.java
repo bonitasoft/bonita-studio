@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.filters;
+package org.bonitasoft.studio.data.ui.property.section;
 
 import org.bonitasoft.studio.model.process.CatchMessageEvent;
 import org.bonitasoft.studio.model.process.Lane;

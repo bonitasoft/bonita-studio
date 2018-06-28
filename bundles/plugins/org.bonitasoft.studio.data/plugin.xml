@@ -41,5 +41,27 @@
             type="TYPE_VARIABLE">
       </proposalListner>
    </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.bonitasoft.studio.diagram">
+           <propertySection
+              afterSection="tab.poolData"
+              class="org.bonitasoft.studio.data.ui.property.section.DataSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.data.ui.property.section.LocalDataFilter"
+              id="DataSection"
+              tab="tab.data"
+              viewID="org.bonitasoft.studio.views.properties.process.data">
+        </propertySection>
+        <propertySection
+              class="org.bonitasoft.studio.data.ui.property.section.PoolDataSection"
+              filter="org.bonitasoft.studio.data.ui.property.section.HasDataFilter"
+              id="PoolDataSection"
+              tab="tab.poolData"
+              viewID="org.bonitasoft.studio.views.properties.process.data">
+        </propertySection>
+      </propertySections>
+   </extension>
 
 </plugin>
