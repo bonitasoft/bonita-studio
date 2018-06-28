@@ -12,28 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.bos.sections.data.DataSectionBOS;
-
-import java.util.Set;
+package org.bonitasoft.studio.data.ui.property.section;
 
 import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Aurelien Pupier
  */
-public class DataSectionBOS extends AbstractDataSection {
-
-    @Override
-    protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
-        final Set<EStructuralFeature> res = super.getDataFeatureToCheckUniqueID();
-        res.add(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA);
-        res.add(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA);
-        res.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA);
-        return res;
-    }
+public class DataSection extends AbstractDataSection {
 
     /*
      * (non-Javadoc)

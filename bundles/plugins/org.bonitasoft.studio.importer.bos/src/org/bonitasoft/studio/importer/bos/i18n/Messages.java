@@ -73,5 +73,9 @@ public class Messages extends NLS {
     public static String importWorkspaceOverwriteBehavior;
     public static String moreInfo;
     public static String bdmDeployedInfo;
+    public static String legacyFormsNotImported;
+    public static String gwtFormsNotSupported;
+    public static String formsRemovedFromStudio;
+    public static String legacyFormsNotImportedFromWorkspace;
 
 }

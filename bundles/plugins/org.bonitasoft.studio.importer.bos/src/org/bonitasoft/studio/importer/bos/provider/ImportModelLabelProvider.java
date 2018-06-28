@@ -11,6 +11,7 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.IPresentable;
+import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler.ConflictStyler;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -28,10 +29,12 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
     private final List<Image> toDispose = new ArrayList<>();
     private final ConflictStyler conflictStyler;
     private final Styler sameContentStyler;
+    private Styler notImportedStyle;
 
     public ImportModelLabelProvider(ImportModelStyler styler) {
         this.conflictStyler = styler.createConflictStyler();
         this.sameContentStyler = styler.createSameContentStyler();
+        this.notImportedStyle = styler.createNotImportedStyler();
     }
 
     @Override
@@ -46,6 +49,10 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
                 && ((AbstractFileModel) element).getStatus() == ConflictStatus.SAME_CONTENT) {
             styledString.append(String.format(" (%s)", Messages.skipped));
             styledString.setStyle(START_OFFSET, styledString.length(), sameContentStyler);
+        }
+        if (element instanceof LegacyStoreModel) {
+            styledString.setStyle(START_OFFSET, styledString.length(), notImportedStyle);
+            styledString.append(String.format(" (%s)", Messages.legacyFormsNotImported));
         }
         return styledString;
     }

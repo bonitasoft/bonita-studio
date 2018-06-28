@@ -55,6 +55,22 @@ public class ImportModelStyler {
         }
 
     }
+    
+    public static class NotImportedStyler extends Styler {
+
+        private final Color fForegroundColor;
+
+        public NotImportedStyler() {
+            fForegroundColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+        }
+
+        @Override
+        public void applyStyles(TextStyle textStyle) {
+            textStyle.foreground = fForegroundColor;
+            textStyle.strikeout = true;
+        }
+
+    }
 
     public ConflictStyler createConflictStyler() {
         return new ConflictStyler();
@@ -62,5 +78,9 @@ public class ImportModelStyler {
 
     public Styler createSameContentStyler() {
         return new SameContentStyler();
+    }
+    
+    public Styler createNotImportedStyler() {
+        return new NotImportedStyler();
     }
 }

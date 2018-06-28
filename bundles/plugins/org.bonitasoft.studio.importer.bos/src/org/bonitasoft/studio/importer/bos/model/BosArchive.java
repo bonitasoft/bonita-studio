@@ -85,20 +85,29 @@ public class BosArchive {
         final String entryName = entry.getName();
         final List<String> segments = Splitter.on('/').splitToList(entryName);
         segments.stream()
-                .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent())
+                .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent() || isLegacyFormRepo(segment))
                 .forEach(segment -> handleSegment(archiveModel, segment, segments, repository, resourcesToOpen));
+    }
+
+    private boolean isLegacyFormRepo(String segment) {
+        return Repository.LEGACY_REPOSITORIES.contains(segment);
     }
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
             IRepository repository, Set<String> resourcesToOpen) {
         final List<String> parentSegments = segments.subList(0, 2);
-        final ImportStoreModel store = new ImportStoreModel(Joiner.on('/').join(parentSegments),
-                (IRepositoryStore<IRepositoryFileStore>) repository.getRepositoryStoreByName(segment).get());
+        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName = repository.getRepositoryStoreByName(segment);
+        if (repositoryStoreByName.isPresent()) {
+            final ImportStoreModel store = new ImportStoreModel(Joiner.on('/').join(parentSegments),
+                    (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
 
-        parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments, resourcesToOpen,
-                true);
-        if(store.getChildren().length == 0) {
-            archiveModel.removeStore(store);
+            parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments, resourcesToOpen,
+                    true);
+            if (store.getChildren().length == 0) {
+                archiveModel.removeStore(store);
+            }
+        } else {
+            archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
         }
     }
 
