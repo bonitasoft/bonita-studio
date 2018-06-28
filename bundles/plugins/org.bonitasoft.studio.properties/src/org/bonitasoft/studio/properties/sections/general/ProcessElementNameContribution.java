@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
@@ -36,6 +37,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
@@ -102,10 +104,12 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
                 final String eventName = m.getEvent();
                 final Message event = ModelHelper.findEvent(ModelHelper.getMainProcess(element), eventName);
                 if (event != null) {
-                    editingDomain.getCommandStack().execute(
-                            SetCommand.create(editingDomain, event,
-                                    ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION,
-                                    ExpressionHelper.createConstantExpression(element.getName(), String.class.getName())));
+                    EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(event.getTargetProcessExpression());
+                    Expression newExpression = ExpressionHelper.createConstantExpression(element.getName(),
+                            String.class.getName());
+                    newExpression.setReturnTypeFixed(event.getTargetProcessExpression().isReturnTypeFixed());
+                    updater.editWorkingCopy(newExpression);
+                    editingDomain.getCommandStack().execute(updater.createUpdateCommand(editingDomain));
                 }
             }
         }
@@ -377,7 +381,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
             processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
         }
         try {
-            final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+            final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
             final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
             if (c.isEnabled()) {
                 c.executeWithChecks(new ExecutionEvent());

@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.Pool;
@@ -45,7 +47,6 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -90,7 +91,8 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.
+     * Composite)
      */
     @Override
     protected void createContent(Composite parent) {
@@ -209,10 +211,12 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
         for (final AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))) {
             final Message eventObject = ModelHelper.findEvent(element, ev.getEvent());
             if (eventObject != null) {
-                getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), eventObject,
-                                ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper
-                                        .createConstantExpression(element.getName(), String.class.getName())));
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(eventObject.getTargetProcessExpression());
+                Expression newExpression = ExpressionHelper.createConstantExpression(element.getName(),
+                        String.class.getName());
+                newExpression.setReturnTypeFixed(eventObject.getTargetProcessExpression().isReturnTypeFixed());
+                updater.editWorkingCopy(newExpression);
+                getEditingDomain().getCommandStack().execute(updater.createUpdateCommand(getEditingDomain()));
             }
         }
     }
@@ -231,7 +235,8 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
+     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setInput(org.eclipse.ui.
+     * IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
      */
     @Override
@@ -242,7 +247,9 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setEditingDomain(org.eclipse.emf.transaction.
+     * @see
+     * org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setEditingDomain(org.eclipse.emf
+     * .transaction.
      * TransactionalEditingDomain)
      */
     @Override
