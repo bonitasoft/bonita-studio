@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -53,11 +54,14 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
         if (!project.exists()) {
             project.create(monitor);
             project.open(monitor);
-            project.setDescription(
-                    new ProjectDescriptionBuilder().withProjectName(project.getName())
-                            .withComment(ProductVersion.CURRENT_VERSION).havingNatures(natures)
-                            .havingBuilders(builders).build(),
-                    monitor);
+            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
+                project.setDescription(
+                        new ProjectDescriptionBuilder().withProjectName(project.getName())
+                                .withComment(ProductVersion.CURRENT_VERSION).havingNatures(natures)
+                                .havingBuilders(builders).build(),
+                        monitor);
+            }
+
             addBuildProperties(monitor);
         }
         createJavaProject(monitor);

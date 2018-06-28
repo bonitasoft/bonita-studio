@@ -156,7 +156,6 @@
                tab="tab.general"
                viewID="org.bonitasoft.studio.views.properties.process.general">
          </propertySection>
-     
         <propertySection
               class="org.bonitasoft.studio.properties.sections.general.PoolGeneralPropertySection"
               enablesFor="1"
