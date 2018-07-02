@@ -104,8 +104,7 @@ public class BPMNEventSubProcessExportImportTest {
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("testEventSubProcess.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
-                new NullProgressMonitor());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
