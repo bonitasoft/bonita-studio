@@ -119,7 +119,6 @@ import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.XORGateway;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -234,8 +233,7 @@ public class BonitaToBPMNExporter {
 
     public void export(final IBonitaModelExporter modelExporter,
             IModelSearch modelSearch,
-            final File destFile,
-            final IProgressMonitor monitor) {
+            final File destFile) {
         this.modelSearch = modelSearch;
         final MainProcess mainProcess = modelExporter.getMainProcess();
 
