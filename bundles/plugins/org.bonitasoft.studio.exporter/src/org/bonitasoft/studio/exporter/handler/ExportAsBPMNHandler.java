@@ -80,8 +80,7 @@ public class ExportAsBPMNHandler {
                                 transformer.export(
                                         new BonitaModelExporterImpl(diagram.eResource(), modelSearch),
                                         modelSearch,
-                                        destFile,
-                                        monitor);
+                                        destFile);
                             });
                             MultiStatus status = transformer.getStatus();
                             if (status.getSeverity() < IStatus.ERROR) {
