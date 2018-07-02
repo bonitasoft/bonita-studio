@@ -46,7 +46,6 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPar
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -134,8 +133,7 @@ public class BPMNExportImportMessageDataTest {
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("testMessageDataTestValue.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
-                new NullProgressMonitor());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();

@@ -33,7 +33,6 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -56,8 +55,8 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                 IModelSearch modelSearch = new ModelSearch(
                         () -> diagramRepoStore.getAllProcesses(),
                         () -> connectorDefRepoStore.getDefinitions());
-                new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch, destFile,
-                        new NullProgressMonitor());
+                new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
+                        destFile);
                 builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));
             } else {
                 BonitaStudioLog.warning(
