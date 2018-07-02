@@ -36,7 +36,6 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.SWT;
@@ -89,8 +88,7 @@ public class BPMNExportTests {
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(c.eResource(), modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
-                new NullProgressMonitor());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
