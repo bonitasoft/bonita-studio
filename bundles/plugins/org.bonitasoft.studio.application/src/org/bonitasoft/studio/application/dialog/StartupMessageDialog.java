@@ -73,7 +73,7 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     public static int open(Shell parent, int style, IPreferenceStore store, String key) {
         final StartupMessageDialog dialog = new StartupMessageDialog(parent);
-        dialog.setShellStyle(dialog.getShellStyle() | style | SWT.NO_TRIM | SWT.ON_TOP);
+        dialog.setShellStyle(dialog.getShellStyle() | style | SWT.NO_TRIM | SWT.BORDER);
         dialog.setPrefStore(store);
         dialog.setPrefKey(key);
         return dialog.open();
