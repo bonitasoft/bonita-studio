@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
@@ -69,11 +70,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
-import org.osgi.framework.Version;
 
 public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
-    private static final Version VERSION_7_8_0 = new Version("7.8.0");
     private static final int BUTTON_WIDTH = 80;
     private static final String BOS_EXTENSION = "*.bos";
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
@@ -303,14 +302,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 Messages.bosArchiveName,
                 fileName,
                 archiveModel.getBosArchive().getVersion()));
-        Version archiveVersion = null;
-        try {
-            archiveVersion = Version.parseVersion(archiveModel.getBosArchive().getVersion());
-        } catch (IllegalArgumentException e) {
-            //Version is not osgi friendly (eg: 6.0.0-ga)
-        }
-        if (archiveVersion == null || archiveVersion
-                .compareTo(VERSION_7_8_0) < 0) {
+        if (ProductVersion.isBefore780Version(archiveModel.getBosArchive().getVersion())) {
             message.append(System.lineSeparator());
             message.append(Messages.gwtFormsNotSupported);
             message.append(System.lineSeparator());

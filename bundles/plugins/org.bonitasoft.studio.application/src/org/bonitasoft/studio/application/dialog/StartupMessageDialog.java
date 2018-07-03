@@ -14,9 +14,8 @@
  */
 package org.bonitasoft.studio.application.dialog;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -24,6 +23,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -73,7 +73,7 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     public static int open(Shell parent, int style, IPreferenceStore store, String key) {
         final StartupMessageDialog dialog = new StartupMessageDialog(parent);
-        dialog.setShellStyle(dialog.getShellStyle() | style | SWT.NO_TRIM | SWT.BORDER);
+        dialog.setShellStyle(dialog.getShellStyle() | style | SWT.SHEET);
         dialog.setPrefStore(store);
         dialog.setPrefKey(key);
         return dialog.open();
@@ -99,7 +99,8 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
                     .applyTo(new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL));
 
             startMessage = new Link(composite, SWT.WRAP | SWT.NO_FOCUS);
-            startMessage.setText(String.format(Messages.startDialogMsg, Messages.releaseNote, Messages.documentedHere));
+            startMessage
+                    .setText(String.format(Messages.startDialogMsg, Messages.releaseNote, Messages._6xFormsDontWorkAnymore));
             GridDataFactory
                     .fillDefaults()
                     .span(2, 1)
@@ -118,8 +119,8 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     private void openBrowser(String text) {
         try {
-            java.awt.Desktop.getDesktop().browse(new URI(getLinkFor(text)));
-        } catch (IOException | URISyntaxException e) {
+            new OpenBrowserOperation(new URL(getLinkFor(text))).execute();
+        } catch (MalformedURLException e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -130,9 +131,9 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
                     "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=676&bos_redirect_product=bos&bos_redirect_major_version=%s",
                     ProductVersion.majorVersion());
         }
-        if (Objects.equals(Messages.documentedHere, text)) {
+        if (Objects.equals(Messages._6xFormsDontWorkAnymore, text)) {
             return String.format(
-                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=675&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=677&bos_redirect_product=bos&bos_redirect_major_version=%s",
                     ProductVersion.majorVersion());
         }
         throw new IllegalArgumentException("Unsupported link");
