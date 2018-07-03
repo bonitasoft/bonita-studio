@@ -71,8 +71,8 @@ public class Messages extends NLS {
     public static String importWorkspace;
     public static String startingEngineServer;
     public static String releaseNote;
-    public static String documentedHere;
     public static String letsStart;
+    public static String _6xFormsDontWorkAnymore;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -27,6 +27,7 @@ public class ProductVersion {
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String CURRENT_VERSION = manifestVersion();
+    public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
     public static final String CURRENT_YEAR = "2018";
 
@@ -99,6 +100,14 @@ public class ProductVersion {
     public static String majorVersion() {
         final Version productVersion = new Version(CURRENT_VERSION);
         return String.format("%s.%s", productVersion.getMajor(), productVersion.getMinor());
+    }
+
+    public static boolean isBefore780Version(String version) {
+        try {
+            return Version.valueOf(version).compareTo(VERSION_7_8_0) < 0;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
 }
