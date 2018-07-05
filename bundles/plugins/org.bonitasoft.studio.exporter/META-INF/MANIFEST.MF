@@ -8,13 +8,13 @@ Bundle-Activator: org.bonitasoft.studio.exporter.Activator
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.exporter,
- org.bonitasoft.studio.exporter.bpmn,
- org.bonitasoft.studio.exporter.bpmn.transfo,
- org.bonitasoft.studio.exporter.bpmn.transfo.data,
- org.bonitasoft.studio.exporter.bpmn.transfo.expression,
- org.bonitasoft.studio.exporter.coolbar,
- org.bonitasoft.studio.exporter.extension,
- org.bonitasoft.studio.exporter.handler,
+  org.bonitasoft.studio.exporter.bpmn,
+  org.bonitasoft.studio.exporter.bpmn.transfo,
+  org.bonitasoft.studio.exporter.bpmn.transfo.data,
+  org.bonitasoft.studio.exporter.bpmn.transfo.expression,
+  org.bonitasoft.studio.exporter.coolbar,
+  org.bonitasoft.studio.exporter.extension,
+  org.bonitasoft.studio.exporter.handler,
  org.bonitasoft.studio.exporter.runtime
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
