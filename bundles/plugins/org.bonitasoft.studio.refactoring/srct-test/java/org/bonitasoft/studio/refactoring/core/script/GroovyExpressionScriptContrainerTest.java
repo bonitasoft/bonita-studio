@@ -27,14 +27,11 @@ import static org.mockito.Mockito.spy;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
-import org.bonitasoft.studio.model.form.TextFormField;
-import org.bonitasoft.studio.model.form.builders.TextFormFieldBuilder;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder;
 import org.bonitasoft.studio.refactoring.core.DataRefactorPair;
-import org.bonitasoft.studio.refactoring.core.WidgetRefactorPair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -116,21 +113,6 @@ public class GroovyExpressionScriptContrainerTest {
         ExpressionAssert.assertThat(expression).hasContent("return myNewData");
     }
 
-    @Test
-    public void should_build_a_compoundCommand_updating_expression_content_when_applyingUpdate_for_widget() throws Exception {
-        final TextFormField textFormField = TextFormFieldBuilder.aTextFormField().withName("myText").build();
-        final Expression expression = aGroovyScriptExpression()
-                .withContent("return field_myText").havingReferencedElements(textFormField).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME,
-                scriptRefactorOperationFactory);
-
-        groovyExpressionScriptContrainer.setNewScript("return field_myNewText");
-        final CompoundCommand command = groovyExpressionScriptContrainer.applyUpdate(editingDomain());
-        command.execute();
-
-        ExpressionAssert.assertThat(expression).hasContent("return field_myNewText");
-    }
 
     @Test
     public void should_build_a_compoundCommand_updating_expression_dependencies_when_updatingDependencies_for_a_data() throws Exception {
@@ -150,23 +132,6 @@ public class GroovyExpressionScriptContrainerTest {
         assertThat(expression.getReferencedElements()).extracting("name").containsOnly("myNewData");
     }
 
-    @Test
-    public void should_build_a_compoundCommand_updating_expression_dependencies_when_updatingDependencies_for_a_widget() throws Exception {
-        final TextFormField textFormField = TextFormFieldBuilder.aTextFormField().withName("myText").build();
-        final Expression expression = aGroovyScriptExpression()
-                .withContent("return field_myText").havingReferencedElements(textFormField).build();
-        final GroovyExpressionScriptContrainer groovyExpressionScriptContrainer = new GroovyExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME, scriptRefactorOperationFactory);
-
-        groovyExpressionScriptContrainer.setNewScript("return field_myNewText");
-        final TextFormField copy = EcoreUtil.copy(textFormField);
-        copy.setName("myNewText");
-        final CompoundCommand command = groovyExpressionScriptContrainer.updateDependencies(editingDomain(), newArrayList(new WidgetRefactorPair(copy,
-                textFormField)));
-        command.execute();
-
-        assertThat(expression.getReferencedElements()).extracting("name").containsOnly("myNewText");
-    }
 
     @Test
     public void should_build_a_compoundCommand_removing_expression_dependencies_when_removingDependencies_for_a_data() throws Exception {

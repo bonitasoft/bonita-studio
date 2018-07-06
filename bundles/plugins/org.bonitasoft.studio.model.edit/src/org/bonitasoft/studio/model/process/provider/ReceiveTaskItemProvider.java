@@ -225,10 +225,6 @@ public class ReceiveTaskItemProvider extends ActivityItemProvider {
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA ||
-			childFeature == ProcessPackage.Literals.DATA_AWARE__DATA ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS ||
-			childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||

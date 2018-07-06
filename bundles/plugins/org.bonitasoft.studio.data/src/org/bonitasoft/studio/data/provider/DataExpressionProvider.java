@@ -16,7 +16,6 @@
 package org.bonitasoft.studio.data.provider;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -31,16 +30,12 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -68,33 +63,8 @@ public class DataExpressionProvider implements IExpressionProvider {
     public Set<Expression> getExpressions(final EObject context) {
         final Set<Expression> result = new HashSet<Expression>();
 
-        Form form = null;
-        PageFlow pf = null;
-        if (context instanceof Widget) {
-            form = ModelHelper.getForm((Widget) context);
-        } else if (context instanceof Form) {
-            form = (Form) context;
-        } else if (context instanceof PageFlow) {
-            pf = (PageFlow) context;
-        }
-
-        if (form != null) {
-            final EObject formContainer = form.eContainer();
-            if (formContainer != null) {
-                if (form.eContainmentFeature() != null && (formContainer instanceof PageFlow || formContainer instanceof ViewPageFlow)) {
-                    for (final Data d : getDataInForm(form, formContainer)) {
-                        result.add(createExpression(d));
-                    }
-                }
-            }
-        } else if (pf != null) {
-            for (final Data d : ModelHelper.getAccessibleData(pf)) {
-                result.add(createExpression(d));
-            }
-        } else if (context instanceof EObject) {
-            for (final Data d : ModelHelper.getAccessibleData(context, true)) {
-                result.add(createExpression(d));
-            }
+        for (final Data d : ModelHelper.getAccessibleData(context, true)) {
+            result.add(createExpression(d));
         }
 
         final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(context);
@@ -106,7 +76,8 @@ public class DataExpressionProvider implements IExpressionProvider {
                 if (iteratorExpression != null
                         && iteratorExpression.getName() != null
                         && !iteratorExpression.getName().isEmpty()) {
-                    final Data d = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression,
+                    final Data d = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) parentFlowElement,
+                            iteratorExpression,
                             mainProcess(parentFlowElement));
                     result.add(createExpression(d));
                 }
@@ -125,10 +96,6 @@ public class DataExpressionProvider implements IExpressionProvider {
         final Pool pool = ModelHelper.getParentPool(parentFlowElement);
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         return ModelHelper.getMainProcess(repositoryStore.findProcess(pool.getName(), pool.getVersion()));
-    }
-
-    protected List<Data> getDataInForm(final Form form, final EObject formContainer) {
-        return ModelHelper.getAccessibleDataInForms(formContainer, form.eContainmentFeature());
     }
 
     @Override

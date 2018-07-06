@@ -27,64 +27,34 @@
           <element href="process.ecore#//Assignable"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trU2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_13trU2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_RTZ8rH7WEeikGNUjluDuqA">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//AssociatedFile"/>
-        <changes xsi:type="history:Set" xmi:id="_13trVGnREeaTLbmqFFisdA" featureName="name" dataValue="AssociatedFile">
-          <element href="process.ecore#//AssociatedFile"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13trVGnREeaTLbmqFFisdA" element="_RTZ8rH7WEeikGNUjluDuqA" featureName="name" dataValue="AssociatedFile"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trVWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//AssociatedFile"/>
-        <element href="process.ecore#//AssociatedFile/path"/>
-        <changes xsi:type="history:Set" xmi:id="_13trVmnREeaTLbmqFFisdA" featureName="name" dataValue="path">
-          <element href="process.ecore#//AssociatedFile/path"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13trV2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//AssociatedFile/path"/>
+      <changes xsi:type="history:Create" xmi:id="_13trVWnREeaTLbmqFFisdA" target="_RTZ8rH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_RTZ8rX7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13trVmnREeaTLbmqFFisdA" element="_RTZ8rX7WEeikGNUjluDuqA" featureName="name" dataValue="path"/>
+        <changes xsi:type="history:Set" xmi:id="_13trV2nREeaTLbmqFFisdA" element="_RTZ8rX7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trWGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//AssociatedFile"/>
-        <element href="process.ecore#//AssociatedFile/warPath"/>
-        <changes xsi:type="history:Set" xmi:id="_13trWWnREeaTLbmqFFisdA" featureName="name" dataValue="warPath">
-          <element href="process.ecore#//AssociatedFile/warPath"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13trWmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//AssociatedFile/warPath"/>
+      <changes xsi:type="history:Create" xmi:id="_13trWGnREeaTLbmqFFisdA" target="_RTZ8rH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_RTZ8r37WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13trWWnREeaTLbmqFFisdA" element="_RTZ8r37WEeikGNUjluDuqA" featureName="name" dataValue="warPath"/>
+        <changes xsi:type="history:Set" xmi:id="_13trWmnREeaTLbmqFFisdA" element="_RTZ8r37WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trW2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_13trW2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_xFz0g39pEeiiU5kHUMShmw">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ConsultationPageFlowType"/>
-        <changes xsi:type="history:Set" xmi:id="_13trXGnREeaTLbmqFFisdA" featureName="name" dataValue="ConsultationPageFlowType">
-          <element href="process.ecore#//ConsultationPageFlowType"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13trXGnREeaTLbmqFFisdA" element="_xFz0g39pEeiiU5kHUMShmw" featureName="name" dataValue="ConsultationPageFlowType"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trXWnREeaTLbmqFFisdA" referenceName="eLiterals">
-        <target href="process.ecore#//ConsultationPageFlowType"/>
-        <element href="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
-        <changes xsi:type="history:Set" xmi:id="_13trXmnREeaTLbmqFFisdA" featureName="name" dataValue="PAGEFLOW">
-          <element href="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13trX2nREeaTLbmqFFisdA" featureName="literal" dataValue="PAGEFLOW">
-          <element href="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13trXWnREeaTLbmqFFisdA" target="_xFz0g39pEeiiU5kHUMShmw" referenceName="eLiterals" element="_xFz0hH9pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_13trXmnREeaTLbmqFFisdA" element="_xFz0hH9pEeiiU5kHUMShmw" featureName="name" dataValue="PAGEFLOW"/>
+        <changes xsi:type="history:Set" xmi:id="_13trX2nREeaTLbmqFFisdA" element="_xFz0hH9pEeiiU5kHUMShmw" featureName="literal" dataValue="PAGEFLOW"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13trYGnREeaTLbmqFFisdA" referenceName="eLiterals">
-        <target href="process.ecore#//ConsultationPageFlowType"/>
-        <element href="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-        <changes xsi:type="history:Set" xmi:id="_13trYWnREeaTLbmqFFisdA" featureName="name" dataValue="REDIRECTION">
-          <element href="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13trYmnREeaTLbmqFFisdA" featureName="value" dataValue="1" oldDataValue="0">
-          <element href="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13trY2nREeaTLbmqFFisdA" featureName="literal" dataValue="REDIRECTION">
-          <element href="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13trYGnREeaTLbmqFFisdA" target="_xFz0g39pEeiiU5kHUMShmw" referenceName="eLiterals" element="_xFz0hX9pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_13trYWnREeaTLbmqFFisdA" element="_xFz0hX9pEeiiU5kHUMShmw" featureName="name" dataValue="REDIRECTION"/>
+        <changes xsi:type="history:Set" xmi:id="_13trYmnREeaTLbmqFFisdA" element="_xFz0hX9pEeiiU5kHUMShmw" featureName="value" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" xmi:id="_13trY2nREeaTLbmqFFisdA" element="_xFz0hX9pEeiiU5kHUMShmw" featureName="literal" dataValue="REDIRECTION"/>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_13uSYGnREeaTLbmqFFisdA" referenceName="eClassifiers">
         <target href="process.ecore#/"/>
@@ -246,28 +216,18 @@
           <referenceValue href="process.ecore#//Element"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13zx_mnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13zx_mnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_OGnF8n7VEeikGNUjluDuqA">
         <target href="process.ecore#//AbstractPageFlow"/>
-        <element href="process.ecore#//AbstractPageFlow/regExpToHideDefaultField"/>
-        <changes xsi:type="history:Set" xmi:id="_13zx_2nREeaTLbmqFFisdA" featureName="name" dataValue="regExpToHideDefaultField">
-          <element href="process.ecore#//AbstractPageFlow/regExpToHideDefaultField"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13zyAGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//AbstractPageFlow/regExpToHideDefaultField"/>
+        <changes xsi:type="history:Set" xmi:id="_13zx_2nREeaTLbmqFFisdA" element="_OGnF8n7VEeikGNUjluDuqA" featureName="name" dataValue="regExpToHideDefaultField"/>
+        <changes xsi:type="history:Set" xmi:id="_13zyAGnREeaTLbmqFFisdA" element="_OGnF8n7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13zyAWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13zyAWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_PwLEwn7VEeikGNUjluDuqA">
         <target href="process.ecore#//AbstractPageFlow"/>
-        <element href="process.ecore#//AbstractPageFlow/useRegExpToHideDefaultField"/>
-        <changes xsi:type="history:Set" xmi:id="_13zyAmnREeaTLbmqFFisdA" featureName="name" dataValue="useRegExpToHideDefaultField">
-          <element href="process.ecore#//AbstractPageFlow/useRegExpToHideDefaultField"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13zyA2nREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="false">
-          <element href="process.ecore#//AbstractPageFlow/useRegExpToHideDefaultField"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13zyBGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//AbstractPageFlow/useRegExpToHideDefaultField"/>
+        <changes xsi:type="history:Set" xmi:id="_13zyAmnREeaTLbmqFFisdA" element="_PwLEwn7VEeikGNUjluDuqA" featureName="name" dataValue="useRegExpToHideDefaultField"/>
+        <changes xsi:type="history:Set" xmi:id="_13zyA2nREeaTLbmqFFisdA" element="_PwLEwn7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13zyBGnREeaTLbmqFFisdA" element="_PwLEwn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
       </changes>
@@ -753,48 +713,23 @@
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_134qe2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_134qe2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_zFqMYn9pEeiiU5kHUMShmw">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//EntryPageFlowType"/>
-        <changes xsi:type="history:Set" xmi:id="_134qfGnREeaTLbmqFFisdA" featureName="name" dataValue="EntryPageFlowType">
-          <element href="process.ecore#//EntryPageFlowType"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_134qfGnREeaTLbmqFFisdA" element="_zFqMYn9pEeiiU5kHUMShmw" featureName="name" dataValue="EntryPageFlowType"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_134qfWnREeaTLbmqFFisdA" referenceName="eLiterals">
-        <target href="process.ecore#//EntryPageFlowType"/>
-        <element href="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
-        <changes xsi:type="history:Set" xmi:id="_134qfmnREeaTLbmqFFisdA" featureName="name" dataValue="PAGEFLOW">
-          <element href="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_134qf2nREeaTLbmqFFisdA" featureName="literal" dataValue="PAGEFLOW">
-          <element href="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_134qfWnREeaTLbmqFFisdA" target="_zFqMYn9pEeiiU5kHUMShmw" referenceName="eLiterals" element="_zFqMY39pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_134qfmnREeaTLbmqFFisdA" element="_zFqMY39pEeiiU5kHUMShmw" featureName="name" dataValue="PAGEFLOW"/>
+        <changes xsi:type="history:Set" xmi:id="_134qf2nREeaTLbmqFFisdA" element="_zFqMY39pEeiiU5kHUMShmw" featureName="literal" dataValue="PAGEFLOW"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_134qgGnREeaTLbmqFFisdA" referenceName="eLiterals">
-        <target href="process.ecore#//EntryPageFlowType"/>
-        <element href="process.ecore#//EntryPageFlowType/SKIP"/>
-        <changes xsi:type="history:Set" xmi:id="_134qgWnREeaTLbmqFFisdA" featureName="name" dataValue="SKIP">
-          <element href="process.ecore#//EntryPageFlowType/SKIP"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_134qgmnREeaTLbmqFFisdA" featureName="value" dataValue="1" oldDataValue="0">
-          <element href="process.ecore#//EntryPageFlowType/SKIP"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_134qg2nREeaTLbmqFFisdA" featureName="literal" dataValue="SKIP">
-          <element href="process.ecore#//EntryPageFlowType/SKIP"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_134qgGnREeaTLbmqFFisdA" target="_zFqMYn9pEeiiU5kHUMShmw" referenceName="eLiterals" element="_zFqMZH9pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_134qgWnREeaTLbmqFFisdA" element="_zFqMZH9pEeiiU5kHUMShmw" featureName="name" dataValue="SKIP"/>
+        <changes xsi:type="history:Set" xmi:id="_134qgmnREeaTLbmqFFisdA" element="_zFqMZH9pEeiiU5kHUMShmw" featureName="value" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" xmi:id="_134qg2nREeaTLbmqFFisdA" element="_zFqMZH9pEeiiU5kHUMShmw" featureName="literal" dataValue="SKIP"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_134qhGnREeaTLbmqFFisdA" referenceName="eLiterals">
-        <target href="process.ecore#//EntryPageFlowType"/>
-        <element href="process.ecore#//EntryPageFlowType/REDIRECT"/>
-        <changes xsi:type="history:Set" xmi:id="_134qhWnREeaTLbmqFFisdA" featureName="name" dataValue="REDIRECT">
-          <element href="process.ecore#//EntryPageFlowType/REDIRECT"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_134qhmnREeaTLbmqFFisdA" featureName="value" dataValue="2" oldDataValue="0">
-          <element href="process.ecore#//EntryPageFlowType/REDIRECT"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_134qh2nREeaTLbmqFFisdA" featureName="literal" dataValue="REDIRECT">
-          <element href="process.ecore#//EntryPageFlowType/REDIRECT"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_134qhGnREeaTLbmqFFisdA" target="_zFqMYn9pEeiiU5kHUMShmw" referenceName="eLiterals" element="_zFqMZX9pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_134qhWnREeaTLbmqFFisdA" element="_zFqMZX9pEeiiU5kHUMShmw" featureName="name" dataValue="REDIRECT"/>
+        <changes xsi:type="history:Set" xmi:id="_134qhmnREeaTLbmqFFisdA" element="_zFqMZX9pEeiiU5kHUMShmw" featureName="value" dataValue="2" oldDataValue="0"/>
+        <changes xsi:type="history:Set" xmi:id="_134qh2nREeaTLbmqFFisdA" element="_zFqMZX9pEeiiU5kHUMShmw" featureName="literal" dataValue="REDIRECT"/>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_134qiGnREeaTLbmqFFisdA" referenceName="eClassifiers">
         <target href="process.ecore#/"/>
@@ -1207,100 +1142,52 @@
           <referenceValue href="process.ecore#//AbstractPageFlow"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_139i_mnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_139i_mnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_TvYFQn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/byPassFormsGeneration"/>
-        <changes xsi:type="history:Set" xmi:id="_139i_2nREeaTLbmqFFisdA" featureName="name" dataValue="byPassFormsGeneration">
-          <element href="process.ecore#//PageFlow/byPassFormsGeneration"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_139jAGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/byPassFormsGeneration"/>
+        <changes xsi:type="history:Set" xmi:id="_139i_2nREeaTLbmqFFisdA" element="_TvYFQn7VEeikGNUjluDuqA" featureName="name" dataValue="byPassFormsGeneration"/>
+        <changes xsi:type="history:Set" xmi:id="_139jAGnREeaTLbmqFFisdA" element="_TvYFQn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_139jAWnREeaTLbmqFFisdA" referenceName="eAnnotations">
-        <target href="process.ecore#//PageFlow/byPassFormsGeneration"/>
-        <element href="process.ecore#//PageFlow/byPassFormsGeneration/%Deprecated_since_5.4%"/>
-        <changes xsi:type="history:Set" xmi:id="_139jAmnREeaTLbmqFFisdA" featureName="source" dataValue="Deprecated_since_5.4">
-          <element href="process.ecore#//PageFlow/byPassFormsGeneration/%Deprecated_since_5.4%"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_139jAWnREeaTLbmqFFisdA" target="_TvYFQn7VEeikGNUjluDuqA" referenceName="eAnnotations" element="_TvYFQ37VEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_139jAmnREeaTLbmqFFisdA" element="_TvYFQ37VEeikGNUjluDuqA" featureName="source" dataValue="Deprecated_since_5.4"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_139jA2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_139jA2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_Ucb_kn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/confirmationTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_139jBGnREeaTLbmqFFisdA" featureName="name" dataValue="confirmationTemplate">
-          <element href="process.ecore#//PageFlow/confirmationTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_139jBWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/confirmationTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_139jBmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/confirmationTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_139jBGnREeaTLbmqFFisdA" element="_Ucb_kn7VEeikGNUjluDuqA" featureName="name" dataValue="confirmationTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_139jBWnREeaTLbmqFFisdA" element="_Ucb_kn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_139jBmnREeaTLbmqFFisdA" element="_Ucb_kn7VEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_139jB2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_139jB2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_VJNmAn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/transientData"/>
-        <changes xsi:type="history:Set" xmi:id="_13-KAGnREeaTLbmqFFisdA" featureName="name" dataValue="transientData">
-          <element href="process.ecore#//PageFlow/transientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KAWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//PageFlow/transientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KAmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/transientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KA2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/transientData"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KAGnREeaTLbmqFFisdA" element="_VJNmAn7VEeikGNUjluDuqA" featureName="name" dataValue="transientData"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KAWnREeaTLbmqFFisdA" element="_VJNmAn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KAmnREeaTLbmqFFisdA" element="_VJNmAn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KA2nREeaTLbmqFFisdA" element="_VJNmAn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//Data"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-KBGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-KBGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_Vv-rEn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/pageFlowConnectors"/>
-        <changes xsi:type="history:Set" xmi:id="_13-KBWnREeaTLbmqFFisdA" featureName="name" dataValue="pageFlowConnectors">
-          <element href="process.ecore#//PageFlow/pageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KBmnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//PageFlow/pageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KB2nREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/pageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KCGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/pageFlowConnectors"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KBWnREeaTLbmqFFisdA" element="_Vv-rEn7VEeikGNUjluDuqA" featureName="name" dataValue="pageFlowConnectors"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KBmnREeaTLbmqFFisdA" element="_Vv-rEn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KB2nREeaTLbmqFFisdA" element="_Vv-rEn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KCGnREeaTLbmqFFisdA" element="_Vv-rEn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//Connector"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-KCWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-KCWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_b2dhIn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/entryPageFlowType"/>
-        <changes xsi:type="history:Set" xmi:id="_13-KCmnREeaTLbmqFFisdA" featureName="name" dataValue="entryPageFlowType">
-          <element href="process.ecore#//PageFlow/entryPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KC2nREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="">
-          <element href="process.ecore#//PageFlow/entryPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KDGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/entryPageFlowType"/>
-          <referenceValue href="process.ecore#//EntryPageFlowType"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13-KCmnREeaTLbmqFFisdA" element="_b2dhIn7VEeikGNUjluDuqA" featureName="name" dataValue="entryPageFlowType"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KC2nREeaTLbmqFFisdA" element="_b2dhIn7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue=""/>
+        <changes xsi:type="history:Set" xmi:id="_13-KDGnREeaTLbmqFFisdA" element="_b2dhIn7VEeikGNUjluDuqA" featureName="eType" referenceValue="_zFqMYn9pEeiiU5kHUMShmw"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-KDWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-KDWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_chtdkn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/transmitURLAsParameter"/>
-        <changes xsi:type="history:Set" xmi:id="_13-KDmnREeaTLbmqFFisdA" featureName="name" dataValue="transmitURLAsParameter">
-          <element href="process.ecore#//PageFlow/transmitURLAsParameter"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KD2nREeaTLbmqFFisdA" featureName="lowerBound" dataValue="1" oldDataValue="0">
-          <element href="process.ecore#//PageFlow/transmitURLAsParameter"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KEGnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="true">
-          <element href="process.ecore#//PageFlow/transmitURLAsParameter"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-KEWnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/transmitURLAsParameter"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KDmnREeaTLbmqFFisdA" element="_chtdkn7VEeikGNUjluDuqA" featureName="name" dataValue="transmitURLAsParameter"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KD2nREeaTLbmqFFisdA" element="_chtdkn7VEeikGNUjluDuqA" featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KEGnREeaTLbmqFFisdA" element="_chtdkn7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue="true"/>
+        <changes xsi:type="history:Set" xmi:id="_13-KEWnREeaTLbmqFFisdA" element="_chtdkn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
       </changes>
@@ -1311,20 +1198,12 @@
           <element href="process.ecore#//PageFlowTransition"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-KFGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-KFGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_dEIOIn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/pageFlowTransitions"/>
-        <changes xsi:type="history:Set" xmi:id="_13-xEGnREeaTLbmqFFisdA" featureName="name" dataValue="pageFlowTransitions">
-          <element href="process.ecore#//PageFlow/pageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xEWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//PageFlow/pageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xEmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/pageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xE2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/pageFlowTransitions"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xEGnREeaTLbmqFFisdA" element="_dEIOIn7VEeikGNUjluDuqA" featureName="name" dataValue="pageFlowTransitions"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xEWnREeaTLbmqFFisdA" element="_dEIOIn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xEmnREeaTLbmqFFisdA" element="_dEIOIn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xE2nREeaTLbmqFFisdA" element="_dEIOIn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//PageFlowTransition"/>
         </changes>
       </changes>
@@ -1345,192 +1224,89 @@
           <referenceValue href="process.ecore#//AbstractPageFlow"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-xGWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-xGWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_jFkMIn7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapPageFlowTransitions"/>
-        <changes xsi:type="history:Set" xmi:id="_13-xGmnREeaTLbmqFFisdA" featureName="name" dataValue="recapPageFlowTransitions">
-          <element href="process.ecore#//RecapFlow/recapPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xG2nREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//RecapFlow/recapPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xHGnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//RecapFlow/recapPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xHWnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapPageFlowTransitions"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xGmnREeaTLbmqFFisdA" element="_jFkMIn7VEeikGNUjluDuqA" featureName="name" dataValue="recapPageFlowTransitions"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xG2nREeaTLbmqFFisdA" element="_jFkMIn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xHGnREeaTLbmqFFisdA" element="_jFkMIn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xHWnREeaTLbmqFFisdA" element="_jFkMIn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//PageFlowTransition"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-xHmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-xHmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_jvR3gn7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapTransientData"/>
-        <changes xsi:type="history:Set" xmi:id="_13-xH2nREeaTLbmqFFisdA" featureName="name" dataValue="recapTransientData">
-          <element href="process.ecore#//RecapFlow/recapTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xIGnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//RecapFlow/recapTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xIWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//RecapFlow/recapTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xImnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapTransientData"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xH2nREeaTLbmqFFisdA" element="_jvR3gn7VEeikGNUjluDuqA" featureName="name" dataValue="recapTransientData"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xIGnREeaTLbmqFFisdA" element="_jvR3gn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xIWnREeaTLbmqFFisdA" element="_jvR3gn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xImnREeaTLbmqFFisdA" element="_jvR3gn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//Data"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-xI2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-xI2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_kVlCgn7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapFlowConnectors"/>
-        <changes xsi:type="history:Set" xmi:id="_13-xJGnREeaTLbmqFFisdA" featureName="name" dataValue="recapFlowConnectors">
-          <element href="process.ecore#//RecapFlow/recapFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xJWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//RecapFlow/recapFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xJmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//RecapFlow/recapFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xJ2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapFlowConnectors"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xJGnREeaTLbmqFFisdA" element="_kVlCgn7VEeikGNUjluDuqA" featureName="name" dataValue="recapFlowConnectors"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xJWnREeaTLbmqFFisdA" element="_kVlCgn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xJmnREeaTLbmqFFisdA" element="_kVlCgn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xJ2nREeaTLbmqFFisdA" element="_kVlCgn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="process.ecore#//Connector"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13-xKGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_13-xKGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_lCyt0n7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapPageFlowType"/>
-        <changes xsi:type="history:Set" xmi:id="_13-xKWnREeaTLbmqFFisdA" featureName="name" dataValue="recapPageFlowType">
-          <element href="process.ecore#//RecapFlow/recapPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13-xKmnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="">
-          <element href="process.ecore#//RecapFlow/recapPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YIGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapPageFlowType"/>
-          <referenceValue href="process.ecore#//ConsultationPageFlowType"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13-xKWnREeaTLbmqFFisdA" element="_lCyt0n7VEeikGNUjluDuqA" featureName="name" dataValue="recapPageFlowType"/>
+        <changes xsi:type="history:Set" xmi:id="_13-xKmnREeaTLbmqFFisdA" element="_lCyt0n7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue=""/>
+        <changes xsi:type="history:Set" xmi:id="_13_YIGnREeaTLbmqFFisdA" element="_lCyt0n7VEeikGNUjluDuqA" featureName="eType" referenceValue="_xFz0g39pEeiiU5kHUMShmw"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YIWnREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_13_YIWnREeaTLbmqFFisdA" referenceName="eClassifiers" element="_TFhahH7WEeikGNUjluDuqA">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ResourceContainer"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YImnREeaTLbmqFFisdA" featureName="name" dataValue="ResourceContainer">
-          <element href="process.ecore#//ResourceContainer"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13_YImnREeaTLbmqFFisdA" element="_TFhahH7WEeikGNUjluDuqA" featureName="name" dataValue="ResourceContainer"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YI2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceContainer"/>
-        <element href="process.ecore#//ResourceContainer/htmlTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YJGnREeaTLbmqFFisdA" featureName="name" dataValue="htmlTemplate">
-          <element href="process.ecore#//ResourceContainer/htmlTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YJWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ResourceContainer/htmlTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YJmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceContainer/htmlTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13_YI2nREeaTLbmqFFisdA" target="_TFhahH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_TFhahX7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13_YJGnREeaTLbmqFFisdA" element="_TFhahX7WEeikGNUjluDuqA" featureName="name" dataValue="htmlTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YJWnREeaTLbmqFFisdA" element="_TFhahX7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YJmnREeaTLbmqFFisdA" element="_TFhahX7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YJ2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceContainer"/>
-        <element href="process.ecore#//ResourceContainer/resourceJars"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YKGnREeaTLbmqFFisdA" featureName="name" dataValue="resourceJars">
-          <element href="process.ecore#//ResourceContainer/resourceJars"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YKWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ResourceContainer/resourceJars"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YKmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceContainer/resourceJars"/>
+      <changes xsi:type="history:Create" xmi:id="_13_YJ2nREeaTLbmqFFisdA" target="_TFhahH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_TFhahn7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13_YKGnREeaTLbmqFFisdA" element="_TFhahn7WEeikGNUjluDuqA" featureName="name" dataValue="resourceJars"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YKWnREeaTLbmqFFisdA" element="_TFhahn7WEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YKmnREeaTLbmqFFisdA" element="_TFhahn7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YK2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceContainer"/>
-        <element href="process.ecore#//ResourceContainer/resourceValidators"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YLGnREeaTLbmqFFisdA" featureName="name" dataValue="resourceValidators">
-          <element href="process.ecore#//ResourceContainer/resourceValidators"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YLWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ResourceContainer/resourceValidators"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13_YLmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceContainer/resourceValidators"/>
+      <changes xsi:type="history:Create" xmi:id="_13_YK2nREeaTLbmqFFisdA" target="_TFhahH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_TFhaiH7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13_YLGnREeaTLbmqFFisdA" element="_TFhaiH7WEeikGNUjluDuqA" featureName="name" dataValue="resourceValidators"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YLWnREeaTLbmqFFisdA" element="_TFhaiH7WEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13_YLmnREeaTLbmqFFisdA" element="_TFhaiH7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YL2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_13_YL2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_T_jZ037WEeikGNUjluDuqA">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ResourceFile"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YMGnREeaTLbmqFFisdA" featureName="name" dataValue="ResourceFile">
-          <element href="process.ecore#//ResourceFile"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_13_YMWnREeaTLbmqFFisdA" featureName="eSuperTypes">
-          <element href="process.ecore#//ResourceFile"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13_YMGnREeaTLbmqFFisdA" element="_T_jZ037WEeikGNUjluDuqA" featureName="name" dataValue="ResourceFile"/>
+        <changes xsi:type="history:Add" xmi:id="_13_YMWnREeaTLbmqFFisdA" element="_T_jZ037WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13_YMmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceContainer"/>
-        <element href="process.ecore#//ResourceContainer/resourceFiles"/>
-        <changes xsi:type="history:Set" xmi:id="_13_YM2nREeaTLbmqFFisdA" featureName="name" dataValue="resourceFiles">
-          <element href="process.ecore#//ResourceContainer/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__MGnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ResourceContainer/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__MWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ResourceContainer/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__MmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceContainer/resourceFiles"/>
-          <referenceValue href="process.ecore#//ResourceFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13_YMmnREeaTLbmqFFisdA" target="_TFhahH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_TFhain7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13_YM2nREeaTLbmqFFisdA" element="_TFhain7WEeikGNUjluDuqA" featureName="name" dataValue="resourceFiles"/>
+        <changes xsi:type="history:Set" xmi:id="_13__MGnREeaTLbmqFFisdA" element="_TFhain7WEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13__MWnREeaTLbmqFFisdA" element="_TFhain7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13__MmnREeaTLbmqFFisdA" element="_TFhain7WEeikGNUjluDuqA" featureName="eType" referenceValue="_T_jZ037WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13__M2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_13__M2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_VDEsUn7WEeikGNUjluDuqA">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ResourceFolder"/>
-        <changes xsi:type="history:Set" xmi:id="_13__NGnREeaTLbmqFFisdA" featureName="name" dataValue="ResourceFolder">
-          <element href="process.ecore#//ResourceFolder"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_13__NWnREeaTLbmqFFisdA" featureName="eSuperTypes">
-          <element href="process.ecore#//ResourceFolder"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+        <changes xsi:type="history:Set" xmi:id="_13__NGnREeaTLbmqFFisdA" element="_VDEsUn7WEeikGNUjluDuqA" featureName="name" dataValue="ResourceFolder"/>
+        <changes xsi:type="history:Add" xmi:id="_13__NWnREeaTLbmqFFisdA" element="_VDEsUn7WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13__NmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceContainer"/>
-        <element href="process.ecore#//ResourceContainer/resourceFolders"/>
-        <changes xsi:type="history:Set" xmi:id="_13__N2nREeaTLbmqFFisdA" featureName="name" dataValue="resourceFolders">
-          <element href="process.ecore#//ResourceContainer/resourceFolders"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__OGnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ResourceContainer/resourceFolders"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__OWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ResourceContainer/resourceFolders"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__OmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceContainer/resourceFolders"/>
-          <referenceValue href="process.ecore#//ResourceFolder"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13__NmnREeaTLbmqFFisdA" target="_TFhahH7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_TFhajH7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13__N2nREeaTLbmqFFisdA" element="_TFhajH7WEeikGNUjluDuqA" featureName="name" dataValue="resourceFolders"/>
+        <changes xsi:type="history:Set" xmi:id="_13__OGnREeaTLbmqFFisdA" element="_TFhajH7WEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13__OWnREeaTLbmqFFisdA" element="_TFhajH7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13__OmnREeaTLbmqFFisdA" element="_TFhajH7WEeikGNUjluDuqA" featureName="eType" referenceValue="_VDEsUn7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_13__O2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ResourceFolder"/>
-        <element href="process.ecore#//ResourceFolder/resourceFiles"/>
-        <changes xsi:type="history:Set" xmi:id="_13__PGnREeaTLbmqFFisdA" featureName="name" dataValue="resourceFiles">
-          <element href="process.ecore#//ResourceFolder/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__PWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ResourceFolder/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__PmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ResourceFolder/resourceFiles"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_13__P2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ResourceFolder/resourceFiles"/>
-          <referenceValue href="process.ecore#//ResourceFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_13__O2nREeaTLbmqFFisdA" target="_VDEsUn7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_VDEsU37WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_13__PGnREeaTLbmqFFisdA" element="_VDEsU37WEeikGNUjluDuqA" featureName="name" dataValue="resourceFiles"/>
+        <changes xsi:type="history:Set" xmi:id="_13__PWnREeaTLbmqFFisdA" element="_VDEsU37WEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_13__PmnREeaTLbmqFFisdA" element="_VDEsU37WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_13__P2nREeaTLbmqFFisdA" element="_VDEsU37WEeikGNUjluDuqA" featureName="eType" referenceValue="_T_jZ037WEeikGNUjluDuqA"/>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_13__QGnREeaTLbmqFFisdA" referenceName="eClassifiers">
         <target href="process.ecore#/"/>
@@ -2007,87 +1783,43 @@
           <referenceValue href="process.ecore#//SignalEvent"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14EQoGnREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_14EQoGnREeaTLbmqFFisdA" referenceName="eClassifiers" element="_M4NhQX9mEeiiU5kHUMShmw">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ViewPageFlow"/>
-        <changes xsi:type="history:Set" xmi:id="_14EQoWnREeaTLbmqFFisdA" featureName="name" dataValue="ViewPageFlow">
-          <element href="process.ecore#//ViewPageFlow"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQomnREeaTLbmqFFisdA" featureName="abstract" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQo2nREeaTLbmqFFisdA" featureName="interface" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_14EQpGnREeaTLbmqFFisdA" featureName="eSuperTypes">
-          <element href="process.ecore#//ViewPageFlow"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQoWnREeaTLbmqFFisdA" element="_M4NhQX9mEeiiU5kHUMShmw" featureName="name" dataValue="ViewPageFlow"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQomnREeaTLbmqFFisdA" element="_M4NhQX9mEeiiU5kHUMShmw" featureName="abstract" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQo2nREeaTLbmqFFisdA" element="_M4NhQX9mEeiiU5kHUMShmw" featureName="interface" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Add" xmi:id="_14EQpGnREeaTLbmqFFisdA" element="_M4NhQX9mEeiiU5kHUMShmw" featureName="eSuperTypes">
           <referenceValue href="process.ecore#//AbstractPageFlow"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14EQpWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
-        <changes xsi:type="history:Set" xmi:id="_14EQpmnREeaTLbmqFFisdA" featureName="name" dataValue="viewPageFlowTransitions">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQp2nREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQqGnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQqWnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
+      <changes xsi:type="history:Create" xmi:id="_14EQpWnREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_HJUEwn9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_14EQpmnREeaTLbmqFFisdA" element="_HJUEwn9mEeiiU5kHUMShmw" featureName="name" dataValue="viewPageFlowTransitions"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQp2nREeaTLbmqFFisdA" element="_HJUEwn9mEeiiU5kHUMShmw" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQqGnREeaTLbmqFFisdA" element="_HJUEwn9mEeiiU5kHUMShmw" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQqWnREeaTLbmqFFisdA" element="_HJUEwn9mEeiiU5kHUMShmw" featureName="eType">
           <referenceValue href="process.ecore#//PageFlowTransition"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14EQqmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewTransientData"/>
-        <changes xsi:type="history:Set" xmi:id="_14EQq2nREeaTLbmqFFisdA" featureName="name" dataValue="viewTransientData">
-          <element href="process.ecore#//ViewPageFlow/viewTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQrGnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ViewPageFlow/viewTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQrWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow/viewTransientData"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQrmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewTransientData"/>
+      <changes xsi:type="history:Create" xmi:id="_14EQqmnREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_GkSFEn9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_14EQq2nREeaTLbmqFFisdA" element="_GkSFEn9mEeiiU5kHUMShmw" featureName="name" dataValue="viewTransientData"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQrGnREeaTLbmqFFisdA" element="_GkSFEn9mEeiiU5kHUMShmw" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQrWnREeaTLbmqFFisdA" element="_GkSFEn9mEeiiU5kHUMShmw" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQrmnREeaTLbmqFFisdA" element="_GkSFEn9mEeiiU5kHUMShmw" featureName="eType">
           <referenceValue href="process.ecore#//Data"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14EQr2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
-        <changes xsi:type="history:Set" xmi:id="_14EQsGnREeaTLbmqFFisdA" featureName="name" dataValue="viewPageFlowConnectors">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQsWnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQsmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQs2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
+      <changes xsi:type="history:Create" xmi:id="_14EQr2nREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_GHCIYn9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_14EQsGnREeaTLbmqFFisdA" element="_GHCIYn9mEeiiU5kHUMShmw" featureName="name" dataValue="viewPageFlowConnectors"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQsWnREeaTLbmqFFisdA" element="_GHCIYn9mEeiiU5kHUMShmw" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQsmnREeaTLbmqFFisdA" element="_GHCIYn9mEeiiU5kHUMShmw" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQs2nREeaTLbmqFFisdA" element="_GHCIYn9mEeiiU5kHUMShmw" featureName="eType">
           <referenceValue href="process.ecore#//Connector"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14EQtGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewPageFlowType"/>
-        <changes xsi:type="history:Set" xmi:id="_14EQtWnREeaTLbmqFFisdA" featureName="name" dataValue="viewPageFlowType">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQtmnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowType"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14EQt2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowType"/>
-          <referenceValue href="process.ecore#//ConsultationPageFlowType"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14EQtGnREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_FkyW8n9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_14EQtWnREeaTLbmqFFisdA" element="_FkyW8n9mEeiiU5kHUMShmw" featureName="name" dataValue="viewPageFlowType"/>
+        <changes xsi:type="history:Set" xmi:id="_14EQtmnREeaTLbmqFFisdA" element="_FkyW8n9mEeiiU5kHUMShmw" featureName="defaultValueLiteral" dataValue=""/>
+        <changes xsi:type="history:Set" xmi:id="_14EQt2nREeaTLbmqFFisdA" element="_FkyW8n9mEeiiU5kHUMShmw" featureName="eType" referenceValue="_xFz0g39pEeiiU5kHUMShmw"/>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_14EQuGnREeaTLbmqFFisdA" referenceName="eClassifiers">
         <target href="process.ecore#/"/>
@@ -3134,9 +2866,8 @@
           <element href="process.ecore#//FlowElement"/>
           <referenceValue href="process.ecore#//TargetElement"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14LlcWnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14LlcWnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_M4NhQX9mEeiiU5kHUMShmw">
           <element href="process.ecore#//FlowElement"/>
-          <referenceValue href="process.ecore#//ViewPageFlow"/>
         </changes>
         <changes xsi:type="history:Add" xmi:id="_14LlcmnREeaTLbmqFFisdA" featureName="eSuperTypes">
           <element href="process.ecore#//FlowElement"/>
@@ -3601,9 +3332,8 @@
           <element href="process.ecore#//Task"/>
           <referenceValue href="process.ecore#//PageFlow"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14STHWnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14STHWnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
           <element href="process.ecore#//Task"/>
-          <referenceValue href="process.ecore#//ResourceContainer"/>
         </changes>
         <changes xsi:type="history:Add" xmi:id="_14STHmnREeaTLbmqFFisdA" featureName="eSuperTypes">
           <element href="process.ecore#//Task"/>
@@ -4647,25 +4377,16 @@
           <element href="form.ecore#//Form"/>
           <referenceValue href="form.ecore#//Validable"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14d5XGnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14d5XGnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
           <element href="form.ecore#//Form"/>
-          <referenceValue href="process.ecore#//ResourceContainer"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14d5XWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_14d5XWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_doQO4n7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/form"/>
-        <changes xsi:type="history:Set" xmi:id="_14d5XmnREeaTLbmqFFisdA" featureName="name" dataValue="form">
-          <element href="process.ecore#//PageFlow/form"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14egUGnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//PageFlow/form"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14egUWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/form"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14egUmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/form"/>
+        <changes xsi:type="history:Set" xmi:id="_14d5XmnREeaTLbmqFFisdA" element="_doQO4n7VEeikGNUjluDuqA" featureName="name" dataValue="form"/>
+        <changes xsi:type="history:Set" xmi:id="_14egUGnREeaTLbmqFFisdA" element="_doQO4n7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14egUWnREeaTLbmqFFisdA" element="_doQO4n7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14egUmnREeaTLbmqFFisdA" element="_doQO4n7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="form.ecore#//Form"/>
         </changes>
       </changes>
@@ -5172,37 +4893,20 @@
           <referenceValue href="form.ecore#//Form"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14iKtGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_14iKtGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_l5Qbwn7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapForms"/>
-        <changes xsi:type="history:Set" xmi:id="_14iKtWnREeaTLbmqFFisdA" featureName="name" dataValue="recapForms">
-          <element href="process.ecore#//RecapFlow/recapForms"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKtmnREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//RecapFlow/recapForms"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKt2nREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//RecapFlow/recapForms"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKuGnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapForms"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKtWnREeaTLbmqFFisdA" element="_l5Qbwn7VEeikGNUjluDuqA" featureName="name" dataValue="recapForms"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKtmnREeaTLbmqFFisdA" element="_l5Qbwn7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKt2nREeaTLbmqFFisdA" element="_l5Qbwn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKuGnREeaTLbmqFFisdA" element="_l5Qbwn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="form.ecore#//ViewForm"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14iKuWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewForm"/>
-        <changes xsi:type="history:Set" xmi:id="_14iKumnREeaTLbmqFFisdA" featureName="name" dataValue="viewForm">
-          <element href="process.ecore#//ViewPageFlow/viewForm"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKu2nREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//ViewPageFlow/viewForm"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKvGnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow/viewForm"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14iKvWnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewForm"/>
+      <changes xsi:type="history:Create" xmi:id="_14iKuWnREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_Eswiwn9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_14iKumnREeaTLbmqFFisdA" element="_Eswiwn9mEeiiU5kHUMShmw" featureName="name" dataValue="viewForm"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKu2nREeaTLbmqFFisdA" element="_Eswiwn9mEeiiU5kHUMShmw" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKvGnREeaTLbmqFFisdA" element="_Eswiwn9mEeiiU5kHUMShmw" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14iKvWnREeaTLbmqFFisdA" element="_Eswiwn9mEeiiU5kHUMShmw" featureName="eType">
           <referenceValue href="form.ecore#//ViewForm"/>
         </changes>
       </changes>
@@ -6741,18 +6445,11 @@
           <referenceValue href="form.ecore#//CSSCustomizable"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14qGm2nREeaTLbmqFFisdA" referenceName="eClassifiers">
+      <changes xsi:type="history:Create" xmi:id="_14qGm2nREeaTLbmqFFisdA" referenceName="eClassifiers" element="_aDbAwX7WEeikGNUjluDuqA">
         <target href="process.ecore#/"/>
-        <element href="process.ecore#//ProcessApplication"/>
-        <changes xsi:type="history:Set" xmi:id="_14qGnGnREeaTLbmqFFisdA" featureName="name" dataValue="ProcessApplication">
-          <element href="process.ecore#//ProcessApplication"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_14qGnWnREeaTLbmqFFisdA" featureName="eSuperTypes">
-          <element href="process.ecore#//ProcessApplication"/>
-          <referenceValue href="process.ecore#//ResourceContainer"/>
-        </changes>
-        <changes xsi:type="history:Add" xmi:id="_14qGnmnREeaTLbmqFFisdA" featureName="eSuperTypes">
-          <element href="process.ecore#//ProcessApplication"/>
+        <changes xsi:type="history:Set" xmi:id="_14qGnGnREeaTLbmqFFisdA" element="_aDbAwX7WEeikGNUjluDuqA" featureName="name" dataValue="ProcessApplication"/>
+        <changes xsi:type="history:Add" xmi:id="_14qGnWnREeaTLbmqFFisdA" element="_aDbAwX7WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA"/>
+        <changes xsi:type="history:Add" xmi:id="_14qGnmnREeaTLbmqFFisdA" element="_aDbAwX7WEeikGNUjluDuqA" featureName="eSuperTypes">
           <referenceValue href="form.ecore#//MandatoryFieldsCustomization"/>
         </changes>
       </changes>
@@ -6769,13 +6466,11 @@
           <element href="process.ecore#//AbstractProcess"/>
           <referenceValue href="process.ecore#//Container"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14qtlGnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14qtlGnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_aDbAwX7WEeikGNUjluDuqA">
           <element href="process.ecore#//AbstractProcess"/>
-          <referenceValue href="process.ecore#//ProcessApplication"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14qtlWnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14qtlWnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
           <element href="process.ecore#//AbstractProcess"/>
-          <referenceValue href="process.ecore#//ResourceContainer"/>
         </changes>
         <changes xsi:type="history:Add" xmi:id="_14qtlmnREeaTLbmqFFisdA" featureName="eSuperTypes">
           <element href="process.ecore#//AbstractProcess"/>
@@ -6789,9 +6484,8 @@
           <element href="process.ecore#//AbstractProcess"/>
           <referenceValue href="process.ecore#//RecapFlow"/>
         </changes>
-        <changes xsi:type="history:Add" xmi:id="_14qtmWnREeaTLbmqFFisdA" featureName="eSuperTypes">
+        <changes xsi:type="history:Add" xmi:id="_14qtmWnREeaTLbmqFFisdA" featureName="eSuperTypes" referenceValue="_M4NhQX9mEeiiU5kHUMShmw">
           <element href="process.ecore#//AbstractProcess"/>
-          <referenceValue href="process.ecore#//ViewPageFlow"/>
         </changes>
       </changes>
       <changes xsi:type="history:Create" xmi:id="_14qtmmnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
@@ -7042,148 +6736,63 @@
           <referenceValue href="process.ecore#//Document"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14r7w2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/errorTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_14r7xGnREeaTLbmqFFisdA" featureName="name" dataValue="errorTemplate">
-          <element href="process.ecore#//ProcessApplication/errorTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7xWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/errorTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7xmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/errorTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14r7w2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAwn7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14r7xGnREeaTLbmqFFisdA" element="_aDbAwn7WEeikGNUjluDuqA" featureName="name" dataValue="errorTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7xWnREeaTLbmqFFisdA" element="_aDbAwn7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7xmnREeaTLbmqFFisdA" element="_aDbAwn7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14r7x2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/processTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_14r7yGnREeaTLbmqFFisdA" featureName="name" dataValue="processTemplate">
-          <element href="process.ecore#//ProcessApplication/processTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7yWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/processTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7ymnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/processTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14r7x2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAw37WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14r7yGnREeaTLbmqFFisdA" element="_aDbAw37WEeikGNUjluDuqA" featureName="name" dataValue="processTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7yWnREeaTLbmqFFisdA" element="_aDbAw37WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7ymnREeaTLbmqFFisdA" element="_aDbAw37WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14r7y2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/pageTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_14r7zGnREeaTLbmqFFisdA" featureName="name" dataValue="pageTemplate">
-          <element href="process.ecore#//ProcessApplication/pageTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7zWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/pageTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14r7zmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/pageTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14r7y2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAxH7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14r7zGnREeaTLbmqFFisdA" element="_aDbAxH7WEeikGNUjluDuqA" featureName="name" dataValue="pageTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7zWnREeaTLbmqFFisdA" element="_aDbAxH7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14r7zmnREeaTLbmqFFisdA" element="_aDbAxH7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14r7z2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/consultationTemplate"/>
-        <changes xsi:type="history:Set" xmi:id="_14siwGnREeaTLbmqFFisdA" featureName="name" dataValue="consultationTemplate">
-          <element href="process.ecore#//ProcessApplication/consultationTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14siwWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/consultationTemplate"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14siwmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/consultationTemplate"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14r7z2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAxX7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14siwGnREeaTLbmqFFisdA" element="_aDbAxX7WEeikGNUjluDuqA" featureName="name" dataValue="consultationTemplate"/>
+        <changes xsi:type="history:Set" xmi:id="_14siwWnREeaTLbmqFFisdA" element="_aDbAxX7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14siwmnREeaTLbmqFFisdA" element="_aDbAxX7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14siw2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/logInPage"/>
-        <changes xsi:type="history:Set" xmi:id="_14sixGnREeaTLbmqFFisdA" featureName="name" dataValue="logInPage">
-          <element href="process.ecore#//ProcessApplication/logInPage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14sixWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/logInPage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14sixmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/logInPage"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14siw2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAxn7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14sixGnREeaTLbmqFFisdA" element="_aDbAxn7WEeikGNUjluDuqA" featureName="name" dataValue="logInPage"/>
+        <changes xsi:type="history:Set" xmi:id="_14sixWnREeaTLbmqFFisdA" element="_aDbAxn7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14sixmnREeaTLbmqFFisdA" element="_aDbAxn7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14six2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/welcomePage"/>
-        <changes xsi:type="history:Set" xmi:id="_14siyGnREeaTLbmqFFisdA" featureName="name" dataValue="welcomePage">
-          <element href="process.ecore#//ProcessApplication/welcomePage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14siyWnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/welcomePage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14siymnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/welcomePage"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14six2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAx37WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14siyGnREeaTLbmqFFisdA" element="_aDbAx37WEeikGNUjluDuqA" featureName="name" dataValue="welcomePage"/>
+        <changes xsi:type="history:Set" xmi:id="_14siyWnREeaTLbmqFFisdA" element="_aDbAx37WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14siymnREeaTLbmqFFisdA" element="_aDbAx37WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14siy2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/welcomePageInternal"/>
-        <changes xsi:type="history:Set" xmi:id="_14sizGnREeaTLbmqFFisdA" featureName="name" dataValue="welcomePageInternal">
-          <element href="process.ecore#//ProcessApplication/welcomePageInternal"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14sizWnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="true">
-          <element href="process.ecore#//ProcessApplication/welcomePageInternal"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14sizmnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/welcomePageInternal"/>
+      <changes xsi:type="history:Create" xmi:id="_14siy2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAyH7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14sizGnREeaTLbmqFFisdA" element="_aDbAyH7WEeikGNUjluDuqA" featureName="name" dataValue="welcomePageInternal"/>
+        <changes xsi:type="history:Set" xmi:id="_14sizWnREeaTLbmqFFisdA" element="_aDbAyH7WEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue="true"/>
+        <changes xsi:type="history:Set" xmi:id="_14sizmnREeaTLbmqFFisdA" element="_aDbAyH7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14siz2nREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/autoLogin"/>
-        <changes xsi:type="history:Set" xmi:id="_14si0GnREeaTLbmqFFisdA" featureName="name" dataValue="autoLogin">
-          <element href="process.ecore#//ProcessApplication/autoLogin"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14si0WnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/autoLogin"/>
+      <changes xsi:type="history:Create" xmi:id="_14siz2nREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAyn7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14si0GnREeaTLbmqFFisdA" element="_aDbAyn7WEeikGNUjluDuqA" featureName="name" dataValue="autoLogin"/>
+        <changes xsi:type="history:Set" xmi:id="_14si0WnREeaTLbmqFFisdA" element="_aDbAyn7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14si0mnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/autoLoginId"/>
-        <changes xsi:type="history:Set" xmi:id="_14si02nREeaTLbmqFFisdA" featureName="name" dataValue="autoLoginId">
-          <element href="process.ecore#//ProcessApplication/autoLoginId"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14si1GnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/autoLoginId"/>
+      <changes xsi:type="history:Create" xmi:id="_14si0mnREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAzH7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14si02nREeaTLbmqFFisdA" element="_aDbAzH7WEeikGNUjluDuqA" featureName="name" dataValue="autoLoginId"/>
+        <changes xsi:type="history:Set" xmi:id="_14si1GnREeaTLbmqFFisdA" element="_aDbAzH7WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14si1WnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/hostPage"/>
-        <changes xsi:type="history:Set" xmi:id="_14si1mnREeaTLbmqFFisdA" featureName="name" dataValue="hostPage">
-          <element href="process.ecore#//ProcessApplication/hostPage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14si12nREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ProcessApplication/hostPage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14si2GnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/hostPage"/>
-          <referenceValue href="process.ecore#//AssociatedFile"/>
-        </changes>
+      <changes xsi:type="history:Create" xmi:id="_14si1WnREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAzn7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14si1mnREeaTLbmqFFisdA" element="_aDbAzn7WEeikGNUjluDuqA" featureName="name" dataValue="hostPage"/>
+        <changes xsi:type="history:Set" xmi:id="_14si12nREeaTLbmqFFisdA" element="_aDbAzn7WEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_14si2GnREeaTLbmqFFisdA" element="_aDbAzn7WEeikGNUjluDuqA" featureName="eType" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_14si2WnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ProcessApplication"/>
-        <element href="process.ecore#//ProcessApplication/basedOnLookAndFeel"/>
-        <changes xsi:type="history:Set" xmi:id="_14si2mnREeaTLbmqFFisdA" featureName="name" dataValue="basedOnLookAndFeel">
-          <element href="process.ecore#//ProcessApplication/basedOnLookAndFeel"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_14si22nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ProcessApplication/basedOnLookAndFeel"/>
+      <changes xsi:type="history:Create" xmi:id="_14si2WnREeaTLbmqFFisdA" target="_aDbAwX7WEeikGNUjluDuqA" referenceName="eStructuralFeatures" element="_aDbAz37WEeikGNUjluDuqA">
+        <changes xsi:type="history:Set" xmi:id="_14si2mnREeaTLbmqFFisdA" element="_aDbAz37WEeikGNUjluDuqA" featureName="name" dataValue="basedOnLookAndFeel"/>
+        <changes xsi:type="history:Set" xmi:id="_14si22nREeaTLbmqFFisdA" element="_aDbAz37WEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </changes>
       </changes>
@@ -9277,31 +8886,19 @@
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_144wAGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_144wAGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_eOE4wn7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/entryRedirectionURL"/>
-        <changes xsi:type="history:Set" xmi:id="_144wAWnREeaTLbmqFFisdA" featureName="name" dataValue="entryRedirectionURL">
-          <element href="process.ecore#//PageFlow/entryRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wAmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/entryRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wA2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/entryRedirectionURL"/>
+        <changes xsi:type="history:Set" xmi:id="_144wAWnREeaTLbmqFFisdA" element="_eOE4wn7VEeikGNUjluDuqA" featureName="name" dataValue="entryRedirectionURL"/>
+        <changes xsi:type="history:Set" xmi:id="_144wAmnREeaTLbmqFFisdA" element="_eOE4wn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_144wA2nREeaTLbmqFFisdA" element="_eOE4wn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_144wBGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_144wBGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_eyl7En7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/confirmationMessage"/>
-        <changes xsi:type="history:Set" xmi:id="_144wBWnREeaTLbmqFFisdA" featureName="name" dataValue="confirmationMessage">
-          <element href="process.ecore#//PageFlow/confirmationMessage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wBmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/confirmationMessage"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wB2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/confirmationMessage"/>
+        <changes xsi:type="history:Set" xmi:id="_144wBWnREeaTLbmqFFisdA" element="_eyl7En7VEeikGNUjluDuqA" featureName="name" dataValue="confirmationMessage"/>
+        <changes xsi:type="history:Set" xmi:id="_144wBmnREeaTLbmqFFisdA" element="_eyl7En7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_144wB2nREeaTLbmqFFisdA" element="_eyl7En7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
@@ -9319,17 +8916,11 @@
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_144wDGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_144wDGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_mjUscn7VEeikGNUjluDuqA">
         <target href="process.ecore#//RecapFlow"/>
-        <element href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" xmi:id="_144wDWnREeaTLbmqFFisdA" featureName="name" dataValue="recapPageFlowRedirectionURL">
-          <element href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wDmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wD2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
+        <changes xsi:type="history:Set" xmi:id="_144wDWnREeaTLbmqFFisdA" element="_mjUscn7VEeikGNUjluDuqA" featureName="name" dataValue="recapPageFlowRedirectionURL"/>
+        <changes xsi:type="history:Set" xmi:id="_144wDmnREeaTLbmqFFisdA" element="_mjUscn7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_144wD2nREeaTLbmqFFisdA" element="_mjUscn7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
@@ -9347,17 +8938,10 @@
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_144wFGnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
-        <target href="process.ecore#//ViewPageFlow"/>
-        <element href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" xmi:id="_144wFWnREeaTLbmqFFisdA" featureName="name" dataValue="viewPageFlowRedirectionURL">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wFmnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_144wF2nREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+      <changes xsi:type="history:Create" xmi:id="_144wFGnREeaTLbmqFFisdA" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures" element="_D2Q_on9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Set" xmi:id="_144wFWnREeaTLbmqFFisdA" element="_D2Q_on9mEeiiU5kHUMShmw" featureName="name" dataValue="viewPageFlowRedirectionURL"/>
+        <changes xsi:type="history:Set" xmi:id="_144wFmnREeaTLbmqFFisdA" element="_D2Q_on9mEeiiU5kHUMShmw" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_144wF2nREeaTLbmqFFisdA" element="_D2Q_on9mEeiiU5kHUMShmw" featureName="eType">
           <referenceValue href="expression.ecore#//Expression"/>
         </changes>
       </changes>
@@ -10212,20 +9796,12 @@
           <referenceValue href="expression.ecore#//Operation"/>
         </changes>
       </changes>
-      <changes xsi:type="history:Create" xmi:id="_149okWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures">
+      <changes xsi:type="history:Create" xmi:id="_149okWnREeaTLbmqFFisdA" referenceName="eStructuralFeatures" element="_ficDon7VEeikGNUjluDuqA">
         <target href="process.ecore#//PageFlow"/>
-        <element href="process.ecore#//PageFlow/entryRedirectionActions"/>
-        <changes xsi:type="history:Set" xmi:id="_149okmnREeaTLbmqFFisdA" featureName="name" dataValue="entryRedirectionActions">
-          <element href="process.ecore#//PageFlow/entryRedirectionActions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_149ok2nREeaTLbmqFFisdA" featureName="upperBound" dataValue="-1" oldDataValue="1">
-          <element href="process.ecore#//PageFlow/entryRedirectionActions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_149olGnREeaTLbmqFFisdA" featureName="containment" dataValue="true" oldDataValue="false">
-          <element href="process.ecore#//PageFlow/entryRedirectionActions"/>
-        </changes>
-        <changes xsi:type="history:Set" xmi:id="_149olWnREeaTLbmqFFisdA" featureName="eType">
-          <element href="process.ecore#//PageFlow/entryRedirectionActions"/>
+        <changes xsi:type="history:Set" xmi:id="_149okmnREeaTLbmqFFisdA" element="_ficDon7VEeikGNUjluDuqA" featureName="name" dataValue="entryRedirectionActions"/>
+        <changes xsi:type="history:Set" xmi:id="_149ok2nREeaTLbmqFFisdA" element="_ficDon7VEeikGNUjluDuqA" featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" xmi:id="_149olGnREeaTLbmqFFisdA" element="_ficDon7VEeikGNUjluDuqA" featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" xmi:id="_149olWnREeaTLbmqFFisdA" element="_ficDon7VEeikGNUjluDuqA" featureName="eType">
           <referenceValue href="expression.ecore#//Operation"/>
         </changes>
       </changes>
@@ -12602,18 +12178,12 @@
       </changes>
     </changes>
     <changes xsi:type="history:CompositeChange" xmi:id="_15Kc92nREeaTLbmqFFisdA">
-      <changes xsi:type="history:Set" xmi:id="_15Kc-GnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue="">
-        <element href="process.ecore#//PageFlow/entryPageFlowType"/>
-      </changes>
-      <changes xsi:type="history:Set" xmi:id="_15Kc-WnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue="">
-        <element href="process.ecore#//RecapFlow/recapPageFlowType"/>
-      </changes>
+      <changes xsi:type="history:Set" xmi:id="_15Kc-GnREeaTLbmqFFisdA" element="_b2dhIn7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
+      <changes xsi:type="history:Set" xmi:id="_15Kc-WnREeaTLbmqFFisdA" element="_lCyt0n7VEeikGNUjluDuqA" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
       <changes xsi:type="history:Set" xmi:id="_15Kc-mnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="EXPRESSION" oldDataValue="GROOVY_EXPRESSION">
         <element href="process.ecore#//SequenceFlow/conditionType"/>
       </changes>
-      <changes xsi:type="history:Set" xmi:id="_15Kc-2nREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue="">
-        <element href="process.ecore#//ViewPageFlow/viewPageFlowType"/>
-      </changes>
+      <changes xsi:type="history:Set" xmi:id="_15Kc-2nREeaTLbmqFFisdA" element="_FkyW8n9mEeiiU5kHUMShmw" featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
       <changes xsi:type="history:Set" xmi:id="_15Kc_GnREeaTLbmqFFisdA" featureName="defaultValueLiteral" dataValue="CONSTANT" oldDataValue="0">
         <element href="simulation.ecore#//InjectionPeriod/repartition"/>
       </changes>
@@ -14045,18 +13615,11 @@
             <element href="process.ecore#//FormMappingType/URL"/>
           </changes>
         </changes>
-        <changes xsi:type="history:Create" xmi:id="_15RKoWnREeaTLbmqFFisdA" referenceName="eLiterals">
+        <changes xsi:type="history:Create" xmi:id="_15RKoWnREeaTLbmqFFisdA" referenceName="eLiterals" element="_tgFD8n9pEeiiU5kHUMShmw">
           <target href="process.ecore#//FormMappingType"/>
-          <element href="process.ecore#//FormMappingType/LEGACY"/>
-          <changes xsi:type="history:Set" xmi:id="_15RKomnREeaTLbmqFFisdA" featureName="name" dataValue="LEGACY">
-            <element href="process.ecore#//FormMappingType/LEGACY"/>
-          </changes>
-          <changes xsi:type="history:Set" xmi:id="_15RKo2nREeaTLbmqFFisdA" featureName="literal" dataValue="LEGACY">
-            <element href="process.ecore#//FormMappingType/LEGACY"/>
-          </changes>
-          <changes xsi:type="history:Set" xmi:id="_15RKpGnREeaTLbmqFFisdA" featureName="value" dataValue="2" oldDataValue="0">
-            <element href="process.ecore#//FormMappingType/LEGACY"/>
-          </changes>
+          <changes xsi:type="history:Set" xmi:id="_15RKomnREeaTLbmqFFisdA" element="_tgFD8n9pEeiiU5kHUMShmw" featureName="name" dataValue="LEGACY"/>
+          <changes xsi:type="history:Set" xmi:id="_15RKo2nREeaTLbmqFFisdA" element="_tgFD8n9pEeiiU5kHUMShmw" featureName="literal" dataValue="LEGACY"/>
+          <changes xsi:type="history:Set" xmi:id="_15RKpGnREeaTLbmqFFisdA" element="_tgFD8n9pEeiiU5kHUMShmw" featureName="value" dataValue="2" oldDataValue="0"/>
         </changes>
         <operation xmi:id="_15RKpWnREeaTLbmqFFisdA" name="createEnumeration">
           <parameters xmi:id="_15RKpmnREeaTLbmqFFisdA" name="ePackage">
@@ -14578,6 +14141,549 @@
           <dataValue xsi:nil="true"/>
         </parameters>
       </operation>
+    </changes>
+  </releases>
+  <releases xmi:id="_kNwSIH6nEeimZt3VsFYQiw" date="2018-07-03T11:43:27.494+0200" label="7.8.0-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_iPxegH7TEeikGNUjluDuqA" migration="org.bonitasoft.studio.migration.custom.migration.Removev6FromCustomMigration">
+      <changes xsi:type="history:OperationChange" xmi:id="_q37EEH6nEeimZt3VsFYQiw">
+        <changes xsi:type="history:Remove" xmi:id="_q37EEX6nEeimZt3VsFYQiw" featureName="eSuperTypes" referenceValue="_aDbAwX7WEeikGNUjluDuqA">
+          <element href="process.ecore#//AbstractProcess"/>
+        </changes>
+        <operation xmi:id="_q37EEn6nEeimZt3VsFYQiw" name="removeSuperType">
+          <parameters xmi:id="_q37EE36nEeimZt3VsFYQiw" name="eClass">
+            <referenceValue xmi:id="_q37EFH6nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+            <referenceValue xmi:id="_q37EFX6nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_q37EFn6nEeimZt3VsFYQiw" name="superType">
+            <referenceValue xmi:id="_q37EF36nEeimZt3VsFYQiw" element="_aDbAwX7WEeikGNUjluDuqA"/>
+            <referenceValue xmi:id="_q37EGH6nEeimZt3VsFYQiw" element="_aDbAwX7WEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_q37EGX6nEeimZt3VsFYQiw">
+        <changes xsi:type="history:Remove" xmi:id="_q37EGn6nEeimZt3VsFYQiw" featureName="eSuperTypes" referenceValue="_M4NhQX9mEeiiU5kHUMShmw">
+          <element href="process.ecore#//AbstractProcess"/>
+        </changes>
+        <operation xmi:id="_q37EG36nEeimZt3VsFYQiw" name="removeSuperType">
+          <parameters xmi:id="_q37EHH6nEeimZt3VsFYQiw" name="eClass">
+            <referenceValue xmi:id="_q37EHX6nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+            <referenceValue xmi:id="_q37EHn6nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_q37EH36nEeimZt3VsFYQiw" name="superType">
+            <referenceValue xmi:id="_q37EIH6nEeimZt3VsFYQiw" element="_M4NhQX9mEeiiU5kHUMShmw"/>
+            <referenceValue xmi:id="_q37EIX6nEeimZt3VsFYQiw" element="_M4NhQX9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_q37EIn6nEeimZt3VsFYQiw">
+        <changes xsi:type="history:Remove" xmi:id="_q37EI36nEeimZt3VsFYQiw" featureName="eSuperTypes">
+          <element href="process.ecore#//AbstractProcess"/>
+          <referenceValue href="simulation.ecore#//SimulationAbstractProcess"/>
+        </changes>
+        <operation xmi:id="_q37EJH6nEeimZt3VsFYQiw" name="removeSuperType">
+          <parameters xmi:id="_q37EJX6nEeimZt3VsFYQiw" name="eClass">
+            <referenceValue xmi:id="_q37EJn6nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+            <referenceValue xmi:id="_q37EJ36nEeimZt3VsFYQiw">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_q37EKH6nEeimZt3VsFYQiw" name="superType">
+            <referenceValue xmi:id="_q37EKX6nEeimZt3VsFYQiw">
+              <element href="simulation.ecore#//SimulationAbstractProcess"/>
+            </referenceValue>
+            <referenceValue xmi:id="_q37EKn6nEeimZt3VsFYQiw">
+              <element href="simulation.ecore#//SimulationAbstractProcess"/>
+            </referenceValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_t1rckH7REeikGNUjluDuqA">
+        <changes xsi:type="history:Remove" xmi:id="_t1sDoH7REeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
+          <element href="process.ecore#//AbstractProcess"/>
+        </changes>
+        <operation xmi:id="_t1sDoX7REeikGNUjluDuqA" name="removeSuperType">
+          <parameters xmi:id="_t1sDon7REeikGNUjluDuqA" name="eClass">
+            <referenceValue xmi:id="_t1sDo37REeikGNUjluDuqA">
+              <element href="process.ecore#//AbstractProcess"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_t1sDpH7REeikGNUjluDuqA" name="superType">
+            <referenceValue xmi:id="_t1sDpX7REeikGNUjluDuqA" element="_TFhahH7WEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_OGnF8H7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_OGnF8X7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//AbstractPageFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_OGnF8n7VEeikGNUjluDuqA" name="regExpToHideDefaultField">
+            <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </element>
+        </changes>
+        <operation xmi:id="_OGnF9H7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_OGnF9X7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_OGnF9n7VEeikGNUjluDuqA" element="_OGnF8n7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_PwLEwH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_PwLEwX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//AbstractPageFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_PwLEwn7VEeikGNUjluDuqA" name="useRegExpToHideDefaultField" defaultValueLiteral="false">
+            <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </element>
+        </changes>
+        <operation xmi:id="_PwLExH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_PwLExX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_PwLExn7VEeikGNUjluDuqA" element="_PwLEwn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_TvYFQH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_TvYFQX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_TvYFQn7VEeikGNUjluDuqA" name="byPassFormsGeneration">
+            <eAnnotations xmi:id="_TvYFQ37VEeikGNUjluDuqA" source="Deprecated_since_5.4"/>
+            <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+          </element>
+        </changes>
+        <operation xmi:id="_TvYFRX7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_TvYFRn7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_TvYFR37VEeikGNUjluDuqA" element="_TvYFQn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_Ucb_kH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_Ucb_kX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_Ucb_kn7VEeikGNUjluDuqA" name="confirmationTemplate" eType="_RTZ8rH7WEeikGNUjluDuqA" containment="true"/>
+        </changes>
+        <operation xmi:id="_Ucb_lH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_Ucb_lX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_Ucb_ln7VEeikGNUjluDuqA" element="_Ucb_kn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_VJNmAH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_VJNmAX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_VJNmAn7VEeikGNUjluDuqA" name="transientData" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Data"/>
+          </element>
+        </changes>
+        <operation xmi:id="_VJNmBH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_VJNmBX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_VJNmBn7VEeikGNUjluDuqA" element="_VJNmAn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_Vv-rEH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_Vv-rEX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_Vv-rEn7VEeikGNUjluDuqA" name="pageFlowConnectors" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Connector"/>
+          </element>
+        </changes>
+        <operation xmi:id="_Vv-rFH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_Vv-rFX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_Vv-rFn7VEeikGNUjluDuqA" element="_Vv-rEn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_b2dhIH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_b2dhIX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_b2dhIn7VEeikGNUjluDuqA" name="entryPageFlowType" eType="_zFqMYn9pEeiiU5kHUMShmw" defaultValueLiteral="PAGEFLOW"/>
+        </changes>
+        <operation xmi:id="_b2dhJH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_b2dhJX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_b2dhJn7VEeikGNUjluDuqA" element="_b2dhIn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_chtdkH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_chtdkX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_chtdkn7VEeikGNUjluDuqA" name="transmitURLAsParameter" lowerBound="1" defaultValueLiteral="true">
+            <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </element>
+        </changes>
+        <operation xmi:id="_chtdlH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_chtdlX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_chtdln7VEeikGNUjluDuqA" element="_chtdkn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_dEIOIH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_dEIOIX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_dEIOIn7VEeikGNUjluDuqA" name="pageFlowTransitions" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//PageFlowTransition"/>
+          </element>
+        </changes>
+        <operation xmi:id="_dEIOJH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_dEIOJX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_dEIOJn7VEeikGNUjluDuqA" element="_dEIOIn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_doQO4H7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_doQO4X7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_doQO4n7VEeikGNUjluDuqA" name="form" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="form.ecore#//Form"/>
+          </element>
+        </changes>
+        <operation xmi:id="_doQO5H7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_doQO5X7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_doQO5n7VEeikGNUjluDuqA" element="_doQO4n7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_eOE4wH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_eOE4wX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_eOE4wn7VEeikGNUjluDuqA" name="entryRedirectionURL" containment="true">
+            <eType xsi:type="ecore:EClass" href="expression.ecore#//Expression"/>
+          </element>
+        </changes>
+        <operation xmi:id="_eOE4xH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_eOE4xX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_eOE4xn7VEeikGNUjluDuqA" element="_eOE4wn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_eyl7EH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_eyl7EX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_eyl7En7VEeikGNUjluDuqA" name="confirmationMessage" containment="true">
+            <eType xsi:type="ecore:EClass" href="expression.ecore#//Expression"/>
+          </element>
+        </changes>
+        <operation xmi:id="_eyl7FH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_eyl7FX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_eyl7Fn7VEeikGNUjluDuqA" element="_eyl7En7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_ficDoH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_ficDoX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//PageFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_ficDon7VEeikGNUjluDuqA" name="entryRedirectionActions" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="expression.ecore#//Operation"/>
+          </element>
+        </changes>
+        <operation xmi:id="_ficDpH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_ficDpX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_ficDpn7VEeikGNUjluDuqA" element="_ficDon7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_jFkMIH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_jFkMIX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_jFkMIn7VEeikGNUjluDuqA" name="recapPageFlowTransitions" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//PageFlowTransition"/>
+          </element>
+        </changes>
+        <operation xmi:id="_jFkMJH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_jFkMJX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_jFkMJn7VEeikGNUjluDuqA" element="_jFkMIn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_jvR3gH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_jvR3gX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_jvR3gn7VEeikGNUjluDuqA" name="recapTransientData" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Data"/>
+          </element>
+        </changes>
+        <operation xmi:id="_jvR3hH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_jvR3hX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_jvR3hn7VEeikGNUjluDuqA" element="_jvR3gn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_kVlCgH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_kVlCgX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_kVlCgn7VEeikGNUjluDuqA" name="recapFlowConnectors" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Connector"/>
+          </element>
+        </changes>
+        <operation xmi:id="_kVlChH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_kVlChX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_kVlChn7VEeikGNUjluDuqA" element="_kVlCgn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_lCyt0H7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_lCyt0X7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EAttribute" xmi:id="_lCyt0n7VEeikGNUjluDuqA" name="recapPageFlowType" eType="_xFz0g39pEeiiU5kHUMShmw" defaultValueLiteral="PAGEFLOW"/>
+        </changes>
+        <operation xmi:id="_lCyt1H7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_lCyt1X7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_lCyt1n7VEeikGNUjluDuqA" element="_lCyt0n7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_l5QbwH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_l5QbwX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_l5Qbwn7VEeikGNUjluDuqA" name="recapForms" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="form.ecore#//ViewForm"/>
+          </element>
+        </changes>
+        <operation xmi:id="_l5QbxH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_l5QbxX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_l5Qbxn7VEeikGNUjluDuqA" element="_l5Qbwn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_mjUscH7VEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_mjUscX7VEeikGNUjluDuqA" referenceName="eStructuralFeatures">
+          <target href="process.ecore#//RecapFlow"/>
+          <element xsi:type="ecore:EReference" xmi:id="_mjUscn7VEeikGNUjluDuqA" name="recapPageFlowRedirectionURL" containment="true">
+            <eType xsi:type="ecore:EClass" href="expression.ecore#//Expression"/>
+          </element>
+        </changes>
+        <operation xmi:id="_mjUsdH7VEeikGNUjluDuqA" name="deleteFeature2">
+          <parameters xmi:id="_mjUsdX7VEeikGNUjluDuqA" name="feature">
+            <referenceValue xmi:id="_mjUsdn7VEeikGNUjluDuqA" element="_mjUscn7VEeikGNUjluDuqA"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_D2Q_oH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_D2Q_oX9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" xmi:id="_D2Q_on9mEeiiU5kHUMShmw" name="viewPageFlowRedirectionURL" containment="true">
+            <eType xsi:type="ecore:EClass" href="expression.ecore#//Expression"/>
+          </element>
+        </changes>
+        <operation xmi:id="_D2Q_pH9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_D2Q_pX9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_D2Q_pn9mEeiiU5kHUMShmw" element="_D2Q_on9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_EswiwH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_EswiwX9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" xmi:id="_Eswiwn9mEeiiU5kHUMShmw" name="viewForm" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="form.ecore#//ViewForm"/>
+          </element>
+        </changes>
+        <operation xmi:id="_EswixH9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_EswixX9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_Eswixn9mEeiiU5kHUMShmw" element="_Eswiwn9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_FkyW8H9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_FkyW8X9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" xmi:id="_FkyW8n9mEeiiU5kHUMShmw" name="viewPageFlowType" eType="_xFz0g39pEeiiU5kHUMShmw" defaultValueLiteral="PAGEFLOW"/>
+        </changes>
+        <operation xmi:id="_FkyW9H9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_FkyW9X9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_FkyW9n9mEeiiU5kHUMShmw" element="_FkyW8n9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_GHCIYH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_GHCIYX9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" xmi:id="_GHCIYn9mEeiiU5kHUMShmw" name="viewPageFlowConnectors" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Connector"/>
+          </element>
+        </changes>
+        <operation xmi:id="_GHCIZH9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_GHCIZX9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_GHCIZn9mEeiiU5kHUMShmw" element="_GHCIYn9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_GkSFEH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_GkSFEX9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" xmi:id="_GkSFEn9mEeiiU5kHUMShmw" name="viewTransientData" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//Data"/>
+          </element>
+        </changes>
+        <operation xmi:id="_GkSFFH9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_GkSFFX9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_GkSFFn9mEeiiU5kHUMShmw" element="_GkSFEn9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_HJUEwH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_HJUEwX9mEeiiU5kHUMShmw" target="_M4NhQX9mEeiiU5kHUMShmw" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" xmi:id="_HJUEwn9mEeiiU5kHUMShmw" name="viewPageFlowTransitions" upperBound="-1" containment="true">
+            <eType xsi:type="ecore:EClass" href="process.ecore#//PageFlowTransition"/>
+          </element>
+        </changes>
+        <operation xmi:id="_HJUExH9mEeiiU5kHUMShmw" name="deleteFeature2">
+          <parameters xmi:id="_HJUExX9mEeiiU5kHUMShmw" name="feature">
+            <referenceValue xmi:id="_HJUExn9mEeiiU5kHUMShmw" element="_HJUEwn9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_Juk20H9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Remove" xmi:id="_Juk20X9mEeiiU5kHUMShmw" featureName="eSuperTypes" referenceValue="_M4NhQX9mEeiiU5kHUMShmw">
+          <element href="process.ecore#//FlowElement"/>
+        </changes>
+        <operation xmi:id="_Juk20n9mEeiiU5kHUMShmw" name="removeSuperType">
+          <parameters xmi:id="_Juk2039mEeiiU5kHUMShmw" name="eClass">
+            <referenceValue xmi:id="_Juk21H9mEeiiU5kHUMShmw">
+              <element href="process.ecore#//FlowElement"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_Juk21X9mEeiiU5kHUMShmw" name="superType">
+            <referenceValue xmi:id="_Juk21n9mEeiiU5kHUMShmw" element="_M4NhQX9mEeiiU5kHUMShmw"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_LWsrMH9mEeiiU5kHUMShmw">
+        <changes xsi:type="history:Remove" xmi:id="_LWsrMX9mEeiiU5kHUMShmw" featureName="eSuperTypes">
+          <element href="process.ecore#//FlowElement"/>
+          <referenceValue href="simulation.ecore#//SimulationActivity"/>
+        </changes>
+        <operation xmi:id="_LWsrMn9mEeiiU5kHUMShmw" name="removeSuperType">
+          <parameters xmi:id="_LWsrM39mEeiiU5kHUMShmw" name="eClass">
+            <referenceValue xmi:id="_LWsrNH9mEeiiU5kHUMShmw">
+              <element href="process.ecore#//FlowElement"/>
+            </referenceValue>
+          </parameters>
+          <parameters xmi:id="_LWsrNX9mEeiiU5kHUMShmw" name="superType">
+            <referenceValue xmi:id="_LWsrNn9mEeiiU5kHUMShmw">
+              <element href="simulation.ecore#//SimulationActivity"/>
+            </referenceValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange" xmi:id="_tgFD8H9pEeiiU5kHUMShmw">
+        <changes xsi:type="history:Delete" xmi:id="_tgFD8X9pEeiiU5kHUMShmw" referenceName="eLiterals">
+          <target href="process.ecore#//FormMappingType"/>
+          <element xsi:type="ecore:EEnumLiteral" xmi:id="_tgFD8n9pEeiiU5kHUMShmw" name="LEGACY" value="2"/>
+        </changes>
+        <operation xmi:id="_tgFD839pEeiiU5kHUMShmw" name="replaceLiteral">
+          <parameters xmi:id="_tgFD9H9pEeiiU5kHUMShmw" name="toReplace">
+            <referenceValue xmi:id="_tgFD9X9pEeiiU5kHUMShmw" element="_tgFD8n9pEeiiU5kHUMShmw"/>
+          </parameters>
+          <parameters xmi:id="_tgFD9n9pEeiiU5kHUMShmw" name="replaceBy">
+            <referenceValue xmi:id="_tgFD939pEeiiU5kHUMShmw">
+              <element href="process.ecore#//FormMappingType/INTERNAL"/>
+            </referenceValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange" xmi:id="_bd6o0H7WEeikGNUjluDuqA">
+        <changes xsi:type="history:Delete" xmi:id="_RTZ8oX7WEeikGNUjluDuqA" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8on7WEeikGNUjluDuqA" element="_aDbAwn7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8o37WEeikGNUjluDuqA" element="_aDbAw37WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8pH7WEeikGNUjluDuqA" element="_aDbAxH7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8pX7WEeikGNUjluDuqA" element="_aDbAxX7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8pn7WEeikGNUjluDuqA" element="_aDbAxn7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8p37WEeikGNUjluDuqA" element="_aDbAx37WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8qH7WEeikGNUjluDuqA" element="_aDbAzn7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Set" xmi:id="_RTZ8qX7WEeikGNUjluDuqA" element="_TFhahX7WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Remove" xmi:id="_RTZ8qn7WEeikGNUjluDuqA" element="_T_jZ037WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Remove" xmi:id="_RTZ8q37WEeikGNUjluDuqA" element="_VDEsUn7WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_RTZ8rH7WEeikGNUjluDuqA"/>
+          <element xsi:type="ecore:EClass" xmi:id="_RTZ8rH7WEeikGNUjluDuqA" name="AssociatedFile">
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_RTZ8rX7WEeikGNUjluDuqA" name="path">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_RTZ8r37WEeikGNUjluDuqA" name="warPath">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_TFhagH7WEeikGNUjluDuqA" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <changes xsi:type="history:Remove" xmi:id="_TFhagX7WEeikGNUjluDuqA" element="_aDbAwX7WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA"/>
+          <changes xsi:type="history:Remove" xmi:id="_TFhagn7WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
+            <element href="process.ecore#//Task"/>
+          </changes>
+          <changes xsi:type="history:Remove" xmi:id="_TFhag37WEeikGNUjluDuqA" featureName="eSuperTypes" referenceValue="_TFhahH7WEeikGNUjluDuqA">
+            <element href="form.ecore#//Form"/>
+          </changes>
+          <element xsi:type="ecore:EClass" xmi:id="_TFhahH7WEeikGNUjluDuqA" name="ResourceContainer">
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_TFhahX7WEeikGNUjluDuqA" name="htmlTemplate" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_TFhahn7WEeikGNUjluDuqA" name="resourceJars" upperBound="-1">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_TFhaiH7WEeikGNUjluDuqA" name="resourceValidators" upperBound="-1">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_TFhain7WEeikGNUjluDuqA" name="resourceFiles" upperBound="-1" eType="_T_jZ037WEeikGNUjluDuqA" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_TFhajH7WEeikGNUjluDuqA" name="resourceFolders" upperBound="-1" eType="_VDEsUn7WEeikGNUjluDuqA" containment="true"/>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_T_jZ0X7WEeikGNUjluDuqA" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <changes xsi:type="history:Set" xmi:id="_T_jZ0n7WEeikGNUjluDuqA" element="_VDEsU37WEeikGNUjluDuqA" featureName="eType" oldReferenceValue="_T_jZ037WEeikGNUjluDuqA"/>
+          <element xsi:type="ecore:EClass" xmi:id="_T_jZ037WEeikGNUjluDuqA" name="ResourceFile"/>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_VDEsUX7WEeikGNUjluDuqA" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <element xsi:type="ecore:EClass" xmi:id="_VDEsUn7WEeikGNUjluDuqA" name="ResourceFolder">
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_VDEsU37WEeikGNUjluDuqA" name="resourceFiles" upperBound="-1" containment="true"/>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_aDbAwH7WEeikGNUjluDuqA" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <element xsi:type="ecore:EClass" xmi:id="_aDbAwX7WEeikGNUjluDuqA" name="ProcessApplication">
+            <eSuperTypes href="form.ecore#//MandatoryFieldsCustomization"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAwn7WEeikGNUjluDuqA" name="errorTemplate" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAw37WEeikGNUjluDuqA" name="processTemplate" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAxH7WEeikGNUjluDuqA" name="pageTemplate" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAxX7WEeikGNUjluDuqA" name="consultationTemplate" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAxn7WEeikGNUjluDuqA" name="logInPage" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAx37WEeikGNUjluDuqA" name="welcomePage" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_aDbAyH7WEeikGNUjluDuqA" name="welcomePageInternal" defaultValueLiteral="true">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_aDbAyn7WEeikGNUjluDuqA" name="autoLogin">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_aDbAzH7WEeikGNUjluDuqA" name="autoLoginId">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="_aDbAzn7WEeikGNUjluDuqA" name="hostPage" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="_aDbAz37WEeikGNUjluDuqA" name="basedOnLookAndFeel">
+              <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            </eStructuralFeatures>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_M4NhQH9mEeiiU5kHUMShmw" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <element xsi:type="ecore:EClass" xmi:id="_M4NhQX9mEeiiU5kHUMShmw" name="ViewPageFlow" abstract="true" interface="true">
+            <eSuperTypes href="process.ecore#//AbstractPageFlow"/>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_xFz0gn9pEeiiU5kHUMShmw" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <element xsi:type="ecore:EEnum" xmi:id="_xFz0g39pEeiiU5kHUMShmw" name="ConsultationPageFlowType">
+            <eLiterals xmi:id="_xFz0hH9pEeiiU5kHUMShmw" name="PAGEFLOW" literal="PAGEFLOW"/>
+            <eLiterals xmi:id="_xFz0hX9pEeiiU5kHUMShmw" name="REDIRECTION" value="1" literal="REDIRECTION"/>
+          </element>
+        </changes>
+        <changes xsi:type="history:Delete" xmi:id="_zFqMYX9pEeiiU5kHUMShmw" referenceName="eClassifiers">
+          <target href="process.ecore#/"/>
+          <element xsi:type="ecore:EEnum" xmi:id="_zFqMYn9pEeiiU5kHUMShmw" name="EntryPageFlowType">
+            <eLiterals xmi:id="_zFqMY39pEeiiU5kHUMShmw" name="PAGEFLOW" literal="PAGEFLOW"/>
+            <eLiterals xmi:id="_zFqMZH9pEeiiU5kHUMShmw" name="SKIP" value="1" literal="SKIP"/>
+            <eLiterals xmi:id="_zFqMZX9pEeiiU5kHUMShmw" name="REDIRECT" value="2" literal="REDIRECT"/>
+          </element>
+        </changes>
+      </changes>
     </changes>
   </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>

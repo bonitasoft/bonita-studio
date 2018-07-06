@@ -17,14 +17,8 @@
  */
 package org.bonitasoft.studio.model.process.util;
 
-import org.bonitasoft.studio.model.form.CSSCustomizable;
-import org.bonitasoft.studio.model.form.MandatoryFieldsCustomization;
-
 import org.bonitasoft.studio.model.process.*;
 
-import org.bonitasoft.studio.model.simulation.SimulationAbstractProcess;
-import org.bonitasoft.studio.model.simulation.SimulationActivity;
-import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -125,10 +119,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseAssignable(Assignable object) {
 				return createAssignableAdapter();
-			}
-			@Override
-			public Adapter caseAssociatedFile(AssociatedFile object) {
-				return createAssociatedFileAdapter();
 			}
 			@Override
 			public Adapter caseAssociation(Association object) {
@@ -395,10 +385,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 				return createPoolAdapter();
 			}
 			@Override
-			public Adapter caseProcessApplication(ProcessApplication object) {
-				return createProcessApplicationAdapter();
-			}
-			@Override
 			public Adapter casePageFlowTransition(PageFlowTransition object) {
 				return createPageFlowTransitionAdapter();
 			}
@@ -409,18 +395,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseReceiveTask(ReceiveTask object) {
 				return createReceiveTaskAdapter();
-			}
-			@Override
-			public Adapter caseResourceContainer(ResourceContainer object) {
-				return createResourceContainerAdapter();
-			}
-			@Override
-			public Adapter caseResourceFile(ResourceFile object) {
-				return createResourceFileAdapter();
-			}
-			@Override
-			public Adapter caseResourceFolder(ResourceFolder object) {
-				return createResourceFolderAdapter();
 			}
 			@Override
 			public Adapter caseSequenceFlow(SequenceFlow object) {
@@ -511,10 +485,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 				return createTimerEventAdapter();
 			}
 			@Override
-			public Adapter caseViewPageFlow(ViewPageFlow object) {
-				return createViewPageFlowAdapter();
-			}
-			@Override
 			public Adapter caseXMLData(XMLData object) {
 				return createXMLDataAdapter();
 			}
@@ -525,26 +495,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseXORGateway(XORGateway object) {
 				return createXORGatewayAdapter();
-			}
-			@Override
-			public Adapter caseCSSCustomizable(CSSCustomizable object) {
-				return createCSSCustomizableAdapter();
-			}
-			@Override
-			public Adapter caseMandatoryFieldsCustomization(MandatoryFieldsCustomization object) {
-				return createMandatoryFieldsCustomizationAdapter();
-			}
-			@Override
-			public Adapter caseSimulationDataContainer(SimulationDataContainer object) {
-				return createSimulationDataContainerAdapter();
-			}
-			@Override
-			public Adapter caseSimulationAbstractProcess(SimulationAbstractProcess object) {
-				return createSimulationAbstractProcessAdapter();
-			}
-			@Override
-			public Adapter caseSimulationActivity(SimulationActivity object) {
-				return createSimulationActivityAdapter();
 			}
 			@Override
 			public Adapter caseSimulationTransition(SimulationTransition object) {
@@ -693,20 +643,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAssignableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.AssociatedFile <em>Associated File</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.AssociatedFile
-	 * @generated
-	 */
-	public Adapter createAssociatedFileAdapter() {
 		return null;
 	}
 
@@ -1635,20 +1571,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ProcessApplication <em>Application</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication
-	 * @generated
-	 */
-	public Adapter createProcessApplicationAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.PageFlowTransition <em>Page Flow Transition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1687,48 +1609,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReceiveTaskAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ResourceContainer <em>Resource Container</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer
-	 * @generated
-	 */
-	public Adapter createResourceContainerAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ResourceFile <em>Resource File</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ResourceFile
-	 * @generated
-	 */
-	public Adapter createResourceFileAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ResourceFolder <em>Resource Folder</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ResourceFolder
-	 * @generated
-	 */
-	public Adapter createResourceFolderAdapter() {
 		return null;
 	}
 
@@ -2041,20 +1921,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ViewPageFlow <em>View Page Flow</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow
-	 * @generated
-	 */
-	public Adapter createViewPageFlowAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.XMLData <em>XML Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -2093,76 +1959,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createXORGatewayAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.form.CSSCustomizable <em>CSS Customizable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.form.CSSCustomizable
-	 * @generated
-	 */
-	public Adapter createCSSCustomizableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.form.MandatoryFieldsCustomization <em>Mandatory Fields Customization</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.form.MandatoryFieldsCustomization
-	 * @generated
-	 */
-	public Adapter createMandatoryFieldsCustomizationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.simulation.SimulationDataContainer <em>Data Container</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationDataContainer
-	 * @generated
-	 */
-	public Adapter createSimulationDataContainerAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.simulation.SimulationAbstractProcess <em>Abstract Process</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationAbstractProcess
-	 * @generated
-	 */
-	public Adapter createSimulationAbstractProcessAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.simulation.SimulationActivity <em>Activity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationActivity
-	 * @generated
-	 */
-	public Adapter createSimulationActivityAdapter() {
 		return null;
 	}
 

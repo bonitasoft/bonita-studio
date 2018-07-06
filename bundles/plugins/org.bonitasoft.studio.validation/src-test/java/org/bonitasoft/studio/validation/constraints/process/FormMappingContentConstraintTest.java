@@ -84,7 +84,7 @@ public class FormMappingContentConstraintTest {
     public void should_not_fail_if_form_mapping_is_not_INTERNAL() throws Exception {
         final FormMappingContentConstraint internalFormMappingConstraint = new FormMappingContentConstraint();
 
-        final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.LEGACY)
+        final IValidationContext validationContext = aValidationContext(aFormMapping().withType(FormMappingType.NONE)
                 .havingTargetForm(anExpression().withContent("a_form_id"))
                 .build());
         internalFormMappingConstraint.performBatchValidation(validationContext);

@@ -30,12 +30,6 @@ import org.bonitasoft.studio.model.form.Validable;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
 
-import org.bonitasoft.studio.model.process.AssociatedFile;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ResourceContainer;
-import org.bonitasoft.studio.model.process.ResourceFile;
-import org.bonitasoft.studio.model.process.ResourceFolder;
-
 import org.bonitasoft.studio.model.process.impl.ConnectableElementImpl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -52,7 +46,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -68,11 +61,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getValidators <em>Validators</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getUseDefaultValidator <em>Use Default Validator</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#isBelow <em>Below</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getHtmlTemplate <em>Html Template</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getResourceJars <em>Resource Jars</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getResourceValidators <em>Resource Validators</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getResourceFiles <em>Resource Files</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getResourceFolders <em>Resource Folders</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getNColumn <em>NColumn</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getStringAttributes <em>String Attributes</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.form.impl.FormImpl#getNLine <em>NLine</em>}</li>
@@ -138,56 +126,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * @ordered
 	 */
 	protected boolean below = BELOW_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getHtmlTemplate() <em>Html Template</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getHtmlTemplate()
-	 * @generated
-	 * @ordered
-	 */
-	protected AssociatedFile htmlTemplate;
-
-	/**
-	 * The cached value of the '{@link #getResourceJars() <em>Resource Jars</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getResourceJars()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> resourceJars;
-
-	/**
-	 * The cached value of the '{@link #getResourceValidators() <em>Resource Validators</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getResourceValidators()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> resourceValidators;
-
-	/**
-	 * The cached value of the '{@link #getResourceFiles() <em>Resource Files</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getResourceFiles()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ResourceFile> resourceFiles;
-
-	/**
-	 * The cached value of the '{@link #getResourceFolders() <em>Resource Folders</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getResourceFolders()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ResourceFolder> resourceFolders;
 
 	/**
 	 * The default value of the '{@link #getNColumn() <em>NColumn</em>}' attribute.
@@ -427,97 +365,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AssociatedFile getHtmlTemplate() {
-		return htmlTemplate;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetHtmlTemplate(AssociatedFile newHtmlTemplate, NotificationChain msgs) {
-		AssociatedFile oldHtmlTemplate = htmlTemplate;
-		htmlTemplate = newHtmlTemplate;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FormPackage.FORM__HTML_TEMPLATE, oldHtmlTemplate, newHtmlTemplate);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setHtmlTemplate(AssociatedFile newHtmlTemplate) {
-		if (newHtmlTemplate != htmlTemplate) {
-			NotificationChain msgs = null;
-			if (htmlTemplate != null)
-				msgs = ((InternalEObject)htmlTemplate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FormPackage.FORM__HTML_TEMPLATE, null, msgs);
-			if (newHtmlTemplate != null)
-				msgs = ((InternalEObject)newHtmlTemplate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FormPackage.FORM__HTML_TEMPLATE, null, msgs);
-			msgs = basicSetHtmlTemplate(newHtmlTemplate, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.FORM__HTML_TEMPLATE, newHtmlTemplate, newHtmlTemplate));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getResourceJars() {
-		if (resourceJars == null) {
-			resourceJars = new EDataTypeUniqueEList<String>(String.class, this, FormPackage.FORM__RESOURCE_JARS);
-		}
-		return resourceJars;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getResourceValidators() {
-		if (resourceValidators == null) {
-			resourceValidators = new EDataTypeUniqueEList<String>(String.class, this, FormPackage.FORM__RESOURCE_VALIDATORS);
-		}
-		return resourceValidators;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<ResourceFile> getResourceFiles() {
-		if (resourceFiles == null) {
-			resourceFiles = new EObjectContainmentEList<ResourceFile>(ResourceFile.class, this, FormPackage.FORM__RESOURCE_FILES);
-		}
-		return resourceFiles;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<ResourceFolder> getResourceFolders() {
-		if (resourceFolders == null) {
-			resourceFolders = new EObjectContainmentEList<ResourceFolder>(ResourceFolder.class, this, FormPackage.FORM__RESOURCE_FOLDERS);
-		}
-		return resourceFolders;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public int getNColumn() {
 		return nColumn;
 	}
@@ -731,12 +578,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 		switch (featureID) {
 			case FormPackage.FORM__VALIDATORS:
 				return ((InternalEList<?>)getValidators()).basicRemove(otherEnd, msgs);
-			case FormPackage.FORM__HTML_TEMPLATE:
-				return basicSetHtmlTemplate(null, msgs);
-			case FormPackage.FORM__RESOURCE_FILES:
-				return ((InternalEList<?>)getResourceFiles()).basicRemove(otherEnd, msgs);
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-				return ((InternalEList<?>)getResourceFolders()).basicRemove(otherEnd, msgs);
 			case FormPackage.FORM__STRING_ATTRIBUTES:
 				return ((InternalEList<?>)getStringAttributes()).basicRemove(otherEnd, msgs);
 			case FormPackage.FORM__COLUMNS:
@@ -767,16 +608,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 				return getUseDefaultValidator();
 			case FormPackage.FORM__BELOW:
 				return isBelow();
-			case FormPackage.FORM__HTML_TEMPLATE:
-				return getHtmlTemplate();
-			case FormPackage.FORM__RESOURCE_JARS:
-				return getResourceJars();
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
-				return getResourceValidators();
-			case FormPackage.FORM__RESOURCE_FILES:
-				return getResourceFiles();
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-				return getResourceFolders();
 			case FormPackage.FORM__NCOLUMN:
 				return getNColumn();
 			case FormPackage.FORM__STRING_ATTRIBUTES:
@@ -822,25 +653,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 				return;
 			case FormPackage.FORM__BELOW:
 				setBelow((Boolean)newValue);
-				return;
-			case FormPackage.FORM__HTML_TEMPLATE:
-				setHtmlTemplate((AssociatedFile)newValue);
-				return;
-			case FormPackage.FORM__RESOURCE_JARS:
-				getResourceJars().clear();
-				getResourceJars().addAll((Collection<? extends String>)newValue);
-				return;
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
-				getResourceValidators().clear();
-				getResourceValidators().addAll((Collection<? extends String>)newValue);
-				return;
-			case FormPackage.FORM__RESOURCE_FILES:
-				getResourceFiles().clear();
-				getResourceFiles().addAll((Collection<? extends ResourceFile>)newValue);
-				return;
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-				getResourceFolders().clear();
-				getResourceFolders().addAll((Collection<? extends ResourceFolder>)newValue);
 				return;
 			case FormPackage.FORM__NCOLUMN:
 				setNColumn((Integer)newValue);
@@ -900,21 +712,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 			case FormPackage.FORM__BELOW:
 				setBelow(BELOW_EDEFAULT);
 				return;
-			case FormPackage.FORM__HTML_TEMPLATE:
-				setHtmlTemplate((AssociatedFile)null);
-				return;
-			case FormPackage.FORM__RESOURCE_JARS:
-				getResourceJars().clear();
-				return;
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
-				getResourceValidators().clear();
-				return;
-			case FormPackage.FORM__RESOURCE_FILES:
-				getResourceFiles().clear();
-				return;
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-				getResourceFolders().clear();
-				return;
 			case FormPackage.FORM__NCOLUMN:
 				setNColumn(NCOLUMN_EDEFAULT);
 				return;
@@ -966,16 +763,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 				return USE_DEFAULT_VALIDATOR_EDEFAULT == null ? useDefaultValidator != null : !USE_DEFAULT_VALIDATOR_EDEFAULT.equals(useDefaultValidator);
 			case FormPackage.FORM__BELOW:
 				return below != BELOW_EDEFAULT;
-			case FormPackage.FORM__HTML_TEMPLATE:
-				return htmlTemplate != null;
-			case FormPackage.FORM__RESOURCE_JARS:
-				return resourceJars != null && !resourceJars.isEmpty();
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
-				return resourceValidators != null && !resourceValidators.isEmpty();
-			case FormPackage.FORM__RESOURCE_FILES:
-				return resourceFiles != null && !resourceFiles.isEmpty();
-			case FormPackage.FORM__RESOURCE_FOLDERS:
-				return resourceFolders != null && !resourceFolders.isEmpty();
 			case FormPackage.FORM__NCOLUMN:
 				return nColumn != NCOLUMN_EDEFAULT;
 			case FormPackage.FORM__STRING_ATTRIBUTES:
@@ -1017,16 +804,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 				default: return -1;
 			}
 		}
-		if (baseClass == ResourceContainer.class) {
-			switch (derivedFeatureID) {
-				case FormPackage.FORM__HTML_TEMPLATE: return ProcessPackage.RESOURCE_CONTAINER__HTML_TEMPLATE;
-				case FormPackage.FORM__RESOURCE_JARS: return ProcessPackage.RESOURCE_CONTAINER__RESOURCE_JARS;
-				case FormPackage.FORM__RESOURCE_VALIDATORS: return ProcessPackage.RESOURCE_CONTAINER__RESOURCE_VALIDATORS;
-				case FormPackage.FORM__RESOURCE_FILES: return ProcessPackage.RESOURCE_CONTAINER__RESOURCE_FILES;
-				case FormPackage.FORM__RESOURCE_FOLDERS: return ProcessPackage.RESOURCE_CONTAINER__RESOURCE_FOLDERS;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -1042,16 +819,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 				case FormPackage.VALIDABLE__VALIDATORS: return FormPackage.FORM__VALIDATORS;
 				case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR: return FormPackage.FORM__USE_DEFAULT_VALIDATOR;
 				case FormPackage.VALIDABLE__BELOW: return FormPackage.FORM__BELOW;
-				default: return -1;
-			}
-		}
-		if (baseClass == ResourceContainer.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.RESOURCE_CONTAINER__HTML_TEMPLATE: return FormPackage.FORM__HTML_TEMPLATE;
-				case ProcessPackage.RESOURCE_CONTAINER__RESOURCE_JARS: return FormPackage.FORM__RESOURCE_JARS;
-				case ProcessPackage.RESOURCE_CONTAINER__RESOURCE_VALIDATORS: return FormPackage.FORM__RESOURCE_VALIDATORS;
-				case ProcessPackage.RESOURCE_CONTAINER__RESOURCE_FILES: return FormPackage.FORM__RESOURCE_FILES;
-				case ProcessPackage.RESOURCE_CONTAINER__RESOURCE_FOLDERS: return FormPackage.FORM__RESOURCE_FOLDERS;
 				default: return -1;
 			}
 		}
@@ -1072,10 +839,6 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 		result.append(useDefaultValidator);
 		result.append(", below: "); //$NON-NLS-1$
 		result.append(below);
-		result.append(", resourceJars: "); //$NON-NLS-1$
-		result.append(resourceJars);
-		result.append(", resourceValidators: "); //$NON-NLS-1$
-		result.append(resourceValidators);
 		result.append(", nColumn: "); //$NON-NLS-1$
 		result.append(nColumn);
 		result.append(", nLine: "); //$NON-NLS-1$

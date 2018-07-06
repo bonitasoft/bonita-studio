@@ -49,32 +49,6 @@ public class CustomProcessItemProviderAdapterFactory extends ProcessItemProvider
         return javaObjectDataItemProvider;
     }
 
-    @Override
-    public Adapter createResourceFileAdapter() {
-        if (resourceFileItemProvider == null) {
-            resourceFileItemProvider = new CustomResourceFileItemProvider(this);
-        }
-
-        return resourceFileItemProvider;
-    }
-
-    @Override
-    public Adapter createResourceFolderAdapter() {
-        if (resourceFolderItemProvider == null) {
-            resourceFolderItemProvider = new CustomResourceFolderItemProvider(this);
-        }
-
-        return resourceFolderItemProvider;
-    }
-
-    @Override
-    public Adapter createAssociatedFileAdapter() {
-        if (associatedFileItemProvider == null) {
-            associatedFileItemProvider = new CustomAssociatedFileItemProvider(this);
-        }
-
-        return associatedFileItemProvider;
-    }
 
     @Override
     public Adapter createMessageAdapter() {

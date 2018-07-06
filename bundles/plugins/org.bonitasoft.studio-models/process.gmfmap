@@ -1963,60 +1963,6 @@
             xsi:type="gmfmap:FeatureValueSpec">
           <feature
               xsi:type="ecore:EReference"
-              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//PageFlow/confirmationMessage"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//PageFlow/entryRedirectionURL"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
               href="process.ecore#//PageFlow/formMapping"/>
           <value
               body="org.bonitasoft.studio.model.process.FormMapping mapping = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();&#xD;&#xA;mapping.setTargetForm(org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createFormReferenceExpression(&quot;&quot;, &quot;&quot;));&#xD;&#xA;return mapping ;"

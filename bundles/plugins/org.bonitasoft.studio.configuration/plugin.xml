@@ -37,9 +37,6 @@
       <exportConfigurationAction
             class="org.bonitasoft.studio.configuration.action.ExportProcessDependenciesAction">
       </exportConfigurationAction>
-      <exportConfigurationAction
-            class="org.bonitasoft.studio.configuration.action.ExportApplicationDependenciesAction">
-      </exportConfigurationAction>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

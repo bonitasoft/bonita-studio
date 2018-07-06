@@ -113,17 +113,6 @@ public class FormMappingConstraintTest {
         formMappingConstraint.performBatchValidation(ctx);
     }
 
-    @Test
-    public void should_return_a_valid_status_for_legacy_type() throws Exception {
-        //Given
-        doReturn(aFormMapping().withType(FormMappingType.LEGACY).havingTargetForm(anExpression()).build()).when(ctx).getTarget();
-
-        //When
-        final IStatus status = formMappingConstraint.performBatchValidation(ctx);
-
-        //Then
-        assertThat(status).isOK();
-    }
 
     @Test
     public void should_return_an_error_status_if_a_form_mapping_has_a_targetForm_name_in_several_places_in_a_process_but_with_different_id() throws Exception {
@@ -132,8 +121,8 @@ public class FormMappingConstraintTest {
                 .havingFormMapping(aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression().withName("newForm").withContent("id1")))
                 .havingElements(
                         aTask().havingFormMapping(
-                                aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression().withName("newForm").withContent("id2"))),
-                        aTask().havingFormMapping(aFormMapping().withType(FormMappingType.LEGACY)))
+                                aFormMapping().withType(FormMappingType.INTERNAL)
+                                        .havingTargetForm(anExpression().withName("newForm").withContent("id2"))))
                 .build();
         doReturn(fileStore).when(webPageRepositoryStore).getChild("id1");
         doReturn(fileStore).when(webPageRepositoryStore).getChild("id2");

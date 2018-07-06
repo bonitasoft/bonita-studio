@@ -320,32 +320,11 @@ public class MainProcessItemProvider extends AbstractProcessItemProvider {
 			childFeature == ProcessPackage.Literals.CONTAINER__ELEMENTS ||
 			childFeature == ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS ||
 			childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS ||
-			childFeature == ProcessPackage.Literals.RECAP_FLOW__RECAP_FLOW_CONNECTORS ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS ||
 			childFeature == ProcessPackage.Literals.ABSTRACT_PROCESS__CONNECTIONS ||
 			childFeature == ProcessPackage.Literals.ABSTRACT_PROCESS__DATATYPES ||
 			childFeature == ProcessPackage.Literals.DATA_AWARE__DATA ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA ||
-			childFeature == ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA ||
 			childFeature == ProcessPackage.Literals.MAIN_PROCESS__MESSAGE_CONNECTIONS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__FORM ||
-			childFeature == ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM ||
 			childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__KPIS ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE ||
-			childFeature == ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_TRANSITIONS ||
-			childFeature == ProcessPackage.Literals.RECAP_FLOW__RECAP_PAGE_FLOW_TRANSITIONS ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS ||
 			childFeature == ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING ||
 			childFeature == ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING;
 

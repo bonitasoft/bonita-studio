@@ -64,9 +64,9 @@ public class BarExporterTest {
 
         final BotExecutionDiagramPropertiesView executionTab = new BotProcessDiagramPropertiesViewFolder(bot)
                 .selectExecutionTab();
-        executionTab.selectInstantiationFormTab().selectLegacy();
+        executionTab.selectInstantiationFormTab().selectNone();
         new BotGefProcessDiagramEditor(bot).selectElement("Step1");
-        executionTab.selectFormTab().selectLegacy();
+        executionTab.selectFormTab().selectNone();
 
         // get the GEF editor to activate tools
         final SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
@@ -75,12 +75,12 @@ public class BarExporterTest {
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 500);
 
-        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
+        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectNone();
 
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 800);
 
-        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectLegacy();
+        new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectNone();
 
         // Save Diagram
         bot.menu("File").menu("Save").click();

@@ -41,30 +41,28 @@ public class OperationLeftOperandConsistencyConstraint extends
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
         final Operation operation = (Operation) ctx.getTarget();
-        if (ValidableOperation.shouldValidateOperation(operation)) {
-            final Expression leftOperand = operation.getLeftOperand();
-            if (leftOperand != null && leftOperand.getContent() != null
-                    && !leftOperand.getContent().isEmpty()) {
-                final String type = leftOperand.getType();
-                if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
-                    if (leftOperand.getReferencedElements().isEmpty()) {
-                        final Widget widget = ModelHelper
-                                .getParentWidget(operation);
-                        if (widget == null || !widget.isReadOnly()) {
-                            return ctx.createFailureStatus(Messages.bind(
-                                    Messages.inconsistentLeftOperand,
-                                    leftOperand.getName()));
-                        }
+        final Expression leftOperand = operation.getLeftOperand();
+        if (leftOperand != null && leftOperand.getContent() != null
+                && !leftOperand.getContent().isEmpty()) {
+            final String type = leftOperand.getType();
+            if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
+                if (leftOperand.getReferencedElements().isEmpty()) {
+                    final Widget widget = ModelHelper
+                            .getParentWidget(operation);
+                    if (widget == null || !widget.isReadOnly()) {
+                        return ctx.createFailureStatus(Messages.bind(
+                                Messages.inconsistentLeftOperand,
+                                leftOperand.getName()));
                     }
                 }
-                if (ExpressionConstants.CONSTANT_TYPE.equals(type)) {
-                    final Widget widget = ModelHelper.getParentWidget(operation);
-                    if (widget == null || !widget.isReadOnly()) {
-                        if (leftOperand.getReferencedElements().isEmpty()) {
-                            return ctx.createFailureStatus(Messages.bind(
-                                    Messages.inconsistentLeftOperand,
-                                    leftOperand.getName()));
-                        }
+            }
+            if (ExpressionConstants.CONSTANT_TYPE.equals(type)) {
+                final Widget widget = ModelHelper.getParentWidget(operation);
+                if (widget == null || !widget.isReadOnly()) {
+                    if (leftOperand.getReferencedElements().isEmpty()) {
+                        return ctx.createFailureStatus(Messages.bind(
+                                Messages.inconsistentLeftOperand,
+                                leftOperand.getName()));
                     }
                 }
             }

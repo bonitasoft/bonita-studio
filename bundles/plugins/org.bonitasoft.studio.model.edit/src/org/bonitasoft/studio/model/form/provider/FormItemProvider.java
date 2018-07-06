@@ -29,9 +29,6 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-
 import org.bonitasoft.studio.model.process.provider.ConnectableElementItemProvider;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -76,9 +73,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 
 			addUseDefaultValidatorPropertyDescriptor(object);
 			addBelowPropertyDescriptor(object);
-			addResourceJarsPropertyDescriptor(object);
-			addResourceValidatorsPropertyDescriptor(object);
-			addResourceFilesPropertyDescriptor(object);
 			addNColumnPropertyDescriptor(object);
 			addNLinePropertyDescriptor(object);
 			addShowPageLabelPropertyDescriptor(object);
@@ -129,72 +123,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 				 false,
 				 false,
 				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Jars feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceJarsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceJars_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceJars_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_JARS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Validators feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceValidatorsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceValidators_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceValidators_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_VALIDATORS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Files feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceFilesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceFiles_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceFiles_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES,
-				 true,
-				 false,
-				 true,
-				 null,
 				 null,
 				 null));
 	}
@@ -344,8 +272,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(FormPackage.Literals.VALIDABLE__VALIDATORS);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS);
 			childrenFeatures.add(FormPackage.Literals.FORM__STRING_ATTRIBUTES);
 			childrenFeatures.add(FormPackage.Literals.FORM__COLUMNS);
 			childrenFeatures.add(FormPackage.Literals.FORM__LINES);
@@ -408,8 +334,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 		switch (notification.getFeatureID(Form.class)) {
 			case FormPackage.FORM__USE_DEFAULT_VALIDATOR:
 			case FormPackage.FORM__BELOW:
-			case FormPackage.FORM__RESOURCE_JARS:
-			case FormPackage.FORM__RESOURCE_VALIDATORS:
 			case FormPackage.FORM__NCOLUMN:
 			case FormPackage.FORM__NLINE:
 			case FormPackage.FORM__SHOW_PAGE_LABEL:
@@ -419,8 +343,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case FormPackage.FORM__VALIDATORS:
-			case FormPackage.FORM__HTML_TEMPLATE:
-			case FormPackage.FORM__RESOURCE_FOLDERS:
 			case FormPackage.FORM__STRING_ATTRIBUTES:
 			case FormPackage.FORM__COLUMNS:
 			case FormPackage.FORM__LINES:
@@ -447,26 +369,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			(createChildParameter
 				(FormPackage.Literals.VALIDABLE__VALIDATORS,
 				 FormFactory.eINSTANCE.createValidator()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createAssociatedFile()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFile()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -622,29 +524,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			(createChildParameter
 				(FormPackage.Literals.FORM__ACTIONS,
 				 ExpressionFactory.eINSTANCE.createOperation()));
-	}
-
-	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-		Object childFeature = feature;
-		Object childObject = child;
-
-		boolean qualify =
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS;
-
-		if (qualify) {
-			return getString
-				("_UI_CreateChild_text2", //$NON-NLS-1$
-				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-		}
-		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 	/**

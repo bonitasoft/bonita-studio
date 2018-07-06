@@ -54,7 +54,6 @@ import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Assignable;
-import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Association;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -70,7 +69,6 @@ import org.bonitasoft.studio.model.process.CatchSignalEvent;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ConsultationPageFlowType;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -93,7 +91,6 @@ import org.bonitasoft.studio.model.process.EndEvent;
 import org.bonitasoft.studio.model.process.EndMessageEvent;
 import org.bonitasoft.studio.model.process.EndSignalEvent;
 import org.bonitasoft.studio.model.process.EndTerminatedEvent;
-import org.bonitasoft.studio.model.process.EntryPageFlowType;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.ErrorEvent;
 import org.bonitasoft.studio.model.process.Event;
@@ -130,14 +127,10 @@ import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.PageFlowTransition;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessApplication;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.ReceiveTask;
-import org.bonitasoft.studio.model.process.ResourceContainer;
-import org.bonitasoft.studio.model.process.ResourceFile;
-import org.bonitasoft.studio.model.process.ResourceFolder;
 import org.bonitasoft.studio.model.process.ScriptTask;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
@@ -162,7 +155,6 @@ import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.ThrowSignalEvent;
 import org.bonitasoft.studio.model.process.TimerEvent;
-import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.XORGateway;
@@ -256,13 +248,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * @generated
 	 */
 	private EClass assignableEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass associatedFileEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -731,13 +716,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass processApplicationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass pageFlowTransitionEClass = null;
 
 	/**
@@ -753,27 +731,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * @generated
 	 */
 	private EClass receiveTaskEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass resourceContainerEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass resourceFileEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass resourceFolderEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -934,13 +891,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass viewPageFlowEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass xmlDataEClass = null;
 
 	/**
@@ -969,13 +919,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum consultationPageFlowTypeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EEnum contractInputTypeEEnum = null;
 
 	/**
@@ -984,13 +927,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * @generated
 	 */
 	private EEnum documentTypeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum entryPageFlowTypeEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1179,24 +1115,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 */
 	public EClass getAbstractPageFlow() {
 		return abstractPageFlowEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAbstractPageFlow_RegExpToHideDefaultField() {
-		return (EAttribute)abstractPageFlowEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAbstractPageFlow_UseRegExpToHideDefaultField() {
-		return (EAttribute)abstractPageFlowEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1395,33 +1313,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 */
 	public EReference getAssignable_Filters() {
 		return (EReference)assignableEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getAssociatedFile() {
-		return associatedFileEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAssociatedFile_Path() {
-		return (EAttribute)associatedFileEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAssociatedFile_WarPath() {
-		return (EAttribute)associatedFileEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2941,107 +2832,8 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPageFlow_ByPassFormsGeneration() {
-		return (EAttribute)pageFlowEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_ConfirmationTemplate() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_TransientData() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_PageFlowConnectors() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPageFlow_EntryPageFlowType() {
-		return (EAttribute)pageFlowEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPageFlow_TransmitURLAsParameter() {
-		return (EAttribute)pageFlowEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_PageFlowTransitions() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_Form() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_EntryRedirectionURL() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_ConfirmationMessage() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlow_EntryRedirectionActions() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getPageFlow_FormMapping() {
-		return (EReference)pageFlowEClass.getEStructuralFeatures().get(11);
+		return (EReference)pageFlowEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3078,114 +2870,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 */
 	public EAttribute getPool_DisplayName() {
 		return (EAttribute)poolEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getProcessApplication() {
-		return processApplicationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_ErrorTemplate() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_ProcessTemplate() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_PageTemplate() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_ConsultationTemplate() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_LogInPage() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_WelcomePage() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProcessApplication_WelcomePageInternal() {
-		return (EAttribute)processApplicationEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProcessApplication_AutoLogin() {
-		return (EAttribute)processApplicationEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProcessApplication_AutoLoginId() {
-		return (EAttribute)processApplicationEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProcessApplication_HostPage() {
-		return (EReference)processApplicationEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProcessApplication_BasedOnLookAndFeel() {
-		return (EAttribute)processApplicationEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -3238,62 +2922,8 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRecapFlow_RecapPageFlowTransitions() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRecapFlow_RecapTransientData() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRecapFlow_RecapFlowConnectors() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRecapFlow_RecapPageFlowType() {
-		return (EAttribute)recapFlowEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRecapFlow_RecapForms() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRecapFlow_RecapPageFlowRedirectionURL() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRecapFlow_OverviewFormMapping() {
-		return (EReference)recapFlowEClass.getEStructuralFeatures().get(6);
+		return (EReference)recapFlowEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3303,87 +2933,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 */
 	public EClass getReceiveTask() {
 		return receiveTaskEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getResourceContainer() {
-		return resourceContainerEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getResourceContainer_HtmlTemplate() {
-		return (EReference)resourceContainerEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getResourceContainer_ResourceJars() {
-		return (EAttribute)resourceContainerEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getResourceContainer_ResourceValidators() {
-		return (EAttribute)resourceContainerEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getResourceContainer_ResourceFiles() {
-		return (EReference)resourceContainerEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getResourceContainer_ResourceFolders() {
-		return (EReference)resourceContainerEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getResourceFile() {
-		return resourceFileEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getResourceFolder() {
-		return resourceFolderEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getResourceFolder_ResourceFiles() {
-		return (EReference)resourceFolderEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3841,69 +3390,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getViewPageFlow() {
-		return viewPageFlowEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewPageFlow_ViewPageFlowTransitions() {
-		return (EReference)viewPageFlowEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewPageFlow_ViewTransientData() {
-		return (EReference)viewPageFlowEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewPageFlow_ViewPageFlowConnectors() {
-		return (EReference)viewPageFlowEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getViewPageFlow_ViewPageFlowType() {
-		return (EAttribute)viewPageFlowEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewPageFlow_ViewForm() {
-		return (EReference)viewPageFlowEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewPageFlow_ViewPageFlowRedirectionURL() {
-		return (EReference)viewPageFlowEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getXMLData() {
 		return xmlDataEClass;
 	}
@@ -3958,15 +3444,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getConsultationPageFlowType() {
-		return consultationPageFlowTypeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getContractInputType() {
 		return contractInputTypeEEnum;
 	}
@@ -3978,15 +3455,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 */
 	public EEnum getDocumentType() {
 		return documentTypeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EEnum getEntryPageFlowType() {
-		return entryPageFlowTypeEEnum;
 	}
 
 	/**
@@ -4078,8 +3546,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		createEReference(abstractCatchMessageEventEClass, ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT);
 
 		abstractPageFlowEClass = createEClass(ABSTRACT_PAGE_FLOW);
-		createEAttribute(abstractPageFlowEClass, ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD);
-		createEAttribute(abstractPageFlowEClass, ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD);
 
 		abstractProcessEClass = createEClass(ABSTRACT_PROCESS);
 		createEAttribute(abstractProcessEClass, ABSTRACT_PROCESS__VERSION);
@@ -4109,10 +3575,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		assignableEClass = createEClass(ASSIGNABLE);
 		createEReference(assignableEClass, ASSIGNABLE__ACTOR);
 		createEReference(assignableEClass, ASSIGNABLE__FILTERS);
-
-		associatedFileEClass = createEClass(ASSOCIATED_FILE);
-		createEAttribute(associatedFileEClass, ASSOCIATED_FILE__PATH);
-		createEAttribute(associatedFileEClass, ASSOCIATED_FILE__WAR_PATH);
 
 		associationEClass = createEClass(ASSOCIATION);
 		createEAttribute(associationEClass, ASSOCIATION__IS_DIRECTED);
@@ -4346,17 +3808,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		createEReference(outputMappingEClass, OUTPUT_MAPPING__PROCESS_TARGET);
 
 		pageFlowEClass = createEClass(PAGE_FLOW);
-		createEAttribute(pageFlowEClass, PAGE_FLOW__BY_PASS_FORMS_GENERATION);
-		createEReference(pageFlowEClass, PAGE_FLOW__CONFIRMATION_TEMPLATE);
-		createEReference(pageFlowEClass, PAGE_FLOW__TRANSIENT_DATA);
-		createEReference(pageFlowEClass, PAGE_FLOW__PAGE_FLOW_CONNECTORS);
-		createEAttribute(pageFlowEClass, PAGE_FLOW__ENTRY_PAGE_FLOW_TYPE);
-		createEAttribute(pageFlowEClass, PAGE_FLOW__TRANSMIT_URL_AS_PARAMETER);
-		createEReference(pageFlowEClass, PAGE_FLOW__PAGE_FLOW_TRANSITIONS);
-		createEReference(pageFlowEClass, PAGE_FLOW__FORM);
-		createEReference(pageFlowEClass, PAGE_FLOW__ENTRY_REDIRECTION_URL);
-		createEReference(pageFlowEClass, PAGE_FLOW__CONFIRMATION_MESSAGE);
-		createEReference(pageFlowEClass, PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS);
 		createEReference(pageFlowEClass, PAGE_FLOW__FORM_MAPPING);
 
 		poolEClass = createEClass(POOL);
@@ -4364,46 +3815,15 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		createEReference(poolEClass, POOL__SEARCH_INDEXES);
 		createEAttribute(poolEClass, POOL__DISPLAY_NAME);
 
-		processApplicationEClass = createEClass(PROCESS_APPLICATION);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__ERROR_TEMPLATE);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__PROCESS_TEMPLATE);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__PAGE_TEMPLATE);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__CONSULTATION_TEMPLATE);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__LOG_IN_PAGE);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__WELCOME_PAGE);
-		createEAttribute(processApplicationEClass, PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL);
-		createEAttribute(processApplicationEClass, PROCESS_APPLICATION__AUTO_LOGIN);
-		createEAttribute(processApplicationEClass, PROCESS_APPLICATION__AUTO_LOGIN_ID);
-		createEReference(processApplicationEClass, PROCESS_APPLICATION__HOST_PAGE);
-		createEAttribute(processApplicationEClass, PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL);
-
 		pageFlowTransitionEClass = createEClass(PAGE_FLOW_TRANSITION);
 		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__FROM);
 		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__TO);
 		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__CONDITION);
 
 		recapFlowEClass = createEClass(RECAP_FLOW);
-		createEReference(recapFlowEClass, RECAP_FLOW__RECAP_PAGE_FLOW_TRANSITIONS);
-		createEReference(recapFlowEClass, RECAP_FLOW__RECAP_TRANSIENT_DATA);
-		createEReference(recapFlowEClass, RECAP_FLOW__RECAP_FLOW_CONNECTORS);
-		createEAttribute(recapFlowEClass, RECAP_FLOW__RECAP_PAGE_FLOW_TYPE);
-		createEReference(recapFlowEClass, RECAP_FLOW__RECAP_FORMS);
-		createEReference(recapFlowEClass, RECAP_FLOW__RECAP_PAGE_FLOW_REDIRECTION_URL);
 		createEReference(recapFlowEClass, RECAP_FLOW__OVERVIEW_FORM_MAPPING);
 
 		receiveTaskEClass = createEClass(RECEIVE_TASK);
-
-		resourceContainerEClass = createEClass(RESOURCE_CONTAINER);
-		createEReference(resourceContainerEClass, RESOURCE_CONTAINER__HTML_TEMPLATE);
-		createEAttribute(resourceContainerEClass, RESOURCE_CONTAINER__RESOURCE_JARS);
-		createEAttribute(resourceContainerEClass, RESOURCE_CONTAINER__RESOURCE_VALIDATORS);
-		createEReference(resourceContainerEClass, RESOURCE_CONTAINER__RESOURCE_FILES);
-		createEReference(resourceContainerEClass, RESOURCE_CONTAINER__RESOURCE_FOLDERS);
-
-		resourceFileEClass = createEClass(RESOURCE_FILE);
-
-		resourceFolderEClass = createEClass(RESOURCE_FOLDER);
-		createEReference(resourceFolderEClass, RESOURCE_FOLDER__RESOURCE_FILES);
 
 		sequenceFlowEClass = createEClass(SEQUENCE_FLOW);
 		createEAttribute(sequenceFlowEClass, SEQUENCE_FLOW__IS_DEFAULT);
@@ -4477,14 +3897,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 		timerEventEClass = createEClass(TIMER_EVENT);
 
-		viewPageFlowEClass = createEClass(VIEW_PAGE_FLOW);
-		createEReference(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS);
-		createEReference(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA);
-		createEReference(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS);
-		createEAttribute(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TYPE);
-		createEReference(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_FORM);
-		createEReference(viewPageFlowEClass, VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_REDIRECTION_URL);
-
 		xmlDataEClass = createEClass(XML_DATA);
 		createEAttribute(xmlDataEClass, XML_DATA__NAMESPACE);
 		createEAttribute(xmlDataEClass, XML_DATA__TYPE);
@@ -4495,10 +3907,8 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 		// Create enums
 		correlationTypeActiveEEnum = createEEnum(CORRELATION_TYPE_ACTIVE);
-		consultationPageFlowTypeEEnum = createEEnum(CONSULTATION_PAGE_FLOW_TYPE);
 		contractInputTypeEEnum = createEEnum(CONTRACT_INPUT_TYPE);
 		documentTypeEEnum = createEEnum(DOCUMENT_TYPE);
-		entryPageFlowTypeEEnum = createEEnum(ENTRY_PAGE_FLOW_TYPE);
 		formMappingTypeEEnum = createEEnum(FORM_MAPPING_TYPE);
 		gatewayTypeEEnum = createEEnum(GATEWAY_TYPE);
 		inputMappingAssignationTypeEEnum = createEEnum(INPUT_MAPPING_ASSIGNATION_TYPE);
@@ -4533,11 +3943,11 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		// Obtain other dependent packages
 		DecisionPackage theDecisionPackage = (DecisionPackage)EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
 		ExpressionPackage theExpressionPackage = (ExpressionPackage)EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
-		SimulationPackage theSimulationPackage = (SimulationPackage)EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
 		ConfigurationPackage theConfigurationPackage = (ConfigurationPackage)EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
 		ParameterPackage theParameterPackage = (ParameterPackage)EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
 		KpiPackage theKpiPackage = (KpiPackage)EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
 		ConnectorConfigurationPackage theConnectorConfigurationPackage = (ConnectorConfigurationPackage)EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		SimulationPackage theSimulationPackage = (SimulationPackage)EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
 		FormPackage theFormPackage = (FormPackage)EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
 
 		// Add subpackages
@@ -4551,12 +3961,8 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		abstractCatchMessageEventEClass.getESuperTypes().add(this.getElement());
 		abstractPageFlowEClass.getESuperTypes().add(this.getElement());
 		abstractProcessEClass.getESuperTypes().add(this.getContainer());
-		abstractProcessEClass.getESuperTypes().add(this.getProcessApplication());
-		abstractProcessEClass.getESuperTypes().add(this.getResourceContainer());
 		abstractProcessEClass.getESuperTypes().add(this.getPageFlow());
-		abstractProcessEClass.getESuperTypes().add(theSimulationPackage.getSimulationAbstractProcess());
 		abstractProcessEClass.getESuperTypes().add(this.getRecapFlow());
-		abstractProcessEClass.getESuperTypes().add(this.getViewPageFlow());
 		abstractTimerEventEClass.getESuperTypes().add(this.getElement());
 		activityEClass.getESuperTypes().add(this.getFlowElement());
 		activityEClass.getESuperTypes().add(this.getConnectableElement());
@@ -4607,8 +4013,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		flowElementEClass.getESuperTypes().add(this.getElement());
 		flowElementEClass.getESuperTypes().add(this.getSourceElement());
 		flowElementEClass.getESuperTypes().add(this.getTargetElement());
-		flowElementEClass.getESuperTypes().add(this.getViewPageFlow());
-		flowElementEClass.getESuperTypes().add(theSimulationPackage.getSimulationActivity());
 		gatewayEClass.getESuperTypes().add(this.getFlowElement());
 		inclusiveGatewayEClass.getESuperTypes().add(this.getGateway());
 		integerTypeEClass.getESuperTypes().add(this.getDataType());
@@ -4637,13 +4041,9 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		pageFlowEClass.getESuperTypes().add(this.getAbstractPageFlow());
 		poolEClass.getESuperTypes().add(this.getAbstractProcess());
 		poolEClass.getESuperTypes().add(this.getContractContainer());
-		processApplicationEClass.getESuperTypes().add(this.getResourceContainer());
-		processApplicationEClass.getESuperTypes().add(theFormPackage.getMandatoryFieldsCustomization());
 		recapFlowEClass.getESuperTypes().add(this.getAbstractPageFlow());
 		receiveTaskEClass.getESuperTypes().add(this.getActivity());
 		receiveTaskEClass.getESuperTypes().add(this.getCatchMessageEvent());
-		resourceFileEClass.getESuperTypes().add(this.getAssociatedFile());
-		resourceFolderEClass.getESuperTypes().add(this.getAssociatedFile());
 		sequenceFlowEClass.getESuperTypes().add(this.getConnection());
 		signalEventEClass.getESuperTypes().add(this.getElement());
 		sourceElementEClass.getESuperTypes().add(this.getElement());
@@ -4663,7 +4063,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		subProcessEventEClass.getESuperTypes().add(this.getContainer());
 		taskEClass.getESuperTypes().add(this.getActivity());
 		taskEClass.getESuperTypes().add(this.getPageFlow());
-		taskEClass.getESuperTypes().add(this.getResourceContainer());
 		taskEClass.getESuperTypes().add(this.getAssignable());
 		taskEClass.getESuperTypes().add(this.getContractContainer());
 		targetElementEClass.getESuperTypes().add(this.getElement());
@@ -4674,7 +4073,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		timerEventEClass.getESuperTypes().add(this.getEvent());
 		timerEventEClass.getESuperTypes().add(this.getAbstractTimerEvent());
 		timerEventEClass.getESuperTypes().add(this.getDataAware());
-		viewPageFlowEClass.getESuperTypes().add(this.getAbstractPageFlow());
 		xmlDataEClass.getESuperTypes().add(this.getData());
 		xmlTypeEClass.getESuperTypes().add(this.getDataType());
 		xorGatewayEClass.getESuperTypes().add(this.getGateway());
@@ -4687,8 +4085,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		initEReference(getAbstractCatchMessageEvent_MessageContent(), theExpressionPackage.getOperation(), null, "messageContent", null, 0, -1, AbstractCatchMessageEvent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(abstractPageFlowEClass, AbstractPageFlow.class, "AbstractPageFlow", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getAbstractPageFlow_RegExpToHideDefaultField(), ecorePackage.getEString(), "regExpToHideDefaultField", null, 0, 1, AbstractPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getAbstractPageFlow_UseRegExpToHideDefaultField(), ecorePackage.getEBoolean(), "useRegExpToHideDefaultField", "false", 0, 1, AbstractPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		initEClass(abstractProcessEClass, AbstractProcess.class, "AbstractProcess", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getAbstractProcess_Version(), ecorePackage.getEString(), "version", "1.0", 0, 1, AbstractProcess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
@@ -4718,10 +4114,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		initEClass(assignableEClass, Assignable.class, "Assignable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getAssignable_Actor(), this.getActor(), null, "actor", null, 0, 1, Assignable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getAssignable_Filters(), this.getActorFilter(), null, "filters", null, 0, -1, Assignable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(associatedFileEClass, AssociatedFile.class, "AssociatedFile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getAssociatedFile_Path(), ecorePackage.getEString(), "path", null, 0, 1, AssociatedFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getAssociatedFile_WarPath(), ecorePackage.getEString(), "warPath", null, 0, 1, AssociatedFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(associationEClass, Association.class, "Association", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getAssociation_IsDirected(), ecorePackage.getEBoolean(), "isDirected", "false", 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
@@ -4957,17 +4349,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		initEReference(getOutputMapping_ProcessTarget(), this.getData(), null, "processTarget", null, 0, 1, OutputMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(pageFlowEClass, PageFlow.class, "PageFlow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getPageFlow_ByPassFormsGeneration(), ecorePackage.getEBooleanObject(), "byPassFormsGeneration", null, 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_ConfirmationTemplate(), this.getAssociatedFile(), null, "confirmationTemplate", null, 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_TransientData(), this.getData(), null, "transientData", null, 0, -1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_PageFlowConnectors(), this.getConnector(), null, "pageFlowConnectors", null, 0, -1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getPageFlow_EntryPageFlowType(), this.getEntryPageFlowType(), "entryPageFlowType", "PAGEFLOW", 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(getPageFlow_TransmitURLAsParameter(), ecorePackage.getEBoolean(), "transmitURLAsParameter", "true", 1, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEReference(getPageFlow_PageFlowTransitions(), this.getPageFlowTransition(), null, "pageFlowTransitions", null, 0, -1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_Form(), theFormPackage.getForm(), null, "form", null, 0, -1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_EntryRedirectionURL(), theExpressionPackage.getExpression(), null, "entryRedirectionURL", null, 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_ConfirmationMessage(), theExpressionPackage.getExpression(), null, "confirmationMessage", null, 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlow_EntryRedirectionActions(), theExpressionPackage.getOperation(), null, "entryRedirectionActions", null, 0, -1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getPageFlow_FormMapping(), this.getFormMapping(), null, "formMapping", null, 0, 1, PageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(poolEClass, Pool.class, "Pool", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -4975,46 +4356,15 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		initEReference(getPool_SearchIndexes(), this.getSearchIndex(), null, "searchIndexes", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getPool_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(processApplicationEClass, ProcessApplication.class, "ProcessApplication", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getProcessApplication_ErrorTemplate(), this.getAssociatedFile(), null, "errorTemplate", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_ProcessTemplate(), this.getAssociatedFile(), null, "processTemplate", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_PageTemplate(), this.getAssociatedFile(), null, "pageTemplate", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_ConsultationTemplate(), this.getAssociatedFile(), null, "consultationTemplate", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_LogInPage(), this.getAssociatedFile(), null, "logInPage", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_WelcomePage(), this.getAssociatedFile(), null, "welcomePage", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getProcessApplication_WelcomePageInternal(), ecorePackage.getEBooleanObject(), "welcomePageInternal", "true", 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(getProcessApplication_AutoLogin(), ecorePackage.getEBoolean(), "autoLogin", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getProcessApplication_AutoLoginId(), ecorePackage.getEString(), "autoLoginId", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getProcessApplication_HostPage(), this.getAssociatedFile(), null, "hostPage", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getProcessApplication_BasedOnLookAndFeel(), ecorePackage.getEString(), "basedOnLookAndFeel", null, 0, 1, ProcessApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
 		initEClass(pageFlowTransitionEClass, PageFlowTransition.class, "PageFlowTransition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getPageFlowTransition_From(), theFormPackage.getForm(), null, "from", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getPageFlowTransition_To(), theFormPackage.getForm(), null, "to", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getPageFlowTransition_Condition(), theExpressionPackage.getExpression(), null, "condition", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(recapFlowEClass, RecapFlow.class, "RecapFlow", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getRecapFlow_RecapPageFlowTransitions(), this.getPageFlowTransition(), null, "recapPageFlowTransitions", null, 0, -1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getRecapFlow_RecapTransientData(), this.getData(), null, "recapTransientData", null, 0, -1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getRecapFlow_RecapFlowConnectors(), this.getConnector(), null, "recapFlowConnectors", null, 0, -1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getRecapFlow_RecapPageFlowType(), this.getConsultationPageFlowType(), "recapPageFlowType", "PAGEFLOW", 0, 1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEReference(getRecapFlow_RecapForms(), theFormPackage.getViewForm(), null, "recapForms", null, 0, -1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getRecapFlow_RecapPageFlowRedirectionURL(), theExpressionPackage.getExpression(), null, "recapPageFlowRedirectionURL", null, 0, 1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getRecapFlow_OverviewFormMapping(), this.getFormMapping(), null, "overviewFormMapping", null, 0, 1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(receiveTaskEClass, ReceiveTask.class, "ReceiveTask", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(resourceContainerEClass, ResourceContainer.class, "ResourceContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getResourceContainer_HtmlTemplate(), this.getAssociatedFile(), null, "htmlTemplate", null, 0, 1, ResourceContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getResourceContainer_ResourceJars(), ecorePackage.getEString(), "resourceJars", null, 0, -1, ResourceContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getResourceContainer_ResourceValidators(), ecorePackage.getEString(), "resourceValidators", null, 0, -1, ResourceContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getResourceContainer_ResourceFiles(), this.getResourceFile(), null, "resourceFiles", null, 0, -1, ResourceContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getResourceContainer_ResourceFolders(), this.getResourceFolder(), null, "resourceFolders", null, 0, -1, ResourceContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(resourceFileEClass, ResourceFile.class, "ResourceFile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(resourceFolderEClass, ResourceFolder.class, "ResourceFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getResourceFolder_ResourceFiles(), this.getResourceFile(), null, "resourceFiles", null, 0, -1, ResourceFolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(sequenceFlowEClass, SequenceFlow.class, "SequenceFlow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getSequenceFlow_IsDefault(), ecorePackage.getEBoolean(), "isDefault", "false", 0, 1, SequenceFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
@@ -5088,14 +4438,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 		initEClass(timerEventEClass, TimerEvent.class, "TimerEvent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(viewPageFlowEClass, ViewPageFlow.class, "ViewPageFlow", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getViewPageFlow_ViewPageFlowTransitions(), this.getPageFlowTransition(), null, "viewPageFlowTransitions", null, 0, -1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getViewPageFlow_ViewTransientData(), this.getData(), null, "viewTransientData", null, 0, -1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getViewPageFlow_ViewPageFlowConnectors(), this.getConnector(), null, "viewPageFlowConnectors", null, 0, -1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getViewPageFlow_ViewPageFlowType(), this.getConsultationPageFlowType(), "viewPageFlowType", "PAGEFLOW", 0, 1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEReference(getViewPageFlow_ViewForm(), theFormPackage.getViewForm(), null, "viewForm", null, 0, -1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getViewPageFlow_ViewPageFlowRedirectionURL(), theExpressionPackage.getExpression(), null, "viewPageFlowRedirectionURL", null, 0, 1, ViewPageFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
 		initEClass(xmlDataEClass, XMLData.class, "XMLData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getXMLData_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, XMLData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getXMLData_Type(), ecorePackage.getEString(), "type", null, 0, 1, XMLData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -5109,10 +4451,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		addEEnumLiteral(correlationTypeActiveEEnum, CorrelationTypeActive.INACTIVE);
 		addEEnumLiteral(correlationTypeActiveEEnum, CorrelationTypeActive.KEYS);
 		addEEnumLiteral(correlationTypeActiveEEnum, CorrelationTypeActive.PREDICATES);
-
-		initEEnum(consultationPageFlowTypeEEnum, ConsultationPageFlowType.class, "ConsultationPageFlowType"); //$NON-NLS-1$
-		addEEnumLiteral(consultationPageFlowTypeEEnum, ConsultationPageFlowType.PAGEFLOW);
-		addEEnumLiteral(consultationPageFlowTypeEEnum, ConsultationPageFlowType.REDIRECTION);
 
 		initEEnum(contractInputTypeEEnum, ContractInputType.class, "ContractInputType"); //$NON-NLS-1$
 		addEEnumLiteral(contractInputTypeEEnum, ContractInputType.TEXT);
@@ -5133,15 +4471,9 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		addEEnumLiteral(documentTypeEEnum, DocumentType.EXTERNAL);
 		addEEnumLiteral(documentTypeEEnum, DocumentType.CONTRACT);
 
-		initEEnum(entryPageFlowTypeEEnum, EntryPageFlowType.class, "EntryPageFlowType"); //$NON-NLS-1$
-		addEEnumLiteral(entryPageFlowTypeEEnum, EntryPageFlowType.PAGEFLOW);
-		addEEnumLiteral(entryPageFlowTypeEEnum, EntryPageFlowType.SKIP);
-		addEEnumLiteral(entryPageFlowTypeEEnum, EntryPageFlowType.REDIRECT);
-
 		initEEnum(formMappingTypeEEnum, FormMappingType.class, "FormMappingType"); //$NON-NLS-1$
 		addEEnumLiteral(formMappingTypeEEnum, FormMappingType.INTERNAL);
 		addEEnumLiteral(formMappingTypeEEnum, FormMappingType.URL);
-		addEEnumLiteral(formMappingTypeEEnum, FormMappingType.LEGACY);
 		addEEnumLiteral(formMappingTypeEEnum, FormMappingType.NONE);
 
 		initEEnum(gatewayTypeEEnum, GatewayType.class, "GatewayType"); //$NON-NLS-1$
@@ -5181,25 +4513,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 		// Create resource
 		createResource(eNS_URI);
-
-		// Create annotations
-		// Deprecated_since_5.4
-		createDeprecated_since_5Annotations();
-	}
-
-	/**
-	 * Initializes the annotations for <b>Deprecated_since_5.4</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void createDeprecated_since_5Annotations() {
-		String source = "Deprecated_since_5.4"; //$NON-NLS-1$	
-		addAnnotation
-		  (getPageFlow_ByPassFormsGeneration(), 
-		   source, 
-		   new String[] {
-		   });
 	}
 
 } //ProcessPackageImpl

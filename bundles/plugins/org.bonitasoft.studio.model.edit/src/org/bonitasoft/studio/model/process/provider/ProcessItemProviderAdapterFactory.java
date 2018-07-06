@@ -179,29 +179,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.AssociatedFile} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected AssociatedFileItemProvider associatedFileItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.AssociatedFile}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createAssociatedFileAdapter() {
-		if (associatedFileItemProvider == null) {
-			associatedFileItemProvider = new AssociatedFileItemProvider(this);
-		}
-
-		return associatedFileItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.Association} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1559,29 +1536,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.ProcessApplication} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ProcessApplicationItemProvider processApplicationItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.ProcessApplication}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createProcessApplicationAdapter() {
-		if (processApplicationItemProvider == null) {
-			processApplicationItemProvider = new ProcessApplicationItemProvider(this);
-		}
-
-		return processApplicationItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.PageFlowTransition} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1625,75 +1579,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 		}
 
 		return receiveTaskItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.ResourceContainer} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ResourceContainerItemProvider resourceContainerItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.ResourceContainer}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createResourceContainerAdapter() {
-		if (resourceContainerItemProvider == null) {
-			resourceContainerItemProvider = new ResourceContainerItemProvider(this);
-		}
-
-		return resourceContainerItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.ResourceFile} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ResourceFileItemProvider resourceFileItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.ResourceFile}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createResourceFileAdapter() {
-		if (resourceFileItemProvider == null) {
-			resourceFileItemProvider = new ResourceFileItemProvider(this);
-		}
-
-		return resourceFileItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.ResourceFolder} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ResourceFolderItemProvider resourceFolderItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.ResourceFolder}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createResourceFolderAdapter() {
-		if (resourceFolderItemProvider == null) {
-			resourceFolderItemProvider = new ResourceFolderItemProvider(this);
-		}
-
-		return resourceFolderItemProvider;
 	}
 
 	/**
@@ -2282,7 +2167,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 		if (actorItemProvider != null) actorItemProvider.dispose();
 		if (actorFilterItemProvider != null) actorFilterItemProvider.dispose();
 		if (andGatewayItemProvider != null) andGatewayItemProvider.dispose();
-		if (associatedFileItemProvider != null) associatedFileItemProvider.dispose();
 		if (associationItemProvider != null) associationItemProvider.dispose();
 		if (booleanTypeItemProvider != null) booleanTypeItemProvider.dispose();
 		if (boundaryEventItemProvider != null) boundaryEventItemProvider.dispose();
@@ -2342,12 +2226,8 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 		if (outputMappingItemProvider != null) outputMappingItemProvider.dispose();
 		if (pageFlowItemProvider != null) pageFlowItemProvider.dispose();
 		if (poolItemProvider != null) poolItemProvider.dispose();
-		if (processApplicationItemProvider != null) processApplicationItemProvider.dispose();
 		if (pageFlowTransitionItemProvider != null) pageFlowTransitionItemProvider.dispose();
 		if (receiveTaskItemProvider != null) receiveTaskItemProvider.dispose();
-		if (resourceContainerItemProvider != null) resourceContainerItemProvider.dispose();
-		if (resourceFileItemProvider != null) resourceFileItemProvider.dispose();
-		if (resourceFolderItemProvider != null) resourceFolderItemProvider.dispose();
 		if (sequenceFlowItemProvider != null) sequenceFlowItemProvider.dispose();
 		if (stringTypeItemProvider != null) stringTypeItemProvider.dispose();
 		if (scriptTaskItemProvider != null) scriptTaskItemProvider.dispose();

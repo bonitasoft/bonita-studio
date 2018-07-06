@@ -82,8 +82,6 @@ public class AbstractPageFlowItemProvider
 
 			addDocumentationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
-			addRegExpToHideDefaultFieldPropertyDescriptor(object);
-			addUseRegExpToHideDefaultFieldPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -128,50 +126,6 @@ public class AbstractPageFlowItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Reg Exp To Hide Default Field feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRegExpToHideDefaultFieldPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractPageFlow_regExpToHideDefaultField_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractPageFlow_regExpToHideDefaultField_feature", "_UI_AbstractPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Use Reg Exp To Hide Default Field feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addUseRegExpToHideDefaultFieldPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractPageFlow_useRegExpToHideDefaultField_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractPageFlow_useRegExpToHideDefaultField_feature", "_UI_AbstractPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -246,8 +200,6 @@ public class AbstractPageFlowItemProvider
 		switch (notification.getFeatureID(AbstractPageFlow.class)) {
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__DOCUMENTATION:
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__NAME:
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT:

@@ -76,7 +76,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 			case ProcessPackage.ACTOR: return createActor();
 			case ProcessPackage.ACTOR_FILTER: return createActorFilter();
 			case ProcessPackage.AND_GATEWAY: return createANDGateway();
-			case ProcessPackage.ASSOCIATED_FILE: return createAssociatedFile();
 			case ProcessPackage.ASSOCIATION: return createAssociation();
 			case ProcessPackage.BOOLEAN_TYPE: return createBooleanType();
 			case ProcessPackage.BOUNDARY_EVENT: return createBoundaryEvent();
@@ -136,12 +135,8 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 			case ProcessPackage.OUTPUT_MAPPING: return createOutputMapping();
 			case ProcessPackage.PAGE_FLOW: return createPageFlow();
 			case ProcessPackage.POOL: return createPool();
-			case ProcessPackage.PROCESS_APPLICATION: return createProcessApplication();
 			case ProcessPackage.PAGE_FLOW_TRANSITION: return createPageFlowTransition();
 			case ProcessPackage.RECEIVE_TASK: return createReceiveTask();
-			case ProcessPackage.RESOURCE_CONTAINER: return createResourceContainer();
-			case ProcessPackage.RESOURCE_FILE: return createResourceFile();
-			case ProcessPackage.RESOURCE_FOLDER: return createResourceFolder();
 			case ProcessPackage.SEQUENCE_FLOW: return createSequenceFlow();
 			case ProcessPackage.STRING_TYPE: return createStringType();
 			case ProcessPackage.SCRIPT_TASK: return createScriptTask();
@@ -178,14 +173,10 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 		switch (eDataType.getClassifierID()) {
 			case ProcessPackage.CORRELATION_TYPE_ACTIVE:
 				return createCorrelationTypeActiveFromString(eDataType, initialValue);
-			case ProcessPackage.CONSULTATION_PAGE_FLOW_TYPE:
-				return createConsultationPageFlowTypeFromString(eDataType, initialValue);
 			case ProcessPackage.CONTRACT_INPUT_TYPE:
 				return createContractInputTypeFromString(eDataType, initialValue);
 			case ProcessPackage.DOCUMENT_TYPE:
 				return createDocumentTypeFromString(eDataType, initialValue);
-			case ProcessPackage.ENTRY_PAGE_FLOW_TYPE:
-				return createEntryPageFlowTypeFromString(eDataType, initialValue);
 			case ProcessPackage.FORM_MAPPING_TYPE:
 				return createFormMappingTypeFromString(eDataType, initialValue);
 			case ProcessPackage.GATEWAY_TYPE:
@@ -213,14 +204,10 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 		switch (eDataType.getClassifierID()) {
 			case ProcessPackage.CORRELATION_TYPE_ACTIVE:
 				return convertCorrelationTypeActiveToString(eDataType, instanceValue);
-			case ProcessPackage.CONSULTATION_PAGE_FLOW_TYPE:
-				return convertConsultationPageFlowTypeToString(eDataType, instanceValue);
 			case ProcessPackage.CONTRACT_INPUT_TYPE:
 				return convertContractInputTypeToString(eDataType, instanceValue);
 			case ProcessPackage.DOCUMENT_TYPE:
 				return convertDocumentTypeToString(eDataType, instanceValue);
-			case ProcessPackage.ENTRY_PAGE_FLOW_TYPE:
-				return convertEntryPageFlowTypeToString(eDataType, instanceValue);
 			case ProcessPackage.FORM_MAPPING_TYPE:
 				return convertFormMappingTypeToString(eDataType, instanceValue);
 			case ProcessPackage.GATEWAY_TYPE:
@@ -276,16 +263,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	public ANDGateway createANDGateway() {
 		ANDGatewayImpl andGateway = new ANDGatewayImpl();
 		return andGateway;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AssociatedFile createAssociatedFile() {
-		AssociatedFileImpl associatedFile = new AssociatedFileImpl();
-		return associatedFile;
 	}
 
 	/**
@@ -883,16 +860,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProcessApplication createProcessApplication() {
-		ProcessApplicationImpl processApplication = new ProcessApplicationImpl();
-		return processApplication;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public PageFlowTransition createPageFlowTransition() {
 		PageFlowTransitionImpl pageFlowTransition = new PageFlowTransitionImpl();
 		return pageFlowTransition;
@@ -906,36 +873,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	public ReceiveTask createReceiveTask() {
 		ReceiveTaskImpl receiveTask = new ReceiveTaskImpl();
 		return receiveTask;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ResourceContainer createResourceContainer() {
-		ResourceContainerImpl resourceContainer = new ResourceContainerImpl();
-		return resourceContainer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ResourceFile createResourceFile() {
-		ResourceFileImpl resourceFile = new ResourceFileImpl();
-		return resourceFile;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ResourceFolder createResourceFolder() {
-		ResourceFolderImpl resourceFolder = new ResourceFolderImpl();
-		return resourceFolder;
 	}
 
 	/**
@@ -1173,26 +1110,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConsultationPageFlowType createConsultationPageFlowTypeFromString(EDataType eDataType, String initialValue) {
-		ConsultationPageFlowType result = ConsultationPageFlowType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertConsultationPageFlowTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ContractInputType createContractInputTypeFromString(EDataType eDataType, String initialValue) {
 		ContractInputType result = ContractInputType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1225,26 +1142,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * @generated
 	 */
 	public String convertDocumentTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EntryPageFlowType createEntryPageFlowTypeFromString(EDataType eDataType, String initialValue) {
-		EntryPageFlowType result = EntryPageFlowType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertEntryPageFlowTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

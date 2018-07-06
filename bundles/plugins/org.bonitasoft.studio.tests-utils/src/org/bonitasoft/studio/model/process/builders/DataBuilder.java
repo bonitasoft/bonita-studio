@@ -20,9 +20,7 @@ import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.RecapFlow;
 
 /**
  * @author Romain Bioteau
@@ -90,16 +88,6 @@ public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends El
 
     public B in(final Buildable<? extends DataAware> dataAwareBuildable) {
         dataAwareBuildable.build().getData().add(getBuiltInstance());
-        return getThis();
-    }
-
-    public B inPageflow(final Buildable<? extends PageFlow> pageFlowBuildable) {
-        pageFlowBuildable.build().getTransientData().add(getBuiltInstance());
-        return getThis();
-    }
-
-    public B inOverviewPageflow(final Buildable<? extends RecapFlow> pageFlowBuildable) {
-        pageFlowBuildable.build().getRecapTransientData().add(getBuiltInstance());
         return getThis();
     }
 

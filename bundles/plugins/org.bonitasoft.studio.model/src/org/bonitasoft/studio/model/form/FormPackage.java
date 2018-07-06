@@ -331,58 +331,13 @@ public interface FormPackage extends EPackage {
 	int FORM__BELOW = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM__HTML_TEMPLATE = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM__RESOURCE_JARS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM__RESOURCE_VALIDATORS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM__RESOURCE_FILES = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM__RESOURCE_FOLDERS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 7;
-
-	/**
 	 * The feature id for the '<em><b>NColumn</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__NCOLUMN = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 8;
+	int FORM__NCOLUMN = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>String Attributes</b></em>' map.
@@ -391,7 +346,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__STRING_ATTRIBUTES = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 9;
+	int FORM__STRING_ATTRIBUTES = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>NLine</b></em>' attribute.
@@ -400,7 +355,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__NLINE = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 10;
+	int FORM__NLINE = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Show Page Label</b></em>' attribute.
@@ -409,7 +364,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__SHOW_PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 11;
+	int FORM__SHOW_PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Allow HTML In Page Label</b></em>' attribute.
@@ -418,7 +373,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__ALLOW_HTML_IN_PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 12;
+	int FORM__ALLOW_HTML_IN_PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -427,7 +382,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__VERSION = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 13;
+	int FORM__VERSION = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
@@ -436,7 +391,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__COLUMNS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 14;
+	int FORM__COLUMNS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Lines</b></em>' containment reference list.
@@ -445,7 +400,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__LINES = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 15;
+	int FORM__LINES = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Widgets</b></em>' containment reference list.
@@ -454,7 +409,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__WIDGETS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 16;
+	int FORM__WIDGETS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Page Label</b></em>' containment reference.
@@ -463,7 +418,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 17;
+	int FORM__PAGE_LABEL = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
@@ -472,7 +427,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM__ACTIONS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 18;
+	int FORM__ACTIONS = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The number of structural features of the '<em>Form</em>' class.
@@ -481,7 +436,7 @@ public interface FormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORM_FEATURE_COUNT = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 19;
+	int FORM_FEATURE_COUNT = ProcessPackage.CONNECTABLE_ELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.form.impl.WidgetLayoutInfoImpl <em>Widget Layout Info</em>}' class.
@@ -830,51 +785,6 @@ public interface FormPackage extends EPackage {
 	 * @ordered
 	 */
 	int VIEW_FORM__BELOW = FORM__BELOW;
-
-	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_FORM__HTML_TEMPLATE = FORM__HTML_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_FORM__RESOURCE_JARS = FORM__RESOURCE_JARS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_FORM__RESOURCE_VALIDATORS = FORM__RESOURCE_VALIDATORS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_FORM__RESOURCE_FILES = FORM__RESOURCE_FILES;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_FORM__RESOURCE_FOLDERS = FORM__RESOURCE_FOLDERS;
 
 	/**
 	 * The feature id for the '<em><b>NColumn</b></em>' attribute.

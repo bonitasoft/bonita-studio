@@ -17,14 +17,8 @@
  */
 package org.bonitasoft.studio.model.process.util;
 
-import org.bonitasoft.studio.model.form.CSSCustomizable;
-import org.bonitasoft.studio.model.form.MandatoryFieldsCustomization;
-
 import org.bonitasoft.studio.model.process.*;
 
-import org.bonitasoft.studio.model.simulation.SimulationAbstractProcess;
-import org.bonitasoft.studio.model.simulation.SimulationActivity;
-import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
 
 import org.eclipse.emf.ecore.EObject;
@@ -107,18 +101,11 @@ public class ProcessSwitch<T> extends Switch<T> {
 				AbstractProcess abstractProcess = (AbstractProcess)theEObject;
 				T result = caseAbstractProcess(abstractProcess);
 				if (result == null) result = caseContainer(abstractProcess);
-				if (result == null) result = caseProcessApplication(abstractProcess);
 				if (result == null) result = casePageFlow(abstractProcess);
-				if (result == null) result = caseSimulationAbstractProcess(abstractProcess);
 				if (result == null) result = caseRecapFlow(abstractProcess);
-				if (result == null) result = caseViewPageFlow(abstractProcess);
-				if (result == null) result = caseResourceContainer(abstractProcess);
-				if (result == null) result = caseMandatoryFieldsCustomization(abstractProcess);
 				if (result == null) result = caseConnectableElement(abstractProcess);
 				if (result == null) result = caseAbstractPageFlow(abstractProcess);
-				if (result == null) result = caseSimulationDataContainer(abstractProcess);
 				if (result == null) result = caseElement(abstractProcess);
-				if (result == null) result = caseCSSCustomizable(abstractProcess);
 				if (result == null) result = caseDataAware(abstractProcess);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -139,11 +126,7 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMultiInstantiable(activity);
 				if (result == null) result = caseSourceElement(activity);
 				if (result == null) result = caseTargetElement(activity);
-				if (result == null) result = caseViewPageFlow(activity);
-				if (result == null) result = caseSimulationActivity(activity);
 				if (result == null) result = caseDataAware(activity);
-				if (result == null) result = caseAbstractPageFlow(activity);
-				if (result == null) result = caseSimulationDataContainer(activity);
 				if (result == null) result = caseElement(activity);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -170,10 +153,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(andGateway);
 				if (result == null) result = caseSourceElement(andGateway);
 				if (result == null) result = caseTargetElement(andGateway);
-				if (result == null) result = caseViewPageFlow(andGateway);
-				if (result == null) result = caseSimulationActivity(andGateway);
-				if (result == null) result = caseAbstractPageFlow(andGateway);
-				if (result == null) result = caseSimulationDataContainer(andGateway);
 				if (result == null) result = caseElement(andGateway);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -181,12 +160,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 			case ProcessPackage.ASSIGNABLE: {
 				Assignable assignable = (Assignable)theEObject;
 				T result = caseAssignable(assignable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.ASSOCIATED_FILE: {
-				AssociatedFile associatedFile = (AssociatedFile)theEObject;
-				T result = caseAssociatedFile(associatedFile);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -272,11 +245,7 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMultiInstantiable(callActivity);
 				if (result == null) result = caseSourceElement(callActivity);
 				if (result == null) result = caseTargetElement(callActivity);
-				if (result == null) result = caseViewPageFlow(callActivity);
-				if (result == null) result = caseSimulationActivity(callActivity);
 				if (result == null) result = caseDataAware(callActivity);
-				if (result == null) result = caseAbstractPageFlow(callActivity);
-				if (result == null) result = caseSimulationDataContainer(callActivity);
 				if (result == null) result = caseElement(callActivity);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -289,10 +258,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(catchLinkEvent);
 				if (result == null) result = caseSourceElement(catchLinkEvent);
 				if (result == null) result = caseTargetElement(catchLinkEvent);
-				if (result == null) result = caseViewPageFlow(catchLinkEvent);
-				if (result == null) result = caseSimulationActivity(catchLinkEvent);
-				if (result == null) result = caseAbstractPageFlow(catchLinkEvent);
-				if (result == null) result = caseSimulationDataContainer(catchLinkEvent);
 				if (result == null) result = caseElement(catchLinkEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -307,10 +272,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(catchMessageEvent);
 				if (result == null) result = caseSourceElement(catchMessageEvent);
 				if (result == null) result = caseTargetElement(catchMessageEvent);
-				if (result == null) result = caseViewPageFlow(catchMessageEvent);
-				if (result == null) result = caseSimulationActivity(catchMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(catchMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(catchMessageEvent);
 				if (result == null) result = caseElement(catchMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -451,10 +412,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(event);
 				if (result == null) result = caseSourceElement(event);
 				if (result == null) result = caseTargetElement(event);
-				if (result == null) result = caseViewPageFlow(event);
-				if (result == null) result = caseSimulationActivity(event);
-				if (result == null) result = caseAbstractPageFlow(event);
-				if (result == null) result = caseSimulationDataContainer(event);
 				if (result == null) result = caseElement(event);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -467,10 +424,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(endErrorEvent);
 				if (result == null) result = caseSourceElement(endErrorEvent);
 				if (result == null) result = caseTargetElement(endErrorEvent);
-				if (result == null) result = caseViewPageFlow(endErrorEvent);
-				if (result == null) result = caseSimulationActivity(endErrorEvent);
-				if (result == null) result = caseAbstractPageFlow(endErrorEvent);
-				if (result == null) result = caseSimulationDataContainer(endErrorEvent);
 				if (result == null) result = caseElement(endErrorEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -482,10 +435,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(endEvent);
 				if (result == null) result = caseSourceElement(endEvent);
 				if (result == null) result = caseTargetElement(endEvent);
-				if (result == null) result = caseViewPageFlow(endEvent);
-				if (result == null) result = caseSimulationActivity(endEvent);
-				if (result == null) result = caseAbstractPageFlow(endEvent);
-				if (result == null) result = caseSimulationDataContainer(endEvent);
 				if (result == null) result = caseElement(endEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -499,10 +448,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(endMessageEvent);
 				if (result == null) result = caseSourceElement(endMessageEvent);
 				if (result == null) result = caseTargetElement(endMessageEvent);
-				if (result == null) result = caseViewPageFlow(endMessageEvent);
-				if (result == null) result = caseSimulationActivity(endMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(endMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(endMessageEvent);
 				if (result == null) result = caseElement(endMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -516,10 +461,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(endSignalEvent);
 				if (result == null) result = caseSourceElement(endSignalEvent);
 				if (result == null) result = caseTargetElement(endSignalEvent);
-				if (result == null) result = caseViewPageFlow(endSignalEvent);
-				if (result == null) result = caseSimulationActivity(endSignalEvent);
-				if (result == null) result = caseAbstractPageFlow(endSignalEvent);
-				if (result == null) result = caseSimulationDataContainer(endSignalEvent);
 				if (result == null) result = caseElement(endSignalEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -531,10 +472,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(endTerminatedEvent);
 				if (result == null) result = caseSourceElement(endTerminatedEvent);
 				if (result == null) result = caseTargetElement(endTerminatedEvent);
-				if (result == null) result = caseViewPageFlow(endTerminatedEvent);
-				if (result == null) result = caseSimulationActivity(endTerminatedEvent);
-				if (result == null) result = caseAbstractPageFlow(endTerminatedEvent);
-				if (result == null) result = caseSimulationDataContainer(endTerminatedEvent);
 				if (result == null) result = caseElement(endTerminatedEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -566,10 +503,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				T result = caseFlowElement(flowElement);
 				if (result == null) result = caseSourceElement(flowElement);
 				if (result == null) result = caseTargetElement(flowElement);
-				if (result == null) result = caseViewPageFlow(flowElement);
-				if (result == null) result = caseSimulationActivity(flowElement);
-				if (result == null) result = caseAbstractPageFlow(flowElement);
-				if (result == null) result = caseSimulationDataContainer(flowElement);
 				if (result == null) result = caseElement(flowElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -586,10 +519,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(gateway);
 				if (result == null) result = caseSourceElement(gateway);
 				if (result == null) result = caseTargetElement(gateway);
-				if (result == null) result = caseViewPageFlow(gateway);
-				if (result == null) result = caseSimulationActivity(gateway);
-				if (result == null) result = caseAbstractPageFlow(gateway);
-				if (result == null) result = caseSimulationDataContainer(gateway);
 				if (result == null) result = caseElement(gateway);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -601,10 +530,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(inclusiveGateway);
 				if (result == null) result = caseSourceElement(inclusiveGateway);
 				if (result == null) result = caseTargetElement(inclusiveGateway);
-				if (result == null) result = caseViewPageFlow(inclusiveGateway);
-				if (result == null) result = caseSimulationActivity(inclusiveGateway);
-				if (result == null) result = caseAbstractPageFlow(inclusiveGateway);
-				if (result == null) result = caseSimulationDataContainer(inclusiveGateway);
 				if (result == null) result = caseElement(inclusiveGateway);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -643,10 +568,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(intermediateCatchSignalEvent);
 				if (result == null) result = caseSourceElement(intermediateCatchSignalEvent);
 				if (result == null) result = caseTargetElement(intermediateCatchSignalEvent);
-				if (result == null) result = caseViewPageFlow(intermediateCatchSignalEvent);
-				if (result == null) result = caseSimulationActivity(intermediateCatchSignalEvent);
-				if (result == null) result = caseAbstractPageFlow(intermediateCatchSignalEvent);
-				if (result == null) result = caseSimulationDataContainer(intermediateCatchSignalEvent);
 				if (result == null) result = caseElement(intermediateCatchSignalEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -660,10 +581,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(intermediateThrowSignalEvent);
 				if (result == null) result = caseSourceElement(intermediateThrowSignalEvent);
 				if (result == null) result = caseTargetElement(intermediateThrowSignalEvent);
-				if (result == null) result = caseViewPageFlow(intermediateThrowSignalEvent);
-				if (result == null) result = caseSimulationActivity(intermediateThrowSignalEvent);
-				if (result == null) result = caseAbstractPageFlow(intermediateThrowSignalEvent);
-				if (result == null) result = caseSimulationDataContainer(intermediateThrowSignalEvent);
 				if (result == null) result = caseElement(intermediateThrowSignalEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -679,10 +596,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(intermediateCatchMessageEvent);
 				if (result == null) result = caseSourceElement(intermediateCatchMessageEvent);
 				if (result == null) result = caseTargetElement(intermediateCatchMessageEvent);
-				if (result == null) result = caseViewPageFlow(intermediateCatchMessageEvent);
-				if (result == null) result = caseSimulationActivity(intermediateCatchMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(intermediateCatchMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(intermediateCatchMessageEvent);
 				if (result == null) result = caseElement(intermediateCatchMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -696,10 +609,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(intermediateThrowMessageEvent);
 				if (result == null) result = caseSourceElement(intermediateThrowMessageEvent);
 				if (result == null) result = caseTargetElement(intermediateThrowMessageEvent);
-				if (result == null) result = caseViewPageFlow(intermediateThrowMessageEvent);
-				if (result == null) result = caseSimulationActivity(intermediateThrowMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(intermediateThrowMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(intermediateThrowMessageEvent);
 				if (result == null) result = caseElement(intermediateThrowMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -714,10 +623,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(intermediateCatchTimerEvent);
 				if (result == null) result = caseSourceElement(intermediateCatchTimerEvent);
 				if (result == null) result = caseTargetElement(intermediateCatchTimerEvent);
-				if (result == null) result = caseViewPageFlow(intermediateCatchTimerEvent);
-				if (result == null) result = caseSimulationActivity(intermediateCatchTimerEvent);
-				if (result == null) result = caseAbstractPageFlow(intermediateCatchTimerEvent);
-				if (result == null) result = caseSimulationDataContainer(intermediateCatchTimerEvent);
 				if (result == null) result = caseElement(intermediateCatchTimerEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -754,10 +659,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(linkEvent);
 				if (result == null) result = caseSourceElement(linkEvent);
 				if (result == null) result = caseTargetElement(linkEvent);
-				if (result == null) result = caseViewPageFlow(linkEvent);
-				if (result == null) result = caseSimulationActivity(linkEvent);
-				if (result == null) result = caseAbstractPageFlow(linkEvent);
-				if (result == null) result = caseSimulationDataContainer(linkEvent);
 				if (result == null) result = caseElement(linkEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -775,18 +676,11 @@ public class ProcessSwitch<T> extends Switch<T> {
 				T result = caseMainProcess(mainProcess);
 				if (result == null) result = caseAbstractProcess(mainProcess);
 				if (result == null) result = caseContainer(mainProcess);
-				if (result == null) result = caseProcessApplication(mainProcess);
 				if (result == null) result = casePageFlow(mainProcess);
-				if (result == null) result = caseSimulationAbstractProcess(mainProcess);
 				if (result == null) result = caseRecapFlow(mainProcess);
-				if (result == null) result = caseViewPageFlow(mainProcess);
-				if (result == null) result = caseResourceContainer(mainProcess);
-				if (result == null) result = caseMandatoryFieldsCustomization(mainProcess);
 				if (result == null) result = caseConnectableElement(mainProcess);
 				if (result == null) result = caseAbstractPageFlow(mainProcess);
-				if (result == null) result = caseSimulationDataContainer(mainProcess);
 				if (result == null) result = caseElement(mainProcess);
-				if (result == null) result = caseCSSCustomizable(mainProcess);
 				if (result == null) result = caseDataAware(mainProcess);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -812,10 +706,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(messageEvent);
 				if (result == null) result = caseSourceElement(messageEvent);
 				if (result == null) result = caseTargetElement(messageEvent);
-				if (result == null) result = caseViewPageFlow(messageEvent);
-				if (result == null) result = caseSimulationActivity(messageEvent);
-				if (result == null) result = caseAbstractPageFlow(messageEvent);
-				if (result == null) result = caseSimulationDataContainer(messageEvent);
 				if (result == null) result = caseElement(messageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -865,28 +755,12 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAbstractProcess(pool);
 				if (result == null) result = caseContractContainer(pool);
 				if (result == null) result = caseContainer(pool);
-				if (result == null) result = caseProcessApplication(pool);
 				if (result == null) result = casePageFlow(pool);
-				if (result == null) result = caseSimulationAbstractProcess(pool);
 				if (result == null) result = caseRecapFlow(pool);
-				if (result == null) result = caseViewPageFlow(pool);
-				if (result == null) result = caseResourceContainer(pool);
-				if (result == null) result = caseMandatoryFieldsCustomization(pool);
 				if (result == null) result = caseConnectableElement(pool);
 				if (result == null) result = caseAbstractPageFlow(pool);
-				if (result == null) result = caseSimulationDataContainer(pool);
 				if (result == null) result = caseElement(pool);
-				if (result == null) result = caseCSSCustomizable(pool);
 				if (result == null) result = caseDataAware(pool);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.PROCESS_APPLICATION: {
-				ProcessApplication processApplication = (ProcessApplication)theEObject;
-				T result = caseProcessApplication(processApplication);
-				if (result == null) result = caseResourceContainer(processApplication);
-				if (result == null) result = caseMandatoryFieldsCustomization(processApplication);
-				if (result == null) result = caseCSSCustomizable(processApplication);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -916,34 +790,10 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAbstractCatchMessageEvent(receiveTask);
 				if (result == null) result = caseSourceElement(receiveTask);
 				if (result == null) result = caseTargetElement(receiveTask);
-				if (result == null) result = caseViewPageFlow(receiveTask);
-				if (result == null) result = caseSimulationActivity(receiveTask);
 				if (result == null) result = caseDataAware(receiveTask);
 				if (result == null) result = caseEvent(receiveTask);
 				if (result == null) result = caseFlowElement(receiveTask);
-				if (result == null) result = caseAbstractPageFlow(receiveTask);
-				if (result == null) result = caseSimulationDataContainer(receiveTask);
 				if (result == null) result = caseElement(receiveTask);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.RESOURCE_CONTAINER: {
-				ResourceContainer resourceContainer = (ResourceContainer)theEObject;
-				T result = caseResourceContainer(resourceContainer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.RESOURCE_FILE: {
-				ResourceFile resourceFile = (ResourceFile)theEObject;
-				T result = caseResourceFile(resourceFile);
-				if (result == null) result = caseAssociatedFile(resourceFile);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.RESOURCE_FOLDER: {
-				ResourceFolder resourceFolder = (ResourceFolder)theEObject;
-				T result = caseResourceFolder(resourceFolder);
-				if (result == null) result = caseAssociatedFile(resourceFolder);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -988,11 +838,7 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMultiInstantiable(scriptTask);
 				if (result == null) result = caseSourceElement(scriptTask);
 				if (result == null) result = caseTargetElement(scriptTask);
-				if (result == null) result = caseViewPageFlow(scriptTask);
-				if (result == null) result = caseSimulationActivity(scriptTask);
 				if (result == null) result = caseDataAware(scriptTask);
-				if (result == null) result = caseAbstractPageFlow(scriptTask);
-				if (result == null) result = caseSimulationDataContainer(scriptTask);
 				if (result == null) result = caseElement(scriptTask);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1014,13 +860,9 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMessageEvent(sendTask);
 				if (result == null) result = caseSourceElement(sendTask);
 				if (result == null) result = caseTargetElement(sendTask);
-				if (result == null) result = caseViewPageFlow(sendTask);
-				if (result == null) result = caseSimulationActivity(sendTask);
 				if (result == null) result = caseDataAware(sendTask);
 				if (result == null) result = caseEvent(sendTask);
 				if (result == null) result = caseFlowElement(sendTask);
-				if (result == null) result = caseAbstractPageFlow(sendTask);
-				if (result == null) result = caseSimulationDataContainer(sendTask);
 				if (result == null) result = caseElement(sendTask);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1035,11 +877,7 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMultiInstantiable(serviceTask);
 				if (result == null) result = caseSourceElement(serviceTask);
 				if (result == null) result = caseTargetElement(serviceTask);
-				if (result == null) result = caseViewPageFlow(serviceTask);
-				if (result == null) result = caseSimulationActivity(serviceTask);
 				if (result == null) result = caseDataAware(serviceTask);
-				if (result == null) result = caseAbstractPageFlow(serviceTask);
-				if (result == null) result = caseSimulationDataContainer(serviceTask);
 				if (result == null) result = caseElement(serviceTask);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1052,10 +890,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(startErrorEvent);
 				if (result == null) result = caseSourceElement(startErrorEvent);
 				if (result == null) result = caseTargetElement(startErrorEvent);
-				if (result == null) result = caseViewPageFlow(startErrorEvent);
-				if (result == null) result = caseSimulationActivity(startErrorEvent);
-				if (result == null) result = caseAbstractPageFlow(startErrorEvent);
-				if (result == null) result = caseSimulationDataContainer(startErrorEvent);
 				if (result == null) result = caseElement(startErrorEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1067,10 +901,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(startEvent);
 				if (result == null) result = caseSourceElement(startEvent);
 				if (result == null) result = caseTargetElement(startEvent);
-				if (result == null) result = caseViewPageFlow(startEvent);
-				if (result == null) result = caseSimulationActivity(startEvent);
-				if (result == null) result = caseAbstractPageFlow(startEvent);
-				if (result == null) result = caseSimulationDataContainer(startEvent);
 				if (result == null) result = caseElement(startEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1086,10 +916,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(startMessageEvent);
 				if (result == null) result = caseSourceElement(startMessageEvent);
 				if (result == null) result = caseTargetElement(startMessageEvent);
-				if (result == null) result = caseViewPageFlow(startMessageEvent);
-				if (result == null) result = caseSimulationActivity(startMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(startMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(startMessageEvent);
 				if (result == null) result = caseElement(startMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1104,10 +930,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(startSignalEvent);
 				if (result == null) result = caseSourceElement(startSignalEvent);
 				if (result == null) result = caseTargetElement(startSignalEvent);
-				if (result == null) result = caseViewPageFlow(startSignalEvent);
-				if (result == null) result = caseSimulationActivity(startSignalEvent);
-				if (result == null) result = caseAbstractPageFlow(startSignalEvent);
-				if (result == null) result = caseSimulationDataContainer(startSignalEvent);
 				if (result == null) result = caseElement(startSignalEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1122,10 +944,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(startTimerEvent);
 				if (result == null) result = caseSourceElement(startTimerEvent);
 				if (result == null) result = caseTargetElement(startTimerEvent);
-				if (result == null) result = caseViewPageFlow(startTimerEvent);
-				if (result == null) result = caseSimulationActivity(startTimerEvent);
-				if (result == null) result = caseAbstractPageFlow(startTimerEvent);
-				if (result == null) result = caseSimulationDataContainer(startTimerEvent);
 				if (result == null) result = caseElement(startTimerEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1143,20 +961,16 @@ public class ProcessSwitch<T> extends Switch<T> {
 				T result = caseTask(task);
 				if (result == null) result = caseActivity(task);
 				if (result == null) result = casePageFlow(task);
-				if (result == null) result = caseResourceContainer(task);
 				if (result == null) result = caseAssignable(task);
 				if (result == null) result = caseContractContainer(task);
 				if (result == null) result = caseFlowElement(task);
 				if (result == null) result = caseConnectableElement(task);
 				if (result == null) result = caseOperationContainer(task);
 				if (result == null) result = caseMultiInstantiable(task);
+				if (result == null) result = caseAbstractPageFlow(task);
 				if (result == null) result = caseSourceElement(task);
 				if (result == null) result = caseTargetElement(task);
-				if (result == null) result = caseViewPageFlow(task);
-				if (result == null) result = caseSimulationActivity(task);
 				if (result == null) result = caseDataAware(task);
-				if (result == null) result = caseAbstractPageFlow(task);
-				if (result == null) result = caseSimulationDataContainer(task);
 				if (result == null) result = caseElement(task);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1197,10 +1011,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(throwLinkEvent);
 				if (result == null) result = caseSourceElement(throwLinkEvent);
 				if (result == null) result = caseTargetElement(throwLinkEvent);
-				if (result == null) result = caseViewPageFlow(throwLinkEvent);
-				if (result == null) result = caseSimulationActivity(throwLinkEvent);
-				if (result == null) result = caseAbstractPageFlow(throwLinkEvent);
-				if (result == null) result = caseSimulationDataContainer(throwLinkEvent);
 				if (result == null) result = caseElement(throwLinkEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1213,10 +1023,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(throwMessageEvent);
 				if (result == null) result = caseSourceElement(throwMessageEvent);
 				if (result == null) result = caseTargetElement(throwMessageEvent);
-				if (result == null) result = caseViewPageFlow(throwMessageEvent);
-				if (result == null) result = caseSimulationActivity(throwMessageEvent);
-				if (result == null) result = caseAbstractPageFlow(throwMessageEvent);
-				if (result == null) result = caseSimulationDataContainer(throwMessageEvent);
 				if (result == null) result = caseElement(throwMessageEvent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1230,19 +1036,7 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(timerEvent);
 				if (result == null) result = caseSourceElement(timerEvent);
 				if (result == null) result = caseTargetElement(timerEvent);
-				if (result == null) result = caseViewPageFlow(timerEvent);
-				if (result == null) result = caseSimulationActivity(timerEvent);
-				if (result == null) result = caseAbstractPageFlow(timerEvent);
-				if (result == null) result = caseSimulationDataContainer(timerEvent);
 				if (result == null) result = caseElement(timerEvent);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ProcessPackage.VIEW_PAGE_FLOW: {
-				ViewPageFlow viewPageFlow = (ViewPageFlow)theEObject;
-				T result = caseViewPageFlow(viewPageFlow);
-				if (result == null) result = caseAbstractPageFlow(viewPageFlow);
-				if (result == null) result = caseElement(viewPageFlow);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1269,10 +1063,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFlowElement(xorGateway);
 				if (result == null) result = caseSourceElement(xorGateway);
 				if (result == null) result = caseTargetElement(xorGateway);
-				if (result == null) result = caseViewPageFlow(xorGateway);
-				if (result == null) result = caseSimulationActivity(xorGateway);
-				if (result == null) result = caseAbstractPageFlow(xorGateway);
-				if (result == null) result = caseSimulationDataContainer(xorGateway);
 				if (result == null) result = caseElement(xorGateway);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1413,21 +1203,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseAssignable(Assignable object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Associated File</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Associated File</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAssociatedFile(AssociatedFile object) {
 		return null;
 	}
 
@@ -2422,21 +2197,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Application</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Application</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProcessApplication(ProcessApplication object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Page Flow Transition</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -2478,51 +2238,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseReceiveTask(ReceiveTask object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Resource Container</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Resource Container</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseResourceContainer(ResourceContainer object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Resource File</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Resource File</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseResourceFile(ResourceFile object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Resource Folder</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Resource Folder</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseResourceFolder(ResourceFolder object) {
 		return null;
 	}
 
@@ -2857,21 +2572,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>View Page Flow</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>View Page Flow</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseViewPageFlow(ViewPageFlow object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>XML Data</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -2913,81 +2613,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseXORGateway(XORGateway object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>CSS Customizable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>CSS Customizable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseCSSCustomizable(CSSCustomizable object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Mandatory Fields Customization</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Mandatory Fields Customization</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseMandatoryFieldsCustomization(MandatoryFieldsCustomization object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Data Container</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Data Container</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimulationDataContainer(SimulationDataContainer object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Abstract Process</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Abstract Process</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimulationAbstractProcess(SimulationAbstractProcess object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Activity</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Activity</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimulationActivity(SimulationActivity object) {
 		return null;
 	}
 

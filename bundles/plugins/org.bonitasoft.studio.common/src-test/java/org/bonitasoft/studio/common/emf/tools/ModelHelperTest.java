@@ -73,11 +73,9 @@ public class ModelHelperTest {
         myForm = formFactory.createForm();
         textField = formFactory.createTextFormField();
         myForm.getWidgets().add(textField);
-        task1.getForm().add(myForm);
 
         pageFlowTransientData = processFactory.createData();
         pageFlowTransientData.setTransient(true);
-        task1.getTransientData().add(pageFlowTransientData);
 
         task2 = processFactory.createTask();
         t2Data = processFactory.createData();
@@ -116,15 +114,6 @@ public class ModelHelperTest {
         assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData, t1Data);
     }
 
-    @Test
-    public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData, t1Data, pageFlowTransientData);
-    }
-
-    @Test
-    public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleWithoutPageflowTransientData_IfIncludeTransientDataIsFalse() throws Exception {
-        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData, t1Data);
-    }
 
     @Test
     public void shouldGetReferencedDocument() {

@@ -23,14 +23,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.edit.ProcessEditPlugin;
 
-import org.bonitasoft.studio.model.form.FormFactory;
-
 import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-
-import org.bonitasoft.studio.model.simulation.SimulationFactory;
-import org.bonitasoft.studio.model.simulation.SimulationPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -90,15 +85,6 @@ public class IntermediateThrowSignalEventItemProvider
 			addSignalCodePropertyDescriptor(object);
 			addOutgoingPropertyDescriptor(object);
 			addIncomingPropertyDescriptor(object);
-			addRegExpToHideDefaultFieldPropertyDescriptor(object);
-			addUseRegExpToHideDefaultFieldPropertyDescriptor(object);
-			addViewPageFlowTypePropertyDescriptor(object);
-			addViewPageFlowRedirectionURLPropertyDescriptor(object);
-			addExecutionTimePropertyDescriptor(object);
-			addEstimatedTimePropertyDescriptor(object);
-			addMaximumTimePropertyDescriptor(object);
-			addContigousPropertyDescriptor(object);
-			addExclusiveOutgoingTransitionPropertyDescriptor(object);
 			addDynamicLabelPropertyDescriptor(object);
 			addDynamicDescriptionPropertyDescriptor(object);
 			addStepSummaryPropertyDescriptor(object);
@@ -217,204 +203,6 @@ public class IntermediateThrowSignalEventItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Reg Exp To Hide Default Field feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRegExpToHideDefaultFieldPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractPageFlow_regExpToHideDefaultField_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractPageFlow_regExpToHideDefaultField_feature", "_UI_AbstractPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Use Reg Exp To Hide Default Field feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addUseRegExpToHideDefaultFieldPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractPageFlow_useRegExpToHideDefaultField_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractPageFlow_useRegExpToHideDefaultField_feature", "_UI_AbstractPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the View Page Flow Type feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addViewPageFlowTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ViewPageFlow_viewPageFlowType_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ViewPageFlow_viewPageFlowType_feature", "_UI_ViewPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TYPE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the View Page Flow Redirection URL feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addViewPageFlowRedirectionURLPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ViewPageFlow_viewPageFlowRedirectionURL_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ViewPageFlow_viewPageFlowRedirectionURL_feature", "_UI_ViewPageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_REDIRECTION_URL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Execution Time feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addExecutionTimePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationActivity_executionTime_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationActivity_executionTime_feature", "_UI_SimulationActivity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_ACTIVITY__EXECUTION_TIME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Estimated Time feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addEstimatedTimePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationActivity_estimatedTime_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationActivity_estimatedTime_feature", "_UI_SimulationActivity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_ACTIVITY__ESTIMATED_TIME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Maximum Time feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMaximumTimePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationActivity_maximumTime_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationActivity_maximumTime_feature", "_UI_SimulationActivity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_ACTIVITY__MAXIMUM_TIME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Contigous feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addContigousPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationActivity_contigous_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationActivity_contigous_feature", "_UI_SimulationActivity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_ACTIVITY__CONTIGOUS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Exclusive Outgoing Transition feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addExclusiveOutgoingTransitionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationActivity_exclusiveOutgoingTransition_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationActivity_exclusiveOutgoingTransition_feature", "_UI_SimulationActivity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Dynamic Label feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -493,14 +281,6 @@ public class IntermediateThrowSignalEventItemProvider
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT);
-			childrenFeatures.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS);
-			childrenFeatures.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA);
-			childrenFeatures.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS);
-			childrenFeatures.add(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM);
-			childrenFeatures.add(SimulationPackage.Literals.SIMULATION_DATA_CONTAINER__SIMULATION_DATA);
-			childrenFeatures.add(SimulationPackage.Literals.SIMULATION_ACTIVITY__RESOURCES_USAGES);
-			childrenFeatures.add(SimulationPackage.Literals.SIMULATION_ACTIVITY__LOOP_TRANSITION);
-			childrenFeatures.add(SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE);
 		}
 		return childrenFeatures;
 	}
@@ -559,29 +339,12 @@ public class IntermediateThrowSignalEventItemProvider
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__DOCUMENTATION:
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__NAME:
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__SIGNAL_CODE:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_TYPE:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__EXECUTION_TIME:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__ESTIMATED_TIME:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__MAXIMUM_TIME:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__CONTIGOUS:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__EXCLUSIVE_OUTGOING_TRANSITION:
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_LABEL:
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_DESCRIPTION:
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__STEP_SUMMARY:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__TEXT_ANNOTATION_ATTACHMENT:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_TRANSITIONS:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_TRANSIENT_DATA:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_CONNECTORS:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_FORM:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__SIMULATION_DATA:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__RESOURCES_USAGES:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__LOOP_TRANSITION:
-			case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT__DATA_CHANGE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -603,91 +366,6 @@ public class IntermediateThrowSignalEventItemProvider
 			(createChildParameter
 				(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT,
 				 ProcessFactory.eINSTANCE.createTextAnnotationAttachment()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS,
-				 ProcessFactory.eINSTANCE.createPageFlowTransition()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createJavaObjectData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createBusinessObjectData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createXMLData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS,
-				 ProcessFactory.eINSTANCE.createConnector()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS,
-				 ProcessFactory.eINSTANCE.createActorFilter()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM,
-				 FormFactory.eINSTANCE.createViewForm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_DATA_CONTAINER__SIMULATION_DATA,
-				 SimulationFactory.eINSTANCE.createSimulationBoolean()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_DATA_CONTAINER__SIMULATION_DATA,
-				 SimulationFactory.eINSTANCE.createSimulationNumberData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_DATA_CONTAINER__SIMULATION_DATA,
-				 SimulationFactory.eINSTANCE.createSimulationLiteralData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__RESOURCES_USAGES,
-				 SimulationFactory.eINSTANCE.createResourceUsage()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__LOOP_TRANSITION,
-				 ProcessFactory.eINSTANCE.createConnection()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__LOOP_TRANSITION,
-				 ProcessFactory.eINSTANCE.createAssociation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__LOOP_TRANSITION,
-				 ProcessFactory.eINSTANCE.createSequenceFlow()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__LOOP_TRANSITION,
-				 SimulationFactory.eINSTANCE.createSimulationTransition()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_ACTIVITY__DATA_CHANGE,
-				 SimulationFactory.eINSTANCE.createDataChange()));
 	}
 
 	/**

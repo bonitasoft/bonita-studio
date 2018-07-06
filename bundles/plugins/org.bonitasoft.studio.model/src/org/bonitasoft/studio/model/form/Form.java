@@ -21,7 +21,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 
 import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.ResourceContainer;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
@@ -52,7 +51,7 @@ import org.eclipse.emf.common.util.EMap;
  * @model
  * @generated
  */
-public interface Form extends ConnectableElement, Validable, ResourceContainer {
+public interface Form extends ConnectableElement, Validable {
 	/**
 	 * Returns the value of the '<em><b>NColumn</b></em>' attribute.
 	 * The default value is <code>"1"</code>.

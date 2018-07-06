@@ -19,8 +19,6 @@ package org.bonitasoft.studio.common.palette;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.model.form.builders.FileWidgetBuilder;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.builders.ActivityBuilder;
@@ -57,12 +55,6 @@ public class DefaultElementNameProviderTest {
         assertThat(defaultElementNameProvider.getNameFor(ActivityBuilder.anActivity().build())).isEqualTo(Messages.StepDefaultName);
         final FlowElement flowElement = ProcessFactory.eINSTANCE.createFlowElement();
         assertThat(defaultElementNameProvider.getNameFor(flowElement)).isEqualTo(flowElement.eClass().getName());
-    }
-
-    @Test
-    public void should_getNameFor_a_widget() throws Exception {
-        assertThat(defaultElementNameProvider.getNameFor(FileWidgetBuilder.aFileWidget().build())).isEqualTo(
-                NamingUtils.toJavaIdentifier(Messages.File_title, true));
     }
 
 }

@@ -67,18 +67,6 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
         }
     };
     
-    private final IValidator anonymousUserNameValidator = new IValidator() {
-
-        @Override
-        public IStatus validate(Object input) {
-        	if(process!=null && process.isAutoLogin()){
-        		if(input == null || input.toString().isEmpty()){
-        			return ValidationStatus.error(Messages.anonymousUserNameMissingMessage);
-        		}
-        	}
-        	return Status.OK_STATUS;
-        }
-    };
     
     private WizardPageSupport pageSupport;
 
@@ -98,9 +86,7 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
 
-
         // Authentification user / login by default
-        
         final Composite loginComposite = new Composite(mainComposite,SWT.NONE) ;
         loginComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         loginComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create()) ;
@@ -128,39 +114,6 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
         passwordText = new Text(loginComposite, SWT.BORDER | SWT.PASSWORD) ;
         passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        // Separator 
-        Label lineSeparator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
-        lineSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        
-        // anonymous user
-        final Composite anonymousLoginComposite = new Composite(mainComposite,SWT.NONE) ;
-        anonymousLoginComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        anonymousLoginComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create()) ;
-        
-        final Label anonymousUser= new Label(anonymousLoginComposite, SWT.NONE);
-        anonymousUser.setText(Messages.anonymousUser);
-        anonymousUser.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        anonymousUser.setFont(BonitaStudioFontRegistry.getActiveFont());
-        
-        final Label anonymousLoginHint = new Label(anonymousLoginComposite, SWT.WRAP) ;
-        anonymousLoginHint.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
-        anonymousLoginHint.setText(Messages.anonymousUserMessage) ;
-
-        final Label anonymousUsernameLabel = new Label(anonymousLoginComposite, SWT.NONE) ;
-        anonymousUsernameLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-        anonymousUsernameLabel.setText(Messages.username) ;
-
-        anonymousUsernameText = new Text(anonymousLoginComposite, SWT.BORDER) ;
-        anonymousUsernameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-        final Label anonumousPasswordLabel = new Label(anonymousLoginComposite, SWT.NONE) ;
-        anonumousPasswordLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-        anonumousPasswordLabel.setText(Messages.password) ;
-
-        anonymousPasswordText = new Text(anonymousLoginComposite, SWT.BORDER | SWT.PASSWORD) ;
-        anonymousPasswordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-        
         setControl(mainComposite) ;
     }
 
@@ -182,11 +135,6 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
         context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), EMFObservables.observeValue(configuration, ConfigurationPackage.Literals.CONFIGURATION__USERNAME),targetStrategy,null) ;
         context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), EMFObservables.observeValue(configuration, ConfigurationPackage.Literals.CONFIGURATION__PASSWORD)) ;
 
-        UpdateValueStrategy targetAnonymousStrategy = new UpdateValueStrategy() ;
-        targetAnonymousStrategy.setBeforeSetValidator(anonymousUserNameValidator);
-        context.bindValue(SWTObservables.observeText(anonymousUsernameText, SWT.Modify), EMFObservables.observeValue(configuration, ConfigurationPackage.Literals.CONFIGURATION__ANONYMOUS_USER_NAME),targetAnonymousStrategy,null) ;
-        context.bindValue(SWTObservables.observeText(anonymousPasswordText, SWT.Modify), EMFObservables.observeValue(configuration, ConfigurationPackage.Literals.CONFIGURATION__ANONYMOUS_PASSWORD)) ;
-        
         pageSupport = WizardPageSupport.create(this, context) ;
 
     }
@@ -212,11 +160,6 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
             IStatus status =  userNameValidator.validate(conf.getUsername()) ;
             if(status.getSeverity() != IStatus.OK){
                 return status.getMessage() ;
-            }
-            
-            IStatus anonymousUserNameDefined = anonymousUserNameValidator.validate(conf.getAnonymousUserName());
-            if(anonymousUserNameDefined.getSeverity() != IStatus.OK){
-                return anonymousUserNameDefined.getMessage() ;
             }
         }
         

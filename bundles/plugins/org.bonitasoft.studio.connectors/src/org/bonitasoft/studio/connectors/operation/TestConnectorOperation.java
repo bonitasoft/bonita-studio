@@ -415,8 +415,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                 invalidExpressionForTest.put(parameter.getKey(), e);
             } else if (ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
                 invalidExpressionForTest.put(parameter.getKey(), e);
-            } else if (ExpressionConstants.FORM_FIELD_TYPE.equals(e.getType())) {
-                invalidExpressionForTest.put(parameter.getKey(), e);
             } else if (ExpressionConstants.PATTERN_TYPE.equals(e.getType()) && !e.getReferencedElements().isEmpty()) {
                 invalidExpressionForTest.put(parameter.getKey(), e);
             } else if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {

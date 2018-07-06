@@ -20,10 +20,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FormButton;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Info;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -86,14 +82,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
         final Expression expression = (Expression) ctx.getTarget();
         if (!ModelHelper.isAnExpressionCopy(expression) && expression.eContainer() instanceof Operation) {
             final Operation op = (Operation) expression.eContainer();
-            if (ValidableOperation.shouldValidateOperation(op)) {
-                if (op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)) {
-                    final Widget parentWidget = ModelHelper.getParentWidget(op);
-                    if (parentWidget instanceof FormButton
-                            || parentWidget instanceof Info) {
-                        return ctx.createSuccessStatus();
-                    }
-                }
                 if (op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)) {
                     return ctx.createSuccessStatus();
                 }
@@ -131,7 +119,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
                                 .createFailureStatus(new Object[] { Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
                     }
                 }
-            }
         }
         return ctx.createSuccessStatus();
     }

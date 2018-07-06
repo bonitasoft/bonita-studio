@@ -101,7 +101,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
 
     private boolean isSupportedType(final String type) {
         return ExpressionConstants.VARIABLE_TYPE.equals(type) || ExpressionConstants.PARAMETER_TYPE.equals(type)
-                || ExpressionConstants.FORM_FIELD_TYPE.equals(type) || ExpressionConstants.CONTRACT_INPUT_TYPE.equals(type)
+                || ExpressionConstants.CONTRACT_INPUT_TYPE.equals(type)
                 || ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(type);
     }
 
