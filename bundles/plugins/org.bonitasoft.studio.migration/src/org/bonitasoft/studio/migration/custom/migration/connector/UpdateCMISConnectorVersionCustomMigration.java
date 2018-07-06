@@ -113,8 +113,7 @@ public class UpdateCMISConnectorVersionCustomMigration extends CustomMigration {
     private boolean isVariableExpression(final Instance urlExpression) {
         final String expType = urlExpression.get("type");
         return ExpressionConstants.VARIABLE_TYPE.equals(expType) ||
-                ExpressionConstants.PARAMETER_TYPE.equals(expType) ||
-                ExpressionConstants.FORM_FIELD_TYPE.equals(expType);
+                ExpressionConstants.PARAMETER_TYPE.equals(expType);
     }
 
     private Instance transformConstantExpression(final Model model, final String wsdlPath, final Instance urlExpression) {

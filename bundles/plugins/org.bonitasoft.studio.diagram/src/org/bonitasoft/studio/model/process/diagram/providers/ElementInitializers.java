@@ -96,8 +96,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ANDGateway_2009(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ANDGateway_2009(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -116,8 +114,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartEvent_2002(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartEvent_2002(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -136,8 +132,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndEvent_2003(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndEvent_2003(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -158,28 +152,22 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_3);
 			Object value_4 = stepSummary_Task_2004(instance);
 			instance.setStepSummary((Expression) value_4);
-			Object value_5 = viewPageFlowRedirectionURL_Task_2004(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_5);
-			Object value_6 = entryRedirectionURL_Task_2004(instance);
-			instance.setEntryRedirectionURL((Expression) value_6);
-			Object value_7 = confirmationMessage_Task_2004(instance);
-			instance.setConfirmationMessage((Expression) value_7);
-			Object value_8 = loopCondition_Task_2004(instance);
-			instance.setLoopCondition((Expression) value_8);
-			Object value_9 = loopMaximum_Task_2004(instance);
-			instance.setLoopMaximum((Expression) value_9);
-			Object value_10 = cardinalityExpression_Task_2004(instance);
-			instance.setCardinalityExpression((Expression) value_10);
-			Object value_11 = completionCondition_Task_2004(instance);
-			instance.setCompletionCondition((Expression) value_11);
-			Object value_12 = iteratorExpression_Task_2004(instance);
-			instance.setIteratorExpression((Expression) value_12);
-			Object value_13 = contract_Task_2004(instance);
-			instance.setContract((Contract) value_13);
-			Object value_14 = formMapping_Task_2004(instance);
-			instance.setFormMapping((FormMapping) value_14);
-			Object value_15 = expectedDuration_Task_2004(instance);
-			instance.setExpectedDuration((Expression) value_15);
+			Object value_5 = loopCondition_Task_2004(instance);
+			instance.setLoopCondition((Expression) value_5);
+			Object value_6 = loopMaximum_Task_2004(instance);
+			instance.setLoopMaximum((Expression) value_6);
+			Object value_7 = cardinalityExpression_Task_2004(instance);
+			instance.setCardinalityExpression((Expression) value_7);
+			Object value_8 = completionCondition_Task_2004(instance);
+			instance.setCompletionCondition((Expression) value_8);
+			Object value_9 = iteratorExpression_Task_2004(instance);
+			instance.setIteratorExpression((Expression) value_9);
+			Object value_10 = contract_Task_2004(instance);
+			instance.setContract((Contract) value_10);
+			Object value_11 = formMapping_Task_2004(instance);
+			instance.setFormMapping((FormMapping) value_11);
+			Object value_12 = expectedDuration_Task_2004(instance);
+			instance.setExpectedDuration((Expression) value_12);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -198,22 +186,20 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_CallActivity_2036(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_CallActivity_2036(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = calledActivityName_CallActivity_2036(instance);
-			instance.setCalledActivityName((Expression) value_5);
-			Object value_6 = calledActivityVersion_CallActivity_2036(instance);
-			instance.setCalledActivityVersion((Expression) value_6);
-			Object value_7 = loopCondition_CallActivity_2036(instance);
-			instance.setLoopCondition((Expression) value_7);
-			Object value_8 = loopMaximum_CallActivity_2036(instance);
-			instance.setLoopMaximum((Expression) value_8);
-			Object value_9 = cardinalityExpression_CallActivity_2036(instance);
-			instance.setCardinalityExpression((Expression) value_9);
-			Object value_10 = completionCondition_CallActivity_2036(instance);
-			instance.setCompletionCondition((Expression) value_10);
-			Object value_11 = iteratorExpression_CallActivity_2036(instance);
-			instance.setIteratorExpression((Expression) value_11);
+			Object value_4 = calledActivityName_CallActivity_2036(instance);
+			instance.setCalledActivityName((Expression) value_4);
+			Object value_5 = calledActivityVersion_CallActivity_2036(instance);
+			instance.setCalledActivityVersion((Expression) value_5);
+			Object value_6 = loopCondition_CallActivity_2036(instance);
+			instance.setLoopCondition((Expression) value_6);
+			Object value_7 = loopMaximum_CallActivity_2036(instance);
+			instance.setLoopMaximum((Expression) value_7);
+			Object value_8 = cardinalityExpression_CallActivity_2036(instance);
+			instance.setCardinalityExpression((Expression) value_8);
+			Object value_9 = completionCondition_CallActivity_2036(instance);
+			instance.setCompletionCondition((Expression) value_9);
+			Object value_10 = iteratorExpression_CallActivity_2036(instance);
+			instance.setIteratorExpression((Expression) value_10);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -244,18 +230,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ReceiveTask_2025(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ReceiveTask_2025(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ReceiveTask_2025(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ReceiveTask_2025(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ReceiveTask_2025(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ReceiveTask_2025(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ReceiveTask_2025(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ReceiveTask_2025(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ReceiveTask_2025(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ReceiveTask_2025(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ReceiveTask_2025(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ReceiveTask_2025(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -274,18 +258,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_SendTask_2026(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_SendTask_2026(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_SendTask_2026(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_SendTask_2026(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_SendTask_2026(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_SendTask_2026(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_SendTask_2026(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_SendTask_2026(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_SendTask_2026(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_SendTask_2026(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_SendTask_2026(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_SendTask_2026(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -304,18 +286,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ServiceTask_2027(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ServiceTask_2027(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ServiceTask_2027(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ServiceTask_2027(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ServiceTask_2027(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ServiceTask_2027(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ServiceTask_2027(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ServiceTask_2027(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ServiceTask_2027(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ServiceTask_2027(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ServiceTask_2027(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ServiceTask_2027(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -334,18 +314,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ScriptTask_2028(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ScriptTask_2028(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ScriptTask_2028(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ScriptTask_2028(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ScriptTask_2028(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ScriptTask_2028(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ScriptTask_2028(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ScriptTask_2028(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ScriptTask_2028(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ScriptTask_2028(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ScriptTask_2028(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ScriptTask_2028(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -358,16 +336,12 @@ public class ElementInitializers {
 		try {
 			Object value_0 = name_XORGateway_2008(instance);
 			instance.setName((java.lang.String) value_0);
-			Object value_1 = exclusiveOutgoingTransition_XORGateway_2008(instance);
-			instance.setExclusiveOutgoingTransition(((java.lang.Boolean) value_1).booleanValue());
-			Object value_2 = dynamicDescription_XORGateway_2008(instance);
-			instance.setDynamicDescription((Expression) value_2);
-			Object value_3 = dynamicLabel_XORGateway_2008(instance);
-			instance.setDynamicLabel((Expression) value_3);
-			Object value_4 = stepSummary_XORGateway_2008(instance);
-			instance.setStepSummary((Expression) value_4);
-			Object value_5 = viewPageFlowRedirectionURL_XORGateway_2008(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_5);
+			Object value_1 = dynamicDescription_XORGateway_2008(instance);
+			instance.setDynamicDescription((Expression) value_1);
+			Object value_2 = dynamicLabel_XORGateway_2008(instance);
+			instance.setDynamicLabel((Expression) value_2);
+			Object value_3 = stepSummary_XORGateway_2008(instance);
+			instance.setStepSummary((Expression) value_3);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -386,8 +360,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_InclusiveGateway_2030(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_InclusiveGateway_2030(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -406,18 +378,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_Activity_2006(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_Activity_2006(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_Activity_2006(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_Activity_2006(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_Activity_2006(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_Activity_2006(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_Activity_2006(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_Activity_2006(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_Activity_2006(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_Activity_2006(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_Activity_2006(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_Activity_2006(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -440,24 +410,12 @@ public class ElementInitializers {
 			} else {
 				instance.getSearchIndexes().add((SearchIndex) value_2);
 			}
-			Object value_3 = viewPageFlowRedirectionURL_Pool_2007(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_3);
-			Object value_4 = mandatoryLabel_Pool_2007(instance);
-			instance.setMandatoryLabel((Expression) value_4);
-			Object value_5 = mandatorySymbol_Pool_2007(instance);
-			instance.setMandatorySymbol((Expression) value_5);
-			Object value_6 = confirmationMessage_Pool_2007(instance);
-			instance.setConfirmationMessage((Expression) value_6);
-			Object value_7 = entryRedirectionURL_Pool_2007(instance);
-			instance.setEntryRedirectionURL((Expression) value_7);
-			Object value_8 = recapPageFlowRedirectionURL_Pool_2007(instance);
-			instance.setRecapPageFlowRedirectionURL((Expression) value_8);
-			Object value_9 = formMapping_Pool_2007(instance);
-			instance.setFormMapping((FormMapping) value_9);
-			Object value_10 = overviewFormMapping_Pool_2007(instance);
-			instance.setOverviewFormMapping((FormMapping) value_10);
-			Object value_11 = contract_Pool_2007(instance);
-			instance.setContract((Contract) value_11);
+			Object value_3 = formMapping_Pool_2007(instance);
+			instance.setFormMapping((FormMapping) value_3);
+			Object value_4 = overviewFormMapping_Pool_2007(instance);
+			instance.setOverviewFormMapping((FormMapping) value_4);
+			Object value_5 = contract_Pool_2007(instance);
+			instance.setContract((Contract) value_5);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -476,8 +434,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartMessageEvent_2010(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartMessageEvent_2010(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -496,8 +452,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndMessageEvent_2011(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndMessageEvent_2011(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -516,8 +470,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchMessageEvent_2013(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchMessageEvent_2013(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -536,8 +488,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateThrowMessageEvent_2014(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateThrowMessageEvent_2014(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -568,8 +518,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchTimerEvent_2017(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchTimerEvent_2017(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -588,8 +536,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartTimerEvent_2016(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartTimerEvent_2016(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -608,8 +554,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_CatchLinkEvent_2018(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_CatchLinkEvent_2018(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -628,8 +572,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ThrowLinkEvent_2019(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ThrowLinkEvent_2019(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -648,8 +590,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateThrowSignalEvent_2020(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateThrowSignalEvent_2020(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -668,8 +608,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchSignalEvent_2021(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchSignalEvent_2021(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -688,8 +626,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartSignalEvent_2022(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartSignalEvent_2022(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -708,8 +644,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndSignalEvent_2023(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndSignalEvent_2023(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -728,8 +662,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndErrorEvent_2029(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndErrorEvent_2029(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -748,8 +680,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartErrorEvent_2033(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartErrorEvent_2033(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -768,8 +698,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndTerminatedEvent_2035(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndTerminatedEvent_2035(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -908,8 +836,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ANDGateway_3009(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ANDGateway_3009(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -928,8 +854,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndEvent_3003(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndEvent_3003(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -948,22 +872,20 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_CallActivity_3063(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_CallActivity_3063(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = calledActivityName_CallActivity_3063(instance);
-			instance.setCalledActivityName((Expression) value_5);
-			Object value_6 = calledActivityVersion_CallActivity_3063(instance);
-			instance.setCalledActivityVersion((Expression) value_6);
-			Object value_7 = loopCondition_CallActivity_3063(instance);
-			instance.setLoopCondition((Expression) value_7);
-			Object value_8 = loopMaximum_CallActivity_3063(instance);
-			instance.setLoopMaximum((Expression) value_8);
-			Object value_9 = cardinalityExpression_CallActivity_3063(instance);
-			instance.setCardinalityExpression((Expression) value_9);
-			Object value_10 = completionCondition_CallActivity_3063(instance);
-			instance.setCompletionCondition((Expression) value_10);
-			Object value_11 = iteratorExpression_CallActivity_3063(instance);
-			instance.setIteratorExpression((Expression) value_11);
+			Object value_4 = calledActivityName_CallActivity_3063(instance);
+			instance.setCalledActivityName((Expression) value_4);
+			Object value_5 = calledActivityVersion_CallActivity_3063(instance);
+			instance.setCalledActivityVersion((Expression) value_5);
+			Object value_6 = loopCondition_CallActivity_3063(instance);
+			instance.setLoopCondition((Expression) value_6);
+			Object value_7 = loopMaximum_CallActivity_3063(instance);
+			instance.setLoopMaximum((Expression) value_7);
+			Object value_8 = cardinalityExpression_CallActivity_3063(instance);
+			instance.setCardinalityExpression((Expression) value_8);
+			Object value_9 = completionCondition_CallActivity_3063(instance);
+			instance.setCompletionCondition((Expression) value_9);
+			Object value_10 = iteratorExpression_CallActivity_3063(instance);
+			instance.setIteratorExpression((Expression) value_10);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -984,28 +906,22 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_3);
 			Object value_4 = stepSummary_Task_3005(instance);
 			instance.setStepSummary((Expression) value_4);
-			Object value_5 = viewPageFlowRedirectionURL_Task_3005(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_5);
-			Object value_6 = entryRedirectionURL_Task_3005(instance);
-			instance.setEntryRedirectionURL((Expression) value_6);
-			Object value_7 = confirmationMessage_Task_3005(instance);
-			instance.setConfirmationMessage((Expression) value_7);
-			Object value_8 = loopCondition_Task_3005(instance);
-			instance.setLoopCondition((Expression) value_8);
-			Object value_9 = loopMaximum_Task_3005(instance);
-			instance.setLoopMaximum((Expression) value_9);
-			Object value_10 = cardinalityExpression_Task_3005(instance);
-			instance.setCardinalityExpression((Expression) value_10);
-			Object value_11 = completionCondition_Task_3005(instance);
-			instance.setCompletionCondition((Expression) value_11);
-			Object value_12 = iteratorExpression_Task_3005(instance);
-			instance.setIteratorExpression((Expression) value_12);
-			Object value_13 = contract_Task_3005(instance);
-			instance.setContract((Contract) value_13);
-			Object value_14 = formMapping_Task_3005(instance);
-			instance.setFormMapping((FormMapping) value_14);
-			Object value_15 = expectedDuration_Task_3005(instance);
-			instance.setExpectedDuration((Expression) value_15);
+			Object value_5 = loopCondition_Task_3005(instance);
+			instance.setLoopCondition((Expression) value_5);
+			Object value_6 = loopMaximum_Task_3005(instance);
+			instance.setLoopMaximum((Expression) value_6);
+			Object value_7 = cardinalityExpression_Task_3005(instance);
+			instance.setCardinalityExpression((Expression) value_7);
+			Object value_8 = completionCondition_Task_3005(instance);
+			instance.setCompletionCondition((Expression) value_8);
+			Object value_9 = iteratorExpression_Task_3005(instance);
+			instance.setIteratorExpression((Expression) value_9);
+			Object value_10 = contract_Task_3005(instance);
+			instance.setContract((Contract) value_10);
+			Object value_11 = formMapping_Task_3005(instance);
+			instance.setFormMapping((FormMapping) value_11);
+			Object value_12 = expectedDuration_Task_3005(instance);
+			instance.setExpectedDuration((Expression) value_12);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1024,18 +940,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ReceiveTask_3026(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ReceiveTask_3026(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ReceiveTask_3026(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ReceiveTask_3026(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ReceiveTask_3026(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ReceiveTask_3026(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ReceiveTask_3026(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ReceiveTask_3026(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ReceiveTask_3026(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ReceiveTask_3026(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ReceiveTask_3026(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ReceiveTask_3026(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1066,18 +980,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_SendTask_3025(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_SendTask_3025(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_SendTask_3025(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_SendTask_3025(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_SendTask_3025(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_SendTask_3025(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_SendTask_3025(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_SendTask_3025(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_SendTask_3025(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_SendTask_3025(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_SendTask_3025(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_SendTask_3025(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1096,18 +1008,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ServiceTask_3027(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ServiceTask_3027(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ServiceTask_3027(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ServiceTask_3027(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ServiceTask_3027(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ServiceTask_3027(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ServiceTask_3027(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ServiceTask_3027(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ServiceTask_3027(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ServiceTask_3027(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ServiceTask_3027(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ServiceTask_3027(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1138,18 +1048,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ScriptTask_3028(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ScriptTask_3028(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_ScriptTask_3028(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_ScriptTask_3028(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_ScriptTask_3028(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_ScriptTask_3028(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_ScriptTask_3028(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_ScriptTask_3028(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_ScriptTask_3028(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_ScriptTask_3028(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_ScriptTask_3028(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_ScriptTask_3028(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1174,16 +1082,12 @@ public class ElementInitializers {
 		try {
 			Object value_0 = name_XORGateway_3008(instance);
 			instance.setName((java.lang.String) value_0);
-			Object value_1 = exclusiveOutgoingTransition_XORGateway_3008(instance);
-			instance.setExclusiveOutgoingTransition(((java.lang.Boolean) value_1).booleanValue());
-			Object value_2 = dynamicDescription_XORGateway_3008(instance);
-			instance.setDynamicDescription((Expression) value_2);
-			Object value_3 = dynamicLabel_XORGateway_3008(instance);
-			instance.setDynamicLabel((Expression) value_3);
-			Object value_4 = stepSummary_XORGateway_3008(instance);
-			instance.setStepSummary((Expression) value_4);
-			Object value_5 = viewPageFlowRedirectionURL_XORGateway_3008(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_5);
+			Object value_1 = dynamicDescription_XORGateway_3008(instance);
+			instance.setDynamicDescription((Expression) value_1);
+			Object value_2 = dynamicLabel_XORGateway_3008(instance);
+			instance.setDynamicLabel((Expression) value_2);
+			Object value_3 = stepSummary_XORGateway_3008(instance);
+			instance.setStepSummary((Expression) value_3);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1202,18 +1106,16 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_Activity_3006(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_Activity_3006(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
-			Object value_5 = loopCondition_Activity_3006(instance);
-			instance.setLoopCondition((Expression) value_5);
-			Object value_6 = loopMaximum_Activity_3006(instance);
-			instance.setLoopMaximum((Expression) value_6);
-			Object value_7 = cardinalityExpression_Activity_3006(instance);
-			instance.setCardinalityExpression((Expression) value_7);
-			Object value_8 = completionCondition_Activity_3006(instance);
-			instance.setCompletionCondition((Expression) value_8);
-			Object value_9 = iteratorExpression_Activity_3006(instance);
-			instance.setIteratorExpression((Expression) value_9);
+			Object value_4 = loopCondition_Activity_3006(instance);
+			instance.setLoopCondition((Expression) value_4);
+			Object value_5 = loopMaximum_Activity_3006(instance);
+			instance.setLoopMaximum((Expression) value_5);
+			Object value_6 = cardinalityExpression_Activity_3006(instance);
+			instance.setCardinalityExpression((Expression) value_6);
+			Object value_7 = completionCondition_Activity_3006(instance);
+			instance.setCompletionCondition((Expression) value_7);
+			Object value_8 = iteratorExpression_Activity_3006(instance);
+			instance.setIteratorExpression((Expression) value_8);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1244,8 +1146,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchMessageEvent_3013(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchMessageEvent_3013(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1264,8 +1164,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartMessageEvent_3012(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartMessageEvent_3012(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1284,8 +1182,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndMessageEvent_3011(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndMessageEvent_3011(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1304,8 +1200,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateThrowMessageEvent_3014(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateThrowMessageEvent_3014(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1336,8 +1230,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartTimerEvent_3016(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartTimerEvent_3016(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1356,8 +1248,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchTimerEvent_3017(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchTimerEvent_3017(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1376,8 +1266,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartSignalEvent_3023(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartSignalEvent_3023(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1396,8 +1284,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateThrowSignalEvent_3022(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateThrowSignalEvent_3022(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1416,8 +1302,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_IntermediateCatchSignalEvent_3021(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_IntermediateCatchSignalEvent_3021(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1436,8 +1320,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndSignalEvent_3020(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndSignalEvent_3020(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1456,8 +1338,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndErrorEvent_3050(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndErrorEvent_3050(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1476,8 +1356,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_EndTerminatedEvent_3062(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_EndTerminatedEvent_3062(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1496,8 +1374,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartErrorEvent_3060(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartErrorEvent_3060(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1516,8 +1392,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_InclusiveGateway_3051(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_InclusiveGateway_3051(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1548,8 +1422,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_StartEvent_3002(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_StartEvent_3002(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1580,8 +1452,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_ThrowLinkEvent_3018(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_ThrowLinkEvent_3018(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1600,8 +1470,6 @@ public class ElementInitializers {
 			instance.setDynamicLabel((Expression) value_2);
 			Object value_3 = stepSummary_CatchLinkEvent_3019(instance);
 			instance.setStepSummary((Expression) value_3);
-			Object value_4 = viewPageFlowRedirectionURL_CatchLinkEvent_3019(instance);
-			instance.setViewPageFlowRedirectionURL((Expression) value_4);
 		} catch (RuntimeException e) {
 			ProcessDiagramEditorPlugin.getInstance().logError("Element initialization failed", e); //$NON-NLS-1$						
 		}
@@ -1673,16 +1541,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ANDGateway_2009(ANDGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_StartEvent_2002(StartEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -1711,16 +1569,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_StartEvent_2002(StartEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_StartEvent_2002(StartEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -1767,16 +1615,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_EndEvent_2003(EndEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_Task_2004(Task self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -1812,36 +1650,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_Task_2004(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_Task_2004(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression entryRedirectionURL_Task_2004(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression confirmationMessage_Task_2004(Task self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -1939,16 +1747,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_CallActivity_2036(CallActivity self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_CallActivity_2036(CallActivity self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2059,16 +1857,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ReceiveTask_2025(ReceiveTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_ReceiveTask_2025(ReceiveTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -2134,16 +1922,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_SendTask_2026(SendTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_SendTask_2026(SendTask self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2227,16 +2005,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ServiceTask_2027(ServiceTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_ServiceTask_2027(ServiceTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -2311,16 +2079,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ScriptTask_2028(ScriptTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_ScriptTask_2028(ScriptTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -2365,13 +2123,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private java.lang.Boolean exclusiveOutgoingTransition_XORGateway_2008(XORGateway self) {
-		return true;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression dynamicDescription_XORGateway_2008(XORGateway self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
@@ -2393,16 +2144,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_XORGateway_2008(XORGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_XORGateway_2008(XORGateway self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2449,16 +2190,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_InclusiveGateway_2030(InclusiveGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_Activity_2006(Activity self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -2487,16 +2218,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_Activity_2006(Activity self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_Activity_2006(Activity self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2573,66 +2294,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression mandatoryLabel_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression mandatorySymbol_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression confirmationMessage_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression entryRedirectionURL_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression recapPageFlowRedirectionURL_Pool_2007(Pool self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private FormMapping formMapping_Pool_2007(Pool self) {
 		FormMapping mapping = ProcessFactory.eINSTANCE.createFormMapping();
 		mapping.setTargetForm(ExpressionHelper.createFormReferenceExpression("", ""));
@@ -2695,16 +2356,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartMessageEvent_2010(StartMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndMessageEvent_2011(EndMessageEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -2733,16 +2384,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_EndMessageEvent_2011(EndMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_EndMessageEvent_2011(EndMessageEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2789,17 +2430,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchMessageEvent_2013(
-			IntermediateCatchMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_IntermediateThrowMessageEvent_2014(IntermediateThrowMessageEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -2828,17 +2458,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_IntermediateThrowMessageEvent_2014(IntermediateThrowMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateThrowMessageEvent_2014(
-			IntermediateThrowMessageEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2892,16 +2511,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchTimerEvent_2017(IntermediateCatchTimerEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_StartTimerEvent_2016(StartTimerEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -2930,16 +2539,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_StartTimerEvent_2016(StartTimerEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_StartTimerEvent_2016(StartTimerEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -2986,16 +2585,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_CatchLinkEvent_2018(CatchLinkEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_ThrowLinkEvent_2019(ThrowLinkEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3024,16 +2613,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_ThrowLinkEvent_2019(ThrowLinkEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_ThrowLinkEvent_2019(ThrowLinkEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -3080,16 +2659,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateThrowSignalEvent_2020(IntermediateThrowSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_IntermediateCatchSignalEvent_2021(IntermediateCatchSignalEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3118,16 +2687,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_IntermediateCatchSignalEvent_2021(IntermediateCatchSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchSignalEvent_2021(IntermediateCatchSignalEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -3174,16 +2733,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartSignalEvent_2022(StartSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndSignalEvent_2023(EndSignalEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3212,16 +2761,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_EndSignalEvent_2023(EndSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_EndSignalEvent_2023(EndSignalEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -3268,16 +2807,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_EndErrorEvent_2029(EndErrorEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_StartErrorEvent_2033(StartErrorEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3315,16 +2844,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartErrorEvent_2033(StartErrorEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndTerminatedEvent_2035(EndTerminatedEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3353,16 +2872,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_EndTerminatedEvent_2035(EndTerminatedEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_EndTerminatedEvent_2035(EndTerminatedEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -3479,16 +2988,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ANDGateway_3009(ANDGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndEvent_3003(EndEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3526,16 +3025,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_EndEvent_3003(EndEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_CallActivity_3063(CallActivity self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -3564,16 +3053,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_CallActivity_3063(CallActivity self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_CallActivity_3063(CallActivity self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -3684,36 +3163,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_Task_3005(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression entryRedirectionURL_Task_3005(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression confirmationMessage_Task_3005(Task self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_Task_3005(Task self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -3811,16 +3260,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ReceiveTask_3026(ReceiveTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_ReceiveTask_3026(ReceiveTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -3902,16 +3341,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_SendTask_3025(SendTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_SendTask_3025(SendTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -3977,16 +3406,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_ServiceTask_3027(ServiceTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_ServiceTask_3027(ServiceTask self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4077,16 +3496,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ScriptTask_3028(ScriptTask self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression loopCondition_ScriptTask_3028(ScriptTask self) {
 		return NamingUtils.generateConstantExpression("", Boolean.class.getName(), true);
 	}
@@ -4138,13 +3547,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private java.lang.Boolean exclusiveOutgoingTransition_XORGateway_3008(XORGateway self) {
-		return true;
-	}
-
-	/**
-	* @generated
-	*/
 	private Expression dynamicDescription_XORGateway_3008(XORGateway self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
@@ -4166,16 +3568,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_XORGateway_3008(XORGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_XORGateway_3008(XORGateway self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4213,16 +3605,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_Activity_3006(Activity self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_Activity_3006(Activity self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4313,17 +3695,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchMessageEvent_3013(
-			IntermediateCatchMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_StartMessageEvent_3012(StartMessageEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4352,16 +3723,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_StartMessageEvent_3012(StartMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_StartMessageEvent_3012(StartMessageEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4408,16 +3769,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_EndMessageEvent_3011(EndMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_IntermediateThrowMessageEvent_3014(IntermediateThrowMessageEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4446,17 +3797,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_IntermediateThrowMessageEvent_3014(IntermediateThrowMessageEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateThrowMessageEvent_3014(
-			IntermediateThrowMessageEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4510,16 +3850,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartTimerEvent_3016(StartTimerEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_IntermediateCatchTimerEvent_3017(IntermediateCatchTimerEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4548,16 +3878,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_IntermediateCatchTimerEvent_3017(IntermediateCatchTimerEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchTimerEvent_3017(IntermediateCatchTimerEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4604,16 +3924,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartSignalEvent_3023(StartSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_IntermediateThrowSignalEvent_3022(IntermediateThrowSignalEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4642,16 +3952,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_IntermediateThrowSignalEvent_3022(IntermediateThrowSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateThrowSignalEvent_3022(IntermediateThrowSignalEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4698,16 +3998,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_IntermediateCatchSignalEvent_3021(IntermediateCatchSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndSignalEvent_3020(EndSignalEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4736,16 +4026,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_EndSignalEvent_3020(EndSignalEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_EndSignalEvent_3020(EndSignalEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4792,16 +4072,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_EndErrorEvent_3050(EndErrorEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_EndTerminatedEvent_3062(EndTerminatedEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4830,16 +4100,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_EndTerminatedEvent_3062(EndTerminatedEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_EndTerminatedEvent_3062(EndTerminatedEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4886,16 +4146,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartErrorEvent_3060(StartErrorEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_InclusiveGateway_3051(InclusiveGateway self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -4924,16 +4174,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_InclusiveGateway_3051(InclusiveGateway self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_InclusiveGateway_3051(InclusiveGateway self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);
@@ -4987,16 +4227,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_StartEvent_3002(StartEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_SubProcessEvent_3058(SubProcessEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -5041,16 +4271,6 @@ public class ElementInitializers {
 	/**
 	* @generated
 	*/
-	private Expression viewPageFlowRedirectionURL_ThrowLinkEvent_3018(ThrowLinkEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
 	private java.lang.String name_CatchLinkEvent_3019(CatchLinkEvent self) {
 		return NamingUtils.getInstance(self).generateName(self, self);
 	}
@@ -5079,16 +4299,6 @@ public class ElementInitializers {
 	* @generated
 	*/
 	private Expression stepSummary_CatchLinkEvent_3019(CatchLinkEvent self) {
-		Expression exp = NamingUtils.generateConstantExpression("");
-		exp.setReturnType(String.class.getName());
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-	/**
-	* @generated
-	*/
-	private Expression viewPageFlowRedirectionURL_CatchLinkEvent_3019(CatchLinkEvent self) {
 		Expression exp = NamingUtils.generateConstantExpression("");
 		exp.setReturnType(String.class.getName());
 		exp.setReturnTypeFixed(true);

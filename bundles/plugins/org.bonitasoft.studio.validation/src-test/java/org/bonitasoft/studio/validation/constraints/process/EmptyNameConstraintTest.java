@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.GroupIterator;
-import org.bonitasoft.studio.model.form.builders.FileWidgetBuilder;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -130,15 +129,6 @@ public class EmptyNameConstraintTest {
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 
         assertThat(iStatus.isOK()).isFalse();
-    }
-
-    @Test
-    public void should_accept_names_with_special_chars_for_widget() throws Exception {
-        when(ctx.getTarget()).thenReturn(FileWidgetBuilder.aFileWidget().withName("hello#").build());
-
-        final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
-
-        assertThat(iStatus.isOK()).isTrue();
     }
 
     @Test

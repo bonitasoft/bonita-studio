@@ -44,8 +44,6 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.GroupIterator;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
@@ -248,20 +246,6 @@ public class ExpressionHelperTest {
         assertThat(EcoreUtil.equals(output, refElement)).isTrue();
     }
 
-    @Test
-    public void should_createExpressionFromEObject_Returns_a_FormFieldExpression_if_EObject_is_a_Widget() throws Exception {
-        final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
-        widget.setName("textField");
-        final Expression expression = ExpressionHelper.createExpressionFromEObject(widget);
-        assertThat(expression).hasContent("field_" + widget.getName()).
-                hasInterpreter("").
-                hasType(ExpressionConstants.FORM_FIELD_TYPE).
-                hasName("field_" + widget.getName()).
-                hasReturnType(widget.getReturnTypeModifier());
-        assertThat(expression.getReferencedElements()).hasSize(1);
-        final EObject refElement = expression.getReferencedElements().get(0);
-        assertThat(EcoreUtil.equals(widget, refElement)).isTrue();
-    }
 
     @Test
     public void should_createExpressionFromEObject_Returns_a_DocumentExpression_if_EObject_is_a_Document() throws Exception {
@@ -276,37 +260,6 @@ public class ExpressionHelperTest {
         assertThat(expression.getReferencedElements()).hasSize(1);
         final EObject refElement = expression.getReferencedElements().get(0);
         assertThat(EcoreUtil.equals(document, refElement)).isTrue();
-    }
-
-    @Test
-    public void should_createExpressionFromEObject_Returns_a_GroupIteratorExpression_if_EObject_is_a_GroupIterator() throws Exception {
-        final GroupIterator iterator = FormFactory.eINSTANCE.createGroupIterator();
-        iterator.setName("iterator");
-        iterator.setClassName(Float.class.getName());
-        final Expression expression = ExpressionHelper.createExpressionFromEObject(iterator);
-        assertThat(expression).hasContent(iterator.getName()).
-                hasInterpreter("").
-                hasType(ExpressionConstants.GROUP_ITERATOR_TYPE).
-                hasName(iterator.getName()).
-                hasReturnType(iterator.getClassName());
-        assertThat(expression.getReferencedElements()).hasSize(1);
-        final EObject refElement = expression.getReferencedElements().get(0);
-        assertThat(EcoreUtil.equals(iterator, refElement)).isTrue();
-    }
-
-    @Test
-    public void should_createExpressionFromEObject_Returns_a_GroupIteratorExpression_if_EObject_is_a_GroupIterator_without_type() throws Exception {
-        final GroupIterator iterator = FormFactory.eINSTANCE.createGroupIterator();
-        iterator.setName("iterator");
-        final Expression expression = ExpressionHelper.createExpressionFromEObject(iterator);
-        assertThat(expression).hasContent(iterator.getName()).
-                hasInterpreter("").
-                hasType(ExpressionConstants.GROUP_ITERATOR_TYPE).
-                hasName(iterator.getName()).
-                hasReturnType(Object.class.getName());
-        assertThat(expression.getReferencedElements()).hasSize(1);
-        final EObject refElement = expression.getReferencedElements().get(0);
-        assertThat(EcoreUtil.equals(iterator, refElement)).isTrue();
     }
 
     @Test(expected = IllegalArgumentException.class)

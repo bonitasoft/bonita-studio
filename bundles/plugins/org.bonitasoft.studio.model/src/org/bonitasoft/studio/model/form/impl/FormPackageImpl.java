@@ -2519,7 +2519,6 @@ public class FormPackageImpl extends EPackageImpl implements FormPackage {
 		// Add supertypes to classes
 		formEClass.getESuperTypes().add(theProcessPackage.getConnectableElement());
 		formEClass.getESuperTypes().add(this.getValidable());
-		formEClass.getESuperTypes().add(theProcessPackage.getResourceContainer());
 		viewFormEClass.getESuperTypes().add(this.getForm());
 		widgetEClass.getESuperTypes().add(theProcessPackage.getElement());
 		widgetEClass.getESuperTypes().add(this.getCSSCustomizable());

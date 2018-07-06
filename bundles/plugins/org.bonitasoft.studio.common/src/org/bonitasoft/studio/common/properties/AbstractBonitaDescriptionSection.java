@@ -40,7 +40,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     @Override
     public void refresh() {
         super.refresh();
-        if (form != null) {
+        if (form != null && !form.isDisposed()) {
             form.setText(getSectionTitle());
             updateSectionDescription();
         }

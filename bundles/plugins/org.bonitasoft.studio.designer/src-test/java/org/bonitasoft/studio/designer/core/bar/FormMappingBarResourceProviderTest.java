@@ -103,10 +103,9 @@ public class FormMappingBarResourceProviderTest {
 
         //Then
         verify(builder).setFormMappings(formMappingModel);
-        assertThat(formMappingModel.getFormMappings()).hasSize(3);
+        assertThat(formMappingModel.getFormMappings()).hasSize(2);
         assertThat(formMappingModel.getFormMappings()).extracting("target", "form", "type", "taskname")
                 .contains(tuple(FormMappingTarget.URL, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW, null),
-                        tuple(FormMappingTarget.LEGACY, "", FormMappingType.PROCESS_START, null),
                         tuple(FormMappingTarget.INTERNAL, "custompage_StepForm", FormMappingType.TASK, "Step1"));
     }
 
@@ -181,7 +180,6 @@ public class FormMappingBarResourceProviderTest {
                 .withVersion("1.0")
                 .havingOverviewFormMapping(
                         aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL("http://www.bonitasoft.com"))
-                .havingFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.LEGACY))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))),

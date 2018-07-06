@@ -16,12 +16,8 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
-import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
@@ -29,59 +25,12 @@ import org.eclipse.emf.edapt.spi.migration.Model;
  * @author Romain Bioteau
  *
  */
+@Deprecated
 public class FileWidgetActionMigration extends CustomMigration {
 
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
-		for(Instance fileWidget : model.getAllInstances("form.FileWidget")){
-			if(fileWidget.getType()==null){
-				continue;
-			}
-			String documentName = fileWidget.get("outputDocumentName");
-			if(documentName != null){
-				Instance storageExpression = StringToExpressionConverter.createExpressionInstance(model, 
-						documentName, 
-						documentName, 
-						String.class.getName(), 
-						ExpressionConstants.DOCUMENT_REF_TYPE,
-						false);
-				String widgetId = WidgetHelper.FIELD_PREFIX+fileWidget.get("name");
-				Instance actionExpression = StringToExpressionConverter.createExpressionInstanceWithDependency(model, 
-						widgetId, 
-						widgetId, 
-						ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE, 
-						ExpressionConstants.FORM_FIELD_TYPE,
-						false,
-						fileWidget);
-				final Instance operator = model.newInstance("expression.Operator");
-				operator.set("type", ExpressionConstants.SET_DOCUMENT_OPERATOR);
-				final Instance oldOperation = fileWidget.get("action");
-				if(oldOperation != null){
-					model.delete(oldOperation);
-				}
-				final Instance actionOperation = StringToExpressionConverter.createOperation(model, storageExpression, operator, actionExpression);
-				fileWidget.set("action", actionOperation);
-			}
-		}
-		for(Instance imageWidget : model.getAllInstances("form.ImageWidget")){
-			Instance document = imageWidget.get("document");
-			boolean isDocument = imageWidget.get("isADocument");
-			if(document != null && isDocument ){
-				String documentName = document.get("name");
-				Instance inputExpression = StringToExpressionConverter.createExpressionInstance(model, 
-						documentName, 
-						documentName, 
-						String.class.getName(), 
-						ExpressionConstants.DOCUMENT_REF_TYPE,
-						false);
-				Instance oldExpressionInstance = imageWidget.get("imgPath");
-				if(oldExpressionInstance != null){
-					model.delete(oldExpressionInstance);
-				}
-				imageWidget.set("imgPath", inputExpression);
-			}
-		}
 	}
 	
 }

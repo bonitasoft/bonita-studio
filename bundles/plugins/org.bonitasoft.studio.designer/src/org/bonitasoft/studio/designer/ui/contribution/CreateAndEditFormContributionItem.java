@@ -224,11 +224,10 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         if (pageFlow != null) {
             final FormMapping formMapping = pageFlow.getFormMapping();
             switch (formMapping.getType()) {
-                case LEGACY:
-                    return Messages.legacyForm;
                 case URL:
                     return Messages.externalURL;
                 case INTERNAL:
+                default:
                     return Messages.uiDesignerLabel;
             }
         }

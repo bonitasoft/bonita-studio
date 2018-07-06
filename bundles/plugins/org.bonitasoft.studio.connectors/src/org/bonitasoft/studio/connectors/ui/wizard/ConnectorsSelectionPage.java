@@ -29,7 +29,6 @@ import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
@@ -129,12 +128,7 @@ public class ConnectorsSelectionPage extends WizardPage {
             public Object[] getChildren(Object parentElement) {
                 List<EObject> children = new ArrayList<EObject>();
                 if (parentElement instanceof ConnectableElement) {
-
                     children.addAll(((ConnectableElement) parentElement).getConnectors());
-
-                }
-                if (parentElement instanceof PageFlow) {
-                    children.addAll(((PageFlow) parentElement).getPageFlowConnectors());
                 }
                 return children.toArray();
             }

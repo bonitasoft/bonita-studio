@@ -23,8 +23,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 
-import org.bonitasoft.studio.model.form.FormFactory;
-
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
@@ -67,219 +65,12 @@ public class TaskItemProvider extends ActivityItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addByPassFormsGenerationPropertyDescriptor(object);
-			addConfirmationTemplatePropertyDescriptor(object);
-			addEntryPageFlowTypePropertyDescriptor(object);
-			addTransmitURLAsParameterPropertyDescriptor(object);
-			addEntryRedirectionURLPropertyDescriptor(object);
-			addConfirmationMessagePropertyDescriptor(object);
-			addResourceJarsPropertyDescriptor(object);
-			addResourceValidatorsPropertyDescriptor(object);
-			addResourceFilesPropertyDescriptor(object);
 			addActorPropertyDescriptor(object);
 			addContractPropertyDescriptor(object);
 			addOverrideActorsOfTheLanePropertyDescriptor(object);
 			addPriorityPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the By Pass Forms Generation feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addByPassFormsGenerationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_byPassFormsGeneration_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_byPassFormsGeneration_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__BY_PASS_FORMS_GENERATION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Confirmation Template feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addConfirmationTemplatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_confirmationTemplate_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_confirmationTemplate_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Entry Page Flow Type feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addEntryPageFlowTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_entryPageFlowType_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_entryPageFlowType_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__ENTRY_PAGE_FLOW_TYPE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Transmit URL As Parameter feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTransmitURLAsParameterPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_transmitURLAsParameter_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_transmitURLAsParameter_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__TRANSMIT_URL_AS_PARAMETER,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Entry Redirection URL feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addEntryRedirectionURLPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_entryRedirectionURL_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_entryRedirectionURL_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__ENTRY_REDIRECTION_URL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Confirmation Message feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addConfirmationMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_PageFlow_confirmationMessage_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_PageFlow_confirmationMessage_feature", "_UI_PageFlow_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_MESSAGE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Jars feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceJarsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceJars_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceJars_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_JARS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Validators feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceValidatorsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceValidators_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceValidators_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_VALIDATORS,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Resource Files feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addResourceFilesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ResourceContainer_resourceFiles_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ResourceContainer_resourceFiles_feature", "_UI_ResourceContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -382,14 +173,7 @@ public class TaskItemProvider extends ActivityItemProvider {
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_TRANSITIONS);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__FORM);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS);
 			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE);
-			childrenFeatures.add(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS);
 			childrenFeatures.add(ProcessPackage.Literals.ASSIGNABLE__FILTERS);
 			childrenFeatures.add(ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
 			childrenFeatures.add(ProcessPackage.Literals.TASK__EXPECTED_DURATION);
@@ -448,26 +232,11 @@ public class TaskItemProvider extends ActivityItemProvider {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(Task.class)) {
-			case ProcessPackage.TASK__BY_PASS_FORMS_GENERATION:
-			case ProcessPackage.TASK__CONFIRMATION_TEMPLATE:
-			case ProcessPackage.TASK__ENTRY_PAGE_FLOW_TYPE:
-			case ProcessPackage.TASK__TRANSMIT_URL_AS_PARAMETER:
-			case ProcessPackage.TASK__ENTRY_REDIRECTION_URL:
-			case ProcessPackage.TASK__CONFIRMATION_MESSAGE:
-			case ProcessPackage.TASK__RESOURCE_JARS:
-			case ProcessPackage.TASK__RESOURCE_VALIDATORS:
 			case ProcessPackage.TASK__OVERRIDE_ACTORS_OF_THE_LANE:
 			case ProcessPackage.TASK__PRIORITY:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case ProcessPackage.TASK__TRANSIENT_DATA:
-			case ProcessPackage.TASK__PAGE_FLOW_CONNECTORS:
-			case ProcessPackage.TASK__PAGE_FLOW_TRANSITIONS:
-			case ProcessPackage.TASK__FORM:
-			case ProcessPackage.TASK__ENTRY_REDIRECTION_ACTIONS:
 			case ProcessPackage.TASK__FORM_MAPPING:
-			case ProcessPackage.TASK__HTML_TEMPLATE:
-			case ProcessPackage.TASK__RESOURCE_FOLDERS:
 			case ProcessPackage.TASK__FILTERS:
 			case ProcessPackage.TASK__EXPECTED_DURATION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
@@ -489,78 +258,8 @@ public class TaskItemProvider extends ActivityItemProvider {
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createJavaObjectData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createBusinessObjectData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA,
-				 ProcessFactory.eINSTANCE.createXMLData()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS,
-				 ProcessFactory.eINSTANCE.createConnector()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS,
-				 ProcessFactory.eINSTANCE.createActorFilter()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_TRANSITIONS,
-				 ProcessFactory.eINSTANCE.createPageFlowTransition()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__FORM,
-				 FormFactory.eINSTANCE.createForm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__FORM,
-				 FormFactory.eINSTANCE.createViewForm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS,
-				 ExpressionFactory.eINSTANCE.createOperation()));
-
-		newChildDescriptors.add
-			(createChildParameter
 				(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING,
 				 ProcessFactory.eINSTANCE.createFormMapping()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createAssociatedFile()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFile()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS,
-				 ProcessFactory.eINSTANCE.createResourceFolder()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -585,27 +284,14 @@ public class TaskItemProvider extends ActivityItemProvider {
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_TRANSITIONS ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA ||
-			childFeature == ProcessPackage.Literals.DATA_AWARE__DATA ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS ||
 			childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS ||
 			childFeature == ProcessPackage.Literals.ASSIGNABLE__FILTERS ||
-			childFeature == ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__FORM ||
-			childFeature == ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS ||
-			childFeature == ProcessPackage.Literals.PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION ||
 			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION ||
-			childFeature == ProcessPackage.Literals.TASK__EXPECTED_DURATION ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__HTML_TEMPLATE ||
-			childFeature == ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS;
+			childFeature == ProcessPackage.Literals.TASK__EXPECTED_DURATION;
 
 		if (qualify) {
 			return getString

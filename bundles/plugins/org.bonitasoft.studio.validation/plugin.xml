@@ -709,21 +709,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.EndingPageflowConstraint"
-                  id="org.bonitasoft.studio.validation.ex.constraint.pageflow"
-                  lang="java"
-                  mode="Batch"
-                  name="Pageflow"
-                  severity="ERROR"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="PageFlow:http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.OutputTransitionConstraint"
                   id="org.bonitasoft.studio.validation.outputTransitions"
                   lang="java"

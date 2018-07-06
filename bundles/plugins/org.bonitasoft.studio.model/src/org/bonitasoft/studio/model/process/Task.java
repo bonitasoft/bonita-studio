@@ -37,7 +37,7 @@ import org.bonitasoft.studio.model.expression.Expression;
  * @model
  * @generated
  */
-public interface Task extends Activity, PageFlow, ResourceContainer, Assignable, ContractContainer {
+public interface Task extends Activity, PageFlow, Assignable, ContractContainer {
 	/**
 	 * Returns the value of the '<em><b>Override Actors Of The Lane</b></em>' attribute.
 	 * The default value is <code>"true"</code>.

@@ -54,16 +54,6 @@ public enum FormMappingType implements Enumerator {
 	URL(1, "URL", "URL"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * The '<em><b>LEGACY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #LEGACY_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	LEGACY(2, "LEGACY", "LEGACY"), //$NON-NLS-1$ //$NON-NLS-2$
-
-	/**
 	 * The '<em><b>NONE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -104,21 +94,6 @@ public enum FormMappingType implements Enumerator {
 	public static final int URL_VALUE = 1;
 
 	/**
-	 * The '<em><b>LEGACY</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>LEGACY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #LEGACY
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int LEGACY_VALUE = 2;
-
-	/**
 	 * The '<em><b>NONE</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -143,7 +118,6 @@ public enum FormMappingType implements Enumerator {
 		new FormMappingType[] {
 			INTERNAL,
 			URL,
-			LEGACY,
 			NONE,
 		};
 
@@ -203,7 +177,6 @@ public enum FormMappingType implements Enumerator {
 		switch (value) {
 			case INTERNAL_VALUE: return INTERNAL;
 			case URL_VALUE: return URL;
-			case LEGACY_VALUE: return LEGACY;
 			case NONE_VALUE: return NONE;
 		}
 		return null;

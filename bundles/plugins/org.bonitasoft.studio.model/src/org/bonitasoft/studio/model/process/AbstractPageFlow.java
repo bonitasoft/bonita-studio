@@ -23,70 +23,10 @@ package org.bonitasoft.studio.model.process;
  * A representation of the model object '<em><b>Abstract Page Flow</b></em>'.
  * <!-- end-user-doc -->
  *
- * <p>
- * The following features are supported:
- * </p>
- * <ul>
- *   <li>{@link org.bonitasoft.studio.model.process.AbstractPageFlow#getRegExpToHideDefaultField <em>Reg Exp To Hide Default Field</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.process.AbstractPageFlow#isUseRegExpToHideDefaultField <em>Use Reg Exp To Hide Default Field</em>}</li>
- * </ul>
  *
  * @see org.bonitasoft.studio.model.process.ProcessPackage#getAbstractPageFlow()
  * @model abstract="true"
  * @generated
  */
 public interface AbstractPageFlow extends Element {
-	/**
-	 * Returns the value of the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Reg Exp To Hide Default Field</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Reg Exp To Hide Default Field</em>' attribute.
-	 * @see #setRegExpToHideDefaultField(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAbstractPageFlow_RegExpToHideDefaultField()
-	 * @model
-	 * @generated
-	 */
-	String getRegExpToHideDefaultField();
-
-	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.AbstractPageFlow#getRegExpToHideDefaultField <em>Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Reg Exp To Hide Default Field</em>' attribute.
-	 * @see #getRegExpToHideDefaultField()
-	 * @generated
-	 */
-	void setRegExpToHideDefaultField(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Use Reg Exp To Hide Default Field</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Reg Exp To Hide Default Field</em>' attribute.
-	 * @see #setUseRegExpToHideDefaultField(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAbstractPageFlow_UseRegExpToHideDefaultField()
-	 * @model default="false"
-	 * @generated
-	 */
-	boolean isUseRegExpToHideDefaultField();
-
-	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.AbstractPageFlow#isUseRegExpToHideDefaultField <em>Use Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Reg Exp To Hide Default Field</em>' attribute.
-	 * @see #isUseRegExpToHideDefaultField()
-	 * @generated
-	 */
-	void setUseRegExpToHideDefaultField(boolean value);
-
 } // AbstractPageFlow

@@ -23,8 +23,6 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 
 import org.bonitasoft.studio.model.parameter.Parameter;
 
-import org.bonitasoft.studio.model.simulation.SimulationAbstractProcess;
-
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -52,7 +50,7 @@ import org.eclipse.emf.common.util.EList;
  * @model abstract="true"
  * @generated
  */
-public interface AbstractProcess extends Container, ProcessApplication, ResourceContainer, PageFlow, SimulationAbstractProcess, RecapFlow, ViewPageFlow {
+public interface AbstractProcess extends Container, PageFlow, RecapFlow {
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * The default value is <code>"1.0"</code>.

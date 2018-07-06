@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
@@ -239,7 +240,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public void openFilesToOpen() {
         for (final IRepositoryFileStore f : fileStoresToOpen) {
-            f.open();
+            Display.getDefault().asyncExec(f::open);
         }
     }
 

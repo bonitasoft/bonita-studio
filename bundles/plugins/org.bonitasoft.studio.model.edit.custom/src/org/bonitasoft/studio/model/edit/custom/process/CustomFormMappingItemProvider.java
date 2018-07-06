@@ -38,7 +38,6 @@ public class CustomFormMappingItemProvider extends FormMappingItemProvider {
                 return isOverview(mapping) ? Messages.bind(Messages.overviewUrlFormMapping, url)
                         : Messages.bind(Messages.urlFormMapping, url);
             case INTERNAL:
-            case LEGACY:
             default:
                 return super.getText(object);
         }

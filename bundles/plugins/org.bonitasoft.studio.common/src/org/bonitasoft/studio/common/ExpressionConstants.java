@@ -40,10 +40,6 @@ public interface ExpressionConstants {
 
     String PARAMETER_TYPE = ExpressionType.TYPE_PARAMETER.name();
 
-    String I18N_TYPE = ExpressionType.TYPE_I18N.name();
-
-    String FORM_FIELD_TYPE = ExpressionType.TYPE_INPUT.name();
-
     String ENGINE_CONSTANT_TYPE = ExpressionType.TYPE_ENGINE_CONSTANT.name();
 
     String CONNECTOR_OUTPUT_TYPE = "CONNECTOR_OUTPUT_TYPE";
@@ -55,8 +51,6 @@ public interface ExpressionConstants {
     String BUSINESS_DATA_TYPE = ExpressionType.TYPE_BUSINESS_DATA.name();
 
     String CONTRACT_INPUT_TYPE = ExpressionType.TYPE_CONTRACT_INPUT.name();
-
-    String URL_ATTRIBUTE_TYPE = "URL_ATTRIBUTE_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE";
 
@@ -75,8 +69,6 @@ public interface ExpressionConstants {
 
     String GROOVY = ExpressionInterpreter.GROOVY.name();
 
-    String SIMULATION_VARIABLE_TYPE = "SIMULATION_VARIABLE_TYPE";
-
     String DOCUMENT_TYPE = ExpressionType.TYPE_DOCUMENT.name();
 
     String PATTERN_TYPE = ExpressionType.TYPE_PATTERN.name();
@@ -91,8 +83,6 @@ public interface ExpressionConstants {
     String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
 
     String ALL_TYPES = "ALL_TYPES";
-
-    String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
 
     String MULTIINSTANCE_ITERATOR_TYPE = "MULTIINSTANCE_ITERATOR_TYPE";
 

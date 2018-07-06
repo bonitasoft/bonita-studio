@@ -246,11 +246,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     }
 
     private void setDatasourceId(final Data workingCopy, final EStructuralFeature feature) {
-        if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
-                || feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
-                || feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)) {
-            workingCopy.setDatasourceId(DatasourceConstants.PAGEFLOW_DATASOURCE);
-        } else if (workingCopy.isTransient()) {
+        if (workingCopy.isTransient()) {
             workingCopy.setDatasourceId(DatasourceConstants.IN_MEMORY_DATASOURCE);
         } else {
             workingCopy.setDatasourceId(DatasourceConstants.BOS_DATASOURCE);

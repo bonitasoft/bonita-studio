@@ -592,14 +592,11 @@ public class EngineExpressionUtil {
 
     static ExpressionType toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
-        if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
+        if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type)) {
             return ExpressionType.TYPE_INPUT;
         }
         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
             return toEngineExpressionTypeFoDocumentRef(expression);
-        }
-        if (ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)) {
-            return ExpressionType.TYPE_INPUT;
         }
         if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(type)) {
             return ExpressionType.TYPE_VARIABLE;
