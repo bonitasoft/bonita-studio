@@ -32,8 +32,6 @@ import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -59,8 +57,6 @@ public class TestDocumentRefactoring {
     private final String mainProcessName = "DocumentRefactoring";
 
     private final String newDocumentName = "myDocumentRefactored";
-
-    private final String parameterName = "myDocument";
 
     private final String empty = "     ";
 
@@ -131,16 +127,6 @@ public class TestDocumentRefactoring {
         assertEquals(document.getName(), expr.getContent());
         Document refDocument = ModelHelper.getDocumentReferencedInExpression(expr);
         assertEquals(document.getDocumentType(), refDocument.getDocumentType());
-        final Form form = task.getForm().get(0);
-        final FileWidget widget = (FileWidget) form.getWidgets().get(0);
-        assertEquals(widget.getInputExpression().getName(), document.getName());
-        final Operation outputOp = widget.getAction();
-        assertEquals(document.getName(), outputOp.getLeftOperand().getContent());
-        refDocument = ModelHelper.getDocumentReferencedInExpression(outputOp.getLeftOperand());
-        assertEquals(document.getDocumentType(), refDocument.getDocumentType());
-        assertEquals(document.getName(), outputOp.getRightOperand().getContent());
-        refDocument = ModelHelper.getDocumentReferencedInExpression(outputOp.getRightOperand());
-        assertEquals(document.getDocumentType(), refDocument.getDocumentType());
     }
 
     private void testRemoveDocumentRefactoring(final Document document, final Pool pool)
@@ -156,13 +142,6 @@ public class TestDocumentRefactoring {
         final Operation op = step1.getOperations().get(0);
         final Expression expr = op.getRightOperand();
         assertEquals(expr.getContent(), empty);
-        final Form form = step1.getForm().get(0);
-        final FileWidget widget = (FileWidget) form.getWidgets().get(0);
-        assertTrue(widget.getInputExpression().getName().isEmpty());
-        final Operation outputOp = widget.getAction();
-        assertTrue(outputOp.getLeftOperand().getContent().isEmpty());
-        assertTrue(outputOp.getRightOperand().getContent().equals(empty));
-
     }
 
     public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {

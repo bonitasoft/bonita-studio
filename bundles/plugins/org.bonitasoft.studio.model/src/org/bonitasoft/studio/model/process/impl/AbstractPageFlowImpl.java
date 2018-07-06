@@ -48,8 +48,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.model.process.impl.AbstractPageFlowImpl#getDocumentation <em>Documentation</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.AbstractPageFlowImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.AbstractPageFlowImpl#getTextAnnotationAttachment <em>Text Annotation Attachment</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.process.impl.AbstractPageFlowImpl#getRegExpToHideDefaultField <em>Reg Exp To Hide Default Field</em>}</li>
- *   <li>{@link org.bonitasoft.studio.model.process.impl.AbstractPageFlowImpl#isUseRegExpToHideDefaultField <em>Use Reg Exp To Hide Default Field</em>}</li>
  * </ul>
  *
  * @generated
@@ -104,46 +102,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 	 * @ordered
 	 */
 	protected EList<TextAnnotationAttachment> textAnnotationAttachment;
-
-	/**
-	 * The default value of the '{@link #getRegExpToHideDefaultField() <em>Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getRegExpToHideDefaultField()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getRegExpToHideDefaultField() <em>Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getRegExpToHideDefaultField()
-	 * @generated
-	 * @ordered
-	 */
-	protected String regExpToHideDefaultField = REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isUseRegExpToHideDefaultField() <em>Use Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isUseRegExpToHideDefaultField()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean USE_REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isUseRegExpToHideDefaultField() <em>Use Reg Exp To Hide Default Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isUseRegExpToHideDefaultField()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean useRegExpToHideDefaultField = USE_REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -223,48 +181,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getRegExpToHideDefaultField() {
-		return regExpToHideDefaultField;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRegExpToHideDefaultField(String newRegExpToHideDefaultField) {
-		String oldRegExpToHideDefaultField = regExpToHideDefaultField;
-		regExpToHideDefaultField = newRegExpToHideDefaultField;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD, oldRegExpToHideDefaultField, regExpToHideDefaultField));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isUseRegExpToHideDefaultField() {
-		return useRegExpToHideDefaultField;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setUseRegExpToHideDefaultField(boolean newUseRegExpToHideDefaultField) {
-		boolean oldUseRegExpToHideDefaultField = useRegExpToHideDefaultField;
-		useRegExpToHideDefaultField = newUseRegExpToHideDefaultField;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD, oldUseRegExpToHideDefaultField, useRegExpToHideDefaultField));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -303,10 +219,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 				return getName();
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT:
 				return getTextAnnotationAttachment();
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				return getRegExpToHideDefaultField();
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				return isUseRegExpToHideDefaultField();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -330,12 +242,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 				getTextAnnotationAttachment().clear();
 				getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
 				return;
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				setRegExpToHideDefaultField((String)newValue);
-				return;
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				setUseRegExpToHideDefaultField((Boolean)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -357,12 +263,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT:
 				getTextAnnotationAttachment().clear();
 				return;
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				setRegExpToHideDefaultField(REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT);
-				return;
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				setUseRegExpToHideDefaultField(USE_REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -381,10 +281,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case ProcessPackage.ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT:
 				return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				return REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT == null ? regExpToHideDefaultField != null : !REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT.equals(regExpToHideDefaultField);
-			case ProcessPackage.ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD:
-				return useRegExpToHideDefaultField != USE_REG_EXP_TO_HIDE_DEFAULT_FIELD_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -403,10 +299,6 @@ public abstract class AbstractPageFlowImpl extends EObjectImpl implements Abstra
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$
 		result.append(name);
-		result.append(", regExpToHideDefaultField: "); //$NON-NLS-1$
-		result.append(regExpToHideDefaultField);
-		result.append(", useRegExpToHideDefaultField: "); //$NON-NLS-1$
-		result.append(useRegExpToHideDefaultField);
 		result.append(')');
 		return result.toString();
 	}

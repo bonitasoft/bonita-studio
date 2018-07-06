@@ -9,7 +9,6 @@ Export-Package: org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.expression.editor.autocompletion,
  org.bonitasoft.studio.expression.editor.constant,
  org.bonitasoft.studio.expression.editor.filter,
- org.bonitasoft.studio.expression.editor.formfield,
  org.bonitasoft.studio.expression.editor.i18n;
   x-friends:="org.bonitasoft.studio.properties.test,
    org.bonitasoft.studio.test.swtbot.util,

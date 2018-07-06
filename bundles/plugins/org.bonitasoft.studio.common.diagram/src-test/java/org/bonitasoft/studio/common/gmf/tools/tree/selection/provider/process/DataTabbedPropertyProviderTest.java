@@ -52,19 +52,6 @@ public class DataTabbedPropertyProviderTest {
         assertThat(provider.appliesTo(aData().havingDefaultValue(anExpression()).in(aTask()).build().getDefaultValue(), null)).isTrue();
     }
 
-    @Test
-    public void should_not_appliesTo_to_pageflow_data() throws Exception {
-        final DataTabbedPropertyProvider provider = new DataTabbedPropertyProvider();
-
-        assertThat(provider.appliesTo(aData().inPageflow(aTask()).build(), null)).isFalse();
-    }
-
-    @Test
-    public void should_not_appliesTo_to_overview_pageflow_data() throws Exception {
-        final DataTabbedPropertyProvider provider = new DataTabbedPropertyProvider();
-
-        assertThat(provider.appliesTo(aData().inOverviewPageflow(aPool()).build(), null)).isFalse();
-    }
 
     @Test
     public void should_not_appliesTo_to_element_not_contained_in_a_data() throws Exception {

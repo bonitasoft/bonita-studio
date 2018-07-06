@@ -444,6 +444,7 @@ public class DiagramRepositoryStore extends
             new RemoveDanglingReferences(diagram).execute();
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
+            diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
             updateConfigurationId(diagramResource, diagram);
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));
@@ -455,6 +456,10 @@ public class DiagramRepositoryStore extends
                 diagramResource.delete(Collections.emptyMap());
             }
         }
+    }
+
+    private boolean isFormDiagram(EObject eObject) {
+        return eObject instanceof Diagram && "Form".equals(((Diagram) eObject).getType());
     }
 
     protected void updateConfigurationId(final Resource diagramResource, final MainProcess diagram) {

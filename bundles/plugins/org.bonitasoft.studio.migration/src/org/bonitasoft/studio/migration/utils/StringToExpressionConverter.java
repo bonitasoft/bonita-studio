@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Model;
-import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Document;
 
 /**
@@ -47,8 +46,6 @@ public class StringToExpressionConverter {
     private final Map<String, Instance> widget = new HashMap<String, Instance>();
 
     private final Map<String, Instance> documents = new HashMap<String, Instance>();
-
-    private boolean useSimulationDataScope = false;
 
     private String dataNameToIgnore;
 
@@ -262,13 +259,8 @@ public class StringToExpressionConverter {
         } else {
             final Instance exp = createExpressionInstance(model, content,
                     content, returnType, expressionType, fixedReturnType);
-            if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)
-                    || ExpressionConstants.SIMULATION_VARIABLE_TYPE
-                    .equals(expressionType)) {
+            if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
                 resolveDataDependencies(exp);
-            } else if (ExpressionConstants.FORM_FIELD_TYPE
-                    .equals(expressionType)) {
-                resolveWidgetDependencies(exp);
             } else if (ExpressionConstants.DOCUMENT_REF_TYPE
                     .equals(expressionType)) {
                 resolveDocumentDependencies(exp);
@@ -487,13 +479,8 @@ public class StringToExpressionConverter {
         if (isAGroovyString(stringToParse)) {
             final String groovyScript = stringToParse.substring(2,
                     stringToParse.length() - 1);
-            if (data.containsKey(groovyScript) && useSimulationDataScope) {
-                return ExpressionConstants.SIMULATION_VARIABLE_TYPE;
-            } else if (data.containsKey(groovyScript)
-                    && !useSimulationDataScope) {
+            if (data.containsKey(groovyScript)) {
                 return ExpressionConstants.VARIABLE_TYPE;
-            } else if (widget.containsKey(groovyScript)) {
-                return ExpressionConstants.FORM_FIELD_TYPE;
             } else if (documents.containsKey(groovyScript)) {
                 return ExpressionConstants.DOCUMENT_REF_TYPE;
             }
@@ -580,20 +567,6 @@ public class StringToExpressionConverter {
                 : IStatus.OK;
     }
 
-    public void setUseSimulationDataScope(final boolean useSimulationDataScope) {
-        this.useSimulationDataScope = useSimulationDataScope;
-        if (useSimulationDataScope) {
-            data.clear();
-            for (final Instance data : model
-                    .getAllInstances("simulation.SimulationData")) {
-                this.data.put((String) data.get("name"), data);
-            }
-        } else {
-            for (final Instance data : model.getAllInstances("process.Data")) {
-                this.data.put((String) data.get("name"), data);
-            }
-        }
-    }
 
     public void setDataToIgnore(final String dataName) {
         dataNameToIgnore = dataName;

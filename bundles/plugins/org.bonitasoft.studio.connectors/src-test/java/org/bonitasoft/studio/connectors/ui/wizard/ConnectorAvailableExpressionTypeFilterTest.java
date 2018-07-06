@@ -24,8 +24,6 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.Activity;
@@ -111,18 +109,6 @@ public class ConnectorAvailableExpressionTypeFilterTest {
         assertThat(
                 connectorAvailableExpressionTypeFilter.select(null, null, ExpressionHelper.createVariableExpression(data)))
                         .isTrue();
-    }
-
-    @Test
-    public void should_select_returns_false_for_form_filed_expression_in_connector_input() throws Exception {
-        final Connector onFinishConnector = ProcessFactory.eINSTANCE.createConnector();
-        onFinishConnector.setEvent(ConnectorEvent.ON_ENTER.name());
-        when(expressionViewer.getInput()).thenReturn(null);
-
-        final TextFormField field = FormFactory.eINSTANCE.createTextFormField();
-        field.setName("myData");
-        assertThat(connectorAvailableExpressionTypeFilter.select(expressionViewer, null,
-                ExpressionHelper.createWidgetExpression(field))).isFalse();
     }
 
     @Test

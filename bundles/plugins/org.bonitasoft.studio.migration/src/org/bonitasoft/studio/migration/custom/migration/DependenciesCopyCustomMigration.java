@@ -41,10 +41,7 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
             final List<Instance> referencesToBeDeleted = new ArrayList<>();
             for (final Instance refElement : referencedElements) {
                 Instance newCleanedDependency = null;
-                if (refElement.instanceOf("form.Widget")) {
-                    newCleanedDependency = newCleanedWidgetDependency(refElement, model);
-                    referencesToBeDeleted.add(refElement);
-                } else if (refElement.instanceOf("process.Data")) {
+                if (refElement.instanceOf("process.Data")) {
                     newCleanedDependency = newCleaneDataDependency(refElement);
                     referencesToBeDeleted.add(refElement);
                 } else if (refElement.instanceOf("process.Document")) {
@@ -100,20 +97,6 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
     protected Instance newCleaneDataDependency(final Instance refElement) {
         final Instance newInstance = refElement.copy();
         newInstance.set("defaultValue", null);
-        return newInstance;
-    }
-
-    protected Instance newCleanedWidgetDependency(final Instance refElement, final Model model) {
-        final Instance newInstance = model.newInstance(refElement.getEClass());
-        newInstance.set("name", refElement.get("name"));
-        Object modifier = refElement.get("returnTypeModifier");
-        if (modifier == null) {
-            modifier = String.class.getName();
-        }
-        newInstance.set("returnTypeModifier", modifier);
-        if (newInstance.instanceOf("form.Duplicable")) {
-            newInstance.set("duplicate", refElement.get("duplicate"));
-        }
         return newInstance;
     }
 

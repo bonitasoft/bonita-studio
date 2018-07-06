@@ -22,7 +22,6 @@ import org.bonitasoft.studio.model.form.*;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ResourceContainer;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -282,10 +281,6 @@ public class FormAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseConnectableElement(ConnectableElement object) {
 				return createConnectableElementAdapter();
-			}
-			@Override
-			public Adapter caseResourceContainer(ResourceContainer object) {
-				return createResourceContainerAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -990,20 +985,6 @@ public class FormAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConnectableElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.ResourceContainer <em>Resource Container</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer
-	 * @generated
-	 */
-	public Adapter createResourceContainerAdapter() {
 		return null;
 	}
 

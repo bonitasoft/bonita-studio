@@ -24,8 +24,8 @@ public class BotFormMappingPropertySection extends BotBase {
         super(bot);
     }
 
-    public BotFormMappingPropertySection selectLegacy() {
-        bot.radio(Messages.legacyForm).click();
+    public BotFormMappingPropertySection selectNone() {
+        bot.radio(Messages.noForm).click();
         return this;
     }
 

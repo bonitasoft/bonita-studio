@@ -79,9 +79,9 @@ public class TestProcessParameters {
             p3.setTypeClassname(Integer.class.getName());
             pool.getParameters().add(p3);
 
-            pool.getFormMapping().setType(FormMappingType.LEGACY);
+            pool.getFormMapping().setType(FormMappingType.NONE);
             for (final Task t : ModelHelper.getAllElementOfTypeIn(pool, Task.class)) {
-                t.getFormMapping().setType(FormMappingType.LEGACY);
+                t.getFormMapping().setType(FormMappingType.NONE);
             }
 
             new ConfigurationSynchronizer(pool, pool.getConfigurations().get(0)).synchronize();

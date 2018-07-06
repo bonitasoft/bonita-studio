@@ -17,7 +17,6 @@ package org.bonitasoft.studio.validation.constraints;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
-import static org.bonitasoft.studio.model.form.builders.FileWidgetBuilder.aFileWidget;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -97,17 +96,4 @@ public class ExpressionDependenciesConstraintTest {
         assertThat(status).isOK();
     }
 
-    @Test
-    public void should_return_an_valid_status_for_variable_expression_without_dependencies_but_not_active() throws Exception {
-        //Given
-        final Expression variableExpression = aFileWidget().havingDisplayLabel(aVariableExpression().withContent("myVar")).hideDisplayLabel().build()
-                .getDisplayLabel();
-        when(ctx.getTarget()).thenReturn(variableExpression);
-
-        //When
-        final IStatus status = expressionDependenciesConstraint.performBatchValidation(ctx);
-
-        //Then
-        assertThat(status).isOK();
-    }
 }

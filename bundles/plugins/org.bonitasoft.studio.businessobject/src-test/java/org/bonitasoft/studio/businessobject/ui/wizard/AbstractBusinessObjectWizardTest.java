@@ -21,7 +21,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.process.Data;
@@ -52,10 +51,6 @@ public class AbstractBusinessObjectWizardTest {
 
     private TextFormField textField;
 
-    private Form myForm;
-
-    private Data pageFlowTransientData;
-
     private Task task2;
 
     private Data t2Data;
@@ -75,16 +70,6 @@ public class AbstractBusinessObjectWizardTest {
         t1Data = processFactory.createData();
         t1Data.setName("t1Data");
         task1.getData().add(t1Data);
-
-        myForm = formFactory.createForm();
-        textField = formFactory.createTextFormField();
-        myForm.getWidgets().add(textField);
-        task1.getForm().add(myForm);
-
-        pageFlowTransientData = processFactory.createData();
-        pageFlowTransientData.setTransient(true);
-        pageFlowTransientData.setName("pageFlowTransientData");
-        task1.getTransientData().add(pageFlowTransientData);
 
         task2 = processFactory.createTask();
         t2Data = processFactory.createData();
@@ -118,27 +103,25 @@ public class AbstractBusinessObjectWizardTest {
 
     @Test
     public void shouldGetAllAccessibleData_ForProcessReturnAllDataAboveProcessAndProcessData() throws Exception {
-        assertThat(abstractWizardUnderTest.getAllAccessibleData(process)).isNotNull().containsOnly(processData, t1Data, t2Data, pageFlowTransientData);
+        assertThat(abstractWizardUnderTest.getAllAccessibleData(process)).isNotNull().containsOnly(processData, t1Data,
+                t2Data);
     }
 
     @Test
     public void shouldGetAllAccessibleData_ForTask1ReturnProcessDataT1DataAndPageFlowData() throws Exception {
-        assertThat(abstractWizardUnderTest.getAllAccessibleData(task1)).isNotNull().containsOnly(processData, t1Data, pageFlowTransientData);
+        assertThat(abstractWizardUnderTest.getAllAccessibleData(task1)).isNotNull().containsOnly(processData, t1Data);
     }
 
-    @Test
-    public void shouldGetAllAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
-        assertThat(abstractWizardUnderTest.getAllAccessibleData(textField)).isNotNull().containsOnly(processData, t1Data, pageFlowTransientData);
-    }
 
     @Test
     public void shouldComputeExistingNamesOnProcess_ReturnAllProcessData() throws Exception {
-        assertThat(abstractWizardUnderTest.computeExistingNames(process)).isNotNull().containsOnly("processData", "t1Data", "t2Data", "pageFlowTransientData");
+        assertThat(abstractWizardUnderTest.computeExistingNames(process)).isNotNull().containsOnly("processData", "t1Data",
+                "t2Data");
     }
 
     @Test
     public void shouldComputeExistingNamesOnTask1_ReturnAllProcessDataExceptT2Data() throws Exception {
-        assertThat(abstractWizardUnderTest.computeExistingNames(task1)).isNotNull().containsOnly("processData", "t1Data", "pageFlowTransientData");
+        assertThat(abstractWizardUnderTest.computeExistingNames(task1)).isNotNull().containsOnly("processData", "t1Data");
     }
 
 }

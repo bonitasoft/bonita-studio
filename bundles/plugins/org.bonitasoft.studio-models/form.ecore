@@ -41,7 +41,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="below" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Form" eSuperTypes="process.ecore#//ConnectableElement #//Validable process.ecore#//ResourceContainer">
+  <eClassifiers xsi:type="ecore:EClass" name="Form" eSuperTypes="process.ecore#//ConnectableElement #//Validable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nColumn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

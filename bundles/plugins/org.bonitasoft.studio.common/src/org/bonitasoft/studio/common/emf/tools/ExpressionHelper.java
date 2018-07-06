@@ -36,7 +36,6 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BooleanType;
@@ -113,27 +112,6 @@ public class ExpressionHelper {
         return exp;
     }
 
-    public static Operation createDocumentOperation(final String targetDocName, final Widget widget) {
-        final Operation action = ExpressionFactory.eINSTANCE.createOperation();
-        final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-        action.setOperator(assignment);
-        final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
-        storageExpression.setContent(targetDocName);
-        storageExpression.setName(targetDocName);
-        storageExpression.setType(ExpressionConstants.CONSTANT_TYPE);
-        storageExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
-        action.setLeftOperand(storageExpression);
-
-        final Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
-        actionExpression.setContent(WidgetHelper.FIELD_PREFIX + widget.getName());
-        actionExpression.setName(WidgetHelper.FIELD_PREFIX + widget.getName());
-        actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE);
-        actionExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
-        actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget));
-        action.setRightOperand(actionExpression);
-        return action;
-    }
 
     public static Expression createConstantExpression(final String content, final String returnClassName) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -276,12 +254,8 @@ public class ExpressionHelper {
             return createParameterExpression((Parameter) element);
         } else if (element instanceof org.bonitasoft.studio.model.expression.Expression) {
             return (Expression) EcoreUtil.copy(element);
-        } else if (element instanceof Widget) {
-            return createWidgetExpression((Widget) element);
         } else if (element instanceof Document) {
             return createDocumentExpressionWithDependency((Document) element);
-        } else if (element instanceof GroupIterator) {
-            return createGroupIteratorExpression((GroupIterator) element);
         } else if (element instanceof ContractInput) {
             return createContractInputExpression((ContractInput) element);
         }
@@ -309,21 +283,6 @@ public class ExpressionHelper {
         return returnType;
     }
 
-    public static Expression createGroupIteratorExpression(final GroupIterator iterator) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        final String iteratorName = iterator.getName();
-        exp.setName(iteratorName);
-        exp.setContent(iteratorName);
-        String className = Object.class.getName();
-        if (iterator.getClassName() != null) {
-            className = iterator.getClassName();
-        }
-        exp.setReturnType(className);
-        exp.setReturnTypeFixed(true);
-        exp.setType(ExpressionConstants.GROUP_ITERATOR_TYPE);
-        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(iterator));
-        return exp;
-    }
 
     public static Expression createDocumentReferenceExpression(final Document d) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -336,18 +295,6 @@ public class ExpressionHelper {
             exp.setReturnType(String.class.getName());
         }
         exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d));
-        return exp;
-    }
-
-    public static Expression createWidgetExpression(final Widget w) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setType(ExpressionConstants.FORM_FIELD_TYPE);
-        exp.setContent(WidgetHelper.FIELD_PREFIX + w.getName());
-        exp.setName(WidgetHelper.FIELD_PREFIX + w.getName());
-        exp.setReturnType(WidgetHelper.getAssociatedReturnType(w));
-        final Widget copy = (Widget) ExpressionHelper.createDependencyFromEObject(w);
-        copy.getDependOn().clear();
-        exp.getReferencedElements().add(copy);
         return exp;
     }
 

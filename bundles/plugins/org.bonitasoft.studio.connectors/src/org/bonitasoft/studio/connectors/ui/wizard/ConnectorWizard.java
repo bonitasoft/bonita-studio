@@ -145,8 +145,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
             new String[] { ExpressionConstants.CONSTANT_TYPE,
                     ExpressionConstants.VARIABLE_TYPE,
                     ExpressionConstants.SCRIPT_TYPE,
-                    ExpressionConstants.PARAMETER_TYPE,
-                    ExpressionConstants.FORM_FIELD_TYPE });
+                    ExpressionConstants.PARAMETER_TYPE });
 
     protected List<ConnectorDefinition> definitions;
 

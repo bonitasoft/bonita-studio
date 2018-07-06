@@ -42,8 +42,6 @@ public final class InfoMessageConverter extends Converter {
                     return getUIDesignerMessage(context, formMappingFeature);
                 case URL:
                     return getURLMessage(context, formMappingFeature);
-                case LEGACY:
-                    return getLegacyMessage(context, formMappingFeature);
                 case NONE:
                     return getNoFormMessage(context, formMappingFeature);
                 default:

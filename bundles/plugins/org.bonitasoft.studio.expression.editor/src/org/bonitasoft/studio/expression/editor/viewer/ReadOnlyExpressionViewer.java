@@ -14,32 +14,23 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
@@ -83,55 +74,6 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     public void manageNatureProviderAndAutocompletionProposal(final Object input) {
         super.manageNatureProviderAndAutocompletionProposal(input);
         setProposalsFiltering(false);
-    }
-
-    /**
-     * Override to remove Form transient data that cannot be set anywhere
-     */
-    @Override
-    protected Set<Expression> getFilteredExpressions() {
-        final Set<Expression> result = super.getFilteredExpressions();
-        filterOutTransientData(result);
-        return result;
-    }
-
-    protected void filterOutTransientData(final Set<Expression> result) {
-        final Set<Expression> toRemove = new HashSet<Expression>();
-
-        final boolean isATransientDataInitialization = isTransientDataInitialization(expressionNatureProvider);
-        if (!isATransientDataInitialization) {
-            for (final Expression e : result) {
-                if (ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
-                    if (!e.getReferencedElements().isEmpty() && e.getReferencedElements().get(0) instanceof Data) {
-                        final Data d = (Data) e.getReferencedElements().get(0);
-                        final String dsId = d.getDatasourceId();
-                        if (dsId != null) {
-                            if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(dsId)) {
-                                toRemove.add(e);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        result.removeAll(toRemove);
-    }
-
-    private boolean isTransientDataInitialization(final IExpressionNatureProvider expressionNatureProvider) {
-        if (expressionNatureProvider instanceof DataExpressionNatureProvider) {
-            final EStructuralFeature dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
-            if (dataFeature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
-                    || dataFeature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
-                    || dataFeature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)) {
-                return true;
-            }
-        }
-        if (context != null) {
-            if (context instanceof Operation && context.eContainer() instanceof Connector) {
-                return context.eContainer().eContainmentFeature().equals(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS);
-            }
-        }
-        return false;
     }
 
     @Override

@@ -71,25 +71,4 @@ public class InfoMessageConverterTest {
         assertThat(converter.convert(pool.getOverviewFormMapping())).isEqualTo(Messages.overviewURLInfo);
     }
 
-    @Test
-    public void should_infoConverter_return_processLegacyMessage() {
-        final Pool pool = aPool().havingFormMapping(aFormMapping()).build();
-        final IConverter converter = new InfoMessageConverter(FormMappingType.LEGACY);
-        assertThat(converter.convert(pool.getFormMapping())).isEqualTo(org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
-    }
-
-    @Test
-    public void should_infoConverter_return_stepLegacyMessage() {
-        final Task task = aTask().havingFormMapping(aFormMapping()).build();
-        final IConverter converter = new InfoMessageConverter(FormMappingType.LEGACY);
-        assertThat(converter.convert(task.getFormMapping())).isEqualTo(org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
-    }
-
-    @Test
-    public void should_infoConverter_return_overviewLegacyInfo() {
-        final Pool pool = aPool().havingOverviewFormMapping(aFormMapping()).build();
-        final IConverter converter = new InfoMessageConverter(FormMappingType.LEGACY);
-        assertThat(converter.convert(pool.getOverviewFormMapping())).isEqualTo(org.bonitasoft.studio.common.Messages.deprecatedLegacyMode);
-    }
-
 }

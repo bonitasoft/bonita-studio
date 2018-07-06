@@ -42,11 +42,6 @@ public abstract class FlowElementBuilder<T extends FlowElement, B extends FlowEl
         return getThis();
     }
 
-    public B withEstimatedTime(final double estimatedTime) {
-        getBuiltInstance().setEstimatedTime(estimatedTime);
-        return getThis();
-    }
-
     public B havingOutgoingConnections(final Connection... connections) {
         if (connections != null) {
             for (final Connection connection : connections) {

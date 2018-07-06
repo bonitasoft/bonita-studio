@@ -73,15 +73,6 @@ public interface ProcessFactory extends EFactory {
 	ANDGateway createANDGateway();
 
 	/**
-	 * Returns a new object of class '<em>Associated File</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Associated File</em>'.
-	 * @generated
-	 */
-	AssociatedFile createAssociatedFile();
-
-	/**
 	 * Returns a new object of class '<em>Association</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -613,15 +604,6 @@ public interface ProcessFactory extends EFactory {
 	Pool createPool();
 
 	/**
-	 * Returns a new object of class '<em>Application</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Application</em>'.
-	 * @generated
-	 */
-	ProcessApplication createProcessApplication();
-
-	/**
 	 * Returns a new object of class '<em>Page Flow Transition</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -638,33 +620,6 @@ public interface ProcessFactory extends EFactory {
 	 * @generated
 	 */
 	ReceiveTask createReceiveTask();
-
-	/**
-	 * Returns a new object of class '<em>Resource Container</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Resource Container</em>'.
-	 * @generated
-	 */
-	ResourceContainer createResourceContainer();
-
-	/**
-	 * Returns a new object of class '<em>Resource File</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Resource File</em>'.
-	 * @generated
-	 */
-	ResourceFile createResourceFile();
-
-	/**
-	 * Returns a new object of class '<em>Resource Folder</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Resource Folder</em>'.
-	 * @generated
-	 */
-	ResourceFolder createResourceFolder();
 
 	/**
 	 * Returns a new object of class '<em>Sequence Flow</em>'.

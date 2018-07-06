@@ -82,7 +82,6 @@ import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
-import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
@@ -92,7 +91,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -283,42 +281,6 @@ public class ModelHelper {
         return result;
     }
 
-    public static List<Data> getAccessibleDataInForms(final EObject element, final EStructuralFeature feature) {
-        if (element instanceof Pool && ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature)) { // Only add transient form data
-            EReference trFeature;
-            final List<Data> accessibleData = new ArrayList<Data>();
-            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
-                trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
-                trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            } else {
-                trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
-            }
-            if (trFeature != null) {
-                accessibleData.addAll((List<Data>) element.eGet(trFeature));
-            }
-            return accessibleData;
-        } else {
-            return getAccessibleDataInFormsWithNoRestriction(element, feature);
-        }
-    }
-
-    public static List<Data> getAccessibleDataInFormsWithNoRestriction(final EObject pageflow,
-            final EStructuralFeature feature) {
-        final List<Data> accessibleData = getAccessibleData(pageflow, null);
-        if (feature != null) {
-            EReference trFeature;
-            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
-                trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
-                trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            } else {
-                trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
-            }
-            accessibleData.addAll((List<Data>) pageflow.eGet(trFeature));
-        }
-        return accessibleData;
-    }
 
     public static List<Data> getAccessibleData(final EObject element) {
         return getAccessibleData(element, null);
@@ -340,49 +302,6 @@ public class ModelHelper {
             element = element.eContainer();
         }
         return data;
-    }
-
-    public static boolean containsResources(final Element element) {
-        boolean containsResources = false;
-        if (element instanceof AbstractProcess) {
-            final AbstractProcess process = (AbstractProcess) element;
-            containsResources = process.getResourceFolders().size() > 0 || process.getResourceFiles().size() > 0
-                    || process.getLogInPage() != null
-                    || process.getProcessTemplate() != null || process.getConfirmationTemplate() != null
-                    || process.getErrorTemplate() != null
-                    || process.getWelcomePage() != null && !process.getWelcomePageInternal();
-            if (containsResources) {
-                return true;
-            }
-        }
-        if (element instanceof PageFlow) {
-            containsResources = containsResources || ((PageFlow) element).getConfirmationTemplate() != null;
-            if (containsResources) {
-                return true;
-            }
-            for (final Element el : ((PageFlow) element).getForm()) {
-                containsResources = containsResources || containsResources(el);
-                if (containsResources) {
-                    return true;
-                }
-            }
-        }
-        if (element instanceof Form) {
-            containsResources = containsResources || ((Form) element).getHtmlTemplate() != null;
-            if (containsResources) {
-                return true;
-            }
-        }
-        if (element instanceof Container && !(element instanceof AbstractProcess)) {
-            for (final Element el : ((Container) element).getElements()) {
-                containsResources = containsResources || containsResources(el);
-                if (containsResources) {
-                    return true;
-                }
-            }
-        }
-
-        return containsResources;
     }
 
     /**
@@ -587,12 +506,6 @@ public class ModelHelper {
 
         if (element instanceof ConnectableElement) {
             for (final Connector c : ((ConnectableElement) element).getConnectors()) {
-                connectors.add(c);
-            }
-        }
-
-        if (element instanceof PageFlow) {
-            for (final Connector c : ((PageFlow) element).getPageFlowConnectors()) {
                 connectors.add(c);
             }
         }
@@ -1232,17 +1145,6 @@ public class ModelHelper {
         return (AbstractPageFlow) ModelHelper.getForm(w).eContainer();
     }
 
-    public static List<Widget> getAllWidgetInsidePageFlow(final PageFlow pageFlow) {
-        return getAllWidgetInsidePageFlow(pageFlow, ProcessPackage.Literals.PAGE_FLOW__FORM);
-    }
-
-    /**
-     * @param pageFlow
-     * @return
-     */
-    public static List<Widget> getAllWidgetInsideConsultationPageFlow(final ViewPageFlow pageFlow) {
-        return getAllWidgetInsidePageFlow(pageFlow, ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM);
-    }
 
     /**
      * remove all element that are referenced outside the object and remove
@@ -1483,11 +1385,6 @@ public class ModelHelper {
     public static List<Data> getAccessibleData(final EObject element, final boolean includeTransientData) {
         final List<Data> result = new ArrayList<Data>();
         if (includeTransientData) {
-            final Form parentForm = getParentForm(element);
-            if (parentForm != null) {
-                result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(),
-                        parentForm.eContainingFeature()));
-            }
             for (final Data d : ModelHelper.getAccessibleData(element)) {
                 if (!result.contains(d)) {
                     result.add(d);
@@ -1532,16 +1429,6 @@ public class ModelHelper {
         return processes;
     }
 
-    /**
-     * Check if the form have a custome page template set
-     *
-     * @param element
-     * @return
-     */
-    public static boolean formIsCustomized(final Form form) {
-        return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null
-                && !form.getHtmlTemplate().getPath().isEmpty();
-    }
 
     public static Document getDocumentReferencedInExpression(final Expression expr) {
         final List<EObject> refs = expr.getReferencedElements();

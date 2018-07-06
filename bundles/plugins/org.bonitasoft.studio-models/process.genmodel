@@ -432,10 +432,6 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/KEYS"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/PREDICATES"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ConsultationPageFlowType">
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ContractInputType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/TEXT"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/INTEGER"/>
@@ -455,15 +451,9 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/CONTRACT"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//EntryPageFlowType">
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/PAGEFLOW"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/SKIP"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//EntryPageFlowType/REDIRECT"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//FormMappingType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/INTERNAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/URL"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/LEGACY"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//FormMappingType/NONE"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//GatewayType">
@@ -507,10 +497,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//AbstractCatchMessageEvent/correlation"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//AbstractCatchMessageEvent/messageContent"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//AbstractPageFlow">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractPageFlow/regExpToHideDefaultField"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractPageFlow/useRegExpToHideDefaultField"/>
-    </genClasses>
+    <genClasses ecoreClass="process.ecore#//AbstractPageFlow"/>
     <genClasses image="false" ecoreClass="process.ecore#//AbstractProcess">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractProcess/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractProcess/author"/>
@@ -537,10 +524,6 @@
     <genClasses image="false" ecoreClass="process.ecore#//Assignable">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Assignable/actor"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Assignable/filters"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//AssociatedFile">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AssociatedFile/path"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AssociatedFile/warPath"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Association">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Association/isDirected"/>
@@ -744,17 +727,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//OutputMapping/processTarget"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//PageFlow">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/byPassFormsGeneration"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/confirmationTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/transientData"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/pageFlowConnectors"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/entryPageFlowType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/transmitURLAsParameter"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/pageFlowTransitions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/form"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionURL"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/confirmationMessage"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionActions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/formMapping"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Pool">
@@ -762,45 +734,15 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/searchIndexes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Pool/displayName"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//ProcessApplication">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/errorTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/processTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/pageTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/consultationTemplate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/logInPage"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/welcomePage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ProcessApplication/welcomePageInternal"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ProcessApplication/autoLogin"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ProcessApplication/autoLoginId"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/hostPage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ProcessApplication/basedOnLookAndFeel"/>
-    </genClasses>
     <genClasses ecoreClass="process.ecore#//PageFlowTransition">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/from"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/to"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/condition"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//RecapFlow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapPageFlowTransitions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapTransientData"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapFlowConnectors"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//RecapFlow/recapPageFlowType"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapForms"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/overviewFormMapping"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ReceiveTask"/>
-    <genClasses ecoreClass="process.ecore#//ResourceContainer">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/htmlTemplate"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ResourceContainer/resourceJars"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ResourceContainer/resourceValidators"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFiles"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceContainer/resourceFolders"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//ResourceFile"/>
-    <genClasses ecoreClass="process.ecore#//ResourceFolder">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceFolder/resourceFiles"/>
-    </genClasses>
     <genClasses ecoreClass="process.ecore#//SequenceFlow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/isDefault"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/conditionType"/>
@@ -862,14 +804,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ThrowMessageEvent/outgoingMessages"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//TimerEvent"/>
-    <genClasses image="false" ecoreClass="process.ecore#//ViewPageFlow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowTransitions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewTransientData"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowConnectors"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ViewPageFlow/viewPageFlowType"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewForm"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-    </genClasses>
     <genClasses ecoreClass="process.ecore#//XMLData">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//XMLData/namespace"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//XMLData/type"/>

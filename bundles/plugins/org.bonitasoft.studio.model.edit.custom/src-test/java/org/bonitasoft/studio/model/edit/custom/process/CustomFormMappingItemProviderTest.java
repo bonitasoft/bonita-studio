@@ -22,7 +22,6 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import org.bonitasoft.studio.model.edit.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.provider.FormMappingItemProvider;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,18 +78,6 @@ public class CustomFormMappingItemProviderTest {
 
         //Then
         assertThat(text).isEqualTo(Messages.bind(Messages.overviewUrlFormMapping, "http://www.myUrl.com"));
-    }
-
-    @Test
-    public void should_delegate_display_to_parent_for_legacy_form_mapping() throws Exception {
-        //Given
-        final FormMapping legacyFormMapping = aFormMapping().withType(FormMappingType.LEGACY).build();
-
-        //When
-        final String text = customFormMappingItemProvider.getText(legacyFormMapping);
-
-        //Then
-        assertThat(text).isEqualTo(new FormMappingItemProvider(new ProcessItemProviderAdapterFactory()).getText(legacyFormMapping));
     }
 
 }

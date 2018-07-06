@@ -19,8 +19,6 @@ package org.bonitasoft.studio.model.process;
 
 import org.bonitasoft.studio.model.expression.Expression;
 
-import org.bonitasoft.studio.model.simulation.SimulationActivity;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Flow Element</b></em>'.
@@ -39,7 +37,7 @@ import org.bonitasoft.studio.model.simulation.SimulationActivity;
  * @model
  * @generated
  */
-public interface FlowElement extends Element, SourceElement, TargetElement, ViewPageFlow, SimulationActivity {
+public interface FlowElement extends Element, SourceElement, TargetElement {
 	/**
 	 * Returns the value of the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

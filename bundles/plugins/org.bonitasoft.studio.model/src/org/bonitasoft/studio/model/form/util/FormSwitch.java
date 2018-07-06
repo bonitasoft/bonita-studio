@@ -22,7 +22,6 @@ import org.bonitasoft.studio.model.form.*;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ResourceContainer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -109,7 +108,6 @@ public class FormSwitch<T> extends Switch<T> {
 				T result = caseForm(form);
 				if (result == null) result = caseConnectableElement(form);
 				if (result == null) result = caseValidable(form);
-				if (result == null) result = caseResourceContainer(form);
 				if (result == null) result = caseElement(form);
 				if (result == null) result = caseDataAware(form);
 				if (result == null) result = defaultCase(theEObject);
@@ -151,7 +149,6 @@ public class FormSwitch<T> extends Switch<T> {
 				if (result == null) result = caseForm(viewForm);
 				if (result == null) result = caseConnectableElement(viewForm);
 				if (result == null) result = caseValidable(viewForm);
-				if (result == null) result = caseResourceContainer(viewForm);
 				if (result == null) result = caseElement(viewForm);
 				if (result == null) result = caseDataAware(viewForm);
 				if (result == null) result = defaultCase(theEObject);
@@ -1303,21 +1300,6 @@ public class FormSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConnectableElement(ConnectableElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Resource Container</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Resource Container</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseResourceContainer(ResourceContainer object) {
 		return null;
 	}
 

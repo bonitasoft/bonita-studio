@@ -79,7 +79,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 39;
+	int ELEMENT = 38;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -237,31 +237,13 @@ public interface ProcessPackage extends EPackage {
 	int ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT = ELEMENT__TEXT_ANNOTATION_ATTACHMENT;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD = ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Abstract Page Flow</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PAGE_FLOW_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
+	int ABSTRACT_PAGE_FLOW_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ContainerImpl <em>Container</em>}' class.
@@ -271,7 +253,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContainer()
 	 * @generated
 	 */
-	int CONTAINER = 24;
+	int CONTAINER = 23;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -365,184 +347,13 @@ public interface ProcessPackage extends EPackage {
 	int ABSTRACT_PROCESS__ELEMENTS = CONTAINER__ELEMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__HTML_TEMPLATE = CONTAINER_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RESOURCE_JARS = CONTAINER_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RESOURCE_VALIDATORS = CONTAINER_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RESOURCE_FILES = CONTAINER_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RESOURCE_FOLDERS = CONTAINER_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Html Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__HTML_ATTRIBUTES = CONTAINER_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Symbol</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__MANDATORY_SYMBOL = CONTAINER_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Label</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__MANDATORY_LABEL = CONTAINER_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Error Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__ERROR_TEMPLATE = CONTAINER_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Process Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__PROCESS_TEMPLATE = CONTAINER_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Page Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__PAGE_TEMPLATE = CONTAINER_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Consultation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__CONSULTATION_TEMPLATE = CONTAINER_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Log In Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__LOG_IN_PAGE = CONTAINER_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__WELCOME_PAGE = CONTAINER_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page Internal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__WELCOME_PAGE_INTERNAL = CONTAINER_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__AUTO_LOGIN = CONTAINER_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__AUTO_LOGIN_ID = CONTAINER_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Host Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__HOST_PAGE = CONTAINER_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Based On Look And Feel</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__BASED_ON_LOOK_AND_FEEL = CONTAINER_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__DATA = CONTAINER_FEATURE_COUNT + 19;
+	int ABSTRACT_PROCESS__DATA = CONTAINER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Connectors</b></em>' containment reference list.
@@ -551,7 +362,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__CONNECTORS = CONTAINER_FEATURE_COUNT + 20;
+	int ABSTRACT_PROCESS__CONNECTORS = CONTAINER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Kpis</b></em>' containment reference list.
@@ -560,124 +371,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__KPIS = CONTAINER_FEATURE_COUNT + 21;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__REG_EXP_TO_HIDE_DEFAULT_FIELD = CONTAINER_FEATURE_COUNT + 22;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CONTAINER_FEATURE_COUNT + 23;
-
-	/**
-	 * The feature id for the '<em><b>By Pass Forms Generation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__BY_PASS_FORMS_GENERATION = CONTAINER_FEATURE_COUNT + 24;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__CONFIRMATION_TEMPLATE = CONTAINER_FEATURE_COUNT + 25;
-
-	/**
-	 * The feature id for the '<em><b>Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__TRANSIENT_DATA = CONTAINER_FEATURE_COUNT + 26;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__PAGE_FLOW_CONNECTORS = CONTAINER_FEATURE_COUNT + 27;
-
-	/**
-	 * The feature id for the '<em><b>Entry Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__ENTRY_PAGE_FLOW_TYPE = CONTAINER_FEATURE_COUNT + 28;
-
-	/**
-	 * The feature id for the '<em><b>Transmit URL As Parameter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__TRANSMIT_URL_AS_PARAMETER = CONTAINER_FEATURE_COUNT + 29;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__PAGE_FLOW_TRANSITIONS = CONTAINER_FEATURE_COUNT + 30;
-
-	/**
-	 * The feature id for the '<em><b>Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__FORM = CONTAINER_FEATURE_COUNT + 31;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__ENTRY_REDIRECTION_URL = CONTAINER_FEATURE_COUNT + 32;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__CONFIRMATION_MESSAGE = CONTAINER_FEATURE_COUNT + 33;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection Actions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__ENTRY_REDIRECTION_ACTIONS = CONTAINER_FEATURE_COUNT + 34;
+	int ABSTRACT_PROCESS__KPIS = CONTAINER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Form Mapping</b></em>' containment reference.
@@ -686,88 +380,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__FORM_MAPPING = CONTAINER_FEATURE_COUNT + 35;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__SIMULATION_DATA = CONTAINER_FEATURE_COUNT + 36;
-
-	/**
-	 * The feature id for the '<em><b>Load Profile ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__LOAD_PROFILE_ID = CONTAINER_FEATURE_COUNT + 37;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__MAXIMUM_TIME = CONTAINER_FEATURE_COUNT + 38;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TRANSITIONS = CONTAINER_FEATURE_COUNT + 39;
-
-	/**
-	 * The feature id for the '<em><b>Recap Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_TRANSIENT_DATA = CONTAINER_FEATURE_COUNT + 40;
-
-	/**
-	 * The feature id for the '<em><b>Recap Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_FLOW_CONNECTORS = CONTAINER_FEATURE_COUNT + 41;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TYPE = CONTAINER_FEATURE_COUNT + 42;
-
-	/**
-	 * The feature id for the '<em><b>Recap Forms</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_FORMS = CONTAINER_FEATURE_COUNT + 43;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__RECAP_PAGE_FLOW_REDIRECTION_URL = CONTAINER_FEATURE_COUNT + 44;
+	int ABSTRACT_PROCESS__FORM_MAPPING = CONTAINER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Overview Form Mapping</b></em>' containment reference.
@@ -776,61 +389,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__OVERVIEW_FORM_MAPPING = CONTAINER_FEATURE_COUNT + 45;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TRANSITIONS = CONTAINER_FEATURE_COUNT + 46;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_TRANSIENT_DATA = CONTAINER_FEATURE_COUNT + 47;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_PAGE_FLOW_CONNECTORS = CONTAINER_FEATURE_COUNT + 48;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TYPE = CONTAINER_FEATURE_COUNT + 49;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_FORM = CONTAINER_FEATURE_COUNT + 50;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ABSTRACT_PROCESS__VIEW_PAGE_FLOW_REDIRECTION_URL = CONTAINER_FEATURE_COUNT + 51;
+	int ABSTRACT_PROCESS__OVERVIEW_FORM_MAPPING = CONTAINER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -839,7 +398,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__VERSION = CONTAINER_FEATURE_COUNT + 52;
+	int ABSTRACT_PROCESS__VERSION = CONTAINER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' attribute.
@@ -848,7 +407,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__AUTHOR = CONTAINER_FEATURE_COUNT + 53;
+	int ABSTRACT_PROCESS__AUTHOR = CONTAINER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Creation Date</b></em>' attribute.
@@ -857,7 +416,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__CREATION_DATE = CONTAINER_FEATURE_COUNT + 54;
+	int ABSTRACT_PROCESS__CREATION_DATE = CONTAINER_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute.
@@ -866,7 +425,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__MODIFICATION_DATE = CONTAINER_FEATURE_COUNT + 55;
+	int ABSTRACT_PROCESS__MODIFICATION_DATE = CONTAINER_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Datatypes</b></em>' containment reference list.
@@ -875,7 +434,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__DATATYPES = CONTAINER_FEATURE_COUNT + 56;
+	int ABSTRACT_PROCESS__DATATYPES = CONTAINER_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Connections</b></em>' containment reference list.
@@ -884,7 +443,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__CONNECTIONS = CONTAINER_FEATURE_COUNT + 57;
+	int ABSTRACT_PROCESS__CONNECTIONS = CONTAINER_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Categories</b></em>' attribute list.
@@ -893,7 +452,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__CATEGORIES = CONTAINER_FEATURE_COUNT + 58;
+	int ABSTRACT_PROCESS__CATEGORIES = CONTAINER_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Actors</b></em>' containment reference list.
@@ -902,7 +461,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__ACTORS = CONTAINER_FEATURE_COUNT + 59;
+	int ABSTRACT_PROCESS__ACTORS = CONTAINER_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Configurations</b></em>' containment reference list.
@@ -911,7 +470,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__CONFIGURATIONS = CONTAINER_FEATURE_COUNT + 60;
+	int ABSTRACT_PROCESS__CONFIGURATIONS = CONTAINER_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -920,7 +479,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS__PARAMETERS = CONTAINER_FEATURE_COUNT + 61;
+	int ABSTRACT_PROCESS__PARAMETERS = CONTAINER_FEATURE_COUNT + 14;
 
 	/**
 	 * The number of structural features of the '<em>Abstract Process</em>' class.
@@ -929,7 +488,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PROCESS_FEATURE_COUNT = CONTAINER_FEATURE_COUNT + 62;
+	int ABSTRACT_PROCESS_FEATURE_COUNT = CONTAINER_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.AbstractTimerEvent <em>Abstract Timer Event</em>}' class.
@@ -994,7 +553,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFlowElement()
 	 * @generated
 	 */
-	int FLOW_ELEMENT = 49;
+	int FLOW_ELEMENT = 48;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -1042,166 +601,13 @@ public interface ProcessPackage extends EPackage {
 	int FLOW_ELEMENT__INCOMING = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_PAGE_FLOW_TRANSITIONS = ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_TRANSIENT_DATA = ELEMENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_PAGE_FLOW_CONNECTORS = ELEMENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_PAGE_FLOW_TYPE = ELEMENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_FORM = ELEMENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__VIEW_PAGE_FLOW_REDIRECTION_URL = ELEMENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__SIMULATION_DATA = ELEMENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__RESOURCES_USAGES = ELEMENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__EXECUTION_TIME = ELEMENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__ESTIMATED_TIME = ELEMENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__MAXIMUM_TIME = ELEMENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__CONTIGOUS = ELEMENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__EXCLUSIVE_OUTGOING_TRANSITION = ELEMENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__LOOP_TRANSITION = ELEMENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FLOW_ELEMENT__DATA_CHANGE = ELEMENT_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FLOW_ELEMENT__DYNAMIC_LABEL = ELEMENT_FEATURE_COUNT + 19;
+	int FLOW_ELEMENT__DYNAMIC_LABEL = ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -1210,7 +616,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FLOW_ELEMENT__DYNAMIC_DESCRIPTION = ELEMENT_FEATURE_COUNT + 20;
+	int FLOW_ELEMENT__DYNAMIC_DESCRIPTION = ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -1219,7 +625,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FLOW_ELEMENT__STEP_SUMMARY = ELEMENT_FEATURE_COUNT + 21;
+	int FLOW_ELEMENT__STEP_SUMMARY = ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Flow Element</em>' class.
@@ -1228,7 +634,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FLOW_ELEMENT_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 22;
+	int FLOW_ELEMENT_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ActivityImpl <em>Activity</em>}' class.
@@ -1284,159 +690,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int ACTIVITY__INCOMING = FLOW_ELEMENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS = FLOW_ELEMENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_TRANSIENT_DATA = FLOW_ELEMENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS = FLOW_ELEMENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_PAGE_FLOW_TYPE = FLOW_ELEMENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_FORM = FLOW_ELEMENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL = FLOW_ELEMENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__SIMULATION_DATA = FLOW_ELEMENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__RESOURCES_USAGES = FLOW_ELEMENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__EXECUTION_TIME = FLOW_ELEMENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__ESTIMATED_TIME = FLOW_ELEMENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__MAXIMUM_TIME = FLOW_ELEMENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__CONTIGOUS = FLOW_ELEMENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION = FLOW_ELEMENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__LOOP_TRANSITION = FLOW_ELEMENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__DATA_CHANGE = FLOW_ELEMENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -1690,7 +943,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getConnector()
 	 * @generated
 	 */
-	int CONNECTOR = 23;
+	int CONNECTOR = 22;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -1926,7 +1179,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getGateway()
 	 * @generated
 	 */
-	int GATEWAY = 51;
+	int GATEWAY = 50;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -1972,159 +1225,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int GATEWAY__INCOMING = FLOW_ELEMENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS = FLOW_ELEMENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_TRANSIENT_DATA = FLOW_ELEMENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_PAGE_FLOW_CONNECTORS = FLOW_ELEMENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_PAGE_FLOW_TYPE = FLOW_ELEMENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_FORM = FLOW_ELEMENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL = FLOW_ELEMENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__SIMULATION_DATA = FLOW_ELEMENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__RESOURCES_USAGES = FLOW_ELEMENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__EXECUTION_TIME = FLOW_ELEMENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__ESTIMATED_TIME = FLOW_ELEMENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__MAXIMUM_TIME = FLOW_ELEMENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__CONTIGOUS = FLOW_ELEMENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION = FLOW_ELEMENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__LOOP_TRANSITION = FLOW_ELEMENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GATEWAY__DATA_CHANGE = FLOW_ELEMENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -2227,159 +1327,6 @@ public interface ProcessPackage extends EPackage {
 	int AND_GATEWAY__INCOMING = GATEWAY__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS = GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_TRANSIENT_DATA = GATEWAY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_PAGE_FLOW_CONNECTORS = GATEWAY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_PAGE_FLOW_TYPE = GATEWAY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_FORM = GATEWAY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL = GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__SIMULATION_DATA = GATEWAY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__RESOURCES_USAGES = GATEWAY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__EXECUTION_TIME = GATEWAY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__ESTIMATED_TIME = GATEWAY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__MAXIMUM_TIME = GATEWAY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__CONTIGOUS = GATEWAY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION = GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__LOOP_TRANSITION = GATEWAY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AND_GATEWAY__DATA_CHANGE = GATEWAY__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2462,43 +1409,6 @@ public interface ProcessPackage extends EPackage {
 	int ASSIGNABLE_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.AssociatedFileImpl <em>Associated File</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.AssociatedFileImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getAssociatedFile()
-	 * @generated
-	 */
-	int ASSOCIATED_FILE = 9;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATED_FILE__PATH = 0;
-
-	/**
-	 * The feature id for the '<em><b>War Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATED_FILE__WAR_PATH = 1;
-
-	/**
-	 * The number of structural features of the '<em>Associated File</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATED_FILE_FEATURE_COUNT = 2;
-
-	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ConnectionImpl <em>Connection</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2506,7 +1416,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getConnection()
 	 * @generated
 	 */
-	int CONNECTION = 30;
+	int CONNECTION = 29;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2606,7 +1516,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getAssociation()
 	 * @generated
 	 */
-	int ASSOCIATION = 10;
+	int ASSOCIATION = 9;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2715,7 +1625,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDataType()
 	 * @generated
 	 */
-	int DATA_TYPE = 36;
+	int DATA_TYPE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2761,7 +1671,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBooleanType()
 	 * @generated
 	 */
-	int BOOLEAN_TYPE = 11;
+	int BOOLEAN_TYPE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2807,7 +1717,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBoundaryEvent()
 	 * @generated
 	 */
-	int BOUNDARY_EVENT = 12;
+	int BOUNDARY_EVENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2862,7 +1772,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBoundaryMessageEvent()
 	 * @generated
 	 */
-	int BOUNDARY_MESSAGE_EVENT = 13;
+	int BOUNDARY_MESSAGE_EVENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -2953,7 +1863,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBoundarySignalEvent()
 	 * @generated
 	 */
-	int BOUNDARY_SIGNAL_EVENT = 14;
+	int BOUNDARY_SIGNAL_EVENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3017,7 +1927,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBoundaryTimerEvent()
 	 * @generated
 	 */
-	int BOUNDARY_TIMER_EVENT = 15;
+	int BOUNDARY_TIMER_EVENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3081,7 +1991,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getData()
 	 * @generated
 	 */
-	int DATA = 33;
+	int DATA = 32;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3181,7 +2091,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getJavaObjectData()
 	 * @generated
 	 */
-	int JAVA_OBJECT_DATA = 61;
+	int JAVA_OBJECT_DATA = 60;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3290,7 +2200,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBusinessObjectData()
 	 * @generated
 	 */
-	int BUSINESS_OBJECT_DATA = 16;
+	int BUSINESS_OBJECT_DATA = 15;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3426,7 +2336,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getBusinessObjectType()
 	 * @generated
 	 */
-	int BUSINESS_OBJECT_TYPE = 17;
+	int BUSINESS_OBJECT_TYPE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3472,7 +2382,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCallActivity()
 	 * @generated
 	 */
-	int CALL_ACTIVITY = 18;
+	int CALL_ACTIVITY = 17;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3518,159 +2428,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int CALL_ACTIVITY__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CALL_ACTIVITY__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -3905,7 +2662,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEvent()
 	 * @generated
 	 */
-	int EVENT = 40;
+	int EVENT = 39;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3953,159 +2710,6 @@ public interface ProcessPackage extends EPackage {
 	int EVENT__INCOMING = FLOW_ELEMENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = FLOW_ELEMENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_PAGE_FLOW_TRANSITIONS = FLOW_ELEMENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_TRANSIENT_DATA = FLOW_ELEMENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_PAGE_FLOW_CONNECTORS = FLOW_ELEMENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_PAGE_FLOW_TYPE = FLOW_ELEMENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_FORM = FLOW_ELEMENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = FLOW_ELEMENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__SIMULATION_DATA = FLOW_ELEMENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__RESOURCES_USAGES = FLOW_ELEMENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__EXECUTION_TIME = FLOW_ELEMENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__ESTIMATED_TIME = FLOW_ELEMENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__MAXIMUM_TIME = FLOW_ELEMENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__CONTIGOUS = FLOW_ELEMENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__EXCLUSIVE_OUTGOING_TRANSITION = FLOW_ELEMENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__LOOP_TRANSITION = FLOW_ELEMENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__DATA_CHANGE = FLOW_ELEMENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4149,7 +2753,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getLinkEvent()
 	 * @generated
 	 */
-	int LINK_EVENT = 64;
+	int LINK_EVENT = 63;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4197,159 +2801,6 @@ public interface ProcessPackage extends EPackage {
 	int LINK_EVENT__INCOMING = EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4393,7 +2844,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCatchLinkEvent()
 	 * @generated
 	 */
-	int CATCH_LINK_EVENT = 19;
+	int CATCH_LINK_EVENT = 18;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4439,159 +2890,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int CATCH_LINK_EVENT__INCOMING = LINK_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = LINK_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = LINK_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = LINK_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_TRANSIENT_DATA = LINK_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_PAGE_FLOW_CONNECTORS = LINK_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_PAGE_FLOW_TYPE = LINK_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_FORM = LINK_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = LINK_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__SIMULATION_DATA = LINK_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__RESOURCES_USAGES = LINK_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__EXECUTION_TIME = LINK_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__ESTIMATED_TIME = LINK_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__MAXIMUM_TIME = LINK_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__CONTIGOUS = LINK_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = LINK_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__LOOP_TRANSITION = LINK_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_LINK_EVENT__DATA_CHANGE = LINK_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -4646,7 +2944,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMessageEvent()
 	 * @generated
 	 */
-	int MESSAGE_EVENT = 69;
+	int MESSAGE_EVENT = 68;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4694,159 +2992,6 @@ public interface ProcessPackage extends EPackage {
 	int MESSAGE_EVENT__INCOMING = EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4890,7 +3035,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCatchMessageEvent()
 	 * @generated
 	 */
-	int CATCH_MESSAGE_EVENT = 20;
+	int CATCH_MESSAGE_EVENT = 19;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4936,159 +3081,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int CATCH_MESSAGE_EVENT__INCOMING = MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_FORM = MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__SIMULATION_DATA = MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__RESOURCES_USAGES = MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__EXECUTION_TIME = MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__ESTIMATED_TIME = MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__MAXIMUM_TIME = MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__CONTIGOUS = MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__LOOP_TRANSITION = MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CATCH_MESSAGE_EVENT__DATA_CHANGE = MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -5179,7 +3171,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSignalEvent()
 	 * @generated
 	 */
-	int SIGNAL_EVENT = 84;
+	int SIGNAL_EVENT = 79;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5234,7 +3226,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCatchSignalEvent()
 	 * @generated
 	 */
-	int CATCH_SIGNAL_EVENT = 21;
+	int CATCH_SIGNAL_EVENT = 20;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5289,7 +3281,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getConnectableElement()
 	 * @generated
 	 */
-	int CONNECTABLE_ELEMENT = 22;
+	int CONNECTABLE_ELEMENT = 21;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5362,7 +3354,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContract()
 	 * @generated
 	 */
-	int CONTRACT = 25;
+	int CONTRACT = 24;
 
 	/**
 	 * The feature id for the '<em><b>Inputs</b></em>' containment reference list.
@@ -5399,7 +3391,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractInputMapping()
 	 * @generated
 	 */
-	int CONTRACT_INPUT_MAPPING = 26;
+	int CONTRACT_INPUT_MAPPING = 25;
 
 	/**
 	 * The feature id for the '<em><b>Data</b></em>' reference.
@@ -5445,7 +3437,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractInput()
 	 * @generated
 	 */
-	int CONTRACT_INPUT = 27;
+	int CONTRACT_INPUT = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5518,7 +3510,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractConstraint()
 	 * @generated
 	 */
-	int CONTRACT_CONSTRAINT = 28;
+	int CONTRACT_CONSTRAINT = 27;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -5573,7 +3565,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractContainer()
 	 * @generated
 	 */
-	int CONTRACT_CONTAINER = 29;
+	int CONTRACT_CONTAINER = 28;
 
 	/**
 	 * The feature id for the '<em><b>Contract</b></em>' containment reference.
@@ -5601,7 +3593,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCorrelation()
 	 * @generated
 	 */
-	int CORRELATION = 31;
+	int CORRELATION = 30;
 
 	/**
 	 * The feature id for the '<em><b>Correlation Type</b></em>' attribute.
@@ -5638,7 +3630,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCorrelationAssociation()
 	 * @generated
 	 */
-	int CORRELATION_ASSOCIATION = 32;
+	int CORRELATION_ASSOCIATION = 31;
 
 	/**
 	 * The feature id for the '<em><b>Correlation Expression</b></em>' containment reference.
@@ -5675,7 +3667,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDataAware()
 	 * @generated
 	 */
-	int DATA_AWARE = 34;
+	int DATA_AWARE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
@@ -5703,7 +3695,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStringType()
 	 * @generated
 	 */
-	int STRING_TYPE = 86;
+	int STRING_TYPE = 81;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5749,7 +3741,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDateType()
 	 * @generated
 	 */
-	int DATE_TYPE = 35;
+	int DATE_TYPE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5795,7 +3787,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDocument()
 	 * @generated
 	 */
-	int DOCUMENT = 37;
+	int DOCUMENT = 36;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5904,7 +3896,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDoubleType()
 	 * @generated
 	 */
-	int DOUBLE_TYPE = 38;
+	int DOUBLE_TYPE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5950,7 +3942,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEndErrorEvent()
 	 * @generated
 	 */
-	int END_ERROR_EVENT = 41;
+	int END_ERROR_EVENT = 40;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5996,159 +3988,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int END_ERROR_EVENT__INCOMING = EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_ERROR_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -6203,7 +4042,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEndEvent()
 	 * @generated
 	 */
-	int END_EVENT = 42;
+	int END_EVENT = 41;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -6251,159 +4090,6 @@ public interface ProcessPackage extends EPackage {
 	int END_EVENT__INCOMING = EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6447,7 +4133,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowMessageEvent()
 	 * @generated
 	 */
-	int THROW_MESSAGE_EVENT = 103;
+	int THROW_MESSAGE_EVENT = 98;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -6493,159 +4179,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int THROW_MESSAGE_EVENT__INCOMING = MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_FORM = MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__SIMULATION_DATA = MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__RESOURCES_USAGES = MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__EXECUTION_TIME = MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__ESTIMATED_TIME = MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__MAXIMUM_TIME = MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__CONTIGOUS = MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__LOOP_TRANSITION = MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_MESSAGE_EVENT__DATA_CHANGE = MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -6709,7 +4242,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEndMessageEvent()
 	 * @generated
 	 */
-	int END_MESSAGE_EVENT = 43;
+	int END_MESSAGE_EVENT = 42;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -6755,159 +4288,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int END_MESSAGE_EVENT__INCOMING = THROW_MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = THROW_MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_FORM = THROW_MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__SIMULATION_DATA = THROW_MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__RESOURCES_USAGES = THROW_MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__EXECUTION_TIME = THROW_MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__ESTIMATED_TIME = THROW_MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__MAXIMUM_TIME = THROW_MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__CONTIGOUS = THROW_MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = THROW_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__LOOP_TRANSITION = THROW_MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_MESSAGE_EVENT__DATA_CHANGE = THROW_MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -6971,7 +4351,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowSignalEvent()
 	 * @generated
 	 */
-	int THROW_SIGNAL_EVENT = 101;
+	int THROW_SIGNAL_EVENT = 96;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7026,7 +4406,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEndSignalEvent()
 	 * @generated
 	 */
-	int END_SIGNAL_EVENT = 44;
+	int END_SIGNAL_EVENT = 43;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7083,166 +4463,13 @@ public interface ProcessPackage extends EPackage {
 	int END_SIGNAL_EVENT__INCOMING = THROW_SIGNAL_EVENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_SIGNAL_EVENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_SIGNAL_EVENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_TRANSIENT_DATA = THROW_SIGNAL_EVENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_PAGE_FLOW_CONNECTORS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_PAGE_FLOW_TYPE = THROW_SIGNAL_EVENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_FORM = THROW_SIGNAL_EVENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__SIMULATION_DATA = THROW_SIGNAL_EVENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__RESOURCES_USAGES = THROW_SIGNAL_EVENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__EXECUTION_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__ESTIMATED_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__MAXIMUM_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__CONTIGOUS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__LOOP_TRANSITION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_SIGNAL_EVENT__DATA_CHANGE = THROW_SIGNAL_EVENT_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int END_SIGNAL_EVENT__DYNAMIC_LABEL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 19;
+	int END_SIGNAL_EVENT__DYNAMIC_LABEL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -7251,7 +4478,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int END_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 20;
+	int END_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -7260,7 +4487,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int END_SIGNAL_EVENT__STEP_SUMMARY = THROW_SIGNAL_EVENT_FEATURE_COUNT + 21;
+	int END_SIGNAL_EVENT__STEP_SUMMARY = THROW_SIGNAL_EVENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>End Signal Event</em>' class.
@@ -7269,7 +4496,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int END_SIGNAL_EVENT_FEATURE_COUNT = THROW_SIGNAL_EVENT_FEATURE_COUNT + 22;
+	int END_SIGNAL_EVENT_FEATURE_COUNT = THROW_SIGNAL_EVENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.EndTerminatedEventImpl <em>End Terminated Event</em>}' class.
@@ -7279,7 +4506,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEndTerminatedEvent()
 	 * @generated
 	 */
-	int END_TERMINATED_EVENT = 45;
+	int END_TERMINATED_EVENT = 44;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7327,159 +4554,6 @@ public interface ProcessPackage extends EPackage {
 	int END_TERMINATED_EVENT__INCOMING = EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int END_TERMINATED_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7523,7 +4597,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getErrorEvent()
 	 * @generated
 	 */
-	int ERROR_EVENT = 46;
+	int ERROR_EVENT = 45;
 
 	/**
 	 * The feature id for the '<em><b>Error Code</b></em>' attribute.
@@ -7551,7 +4625,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEnumType()
 	 * @generated
 	 */
-	int ENUM_TYPE = 47;
+	int ENUM_TYPE = 46;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7606,7 +4680,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFloatType()
 	 * @generated
 	 */
-	int FLOAT_TYPE = 48;
+	int FLOAT_TYPE = 47;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7652,7 +4726,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFormMapping()
 	 * @generated
 	 */
-	int FORM_MAPPING = 50;
+	int FORM_MAPPING = 49;
 
 	/**
 	 * The feature id for the '<em><b>Target Form</b></em>' containment reference.
@@ -7698,7 +4772,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getInclusiveGateway()
 	 * @generated
 	 */
-	int INCLUSIVE_GATEWAY = 52;
+	int INCLUSIVE_GATEWAY = 51;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7744,159 +4818,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int INCLUSIVE_GATEWAY__INCOMING = GATEWAY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS = GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_TRANSIENT_DATA = GATEWAY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_PAGE_FLOW_CONNECTORS = GATEWAY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_PAGE_FLOW_TYPE = GATEWAY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_FORM = GATEWAY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL = GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__SIMULATION_DATA = GATEWAY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__RESOURCES_USAGES = GATEWAY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__EXECUTION_TIME = GATEWAY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__ESTIMATED_TIME = GATEWAY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__MAXIMUM_TIME = GATEWAY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__CONTIGOUS = GATEWAY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION = GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__LOOP_TRANSITION = GATEWAY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INCLUSIVE_GATEWAY__DATA_CHANGE = GATEWAY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -7951,7 +4872,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getInputMapping()
 	 * @generated
 	 */
-	int INPUT_MAPPING = 53;
+	int INPUT_MAPPING = 52;
 
 	/**
 	 * The feature id for the '<em><b>Process Source</b></em>' containment reference.
@@ -7997,7 +4918,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntegerType()
 	 * @generated
 	 */
-	int INTEGER_TYPE = 54;
+	int INTEGER_TYPE = 53;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8043,7 +4964,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateErrorCatchEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_ERROR_CATCH_EVENT = 55;
+	int INTERMEDIATE_ERROR_CATCH_EVENT = 54;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8107,7 +5028,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateCatchSignalEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT = 56;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT = 55;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8164,166 +5085,13 @@ public interface ProcessPackage extends EPackage {
 	int INTERMEDIATE_CATCH_SIGNAL_EVENT__INCOMING = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_TRANSIENT_DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_PAGE_FLOW_CONNECTORS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_PAGE_FLOW_TYPE = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_FORM = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__SIMULATION_DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__RESOURCES_USAGES = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__EXECUTION_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__ESTIMATED_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__MAXIMUM_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__CONTIGOUS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__LOOP_TRANSITION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DATA_CHANGE = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DYNAMIC_LABEL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 19;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DYNAMIC_LABEL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -8332,7 +5100,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 20;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -8341,7 +5109,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__STEP_SUMMARY = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 21;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT__STEP_SUMMARY = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
@@ -8350,7 +5118,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 22;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT__DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Intermediate Catch Signal Event</em>' class.
@@ -8359,7 +5127,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_CATCH_SIGNAL_EVENT_FEATURE_COUNT = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 23;
+	int INTERMEDIATE_CATCH_SIGNAL_EVENT_FEATURE_COUNT = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.IntermediateThrowSignalEventImpl <em>Intermediate Throw Signal Event</em>}' class.
@@ -8369,7 +5137,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateThrowSignalEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT = 57;
+	int INTERMEDIATE_THROW_SIGNAL_EVENT = 56;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8426,166 +5194,13 @@ public interface ProcessPackage extends EPackage {
 	int INTERMEDIATE_THROW_SIGNAL_EVENT__INCOMING = THROW_SIGNAL_EVENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_SIGNAL_EVENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_SIGNAL_EVENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_TRANSIENT_DATA = THROW_SIGNAL_EVENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_CONNECTORS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_TYPE = THROW_SIGNAL_EVENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_FORM = THROW_SIGNAL_EVENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__SIMULATION_DATA = THROW_SIGNAL_EVENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__RESOURCES_USAGES = THROW_SIGNAL_EVENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__EXECUTION_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__ESTIMATED_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__MAXIMUM_TIME = THROW_SIGNAL_EVENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__CONTIGOUS = THROW_SIGNAL_EVENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__LOOP_TRANSITION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__DATA_CHANGE = THROW_SIGNAL_EVENT_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_LABEL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 19;
+	int INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_LABEL = THROW_SIGNAL_EVENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -8594,7 +5209,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 20;
+	int INTERMEDIATE_THROW_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = THROW_SIGNAL_EVENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -8603,7 +5218,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT__STEP_SUMMARY = THROW_SIGNAL_EVENT_FEATURE_COUNT + 21;
+	int INTERMEDIATE_THROW_SIGNAL_EVENT__STEP_SUMMARY = THROW_SIGNAL_EVENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Intermediate Throw Signal Event</em>' class.
@@ -8612,7 +5227,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INTERMEDIATE_THROW_SIGNAL_EVENT_FEATURE_COUNT = THROW_SIGNAL_EVENT_FEATURE_COUNT + 22;
+	int INTERMEDIATE_THROW_SIGNAL_EVENT_FEATURE_COUNT = THROW_SIGNAL_EVENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.IntermediateCatchMessageEventImpl <em>Intermediate Catch Message Event</em>}' class.
@@ -8622,7 +5237,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateCatchMessageEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT = 58;
+	int INTERMEDIATE_CATCH_MESSAGE_EVENT = 57;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8668,159 +5283,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_CATCH_MESSAGE_EVENT__INCOMING = CATCH_MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = CATCH_MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_FORM = CATCH_MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__SIMULATION_DATA = CATCH_MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__RESOURCES_USAGES = CATCH_MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__EXECUTION_TIME = CATCH_MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__ESTIMATED_TIME = CATCH_MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__MAXIMUM_TIME = CATCH_MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__CONTIGOUS = CATCH_MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = CATCH_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__LOOP_TRANSITION = CATCH_MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_MESSAGE_EVENT__DATA_CHANGE = CATCH_MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -8911,7 +5373,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateThrowMessageEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT = 59;
+	int INTERMEDIATE_THROW_MESSAGE_EVENT = 58;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8957,159 +5419,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_THROW_MESSAGE_EVENT__INCOMING = THROW_MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = THROW_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = THROW_MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_FORM = THROW_MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = THROW_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__SIMULATION_DATA = THROW_MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__RESOURCES_USAGES = THROW_MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__EXECUTION_TIME = THROW_MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__ESTIMATED_TIME = THROW_MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__MAXIMUM_TIME = THROW_MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__CONTIGOUS = THROW_MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = THROW_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__LOOP_TRANSITION = THROW_MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_THROW_MESSAGE_EVENT__DATA_CHANGE = THROW_MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -9173,7 +5482,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTimerEvent()
 	 * @generated
 	 */
-	int TIMER_EVENT = 104;
+	int TIMER_EVENT = 99;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9219,159 +5528,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int TIMER_EVENT__INCOMING = EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TIMER_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -9435,7 +5591,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getIntermediateCatchTimerEvent()
 	 * @generated
 	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT = 60;
+	int INTERMEDIATE_CATCH_TIMER_EVENT = 59;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9481,159 +5637,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERMEDIATE_CATCH_TIMER_EVENT__INCOMING = TIMER_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = TIMER_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = TIMER_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = TIMER_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_TRANSIENT_DATA = TIMER_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_PAGE_FLOW_CONNECTORS = TIMER_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_PAGE_FLOW_TYPE = TIMER_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_FORM = TIMER_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = TIMER_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__SIMULATION_DATA = TIMER_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__RESOURCES_USAGES = TIMER_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__EXECUTION_TIME = TIMER_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__ESTIMATED_TIME = TIMER_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__MAXIMUM_TIME = TIMER_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__CONTIGOUS = TIMER_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = TIMER_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__LOOP_TRANSITION = TIMER_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERMEDIATE_CATCH_TIMER_EVENT__DATA_CHANGE = TIMER_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -9697,7 +5700,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getJavaType()
 	 * @generated
 	 */
-	int JAVA_TYPE = 62;
+	int JAVA_TYPE = 61;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9743,7 +5746,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getLane()
 	 * @generated
 	 */
-	int LANE = 63;
+	int LANE = 62;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9816,7 +5819,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getLongType()
 	 * @generated
 	 */
-	int LONG_TYPE = 65;
+	int LONG_TYPE = 64;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9862,7 +5865,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMainProcess()
 	 * @generated
 	 */
-	int MAIN_PROCESS = 66;
+	int MAIN_PROCESS = 65;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9901,177 +5904,6 @@ public interface ProcessPackage extends EPackage {
 	int MAIN_PROCESS__ELEMENTS = ABSTRACT_PROCESS__ELEMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__HTML_TEMPLATE = ABSTRACT_PROCESS__HTML_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RESOURCE_JARS = ABSTRACT_PROCESS__RESOURCE_JARS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RESOURCE_VALIDATORS = ABSTRACT_PROCESS__RESOURCE_VALIDATORS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RESOURCE_FILES = ABSTRACT_PROCESS__RESOURCE_FILES;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RESOURCE_FOLDERS = ABSTRACT_PROCESS__RESOURCE_FOLDERS;
-
-	/**
-	 * The feature id for the '<em><b>Html Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__HTML_ATTRIBUTES = ABSTRACT_PROCESS__HTML_ATTRIBUTES;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Symbol</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__MANDATORY_SYMBOL = ABSTRACT_PROCESS__MANDATORY_SYMBOL;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Label</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__MANDATORY_LABEL = ABSTRACT_PROCESS__MANDATORY_LABEL;
-
-	/**
-	 * The feature id for the '<em><b>Error Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__ERROR_TEMPLATE = ABSTRACT_PROCESS__ERROR_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Process Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__PROCESS_TEMPLATE = ABSTRACT_PROCESS__PROCESS_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Page Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__PAGE_TEMPLATE = ABSTRACT_PROCESS__PAGE_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Consultation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__CONSULTATION_TEMPLATE = ABSTRACT_PROCESS__CONSULTATION_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Log In Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__LOG_IN_PAGE = ABSTRACT_PROCESS__LOG_IN_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__WELCOME_PAGE = ABSTRACT_PROCESS__WELCOME_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page Internal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__WELCOME_PAGE_INTERNAL = ABSTRACT_PROCESS__WELCOME_PAGE_INTERNAL;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__AUTO_LOGIN = ABSTRACT_PROCESS__AUTO_LOGIN;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__AUTO_LOGIN_ID = ABSTRACT_PROCESS__AUTO_LOGIN_ID;
-
-	/**
-	 * The feature id for the '<em><b>Host Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__HOST_PAGE = ABSTRACT_PROCESS__HOST_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Based On Look And Feel</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__BASED_ON_LOOK_AND_FEEL = ABSTRACT_PROCESS__BASED_ON_LOOK_AND_FEEL;
-
-	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10099,123 +5931,6 @@ public interface ProcessPackage extends EPackage {
 	int MAIN_PROCESS__KPIS = ABSTRACT_PROCESS__KPIS;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PROCESS__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PROCESS__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>By Pass Forms Generation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__BY_PASS_FORMS_GENERATION = ABSTRACT_PROCESS__BY_PASS_FORMS_GENERATION;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__CONFIRMATION_TEMPLATE = ABSTRACT_PROCESS__CONFIRMATION_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__TRANSIENT_DATA = ABSTRACT_PROCESS__TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__PAGE_FLOW_CONNECTORS = ABSTRACT_PROCESS__PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>Entry Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__ENTRY_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__ENTRY_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Transmit URL As Parameter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__TRANSMIT_URL_AS_PARAMETER = ABSTRACT_PROCESS__TRANSMIT_URL_AS_PARAMETER;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__FORM = ABSTRACT_PROCESS__FORM;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__ENTRY_REDIRECTION_URL = ABSTRACT_PROCESS__ENTRY_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__CONFIRMATION_MESSAGE = ABSTRACT_PROCESS__CONFIRMATION_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection Actions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__ENTRY_REDIRECTION_ACTIONS = ABSTRACT_PROCESS__ENTRY_REDIRECTION_ACTIONS;
-
-	/**
 	 * The feature id for the '<em><b>Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10225,87 +5940,6 @@ public interface ProcessPackage extends EPackage {
 	int MAIN_PROCESS__FORM_MAPPING = ABSTRACT_PROCESS__FORM_MAPPING;
 
 	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__SIMULATION_DATA = ABSTRACT_PROCESS__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Load Profile ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__LOAD_PROFILE_ID = ABSTRACT_PROCESS__LOAD_PROFILE_ID;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__MAXIMUM_TIME = ABSTRACT_PROCESS__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_TRANSIENT_DATA = ABSTRACT_PROCESS__RECAP_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Recap Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_FLOW_CONNECTORS = ABSTRACT_PROCESS__RECAP_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Recap Forms</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_FORMS = ABSTRACT_PROCESS__RECAP_FORMS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__RECAP_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
 	 * The feature id for the '<em><b>Overview Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10313,60 +5947,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int MAIN_PROCESS__OVERVIEW_FORM_MAPPING = ABSTRACT_PROCESS__OVERVIEW_FORM_MAPPING;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_TRANSIENT_DATA = ABSTRACT_PROCESS__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_PAGE_FLOW_CONNECTORS = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_FORM = ABSTRACT_PROCESS__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAIN_PROCESS__VIEW_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_REDIRECTION_URL;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -10538,7 +6118,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMessage()
 	 * @generated
 	 */
-	int MESSAGE = 67;
+	int MESSAGE = 66;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -10647,7 +6227,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMessageFlow()
 	 * @generated
 	 */
-	int MESSAGE_FLOW = 68;
+	int MESSAGE_FLOW = 67;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -10711,7 +6291,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMultiInstantiable()
 	 * @generated
 	 */
-	int MULTI_INSTANTIABLE = 70;
+	int MULTI_INSTANTIABLE = 69;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -10838,7 +6418,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getNonInterruptingBoundaryTimerEvent()
 	 * @generated
 	 */
-	int NON_INTERRUPTING_BOUNDARY_TIMER_EVENT = 71;
+	int NON_INTERRUPTING_BOUNDARY_TIMER_EVENT = 70;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -10902,7 +6482,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getOperationContainer()
 	 * @generated
 	 */
-	int OPERATION_CONTAINER = 72;
+	int OPERATION_CONTAINER = 71;
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' containment reference list.
@@ -10930,7 +6510,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getOutputMapping()
 	 * @generated
 	 */
-	int OUTPUT_MAPPING = 73;
+	int OUTPUT_MAPPING = 72;
 
 	/**
 	 * The feature id for the '<em><b>Subprocess Source</b></em>' attribute.
@@ -10967,7 +6547,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getPageFlow()
 	 * @generated
 	 */
-	int PAGE_FLOW = 74;
+	int PAGE_FLOW = 73;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -11024,130 +6604,13 @@ public interface ProcessPackage extends EPackage {
 	int PAGE_FLOW__KPIS = CONNECTABLE_ELEMENT__KPIS;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD = CONNECTABLE_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CONNECTABLE_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>By Pass Forms Generation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__BY_PASS_FORMS_GENERATION = CONNECTABLE_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__CONFIRMATION_TEMPLATE = CONNECTABLE_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__TRANSIENT_DATA = CONNECTABLE_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__PAGE_FLOW_CONNECTORS = CONNECTABLE_ELEMENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Entry Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__ENTRY_PAGE_FLOW_TYPE = CONNECTABLE_ELEMENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Transmit URL As Parameter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__TRANSMIT_URL_AS_PARAMETER = CONNECTABLE_ELEMENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__PAGE_FLOW_TRANSITIONS = CONNECTABLE_ELEMENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__FORM = CONNECTABLE_ELEMENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__ENTRY_REDIRECTION_URL = CONNECTABLE_ELEMENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__CONFIRMATION_MESSAGE = CONNECTABLE_ELEMENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection Actions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS = CONNECTABLE_ELEMENT_FEATURE_COUNT + 12;
-
-	/**
 	 * The feature id for the '<em><b>Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_FLOW__FORM_MAPPING = CONNECTABLE_ELEMENT_FEATURE_COUNT + 13;
+	int PAGE_FLOW__FORM_MAPPING = CONNECTABLE_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Page Flow</em>' class.
@@ -11156,7 +6619,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_FLOW_FEATURE_COUNT = CONNECTABLE_ELEMENT_FEATURE_COUNT + 14;
+	int PAGE_FLOW_FEATURE_COUNT = CONNECTABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.PoolImpl <em>Pool</em>}' class.
@@ -11166,7 +6629,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getPool()
 	 * @generated
 	 */
-	int POOL = 75;
+	int POOL = 74;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -11205,177 +6668,6 @@ public interface ProcessPackage extends EPackage {
 	int POOL__ELEMENTS = ABSTRACT_PROCESS__ELEMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__HTML_TEMPLATE = ABSTRACT_PROCESS__HTML_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RESOURCE_JARS = ABSTRACT_PROCESS__RESOURCE_JARS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RESOURCE_VALIDATORS = ABSTRACT_PROCESS__RESOURCE_VALIDATORS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RESOURCE_FILES = ABSTRACT_PROCESS__RESOURCE_FILES;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RESOURCE_FOLDERS = ABSTRACT_PROCESS__RESOURCE_FOLDERS;
-
-	/**
-	 * The feature id for the '<em><b>Html Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__HTML_ATTRIBUTES = ABSTRACT_PROCESS__HTML_ATTRIBUTES;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Symbol</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__MANDATORY_SYMBOL = ABSTRACT_PROCESS__MANDATORY_SYMBOL;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Label</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__MANDATORY_LABEL = ABSTRACT_PROCESS__MANDATORY_LABEL;
-
-	/**
-	 * The feature id for the '<em><b>Error Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__ERROR_TEMPLATE = ABSTRACT_PROCESS__ERROR_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Process Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__PROCESS_TEMPLATE = ABSTRACT_PROCESS__PROCESS_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Page Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__PAGE_TEMPLATE = ABSTRACT_PROCESS__PAGE_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Consultation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__CONSULTATION_TEMPLATE = ABSTRACT_PROCESS__CONSULTATION_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Log In Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__LOG_IN_PAGE = ABSTRACT_PROCESS__LOG_IN_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__WELCOME_PAGE = ABSTRACT_PROCESS__WELCOME_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page Internal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__WELCOME_PAGE_INTERNAL = ABSTRACT_PROCESS__WELCOME_PAGE_INTERNAL;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__AUTO_LOGIN = ABSTRACT_PROCESS__AUTO_LOGIN;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__AUTO_LOGIN_ID = ABSTRACT_PROCESS__AUTO_LOGIN_ID;
-
-	/**
-	 * The feature id for the '<em><b>Host Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__HOST_PAGE = ABSTRACT_PROCESS__HOST_PAGE;
-
-	/**
-	 * The feature id for the '<em><b>Based On Look And Feel</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__BASED_ON_LOOK_AND_FEEL = ABSTRACT_PROCESS__BASED_ON_LOOK_AND_FEEL;
-
-	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11403,123 +6695,6 @@ public interface ProcessPackage extends EPackage {
 	int POOL__KPIS = ABSTRACT_PROCESS__KPIS;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PROCESS__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PROCESS__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>By Pass Forms Generation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__BY_PASS_FORMS_GENERATION = ABSTRACT_PROCESS__BY_PASS_FORMS_GENERATION;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__CONFIRMATION_TEMPLATE = ABSTRACT_PROCESS__CONFIRMATION_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__TRANSIENT_DATA = ABSTRACT_PROCESS__TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__PAGE_FLOW_CONNECTORS = ABSTRACT_PROCESS__PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>Entry Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__ENTRY_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__ENTRY_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Transmit URL As Parameter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__TRANSMIT_URL_AS_PARAMETER = ABSTRACT_PROCESS__TRANSMIT_URL_AS_PARAMETER;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__FORM = ABSTRACT_PROCESS__FORM;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__ENTRY_REDIRECTION_URL = ABSTRACT_PROCESS__ENTRY_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__CONFIRMATION_MESSAGE = ABSTRACT_PROCESS__CONFIRMATION_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection Actions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__ENTRY_REDIRECTION_ACTIONS = ABSTRACT_PROCESS__ENTRY_REDIRECTION_ACTIONS;
-
-	/**
 	 * The feature id for the '<em><b>Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11529,87 +6704,6 @@ public interface ProcessPackage extends EPackage {
 	int POOL__FORM_MAPPING = ABSTRACT_PROCESS__FORM_MAPPING;
 
 	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__SIMULATION_DATA = ABSTRACT_PROCESS__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Load Profile ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__LOAD_PROFILE_ID = ABSTRACT_PROCESS__LOAD_PROFILE_ID;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__MAXIMUM_TIME = ABSTRACT_PROCESS__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_TRANSIENT_DATA = ABSTRACT_PROCESS__RECAP_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Recap Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_FLOW_CONNECTORS = ABSTRACT_PROCESS__RECAP_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Recap Forms</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_FORMS = ABSTRACT_PROCESS__RECAP_FORMS;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__RECAP_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PROCESS__RECAP_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
 	 * The feature id for the '<em><b>Overview Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11617,60 +6711,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int POOL__OVERVIEW_FORM_MAPPING = ABSTRACT_PROCESS__OVERVIEW_FORM_MAPPING;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_PAGE_FLOW_TRANSITIONS = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_TRANSIENT_DATA = ABSTRACT_PROCESS__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_PAGE_FLOW_CONNECTORS = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_PAGE_FLOW_TYPE = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_FORM = ABSTRACT_PROCESS__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POOL__VIEW_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PROCESS__VIEW_PAGE_FLOW_REDIRECTION_URL;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -11808,260 +6848,6 @@ public interface ProcessPackage extends EPackage {
 	int POOL_FEATURE_COUNT = ABSTRACT_PROCESS_FEATURE_COUNT + 4;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ResourceContainerImpl <em>Resource Container</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.ResourceContainerImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceContainer()
-	 * @generated
-	 */
-	int RESOURCE_CONTAINER = 80;
-
-	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER__HTML_TEMPLATE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER__RESOURCE_JARS = 1;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER__RESOURCE_VALIDATORS = 2;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER__RESOURCE_FILES = 3;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER__RESOURCE_FOLDERS = 4;
-
-	/**
-	 * The number of structural features of the '<em>Resource Container</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_CONTAINER_FEATURE_COUNT = 5;
-
-	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ProcessApplicationImpl <em>Application</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessApplicationImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getProcessApplication()
-	 * @generated
-	 */
-	int PROCESS_APPLICATION = 76;
-
-	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__HTML_TEMPLATE = RESOURCE_CONTAINER__HTML_TEMPLATE;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__RESOURCE_JARS = RESOURCE_CONTAINER__RESOURCE_JARS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__RESOURCE_VALIDATORS = RESOURCE_CONTAINER__RESOURCE_VALIDATORS;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__RESOURCE_FILES = RESOURCE_CONTAINER__RESOURCE_FILES;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__RESOURCE_FOLDERS = RESOURCE_CONTAINER__RESOURCE_FOLDERS;
-
-	/**
-	 * The feature id for the '<em><b>Html Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__HTML_ATTRIBUTES = RESOURCE_CONTAINER_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Symbol</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__MANDATORY_SYMBOL = RESOURCE_CONTAINER_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Mandatory Label</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__MANDATORY_LABEL = RESOURCE_CONTAINER_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Error Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__ERROR_TEMPLATE = RESOURCE_CONTAINER_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Process Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__PROCESS_TEMPLATE = RESOURCE_CONTAINER_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Page Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__PAGE_TEMPLATE = RESOURCE_CONTAINER_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Consultation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__CONSULTATION_TEMPLATE = RESOURCE_CONTAINER_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Log In Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__LOG_IN_PAGE = RESOURCE_CONTAINER_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__WELCOME_PAGE = RESOURCE_CONTAINER_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Welcome Page Internal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL = RESOURCE_CONTAINER_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__AUTO_LOGIN = RESOURCE_CONTAINER_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Auto Login Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__AUTO_LOGIN_ID = RESOURCE_CONTAINER_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Host Page</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__HOST_PAGE = RESOURCE_CONTAINER_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Based On Look And Feel</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL = RESOURCE_CONTAINER_FEATURE_COUNT + 13;
-
-	/**
-	 * The number of structural features of the '<em>Application</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROCESS_APPLICATION_FEATURE_COUNT = RESOURCE_CONTAINER_FEATURE_COUNT + 14;
-
-	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl <em>Page Flow Transition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12069,7 +6855,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getPageFlowTransition()
 	 * @generated
 	 */
-	int PAGE_FLOW_TRANSITION = 77;
+	int PAGE_FLOW_TRANSITION = 75;
 
 	/**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -12115,7 +6901,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getRecapFlow()
 	 * @generated
 	 */
-	int RECAP_FLOW = 78;
+	int RECAP_FLOW = 76;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -12145,85 +6931,13 @@ public interface ProcessPackage extends EPackage {
 	int RECAP_FLOW__TEXT_ANNOTATION_ATTACHMENT = ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_PAGE_FLOW_TRANSITIONS = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Recap Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_TRANSIENT_DATA = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Recap Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_FLOW_CONNECTORS = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_PAGE_FLOW_TYPE = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Recap Forms</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_FORMS = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Recap Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECAP_FLOW__RECAP_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 5;
-
-	/**
 	 * The feature id for the '<em><b>Overview Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RECAP_FLOW__OVERVIEW_FORM_MAPPING = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 6;
+	int RECAP_FLOW__OVERVIEW_FORM_MAPPING = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Recap Flow</em>' class.
@@ -12232,7 +6946,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECAP_FLOW_FEATURE_COUNT = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 7;
+	int RECAP_FLOW_FEATURE_COUNT = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ReceiveTaskImpl <em>Receive Task</em>}' class.
@@ -12242,7 +6956,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getReceiveTask()
 	 * @generated
 	 */
-	int RECEIVE_TASK = 79;
+	int RECEIVE_TASK = 77;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -12288,159 +7002,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int RECEIVE_TASK__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_TASK__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -12668,89 +7229,6 @@ public interface ProcessPackage extends EPackage {
 	int RECEIVE_TASK_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 4;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ResourceFileImpl <em>Resource File</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.ResourceFileImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceFile()
-	 * @generated
-	 */
-	int RESOURCE_FILE = 81;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FILE__PATH = ASSOCIATED_FILE__PATH;
-
-	/**
-	 * The feature id for the '<em><b>War Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FILE__WAR_PATH = ASSOCIATED_FILE__WAR_PATH;
-
-	/**
-	 * The number of structural features of the '<em>Resource File</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FILE_FEATURE_COUNT = ASSOCIATED_FILE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ResourceFolderImpl <em>Resource Folder</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.ResourceFolderImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceFolder()
-	 * @generated
-	 */
-	int RESOURCE_FOLDER = 82;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FOLDER__PATH = ASSOCIATED_FILE__PATH;
-
-	/**
-	 * The feature id for the '<em><b>War Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FOLDER__WAR_PATH = ASSOCIATED_FILE__WAR_PATH;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FOLDER__RESOURCE_FILES = ASSOCIATED_FILE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Resource Folder</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_FOLDER_FEATURE_COUNT = ASSOCIATED_FILE_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.SequenceFlowImpl <em>Sequence Flow</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12758,7 +7236,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSequenceFlow()
 	 * @generated
 	 */
-	int SEQUENCE_FLOW = 83;
+	int SEQUENCE_FLOW = 78;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -12903,7 +7381,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSourceElement()
 	 * @generated
 	 */
-	int SOURCE_ELEMENT = 85;
+	int SOURCE_ELEMENT = 80;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -12958,7 +7436,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getScriptTask()
 	 * @generated
 	 */
-	int SCRIPT_TASK = 87;
+	int SCRIPT_TASK = 82;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -13004,159 +7482,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int SCRIPT_TASK__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCRIPT_TASK__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -13355,7 +7680,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSearchIndex()
 	 * @generated
 	 */
-	int SEARCH_INDEX = 88;
+	int SEARCH_INDEX = 83;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' containment reference.
@@ -13392,7 +7717,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSendTask()
 	 * @generated
 	 */
-	int SEND_TASK = 89;
+	int SEND_TASK = 84;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -13438,159 +7763,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int SEND_TASK__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEND_TASK__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -13807,7 +7979,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getServiceTask()
 	 * @generated
 	 */
-	int SERVICE_TASK = 90;
+	int SERVICE_TASK = 85;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -13853,159 +8025,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int SERVICE_TASK__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_TASK__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -14204,7 +8223,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartErrorEvent()
 	 * @generated
 	 */
-	int START_ERROR_EVENT = 91;
+	int START_ERROR_EVENT = 86;
 
 	/**
 	 * The feature id for the '<em><b>Error Code</b></em>' attribute.
@@ -14261,166 +8280,13 @@ public interface ProcessPackage extends EPackage {
 	int START_ERROR_EVENT__INCOMING = ERROR_EVENT_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = ERROR_EVENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ERROR_EVENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = ERROR_EVENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_TRANSIENT_DATA = ERROR_EVENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_PAGE_FLOW_CONNECTORS = ERROR_EVENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_PAGE_FLOW_TYPE = ERROR_EVENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_FORM = ERROR_EVENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = ERROR_EVENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__SIMULATION_DATA = ERROR_EVENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__RESOURCES_USAGES = ERROR_EVENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__EXECUTION_TIME = ERROR_EVENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__ESTIMATED_TIME = ERROR_EVENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__MAXIMUM_TIME = ERROR_EVENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__CONTIGOUS = ERROR_EVENT_FEATURE_COUNT + 18;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = ERROR_EVENT_FEATURE_COUNT + 19;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__LOOP_TRANSITION = ERROR_EVENT_FEATURE_COUNT + 20;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_ERROR_EVENT__DATA_CHANGE = ERROR_EVENT_FEATURE_COUNT + 21;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int START_ERROR_EVENT__DYNAMIC_LABEL = ERROR_EVENT_FEATURE_COUNT + 22;
+	int START_ERROR_EVENT__DYNAMIC_LABEL = ERROR_EVENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -14429,7 +8295,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_ERROR_EVENT__DYNAMIC_DESCRIPTION = ERROR_EVENT_FEATURE_COUNT + 23;
+	int START_ERROR_EVENT__DYNAMIC_DESCRIPTION = ERROR_EVENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -14438,7 +8304,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_ERROR_EVENT__STEP_SUMMARY = ERROR_EVENT_FEATURE_COUNT + 24;
+	int START_ERROR_EVENT__STEP_SUMMARY = ERROR_EVENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>Start Error Event</em>' class.
@@ -14447,7 +8313,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_ERROR_EVENT_FEATURE_COUNT = ERROR_EVENT_FEATURE_COUNT + 25;
+	int START_ERROR_EVENT_FEATURE_COUNT = ERROR_EVENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.StartEventImpl <em>Start Event</em>}' class.
@@ -14457,7 +8323,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartEvent()
 	 * @generated
 	 */
-	int START_EVENT = 92;
+	int START_EVENT = 87;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -14505,159 +8371,6 @@ public interface ProcessPackage extends EPackage {
 	int START_EVENT__INCOMING = EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_TRANSIENT_DATA = EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_PAGE_FLOW_CONNECTORS = EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_PAGE_FLOW_TYPE = EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_FORM = EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__SIMULATION_DATA = EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__RESOURCES_USAGES = EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__EXECUTION_TIME = EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__ESTIMATED_TIME = EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__MAXIMUM_TIME = EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__CONTIGOUS = EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__LOOP_TRANSITION = EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_EVENT__DATA_CHANGE = EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14701,7 +8414,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartMessageEvent()
 	 * @generated
 	 */
-	int START_MESSAGE_EVENT = 93;
+	int START_MESSAGE_EVENT = 88;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -14747,159 +8460,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int START_MESSAGE_EVENT__INCOMING = CATCH_MESSAGE_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_MESSAGE_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_MESSAGE_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_TRANSIENT_DATA = CATCH_MESSAGE_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_FORM = CATCH_MESSAGE_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = CATCH_MESSAGE_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__SIMULATION_DATA = CATCH_MESSAGE_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__RESOURCES_USAGES = CATCH_MESSAGE_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__EXECUTION_TIME = CATCH_MESSAGE_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__ESTIMATED_TIME = CATCH_MESSAGE_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__MAXIMUM_TIME = CATCH_MESSAGE_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__CONTIGOUS = CATCH_MESSAGE_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = CATCH_MESSAGE_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__LOOP_TRANSITION = CATCH_MESSAGE_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_MESSAGE_EVENT__DATA_CHANGE = CATCH_MESSAGE_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -14990,7 +8550,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartSignalEvent()
 	 * @generated
 	 */
-	int START_SIGNAL_EVENT = 94;
+	int START_SIGNAL_EVENT = 89;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -15047,166 +8607,13 @@ public interface ProcessPackage extends EPackage {
 	int START_SIGNAL_EVENT__INCOMING = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_TRANSIENT_DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_PAGE_FLOW_CONNECTORS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_PAGE_FLOW_TYPE = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_FORM = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__SIMULATION_DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__RESOURCES_USAGES = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__EXECUTION_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__ESTIMATED_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__MAXIMUM_TIME = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__CONTIGOUS = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__LOOP_TRANSITION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_SIGNAL_EVENT__DATA_CHANGE = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 18;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int START_SIGNAL_EVENT__DYNAMIC_LABEL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 19;
+	int START_SIGNAL_EVENT__DYNAMIC_LABEL = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Description</b></em>' containment reference.
@@ -15215,7 +8622,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 20;
+	int START_SIGNAL_EVENT__DYNAMIC_DESCRIPTION = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Step Summary</b></em>' containment reference.
@@ -15224,7 +8631,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_SIGNAL_EVENT__STEP_SUMMARY = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 21;
+	int START_SIGNAL_EVENT__STEP_SUMMARY = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Data</b></em>' containment reference list.
@@ -15233,7 +8640,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_SIGNAL_EVENT__DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 22;
+	int START_SIGNAL_EVENT__DATA = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Start Signal Event</em>' class.
@@ -15242,7 +8649,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int START_SIGNAL_EVENT_FEATURE_COUNT = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 23;
+	int START_SIGNAL_EVENT_FEATURE_COUNT = CATCH_SIGNAL_EVENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.StartTimerEventImpl <em>Start Timer Event</em>}' class.
@@ -15252,7 +8659,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartTimerEvent()
 	 * @generated
 	 */
-	int START_TIMER_EVENT = 95;
+	int START_TIMER_EVENT = 90;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -15298,159 +8705,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int START_TIMER_EVENT__INCOMING = TIMER_EVENT__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = TIMER_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = TIMER_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = TIMER_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_TRANSIENT_DATA = TIMER_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_PAGE_FLOW_CONNECTORS = TIMER_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_PAGE_FLOW_TYPE = TIMER_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_FORM = TIMER_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = TIMER_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__SIMULATION_DATA = TIMER_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__RESOURCES_USAGES = TIMER_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__EXECUTION_TIME = TIMER_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__ESTIMATED_TIME = TIMER_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__MAXIMUM_TIME = TIMER_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__CONTIGOUS = TIMER_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = TIMER_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__LOOP_TRANSITION = TIMER_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int START_TIMER_EVENT__DATA_CHANGE = TIMER_EVENT__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -15595,7 +8849,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSubProcessEvent()
 	 * @generated
 	 */
-	int SUB_PROCESS_EVENT = 96;
+	int SUB_PROCESS_EVENT = 91;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -15650,7 +8904,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTask()
 	 * @generated
 	 */
-	int TASK = 97;
+	int TASK = 92;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -15696,159 +8950,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int TASK__INCOMING = ACTIVITY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ACTIVITY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_PAGE_FLOW_TRANSITIONS = ACTIVITY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_TRANSIENT_DATA = ACTIVITY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_PAGE_FLOW_CONNECTORS = ACTIVITY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_PAGE_FLOW_TYPE = ACTIVITY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_FORM = ACTIVITY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__VIEW_PAGE_FLOW_REDIRECTION_URL = ACTIVITY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__SIMULATION_DATA = ACTIVITY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__RESOURCES_USAGES = ACTIVITY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__EXECUTION_TIME = ACTIVITY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__ESTIMATED_TIME = ACTIVITY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__MAXIMUM_TIME = ACTIVITY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__CONTIGOUS = ACTIVITY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__EXCLUSIVE_OUTGOING_TRANSITION = ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__LOOP_TRANSITION = ACTIVITY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__DATA_CHANGE = ACTIVITY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -16031,157 +9132,13 @@ public interface ProcessPackage extends EPackage {
 	int TASK__BOUNDARY_INTERMEDIATE_EVENTS = ACTIVITY__BOUNDARY_INTERMEDIATE_EVENTS;
 
 	/**
-	 * The feature id for the '<em><b>By Pass Forms Generation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__BY_PASS_FORMS_GENERATION = ACTIVITY_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__CONFIRMATION_TEMPLATE = ACTIVITY_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__TRANSIENT_DATA = ACTIVITY_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__PAGE_FLOW_CONNECTORS = ACTIVITY_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Entry Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__ENTRY_PAGE_FLOW_TYPE = ACTIVITY_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Transmit URL As Parameter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__TRANSMIT_URL_AS_PARAMETER = ACTIVITY_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__PAGE_FLOW_TRANSITIONS = ACTIVITY_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__FORM = ACTIVITY_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__ENTRY_REDIRECTION_URL = ACTIVITY_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Confirmation Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__CONFIRMATION_MESSAGE = ACTIVITY_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Entry Redirection Actions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__ENTRY_REDIRECTION_ACTIONS = ACTIVITY_FEATURE_COUNT + 10;
-
-	/**
 	 * The feature id for the '<em><b>Form Mapping</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__FORM_MAPPING = ACTIVITY_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Html Template</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__HTML_TEMPLATE = ACTIVITY_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Resource Jars</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__RESOURCE_JARS = ACTIVITY_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Resource Validators</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__RESOURCE_VALIDATORS = ACTIVITY_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Resource Files</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__RESOURCE_FILES = ACTIVITY_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Resource Folders</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TASK__RESOURCE_FOLDERS = ACTIVITY_FEATURE_COUNT + 16;
+	int TASK__FORM_MAPPING = ACTIVITY_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Actor</b></em>' reference.
@@ -16190,7 +9147,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__ACTOR = ACTIVITY_FEATURE_COUNT + 17;
+	int TASK__ACTOR = ACTIVITY_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Filters</b></em>' containment reference list.
@@ -16199,7 +9156,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__FILTERS = ACTIVITY_FEATURE_COUNT + 18;
+	int TASK__FILTERS = ACTIVITY_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Contract</b></em>' containment reference.
@@ -16208,7 +9165,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__CONTRACT = ACTIVITY_FEATURE_COUNT + 19;
+	int TASK__CONTRACT = ACTIVITY_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Override Actors Of The Lane</b></em>' attribute.
@@ -16217,7 +9174,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__OVERRIDE_ACTORS_OF_THE_LANE = ACTIVITY_FEATURE_COUNT + 20;
+	int TASK__OVERRIDE_ACTORS_OF_THE_LANE = ACTIVITY_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Priority</b></em>' attribute.
@@ -16226,7 +9183,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__PRIORITY = ACTIVITY_FEATURE_COUNT + 21;
+	int TASK__PRIORITY = ACTIVITY_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Expected Duration</b></em>' containment reference.
@@ -16235,7 +9192,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK__EXPECTED_DURATION = ACTIVITY_FEATURE_COUNT + 22;
+	int TASK__EXPECTED_DURATION = ACTIVITY_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Task</em>' class.
@@ -16244,7 +9201,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TASK_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 23;
+	int TASK_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.TargetElement <em>Target Element</em>}' class.
@@ -16254,7 +9211,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTargetElement()
 	 * @generated
 	 */
-	int TARGET_ELEMENT = 98;
+	int TARGET_ELEMENT = 93;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16309,7 +9266,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTextAnnotation()
 	 * @generated
 	 */
-	int TEXT_ANNOTATION = 99;
+	int TEXT_ANNOTATION = 94;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16364,7 +9321,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTextAnnotationAttachment()
 	 * @generated
 	 */
-	int TEXT_ANNOTATION_ATTACHMENT = 100;
+	int TEXT_ANNOTATION_ATTACHMENT = 95;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' reference.
@@ -16401,7 +9358,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowLinkEvent()
 	 * @generated
 	 */
-	int THROW_LINK_EVENT = 102;
+	int THROW_LINK_EVENT = 97;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16449,159 +9406,6 @@ public interface ProcessPackage extends EPackage {
 	int THROW_LINK_EVENT__INCOMING = LINK_EVENT__INCOMING;
 
 	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD = LINK_EVENT__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = LINK_EVENT__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_PAGE_FLOW_TRANSITIONS = LINK_EVENT__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_TRANSIENT_DATA = LINK_EVENT__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_PAGE_FLOW_CONNECTORS = LINK_EVENT__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_PAGE_FLOW_TYPE = LINK_EVENT__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_FORM = LINK_EVENT__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL = LINK_EVENT__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__SIMULATION_DATA = LINK_EVENT__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__RESOURCES_USAGES = LINK_EVENT__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__EXECUTION_TIME = LINK_EVENT__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__ESTIMATED_TIME = LINK_EVENT__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__MAXIMUM_TIME = LINK_EVENT__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__CONTIGOUS = LINK_EVENT__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__EXCLUSIVE_OUTGOING_TRANSITION = LINK_EVENT__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__LOOP_TRANSITION = LINK_EVENT__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THROW_LINK_EVENT__DATA_CHANGE = LINK_EVENT__DATA_CHANGE;
-
-	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16647,124 +9451,6 @@ public interface ProcessPackage extends EPackage {
 	int THROW_LINK_EVENT_FEATURE_COUNT = LINK_EVENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.ViewPageFlow <em>View Page Flow</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getViewPageFlow()
-	 * @generated
-	 */
-	int VIEW_PAGE_FLOW = 105;
-
-	/**
-	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__DOCUMENTATION = ABSTRACT_PAGE_FLOW__DOCUMENTATION;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__NAME = ABSTRACT_PAGE_FLOW__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Text Annotation Attachment</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT = ABSTRACT_PAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TYPE = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_FORM = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_REDIRECTION_URL = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 5;
-
-	/**
-	 * The number of structural features of the '<em>View Page Flow</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_PAGE_FLOW_FEATURE_COUNT = ABSTRACT_PAGE_FLOW_FEATURE_COUNT + 6;
-
-	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.XMLDataImpl <em>XML Data</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16772,7 +9458,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXMLData()
 	 * @generated
 	 */
-	int XML_DATA = 106;
+	int XML_DATA = 100;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16890,7 +9576,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXMLType()
 	 * @generated
 	 */
-	int XML_TYPE = 107;
+	int XML_TYPE = 101;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16936,7 +9622,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXORGateway()
 	 * @generated
 	 */
-	int XOR_GATEWAY = 108;
+	int XOR_GATEWAY = 102;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -16982,159 +9668,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int XOR_GATEWAY__INCOMING = GATEWAY__INCOMING;
-
-	/**
-	 * The feature id for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = GATEWAY__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Transitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS = GATEWAY__VIEW_PAGE_FLOW_TRANSITIONS;
-
-	/**
-	 * The feature id for the '<em><b>View Transient Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_TRANSIENT_DATA = GATEWAY__VIEW_TRANSIENT_DATA;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Connectors</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_PAGE_FLOW_CONNECTORS = GATEWAY__VIEW_PAGE_FLOW_CONNECTORS;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_PAGE_FLOW_TYPE = GATEWAY__VIEW_PAGE_FLOW_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>View Form</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_FORM = GATEWAY__VIEW_FORM;
-
-	/**
-	 * The feature id for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL = GATEWAY__VIEW_PAGE_FLOW_REDIRECTION_URL;
-
-	/**
-	 * The feature id for the '<em><b>Simulation Data</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__SIMULATION_DATA = GATEWAY__SIMULATION_DATA;
-
-	/**
-	 * The feature id for the '<em><b>Resources Usages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__RESOURCES_USAGES = GATEWAY__RESOURCES_USAGES;
-
-	/**
-	 * The feature id for the '<em><b>Execution Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__EXECUTION_TIME = GATEWAY__EXECUTION_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Estimated Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__ESTIMATED_TIME = GATEWAY__ESTIMATED_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__MAXIMUM_TIME = GATEWAY__MAXIMUM_TIME;
-
-	/**
-	 * The feature id for the '<em><b>Contigous</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__CONTIGOUS = GATEWAY__CONTIGOUS;
-
-	/**
-	 * The feature id for the '<em><b>Exclusive Outgoing Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION = GATEWAY__EXCLUSIVE_OUTGOING_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Loop Transition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__LOOP_TRANSITION = GATEWAY__LOOP_TRANSITION;
-
-	/**
-	 * The feature id for the '<em><b>Data Change</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XOR_GATEWAY__DATA_CHANGE = GATEWAY__DATA_CHANGE;
 
 	/**
 	 * The feature id for the '<em><b>Dynamic Label</b></em>' containment reference.
@@ -17189,17 +9722,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCorrelationTypeActive()
 	 * @generated
 	 */
-	int CORRELATION_TYPE_ACTIVE = 109;
-
-	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.ConsultationPageFlowType <em>Consultation Page Flow Type</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.ConsultationPageFlowType
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getConsultationPageFlowType()
-	 * @generated
-	 */
-	int CONSULTATION_PAGE_FLOW_TYPE = 110;
+	int CORRELATION_TYPE_ACTIVE = 103;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.ContractInputType <em>Contract Input Type</em>}' enum.
@@ -17209,7 +9732,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractInputType()
 	 * @generated
 	 */
-	int CONTRACT_INPUT_TYPE = 111;
+	int CONTRACT_INPUT_TYPE = 104;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.DocumentType <em>Document Type</em>}' enum.
@@ -17219,17 +9742,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDocumentType()
 	 * @generated
 	 */
-	int DOCUMENT_TYPE = 112;
-
-	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.EntryPageFlowType <em>Entry Page Flow Type</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.EntryPageFlowType
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEntryPageFlowType()
-	 * @generated
-	 */
-	int ENTRY_PAGE_FLOW_TYPE = 113;
+	int DOCUMENT_TYPE = 105;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.FormMappingType <em>Form Mapping Type</em>}' enum.
@@ -17239,7 +9752,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFormMappingType()
 	 * @generated
 	 */
-	int FORM_MAPPING_TYPE = 114;
+	int FORM_MAPPING_TYPE = 106;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.GatewayType <em>Gateway Type</em>}' enum.
@@ -17249,7 +9762,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getGatewayType()
 	 * @generated
 	 */
-	int GATEWAY_TYPE = 115;
+	int GATEWAY_TYPE = 107;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.InputMappingAssignationType <em>Input Mapping Assignation Type</em>}' enum.
@@ -17259,7 +9772,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getInputMappingAssignationType()
 	 * @generated
 	 */
-	int INPUT_MAPPING_ASSIGNATION_TYPE = 116;
+	int INPUT_MAPPING_ASSIGNATION_TYPE = 108;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.MultiInstanceType <em>Multi Instance Type</em>}' enum.
@@ -17269,7 +9782,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMultiInstanceType()
 	 * @generated
 	 */
-	int MULTI_INSTANCE_TYPE = 117;
+	int MULTI_INSTANCE_TYPE = 109;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.SequenceFlowConditionType <em>Sequence Flow Condition Type</em>}' enum.
@@ -17279,7 +9792,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSequenceFlowConditionType()
 	 * @generated
 	 */
-	int SEQUENCE_FLOW_CONDITION_TYPE = 118;
+	int SEQUENCE_FLOW_CONDITION_TYPE = 110;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.StartTimerScriptType <em>Start Timer Script Type</em>}' enum.
@@ -17289,7 +9802,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartTimerScriptType()
 	 * @generated
 	 */
-	int START_TIMER_SCRIPT_TYPE = 119;
+	int START_TIMER_SCRIPT_TYPE = 111;
 
 
 	/**
@@ -17355,28 +9868,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getAbstractPageFlow();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AbstractPageFlow#getRegExpToHideDefaultField <em>Reg Exp To Hide Default Field</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Reg Exp To Hide Default Field</em>'.
-	 * @see org.bonitasoft.studio.model.process.AbstractPageFlow#getRegExpToHideDefaultField()
-	 * @see #getAbstractPageFlow()
-	 * @generated
-	 */
-	EAttribute getAbstractPageFlow_RegExpToHideDefaultField();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AbstractPageFlow#isUseRegExpToHideDefaultField <em>Use Reg Exp To Hide Default Field</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Use Reg Exp To Hide Default Field</em>'.
-	 * @see org.bonitasoft.studio.model.process.AbstractPageFlow#isUseRegExpToHideDefaultField()
-	 * @see #getAbstractPageFlow()
-	 * @generated
-	 */
-	EAttribute getAbstractPageFlow_UseRegExpToHideDefaultField();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.AbstractProcess <em>Abstract Process</em>}'.
@@ -17612,38 +10103,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getAssignable_Filters();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.AssociatedFile <em>Associated File</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Associated File</em>'.
-	 * @see org.bonitasoft.studio.model.process.AssociatedFile
-	 * @generated
-	 */
-	EClass getAssociatedFile();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AssociatedFile#getPath <em>Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.bonitasoft.studio.model.process.AssociatedFile#getPath()
-	 * @see #getAssociatedFile()
-	 * @generated
-	 */
-	EAttribute getAssociatedFile_Path();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AssociatedFile#getWarPath <em>War Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>War Path</em>'.
-	 * @see org.bonitasoft.studio.model.process.AssociatedFile#getWarPath()
-	 * @see #getAssociatedFile()
-	 * @generated
-	 */
-	EAttribute getAssociatedFile_WarPath();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.Association <em>Association</em>}'.
@@ -19429,127 +11888,6 @@ public interface ProcessPackage extends EPackage {
 	EClass getPageFlow();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.PageFlow#getByPassFormsGeneration <em>By Pass Forms Generation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>By Pass Forms Generation</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getByPassFormsGeneration()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EAttribute getPageFlow_ByPassFormsGeneration();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.PageFlow#getConfirmationTemplate <em>Confirmation Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Confirmation Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getConfirmationTemplate()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_ConfirmationTemplate();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.PageFlow#getTransientData <em>Transient Data</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Transient Data</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getTransientData()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_TransientData();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.PageFlow#getPageFlowConnectors <em>Page Flow Connectors</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Page Flow Connectors</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getPageFlowConnectors()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_PageFlowConnectors();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.PageFlow#getEntryPageFlowType <em>Entry Page Flow Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Entry Page Flow Type</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getEntryPageFlowType()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EAttribute getPageFlow_EntryPageFlowType();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.PageFlow#isTransmitURLAsParameter <em>Transmit URL As Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Transmit URL As Parameter</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#isTransmitURLAsParameter()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EAttribute getPageFlow_TransmitURLAsParameter();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.PageFlow#getPageFlowTransitions <em>Page Flow Transitions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Page Flow Transitions</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getPageFlowTransitions()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_PageFlowTransitions();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.PageFlow#getForm <em>Form</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Form</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getForm()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_Form();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.PageFlow#getEntryRedirectionURL <em>Entry Redirection URL</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Entry Redirection URL</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getEntryRedirectionURL()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_EntryRedirectionURL();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.PageFlow#getConfirmationMessage <em>Confirmation Message</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Confirmation Message</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getConfirmationMessage()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_ConfirmationMessage();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.PageFlow#getEntryRedirectionActions <em>Entry Redirection Actions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Entry Redirection Actions</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlow#getEntryRedirectionActions()
-	 * @see #getPageFlow()
-	 * @generated
-	 */
-	EReference getPageFlow_EntryRedirectionActions();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.PageFlow#getFormMapping <em>Form Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19602,137 +11940,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPool_DisplayName();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ProcessApplication <em>Application</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Application</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication
-	 * @generated
-	 */
-	EClass getProcessApplication();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getErrorTemplate <em>Error Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Error Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getErrorTemplate()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_ErrorTemplate();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getProcessTemplate <em>Process Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Process Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getProcessTemplate()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_ProcessTemplate();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getPageTemplate <em>Page Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Page Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getPageTemplate()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_PageTemplate();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getConsultationTemplate <em>Consultation Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Consultation Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getConsultationTemplate()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_ConsultationTemplate();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getLogInPage <em>Log In Page</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Log In Page</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getLogInPage()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_LogInPage();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getWelcomePage <em>Welcome Page</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Welcome Page</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getWelcomePage()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_WelcomePage();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ProcessApplication#getWelcomePageInternal <em>Welcome Page Internal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Welcome Page Internal</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getWelcomePageInternal()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EAttribute getProcessApplication_WelcomePageInternal();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ProcessApplication#isAutoLogin <em>Auto Login</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Auto Login</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#isAutoLogin()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EAttribute getProcessApplication_AutoLogin();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ProcessApplication#getAutoLoginId <em>Auto Login Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Auto Login Id</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getAutoLoginId()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EAttribute getProcessApplication_AutoLoginId();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ProcessApplication#getHostPage <em>Host Page</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Host Page</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getHostPage()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EReference getProcessApplication_HostPage();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ProcessApplication#getBasedOnLookAndFeel <em>Based On Look And Feel</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Based On Look And Feel</em>'.
-	 * @see org.bonitasoft.studio.model.process.ProcessApplication#getBasedOnLookAndFeel()
-	 * @see #getProcessApplication()
-	 * @generated
-	 */
-	EAttribute getProcessApplication_BasedOnLookAndFeel();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.PageFlowTransition <em>Page Flow Transition</em>}'.
@@ -19788,72 +11995,6 @@ public interface ProcessPackage extends EPackage {
 	EClass getRecapFlow();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowTransitions <em>Recap Page Flow Transitions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Recap Page Flow Transitions</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowTransitions()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EReference getRecapFlow_RecapPageFlowTransitions();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapTransientData <em>Recap Transient Data</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Recap Transient Data</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapTransientData()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EReference getRecapFlow_RecapTransientData();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapFlowConnectors <em>Recap Flow Connectors</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Recap Flow Connectors</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapFlowConnectors()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EReference getRecapFlow_RecapFlowConnectors();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowType <em>Recap Page Flow Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Recap Page Flow Type</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowType()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EAttribute getRecapFlow_RecapPageFlowType();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapForms <em>Recap Forms</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Recap Forms</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapForms()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EReference getRecapFlow_RecapForms();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowRedirectionURL <em>Recap Page Flow Redirection URL</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Recap Page Flow Redirection URL</em>'.
-	 * @see org.bonitasoft.studio.model.process.RecapFlow#getRecapPageFlowRedirectionURL()
-	 * @see #getRecapFlow()
-	 * @generated
-	 */
-	EReference getRecapFlow_RecapPageFlowRedirectionURL();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.RecapFlow#getOverviewFormMapping <em>Overview Form Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19873,102 +12014,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getReceiveTask();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ResourceContainer <em>Resource Container</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Resource Container</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer
-	 * @generated
-	 */
-	EClass getResourceContainer();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ResourceContainer#getHtmlTemplate <em>Html Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Html Template</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer#getHtmlTemplate()
-	 * @see #getResourceContainer()
-	 * @generated
-	 */
-	EReference getResourceContainer_HtmlTemplate();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link org.bonitasoft.studio.model.process.ResourceContainer#getResourceJars <em>Resource Jars</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Resource Jars</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer#getResourceJars()
-	 * @see #getResourceContainer()
-	 * @generated
-	 */
-	EAttribute getResourceContainer_ResourceJars();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link org.bonitasoft.studio.model.process.ResourceContainer#getResourceValidators <em>Resource Validators</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Resource Validators</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer#getResourceValidators()
-	 * @see #getResourceContainer()
-	 * @generated
-	 */
-	EAttribute getResourceContainer_ResourceValidators();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ResourceContainer#getResourceFiles <em>Resource Files</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Resource Files</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer#getResourceFiles()
-	 * @see #getResourceContainer()
-	 * @generated
-	 */
-	EReference getResourceContainer_ResourceFiles();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ResourceContainer#getResourceFolders <em>Resource Folders</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Resource Folders</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceContainer#getResourceFolders()
-	 * @see #getResourceContainer()
-	 * @generated
-	 */
-	EReference getResourceContainer_ResourceFolders();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ResourceFile <em>Resource File</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Resource File</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceFile
-	 * @generated
-	 */
-	EClass getResourceFile();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ResourceFolder <em>Resource Folder</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Resource Folder</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceFolder
-	 * @generated
-	 */
-	EClass getResourceFolder();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ResourceFolder#getResourceFiles <em>Resource Files</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Resource Files</em>'.
-	 * @see org.bonitasoft.studio.model.process.ResourceFolder#getResourceFiles()
-	 * @see #getResourceFolder()
-	 * @generated
-	 */
-	EReference getResourceFolder_ResourceFiles();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.SequenceFlow <em>Sequence Flow</em>}'.
@@ -20499,82 +12544,6 @@ public interface ProcessPackage extends EPackage {
 	EClass getTimerEvent();
 
 	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ViewPageFlow <em>View Page Flow</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>View Page Flow</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow
-	 * @generated
-	 */
-	EClass getViewPageFlow();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowTransitions <em>View Page Flow Transitions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>View Page Flow Transitions</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowTransitions()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EReference getViewPageFlow_ViewPageFlowTransitions();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewTransientData <em>View Transient Data</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>View Transient Data</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewTransientData()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EReference getViewPageFlow_ViewTransientData();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowConnectors <em>View Page Flow Connectors</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>View Page Flow Connectors</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowConnectors()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EReference getViewPageFlow_ViewPageFlowConnectors();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowType <em>View Page Flow Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>View Page Flow Type</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowType()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EAttribute getViewPageFlow_ViewPageFlowType();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewForm <em>View Form</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>View Form</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewForm()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EReference getViewPageFlow_ViewForm();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowRedirectionURL <em>View Page Flow Redirection URL</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>View Page Flow Redirection URL</em>'.
-	 * @see org.bonitasoft.studio.model.process.ViewPageFlow#getViewPageFlowRedirectionURL()
-	 * @see #getViewPageFlow()
-	 * @generated
-	 */
-	EReference getViewPageFlow_ViewPageFlowRedirectionURL();
-
-	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.XMLData <em>XML Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -20637,16 +12606,6 @@ public interface ProcessPackage extends EPackage {
 	EEnum getCorrelationTypeActive();
 
 	/**
-	 * Returns the meta object for enum '{@link org.bonitasoft.studio.model.process.ConsultationPageFlowType <em>Consultation Page Flow Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Consultation Page Flow Type</em>'.
-	 * @see org.bonitasoft.studio.model.process.ConsultationPageFlowType
-	 * @generated
-	 */
-	EEnum getConsultationPageFlowType();
-
-	/**
 	 * Returns the meta object for enum '{@link org.bonitasoft.studio.model.process.ContractInputType <em>Contract Input Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -20665,16 +12624,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getDocumentType();
-
-	/**
-	 * Returns the meta object for enum '{@link org.bonitasoft.studio.model.process.EntryPageFlowType <em>Entry Page Flow Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Entry Page Flow Type</em>'.
-	 * @see org.bonitasoft.studio.model.process.EntryPageFlowType
-	 * @generated
-	 */
-	EEnum getEntryPageFlowType();
 
 	/**
 	 * Returns the meta object for enum '{@link org.bonitasoft.studio.model.process.FormMappingType <em>Form Mapping Type</em>}'.
@@ -20809,22 +12758,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ABSTRACT_PAGE_FLOW = eINSTANCE.getAbstractPageFlow();
-
-		/**
-		 * The meta object literal for the '<em><b>Reg Exp To Hide Default Field</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ABSTRACT_PAGE_FLOW__REG_EXP_TO_HIDE_DEFAULT_FIELD = eINSTANCE.getAbstractPageFlow_RegExpToHideDefaultField();
-
-		/**
-		 * The meta object literal for the '<em><b>Use Reg Exp To Hide Default Field</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ABSTRACT_PAGE_FLOW__USE_REG_EXP_TO_HIDE_DEFAULT_FIELD = eINSTANCE.getAbstractPageFlow_UseRegExpToHideDefaultField();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.AbstractProcessImpl <em>Abstract Process</em>}' class.
@@ -21015,32 +12948,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ASSIGNABLE__FILTERS = eINSTANCE.getAssignable_Filters();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.AssociatedFileImpl <em>Associated File</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.AssociatedFileImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getAssociatedFile()
-		 * @generated
-		 */
-		EClass ASSOCIATED_FILE = eINSTANCE.getAssociatedFile();
-
-		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ASSOCIATED_FILE__PATH = eINSTANCE.getAssociatedFile_Path();
-
-		/**
-		 * The meta object literal for the '<em><b>War Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ASSOCIATED_FILE__WAR_PATH = eINSTANCE.getAssociatedFile_WarPath();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.AssociationImpl <em>Association</em>}' class.
@@ -22517,94 +14424,6 @@ public interface ProcessPackage extends EPackage {
 		EClass PAGE_FLOW = eINSTANCE.getPageFlow();
 
 		/**
-		 * The meta object literal for the '<em><b>By Pass Forms Generation</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE_FLOW__BY_PASS_FORMS_GENERATION = eINSTANCE.getPageFlow_ByPassFormsGeneration();
-
-		/**
-		 * The meta object literal for the '<em><b>Confirmation Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__CONFIRMATION_TEMPLATE = eINSTANCE.getPageFlow_ConfirmationTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Transient Data</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__TRANSIENT_DATA = eINSTANCE.getPageFlow_TransientData();
-
-		/**
-		 * The meta object literal for the '<em><b>Page Flow Connectors</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__PAGE_FLOW_CONNECTORS = eINSTANCE.getPageFlow_PageFlowConnectors();
-
-		/**
-		 * The meta object literal for the '<em><b>Entry Page Flow Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE_FLOW__ENTRY_PAGE_FLOW_TYPE = eINSTANCE.getPageFlow_EntryPageFlowType();
-
-		/**
-		 * The meta object literal for the '<em><b>Transmit URL As Parameter</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE_FLOW__TRANSMIT_URL_AS_PARAMETER = eINSTANCE.getPageFlow_TransmitURLAsParameter();
-
-		/**
-		 * The meta object literal for the '<em><b>Page Flow Transitions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__PAGE_FLOW_TRANSITIONS = eINSTANCE.getPageFlow_PageFlowTransitions();
-
-		/**
-		 * The meta object literal for the '<em><b>Form</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__FORM = eINSTANCE.getPageFlow_Form();
-
-		/**
-		 * The meta object literal for the '<em><b>Entry Redirection URL</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__ENTRY_REDIRECTION_URL = eINSTANCE.getPageFlow_EntryRedirectionURL();
-
-		/**
-		 * The meta object literal for the '<em><b>Confirmation Message</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__CONFIRMATION_MESSAGE = eINSTANCE.getPageFlow_ConfirmationMessage();
-
-		/**
-		 * The meta object literal for the '<em><b>Entry Redirection Actions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW__ENTRY_REDIRECTION_ACTIONS = eINSTANCE.getPageFlow_EntryRedirectionActions();
-
-		/**
 		 * The meta object literal for the '<em><b>Form Mapping</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -22645,104 +14464,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POOL__DISPLAY_NAME = eINSTANCE.getPool_DisplayName();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ProcessApplicationImpl <em>Application</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessApplicationImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getProcessApplication()
-		 * @generated
-		 */
-		EClass PROCESS_APPLICATION = eINSTANCE.getProcessApplication();
-
-		/**
-		 * The meta object literal for the '<em><b>Error Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__ERROR_TEMPLATE = eINSTANCE.getProcessApplication_ErrorTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Process Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__PROCESS_TEMPLATE = eINSTANCE.getProcessApplication_ProcessTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Page Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__PAGE_TEMPLATE = eINSTANCE.getProcessApplication_PageTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Consultation Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__CONSULTATION_TEMPLATE = eINSTANCE.getProcessApplication_ConsultationTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Log In Page</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__LOG_IN_PAGE = eINSTANCE.getProcessApplication_LogInPage();
-
-		/**
-		 * The meta object literal for the '<em><b>Welcome Page</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__WELCOME_PAGE = eINSTANCE.getProcessApplication_WelcomePage();
-
-		/**
-		 * The meta object literal for the '<em><b>Welcome Page Internal</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL = eINSTANCE.getProcessApplication_WelcomePageInternal();
-
-		/**
-		 * The meta object literal for the '<em><b>Auto Login</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROCESS_APPLICATION__AUTO_LOGIN = eINSTANCE.getProcessApplication_AutoLogin();
-
-		/**
-		 * The meta object literal for the '<em><b>Auto Login Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROCESS_APPLICATION__AUTO_LOGIN_ID = eINSTANCE.getProcessApplication_AutoLoginId();
-
-		/**
-		 * The meta object literal for the '<em><b>Host Page</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROCESS_APPLICATION__HOST_PAGE = eINSTANCE.getProcessApplication_HostPage();
-
-		/**
-		 * The meta object literal for the '<em><b>Based On Look And Feel</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL = eINSTANCE.getProcessApplication_BasedOnLookAndFeel();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl <em>Page Flow Transition</em>}' class.
@@ -22789,54 +14510,6 @@ public interface ProcessPackage extends EPackage {
 		EClass RECAP_FLOW = eINSTANCE.getRecapFlow();
 
 		/**
-		 * The meta object literal for the '<em><b>Recap Page Flow Transitions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECAP_FLOW__RECAP_PAGE_FLOW_TRANSITIONS = eINSTANCE.getRecapFlow_RecapPageFlowTransitions();
-
-		/**
-		 * The meta object literal for the '<em><b>Recap Transient Data</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECAP_FLOW__RECAP_TRANSIENT_DATA = eINSTANCE.getRecapFlow_RecapTransientData();
-
-		/**
-		 * The meta object literal for the '<em><b>Recap Flow Connectors</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECAP_FLOW__RECAP_FLOW_CONNECTORS = eINSTANCE.getRecapFlow_RecapFlowConnectors();
-
-		/**
-		 * The meta object literal for the '<em><b>Recap Page Flow Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RECAP_FLOW__RECAP_PAGE_FLOW_TYPE = eINSTANCE.getRecapFlow_RecapPageFlowType();
-
-		/**
-		 * The meta object literal for the '<em><b>Recap Forms</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECAP_FLOW__RECAP_FORMS = eINSTANCE.getRecapFlow_RecapForms();
-
-		/**
-		 * The meta object literal for the '<em><b>Recap Page Flow Redirection URL</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECAP_FLOW__RECAP_PAGE_FLOW_REDIRECTION_URL = eINSTANCE.getRecapFlow_RecapPageFlowRedirectionURL();
-
-		/**
 		 * The meta object literal for the '<em><b>Overview Form Mapping</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -22853,84 +14526,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EClass RECEIVE_TASK = eINSTANCE.getReceiveTask();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ResourceContainerImpl <em>Resource Container</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.ResourceContainerImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceContainer()
-		 * @generated
-		 */
-		EClass RESOURCE_CONTAINER = eINSTANCE.getResourceContainer();
-
-		/**
-		 * The meta object literal for the '<em><b>Html Template</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RESOURCE_CONTAINER__HTML_TEMPLATE = eINSTANCE.getResourceContainer_HtmlTemplate();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Jars</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RESOURCE_CONTAINER__RESOURCE_JARS = eINSTANCE.getResourceContainer_ResourceJars();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Validators</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RESOURCE_CONTAINER__RESOURCE_VALIDATORS = eINSTANCE.getResourceContainer_ResourceValidators();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Files</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RESOURCE_CONTAINER__RESOURCE_FILES = eINSTANCE.getResourceContainer_ResourceFiles();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Folders</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RESOURCE_CONTAINER__RESOURCE_FOLDERS = eINSTANCE.getResourceContainer_ResourceFolders();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ResourceFileImpl <em>Resource File</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.ResourceFileImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceFile()
-		 * @generated
-		 */
-		EClass RESOURCE_FILE = eINSTANCE.getResourceFile();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ResourceFolderImpl <em>Resource Folder</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.ResourceFolderImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getResourceFolder()
-		 * @generated
-		 */
-		EClass RESOURCE_FOLDER = eINSTANCE.getResourceFolder();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Files</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RESOURCE_FOLDER__RESOURCE_FILES = eINSTANCE.getResourceFolder_ResourceFiles();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.SequenceFlowImpl <em>Sequence Flow</em>}' class.
@@ -23377,64 +14972,6 @@ public interface ProcessPackage extends EPackage {
 		EClass TIMER_EVENT = eINSTANCE.getTimerEvent();
 
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.ViewPageFlow <em>View Page Flow</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.ViewPageFlow
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getViewPageFlow()
-		 * @generated
-		 */
-		EClass VIEW_PAGE_FLOW = eINSTANCE.getViewPageFlow();
-
-		/**
-		 * The meta object literal for the '<em><b>View Page Flow Transitions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TRANSITIONS = eINSTANCE.getViewPageFlow_ViewPageFlowTransitions();
-
-		/**
-		 * The meta object literal for the '<em><b>View Transient Data</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA = eINSTANCE.getViewPageFlow_ViewTransientData();
-
-		/**
-		 * The meta object literal for the '<em><b>View Page Flow Connectors</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_CONNECTORS = eINSTANCE.getViewPageFlow_ViewPageFlowConnectors();
-
-		/**
-		 * The meta object literal for the '<em><b>View Page Flow Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TYPE = eINSTANCE.getViewPageFlow_ViewPageFlowType();
-
-		/**
-		 * The meta object literal for the '<em><b>View Form</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_PAGE_FLOW__VIEW_FORM = eINSTANCE.getViewPageFlow_ViewForm();
-
-		/**
-		 * The meta object literal for the '<em><b>View Page Flow Redirection URL</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_REDIRECTION_URL = eINSTANCE.getViewPageFlow_ViewPageFlowRedirectionURL();
-
-		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.XMLDataImpl <em>XML Data</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23491,16 +15028,6 @@ public interface ProcessPackage extends EPackage {
 		EEnum CORRELATION_TYPE_ACTIVE = eINSTANCE.getCorrelationTypeActive();
 
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.ConsultationPageFlowType <em>Consultation Page Flow Type</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.ConsultationPageFlowType
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getConsultationPageFlowType()
-		 * @generated
-		 */
-		EEnum CONSULTATION_PAGE_FLOW_TYPE = eINSTANCE.getConsultationPageFlowType();
-
-		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.ContractInputType <em>Contract Input Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23519,16 +15046,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum DOCUMENT_TYPE = eINSTANCE.getDocumentType();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.EntryPageFlowType <em>Entry Page Flow Type</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.EntryPageFlowType
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getEntryPageFlowType()
-		 * @generated
-		 */
-		EEnum ENTRY_PAGE_FLOW_TYPE = eINSTANCE.getEntryPageFlowType();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.FormMappingType <em>Form Mapping Type</em>}' enum.

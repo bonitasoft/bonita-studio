@@ -24,9 +24,6 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.expression.ContractInputExpressionEditor;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -85,15 +82,6 @@ public class ContractInputExpressionProviderTest {
         assertThat(contractInputExpressionProvider.isRelevantFor(context)).isTrue();
     }
 
-    @Test
-    public void should_isRelevant_returns_false_if_context_is_a_form_in_a_Task() throws Exception {
-        final Task context = ProcessFactory.eINSTANCE.createTask();
-        final Form form = FormFactory.eINSTANCE.createForm();
-        final Widget texField = FormFactory.eINSTANCE.createTextFormField();;
-        form.getWidgets().add(texField);
-        context.getForm().add(form);
-        assertThat(contractInputExpressionProvider.isRelevantFor(texField)).isFalse();
-    }
 
     @Test
     public void should_isRelevant_returns_true_if_context_is_a_data_in_a_Pool() throws Exception {
@@ -101,16 +89,6 @@ public class ContractInputExpressionProviderTest {
         final Data data = ProcessFactory.eINSTANCE.createData();
         context.getData().add(data);
         assertThat(contractInputExpressionProvider.isRelevantFor(data)).isTrue();
-    }
-
-    @Test
-    public void should_isRelevant_returns_false_if_context_is_a_form_in_a_Pool() throws Exception {
-        final Pool context = ProcessFactory.eINSTANCE.createPool();
-        final Form form = FormFactory.eINSTANCE.createForm();
-        final Widget texField = FormFactory.eINSTANCE.createTextFormField();
-        form.getWidgets().add(texField);
-        context.getForm().add(form);
-        assertThat(contractInputExpressionProvider.isRelevantFor(texField)).isFalse();
     }
 
     @Test

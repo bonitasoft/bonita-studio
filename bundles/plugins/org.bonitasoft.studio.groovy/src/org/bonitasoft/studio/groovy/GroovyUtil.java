@@ -17,9 +17,7 @@ package org.bonitasoft.studio.groovy;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -35,9 +33,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -49,14 +45,10 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.simulation.SimulationBoolean;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationLiteralData;
@@ -64,8 +56,6 @@ import org.bonitasoft.studio.model.simulation.SimulationNumberData;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -106,140 +96,6 @@ public class GroovyUtil {
         return new ScriptVariable(d.getName(), type);
     }
 
-    public static List<ScriptVariable> createScriptVariablesFromSimulationElement(
-            final Element elem) {
-        if (elem == null) {
-            return new ArrayList<>();
-        }
-
-        final AbstractProcess process = ModelHelper.getParentProcess(elem);
-        final List<ScriptVariable> result = new ArrayList<>();
-
-        for (final SimulationData d : process.getSimulationData()) {
-            final ScriptVariable field = createScriptVariable(d);
-            if (field != null) {
-                result.add(field);
-            }
-
-        }
-
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static List<ScriptVariable> createScriptVariablesFromFormElement(
-            final Element elem, final boolean showFieldVarFromOtherForms,
-            final boolean showFieldVarFromOwnForms) {
-
-        Form form = null;
-        // get the form
-        if (elem instanceof Widget) {
-            form = ModelHelper.getForm((Widget) elem);
-        } else if (elem instanceof Form) {
-            form = (Form) elem;
-        }
-
-        if (form == null) {
-            return Collections.emptyList();
-        }
-
-        // Add all page flow transient data
-
-        boolean isInEntryPageFlow = false;
-        boolean isInViewPageFlow = false;
-        boolean isInOverviewPageFlow = false;
-        if (form != null) {
-            final EReference feature = form.eContainmentFeature();
-            isInEntryPageFlow = feature
-                    .equals(ProcessPackage.Literals.PAGE_FLOW__FORM);
-            isInViewPageFlow = feature
-                    .equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM);
-            isInOverviewPageFlow = feature
-                    .equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS);
-        }
-        Element currentObject = elem;
-        final ArrayList<Data> pageFlowTransientData = new ArrayList<>();
-
-        while (currentObject != null) {
-            if (isInEntryPageFlow && currentObject instanceof PageFlow) {
-                pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
-            }
-            if (isInViewPageFlow && currentObject instanceof ViewPageFlow) {
-                pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
-            }
-            if (isInOverviewPageFlow && currentObject instanceof RecapFlow) {
-                pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
-            }
-            currentObject = (Element) currentObject.eContainer();
-        }
-
-        final List<ScriptVariable> result = new ArrayList<>();
-        final Element eContainer = (Element) form.eContainer();
-        if (eContainer != null) {
-            final List<Data> datas = ModelHelper.getAccessibleData(eContainer);
-            for (final Data d : datas) {
-                final ScriptVariable field = createScriptVariable(d);
-                if (field != null) {
-                    result.add(field);
-                }
-            }
-        }
-        for (final Data d : pageFlowTransientData) {
-            final ScriptVariable field = createScriptVariable(d);
-            if (field != null) {
-                result.add(field);
-            }
-        }
-        if (showFieldVarFromOwnForms) {
-            // get all fields from current form
-            for (final Iterator<?> iterator = form.eAllContents(); iterator
-                    .hasNext();) {
-                final EObject child = (EObject) iterator.next();
-                if (child instanceof FormField) {
-                    final ScriptVariable field = createScriptVariable((Widget) child);
-                    if (field != null) {
-                        result.add(field);
-                    }
-                }
-            }
-        }
-        if (showFieldVarFromOtherForms) {
-            // get all fields from pageflow
-            final EObject pageFlow = form.eContainer();
-            final EStructuralFeature feature = form.eContainingFeature();
-            if (pageFlow != null) {
-                for (final Iterator<?> iterator = ((List<?>) pageFlow
-                        .eGet(feature)).iterator(); iterator.hasNext();) {
-                    final EObject eObject = (EObject) iterator.next();
-                    if (!eObject.equals(form)) {
-                        for (final Iterator<?> iterator2 = eObject
-                                .eAllContents(); iterator2.hasNext();) {
-                            final EObject child = (EObject) iterator2.next();
-                            if (child instanceof FormField) {
-                                final ScriptVariable field = createScriptVariable((Widget) child);
-                                if (field != null) {
-                                    result.add(field);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-        if (!showFieldVarFromOwnForms && !showFieldVarFromOtherForms
-                && elem instanceof Widget) {
-            result.add(createScriptVariable((Widget) elem));
-        }
-
-        return result;
-    }
 
     public static List<ExpressionConstants> getBonitaConstantsFor(
             EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
@@ -493,11 +349,6 @@ public class GroovyUtil {
             return new ArrayList<>();
         }
 
-        if (elem instanceof Form || elem instanceof Widget) {
-            return createScriptVariablesFromFormElement(elem, true,
-                    elem instanceof SubmitFormButton || elem instanceof Form);
-        }
-
         final List<Data> datas = new ArrayList<>();
 
         final AbstractProcess process = ModelHelper.getParentProcess(elem);
@@ -540,13 +391,7 @@ public class GroovyUtil {
     }
 
     public static ScriptVariable createScriptVariable(final Expression e, final EObject context) {
-        if (org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE
-                .equals(e.getType())) {
-            final Widget widget = (Widget) e.getReferencedElements().get(0);
-            final ScriptVariable scriptVariable = createScriptVariable(widget);
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE);
-            return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
+        if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
             scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
             return scriptVariable;
@@ -571,23 +416,7 @@ public class GroovyUtil {
                 if (isProcessData) {
                     scriptVariable.setCategory("process" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
                 } else {
-                    boolean isAPageflowData = false;
-                    final Form f = ModelHelper.getParentForm(context);
-                    if (f != null && f.eContainer() instanceof PageFlow) {
-                        final PageFlow flow = (PageFlow) f.eContainer();
-
-                        for (final Data d : flow.getTransientData()) {
-                            if (d.getName().equals(data.getName())) {
-                                isAPageflowData = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (isAPageflowData) {
-                        scriptVariable.setCategory("form" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
-                    } else {
-                        scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
-                    }
+                    scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
                 }
             } else {
                 scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
@@ -607,13 +436,6 @@ public class GroovyUtil {
             final ScriptVariable scriptVariable = createScriptVariable(output);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE
-                .equals(e.getType())) {
-            final SimulationData data = (SimulationData) e
-                    .getReferencedElements().get(0);
-            final ScriptVariable scriptVariable = createScriptVariable(data);
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE);
-            return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
                 .equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(),
@@ -627,10 +449,6 @@ public class GroovyUtil {
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
-            return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());

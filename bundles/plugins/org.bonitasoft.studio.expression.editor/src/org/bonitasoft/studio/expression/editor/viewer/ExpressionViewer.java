@@ -29,7 +29,6 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
@@ -59,9 +58,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.TextFormField;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.pics.Pics;
@@ -968,8 +964,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             return ExpressionConstants.JAVA_TYPE;
         } else if (ExpressionConstants.XPATH_TYPE.equals(expressionType)) {
             return ExpressionConstants.XPATH_TYPE;
-        } else if (ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(expressionType)) {
-            return ExpressionConstants.URL_ATTRIBUTE_TYPE;
         } else if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(expressionType)) {
             return ExpressionConstants.SEARCH_INDEX_TYPE;
         } else if (ExpressionConstants.QUERY_TYPE.equals(expressionType)) {
@@ -1230,27 +1224,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected void sideModificationOnProposalAccepted(final CompoundCommand cc, final Expression copy) {
-        final String copyType = copy.getType();
-        if (ExpressionConstants.FORM_FIELD_TYPE.equals(copyType)) {
-            proposalAcceptedForFormField(copy);
-        }
-    }
 
-    private void proposalAcceptedForFormField(final Expression copy) {
-        if (context instanceof Widget) {
-            final Widget w = (Widget) context;
-            if (w != null && w instanceof TextFormField && copy.getName().equals(WidgetHelper.FIELD_PREFIX + w.getName())) {
-                String returnTypeModifier = w.getReturnTypeModifier();
-                if (returnTypeModifier != null) {
-                    if (w instanceof Duplicable && ((Duplicable) w).isDuplicate()) {
-                        returnTypeModifier = List.class.getName();
-                    }
-                    if (!copy.isReturnTypeFixed()) {
-                        copy.setReturnType(returnTypeModifier);
-                    }
-                }
-            }
-        }
     }
 
     @Override

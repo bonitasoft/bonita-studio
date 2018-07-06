@@ -118,8 +118,7 @@ public class ExportBarIT {
                 tuple("custompage_instantiationForm", FormMappingType.PROCESS_START, null, FormMappingTarget.INTERNAL),
                 tuple("custompage_overviewPage", FormMappingType.PROCESS_OVERVIEW, null, FormMappingTarget.INTERNAL),
                 tuple("custompage_stepForm", FormMappingType.TASK, "Step1", FormMappingTarget.INTERNAL),
-                tuple("http://www.google.com", FormMappingType.TASK, "Step2", FormMappingTarget.URL),
-                tuple("", FormMappingType.TASK, "Step3", FormMappingTarget.LEGACY));
+                tuple("http://www.google.com", FormMappingType.TASK, "Step2", FormMappingTarget.URL));
         assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();

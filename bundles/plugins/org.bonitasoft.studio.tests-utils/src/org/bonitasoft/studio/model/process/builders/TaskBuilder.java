@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.Buildable;
-import org.bonitasoft.studio.model.form.builders.FormBuilder;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
@@ -58,13 +57,6 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
 
     public TaskBuilder withPriority(final int priority) {
         getBuiltInstance().setPriority(priority);
-        return this;
-    }
-
-    public TaskBuilder havingForm(final FormBuilder... forms) {
-        for (final FormBuilder formBuilder : forms) {
-            getBuiltInstance().getForm().add(formBuilder.build());
-        }
         return this;
     }
 

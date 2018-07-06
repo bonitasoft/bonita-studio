@@ -18,9 +18,7 @@
 package org.bonitasoft.studio.model.process;
 
 import org.bonitasoft.studio.model.expression.Expression;
-
 import org.bonitasoft.studio.model.form.ViewForm;
-
 import org.eclipse.emf.common.util.EList;
 
 /**

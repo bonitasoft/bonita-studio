@@ -81,13 +81,6 @@ public class EMFResourceUtilTest {
     }
 
     @Test
-    public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValues_ForMultipleFeatures() throws Exception {
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg",
-                ProcessPackage.Literals.ELEMENT__NAME, ProcessPackage.Literals.PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL))
-                        .containsExactly("Poolū", "Default Application");
-    }
-
-    @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_DefaultFeatureValues_ForMultipleFeatures() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg",
                 ProcessPackage.Literals.ELEMENT__NAME, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION))

@@ -117,8 +117,6 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
                 return isNullOrEmpty(formMapping.getUrl()) ? null : formMapping.getUrl();
             case INTERNAL:
                 return !isNullOrEmpty(formName(formMapping)) ? toPageId(formMapping) : fallbackPageId(formMapping);
-            case LEGACY:
-                return "";
             default:
                 throw new IllegalStateException(String.format("Unsupported FormMappingType: %s", formMapping.getType()));
         }
@@ -167,8 +165,6 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
                 if (forceMapping() && formMappingType(formMapping) != FormMappingType.PROCESS_OVERVIEW && isNullOrEmpty(formMapping.getUrl())) {
                     throw new URLNotDefinedException(formMapping);
                 }
-                return true;
-            case LEGACY:
                 return true;
             case NONE:
                 return false;

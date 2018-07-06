@@ -34,13 +34,14 @@ public class FormMappingCustomMigration extends CustomMigration {
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance instance : filter(model.getAllInstances("process.PageFlow"), withoutFormMapping(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING))) {
-            instantiateFormMapping(instance, model, "formMapping");
+        for (final Instance instance : filter(model.getAllInstances("process.PageFlow"),
+                withoutFormMapping(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING))) {
+                instantiateFormMapping(instance, model, "formMapping");
         }
 
         for (final Instance instance : filter(model.getAllInstances("process.RecapFlow"),
                 withoutFormMapping(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING))) {
-            instantiateFormMapping(instance, model, "overviewFormMapping");
+                instantiateFormMapping(instance, model, "overviewFormMapping");
         }
     }
 
@@ -58,7 +59,7 @@ public class FormMappingCustomMigration extends CustomMigration {
         final Instance newInstance = model.newInstance("process.FormMapping");
         final Instance targetFormExpression = newTargetFormExpressionInstance(model);
         newInstance.set("targetForm", targetFormExpression);
-        newInstance.set("type", model.getMetamodel().getEEnum("process.FormMappingType").getEEnumLiteral("LEGACY"));
+        newInstance.set("type", model.getMetamodel().getEEnum("process.FormMappingType").getEEnumLiteral("INTERNAL"));
         input.set(featureName, newInstance);
     }
 

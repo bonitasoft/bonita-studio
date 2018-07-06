@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
 
@@ -33,16 +32,8 @@ public class DataTabbedPropertyProvider extends DataViewTabbedPropertySelectionP
      */
     @Override
     public boolean appliesTo(final EObject element, final IEditorReference activeEditor) {
-        final Data data = ModelHelper.getFirstContainerOfType(element, Data.class);
-        return data != null && !isPageflowData(data) && !isOverviewPageflowData(data);
+        return ModelHelper.getFirstContainerOfType(element, Data.class) != null;
     }
 
-    private boolean isPageflowData(final Data element) {
-        return element.eContainingFeature().equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA);
-    }
-
-    private boolean isOverviewPageflowData(final Data element) {
-        return element.eContainingFeature().equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA);
-    }
 
 }

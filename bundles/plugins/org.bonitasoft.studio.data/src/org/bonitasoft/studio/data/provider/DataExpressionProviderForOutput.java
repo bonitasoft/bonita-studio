@@ -14,15 +14,9 @@
  */
 package org.bonitasoft.studio.data.provider;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -32,10 +26,5 @@ public class DataExpressionProviderForOutput extends DataExpressionProvider {
     @Inject
     public DataExpressionProviderForOutput(final RepositoryAccessor repositoryAccessor) {
         super(repositoryAccessor);
-    }
-
-    @Override
-    protected List<Data> getDataInForm(final Form form, final EObject formContainer) {
-        return ModelHelper.getAccessibleDataInFormsWithNoRestriction(formContainer, form.eContainmentFeature());
     }
 }
