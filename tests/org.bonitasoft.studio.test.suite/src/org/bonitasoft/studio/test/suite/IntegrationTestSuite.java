@@ -66,6 +66,7 @@ import org.bonitasoft.studio.tests.migration.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
+import org.bonitasoft.studio.tests.properties.TestMessageRefactoring;
 import org.bonitasoft.studio.tests.repository.TestAddJar;
 import org.bonitasoft.studio.tests.repository.TestExtensionProject;
 import org.bonitasoft.studio.tests.repository.TestImportExportAndDeleteRepository;
@@ -143,7 +144,8 @@ import org.junit.runners.Suite;
         TestParametersRefactoring.class,
         ExportBarIT.class,
         UIDesignerWorkspaceIntegrationIT.class,
-        CloseAllEditors.class
+        CloseAllEditors.class,
+        TestMessageRefactoring.class
 })
 public class IntegrationTestSuite {
 
