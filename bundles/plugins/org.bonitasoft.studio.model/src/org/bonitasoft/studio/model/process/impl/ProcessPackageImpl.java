@@ -125,7 +125,6 @@ import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.PageFlowTransition;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -716,13 +715,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass pageFlowTransitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass recapFlowEClass = null;
 
 	/**
@@ -1021,11 +1013,11 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
 		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
 		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
 		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
 		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
 		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
 		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
 		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
@@ -1034,11 +1026,11 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		theConfigurationPackage.createPackageContents();
 		theConnectorConfigurationPackage.createPackageContents();
 		theExpressionPackage.createPackageContents();
-		theFormPackage.createPackageContents();
 		theKpiPackage.createPackageContents();
 		theParameterPackage.createPackageContents();
 		theDecisionPackage.createPackageContents();
 		theTransitionsPackage.createPackageContents();
+		theFormPackage.createPackageContents();
 		theSimulationPackage.createPackageContents();
 
 		// Initialize created meta-data
@@ -1047,11 +1039,11 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		theConfigurationPackage.initializePackageContents();
 		theConnectorConfigurationPackage.initializePackageContents();
 		theExpressionPackage.initializePackageContents();
-		theFormPackage.initializePackageContents();
 		theKpiPackage.initializePackageContents();
 		theParameterPackage.initializePackageContents();
 		theDecisionPackage.initializePackageContents();
 		theTransitionsPackage.initializePackageContents();
+		theFormPackage.initializePackageContents();
 		theSimulationPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
@@ -2877,42 +2869,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getPageFlowTransition() {
-		return pageFlowTransitionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlowTransition_From() {
-		return (EReference)pageFlowTransitionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlowTransition_To() {
-		return (EReference)pageFlowTransitionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPageFlowTransition_Condition() {
-		return (EReference)pageFlowTransitionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getRecapFlow() {
 		return recapFlowEClass;
 	}
@@ -3815,11 +3771,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		createEReference(poolEClass, POOL__SEARCH_INDEXES);
 		createEAttribute(poolEClass, POOL__DISPLAY_NAME);
 
-		pageFlowTransitionEClass = createEClass(PAGE_FLOW_TRANSITION);
-		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__FROM);
-		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__TO);
-		createEReference(pageFlowTransitionEClass, PAGE_FLOW_TRANSITION__CONDITION);
-
 		recapFlowEClass = createEClass(RECAP_FLOW);
 		createEReference(recapFlowEClass, RECAP_FLOW__OVERVIEW_FORM_MAPPING);
 
@@ -3947,8 +3898,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		ParameterPackage theParameterPackage = (ParameterPackage)EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
 		KpiPackage theKpiPackage = (KpiPackage)EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
 		ConnectorConfigurationPackage theConnectorConfigurationPackage = (ConnectorConfigurationPackage)EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
-		SimulationPackage theSimulationPackage = (SimulationPackage)EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
-		FormPackage theFormPackage = (FormPackage)EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
 
 		// Add subpackages
 		getESubpackages().add(theDecisionPackage);
@@ -3994,7 +3943,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		connectorEClass.getESuperTypes().add(this.getElement());
 		containerEClass.getESuperTypes().add(this.getElement());
 		connectionEClass.getESuperTypes().add(this.getElement());
-		connectionEClass.getESuperTypes().add(theSimulationPackage.getSimulationTransition());
 		dataEClass.getESuperTypes().add(this.getElement());
 		dateTypeEClass.getESuperTypes().add(this.getStringType());
 		dataTypeEClass.getESuperTypes().add(this.getElement());
@@ -4355,11 +4303,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		initEReference(getPool_Documents(), this.getDocument(), null, "documents", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getPool_SearchIndexes(), this.getSearchIndex(), null, "searchIndexes", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getPool_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(pageFlowTransitionEClass, PageFlowTransition.class, "PageFlowTransition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getPageFlowTransition_From(), theFormPackage.getForm(), null, "from", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlowTransition_To(), theFormPackage.getForm(), null, "to", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getPageFlowTransition_Condition(), theExpressionPackage.getExpression(), null, "condition", null, 0, 1, PageFlowTransition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(recapFlowEClass, RecapFlow.class, "RecapFlow", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getRecapFlow_OverviewFormMapping(), this.getFormMapping(), null, "overviewFormMapping", null, 0, 1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

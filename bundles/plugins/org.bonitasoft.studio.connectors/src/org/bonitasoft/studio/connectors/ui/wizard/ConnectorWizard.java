@@ -74,8 +74,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
@@ -140,12 +138,6 @@ public class ConnectorWizard extends ExtensibleWizard implements
     private final AvailableExpressionTypeFilter expressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
     private EMFModelUpdater<Connector> modelUpdater = new EMFModelUpdater<>();
-
-    private final AvailableExpressionTypeFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(
-            new String[] { ExpressionConstants.CONSTANT_TYPE,
-                    ExpressionConstants.VARIABLE_TYPE,
-                    ExpressionConstants.SCRIPT_TYPE,
-                    ExpressionConstants.PARAMETER_TYPE });
 
     protected List<ConnectorDefinition> definitions;
 
@@ -726,9 +718,6 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     protected AvailableExpressionTypeFilter getExpressionTypeFilter() {
-        if (container instanceof Form || container instanceof SubmitFormButton) {
-            return formExpressionTypeFilter;
-        }
         return expressionTypeFilter;
     }
 

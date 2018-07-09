@@ -28,8 +28,6 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;
 
-import org.bonitasoft.studio.model.simulation.SimulationPackage;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
@@ -266,29 +264,6 @@ public class SequenceFlowItemProvider extends ConnectionItemProvider {
 			(createChildParameter
 				(ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION,
 				 ExpressionFactory.eINSTANCE.createExpression()));
-	}
-
-	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-		Object childFeature = feature;
-		Object childObject = child;
-
-		boolean qualify =
-			childFeature == SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION ||
-			childFeature == ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION;
-
-		if (qualify) {
-			return getString
-				("_UI_CreateChild_text2", //$NON-NLS-1$
-				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-		}
-		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 }

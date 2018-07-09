@@ -73,13 +73,6 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated process -->
       <package
-            uri="http://www.bonitasoft.org/ns/studio/form"
-            class="org.bonitasoft.studio.model.form.FormPackage"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated process -->
-      <package
             uri="http://www.bonitasoft.org/ns/studio/kpi"
             class="org.bonitasoft.studio.model.kpi.KpiPackage"/>
    </extension>
@@ -124,6 +117,13 @@
       <parser
             type="transitions"
             class="org.bonitasoft.studio.model.process.decision.transitions.util.TransitionsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated process -->
+      <package
+            uri="http://www.bonitasoft.org/ns/studio/form"
+            class="org.bonitasoft.studio.model.form.FormPackage"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">

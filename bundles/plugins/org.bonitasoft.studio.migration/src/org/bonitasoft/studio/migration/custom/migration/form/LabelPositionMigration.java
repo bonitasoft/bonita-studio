@@ -16,12 +16,8 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
@@ -29,29 +25,18 @@ import org.eclipse.emf.edapt.spi.migration.Model;
  * @author Romain Bioteau
  *
  */
+@Deprecated
 public class LabelPositionMigration extends CustomMigration {
 
-	private List<String> widgets = new ArrayList<String>();
 	
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
-		for(Instance widget : model.getAllInstances("form.Widget")){
-			Object position = widget.get("labelPosition");
-			if(position == null){
-				widgets.add(widget.getUuid());
-			}
-		}
 	}
 	
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
-		for(Instance widget : model.getAllInstances("form.Widget")){
-			if(widgets.contains(widget.getUuid())){
-				widget.set("labelPosition", model.getMetamodel().getEEnumLiteral("form.LabelPosition.Left"));
-			}
-		}
 	}
 	
 }

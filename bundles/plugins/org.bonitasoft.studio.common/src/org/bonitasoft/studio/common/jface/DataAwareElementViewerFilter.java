@@ -19,8 +19,6 @@
 package org.bonitasoft.studio.common.jface;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.DataAware;
@@ -46,7 +44,8 @@ public class DataAwareElementViewerFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (element instanceof ConnectableElement || element instanceof Container ) && !(element instanceof Widget) &&!(element instanceof Form)  && !(element instanceof MessageEvent) && ModelHelper.getParentProcess((EObject) element).equals(ModelHelper.getParentProcess(sourceContainer));
+        return (element instanceof ConnectableElement || element instanceof Container) && !(element instanceof MessageEvent)
+                && ModelHelper.getParentProcess((EObject) element).equals(ModelHelper.getParentProcess(sourceContainer));
 	}
 
 }

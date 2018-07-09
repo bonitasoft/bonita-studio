@@ -23,9 +23,6 @@ import static org.junit.Assert.assertTrue;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.Activity;
@@ -52,8 +49,6 @@ public class ModelHelperTest {
     private Data processData;
     private Data t1Data;
     private Data t2Data;
-    private Form myForm;
-    private TextFormField textField;
     private Data pageFlowTransientData;
 
     /**
@@ -62,17 +57,12 @@ public class ModelHelperTest {
     @Before
     public void setUp() throws Exception {
         final ProcessFactory processFactory = ProcessFactory.eINSTANCE;
-        final FormFactory formFactory = FormFactory.eINSTANCE;
         process = processFactory.createPool();
         processData = processFactory.createData();
         process.getData().add(processData);
         task1 = processFactory.createTask();
         t1Data = processFactory.createData();
         task1.getData().add(t1Data);
-
-        myForm = formFactory.createForm();
-        textField = formFactory.createTextFormField();
-        myForm.getWidgets().add(textField);
 
         pageFlowTransientData = processFactory.createData();
         pageFlowTransientData.setTransient(true);

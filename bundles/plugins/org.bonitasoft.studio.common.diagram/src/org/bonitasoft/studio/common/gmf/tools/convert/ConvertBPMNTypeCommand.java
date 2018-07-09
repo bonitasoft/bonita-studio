@@ -26,10 +26,6 @@ import org.bonitasoft.studio.common.gmf.tools.CopyEObjectFeaturesCommand;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.form.WidgetDependency;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -37,8 +33,6 @@ import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
-import org.bonitasoft.studio.model.process.XORGateway;
-import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
@@ -51,7 +45,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
@@ -199,11 +192,6 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
             }
         }
 
-        if(sourceElement instanceof Widget){
-            updateWidgetContingencies(targetEditPart.getEditingDomain(),(Widget)sourceElement,(Widget)targetElement) ;
-        }
-
-
         try {
             final CopyEObjectFeaturesCommand operation = new CopyEObjectFeaturesCommand(editingDomain, sourceElement, targetElement);
             OperationHistoryFactory.getOperationHistory().execute(operation, monitor, null);
@@ -217,26 +205,12 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
             }
         }
 
-        if (targetElement instanceof XORGateway) {
-            editingDomain.getCommandStack().execute(
-                    SetCommand.create(editingDomain, targetElement, SimulationPackage.Literals.SIMULATION_ACTIVITY__EXCLUSIVE_OUTGOING_TRANSITION, true));
-        }
-
         if (sourceElement instanceof Activity) {
             // reset boundary connections
             commands.clear();
 
             handleBoundaries(monitor, editingDomain, parentEditPart, targetElement, targetEditPart);
         }
-
-        //        if (targetElement instanceof ConnectableElement) {
-        //            convertConnectorsAndKPIEvent(editingDomain, (ConnectableElement) targetElement);
-        //        }
-
-        // Delete the old node : at this point the old node is already delete,
-        // that's the cause of the NPE
-        // diagramEditDomain.getDiagramCommandStack().execute(new
-        // ICommandProxy(new DeleteCommand(node.getNotationView())));
 
         targetEditPart.getViewer().flush();
         targetEditPart.refresh();// need to call refresh in order that it
@@ -393,15 +367,6 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         return commands;
     }
 
-    private static void updateWidgetContingencies(final TransactionalEditingDomain editingDomain,final Widget sourceElement,final Widget targetElement) {
-        final Form f = ModelHelper.getForm(sourceElement) ;
-        final List<WidgetDependency> widgetsDependencies = ModelHelper.getAllItemsOfType(f, FormPackage.eINSTANCE.getWidgetDependency()) ;
-        for(final WidgetDependency w : widgetsDependencies){
-            if(w.getWidget() != null && w.getWidget().equals(sourceElement)){
-                editingDomain.getCommandStack().execute(new SetCommand(editingDomain, w, FormPackage.eINSTANCE.getWidgetDependency_Widget(), targetElement)) ;
-            }
-        }
-    }
 
     @Override
     protected void didUndo(final Transaction tx) {

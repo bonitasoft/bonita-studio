@@ -25,18 +25,14 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
-import org.bonitasoft.studio.common.palette.FormPaletteLabelProvider;
 import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
@@ -80,7 +76,8 @@ public class NamingUtils {
         return generateConstantExpression(name, String.class.getName(), returnTypeFixed);
     }
 
-    public static Expression generateConstantExpression(final String name, final String typeName, final boolean returnTypeFixed) {
+    public static Expression generateConstantExpression(final String name, final String typeName,
+            final boolean returnTypeFixed) {
         final Expression constantExpression = ExpressionHelper.createConstantExpression(name, name, typeName);
         constantExpression.setReturnTypeFixed(returnTypeFixed);
         return constantExpression;
@@ -96,31 +93,8 @@ public class NamingUtils {
         if (defaultName == null) {
             defaultName = itemProvider.getText(newItem);
         }
-        if (newItem instanceof Widget) {
-            if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
-                mainContainer = existingItem;
-            } else {
-                mainContainer = ModelHelper.getForm((Widget) newItem);
-                if (mainContainer != null && mainContainer.eContainer() != null) {
-                    mainContainer = mainContainer.eContainer();
-                }
-            }
-        } else {
-            mainContainer = process;
-        }
 
-        if (newItem instanceof Widget) {
-            if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
-                mainContainer = existingItem;
-            } else {
-                mainContainer = ModelHelper.getForm((Widget) newItem);
-                if (mainContainer != null && mainContainer.eContainer() != null) {
-                    mainContainer = mainContainer.eContainer();
-                }
-            }
-        } else {
-            mainContainer = process;
-        }
+        mainContainer = process;
 
         if (mainContainer != null) {
             int number = getMaxElements((Element) mainContainer, defaultName);
@@ -317,7 +291,8 @@ public class NamingUtils {
         return defaultName + cpt;
     }
 
-    public static String toConnectorDefinitionFilename(final String definitionId, final String defVersion, final boolean inculdeExtension) {
+    public static String toConnectorDefinitionFilename(final String definitionId, final String defVersion,
+            final boolean inculdeExtension) {
         if (!inculdeExtension) {
             return definitionId + VERSION_SEPARATOR + defVersion;
         } else {
@@ -325,7 +300,8 @@ public class NamingUtils {
         }
     }
 
-    public static String toConnectorImplementationFilename(final String implementationId, final String implementationVersion, final boolean inculdeExtension) {
+    public static String toConnectorImplementationFilename(final String implementationId, final String implementationVersion,
+            final boolean inculdeExtension) {
         if (!inculdeExtension) {
             return implementationId + VERSION_SEPARATOR + implementationVersion;
         } else {
@@ -406,22 +382,9 @@ public class NamingUtils {
         return null;
     }
 
-    public static String getFormPaletteDescription(final List<IElementType> elementTypes) {
-        if (!elementTypes.isEmpty()) {
-            return new FormPaletteLabelProvider().getFormPaletteDescription(elementTypes.get(0).getEClass());
-        }
-        return null;
-    }
-
-    public static String getFormPaletteTitle(final List<IElementType> elementTypes) {
-        if (!elementTypes.isEmpty()) {
-            return new FormPaletteLabelProvider().getFormPaletteText(elementTypes.get(0).getEClass());
-        }
-        return null;
-    }
-
     public static String toConnectorImplementationJarName(final ConnectorImplementation implementation) {
-        return toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), false) + ".jar";
+        return toConnectorImplementationFilename(implementation.getImplementationId(),
+                implementation.getImplementationVersion(), false) + ".jar";
     }
 
 }

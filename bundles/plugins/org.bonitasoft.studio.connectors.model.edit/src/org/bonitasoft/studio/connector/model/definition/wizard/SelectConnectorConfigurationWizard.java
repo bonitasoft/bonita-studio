@@ -34,8 +34,6 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
@@ -199,15 +197,6 @@ public class SelectConnectorConfigurationWizard extends Wizard {
             for (final Parameter p : ModelHelper.getParentProcess(currentConfiguraiton).getParameters()) {
                 if (p.getName().equals(((Parameter) dependency).getName())) {
                     return ExpressionHelper.createDependencyFromEObject(p);
-                }
-            }
-        } else if (dependency instanceof Widget) {
-            final Form parentForm = ModelHelper.getParentForm(currentConfiguraiton);
-            if (parentForm != null) {
-                for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(parentForm)) {
-                    if (w.getName().equals(((Widget) dependency).getName())) {
-                        return ExpressionHelper.createDependencyFromEObject(w);
-                    }
                 }
             }
         } else if (dependency instanceof Expression) {//a provided engine expression

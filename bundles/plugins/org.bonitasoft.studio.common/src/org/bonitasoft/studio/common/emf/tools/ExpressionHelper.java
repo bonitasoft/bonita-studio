@@ -34,9 +34,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -140,9 +137,6 @@ public class ExpressionHelper {
     }
 
     public static EObject createDependencyFromEObject(final EObject dependency) {
-        if (dependency instanceof Widget) {
-            return createWidgetDependency((Widget) dependency);
-        }
         if (dependency instanceof Data) {
             return createDataDependency(dependency);
         }
@@ -190,15 +184,6 @@ public class ExpressionHelper {
         return dataDependency;
     }
 
-    private static EObject createWidgetDependency(final Widget dependency) {
-        final Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
-        widgetDependency.setName(dependency.getName());
-        widgetDependency.setReturnTypeModifier(dependency.getReturnTypeModifier());
-        if (dependency instanceof Duplicable) {
-            ((Duplicable) widgetDependency).setDuplicate(((Duplicable) dependency).isDuplicate());
-        }
-        return widgetDependency;
-    }
 
     public static void clearExpression(final Expression expr) {
         Assert.isLegal(expr != null, "Expression cannot be null.");

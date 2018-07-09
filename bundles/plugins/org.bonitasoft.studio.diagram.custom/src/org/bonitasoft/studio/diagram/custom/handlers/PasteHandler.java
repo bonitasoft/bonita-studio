@@ -22,16 +22,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.handlers.DefaultPasteHandler;
 import org.bonitasoft.studio.diagram.custom.clipboard.Clipboard;
-import org.bonitasoft.studio.diagram.custom.clipboard.CustomCopyCommand;
-import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
-import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Event;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gef.EditPart;
@@ -96,32 +88,12 @@ public class PasteHandler extends DefaultPasteHandler {
 			IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider().getSelection());
 			Object selectedElem = currentSelection.getFirstElement();
 			if(selectedElem instanceof IGraphicalEditPart){
-//				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof MainProcess){
-//					return false;
-//				}
-//				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof SubProcessEvent){
-//					if(!((CustomSubprocessEventCompartmentEditPart)((CustomSubProcessEvent2EditPart)selectedElem).getChildren().get(1)).getCompartmentFigure().isExpanded()){
-//						return false ;
-//					}
-//				}
-//				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof Event){
-//					if(!((CustomSubprocessEventCompartmentEditPart)((CustomSubProcessEvent2EditPart)selectedElem).getChildren().get(1)).getCompartmentFigure().isExpanded()){
-//						return false ;
-//					}
-//				}
 				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof AbstractProcess){
 					return true;
 				}
 				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof Lane){
 					return true;
 				}
-				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof Form){
-					return true;
-				}
-				if(((IGraphicalEditPart) selectedElem).resolveSemanticElement() instanceof Group){
-					return true;
-				}
-				
 			}
 			return false;
 		} else {

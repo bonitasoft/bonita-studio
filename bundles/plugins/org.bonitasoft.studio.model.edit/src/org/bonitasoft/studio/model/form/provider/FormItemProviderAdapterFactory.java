@@ -30,6 +30,7 @@ import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -46,7 +47,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class FormItemProviderAdapterFactory extends FormAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
+public class FormItemProviderAdapterFactory extends FormAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -1026,6 +1027,52 @@ public class FormItemProviderAdapterFactory extends FormAdapterFactory implement
 		if (parentAdapterFactory != null) {
 			parentAdapterFactory.fireNotifyChanged(notification);
 		}
+	}
+
+	/**
+	 * This disposes all of the item providers created by this factory. 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void dispose() {
+		if (widgetDependencyItemProvider != null) widgetDependencyItemProvider.dispose();
+		if (validatorItemProvider != null) validatorItemProvider.dispose();
+		if (validableItemProvider != null) validableItemProvider.dispose();
+		if (formItemProvider != null) formItemProvider.dispose();
+		if (widgetLayoutInfoItemProvider != null) widgetLayoutInfoItemProvider.dispose();
+		if (columnItemProvider != null) columnItemProvider.dispose();
+		if (lineItemProvider != null) lineItemProvider.dispose();
+		if (viewFormItemProvider != null) viewFormItemProvider.dispose();
+		if (groupItemProvider != null) groupItemProvider.dispose();
+		if (checkBoxMultipleFormFieldItemProvider != null) checkBoxMultipleFormFieldItemProvider.dispose();
+		if (comboFormFieldItemProvider != null) comboFormFieldItemProvider.dispose();
+		if (dateFormFieldItemProvider != null) dateFormFieldItemProvider.dispose();
+		if (listFormFieldItemProvider != null) listFormFieldItemProvider.dispose();
+		if (passwordFormFieldItemProvider != null) passwordFormFieldItemProvider.dispose();
+		if (radioFormFieldItemProvider != null) radioFormFieldItemProvider.dispose();
+		if (selectFormFieldItemProvider != null) selectFormFieldItemProvider.dispose();
+		if (textFormFieldItemProvider != null) textFormFieldItemProvider.dispose();
+		if (textAreaFormFieldItemProvider != null) textAreaFormFieldItemProvider.dispose();
+		if (richTextAreaFormFieldItemProvider != null) richTextAreaFormFieldItemProvider.dispose();
+		if (formButtonItemProvider != null) formButtonItemProvider.dispose();
+		if (submitFormButtonItemProvider != null) submitFormButtonItemProvider.dispose();
+		if (previousFormButtonItemProvider != null) previousFormButtonItemProvider.dispose();
+		if (nextFormButtonItemProvider != null) nextFormButtonItemProvider.dispose();
+		if (infoItemProvider != null) infoItemProvider.dispose();
+		if (textInfoItemProvider != null) textInfoItemProvider.dispose();
+		if (messageInfoItemProvider != null) messageInfoItemProvider.dispose();
+		if (checkBoxSingleFormFieldItemProvider != null) checkBoxSingleFormFieldItemProvider.dispose();
+		if (fileWidgetItemProvider != null) fileWidgetItemProvider.dispose();
+		if (imageWidgetItemProvider != null) imageWidgetItemProvider.dispose();
+		if (hiddenWidgetItemProvider != null) hiddenWidgetItemProvider.dispose();
+		if (durationFormFieldItemProvider != null) durationFormFieldItemProvider.dispose();
+		if (tableItemProvider != null) tableItemProvider.dispose();
+		if (dynamicTableItemProvider != null) dynamicTableItemProvider.dispose();
+		if (iFrameWidgetItemProvider != null) iFrameWidgetItemProvider.dispose();
+		if (htmlWidgetItemProvider != null) htmlWidgetItemProvider.dispose();
+		if (suggestBoxItemProvider != null) suggestBoxItemProvider.dispose();
+		if (groupIteratorItemProvider != null) groupIteratorItemProvider.dispose();
 	}
 
 }

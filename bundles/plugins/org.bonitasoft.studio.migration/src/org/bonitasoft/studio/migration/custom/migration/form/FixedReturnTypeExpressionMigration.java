@@ -19,7 +19,6 @@ package org.bonitasoft.studio.migration.custom.migration.form;
 
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
@@ -27,6 +26,7 @@ import org.eclipse.emf.edapt.spi.migration.Model;
  * @author Florine Boudin
  *
  */
+@Deprecated
 public class FixedReturnTypeExpressionMigration extends CustomMigration {
 
 	
@@ -34,61 +34,6 @@ public class FixedReturnTypeExpressionMigration extends CustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		
-		// TextFormField
-		for(Instance instance : model.getAllInstances("form.TextFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-			}
-		}
-		
-		// TextAreaFormField
-		for(Instance instance : model.getAllInstances("form.TextAreaFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-			}
-		}
-		
-		// RichTextAreaFormField
-		for(Instance instance : model.getAllInstances("form.RichTextAreaFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-			}
-		}
-			
-		
-		// CheckBoxMultipleFormField
-		for(Instance instance : model.getAllInstances("form.CheckBoxMultipleFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-			}
-		}
-			
-		// CheckBoxSingleFormField
-		for(Instance instance : model.getAllInstances("form.CheckBoxSingleFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-				exp.set("returnType", Boolean.class.getName());
-			}
-		}
-			
-		// DateFormField
-		for(Instance instance : model.getAllInstances("form.DateFormField")){
-			
-			Instance exp = instance.get("inputExpression");
-			if(exp!=null){
-				exp.set("returnTypeFixed", false);
-			}
-		}		
 	}
 	
 	

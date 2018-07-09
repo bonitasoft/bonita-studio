@@ -216,8 +216,16 @@ public class SubmitFormButtonItemProvider extends FormButtonItemProvider {
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
 			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__ACTION ||
 			childFeature == FormPackage.Literals.SUBMIT_FORM_BUTTON__ACTIONS;
 

@@ -19,8 +19,6 @@ package org.bonitasoft.studio.model.process.util;
 
 import org.bonitasoft.studio.model.process.*;
 
-import org.bonitasoft.studio.model.simulation.SimulationTransition;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -168,7 +166,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				T result = caseAssociation(association);
 				if (result == null) result = caseConnection(association);
 				if (result == null) result = caseElement(association);
-				if (result == null) result = caseSimulationTransition(association);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -340,7 +337,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				Connection connection = (Connection)theEObject;
 				T result = caseConnection(connection);
 				if (result == null) result = caseElement(connection);
-				if (result == null) result = caseSimulationTransition(connection);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -764,12 +760,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProcessPackage.PAGE_FLOW_TRANSITION: {
-				PageFlowTransition pageFlowTransition = (PageFlowTransition)theEObject;
-				T result = casePageFlowTransition(pageFlowTransition);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ProcessPackage.RECAP_FLOW: {
 				RecapFlow recapFlow = (RecapFlow)theEObject;
 				T result = caseRecapFlow(recapFlow);
@@ -802,7 +792,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 				T result = caseSequenceFlow(sequenceFlow);
 				if (result == null) result = caseConnection(sequenceFlow);
 				if (result == null) result = caseElement(sequenceFlow);
-				if (result == null) result = caseSimulationTransition(sequenceFlow);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2197,21 +2186,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Page Flow Transition</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Page Flow Transition</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casePageFlowTransition(PageFlowTransition object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Recap Flow</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -2613,21 +2587,6 @@ public class ProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseXORGateway(XORGateway object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Transition</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Transition</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimulationTransition(SimulationTransition object) {
 		return null;
 	}
 

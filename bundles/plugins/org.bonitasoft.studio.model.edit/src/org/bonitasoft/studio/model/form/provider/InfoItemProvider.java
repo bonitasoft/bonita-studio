@@ -25,6 +25,7 @@ import org.bonitasoft.studio.model.edit.ProcessEditPlugin;
 
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 
+import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Info;
 
@@ -86,12 +87,9 @@ public class InfoItemProvider
 
 			addDocumentationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
-			addWidgetLayoutInfoPropertyDescriptor(object);
 			addShowDisplayLabelPropertyDescriptor(object);
 			addAllowHTMLForDisplayLabelPropertyDescriptor(object);
-			addDependOnPropertyDescriptor(object);
 			addDisplayDependentWidgetOnlyOnEventTriggeredPropertyDescriptor(object);
-			addParentOfPropertyDescriptor(object);
 			addMandatoryPropertyDescriptor(object);
 			addReadOnlyPropertyDescriptor(object);
 			addLabelPositionPropertyDescriptor(object);
@@ -99,12 +97,6 @@ public class InfoItemProvider
 			addInjectWidgetConditionPropertyDescriptor(object);
 			addVersionPropertyDescriptor(object);
 			addReturnTypeModifierPropertyDescriptor(object);
-			addDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditionPropertyDescriptor(object);
-			addDisplayAfterEventDependsOnConditionScriptPropertyDescriptor(object);
-			addTooltipPropertyDescriptor(object);
-			addHelpMessagePropertyDescriptor(object);
-			addDisplayLabelPropertyDescriptor(object);
-			addInjectWidgetScriptPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -154,28 +146,6 @@ public class InfoItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Widget Layout Info feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addWidgetLayoutInfoPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_widgetLayoutInfo_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_widgetLayoutInfo_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Show Display Label feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -220,28 +190,6 @@ public class InfoItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Depend On feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDependOnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_dependOn_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_dependOn_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DEPEND_ON,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Display Dependent Widget Only On Event Triggered feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -259,28 +207,6 @@ public class InfoItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Parent Of feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addParentOfPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_parentOf_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_parentOf_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__PARENT_OF,
-				 true,
-				 false,
-				 true,
-				 null,
 				 null,
 				 null));
 	}
@@ -367,7 +293,7 @@ public class InfoItemProvider
 				 FormPackage.Literals.WIDGET__REAL_HTML_ATTRIBUTES,
 				 true,
 				 false,
-				 true,
+				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
@@ -440,138 +366,6 @@ public class InfoItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Display Dependent Widget Only After First Event Triggered And Condition feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display After Event Depends On Condition Script feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayAfterEventDependsOnConditionScriptPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayAfterEventDependsOnConditionScript_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayAfterEventDependsOnConditionScript_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_tooltip_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_tooltip_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__TOOLTIP,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Help Message feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addHelpMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_helpMessage_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_helpMessage_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__HELP_MESSAGE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayLabel_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_LABEL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Inject Widget Script feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addInjectWidgetScriptPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_injectWidgetScript_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_injectWidgetScript_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -585,8 +379,17 @@ public class InfoItemProvider
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT);
 			childrenFeatures.add(FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DEPEND_ON);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__PARENT_OF);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__INPUT_EXPRESSION);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__TOOLTIP);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__HELP_MESSAGE);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_LABEL);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__ACTION);
 		}
 		return childrenFeatures;
@@ -651,21 +454,25 @@ public class InfoItemProvider
 			case FormPackage.INFO__MANDATORY:
 			case FormPackage.INFO__READ_ONLY:
 			case FormPackage.INFO__LABEL_POSITION:
+			case FormPackage.INFO__REAL_HTML_ATTRIBUTES:
 			case FormPackage.INFO__INJECT_WIDGET_CONDITION:
 			case FormPackage.INFO__VERSION:
 			case FormPackage.INFO__RETURN_TYPE_MODIFIER:
-			case FormPackage.INFO__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION:
-			case FormPackage.INFO__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT:
-			case FormPackage.INFO__TOOLTIP:
-			case FormPackage.INFO__HELP_MESSAGE:
-			case FormPackage.INFO__DISPLAY_LABEL:
-			case FormPackage.INFO__INJECT_WIDGET_SCRIPT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case FormPackage.INFO__TEXT_ANNOTATION_ATTACHMENT:
 			case FormPackage.INFO__HTML_ATTRIBUTES:
+			case FormPackage.INFO__WIDGET_LAYOUT_INFO:
+			case FormPackage.INFO__DEPEND_ON:
+			case FormPackage.INFO__PARENT_OF:
+			case FormPackage.INFO__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION:
+			case FormPackage.INFO__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT:
 			case FormPackage.INFO__INPUT_EXPRESSION:
 			case FormPackage.INFO__AFTER_EVENT_EXPRESSION:
+			case FormPackage.INFO__TOOLTIP:
+			case FormPackage.INFO__HELP_MESSAGE:
+			case FormPackage.INFO__DISPLAY_LABEL:
+			case FormPackage.INFO__INJECT_WIDGET_SCRIPT:
 			case FormPackage.INFO__ACTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
@@ -691,12 +498,57 @@ public class InfoItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO,
+				 FormFactory.eINSTANCE.createWidgetLayoutInfo()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DEPEND_ON,
+				 FormFactory.eINSTANCE.createWidgetDependency()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__PARENT_OF,
+				 FormFactory.eINSTANCE.createWidgetDependency()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(FormPackage.Literals.WIDGET__INPUT_EXPRESSION,
 				 ExpressionFactory.eINSTANCE.createExpression()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__TOOLTIP,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__HELP_MESSAGE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_LABEL,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT,
 				 ExpressionFactory.eINSTANCE.createExpression()));
 
 		newChildDescriptors.add
@@ -717,8 +569,16 @@ public class InfoItemProvider
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
-			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION;
+			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT;
 
 		if (qualify) {
 			return getString

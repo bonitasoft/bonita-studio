@@ -23,8 +23,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.runtime.IStatus;
@@ -87,23 +85,6 @@ public class OperatorConsistencyConstraintTest {
         Assertions.assertThat(status.isOK()).isTrue();
     }
 
-    @Test
-    public void testPerformBatchValidationReturnActionValidationSuccessIfFileWidgetIsDownloadableOnly() throws Exception {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        fileWidget.setDownloadOnly(true);
-        fileWidget.setAction(operation);
-        final Expression leftExpression = ExpressionFactory.eINSTANCE.createExpression();
-        leftExpression.setName("");
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-        operation.setLeftOperand(leftExpression);
-        operation.setOperator(operator);
-        when(context.getTarget()).thenReturn(operation);
-        final OperatorConsistencyConstraint operatorConsistency = new OperatorConsistencyConstraint();
-        final IStatus status = operatorConsistency.performBatchValidation(context);
-        Assertions.assertThat(status.isOK()).isTrue();
-    }
 
     private IStatus performValidationWithDocumentMultiplicityAndOperatorType(final boolean isMultiple, final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();

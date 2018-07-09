@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.model.process;
 
-import org.bonitasoft.studio.model.simulation.SimulationTransition;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,7 +35,7 @@ import org.bonitasoft.studio.model.simulation.SimulationTransition;
  * @model
  * @generated
  */
-public interface Connection extends Element, SimulationTransition {
+public interface Connection extends Element {
 	/**
 	 * Returns the value of the '<em><b>Target</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.TargetElement#getIncoming <em>Incoming</em>}'.

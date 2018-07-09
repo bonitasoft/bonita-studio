@@ -18,7 +18,6 @@ package org.bonitasoft.studio.common.palette;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -58,16 +57,6 @@ public class ProcessPaletteLabelProviderTest {
     @Test(expected = IllegalArgumentException.class)
     public void should_getProcessPaletteDescription_throw_IllegalArgumentException_for_null_argument() throws Exception {
         labelProvider.getProcessPaletteDescription(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_getProcessPaletteText_throw_IllegalArgumentException_for_eClass_not_representing_a_process_element() throws Exception {
-        labelProvider.getProcessPaletteText(FormPackage.Literals.TEXT_FORM_FIELD);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_getProcessPaletteDescription_throw_IllegalArgumentException_for_eClass_not_representing_a_process_element() throws Exception {
-        labelProvider.getProcessPaletteDescription(FormPackage.Literals.TEXT_FORM_FIELD);
     }
 
     @Test

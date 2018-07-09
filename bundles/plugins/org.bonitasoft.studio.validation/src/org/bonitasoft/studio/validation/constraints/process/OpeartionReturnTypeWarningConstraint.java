@@ -19,7 +19,6 @@ import org.bonitasoft.studio.expression.editor.operation.OperationReturnTypesVal
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -45,12 +44,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
                 final Operation op = (Operation) expression.eContainer();
                 if (op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)) {
                     return ctx.createSuccessStatus();
-                }
-                if (op.eContainer() instanceof FileWidget) {
-                    final FileWidget fileWidget = (FileWidget) op.eContainer();
-                    if (fileWidget.isDownloadOnly()) {
-                        return ctx.createSuccessStatus();
-                    }
                 }
                 final IStatus status = validator.validate(op.getRightOperand());
                 if (!status.isOK()) {
@@ -84,12 +77,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
             final Operation op = (Operation) expression.eContainer();
                 if (op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)) {
                     return ctx.createSuccessStatus();
-                }
-                if (op.eContainer() instanceof FileWidget) {
-                    final FileWidget fileWidget = (FileWidget) op.eContainer();
-                    if (fileWidget.isDownloadOnly()) {
-                        return ctx.createSuccessStatus();
-                    }
                 }
                 if (op.getLeftOperand() == null
                         || op.getLeftOperand().getContent() == null

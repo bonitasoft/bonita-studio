@@ -78,7 +78,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			addShowPageLabelPropertyDescriptor(object);
 			addAllowHTMLInPageLabelPropertyDescriptor(object);
 			addVersionPropertyDescriptor(object);
-			addPageLabelPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -238,28 +237,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 	}
 
 	/**
-	 * This adds a property descriptor for the Page Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addPageLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Form_pageLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Form_pageLabel_feature", "_UI_Form_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM__PAGE_LABEL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -276,6 +253,7 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			childrenFeatures.add(FormPackage.Literals.FORM__COLUMNS);
 			childrenFeatures.add(FormPackage.Literals.FORM__LINES);
 			childrenFeatures.add(FormPackage.Literals.FORM__WIDGETS);
+			childrenFeatures.add(FormPackage.Literals.FORM__PAGE_LABEL);
 			childrenFeatures.add(FormPackage.Literals.FORM__ACTIONS);
 		}
 		return childrenFeatures;
@@ -339,7 +317,6 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			case FormPackage.FORM__SHOW_PAGE_LABEL:
 			case FormPackage.FORM__ALLOW_HTML_IN_PAGE_LABEL:
 			case FormPackage.FORM__VERSION:
-			case FormPackage.FORM__PAGE_LABEL:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case FormPackage.FORM__VALIDATORS:
@@ -347,6 +324,7 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			case FormPackage.FORM__COLUMNS:
 			case FormPackage.FORM__LINES:
 			case FormPackage.FORM__WIDGETS:
+			case FormPackage.FORM__PAGE_LABEL:
 			case FormPackage.FORM__ACTIONS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
@@ -519,6 +497,11 @@ public class FormItemProvider extends ConnectableElementItemProvider {
 			(createChildParameter
 				(FormPackage.Literals.FORM__WIDGETS,
 				 FormFactory.eINSTANCE.createSuggestBox()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.FORM__PAGE_LABEL,
+				 ExpressionFactory.eINSTANCE.createExpression()));
 
 		newChildDescriptors.add
 			(createChildParameter

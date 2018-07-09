@@ -16,16 +16,13 @@ package org.bonitasoft.studio.engine.coolbar;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -65,12 +62,6 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
         final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
         if (isADiagram) {
-            final EObject rootElement = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-            if (rootElement instanceof Form) {
-                if (ModelHelper.getParentProcess(rootElement) != null) {
-                    return true;
-                }
-            }
             final List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer().getSelectedEditParts();
             if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
                 final Object selectedEp = selectedEditParts.iterator().next();

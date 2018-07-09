@@ -185,7 +185,7 @@
     <eLiterals name="LOCALDATETIME" value="9" literal="LOCALDATETIME"/>
     <eLiterals name="OFFSETDATETIME" value="10" literal="OFFSETDATETIME"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Connection" eSuperTypes="#//Element simulation.ecore#//SimulationTransition">
+  <eClassifiers xsi:type="ecore:EClass" name="Connection" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//TargetElement"
         eOpposite="#//TargetElement/incoming"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//SourceElement"
@@ -411,12 +411,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="searchIndexes" upperBound="-1"
         eType="#//SearchIndex" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PageFlowTransition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="ecore:EClass form.ecore#//Form"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="ecore:EClass form.ecore#//Form"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecapFlow" abstract="true" interface="true"
       eSuperTypes="#//AbstractPageFlow">

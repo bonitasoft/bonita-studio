@@ -16,26 +16,15 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.document;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
+@Deprecated
 public class DocumentDefaultReturnTypeModifierMigration extends CustomMigration {
 
     @Override
     public void migrateBefore(final Model model, final Metamodel metamodel) throws MigrationException {
-        super.migrateBefore(model, metamodel);
-        final EList<Instance> fileWidgets = model.getAllInstances("form.FileWidget");
-        for (final Instance fileWidget : fileWidgets) {
-            final Object duplicated = fileWidget.get("duplicate");
-            if (duplicated != null && Boolean.TRUE.equals(duplicated)) {
-                fileWidget.set("returnTypeModifier", "java.util.List<java.lang.String>");
-            } else {
-                fileWidget.set("returnTypeModifier", "org.bonitasoft.engine.bpm.document.DocumentValue");
-            }
-        }
     }
 }

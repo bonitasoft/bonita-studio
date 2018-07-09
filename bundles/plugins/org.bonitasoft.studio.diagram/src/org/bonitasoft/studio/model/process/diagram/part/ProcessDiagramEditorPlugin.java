@@ -154,12 +154,12 @@ public class ProcessDiagramEditorPlugin extends AbstractUIPlugin {
 		factories.add(new ConfigurationItemProviderAdapterFactory());
 		factories.add(new ConnectorConfigurationItemProviderAdapterFactory());
 		factories.add(new ExpressionItemProviderAdapterFactory());
-		factories.add(new FormItemProviderAdapterFactory());
 		factories.add(new KpiItemProviderAdapterFactory());
 		factories.add(new ParameterItemProviderAdapterFactory());
 		factories.add(new ProcessItemProviderAdapterFactory());
 		factories.add(new DecisionItemProviderAdapterFactory());
 		factories.add(new TransitionsItemProviderAdapterFactory());
+		factories.add(new FormItemProviderAdapterFactory());
 		factories.add(new SimulationItemProviderAdapterFactory());
 		factories.add(new ResourceItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());

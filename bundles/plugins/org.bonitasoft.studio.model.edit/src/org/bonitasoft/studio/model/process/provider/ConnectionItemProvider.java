@@ -23,13 +23,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.edit.ProcessEditPlugin;
 
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-
-import org.bonitasoft.studio.model.simulation.SimulationPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -86,9 +82,6 @@ public class ConnectionItemProvider
 
 			addDocumentationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
-			addProbabilityPropertyDescriptor(object);
-			addDataBasedPropertyDescriptor(object);
-			addUseExpressionPropertyDescriptor(object);
 			addTargetPropertyDescriptor(object);
 			addSourcePropertyDescriptor(object);
 		}
@@ -135,72 +128,6 @@ public class ConnectionItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Probability feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addProbabilityPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationTransition_probability_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationTransition_probability_feature", "_UI_SimulationTransition_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_TRANSITION__PROBABILITY,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Data Based feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDataBasedPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationTransition_dataBased_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationTransition_dataBased_feature", "_UI_SimulationTransition_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_TRANSITION__DATA_BASED,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Use Expression feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addUseExpressionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SimulationTransition_useExpression_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SimulationTransition_useExpression_feature", "_UI_SimulationTransition_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 SimulationPackage.Literals.SIMULATION_TRANSITION__USE_EXPRESSION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -262,7 +189,6 @@ public class ConnectionItemProvider
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT);
-			childrenFeatures.add(SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION);
 		}
 		return childrenFeatures;
 	}
@@ -320,13 +246,9 @@ public class ConnectionItemProvider
 		switch (notification.getFeatureID(Connection.class)) {
 			case ProcessPackage.CONNECTION__DOCUMENTATION:
 			case ProcessPackage.CONNECTION__NAME:
-			case ProcessPackage.CONNECTION__PROBABILITY:
-			case ProcessPackage.CONNECTION__DATA_BASED:
-			case ProcessPackage.CONNECTION__USE_EXPRESSION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-			case ProcessPackage.CONNECTION__EXPRESSION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -348,11 +270,6 @@ public class ConnectionItemProvider
 			(createChildParameter
 				(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT,
 				 ProcessFactory.eINSTANCE.createTextAnnotationAttachment()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION,
-				 ExpressionFactory.eINSTANCE.createExpression()));
 	}
 
 	/**

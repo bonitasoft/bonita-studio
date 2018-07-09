@@ -30,7 +30,6 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvi
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.Task;
@@ -77,7 +76,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                     && !dataExpression.getContent().isEmpty()
                     && expressionContent != null
                     && !expressionContent.isEmpty()) {
-                if (operation != null && needValidation(operation)) {
+                if (operation != null) {
                     final String operatorType = operation.getOperator().getType();
                     if (ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)) {
                         return validateJavaMethodOperation(expression,
@@ -272,10 +271,6 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                     operatorLabelProvider.getText(operation.getOperator())));
         }
         return null;
-    }
-
-    protected boolean needValidation(final Operation operation) {
-        return !(operation.eContainer() instanceof Info);
     }
 
     protected Operation getOperation(final Expression expression) {
