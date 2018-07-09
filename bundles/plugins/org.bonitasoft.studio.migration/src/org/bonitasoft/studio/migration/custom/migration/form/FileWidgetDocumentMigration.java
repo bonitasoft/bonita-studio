@@ -14,14 +14,8 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import java.util.List;
-
-import org.bonitasoft.engine.operation.OperatorType;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
@@ -30,65 +24,18 @@ import org.eclipse.emf.edapt.spi.migration.Model;
  * @author Florine Boudin
  *
  */
+@Deprecated
 public class FileWidgetDocumentMigration extends CustomMigration {
 
-    private EList<Instance> documents;
-    private EList<Instance> fileWidgets;
 
     @Override
     public void migrateBefore(final Model model, final Metamodel metamodel) throws MigrationException {
-        super.migrateBefore(model, metamodel);
-        fileWidgets = model.getAllInstances("form.FileWidget");
-
-        // remove old documents
-        for (final Instance fileWidget : fileWidgets) {
-            if (fileWidget.get("document") != null) {
-                final Instance element = fileWidget.get("document");
-                fileWidget.remove("document", element);
-            }
-        }
-
 
     }
 
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        super.migrateAfter(model, metamodel);
-        documents = model.getAllInstances("process.Document");
-
-        final EList<Instance> fileWidgets = model.getAllInstances("form.FileWidget");
-
-        for (final Instance fileWidget : fileWidgets) {
-            if (fileWidget.get("action") != null) {
-                final Instance action = fileWidget.get("action");
-                final Instance leftOperand = action.get("leftOperand");
-                final Instance operator = action.get("operator");
-
-                if (leftOperand != null && ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperand.get("type"))) {
-                    final List<Instance> list = leftOperand.get("referencedElements");
-                    // find the document referenced element
-                    if (list.isEmpty()) {
-                        final Instance refDoc = getReferencedDocument(leftOperand);
-                        if (refDoc != null) {
-                            leftOperand.add("referencedElements", refDoc.copy());
-                        }
-                    }
-                } else if (leftOperand != null && "".equals(leftOperand.get("name")) && "".equals(leftOperand.get("content"))) {
-                    // Set the operator type as he should be if designed in 6.4.0
-                    operator.set("type", OperatorType.ASSIGNMENT.toString());
-                }
-            }
-        }
-    }
-
-    private Instance getReferencedDocument(final Instance leftOperand) {
-        for (final Instance doc : documents) {
-            if (doc.get("name").equals(leftOperand.get("name"))) {
-                return doc;
-            }
-        }
-        return null;
     }
 
 

@@ -41,10 +41,6 @@ import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.DateFormField;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.BooleanType;
@@ -101,19 +97,7 @@ public class ExpressionHelperTest {
         assertThat(((JavaObjectData) dependencyFromEObject).getDefaultValue()).isNull();
     }
 
-    @Test
-    public void shouldCreateDependencyFromEObject_CopyWidgetWithName() throws Exception {
-        final Widget widget = FormFactory.eINSTANCE.createDateFormField();
-        widget.setName("myWidget");
-        widget.setDisplayLabel(ExpressionFactory.eINSTANCE.createExpression());
-        widget.setInputExpression(ExpressionFactory.eINSTANCE.createExpression());
 
-        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(dependencyFromEObject).isNotNull().isNotSameAs(widget).isInstanceOf(DateFormField.class);
-        assertThat(((Widget) dependencyFromEObject).getName()).isEqualTo(widget.getName());
-        assertThat(((Widget) dependencyFromEObject).getDisplayLabel()).isNull();
-        assertThat(((Widget) dependencyFromEObject).getInputExpression()).isNull();
-    }
 
     @Test
     public void shouldCreateDependencyFromEObject_CopyDocumentWithMultiplicty() throws Exception {
@@ -145,23 +129,6 @@ public class ExpressionHelperTest {
         assertThat(((SearchIndex) dependencyFromEObject).getName().getName()).isEqualTo(searchIndex.getName().getName());
     }
 
-    @Test
-    public void shouldCreateDependencyFromEObject_CopyWidgetReturnTypeModifier() throws Exception {
-        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
-        widget.setReturnTypeModifier(Integer.class.getName());
-
-        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Widget) dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
-    }
-
-    @Test
-    public void shouldCreateDependencyFromEObject_CopyWidgetDuplicateValue() throws Exception {
-        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
-        ((Duplicable) widget).setDuplicate(true);
-
-        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Duplicable) dependencyFromEObject).isDuplicate()).isTrue();
-    }
 
     @Test
     public void shouldClearExpression_SetEmptyExpression() throws Exception {
@@ -260,12 +227,6 @@ public class ExpressionHelperTest {
         assertThat(expression.getReferencedElements()).hasSize(1);
         final EObject refElement = expression.getReferencedElements().get(0);
         assertThat(EcoreUtil.equals(document, refElement)).isTrue();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void should_createExpressionFromEObject_Throw_an_IllegalArgumentException_for_Unsupported_EObject() throws Exception {
-        final org.bonitasoft.studio.model.form.Form form = FormFactory.eINSTANCE.createForm();
-        ExpressionHelper.createExpressionFromEObject(form);
     }
 
     @Test

@@ -15,7 +15,6 @@
 
 package org.bonitasoft.studio.groovy;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +24,12 @@ import java.util.stream.Stream;
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
@@ -49,12 +44,6 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.simulation.SimulationBoolean;
-import org.bonitasoft.studio.model.simulation.SimulationData;
-import org.bonitasoft.studio.model.simulation.SimulationLiteralData;
-import org.bonitasoft.studio.model.simulation.SimulationNumberData;
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
@@ -83,19 +72,6 @@ public class GroovyUtil {
             return true;
         }
     };
-
-    public static ScriptVariable createScriptVariable(final SimulationData d) {
-        String type = Object.class.getName();
-        if (d instanceof SimulationBoolean) {
-            type = Boolean.class.getName();
-        } else if (d instanceof SimulationLiteralData) {
-            type = String.class.getName();
-        } else if (d instanceof SimulationNumberData) {
-            type = Integer.class.getName();
-        }
-        return new ScriptVariable(d.getName(), type);
-    }
-
 
     public static List<ExpressionConstants> getBonitaConstantsFor(
             EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
@@ -147,17 +123,6 @@ public class GroovyUtil {
 
         if (context instanceof Task) {
             result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
-        } else if (context instanceof Widget
-                && ModelHelper.getPageFlow((Widget) context) != null) {
-            result.add(ExpressionConstants.LOGGED_USER_ID);
-            if (!(ModelHelper.getPageFlow((Widget) context) instanceof AbstractProcess)) {
-                result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
-            }
-        } else if (context instanceof Form) {
-            result.add(ExpressionConstants.LOGGED_USER_ID);
-            if (!(((Form) context).eContainer() instanceof AbstractProcess)) {
-                result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
-            }
         }
 
         return result;
@@ -275,12 +240,6 @@ public class GroovyUtil {
         return t;
     }
 
-    public static FieldNode createVariablesFromGroupIterator(final Group group,
-            final Class<?> clazz) {
-        return new FieldNode(group.getIterator().getName(), Modifier.PUBLIC,
-                new ClassNode(clazz), new ClassNode(clazz), null);
-    }
-
     public static boolean isMultipleData(final Element container,
             String inputScript) {
         if (inputScript != null && inputScript.trim().length() > 0) {
@@ -336,11 +295,6 @@ public class GroovyUtil {
 
     public static ScriptVariable createScriptVariable(final Output output) {
         return new ScriptVariable(output.getName(), output.getType());
-    }
-
-    public static ScriptVariable createScriptVariable(final Widget widget) {
-        return new ScriptVariable(WidgetHelper.FIELD_PREFIX
-                + widget.getName(), WidgetHelper.getAssociatedReturnType(widget));
     }
 
     public static List<ScriptVariable> createScriptVariablesFromFormElement(

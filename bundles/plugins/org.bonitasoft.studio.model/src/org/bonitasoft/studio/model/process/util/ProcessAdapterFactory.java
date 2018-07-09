@@ -19,8 +19,6 @@ package org.bonitasoft.studio.model.process.util;
 
 import org.bonitasoft.studio.model.process.*;
 
-import org.bonitasoft.studio.model.simulation.SimulationTransition;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -385,10 +383,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 				return createPoolAdapter();
 			}
 			@Override
-			public Adapter casePageFlowTransition(PageFlowTransition object) {
-				return createPageFlowTransitionAdapter();
-			}
-			@Override
 			public Adapter caseRecapFlow(RecapFlow object) {
 				return createRecapFlowAdapter();
 			}
@@ -495,10 +489,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseXORGateway(XORGateway object) {
 				return createXORGatewayAdapter();
-			}
-			@Override
-			public Adapter caseSimulationTransition(SimulationTransition object) {
-				return createSimulationTransitionAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -1571,20 +1561,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.PageFlowTransition <em>Page Flow Transition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.PageFlowTransition
-	 * @generated
-	 */
-	public Adapter createPageFlowTransitionAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1959,20 +1935,6 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createXORGatewayAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.simulation.SimulationTransition <em>Transition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationTransition
-	 * @generated
-	 */
-	public Adapter createSimulationTransitionAdapter() {
 		return null;
 	}
 

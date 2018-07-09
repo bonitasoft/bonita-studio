@@ -77,7 +77,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
@@ -426,8 +425,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                     if (dep instanceof Data) {
                         invalidExpressionForTest.put(parameter.getKey(), e);
                     } else if (dep instanceof Parameter) {
-                        invalidExpressionForTest.put(parameter.getKey(), e);
-                    } else if (dep instanceof FormField) {
                         invalidExpressionForTest.put(parameter.getKey(), e);
                     } else if (dep instanceof Document) {
                         invalidExpressionForTest.put(parameter.getKey(), e);

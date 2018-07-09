@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 
@@ -86,23 +84,17 @@ public class DefaultElementNameProvider {
     }
 
     private final ProcessPaletteLabelProvider processPaletteLabelProvider;
-    private final FormPaletteLabelProvider formPaletteLabelProvider;
 
     public DefaultElementNameProvider() {
         processPaletteLabelProvider = new ProcessPaletteLabelProvider();
-        formPaletteLabelProvider = new FormPaletteLabelProvider();
     }
 
     public String getNameFor(final Element element) {
-        if (element instanceof Widget) {
-            return NamingUtils.toJavaIdentifier(formPaletteLabelProvider.getFormPaletteText(element.eClass()), true);
-        } else {
-            String name = classifierIDToDefaultName.get(element.eClass().getClassifierID());
-            if (name == null) {
-                name = processPaletteLabelProvider.getProcessPaletteText(element.eClass());
-            }
-            return name;
+        String name = classifierIDToDefaultName.get(element.eClass().getClassifierID());
+        if (name == null) {
+            name = processPaletteLabelProvider.getProcessPaletteText(element.eClass());
         }
+        return name;
     }
 
 }

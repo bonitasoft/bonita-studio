@@ -20,7 +20,6 @@ import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -94,9 +93,8 @@ public abstract class ExpressionScriptContrainer extends ScriptContainer<Express
         return compoundCommand;
     }
 
-    private Object dependencyName(final EObject dep) {
-        final String name = (String) dep.eGet(getDependencyNameFeature());
-        return dep instanceof Widget ? "field_" + name : name;
+    private String dependencyName(final EObject dep) {
+        return (String) dep.eGet(getDependencyNameFeature());
     }
 
 }

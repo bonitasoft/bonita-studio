@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
@@ -40,16 +39,11 @@ import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpression
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.DateFormField;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -79,8 +73,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -226,9 +218,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             final ExpressionViewer expressionViewer) {
 
         final EObject finalContext = context;
-        if (context instanceof Widget && ModelHelper.getPageFlow((Widget) context) instanceof Pool) {
-            addExpressionButton.setEnabled(false);
-        }
         final ViewerFilter[] finalFilters = filters;
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
 
@@ -332,31 +321,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
                 referenceObservable, selectionToReferencedData,
                 referencedDataToSelection);
         dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(typeText), returnTypeObservable);
-
-        if (context instanceof DateFormField) {
-            handleDateFormFieldBinding();
-        }
-
-    }
-
-    protected void handleDateFormFieldBinding() {
-        final ControlDecoration cd = new ControlDecoration(typeText, SWT.TOP | SWT.LEFT);
-        // cd.setImage(Pics.getImage(PicsConstants.error)) ;
-        cd.setImage(PlatformUI.getWorkbench().getSharedImages()
-                .getImage(ISharedImages.IMG_OBJS_WARN_TSK));
-        cd.setDescriptionText("It is recommanded to use Return type ad String or Date for Date Widget");
-        cd.setShowOnlyOnFocus(false);
-        updateTypeTextControlDecorationVisibility(cd);
-
-        returnTypeObservable
-                .addValueChangeListener(new IValueChangeListener() {
-
-                    @Override
-                    public void handleValueChange(final ValueChangeEvent event) {
-                        updateTypeTextControlDecorationVisibility(cd);
-                    }
-
-                });
     }
 
     protected void updateTypeTextControlDecorationVisibility(final ControlDecoration cd) {

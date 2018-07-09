@@ -21,8 +21,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
@@ -49,8 +47,6 @@ public class AbstractBusinessObjectWizardTest {
 
     private Data t1Data;
 
-    private TextFormField textField;
-
     private Task task2;
 
     private Data t2Data;
@@ -61,7 +57,6 @@ public class AbstractBusinessObjectWizardTest {
     @Before
     public void setUp() throws Exception {
         ProcessFactory processFactory = ProcessFactory.eINSTANCE;
-        FormFactory formFactory = FormFactory.eINSTANCE;
         process = processFactory.createPool();
         processData = processFactory.createData();
         processData.setName("processData");

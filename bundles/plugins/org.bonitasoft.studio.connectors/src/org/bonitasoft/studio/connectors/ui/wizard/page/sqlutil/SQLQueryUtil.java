@@ -17,17 +17,10 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.AbstractTable;
-import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
-import org.bonitasoft.studio.model.form.SingleValuatedFormField;
-import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -97,76 +90,6 @@ public class SQLQueryUtil {
 		return result;
 	}
 
-	public static boolean isGraphicalModeSupportedFor(
-			Expression scriptExpression, EObject container) {
-		if(isSingleOutput(container)){
-			if(isGraphicalModeSupportedFor(scriptExpression)){
-				return getSelectedColumns(scriptExpression).size() == 1 && !useWildcard(scriptExpression);
-			}
-		}else if(isListOutput(container)){
-			if(isGraphicalModeSupportedFor(scriptExpression)){
-				return !useWildcard(scriptExpression);
-			}
-		}else if(isTableOutput(container)){
-			return isGraphicalModeSupportedFor(scriptExpression);
-		}
-		return false;
-	}
 	
-	public static boolean isTableOutput(EObject container) {
-		Widget widget =  ModelHelper.getParentWidget(container);
-		if(container instanceof Expression){
-			String returnType = ((Expression) container).getReturnType();
-			if(returnType != null){
-				try{
-					Class<?> returnTypeClass = Class.forName(returnType);
-					return Collection.class.isAssignableFrom(returnTypeClass) && (widget instanceof AbstractTable);
-				}catch(Exception e){
-					
-				}
-			}
-		}
-	
-		return  widget instanceof MultipleValuatedFormField && (widget instanceof AbstractTable);
-	}
-	
-	public static boolean isListOutput(EObject container) {
-		Widget widget =  ModelHelper.getParentWidget(container);
-		if(container instanceof Expression){
-			String returnType = ((Expression) container).getReturnType();
-			if(returnType != null){
-				try{
-					Class<?> returnTypeClass = Class.forName(returnType);
-					return Collection.class.isAssignableFrom(returnTypeClass) && !(widget instanceof AbstractTable);
-				}catch(Exception e){
-					
-				}
-			}
-		}
-	
-		return  widget instanceof MultipleValuatedFormField && !(widget instanceof AbstractTable);
-	}
-
-	public static boolean isSingleOutput(EObject container) {
-		if(container instanceof Expression){
-			String returnType = ((Expression) container).getReturnType();
-			if(returnType != null){
-				if (returnType.equals(String.class.getName())
-						  || returnType.equals(Byte.class.getName())
-				          || returnType.equals(Short.class.getName())
-				          || returnType.equals(Integer.class.getName())
-				          || returnType.equals(Long.class.getName())
-				          || returnType.equals(Float.class.getName())
-				          || returnType.equals(Double.class.getName())
-				          || returnType.equals(Boolean.class.getName())
-				          || returnType.equals(Character.class.getName())){
-					return true;
-				}
-			}
-		}
-		Widget widget = ModelHelper.getParentWidget(container);
-		return widget instanceof SingleValuatedFormField;
-	}
-
 
 }

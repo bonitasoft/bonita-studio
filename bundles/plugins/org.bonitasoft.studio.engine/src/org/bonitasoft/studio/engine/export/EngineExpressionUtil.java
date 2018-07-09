@@ -30,7 +30,6 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.expression.ProjectXtextResourceProvider;
@@ -42,8 +41,6 @@ import org.bonitasoft.studio.engine.export.expression.converter.comparison.Compa
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.form.GroupIterator;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -190,16 +187,12 @@ public class EngineExpressionUtil {
                     result.add(createParameterExpression((Parameter) element));
                 } else if (element instanceof org.bonitasoft.studio.model.expression.Expression) {
                     result.add(createExpression((org.bonitasoft.studio.model.expression.Expression) element));
-                } else if (element instanceof Widget) {
-                    result.add(createWidgetExpression((Widget) element));
                 } else if (element instanceof Document) {
                     if (((Document) element).isMultiple()) {
                         result.add(expBuilder.createDocumentListExpression(((Document) element).getName()));
                     } else {
                         result.add(expBuilder.createDocumentReferenceExpression(((Document) element).getName()));
                     }
-                } else if (element instanceof GroupIterator) {
-                    result.add(createGroupIteratorExpression((GroupIterator) element));
                 } else if (element instanceof ContractInput) {
                     result.add(expBuilder.createContractInputExpression(((ContractInput) element).getName(),
                             ExpressionHelper.getContractInputReturnType((ContractInput) element)));
@@ -208,41 +201,6 @@ public class EngineExpressionUtil {
         }
 
         return result;
-    }
-
-    /**
-     * @param element
-     * @return
-     */
-    private static Expression createGroupIteratorExpression(final GroupIterator element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        exp.createNewInstance(element.getName());
-        exp.setContent(element.getName());
-        exp.setExpressionType(ExpressionType.TYPE_INPUT);
-        exp.setReturnType(element.getClassName());
-        try {
-            return exp.done();
-        } catch (final InvalidExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * @param element
-     * @return
-     * @throws InvalidExpressionException
-     */
-    private static Expression createWidgetExpression(final Widget element) {
-        final ExpressionBuilder exp = new ExpressionBuilder();
-        exp.createNewInstance(WidgetHelper.FIELD_PREFIX + element.getName());
-        exp.setContent(WidgetHelper.FIELD_PREFIX + element.getName());
-        exp.setExpressionType(ExpressionType.TYPE_INPUT);
-        exp.setReturnType(WidgetHelper.getAssociatedReturnType(element));
-        try {
-            return exp.done();
-        } catch (final InvalidExpressionException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static Expression createParameterExpression(final Parameter parameter) {

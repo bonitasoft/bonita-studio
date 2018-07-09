@@ -41,7 +41,6 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.commands.AbstractHandler;
@@ -204,7 +203,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (part instanceof DiagramEditor) {
             EObject root = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement();
-            return root instanceof MainProcess || root instanceof Form;
+            return root instanceof MainProcess;
         }
         return false;
     }

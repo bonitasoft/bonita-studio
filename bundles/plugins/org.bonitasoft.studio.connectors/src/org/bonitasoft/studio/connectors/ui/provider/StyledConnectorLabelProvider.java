@@ -25,8 +25,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -74,7 +72,7 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
 			String connectorType = connector.getDefinitionId() +" ("+connector.getDefinitionVersion()+")";
 			styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
 			EObject parent = connector.eContainer();
-			if(!(parent instanceof Expression) && !(parent instanceof Form) && !(parent instanceof SubmitFormButton)){
+            if (!(parent instanceof Expression)) {
 				if(connector.getEvent() != null && !connector.getEvent().isEmpty()){
 					styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
 					styledString.append(connector.getEvent(), StyledString.COUNTER_STYLER);

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.common.ValidationCommonPlugin;
@@ -86,7 +85,9 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
             final Diagram diagram = entry.getKey();
             if (diagramEp != null) {
                 if (!monitor.isCanceled()) {
-                    monitor.setTaskName(subTaskName(diagramEp.resolveSemanticElement()));
+                    monitor.setTaskName(Messages.bind(
+                            Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
+                            ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
                     final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
                     runWithConstraints(txDomain, new Runnable() {
 
@@ -104,11 +105,6 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     }
 
 
-    private String subTaskName(final EObject semanticElement) {
-        return semanticElement instanceof Form ? Messages.bind(Messages.validatingForm, ((Form) semanticElement).getName()) : Messages.bind(
-                Messages.validatingProcess, ((MainProcess) semanticElement).getName(),
-                ((MainProcess) semanticElement).getVersion());
-    }
 
     private void buildEditPart() {
         for (final Diagram diagram : diagramsToDiagramEditPart.keySet()) {

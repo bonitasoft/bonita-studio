@@ -21,13 +21,16 @@ package org.bonitasoft.studio.model.form.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.MandatoryFieldsCustomization;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
@@ -59,54 +62,39 @@ public class MandatoryFieldsCustomizationItemProvider extends CSSCustomizableIte
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addMandatorySymbolPropertyDescriptor(object);
-			addMandatoryLabelPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Mandatory Symbol feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addMandatorySymbolPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_MandatoryFieldsCustomization_mandatorySymbol_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_MandatoryFieldsCustomization_mandatorySymbol_feature", "_UI_MandatoryFieldsCustomization_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL);
+			childrenFeatures.add(FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL);
+		}
+		return childrenFeatures;
 	}
 
 	/**
-	 * This adds a property descriptor for the Mandatory Label feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addMandatoryLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_MandatoryFieldsCustomization_mandatoryLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_MandatoryFieldsCustomization_mandatoryLabel_feature", "_UI_MandatoryFieldsCustomization_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
@@ -135,7 +123,7 @@ public class MandatoryFieldsCustomizationItemProvider extends CSSCustomizableIte
 		switch (notification.getFeatureID(MandatoryFieldsCustomization.class)) {
 			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
 			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -151,6 +139,39 @@ public class MandatoryFieldsCustomizationItemProvider extends CSSCustomizableIte
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify =
+			childFeature == FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL ||
+			childFeature == FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL;
+
+		if (qualify) {
+			return getString
+				("_UI_CreateChild_text2", //$NON-NLS-1$
+				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 }

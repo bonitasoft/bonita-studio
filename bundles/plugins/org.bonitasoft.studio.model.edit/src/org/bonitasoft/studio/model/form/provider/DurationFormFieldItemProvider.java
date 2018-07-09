@@ -252,8 +252,23 @@ public class DurationFormFieldItemProvider extends SingleValuatedFormFieldItemPr
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
-			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION;
+			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE;
 
 		if (qualify) {
 			return getString

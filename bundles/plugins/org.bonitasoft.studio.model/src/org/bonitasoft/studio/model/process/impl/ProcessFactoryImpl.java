@@ -135,7 +135,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 			case ProcessPackage.OUTPUT_MAPPING: return createOutputMapping();
 			case ProcessPackage.PAGE_FLOW: return createPageFlow();
 			case ProcessPackage.POOL: return createPool();
-			case ProcessPackage.PAGE_FLOW_TRANSITION: return createPageFlowTransition();
 			case ProcessPackage.RECEIVE_TASK: return createReceiveTask();
 			case ProcessPackage.SEQUENCE_FLOW: return createSequenceFlow();
 			case ProcessPackage.STRING_TYPE: return createStringType();
@@ -853,16 +852,6 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	public Pool createPool() {
 		PoolImpl pool = new PoolImpl();
 		return pool;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public PageFlowTransition createPageFlowTransition() {
-		PageFlowTransitionImpl pageFlowTransition = new PageFlowTransitionImpl();
-		return pageFlowTransition;
 	}
 
 	/**

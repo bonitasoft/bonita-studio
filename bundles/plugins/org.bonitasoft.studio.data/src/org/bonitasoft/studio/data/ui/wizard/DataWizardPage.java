@@ -58,7 +58,6 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BusinessObjectType;
@@ -326,7 +325,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             return "---- Error, please check Studio logs";
         }
 
-        while (!(context instanceof DataAware) || context instanceof Form) {
+        while (!(context instanceof DataAware)) {
             context = context.eContainer();
         }
         if (context instanceof Element) {

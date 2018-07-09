@@ -1446,49 +1446,13 @@ public interface ProcessPackage extends EPackage {
 	int CONNECTION__TEXT_ANNOTATION_ATTACHMENT = ELEMENT__TEXT_ANNOTATION_ATTACHMENT;
 
 	/**
-	 * The feature id for the '<em><b>Probability</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTION__PROBABILITY = ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Data Based</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTION__DATA_BASED = ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Use Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTION__USE_EXPRESSION = ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTION__EXPRESSION = ELEMENT_FEATURE_COUNT + 3;
-
-	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__TARGET = ELEMENT_FEATURE_COUNT + 4;
+	int CONNECTION__TARGET = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' reference.
@@ -1497,7 +1461,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__SOURCE = ELEMENT_FEATURE_COUNT + 5;
+	int CONNECTION__SOURCE = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Connection</em>' class.
@@ -1506,7 +1470,7 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 6;
+	int CONNECTION_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.AssociationImpl <em>Association</em>}' class.
@@ -1544,42 +1508,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int ASSOCIATION__TEXT_ANNOTATION_ATTACHMENT = CONNECTION__TEXT_ANNOTATION_ATTACHMENT;
-
-	/**
-	 * The feature id for the '<em><b>Probability</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATION__PROBABILITY = CONNECTION__PROBABILITY;
-
-	/**
-	 * The feature id for the '<em><b>Data Based</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATION__DATA_BASED = CONNECTION__DATA_BASED;
-
-	/**
-	 * The feature id for the '<em><b>Use Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATION__USE_EXPRESSION = CONNECTION__USE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ASSOCIATION__EXPRESSION = CONNECTION__EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -3171,7 +3099,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSignalEvent()
 	 * @generated
 	 */
-	int SIGNAL_EVENT = 79;
+	int SIGNAL_EVENT = 78;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -3695,7 +3623,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStringType()
 	 * @generated
 	 */
-	int STRING_TYPE = 81;
+	int STRING_TYPE = 80;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4133,7 +4061,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowMessageEvent()
 	 * @generated
 	 */
-	int THROW_MESSAGE_EVENT = 98;
+	int THROW_MESSAGE_EVENT = 97;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -4351,7 +4279,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowSignalEvent()
 	 * @generated
 	 */
-	int THROW_SIGNAL_EVENT = 96;
+	int THROW_SIGNAL_EVENT = 95;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -5482,7 +5410,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTimerEvent()
 	 * @generated
 	 */
-	int TIMER_EVENT = 99;
+	int TIMER_EVENT = 98;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -6848,52 +6776,6 @@ public interface ProcessPackage extends EPackage {
 	int POOL_FEATURE_COUNT = ABSTRACT_PROCESS_FEATURE_COUNT + 4;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl <em>Page Flow Transition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl
-	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getPageFlowTransition()
-	 * @generated
-	 */
-	int PAGE_FLOW_TRANSITION = 75;
-
-	/**
-	 * The feature id for the '<em><b>From</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW_TRANSITION__FROM = 0;
-
-	/**
-	 * The feature id for the '<em><b>To</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW_TRANSITION__TO = 1;
-
-	/**
-	 * The feature id for the '<em><b>Condition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW_TRANSITION__CONDITION = 2;
-
-	/**
-	 * The number of structural features of the '<em>Page Flow Transition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FLOW_TRANSITION_FEATURE_COUNT = 3;
-
-	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6901,7 +6783,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getRecapFlow()
 	 * @generated
 	 */
-	int RECAP_FLOW = 76;
+	int RECAP_FLOW = 75;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -6956,7 +6838,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getReceiveTask()
 	 * @generated
 	 */
-	int RECEIVE_TASK = 77;
+	int RECEIVE_TASK = 76;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7236,7 +7118,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSequenceFlow()
 	 * @generated
 	 */
-	int SEQUENCE_FLOW = 78;
+	int SEQUENCE_FLOW = 77;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7264,42 +7146,6 @@ public interface ProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int SEQUENCE_FLOW__TEXT_ANNOTATION_ATTACHMENT = CONNECTION__TEXT_ANNOTATION_ATTACHMENT;
-
-	/**
-	 * The feature id for the '<em><b>Probability</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEQUENCE_FLOW__PROBABILITY = CONNECTION__PROBABILITY;
-
-	/**
-	 * The feature id for the '<em><b>Data Based</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEQUENCE_FLOW__DATA_BASED = CONNECTION__DATA_BASED;
-
-	/**
-	 * The feature id for the '<em><b>Use Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEQUENCE_FLOW__USE_EXPRESSION = CONNECTION__USE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SEQUENCE_FLOW__EXPRESSION = CONNECTION__EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -7381,7 +7227,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSourceElement()
 	 * @generated
 	 */
-	int SOURCE_ELEMENT = 80;
+	int SOURCE_ELEMENT = 79;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7436,7 +7282,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getScriptTask()
 	 * @generated
 	 */
-	int SCRIPT_TASK = 82;
+	int SCRIPT_TASK = 81;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7680,7 +7526,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSearchIndex()
 	 * @generated
 	 */
-	int SEARCH_INDEX = 83;
+	int SEARCH_INDEX = 82;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' containment reference.
@@ -7717,7 +7563,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSendTask()
 	 * @generated
 	 */
-	int SEND_TASK = 84;
+	int SEND_TASK = 83;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -7979,7 +7825,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getServiceTask()
 	 * @generated
 	 */
-	int SERVICE_TASK = 85;
+	int SERVICE_TASK = 84;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8223,7 +8069,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartErrorEvent()
 	 * @generated
 	 */
-	int START_ERROR_EVENT = 86;
+	int START_ERROR_EVENT = 85;
 
 	/**
 	 * The feature id for the '<em><b>Error Code</b></em>' attribute.
@@ -8323,7 +8169,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartEvent()
 	 * @generated
 	 */
-	int START_EVENT = 87;
+	int START_EVENT = 86;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8414,7 +8260,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartMessageEvent()
 	 * @generated
 	 */
-	int START_MESSAGE_EVENT = 88;
+	int START_MESSAGE_EVENT = 87;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8550,7 +8396,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartSignalEvent()
 	 * @generated
 	 */
-	int START_SIGNAL_EVENT = 89;
+	int START_SIGNAL_EVENT = 88;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8659,7 +8505,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartTimerEvent()
 	 * @generated
 	 */
-	int START_TIMER_EVENT = 90;
+	int START_TIMER_EVENT = 89;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8849,7 +8695,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSubProcessEvent()
 	 * @generated
 	 */
-	int SUB_PROCESS_EVENT = 91;
+	int SUB_PROCESS_EVENT = 90;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -8904,7 +8750,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTask()
 	 * @generated
 	 */
-	int TASK = 92;
+	int TASK = 91;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9211,7 +9057,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTargetElement()
 	 * @generated
 	 */
-	int TARGET_ELEMENT = 93;
+	int TARGET_ELEMENT = 92;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9266,7 +9112,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTextAnnotation()
 	 * @generated
 	 */
-	int TEXT_ANNOTATION = 94;
+	int TEXT_ANNOTATION = 93;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9321,7 +9167,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getTextAnnotationAttachment()
 	 * @generated
 	 */
-	int TEXT_ANNOTATION_ATTACHMENT = 95;
+	int TEXT_ANNOTATION_ATTACHMENT = 94;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' reference.
@@ -9358,7 +9204,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getThrowLinkEvent()
 	 * @generated
 	 */
-	int THROW_LINK_EVENT = 97;
+	int THROW_LINK_EVENT = 96;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9458,7 +9304,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXMLData()
 	 * @generated
 	 */
-	int XML_DATA = 100;
+	int XML_DATA = 99;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9576,7 +9422,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXMLType()
 	 * @generated
 	 */
-	int XML_TYPE = 101;
+	int XML_TYPE = 100;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9622,7 +9468,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getXORGateway()
 	 * @generated
 	 */
-	int XOR_GATEWAY = 102;
+	int XOR_GATEWAY = 101;
 
 	/**
 	 * The feature id for the '<em><b>Documentation</b></em>' attribute.
@@ -9722,7 +9568,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCorrelationTypeActive()
 	 * @generated
 	 */
-	int CORRELATION_TYPE_ACTIVE = 103;
+	int CORRELATION_TYPE_ACTIVE = 102;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.ContractInputType <em>Contract Input Type</em>}' enum.
@@ -9732,7 +9578,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractInputType()
 	 * @generated
 	 */
-	int CONTRACT_INPUT_TYPE = 104;
+	int CONTRACT_INPUT_TYPE = 103;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.DocumentType <em>Document Type</em>}' enum.
@@ -9742,7 +9588,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDocumentType()
 	 * @generated
 	 */
-	int DOCUMENT_TYPE = 105;
+	int DOCUMENT_TYPE = 104;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.FormMappingType <em>Form Mapping Type</em>}' enum.
@@ -9752,7 +9598,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFormMappingType()
 	 * @generated
 	 */
-	int FORM_MAPPING_TYPE = 106;
+	int FORM_MAPPING_TYPE = 105;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.GatewayType <em>Gateway Type</em>}' enum.
@@ -9762,7 +9608,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getGatewayType()
 	 * @generated
 	 */
-	int GATEWAY_TYPE = 107;
+	int GATEWAY_TYPE = 106;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.InputMappingAssignationType <em>Input Mapping Assignation Type</em>}' enum.
@@ -9772,7 +9618,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getInputMappingAssignationType()
 	 * @generated
 	 */
-	int INPUT_MAPPING_ASSIGNATION_TYPE = 108;
+	int INPUT_MAPPING_ASSIGNATION_TYPE = 107;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.MultiInstanceType <em>Multi Instance Type</em>}' enum.
@@ -9782,7 +9628,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMultiInstanceType()
 	 * @generated
 	 */
-	int MULTI_INSTANCE_TYPE = 109;
+	int MULTI_INSTANCE_TYPE = 108;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.SequenceFlowConditionType <em>Sequence Flow Condition Type</em>}' enum.
@@ -9792,7 +9638,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSequenceFlowConditionType()
 	 * @generated
 	 */
-	int SEQUENCE_FLOW_CONDITION_TYPE = 110;
+	int SEQUENCE_FLOW_CONDITION_TYPE = 109;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.model.process.StartTimerScriptType <em>Start Timer Script Type</em>}' enum.
@@ -9802,7 +9648,7 @@ public interface ProcessPackage extends EPackage {
 	 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartTimerScriptType()
 	 * @generated
 	 */
-	int START_TIMER_SCRIPT_TYPE = 111;
+	int START_TIMER_SCRIPT_TYPE = 110;
 
 
 	/**
@@ -11940,49 +11786,6 @@ public interface ProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPool_DisplayName();
-
-	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.PageFlowTransition <em>Page Flow Transition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Page Flow Transition</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlowTransition
-	 * @generated
-	 */
-	EClass getPageFlowTransition();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.bonitasoft.studio.model.process.PageFlowTransition#getFrom <em>From</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>From</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlowTransition#getFrom()
-	 * @see #getPageFlowTransition()
-	 * @generated
-	 */
-	EReference getPageFlowTransition_From();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.bonitasoft.studio.model.process.PageFlowTransition#getTo <em>To</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>To</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlowTransition#getTo()
-	 * @see #getPageFlowTransition()
-	 * @generated
-	 */
-	EReference getPageFlowTransition_To();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.process.PageFlowTransition#getCondition <em>Condition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Condition</em>'.
-	 * @see org.bonitasoft.studio.model.process.PageFlowTransition#getCondition()
-	 * @see #getPageFlowTransition()
-	 * @generated
-	 */
-	EReference getPageFlowTransition_Condition();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}'.
@@ -14464,40 +14267,6 @@ public interface ProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POOL__DISPLAY_NAME = eINSTANCE.getPool_DisplayName();
-
-		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl <em>Page Flow Transition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.process.impl.PageFlowTransitionImpl
-		 * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getPageFlowTransition()
-		 * @generated
-		 */
-		EClass PAGE_FLOW_TRANSITION = eINSTANCE.getPageFlowTransition();
-
-		/**
-		 * The meta object literal for the '<em><b>From</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW_TRANSITION__FROM = eINSTANCE.getPageFlowTransition_From();
-
-		/**
-		 * The meta object literal for the '<em><b>To</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW_TRANSITION__TO = eINSTANCE.getPageFlowTransition_To();
-
-		/**
-		 * The meta object literal for the '<em><b>Condition</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_FLOW_TRANSITION__CONDITION = eINSTANCE.getPageFlowTransition_Condition();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}' class.

@@ -16,38 +16,27 @@ package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartNotFoundException;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartResolver;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySelectionProviderRegistry;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySynchronizerListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.ui.URIEditorInput;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.RootTreeEditPart;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
-import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -55,15 +44,12 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
@@ -157,15 +143,6 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
                 new TabbedPropertySynchronizerListener(editPartResolver, new TabbedPropertySelectionProviderRegistry(),
                         PlatformUI.getWorkbench()
                                 .getActiveWorkbenchWindow().getActivePage()));
-        treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-                handlTreeDoubleClick();
-            }
-
-        });
-
         setControl(mainComposite);
         return mainComposite;
     }
@@ -191,7 +168,6 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         treeViewer.addFilter(new EmptyOperationViewFilter());
         treeViewer.addFilter(new EmptyContractInputMappingViewerFilter());
         treeViewer.addFilter(new MainProcessFormMappingViewerFilter());
-        treeViewer.addFilter(new SimulationViewerFilter());
     }
 
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart) {
@@ -246,45 +222,6 @@ public class BonitaTreeViewer extends AbstractEditPartViewer implements ISelecti
         return null;
     }
 
-    protected void handlTreeDoubleClick() {
-        if (!filteredTree.getViewer().getSelection().isEmpty()) {
-            EObject element = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
-            if (element.eClass().getEPackage().getName().equals(FormPackage.eINSTANCE.getName())) {
-                while (element != null && !(element instanceof Form)) {
-                    element = element.eContainer();
-                }
-            }
-
-            if (element instanceof Form) {
-                openFormEditor((Form) element);
-            }
-        }
-    }
-
-    private void openFormEditor(final Form element) {
-        final Diagram diag = ModelHelper.getDiagramFor(element);
-
-        /*
-         * need to get the URI after save because the name can change as it is
-         * synchronized with the MainProcess name
-         */
-        final URI uri = EcoreUtil.getURI(diag);
-
-        /* open the form editor */
-        final DiagramEditor editor = (DiagramEditor) EditorService.getInstance()
-                .openEditor(new URIEditorInput(uri, ((Element) element).getName()));
-        editor.getDiagramEditPart().getViewer().deselectAll();
-        final EObject elem = (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
-        Element selectedElem = null;
-        if (elem instanceof Validator || elem instanceof Expression) {
-            selectedElem = (Element) elem.eContainer();
-        } else {
-            selectedElem = (Element) elem;
-        }
-        final IGraphicalEditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), selectedElem);
-        editor.getDiagramEditPart().getViewer().select(ep);
-        editor.getDiagramEditPart().getViewer().setSelection(new StructuredSelection(ep));
-    }
 
     /**
      * @see org.eclipse.gef.EditPartViewer#findObjectAtExcluding(Point, Collection, EditPartViewer.Conditional)

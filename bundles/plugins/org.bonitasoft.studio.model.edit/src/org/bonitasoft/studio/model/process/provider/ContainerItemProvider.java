@@ -594,6 +594,16 @@ public class ContainerItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
+				 KpiFactory.eINSTANCE.createDatabaseKPIBinding()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
+				 KpiFactory.eINSTANCE.createDatabaseKPIDefinition()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
 				 FormFactory.eINSTANCE.createForm()));
 
 		newChildDescriptors.add
@@ -745,16 +755,6 @@ public class ContainerItemProvider
 			(createChildParameter
 				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
 				 FormFactory.eINSTANCE.createGroupIterator()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
-				 KpiFactory.eINSTANCE.createDatabaseKPIBinding()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.CONTAINER__ELEMENTS,
-				 KpiFactory.eINSTANCE.createDatabaseKPIDefinition()));
 	}
 
 	/**

@@ -1536,29 +1536,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.PageFlowTransition} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected PageFlowTransitionItemProvider pageFlowTransitionItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.process.PageFlowTransition}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createPageFlowTransitionAdapter() {
-		if (pageFlowTransitionItemProvider == null) {
-			pageFlowTransitionItemProvider = new PageFlowTransitionItemProvider(this);
-		}
-
-		return pageFlowTransitionItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.ReceiveTask} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2226,7 +2203,6 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
 		if (outputMappingItemProvider != null) outputMappingItemProvider.dispose();
 		if (pageFlowItemProvider != null) pageFlowItemProvider.dispose();
 		if (poolItemProvider != null) poolItemProvider.dispose();
-		if (pageFlowTransitionItemProvider != null) pageFlowTransitionItemProvider.dispose();
 		if (receiveTaskItemProvider != null) receiveTaskItemProvider.dispose();
 		if (sequenceFlowItemProvider != null) sequenceFlowItemProvider.dispose();
 		if (stringTypeItemProvider != null) stringTypeItemProvider.dispose();

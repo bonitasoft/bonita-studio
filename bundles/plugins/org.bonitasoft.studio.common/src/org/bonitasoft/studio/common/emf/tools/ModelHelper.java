@@ -27,19 +27,8 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormField;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.ViewForm;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BooleanType;
@@ -67,7 +56,6 @@ import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -83,11 +71,6 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLType;
-import org.bonitasoft.studio.model.simulation.SimulationData;
-import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
-import org.bonitasoft.studio.model.simulation.SimulationTransition;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -148,16 +131,6 @@ public class ModelHelper {
         return res;
     }
 
-    public static FileWidgetInputType getDefaultFileWidgetInputType(final FileWidget widget) {
-        final Form parentForm = ModelHelper.getParentForm(widget);
-        if (parentForm == null) {
-            return FileWidgetInputType.RESOURCE;
-        }
-        if (ModelHelper.isAnEntryPageFlowOnAPool(parentForm)) {
-            return FileWidgetInputType.RESOURCE;
-        }
-        return FileWidgetInputType.DOCUMENT;
-    }
 
     private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
         final List<AbstractProcess> oldwayFindProcesses = oldwayFindProcesses(element, processes);
@@ -640,321 +613,6 @@ public class ModelHelper {
         return false;
     }
 
-    public static Set<Form> getAllFormsContainedIn(final EObject copiedElement) {
-        // TODO : improve algo
-        final Set<Form> res = new HashSet<Form>();
-        /* search in all subcontents */
-        final TreeIterator<?> ti = copiedElement.eAllContents();
-        while (ti.hasNext()) {
-            final Object o = ti.next();
-            if (o instanceof Form) {
-                res.add((Form) o);
-            }
-        }
-        return res;
-    }
-
-    /**
-     * @param element
-     * @param x
-     * @param y
-     * @return the widget in (x,y) in the form (the widget may be inside a group
-     *         but not a group )
-     */
-    public static Widget getWidgetIn(final Element element, final int x, final int y, final boolean includeGroups) {
-        Widget result = null;
-        if (element instanceof Form) {
-            for (final Widget w : ((Form) element).getWidgets()) {
-                result = getWidgetIn(w, x, y, includeGroups);
-                if (result != null) {
-                    return result;
-                }
-            }
-
-        } else if (element instanceof Group) {
-            for (final Widget w : ((Group) element).getWidgets()) {
-                result = getWidgetIn(w, x, y, includeGroups);
-                if (result != null) {
-                    return result;
-                }
-            }
-            if (includeGroups) {
-
-                int dx = 0;
-                int dy = 0;
-                EObject container = element.eContainer();
-                while (container != null && !(container instanceof Form)) {
-                    if (container instanceof Group) {
-                        dx += ((Widget) container).getWidgetLayoutInfo().getColumn();
-                        dy += ((Widget) container).getWidgetLayoutInfo().getLine();
-                    }
-                    container = container.eContainer();
-                }
-                if (y >= ((Widget) element).getWidgetLayoutInfo().getLine() + dy
-                        && y < ((Widget) element).getWidgetLayoutInfo().getLine()
-                                + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
-                        && x >= ((Widget) element).getWidgetLayoutInfo().getColumn() + dx
-                        && x < ((Widget) element).getWidgetLayoutInfo().getColumn()
-                                + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
-                    return (Widget) element;
-                }
-            }
-        } else {
-            int dx = 0;
-            int dy = 0;
-            EObject container = element.eContainer();
-            while (container != null && !(container instanceof Form)) {
-                if (container instanceof Group) {
-                    dx += ((Widget) container).getWidgetLayoutInfo().getColumn();
-                    dy += ((Widget) container).getWidgetLayoutInfo().getLine();
-                }
-                container = container.eContainer();
-            }
-            if (y >= ((Widget) element).getWidgetLayoutInfo().getLine() + dy
-                    && y < ((Widget) element).getWidgetLayoutInfo().getLine()
-                            + ((Widget) element).getWidgetLayoutInfo().getVerticalSpan() + dy
-                    && x >= ((Widget) element).getWidgetLayoutInfo().getColumn() + dx
-                    && x < ((Widget) element).getWidgetLayoutInfo().getColumn()
-                            + ((Widget) element).getWidgetLayoutInfo().getHorizontalSpan() + dx) {
-                return (Widget) element;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * return the neareast empty widget slot available
-     *
-     * @param near
-     */
-    public static boolean findAvailableLocation(final Form form, final Point near) {
-        return findAvailableLocation(form, near, new Point(1, 1));
-    }
-
-    /**
-     * return the neareast empty widget slot available
-     *
-     * @param near
-     */
-    public static boolean findAvailableLocation(final Form form, final Point near, final Point size) {
-
-        final List<Point> slots = new ArrayList<Point>();
-        for (int i = 0; i < form.getNColumn(); i++) {
-            for (int j = 0; j < form.getNLine(); j++) {// for all cases in the grid
-                if (getWidgetIn(form, i, j, false) == null) {// if there is no widget in the case
-                    boolean available = true;
-                    final Group potentialGroup = (Group) getWidgetIn(form, i, j, true);// check if we are in a group or not
-                    if (potentialGroup != null) {
-                        /* So we are in a Group */
-                        for (int k = 0; k < size.x; k++) {
-                            for (int l = 0; l < size.y; l++) {
-                                if (k != 0 || l != 0) {
-                                    final WidgetLayoutInfo groupLayoutInfo = potentialGroup.getWidgetLayoutInfo();
-                                    EObject parent = potentialGroup.eContainer();
-                                    int colOffset = groupLayoutInfo.getColumn();
-                                    int lineOffset = groupLayoutInfo.getLine();
-                                    while (parent instanceof Group) { // Manage group recursion
-                                        final WidgetLayoutInfo layout = ((Group) parent).getWidgetLayoutInfo();
-                                        colOffset = colOffset + layout.getColumn();
-                                        lineOffset = lineOffset + layout.getLine();
-                                        parent = parent.eContainer();
-                                    }
-                                    if (getWidgetIn(form, i + k, j + l, false) != null
-                                            || i + k >= groupLayoutInfo.getHorizontalSpan() + colOffset
-                                            || j + l >= groupLayoutInfo.getVerticalSpan() + lineOffset) {
-                                        available = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!available) {
-                                break;
-                            }
-                        }
-                    } else {
-                        final EObject container = getWidgetContainer(form, i, j);
-                        for (int k = 0; k < size.x; k++) {
-                            for (int l = 0; l < size.y; l++) {// For all the place that the copied element took
-                                if (k != 0 || l != 0) {
-                                    if (getWidgetIn(form, i + k, j + l, false) != null
-                                            || i + k >= form.getNColumn()
-                                            || j + l >= form.getNLine()
-                                            || !getWidgetContainer(form, i + k, j + l).equals(container)) {// check that the case is empty and that we are still
-                                        // on the grid
-                                        available = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!available) {
-                                break;
-                            }
-                        }
-                    }
-                    if (available) {
-                        slots.add(new Point(i, j));
-                    }
-                }
-            }
-        }
-        Point nearest = new Point(-1, -1);
-        int min = Integer.MAX_VALUE;
-        int dist;
-        for (final Point point : slots) {
-            dist = near.getDistance2(point);
-            if (dist < min) {
-                min = dist;
-                nearest = point;
-            }
-
-        }
-        if (nearest.x >= 0 && nearest.y >= 0) {
-            near.x = nearest.x;
-            near.y = nearest.y;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static EObject getWidgetContainer(final Form form, final int i, final int j) {
-        final Widget w = getWidgetIn(form, i, j, true);
-        if (w != null) {
-            if (w instanceof Group) {
-                return w;
-            } else {
-                return w.eContainer();
-            }
-        } else {
-            return form;
-        }
-
-    }
-
-    /**
-     * @param widget
-     * @return the form in which widget is contained.
-     */
-    public static Form getForm(final Widget widget) {
-        EObject o = widget;
-        while (!(o instanceof Form) && o != null) {
-            o = o.eContainer();
-        }
-        return (Form) o;
-    }
-
-    /**
-     * @param form
-     * @return all widgets contained in the form.
-     */
-    public static List<Widget> getAllWidgetInsideForm(final Form form) {
-        final List<Widget> res = new ArrayList<Widget>();
-        for (final Widget w : form.getWidgets()) {
-            res.addAll(getWidgets(w));
-        }
-        return res;
-    }
-
-    /**
-     * @param pageFlow
-     * @param eContainmentFeature
-     * @return
-     */
-    public static List<Widget> getAllWidgetInsidePageFlow(final Element pageFlow, final EReference eContainmentFeature) {
-        final List<Widget> res = new ArrayList<Widget>();
-        @SuppressWarnings("unchecked")
-        final List<Form> forms = (List<Form>) pageFlow.eGet(eContainmentFeature);
-        for (final Form form : forms) {
-            final List<Widget> widgets = getAllWidgetInsideForm(form);
-            for (final Widget element : widgets) {
-                if (!res.contains(element)) {
-                    res.add(element);
-                }
-            }
-        }
-        return res;
-    }
-
-    /**
-     * @param pageFlow
-     * @param eContainmentFeature
-     * @param relativeWidget
-     * @return
-     */
-    public static List<Widget> getAllAccessibleFieldsInsidePageFlow(final Element pageFlow,
-            final EReference eContainmentFeature, final Element relativeWidget) {
-        final ArrayList<Widget> res = new ArrayList<Widget>();
-        if (pageFlow != null) {
-            for (final Form form : (List<Form>) pageFlow.eGet(eContainmentFeature)) {
-                for (final Widget widget2 : form.getWidgets()) {
-                    getAccessibleFields(res, widget2, relativeWidget);
-                }
-            }
-        }
-        return res;
-    }
-
-    /**
-     * @param res
-     * @param widget2
-     * @param widget
-     */
-    private static void getAccessibleFields(final ArrayList<Widget> res, final Widget widget, final Element relativeWidget) {
-        if (widget instanceof Group) {
-            final Group group = (Group) widget;
-            if (group.isDuplicate()) {
-                res.add(group);
-                if (isTargetWidgetInsideGroup(group, relativeWidget)) {
-                    for (final Widget widget2 : group.getWidgets()) {
-                        if (widget2 instanceof FormField) {
-                            getAccessibleFields(res, widget2, relativeWidget);
-                        }
-                    }
-                }
-            } else {
-                res.add(group);
-                for (final Widget widget2 : group.getWidgets()) {
-                    if (widget2 instanceof FormField) {
-                        getAccessibleFields(res, widget2, relativeWidget);
-                    }
-                }
-            }
-        } else if (widget instanceof FormField) {
-            res.add(widget);
-        }
-    }
-
-    private static boolean isTargetWidgetInsideGroup(final Group group, final Element relativeWidget) {
-        if (relativeWidget != null) {
-            for (final Widget widgetInGroup : group.getWidgets()) {
-                if (widgetInGroup.equals(relativeWidget)) {
-                    return true;
-                } else {
-                    if (widgetInGroup instanceof Group) {
-                        return isTargetWidgetInsideGroup((Group) widgetInGroup, relativeWidget);
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param widget
-     * @return the widget and if it is a Group all of its underlying widgets.
-     */
-    protected static List<Widget> getWidgets(final Widget widget) {
-        if (widget instanceof Group) {
-            final List<Widget> res = new ArrayList<Widget>();
-            res.add(widget);
-            for (final Widget w : ((Group) widget).getWidgets()) {
-                res.addAll(getWidgets(w));
-            }
-            return res;
-        } else {
-            return Collections.singletonList(widget);
-        }
-    }
 
     /**
      * @param modelProcess2
@@ -1046,43 +704,7 @@ public class ModelHelper {
         return getDiagramFor(element, resource);
     }
 
-    public static Widget getWidgetById(final Form form, final String id) {
-        for (final Widget w : ModelHelper.getAllWidgetInsideForm(form)) {
-            if (w.getName().equals(id)) {
-                return w;
-            }
-        }
-        return null;
-    }
 
-    public static boolean isInDuplicatedGrp(final Object object) {
-
-        if (object instanceof Widget) {
-            EObject parent = ((EObject) object).eContainer();
-            if (parent instanceof Group) {
-                while (parent != null && !(parent instanceof Form)) {
-                    if (((Group) parent).isDuplicate()) {
-                        return true;
-                    }
-                    parent = parent.eContainer();
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean isInEntryPageFlowOnAPool(final Widget widget) {
-        final Form form = getParentForm(widget);
-        return isAnEntryPageFlowOnAPool(form);
-    }
-
-    public static boolean isAnEntryPageFlowOnAPool(final Form element) {
-        return !(element instanceof ViewForm) && (PageFlow) element.eContainer() instanceof Pool;
-    }
-
-    /**
-     * @return
-     */
     public static String getEObjectID(final EObject eObject) {
         if (eObject == null) {
             return null;
@@ -1094,14 +716,7 @@ public class ModelHelper {
         return null;
     }
 
-    public static boolean isDuplicated(final Object object) {
-        if (object instanceof Duplicable) {
-            if (((Duplicable) object).isDuplicate()) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public static void findAllThrowLinks(final Element root, final List<ThrowLinkEvent> events) {
         if (root instanceof ThrowLinkEvent) {
@@ -1140,11 +755,6 @@ public class ModelHelper {
         }
         return result;
     }
-
-    public static AbstractPageFlow getPageFlow(final Widget w) {
-        return (AbstractPageFlow) ModelHelper.getForm(w).eContainer();
-    }
-
 
     /**
      * remove all element that are referenced outside the object and remove
@@ -1299,14 +909,6 @@ public class ModelHelper {
 
     }
 
-    /**
-     * @param model
-     * @return
-     */
-    public static List<Widget> getAllWidgetsInModel(final EObject container) {
-        return getAllItemsOfType(container, FormPackage.Literals.WIDGET);
-    }
-
     public static <T extends EObject> List<T> getAllItemsOfType(final EObject container, final EClass eClass) {
         final List<T> res = new ArrayList<T>();
         addAllElementOfContainer(container, res, eClass);
@@ -1405,9 +1007,6 @@ public class ModelHelper {
     public static ConnectableElement getParentConnectableElement(final Element element) {
         if (element != null) {
             EObject result = element;
-            if (element instanceof Widget) {
-                result = ModelHelper.getPageFlow((Widget) element);
-            }
             while (result != null && !(result instanceof ConnectableElement)) {
                 result = result.eContainer();
             }
@@ -1448,54 +1047,12 @@ public class ModelHelper {
         return (Lane) lane;
     }
 
-    public static List<SimulationData> getAccessibleSimulationData(final EObject context) {
-        final List<SimulationData> result = new ArrayList<SimulationData>();
-        if (context instanceof SimulationDataContainer) {
-            SimulationDataContainer container = (SimulationDataContainer) context;
-            while (container != null) {
-                for (final SimulationData d : container.getSimulationData()) {
-                    result.add(d);
-                }
-                if (container.eContainer() instanceof SimulationDataContainer) {
-                    container = (SimulationDataContainer) container.eContainer();
-                } else {
-                    container = null;
-                }
-            }
-
-        } else if (context instanceof SimulationTransition) {
-            if (((Connection) context).eContainer() instanceof SimulationDataContainer) {
-                for (final SimulationData d : ((SimulationDataContainer) ((Connection) context).eContainer())
-                        .getSimulationData()) {
-                    result.add(d);
-                }
-            }
-        }
-        return result;
-    }
-
     public static FlowElement getParentFlowElement(final EObject eObject) {
         EObject flowElement = eObject;
         while (flowElement != null && !(flowElement instanceof FlowElement)) {
             flowElement = flowElement.eContainer();
         }
         return flowElement != null ? (FlowElement) flowElement : null;
-    }
-
-    public static Widget getParentWidget(final EObject eObject) {
-        EObject widget = eObject;
-        while (widget != null && !(widget instanceof Widget)) {
-            widget = widget.eContainer();
-        }
-        return widget != null ? (Widget) widget : null;
-    }
-
-    public static Form getParentForm(final EObject eObject) {
-        EObject form = eObject;
-        while (form != null && !(form instanceof Form)) {
-            form = form.eContainer();
-        }
-        return form != null ? (Form) form : null;
     }
 
     public static boolean isAnExpressionCopy(final Expression expression) {
@@ -1517,53 +1074,6 @@ public class ModelHelper {
             element = element.eContainer();
         }
         return (Element) element;
-    }
-
-    public static List<Widget> getAllAccessibleWidgetInsideForm(final Form form) {
-        final List<Widget> res = new ArrayList<Widget>();
-        for (final Widget w : form.getWidgets()) {
-            res.addAll(getAccessibleWidgets(w));
-        }
-        return res;
-    }
-
-    protected static List<Widget> getAccessibleWidgets(final Widget widget) {
-        if (widget instanceof Group) {
-            final List<Widget> res = new ArrayList<Widget>();
-            res.add(widget);
-            if (!((Group) widget).isDuplicate()) {
-                for (final Widget w : ((Group) widget).getWidgets()) {
-                    res.addAll(getWidgets(w));
-                }
-            }
-            return res;
-        } else {
-            return Collections.singletonList(widget);
-        }
-    }
-
-    public static Group getParentGroup(final EObject context) {
-        Widget widget = getParentWidget(context);
-
-        if (context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group) {
-            widget = (Widget) widget.eContainer();
-        }
-
-        if (widget != null) {
-            Widget parentGroup = widget;
-            while (parentGroup != null && !(parentGroup instanceof Group)) {
-                final EObject parent = parentGroup.eContainer();
-                if (parent instanceof Widget) {
-                    parentGroup = (Widget) parent;
-                } else {
-                    parentGroup = null;
-                }
-            }
-            if (parentGroup != null) {
-                return (Group) parentGroup;
-            }
-        }
-        return null;
     }
 
     public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay) {

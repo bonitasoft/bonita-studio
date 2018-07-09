@@ -21,9 +21,6 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -68,11 +65,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
         connectorFailsCombo.add(Messages.connectorFails_crash);
         connectorFailsCombo.add(Messages.connectorFails_ignore);
-
-        // Throw Event are not allowed in Connector in forms
-        if (!(container instanceof Form || container instanceof SubmitFormButton)) {
-            connectorFailsCombo.add(Messages.connectorFails_throwEvent);
-        }
+        connectorFailsCombo.add(Messages.connectorFails_throwEvent);
 
         final UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy();
         ignoreEventStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
@@ -161,15 +154,6 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
                 SWTObservables.observeEnabled(namedErrorText),
                 enableNamedErrorStrategyTarget, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 
-    }
-
-    private boolean activityHasLifecycle() {
-        return !container.eClass().equals(ProcessPackage.Literals.TIMER_EVENT) &&
-                !container.eClass().equals(ProcessPackage.Literals.CATCH_MESSAGE_EVENT) &&
-                !container.eClass().equals(ProcessPackage.Literals.CATCH_SIGNAL_EVENT) &&
-                !container.eClass().equals(ProcessPackage.Literals.ERROR_EVENT) &&
-                !container.eClass().equals(FormPackage.Literals.FORM) &&
-                !FormPackage.Literals.WIDGET.isSuperTypeOf(container.eClass());
     }
 
     public void setEvent(final String event) {

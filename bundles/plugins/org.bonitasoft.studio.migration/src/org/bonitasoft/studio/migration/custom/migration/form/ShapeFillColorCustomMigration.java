@@ -14,15 +14,12 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import java.util.List;
-
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 
+@Deprecated
 public class ShapeFillColorCustomMigration extends CustomMigration {
 
     /*
@@ -32,21 +29,7 @@ public class ShapeFillColorCustomMigration extends CustomMigration {
      */
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance diagram : model.getAllInstances(NotationPackage.Literals.DIAGRAM)) {
-            if (diagram.get("type").equals("Form")) {
-                updateShapeColor(diagram.getContents());
-            }
-        }
     }
 
-    private void updateShapeColor(final List<Instance> instances) {
-        for (final Instance element : instances) {
-            if (element.instanceOf(NotationPackage.Literals.SHAPE)) {
-                element.set("fillColor", null);
-                element.set("lineColor", null);
-            }
-            updateShapeColor(element.getContents());
-        }
-    }
 
 }

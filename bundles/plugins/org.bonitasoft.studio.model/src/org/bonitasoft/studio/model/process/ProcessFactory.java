@@ -604,15 +604,6 @@ public interface ProcessFactory extends EFactory {
 	Pool createPool();
 
 	/**
-	 * Returns a new object of class '<em>Page Flow Transition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Page Flow Transition</em>'.
-	 * @generated
-	 */
-	PageFlowTransition createPageFlowTransition();
-
-	/**
 	 * Returns a new object of class '<em>Receive Task</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
