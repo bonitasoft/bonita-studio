@@ -19,9 +19,6 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -103,19 +100,6 @@ public class EmptyNameConstraintTest {
     @Test
     public void should_accept_empty_names_for_text_annotation_element() throws Exception {
         when(ctx.getTarget()).thenReturn(ProcessFactory.eINSTANCE.createTextAnnotation());
-
-        final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
-
-        assertThat(iStatus.isOK()).isTrue();
-    }
-
-    @Test
-    public void should_accept_empty_names_for_a_disabled_group_iterator() throws Exception {
-        final GroupIterator groupIterator = FormFactory.eINSTANCE.createGroupIterator();
-        final Group group = FormFactory.eINSTANCE.createGroup();
-        group.setIterator(groupIterator);
-        group.setUseIterator(false);
-        when(ctx.getTarget()).thenReturn(groupIterator);
 
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 

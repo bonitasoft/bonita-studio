@@ -21,6 +21,8 @@ package org.bonitasoft.studio.model.form.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+
 import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -67,17 +69,12 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 			addBelowPropertyDescriptor(object);
 			addDescriptionPropertyDescriptor(object);
 			addExampleMessagePositionPropertyDescriptor(object);
-			addExampleMessagePropertyDescriptor(object);
 			addLimitMinNumberOfColumnPropertyDescriptor(object);
 			addLimitMinNumberOfRowPropertyDescriptor(object);
 			addAllowAddRemoveRowPropertyDescriptor(object);
 			addAllowAddRemoveColumnPropertyDescriptor(object);
 			addLimitMaxNumberOfColumnPropertyDescriptor(object);
 			addLimitMaxNumberOfRowPropertyDescriptor(object);
-			addMinNumberOfColumnPropertyDescriptor(object);
-			addMinNumberOfRowPropertyDescriptor(object);
-			addMaxNumberOfColumnPropertyDescriptor(object);
-			addMaxNumberOfRowPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -166,28 +163,6 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Example Message feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addExampleMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_FormField_exampleMessage_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_FormField_exampleMessage_feature", "_UI_FormField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE,
-				 true,
-				 false,
-				 false,
-				 null,
 				 null,
 				 null));
 	}
@@ -325,94 +300,6 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 	}
 
 	/**
-	 * This adds a property descriptor for the Min Number Of Column feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMinNumberOfColumnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DynamicTable_minNumberOfColumn_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_DynamicTable_minNumberOfColumn_feature", "_UI_DynamicTable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Min Number Of Row feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMinNumberOfRowPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DynamicTable_minNumberOfRow_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_DynamicTable_minNumberOfRow_feature", "_UI_DynamicTable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Max Number Of Column feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMaxNumberOfColumnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DynamicTable_maxNumberOfColumn_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_DynamicTable_maxNumberOfColumn_feature", "_UI_DynamicTable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Max Number Of Row feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMaxNumberOfRowPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DynamicTable_maxNumberOfRow_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_DynamicTable_maxNumberOfRow_feature", "_UI_DynamicTable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -425,6 +312,11 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(FormPackage.Literals.VALIDABLE__VALIDATORS);
+			childrenFeatures.add(FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE);
+			childrenFeatures.add(FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN);
+			childrenFeatures.add(FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW);
+			childrenFeatures.add(FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN);
+			childrenFeatures.add(FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW);
 		}
 		return childrenFeatures;
 	}
@@ -484,20 +376,20 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 			case FormPackage.DYNAMIC_TABLE__BELOW:
 			case FormPackage.DYNAMIC_TABLE__DESCRIPTION:
 			case FormPackage.DYNAMIC_TABLE__EXAMPLE_MESSAGE_POSITION:
-			case FormPackage.DYNAMIC_TABLE__EXAMPLE_MESSAGE:
 			case FormPackage.DYNAMIC_TABLE__LIMIT_MIN_NUMBER_OF_COLUMN:
 			case FormPackage.DYNAMIC_TABLE__LIMIT_MIN_NUMBER_OF_ROW:
 			case FormPackage.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW:
 			case FormPackage.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_COLUMN:
 			case FormPackage.DYNAMIC_TABLE__LIMIT_MAX_NUMBER_OF_COLUMN:
 			case FormPackage.DYNAMIC_TABLE__LIMIT_MAX_NUMBER_OF_ROW:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case FormPackage.DYNAMIC_TABLE__VALIDATORS:
+			case FormPackage.DYNAMIC_TABLE__EXAMPLE_MESSAGE:
 			case FormPackage.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN:
 			case FormPackage.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW:
 			case FormPackage.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN:
 			case FormPackage.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case FormPackage.DYNAMIC_TABLE__VALIDATORS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -519,6 +411,31 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 			(createChildParameter
 				(FormPackage.Literals.VALIDABLE__VALIDATORS,
 				 FormFactory.eINSTANCE.createValidator()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW,
+				 ExpressionFactory.eINSTANCE.createExpression()));
 	}
 
 	/**
@@ -533,8 +450,29 @@ public class DynamicTableItemProvider extends AbstractTableItemProvider {
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
-			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION;
+			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION ||
+			childFeature == FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION ||
+			childFeature == FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE ||
+			childFeature == FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN ||
+			childFeature == FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW ||
+			childFeature == FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN ||
+			childFeature == FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW;
 
 		if (qualify) {
 			return getString

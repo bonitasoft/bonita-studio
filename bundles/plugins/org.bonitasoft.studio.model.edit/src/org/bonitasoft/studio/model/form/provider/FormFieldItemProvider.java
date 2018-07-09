@@ -87,12 +87,9 @@ public class FormFieldItemProvider
 
 			addDocumentationPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
-			addWidgetLayoutInfoPropertyDescriptor(object);
 			addShowDisplayLabelPropertyDescriptor(object);
 			addAllowHTMLForDisplayLabelPropertyDescriptor(object);
-			addDependOnPropertyDescriptor(object);
 			addDisplayDependentWidgetOnlyOnEventTriggeredPropertyDescriptor(object);
-			addParentOfPropertyDescriptor(object);
 			addMandatoryPropertyDescriptor(object);
 			addReadOnlyPropertyDescriptor(object);
 			addLabelPositionPropertyDescriptor(object);
@@ -100,26 +97,13 @@ public class FormFieldItemProvider
 			addInjectWidgetConditionPropertyDescriptor(object);
 			addVersionPropertyDescriptor(object);
 			addReturnTypeModifierPropertyDescriptor(object);
-			addDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditionPropertyDescriptor(object);
-			addDisplayAfterEventDependsOnConditionScriptPropertyDescriptor(object);
-			addTooltipPropertyDescriptor(object);
-			addHelpMessagePropertyDescriptor(object);
-			addDisplayLabelPropertyDescriptor(object);
-			addInjectWidgetScriptPropertyDescriptor(object);
 			addUseDefaultValidatorPropertyDescriptor(object);
 			addBelowPropertyDescriptor(object);
 			addDuplicatePropertyDescriptor(object);
 			addLimitNumberOfDuplicationPropertyDescriptor(object);
 			addLimitMinNumberOfDuplicationPropertyDescriptor(object);
-			addMaxNumberOfDuplicationPropertyDescriptor(object);
-			addMinNumberOfDuplicationPropertyDescriptor(object);
-			addDisplayLabelForAddPropertyDescriptor(object);
-			addTooltipForAddPropertyDescriptor(object);
-			addDisplayLabelForRemovePropertyDescriptor(object);
-			addTooltipForRemovePropertyDescriptor(object);
 			addDescriptionPropertyDescriptor(object);
 			addExampleMessagePositionPropertyDescriptor(object);
-			addExampleMessagePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -169,28 +153,6 @@ public class FormFieldItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Widget Layout Info feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addWidgetLayoutInfoPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_widgetLayoutInfo_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_widgetLayoutInfo_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Show Display Label feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -235,28 +197,6 @@ public class FormFieldItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Depend On feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDependOnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_dependOn_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_dependOn_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DEPEND_ON,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Display Dependent Widget Only On Event Triggered feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -274,28 +214,6 @@ public class FormFieldItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Parent Of feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addParentOfPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_parentOf_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_parentOf_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__PARENT_OF,
-				 true,
-				 false,
-				 true,
-				 null,
 				 null,
 				 null));
 	}
@@ -382,7 +300,7 @@ public class FormFieldItemProvider
 				 FormPackage.Literals.WIDGET__REAL_HTML_ATTRIBUTES,
 				 true,
 				 false,
-				 true,
+				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
@@ -450,138 +368,6 @@ public class FormFieldItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Dependent Widget Only After First Event Triggered And Condition feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display After Event Depends On Condition Script feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayAfterEventDependsOnConditionScriptPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayAfterEventDependsOnConditionScript_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayAfterEventDependsOnConditionScript_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_tooltip_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_tooltip_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__TOOLTIP,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Help Message feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addHelpMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_helpMessage_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_helpMessage_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__HELP_MESSAGE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Label feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_displayLabel_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_displayLabel_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__DISPLAY_LABEL,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Inject Widget Script feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addInjectWidgetScriptPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Widget_injectWidgetScript_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Widget_injectWidgetScript_feature", "_UI_Widget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT,
-				 true,
-				 false,
-				 false,
-				 null,
 				 null,
 				 null));
 	}
@@ -697,138 +483,6 @@ public class FormFieldItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Max Number Of Duplication feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMaxNumberOfDuplicationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_maxNumberOfDuplication_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_maxNumberOfDuplication_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Min Number Of Duplication feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMinNumberOfDuplicationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_minNumberOfDuplication_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_minNumberOfDuplication_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Label For Add feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelForAddPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_displayLabelForAdd_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_displayLabelForAdd_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip For Add feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipForAddPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_tooltipForAdd_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_tooltipForAdd_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Label For Remove feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelForRemovePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_displayLabelForRemove_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_displayLabelForRemove_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip For Remove feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipForRemovePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_tooltipForRemove_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_tooltipForRemove_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Description feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -873,28 +527,6 @@ public class FormFieldItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Example Message feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addExampleMessagePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_FormField_exampleMessage_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_FormField_exampleMessage_feature", "_UI_FormField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -908,10 +540,26 @@ public class FormFieldItemProvider
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProcessPackage.Literals.ELEMENT__TEXT_ANNOTATION_ATTACHMENT);
 			childrenFeatures.add(FormPackage.Literals.CSS_CUSTOMIZABLE__HTML_ATTRIBUTES);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DEPEND_ON);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__PARENT_OF);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__INPUT_EXPRESSION);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__TOOLTIP);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__HELP_MESSAGE);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__DISPLAY_LABEL);
+			childrenFeatures.add(FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT);
 			childrenFeatures.add(FormPackage.Literals.WIDGET__ACTION);
 			childrenFeatures.add(FormPackage.Literals.VALIDABLE__VALIDATORS);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE);
+			childrenFeatures.add(FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE);
 		}
 		return childrenFeatures;
 	}
@@ -964,37 +612,41 @@ public class FormFieldItemProvider
 			case FormPackage.FORM_FIELD__MANDATORY:
 			case FormPackage.FORM_FIELD__READ_ONLY:
 			case FormPackage.FORM_FIELD__LABEL_POSITION:
+			case FormPackage.FORM_FIELD__REAL_HTML_ATTRIBUTES:
 			case FormPackage.FORM_FIELD__INJECT_WIDGET_CONDITION:
 			case FormPackage.FORM_FIELD__VERSION:
 			case FormPackage.FORM_FIELD__RETURN_TYPE_MODIFIER:
-			case FormPackage.FORM_FIELD__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION:
-			case FormPackage.FORM_FIELD__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT:
-			case FormPackage.FORM_FIELD__TOOLTIP:
-			case FormPackage.FORM_FIELD__HELP_MESSAGE:
-			case FormPackage.FORM_FIELD__DISPLAY_LABEL:
-			case FormPackage.FORM_FIELD__INJECT_WIDGET_SCRIPT:
 			case FormPackage.FORM_FIELD__USE_DEFAULT_VALIDATOR:
 			case FormPackage.FORM_FIELD__BELOW:
 			case FormPackage.FORM_FIELD__DUPLICATE:
 			case FormPackage.FORM_FIELD__LIMIT_NUMBER_OF_DUPLICATION:
 			case FormPackage.FORM_FIELD__LIMIT_MIN_NUMBER_OF_DUPLICATION:
+			case FormPackage.FORM_FIELD__DESCRIPTION:
+			case FormPackage.FORM_FIELD__EXAMPLE_MESSAGE_POSITION:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case FormPackage.FORM_FIELD__TEXT_ANNOTATION_ATTACHMENT:
+			case FormPackage.FORM_FIELD__HTML_ATTRIBUTES:
+			case FormPackage.FORM_FIELD__WIDGET_LAYOUT_INFO:
+			case FormPackage.FORM_FIELD__DEPEND_ON:
+			case FormPackage.FORM_FIELD__PARENT_OF:
+			case FormPackage.FORM_FIELD__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION:
+			case FormPackage.FORM_FIELD__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT:
+			case FormPackage.FORM_FIELD__INPUT_EXPRESSION:
+			case FormPackage.FORM_FIELD__AFTER_EVENT_EXPRESSION:
+			case FormPackage.FORM_FIELD__TOOLTIP:
+			case FormPackage.FORM_FIELD__HELP_MESSAGE:
+			case FormPackage.FORM_FIELD__DISPLAY_LABEL:
+			case FormPackage.FORM_FIELD__INJECT_WIDGET_SCRIPT:
+			case FormPackage.FORM_FIELD__ACTION:
+			case FormPackage.FORM_FIELD__VALIDATORS:
 			case FormPackage.FORM_FIELD__MAX_NUMBER_OF_DUPLICATION:
 			case FormPackage.FORM_FIELD__MIN_NUMBER_OF_DUPLICATION:
 			case FormPackage.FORM_FIELD__DISPLAY_LABEL_FOR_ADD:
 			case FormPackage.FORM_FIELD__TOOLTIP_FOR_ADD:
 			case FormPackage.FORM_FIELD__DISPLAY_LABEL_FOR_REMOVE:
 			case FormPackage.FORM_FIELD__TOOLTIP_FOR_REMOVE:
-			case FormPackage.FORM_FIELD__DESCRIPTION:
-			case FormPackage.FORM_FIELD__EXAMPLE_MESSAGE_POSITION:
 			case FormPackage.FORM_FIELD__EXAMPLE_MESSAGE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case FormPackage.FORM_FIELD__TEXT_ANNOTATION_ATTACHMENT:
-			case FormPackage.FORM_FIELD__HTML_ATTRIBUTES:
-			case FormPackage.FORM_FIELD__INPUT_EXPRESSION:
-			case FormPackage.FORM_FIELD__AFTER_EVENT_EXPRESSION:
-			case FormPackage.FORM_FIELD__ACTION:
-			case FormPackage.FORM_FIELD__VALIDATORS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -1019,12 +671,57 @@ public class FormFieldItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(FormPackage.Literals.WIDGET__WIDGET_LAYOUT_INFO,
+				 FormFactory.eINSTANCE.createWidgetLayoutInfo()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DEPEND_ON,
+				 FormFactory.eINSTANCE.createWidgetDependency()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__PARENT_OF,
+				 FormFactory.eINSTANCE.createWidgetDependency()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(FormPackage.Literals.WIDGET__INPUT_EXPRESSION,
 				 ExpressionFactory.eINSTANCE.createExpression()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__TOOLTIP,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__HELP_MESSAGE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__DISPLAY_LABEL,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT,
 				 ExpressionFactory.eINSTANCE.createExpression()));
 
 		newChildDescriptors.add
@@ -1036,6 +733,41 @@ public class FormFieldItemProvider
 			(createChildParameter
 				(FormPackage.Literals.VALIDABLE__VALIDATORS,
 				 FormFactory.eINSTANCE.createValidator()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
 	}
 
 	/**
@@ -1050,8 +782,23 @@ public class FormFieldItemProvider
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
-			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION;
+			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.FORM_FIELD__EXAMPLE_MESSAGE;
 
 		if (qualify) {
 			return getString

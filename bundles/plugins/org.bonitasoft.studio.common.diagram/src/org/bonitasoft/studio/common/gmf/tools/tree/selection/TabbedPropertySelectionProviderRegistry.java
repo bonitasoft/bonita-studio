@@ -21,11 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.ITabbedPropertySelectionProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.ButtonActionTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormActionTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormConnectorTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.FormDataTabbedPropertyProvider;
-import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.form.ValidatorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ActorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ConnectorTabbedPropertyProvider;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process.ContractTabbedPropertyProvider;
@@ -48,20 +43,15 @@ public class TabbedPropertySelectionProviderRegistry {
     static {
         registry = new HashSet<ITabbedPropertySelectionProvider>();
         registry.add(new ActorTabbedPropertyProvider());
-        registry.add(new ButtonActionTabbedPropertyProvider());
         registry.add(new ConnectorTabbedPropertyProvider());
         registry.add(new ContractTabbedPropertyProvider());
         registry.add(new DataTabbedPropertyProvider());
         registry.add(new DocumentTabbedPropertyProvider());
-        registry.add(new FormActionTabbedPropertyProvider());
-        registry.add(new FormConnectorTabbedPropertyProvider());
-        registry.add(new FormDataTabbedPropertyProvider());
         registry.add(new FormMappingTabbedPropertyProvider());
         registry.add(new KPITabbedPropertyProvider());
         registry.add(new OperationTabbedPropertyProvider());
         registry.add(new ParameterTabbedPropertyProvider());
         registry.add(new SearchIndexTabbedPropertyProvider());
-        registry.add(new ValidatorTabbedPropertyProvider());
     }
 
     public ITabbedPropertySelectionProvider findSelectionProvider(final EObject element, final IEditorReference activeEditor,

@@ -16,22 +16,13 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
 
-/**
- * @author aurelie
- *
- */
+@Deprecated
 public class FileWidgetResourceMigration extends CustomMigration {
 
     /*
@@ -40,18 +31,6 @@ public class FileWidgetResourceMigration extends CustomMigration {
      */
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        super.migrateAfter(model, metamodel);
-        final EEnum downloadTypeEnum = metamodel.getEEnum("form.FileWidgetDownloadType");
-        final EList<Instance> fileWidgets = model.getAllInstances("form.FileWidget");
-        for (final Instance fileWidget : fileWidgets) {
-
-            if (fileWidget.get("inputType") != null) {
-                final EEnumLiteral literal = fileWidget.get("inputType");
-                if (literal.getLiteral().equals(FileWidgetInputType.RESOURCE.getLiteral())) {
-                    fileWidget.set("downloadType", downloadTypeEnum.getEEnumLiteral(FileWidgetDownloadType.BROWSE_VALUE));
-                }
-            }
-        }
 
     }
 }

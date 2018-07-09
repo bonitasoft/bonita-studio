@@ -30,6 +30,7 @@ import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -46,7 +47,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SimulationItemProviderAdapterFactory extends SimulationAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
+public class SimulationItemProviderAdapterFactory extends SimulationAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -520,6 +521,30 @@ public class SimulationItemProviderAdapterFactory extends SimulationAdapterFacto
 		if (parentAdapterFactory != null) {
 			parentAdapterFactory.fireNotifyChanged(notification);
 		}
+	}
+
+	/**
+	 * This disposes all of the item providers created by this factory. 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void dispose() {
+		if (simulationElementItemProvider != null) simulationElementItemProvider.dispose();
+		if (simulationTransitionItemProvider != null) simulationTransitionItemProvider.dispose();
+		if (resourceUsageItemProvider != null) resourceUsageItemProvider.dispose();
+		if (injectionPeriodItemProvider != null) injectionPeriodItemProvider.dispose();
+		if (simulationBooleanItemProvider != null) simulationBooleanItemProvider.dispose();
+		if (simulationNumberDataItemProvider != null) simulationNumberDataItemProvider.dispose();
+		if (simulationLiteralDataItemProvider != null) simulationLiteralDataItemProvider.dispose();
+		if (simulationLiteralItemProvider != null) simulationLiteralItemProvider.dispose();
+		if (simulationNumberRangeItemProvider != null) simulationNumberRangeItemProvider.dispose();
+		if (dataChangeItemProvider != null) dataChangeItemProvider.dispose();
+		if (simulationCalendarItemProvider != null) simulationCalendarItemProvider.dispose();
+		if (dayPeriodItemProvider != null) dayPeriodItemProvider.dispose();
+		if (modelVersionItemProvider != null) modelVersionItemProvider.dispose();
+		if (loadProfileItemProvider != null) loadProfileItemProvider.dispose();
+		if (resourceItemProvider != null) resourceItemProvider.dispose();
 	}
 
 }

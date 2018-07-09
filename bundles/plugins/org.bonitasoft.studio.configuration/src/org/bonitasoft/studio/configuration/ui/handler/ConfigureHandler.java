@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizard;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizardDialog;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.commands.AbstractHandler;
@@ -109,9 +108,6 @@ public class ConfigureHandler extends AbstractHandler {
                 final DiagramEditPart diagramEditPart = ((DiagramEditor)part).getDiagramEditPart();
                 if (diagramEditPart != null) {
                     final EObject rootElement = diagramEditPart.resolveSemanticElement();
-                    if(rootElement instanceof Form){
-                        return ModelHelper.getParentProcess(rootElement) ;
-                    }
                     final List selection = ((DiagramEditor)part).getDiagramGraphicalViewer().getSelectedEditParts() ;
                     if(!selection.isEmpty()){
                         if(selection.get(0) instanceof IGraphicalEditPart){

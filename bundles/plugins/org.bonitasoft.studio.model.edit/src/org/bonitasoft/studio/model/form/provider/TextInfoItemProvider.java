@@ -21,11 +21,15 @@ package org.bonitasoft.studio.model.form.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.TextInfo;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -63,12 +67,6 @@ public class TextInfoItemProvider extends InfoItemProvider {
 			addDuplicatePropertyDescriptor(object);
 			addLimitNumberOfDuplicationPropertyDescriptor(object);
 			addLimitMinNumberOfDuplicationPropertyDescriptor(object);
-			addMaxNumberOfDuplicationPropertyDescriptor(object);
-			addMinNumberOfDuplicationPropertyDescriptor(object);
-			addDisplayLabelForAddPropertyDescriptor(object);
-			addTooltipForAddPropertyDescriptor(object);
-			addDisplayLabelForRemovePropertyDescriptor(object);
-			addTooltipForRemovePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -140,135 +138,38 @@ public class TextInfoItemProvider extends InfoItemProvider {
 	}
 
 	/**
-	 * This adds a property descriptor for the Max Number Of Duplication feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addMaxNumberOfDuplicationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_maxNumberOfDuplication_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_maxNumberOfDuplication_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE);
+			childrenFeatures.add(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE);
+		}
+		return childrenFeatures;
 	}
 
 	/**
-	 * This adds a property descriptor for the Min Number Of Duplication feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addMinNumberOfDuplicationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_minNumberOfDuplication_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_minNumberOfDuplication_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
 
-	/**
-	 * This adds a property descriptor for the Display Label For Add feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelForAddPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_displayLabelForAdd_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_displayLabelForAdd_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip For Add feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipForAddPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_tooltipForAdd_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_tooltipForAdd_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Display Label For Remove feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addDisplayLabelForRemovePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_displayLabelForRemove_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_displayLabelForRemove_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Tooltip For Remove feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTooltipForRemovePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Duplicable_tooltipForRemove_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Duplicable_tooltipForRemove_feature", "_UI_Duplicable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
+		return super.getChildFeature(object, child);
 	}
 
 	/**
@@ -312,13 +213,15 @@ public class TextInfoItemProvider extends InfoItemProvider {
 			case FormPackage.TEXT_INFO__DUPLICATE:
 			case FormPackage.TEXT_INFO__LIMIT_NUMBER_OF_DUPLICATION:
 			case FormPackage.TEXT_INFO__LIMIT_MIN_NUMBER_OF_DUPLICATION:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
 			case FormPackage.TEXT_INFO__MAX_NUMBER_OF_DUPLICATION:
 			case FormPackage.TEXT_INFO__MIN_NUMBER_OF_DUPLICATION:
 			case FormPackage.TEXT_INFO__DISPLAY_LABEL_FOR_ADD:
 			case FormPackage.TEXT_INFO__TOOLTIP_FOR_ADD:
 			case FormPackage.TEXT_INFO__DISPLAY_LABEL_FOR_REMOVE:
 			case FormPackage.TEXT_INFO__TOOLTIP_FOR_REMOVE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -334,6 +237,36 @@ public class TextInfoItemProvider extends InfoItemProvider {
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE,
+				 ExpressionFactory.eINSTANCE.createExpression()));
 	}
 
 	/**
@@ -348,8 +281,22 @@ public class TextInfoItemProvider extends InfoItemProvider {
 		Object childObject = child;
 
 		boolean qualify =
+			childFeature == FormPackage.Literals.WIDGET__DEPEND_ON ||
+			childFeature == FormPackage.Literals.WIDGET__PARENT_OF ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_DEPENDENT_WIDGET_ONLY_AFTER_FIRST_EVENT_TRIGGERED_AND_CONDITION ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_AFTER_EVENT_DEPENDS_ON_CONDITION_SCRIPT ||
 			childFeature == FormPackage.Literals.WIDGET__INPUT_EXPRESSION ||
-			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION;
+			childFeature == FormPackage.Literals.WIDGET__AFTER_EVENT_EXPRESSION ||
+			childFeature == FormPackage.Literals.WIDGET__TOOLTIP ||
+			childFeature == FormPackage.Literals.WIDGET__HELP_MESSAGE ||
+			childFeature == FormPackage.Literals.WIDGET__DISPLAY_LABEL ||
+			childFeature == FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MAX_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__MIN_NUMBER_OF_DUPLICATION ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_ADD ||
+			childFeature == FormPackage.Literals.DUPLICABLE__DISPLAY_LABEL_FOR_REMOVE ||
+			childFeature == FormPackage.Literals.DUPLICABLE__TOOLTIP_FOR_REMOVE;
 
 		if (qualify) {
 			return getString

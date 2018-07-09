@@ -22,8 +22,6 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.validation.IValidationContext;
@@ -118,24 +116,4 @@ public class OperationLeftOperandConsistencyConstraintTest {
         assertThat(status.isOK()).isFalse();
     }
 
-    @Test
-    public void should_performBatchValidation__ok_if_in_read_only_widget() throws Exception {
-        //given
-        final Operation operation = expressionFactory.createOperation();
-        final Expression expression = expressionFactory.createExpression();
-        expression.setType(ExpressionConstants.CONSTANT_TYPE);
-        expression.setName("dataName");
-        expression.setContent("dataName");
-        operation.setLeftOperand(expression);
-        final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
-        widget.setAction(operation);
-        widget.setReadOnly(true);
-        when(context.getTarget()).thenReturn(operation);
-
-        //when
-        final IStatus status = constraint.performBatchValidation(context);
-
-        //then
-        assertThat(status.isOK()).isTrue();
-    }
 }

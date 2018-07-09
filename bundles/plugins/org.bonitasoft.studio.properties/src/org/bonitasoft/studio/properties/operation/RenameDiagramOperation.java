@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
-import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -29,25 +28,15 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -79,7 +68,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
-        final List<Form> forms = computeFormsToReopen(editor);
         final DuplicateDiagramOperation operation = new DuplicateDiagramOperation();
         operation.setDiagramToDuplicate(diagram);
         operation.setNewDiagramName(diagramName);
@@ -91,11 +79,11 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
             final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
             diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
             cleanOldFileStores(diagramFileStore);
-            reopenEditors(partName, diagramStore, forms);
+            reopenEditors(partName, diagramStore);
         }
     }
 
-    protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore, final List<Form> forms) {
+    protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore) {
         final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         fStore.save(null);
         IWorkbenchPart partToActivate = fStore.open();
@@ -115,39 +103,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         }
         diagramFileStore.close();
         diagramFileStore.delete();
-    }
-
-    private List<Form> computeFormsToReopen(final DiagramEditor editor) {
-        final List<Form> formsToReopen = new ArrayList<Form>();
-        final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-
-        final IEditorInput editorInput = editor.getEditorInput();
-        final IResource diagramResource = EditorUtil.retrieveResourceFromEditorInput(editorInput);
-
-        if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
-            final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getEditorReferences();
-            // look for the resource in other editors
-            for (final IEditorReference iEditorReference : editors) {
-                try {
-                    final IEditorInput input = iEditorReference.getEditorInput();
-                    final IResource iResource = EditorUtil.retrieveResourceFromEditorInput(input);
-                    if (diagramResource != null && diagramResource.equals(iResource)) {
-                        final IWorkbenchPart part = iEditorReference.getPart(false);
-                        if (part != null && part instanceof DiagramDocumentEditor) {
-                            final EObject root = ((DiagramDocumentEditor) part).getDiagramEditPart()
-                                    .resolveSemanticElement();
-                            if (root instanceof Form) {
-                                formsToReopen.add(EcoreUtil.copy((Form) root));
-                            }
-                        }
-                    }
-                } catch (final PartInitException e) {
-                    // no input? -> nothing to do
-                }
-            }
-        }
-        return formsToReopen;
     }
 
     public void setDiagramToDuplicate(final MainProcess diagram) {

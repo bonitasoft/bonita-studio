@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.Triple;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.resources.IFile;
@@ -200,7 +199,7 @@ public class ValidationMarkerProvider {
             final DiagramEditPart de = entry.getValue();
             if (de != null) {
                 final EObject resolvedSemanticElement = de.resolveSemanticElement();
-                if (resolvedSemanticElement instanceof Form || resolvedSemanticElement instanceof MainProcess) {
+                if (resolvedSemanticElement instanceof MainProcess) {
                     final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
                     if (target != null) {
                         org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);

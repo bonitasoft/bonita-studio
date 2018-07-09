@@ -85,7 +85,6 @@ public class ValidatorItemProvider
 			addHtmlClassPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addBelowFieldPropertyDescriptor(object);
-			addParameterPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -179,28 +178,6 @@ public class ValidatorItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Parameter feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addParameterPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Validator_parameter_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Validator_parameter_feature", "_UI_Validator_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.VALIDATOR__PARAMETER,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -212,6 +189,7 @@ public class ValidatorItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
+			childrenFeatures.add(FormPackage.Literals.VALIDATOR__PARAMETER);
 			childrenFeatures.add(FormPackage.Literals.VALIDATOR__DISPLAY_NAME);
 		}
 		return childrenFeatures;
@@ -272,9 +250,9 @@ public class ValidatorItemProvider
 			case FormPackage.VALIDATOR__HTML_CLASS:
 			case FormPackage.VALIDATOR__NAME:
 			case FormPackage.VALIDATOR__BELOW_FIELD:
-			case FormPackage.VALIDATOR__PARAMETER:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
+			case FormPackage.VALIDATOR__PARAMETER:
 			case FormPackage.VALIDATOR__DISPLAY_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
@@ -295,8 +273,36 @@ public class ValidatorItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(FormPackage.Literals.VALIDATOR__PARAMETER,
+				 ExpressionFactory.eINSTANCE.createExpression()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(FormPackage.Literals.VALIDATOR__DISPLAY_NAME,
 				 ExpressionFactory.eINSTANCE.createExpression()));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify =
+			childFeature == FormPackage.Literals.VALIDATOR__PARAMETER ||
+			childFeature == FormPackage.Literals.VALIDATOR__DISPLAY_NAME;
+
+		if (qualify) {
+			return getString
+				("_UI_CreateChild_text2", //$NON-NLS-1$
+				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 	/**

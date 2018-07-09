@@ -30,9 +30,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Lane;
@@ -431,11 +428,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
 
     public void setEObject(final EObject eObject) {
         this.eObject = eObject;
-        if (eObject instanceof Form) {
-            setOperationContainmentFeature(FormPackage.Literals.FORM__ACTIONS);
-        } else if (eObject instanceof SubmitFormButton) {
-            setOperationContainmentFeature(FormPackage.Literals.SUBMIT_FORM_BUTTON__ACTIONS);
-        } else if (eObject instanceof AbstractCatchMessageEvent) {
+        if (eObject instanceof AbstractCatchMessageEvent) {
             setOperationContainmentFeature(ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT);
         } else if (eObject instanceof Connector) {
             setOperationContainmentFeature(ProcessPackage.Literals.CONNECTOR__OUTPUTS);

@@ -294,12 +294,12 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
 		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
 		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
 		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
 		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
 		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
 		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
 		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theSimulationPackage.createPackageContents();
@@ -307,12 +307,12 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 		theConfigurationPackage.createPackageContents();
 		theConnectorConfigurationPackage.createPackageContents();
 		theExpressionPackage.createPackageContents();
-		theFormPackage.createPackageContents();
 		theKpiPackage.createPackageContents();
 		theParameterPackage.createPackageContents();
 		theProcessPackage.createPackageContents();
 		theDecisionPackage.createPackageContents();
 		theTransitionsPackage.createPackageContents();
+		theFormPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theSimulationPackage.initializePackageContents();
@@ -320,12 +320,12 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 		theConfigurationPackage.initializePackageContents();
 		theConnectorConfigurationPackage.initializePackageContents();
 		theExpressionPackage.initializePackageContents();
-		theFormPackage.initializePackageContents();
 		theKpiPackage.initializePackageContents();
 		theParameterPackage.initializePackageContents();
 		theProcessPackage.initializePackageContents();
 		theDecisionPackage.initializePackageContents();
 		theTransitionsPackage.initializePackageContents();
+		theFormPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theSimulationPackage.freeze();

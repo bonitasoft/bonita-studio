@@ -20,8 +20,6 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -98,13 +96,8 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint 
 
     private boolean elementCanHaveEmptyName(final EObject eObj) {
         return eObj instanceof SequenceFlow
-                || eObj instanceof TextAnnotation
-                || aDisabledGroupIterator(eObj);
+                || eObj instanceof TextAnnotation;
     }
 
-    private boolean aDisabledGroupIterator(final EObject eObj) {
-        return eObj instanceof GroupIterator
-                && !((Group) eObj.eContainer()).isUseIterator();
-    }
 
 }

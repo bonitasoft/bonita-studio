@@ -16,8 +16,6 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Container;
@@ -44,8 +42,6 @@ public class ConnectableElementViewerFilter extends ViewerFilter {
     @Override
     public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
         return (element instanceof ConnectableElement || element instanceof Container)
-                && !(element instanceof Widget)
-                && !(element instanceof Form)
                 && !(element instanceof MessageEvent)
                 && ModelHelper.getParentProcess((EObject) element).equals(sourceProcess);
     }

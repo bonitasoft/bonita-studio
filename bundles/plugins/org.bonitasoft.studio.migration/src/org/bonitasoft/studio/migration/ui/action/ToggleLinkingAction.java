@@ -17,9 +17,6 @@ package org.bonitasoft.studio.migration.ui.action;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.ui.view.PropertySelectionProvider;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -60,11 +57,6 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
                             EObject element = editor.getDiagram().eResource().getEObject(uuid);
                             if (PROCESS_ID.equals(editor.getContributorId())) {
                                 while (element != null && !(element instanceof SequenceFlow || element instanceof Container || element instanceof FlowElement)) {
-                                    element = element.eContainer();
-                                }
-                            } else if (FORM_ID.equals(editor.getContributorId())) {
-                                while (element != null
-                                        && !(element instanceof Widget || element instanceof Form || element instanceof Group || element instanceof Widget)) {
                                     element = element.eContainer();
                                 }
                             } else {

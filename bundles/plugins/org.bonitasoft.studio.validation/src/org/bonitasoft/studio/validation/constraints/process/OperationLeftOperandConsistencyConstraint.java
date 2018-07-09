@@ -15,10 +15,8 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -47,24 +45,19 @@ public class OperationLeftOperandConsistencyConstraint extends
             final String type = leftOperand.getType();
             if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
                 if (leftOperand.getReferencedElements().isEmpty()) {
-                    final Widget widget = ModelHelper
-                            .getParentWidget(operation);
-                    if (widget == null || !widget.isReadOnly()) {
-                        return ctx.createFailureStatus(Messages.bind(
-                                Messages.inconsistentLeftOperand,
-                                leftOperand.getName()));
-                    }
+                    return ctx.createFailureStatus(Messages.bind(
+                            Messages.inconsistentLeftOperand,
+                            leftOperand.getName()));
                 }
             }
             if (ExpressionConstants.CONSTANT_TYPE.equals(type)) {
-                final Widget widget = ModelHelper.getParentWidget(operation);
-                if (widget == null || !widget.isReadOnly()) {
-                    if (leftOperand.getReferencedElements().isEmpty()) {
-                        return ctx.createFailureStatus(Messages.bind(
-                                Messages.inconsistentLeftOperand,
-                                leftOperand.getName()));
-                    }
+
+                if (leftOperand.getReferencedElements().isEmpty()) {
+                    return ctx.createFailureStatus(Messages.bind(
+                            Messages.inconsistentLeftOperand,
+                            leftOperand.getName()));
                 }
+
             }
         }
         return ctx.createSuccessStatus();

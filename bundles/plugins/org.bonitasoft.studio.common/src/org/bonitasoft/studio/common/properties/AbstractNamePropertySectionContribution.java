@@ -15,9 +15,6 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -155,20 +152,11 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     }
 
     private boolean useEditButton() {
-        //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
-        return element instanceof MainProcess || element instanceof Pool || element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer());
+        return element instanceof MainProcess || element instanceof Pool;
     }
 
     protected void editProcessNameAndVersion() {
         //TO IMPLEMENT IN SUBCLASS
-    }
-
-    protected boolean isContainerIsAFormOrAGroup(final EObject element) {
-        if (element instanceof Group) {
-            return isContainerIsAFormOrAGroup(element.eContainer());
-        } else {
-            return element instanceof Form;
-        }
     }
 
     @Override

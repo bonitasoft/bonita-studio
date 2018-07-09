@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Document;
@@ -185,11 +184,6 @@ public class OutlineDialog extends MessageDialog{
             if(element instanceof SearchIndex){
                 return Messages.searchIndexListViewerTitle;
             }
-
-            if(element instanceof Widget){
-                return Messages.widgetListViewerTitle;
-            }
-
             if (element instanceof Document) {
                 return Messages.documentListViewerTitle;
             }
@@ -234,11 +228,7 @@ public class OutlineDialog extends MessageDialog{
         outline.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
         final ViewerFilter[] filters = {new OutlineFilter()};
         outline.setFilters(filters);
-        if (!(elementToDisplay.get(0) instanceof Widget)){
-            outline.setInput(ModelHelper.getParentProcess((EObject)elementToDisplay.get(0)));
-        } else {
-            outline.setInput(ModelHelper.getPageFlow((Widget)elementToDisplay.get(0)));
-        }
+        outline.setInput(ModelHelper.getParentProcess((EObject) elementToDisplay.get(0)));
     }
 
     private void createObjectListViewer(final Composite viewersComposite) {

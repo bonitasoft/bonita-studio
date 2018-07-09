@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
@@ -102,8 +101,6 @@ public final class CopyEObjectFeaturesCommand extends AbstractTransactionalComma
                     ((SequenceFlow) connection).setCondition(defaultExpression);
                 }
             }
-        }else if(targetElement instanceof Info){
-            ((Info)targetElement).setAction(null);
         }
         
         if(sourceElement.eClass().equals(ProcessPackage.Literals.THROW_LINK_EVENT)){

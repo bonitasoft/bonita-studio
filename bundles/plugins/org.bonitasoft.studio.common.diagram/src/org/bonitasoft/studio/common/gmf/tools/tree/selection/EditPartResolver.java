@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
@@ -78,22 +77,16 @@ public class EditPartResolver {
                             instanceOf(TextAnnotationAttachment.class),
                             instanceOf(Connection.class),
                             instanceOf(MessageFlow.class),
-                            instanceOf(Pool.class),
-                            instanceOf(Widget.class)))
+                            instanceOf(Pool.class)))
                     .apply(semanticModelElement)) {
                 final Connection connection = ModelHelper.getFirstContainerOfType(semanticModelElement, Connection.class);
                 final FlowElement flowElement = ModelHelper.getFirstContainerOfType(semanticModelElement, FlowElement.class);
-                final Widget widget = ModelHelper.getFirstContainerOfType(semanticModelElement, Widget.class);
                 if (connection != null) {
                     if (semanticElementMatches(editPart, connection)) {
                         return true;
                     }
                 } else if (flowElement != null) {
                     if (semanticElementMatches(editPart, flowElement)) {
-                        return true;
-                    }
-                } else if (widget != null) {
-                    if (semanticElementMatches(editPart, widget)) {
                         return true;
                     }
                 } else {

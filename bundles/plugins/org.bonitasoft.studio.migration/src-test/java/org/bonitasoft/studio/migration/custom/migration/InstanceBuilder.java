@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.migration.custom.migration;
 
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -95,7 +94,6 @@ public class InstanceBuilder {
             final Metamodel metamodel = migrationFactory.createMetamodel();
             final MetamodelResource metamodelResource = migrationFactory.createMetamodelResource();
             metamodelResource.getRootPackages().add(ProcessPackage.eINSTANCE);
-            metamodelResource.getRootPackages().add(FormPackage.eINSTANCE);
             metamodelResource.getRootPackages().add(ExpressionPackage.eINSTANCE);
             metamodel.getResources().add(metamodelResource);
             model.setMetamodel(metamodel);

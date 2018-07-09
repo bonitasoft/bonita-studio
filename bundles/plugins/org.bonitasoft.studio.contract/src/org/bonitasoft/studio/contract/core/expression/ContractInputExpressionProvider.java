@@ -119,9 +119,9 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
     public boolean isRelevantFor(final EObject context) {
         final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(context);
         if (parentFlowElement != null) {//check if on an Activity
-            return parentFlowElement instanceof ContractContainer && ModelHelper.getParentForm(context) == null;
+            return parentFlowElement instanceof ContractContainer;
         } else {// we are at Pool Level
-            return context instanceof Data || ModelHelper.getParentPool(context) != null && ModelHelper.getParentForm(context) == null;
+            return context instanceof Data || ModelHelper.getParentPool(context) != null;
         }
     }
 

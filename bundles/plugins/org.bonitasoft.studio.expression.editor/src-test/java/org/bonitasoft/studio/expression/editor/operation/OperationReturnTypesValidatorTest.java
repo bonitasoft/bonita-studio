@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.JavaObjectDataBuilder.aJavaObjectData;
 import static org.bonitasoft.studio.model.process.builders.LongDataTypeBuilder.aLongDataType;
@@ -34,9 +32,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.IStatus;
@@ -177,7 +172,7 @@ public class OperationReturnTypesValidatorTest {
     }
 
     @Test
-    public void shouldValidateSetListDocumentOperation_add_info_message_when_expression_is_empty_in_Operation_of_Task_Or_Form()
+    public void shouldValidateSetListDocumentOperation_add_info_message_when_expression_is_empty_in_Operation_of_Task()
             throws Exception {
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
         final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
@@ -192,15 +187,6 @@ public class OperationReturnTypesValidatorTest {
         IStatus status = validator.validateSetListDocumentOperation(rightOperand, operation);
         Assertions.assertThat(status.isOK()).isFalse();
         Assertions.assertThat(status.getMessage()).isEqualTo(Messages.messageOperationWithListDocumentInTask);
-
-        // Test widget Action
-        final FileWidget widget = FormFactory.eINSTANCE.createFileWidget();
-        widget.setAction(operation);
-
-        status = validator.validateSetListDocumentOperation(rightOperand, operation);
-        Assertions.assertThat(status.isOK()).isFalse();
-        Assertions.assertThat(status.getMessage()).isEqualTo(Messages.messageOperationWithListDocumentInForm);
-
     }
 
 
