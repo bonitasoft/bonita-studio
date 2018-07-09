@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Message;
@@ -73,17 +75,22 @@ public class CatchEventEventSelectionContribution implements
             final String eventName = eObject.getEvent();
             final Message event = ModelHelper.findEvent(eObject, eventName);
             if (event != null) {
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,
-                                ExpressionHelper.createConstantExpression(eObject.getName(), String.class.getName())));
+                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(event.getTargetElementExpression());
+                Expression newExpression = ExpressionHelper.createConstantExpression(eObject.getName(),
+                        String.class.getName());
+                newExpression.setReturnTypeFixed(event.getTargetElementExpression().isReturnTypeFixed());
+                updater.editWorkingCopy(newExpression);
+                editingDomain.getCommandStack().execute(updater.createUpdateCommand(editingDomain));
             }
         }
     };
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
+     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.
+     * widgets.Composite,
+     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
+     * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
     @Override
     public void createControl(final Composite composite,
@@ -146,7 +153,7 @@ public class CatchEventEventSelectionContribution implements
     }
 
     private List<Message> retrievePossibleMessageEvents() {
-        final List<Message> events = new ArrayList<Message>();
+        final List<Message> events = new ArrayList<>();
         ModelHelper.findAllEvents(ModelHelper.getMainProcess(eObject), events);
 
         // remove messages that source(throwMessage) are on the same process as eObject(catchMessage)
@@ -157,7 +164,7 @@ public class CatchEventEventSelectionContribution implements
     }
 
     private List<Message> retrieveMessageEventsFromThePool(final List<Message> events, final AbstractProcess parentProcess) {
-        final List<Message> eventsToRemove = new ArrayList<Message>();
+        final List<Message> eventsToRemove = new ArrayList<>();
         for (final Message message : events) {
             if (ModelHelper.getParentProcess(message).equals(parentProcess)) {
                 eventsToRemove.add(message);
@@ -171,18 +178,20 @@ public class CatchEventEventSelectionContribution implements
 
         final Message event = ModelHelper.findEvent(eObject, eventName);
 
-        final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
 
         final boolean eventsOnSameDiagram = event != null && event.eResource().equals(eObject.eResource());
 
         // Delete old
         if ((event == null || eventsOnSameDiagram) && eObject.getIncomingMessag() != null) {
-            MessageFlowFactory.removeMessageFlow(editingDomain, event, eObject, editor.getDiagramEditPart());
+            MessageFlowFactory.removeMessageFlow(editingDomain, eObject, editor.getDiagramEditPart());
         }
 
         // Set
         final CompoundCommand cc = new CompoundCommand();
-        final SetCommand setCommand = new SetCommand(editingDomain, eObject, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, eventName);
+        final SetCommand setCommand = new SetCommand(editingDomain, eObject,
+                ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, eventName);
         cc.append(setCommand);
         editingDomain.getCommandStack().execute(setCommand);
 
@@ -191,30 +200,35 @@ public class CatchEventEventSelectionContribution implements
         for (final AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(eObject))) {
             if (ev.getEvent() != null && eventName != null && ev.getEvent().equals(eventName)) {
                 if (!ev.equals(eObject)) {
-                    final SetCommand cmd = new SetCommand(editingDomain, ev, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, null);
+                    final SetCommand cmd = new SetCommand(editingDomain, ev,
+                            ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, null);
                     editingDomain.getCommandStack().execute(cmd);
                 }
                 if (oldEventName != null) {
                     final Message oldEvent = ModelHelper.findEvent(ModelHelper.getMainProcess(eObject), oldEventName);
-                    SetCommand cmd = new SetCommand(editingDomain, oldEvent, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, null);
+                    SetCommand cmd = new SetCommand(editingDomain, oldEvent,
+                            ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, null);
                     editingDomain.getCommandStack().execute(cmd);
-                    cmd = new SetCommand(editingDomain, oldEvent, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION, null);
+                    cmd = new SetCommand(editingDomain, oldEvent, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,
+                            null);
                     editingDomain.getCommandStack().execute(cmd);
                 }
-                MessageFlowFactory.removeMessageFlow(editingDomain, event, ev, editor.getDiagramEditPart());
+                MessageFlowFactory.removeMessageFlow(editingDomain, ev, editor.getDiagramEditPart());
 
             }
         }
 
         // Add new
         if (eventsOnSameDiagram) {
-            final AbstractCatchMessageEvent catchMessage = (AbstractCatchMessageEvent) messageEventPart.resolveSemanticElement();
+            final AbstractCatchMessageEvent catchMessage = (AbstractCatchMessageEvent) messageEventPart
+                    .resolveSemanticElement();
             final String procName = ModelHelper.getParentProcess(catchMessage).getName();
             SetCommand cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION,
                     ExpressionHelper.createConstantExpression(procName, String.class.getName()));
             editingDomain.getCommandStack().execute(cmd);
-            cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION, ExpressionHelper.createConstantExpression(
-                    catchMessage.getName(), String.class.getName()));
+            cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,
+                    ExpressionHelper.createConstantExpression(
+                            catchMessage.getName(), String.class.getName()));
             editingDomain.getCommandStack().execute(cmd);
             MessageFlowFactory.createMessageFlow(editingDomain, event, (ThrowMessageEvent) event.eContainer(),
                     (AbstractCatchMessageEvent) messageEventPart.resolveSemanticElement(), editor.getDiagramEditPart());
@@ -235,7 +249,8 @@ public class CatchEventEventSelectionContribution implements
 
     protected void deactivateNameListener() {
         if (editingDomain != null) {
-            DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(eObject, ProcessPackage.eINSTANCE.getElement_Name(),
+            DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(eObject,
+                    ProcessPackage.eINSTANCE.getElement_Name(),
                     updateSourceEventListener);
         }
     }
@@ -251,7 +266,9 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
+     * @see
+     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore
+     * .EObject)
      */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
@@ -271,7 +288,9 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
+     * @see
+     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.
+     * EObject)
      */
     @Override
     public void setEObject(final EObject object) {
@@ -280,13 +299,15 @@ public class CatchEventEventSelectionContribution implements
     }
 
     private void activateNameListener() {
-        DiagramEventBroker.getInstance(editingDomain).addNotificationListener(eObject, ProcessPackage.eINSTANCE.getElement_Name(), updateSourceEventListener);
+        DiagramEventBroker.getInstance(editingDomain).addNotificationListener(eObject,
+                ProcessPackage.eINSTANCE.getElement_Name(), updateSourceEventListener);
     }
 
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain
+     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
+     * transaction.TransactionalEditingDomain
      * )
      */
     @Override
@@ -296,7 +317,9 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
+     * @see
+     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
+     * viewers.ISelection)
      */
     @Override
     public void setSelection(final ISelection selection) {
