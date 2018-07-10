@@ -29,8 +29,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
@@ -40,7 +38,6 @@ import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,8 +83,7 @@ public class FormMappingBarResourceProviderTest {
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_process_is_null() throws Exception {
         formMappingBarResourceProvider.addResourcesForConfiguration(new BusinessArchiveBuilder(), null, aConfiguration()
-                .build(),
-                Collections.<EObject> emptySet());
+                .build());
     }
 
     @Test
@@ -98,8 +94,7 @@ public class FormMappingBarResourceProviderTest {
 
         //When
         formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithFormMappings, aConfiguration()
-                .build(),
-                Collections.<EObject> emptySet());
+                .build());
 
         //Then
         verify(builder).setFormMappings(formMappingModel);
@@ -117,8 +112,7 @@ public class FormMappingBarResourceProviderTest {
 
         //When
         formMappingBarResourceProvider.addResourcesForConfiguration(builder, pool, aConfiguration()
-                .build(),
-                Collections.<EObject> emptySet());
+                .build());
 
         //Then
         verify(builder).setFormMappings(formMappingModel);
@@ -137,8 +131,7 @@ public class FormMappingBarResourceProviderTest {
 
         //When
         formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithAllTypeOfFormMappings(), aConfiguration()
-                .build(),
-                Collections.<EObject> emptySet());
+                        .build());
 
         //Then
         verify(builder).addExternalResource(taskFormCustomPage);
@@ -149,8 +142,7 @@ public class FormMappingBarResourceProviderTest {
         //When
         doReturn("").when(formMappingBarResourceProvider).resolveUUID("");
         formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(), aConfiguration()
-                .build(),
-                Collections.<EObject> emptySet());
+                .build());
 
         //Then
         verify(builder, never()).addExternalResource(any(BarResource.class));

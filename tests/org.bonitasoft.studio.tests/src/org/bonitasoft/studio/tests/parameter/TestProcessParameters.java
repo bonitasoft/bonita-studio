@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Properties;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -155,7 +154,7 @@ public class TestProcessParameters {
         Assert.assertNotNull(pool);
         importParamters();
         final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool,
-                pool.getConfigurations().get(0).getName(), Collections.EMPTY_SET);
+                pool.getConfigurations().get(0).getName());
         Assert.assertEquals("Missing parameter in bar", 3, bar.getParameters().size());
     }
 

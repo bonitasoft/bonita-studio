@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
-import java.util.Set;
-
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.engine.bpm.process.impl.ActorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ConnectorDefinitionBuilder;
@@ -52,14 +50,11 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
  */
 public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
-
-    protected final Set<EObject> eObjectNotExported;
 
     protected IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider;
 
@@ -75,10 +70,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
     private static final String SUFFIX_CONTEXT = "_ref";
 
-    public AbstractProcessBuilder(final Set<EObject> eObjectNotExported,
-            IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
+    public AbstractProcessBuilder(IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
             IModelSearch modelSearch) {
-        this.eObjectNotExported = eObjectNotExported;
         this.engineDefinitionBuilderProvider = engineDefinitionBuilderProvider;
         this.modelSearch = modelSearch;
     }
@@ -101,22 +94,20 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
 
     protected void addConnector(final FlowElementBuilder builder, final ConnectableElement element) {
         for (final Connector connector : element.getConnectors()) {
-            if (!eObjectNotExported.contains(connector)) {
-                final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
-                ConnectorConfiguration configuration = connector.getConfiguration();
-                if (configuration == null) {
-                    throw new MissingConnectorConfigurationException(connector, element);
-                }
-                if (groovyConnectorConfigurationConverter.appliesTo(configuration)) {
-                    configuration = groovyConnectorConfigurationConverter.convert(connector.getConfiguration());
-                }
-                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(),
-                        connector.getDefinitionId(),
-                        connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
-                handleConnectorBehaviorOnFailure(connector, connectorBuilder);
-                handleConnectorInputs(configuration, connectorBuilder);
-                handleConnectorOutputs(connector, connectorBuilder);
+            final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
+            ConnectorConfiguration configuration = connector.getConfiguration();
+            if (configuration == null) {
+                throw new MissingConnectorConfigurationException(connector, element);
             }
+            if (groovyConnectorConfigurationConverter.appliesTo(configuration)) {
+                configuration = groovyConnectorConfigurationConverter.convert(connector.getConfiguration());
+            }
+            final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(),
+                    connector.getDefinitionId(),
+                    connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
+            handleConnectorBehaviorOnFailure(connector, connectorBuilder);
+            handleConnectorInputs(configuration, connectorBuilder);
+            handleConnectorOutputs(connector, connectorBuilder);
         }
     }
 

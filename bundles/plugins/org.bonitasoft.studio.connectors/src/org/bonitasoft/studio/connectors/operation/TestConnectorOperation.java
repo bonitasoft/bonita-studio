@@ -164,7 +164,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             configuration.setName("TestConnectorConfiguration");
             new ConfigurationSynchronizer(proc, configuration).synchronize();
             configureProcess(configuration, implementation);
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration, Collections.<EObject> emptySet());
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration);
 
             undeployProcess(proc, processApi);
             final ProcessDefinition def = processApi.deploy(businessArchive);

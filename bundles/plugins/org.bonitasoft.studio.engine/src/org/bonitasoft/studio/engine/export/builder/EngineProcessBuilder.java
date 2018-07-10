@@ -14,13 +14,10 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
-import java.util.Set;
-
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -30,9 +27,8 @@ public class EngineProcessBuilder extends AbstractProcessBuilder {
     protected final ProcessDefinitionBuilder builder;
 
     public EngineProcessBuilder(final ProcessDefinitionBuilder processBuilder,
-            IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider, IModelSearch modelSearch,
-            final Set<EObject> eObjectNotExported) {
-        super(eObjectNotExported, engineDefinitionBuilderProvider, modelSearch);
+            IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider, IModelSearch modelSearch) {
+        super(engineDefinitionBuilderProvider, modelSearch);
         builder = processBuilder;
     }
 

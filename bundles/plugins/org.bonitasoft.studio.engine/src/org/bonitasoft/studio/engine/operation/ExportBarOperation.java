@@ -18,7 +18,6 @@ package org.bonitasoft.studio.engine.operation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -34,7 +33,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -111,8 +109,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         monitor.beginTask(Messages.bind(Messages.buildingBar, process.getName(), process.getVersion()),
                 IProgressMonitor.UNKNOWN);
         try {
-            final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId,
-                    Collections.<EObject> emptySet());
+            final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId);
             writeBusinessArchiveToFile(outputFile, bar);
             generatedBars.add(outputFile);
         } catch (final Exception ex) {

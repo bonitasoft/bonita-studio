@@ -17,7 +17,6 @@ package org.bonitasoft.studio.engine.command;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.zip.ZipOutputStream;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -140,8 +139,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
 
                     final File targetBarFile = new File(tmpDir, process.getName() + "--" + process.getVersion() + ".bar");
                     targetBarFile.delete();
-                    BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process, configurationId,
-                            Collections.<EObject> emptySet());
+                    BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process, configurationId);
                     BusinessArchiveFactory.writeBusinessArchiveToFile(bar, targetBarFile);
                 } catch (Exception e) {
                     BonitaStudioLog.error(e);
