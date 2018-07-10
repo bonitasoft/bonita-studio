@@ -19,7 +19,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -43,7 +42,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -68,8 +66,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
-            final Configuration configuration,
-            final Set<EObject> excludedObject) throws Exception {
+            final Configuration configuration) throws Exception {
         checkArgument(process != null);
         builder.setFormMappings(newFormMappingModel(builder, process));
     }

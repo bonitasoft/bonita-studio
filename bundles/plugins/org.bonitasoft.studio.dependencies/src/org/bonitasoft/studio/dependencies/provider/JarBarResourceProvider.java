@@ -17,7 +17,6 @@ package org.bonitasoft.studio.dependencies.provider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -33,7 +32,6 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.io.Files;
 
@@ -43,12 +41,12 @@ import com.google.common.io.Files;
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObjects) {
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+            final Configuration configuration) {
         if (configuration == null) {
             return;
         }
-        final List<BarResource> resources = new ArrayList<BarResource>();
+        final List<BarResource> resources = new ArrayList<>();
         final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         for (final FragmentContainer fc : configuration.getProcessDependencies()) {
             final List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT);

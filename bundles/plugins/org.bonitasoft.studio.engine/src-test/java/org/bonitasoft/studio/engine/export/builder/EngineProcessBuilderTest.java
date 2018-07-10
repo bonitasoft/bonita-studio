@@ -45,7 +45,6 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
-import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,8 +67,7 @@ public class EngineProcessBuilderTest {
     @Before
     public void setup() {
         engineProcessBuilder = spy(
-                new EngineProcessBuilder(processDefBuilder, builderProvider, new ModelSearch(Collections::emptyList),
-                        Collections.<EObject> emptySet()));
+                new EngineProcessBuilder(processDefBuilder, builderProvider, new ModelSearch(Collections::emptyList)));
         doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(anyString(), anyString(), any(Expression.class));
         
     }

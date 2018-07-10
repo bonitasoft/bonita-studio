@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bpm.flownode.GatewayType;
@@ -121,9 +120,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     public EngineFlowElementBuilder(final FlowElementBuilder processBuilder,
             IEngineDefinitionBuilderProvider engineDefinitionBuilderProvider,
-            IModelSearch modelSearch,
-            final Set<EObject> eObjectNotExported) {
-        super(eObjectNotExported, engineDefinitionBuilderProvider, modelSearch);
+            IModelSearch modelSearch) {
+        super(engineDefinitionBuilderProvider, modelSearch);
         builder = processBuilder;
     }
 
@@ -132,12 +130,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true)
                 .getSubProcessBuilder();
         final AbstractProcessBuilder subProcessSwitch = new EngineFlowElementBuilder(subProcessBuilder,
-                engineDefinitionBuilderProvider, modelSearch, eObjectNotExported);
+                engineDefinitionBuilderProvider, modelSearch);
         final List<FlowElement> flowElements = modelSearch.getAllItemsOfType(subProcessEvent, FlowElement.class);
         for (final FlowElement flowElement : flowElements) {
-            if (!eObjectNotExported.contains(flowElement)) {
-                subProcessSwitch.doSwitch(flowElement);
-            }
+            subProcessSwitch.doSwitch(flowElement);
         }
         final List<SourceElement> sourceElements = modelSearch.getAllItemsOfType(subProcessEvent,
                 SourceElement.class);

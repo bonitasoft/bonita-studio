@@ -76,7 +76,6 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         final DeployProcessOperation deployOperation = createDeployProcessOperation();
         final String configurationId = executionContext.getConfigurationId();
         deployOperation.setConfigurationId(configurationId);
-        deployOperation.setObjectToExclude(executionContext.getExcludedObject());
         deployOperation.setDisablePopup(executionContext.synchronousExecution());
         for (final AbstractProcess process : processSelector.getExecutableProcesses()) {
             deployOperation.addProcessToDeploy(process);

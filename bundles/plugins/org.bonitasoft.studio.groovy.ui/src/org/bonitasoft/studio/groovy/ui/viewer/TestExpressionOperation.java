@@ -16,7 +16,6 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +119,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                 }
             }
 
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration, Collections.EMPTY_SET);
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration);
 
             undeployProcess(proc, processApi);
             final ProcessDefinition def = processApi.deploy(businessArchive);

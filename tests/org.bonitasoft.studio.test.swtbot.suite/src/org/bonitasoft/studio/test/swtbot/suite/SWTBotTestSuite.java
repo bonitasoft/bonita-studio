@@ -42,7 +42,6 @@ import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration
 import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
-import org.bonitasoft.studio.tests.debug.TestDebugFeature;
 import org.bonitasoft.studio.tests.diagram.ConvertActivityTypeWithBoundariesIT;
 import org.bonitasoft.studio.tests.diagram.CopyPasteTests;
 import org.bonitasoft.studio.tests.diagram.DeleteCommandTest;
@@ -114,7 +113,6 @@ import org.junit.runners.Suite;
         TestWebPurchase.class,
         TestUndoRedoStackLimit.class,
         TestOpenDiagram.class,
-        TestDebugFeature.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
         ConnectorDefinitionTranslationsTest.class,
         TestBonitaGroovyEditorDialog.class,
