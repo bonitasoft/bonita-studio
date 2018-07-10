@@ -28,8 +28,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -44,7 +42,6 @@ import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStor
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -104,8 +101,8 @@ public class ConnectorBarResourceProviderTest {
                 aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
                         "org.test.MyConnector"));
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
-        provider.addResourcesForConfiguration(builder, aPool().build(), connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"),
-                Collections.<EObject> emptySet());
+        provider.addResourcesForConfiguration(builder, aPool().build(),
+                connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
 
         final ArgumentCaptor<BarResource> barResourceCaptor = ArgumentCaptor.forClass(BarResource.class);
         verify(builder).addClasspathResource(barResourceCaptor.capture());
@@ -126,8 +123,8 @@ public class ConnectorBarResourceProviderTest {
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
-        provider.addResourcesForConfiguration(builder, aPool().build(), connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"),
-                Collections.<EObject> emptySet());
+        provider.addResourcesForConfiguration(builder, aPool().build(),
+                connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
 
         final ArgumentCaptor<BarResource> barResourceCaptor = ArgumentCaptor.forClass(BarResource.class);
         verify(builder).addClasspathResource(barResourceCaptor.capture());
@@ -147,8 +144,8 @@ public class ConnectorBarResourceProviderTest {
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
-        provider.addResourcesForConfiguration(builder, aPool().build(), connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"),
-                Collections.<EObject> emptySet());
+        provider.addResourcesForConfiguration(builder, aPool().build(),
+                connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
 
         final ConnectorImplementation implemetationWithSelfDep = provider.implemetationWithSelfDep(myConnectorImplFileStore,
                 connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));

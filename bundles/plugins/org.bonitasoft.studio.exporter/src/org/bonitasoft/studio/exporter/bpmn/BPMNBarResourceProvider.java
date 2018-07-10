@@ -17,7 +17,6 @@ package org.bonitasoft.studio.exporter.bpmn;
 import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
-import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -33,16 +32,13 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 public class BPMNBarResourceProvider implements BARResourcesProvider {
 
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder,
-            final AbstractProcess process,
-            final Configuration configuration,
-            final Set<EObject> excludedObject) throws Exception {
+            final AbstractProcess process, final Configuration configuration) throws Exception {
         File destFile = null;
         try {
             Resource eResource = process.eResource();

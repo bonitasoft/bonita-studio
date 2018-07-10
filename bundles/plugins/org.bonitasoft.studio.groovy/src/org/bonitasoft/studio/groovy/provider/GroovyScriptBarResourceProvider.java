@@ -79,8 +79,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
      */
     @Override
     public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
-            final Configuration configuration,
-            final Set<EObject> exludedObject) throws Exception {
+            final Configuration configuration) throws Exception {
         if (configuration != null) {
             addGroovyScriptDependenciesToClasspath(builder, configuration, configuration.getProcessDependencies());
             addGroovyScriptDependenciesToExternalLib(builder, configuration, configuration.getApplicationDependencies());

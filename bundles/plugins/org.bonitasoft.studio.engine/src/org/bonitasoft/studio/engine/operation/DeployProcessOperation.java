@@ -24,11 +24,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -57,7 +55,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 
@@ -69,8 +66,6 @@ import com.google.common.base.Predicate;
  */
 public class DeployProcessOperation {
 
-    private Set<EObject> excludedObject = new HashSet<>();
-
     private String configurationId;
 
     private final List<AbstractProcess> processes = new ArrayList<>();
@@ -80,10 +75,6 @@ public class DeployProcessOperation {
     private int problemResolutionResult;
 
     private boolean disablePopup;
-
-    public void setObjectToExclude(final Set<EObject> excludedObject) {
-        this.excludedObject = excludedObject;
-    }
 
     public void addProcessToDeploy(final AbstractProcess process) {
         Assert.isTrue(!(process instanceof MainProcess), "process can't be a MainProcess");
@@ -174,8 +165,7 @@ public class DeployProcessOperation {
         monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
         BusinessArchive bar;
         try {
-            bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId,
-                    excludedObject);
+            bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId);
         } catch (final BarCreationException bce) {
             if (process != null) {
                 BonitaStudioLog.log(String.format("Error when trying to create bar for process %s (%s)", process.getName(),

@@ -21,7 +21,6 @@ import static com.google.common.collect.Maps.uniqueIndex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -55,7 +54,6 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
@@ -83,14 +81,13 @@ public class BarExporter {
         return INSTANCE;
     }
 
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration,
-            final Set<EObject> excludedObject) throws BarCreationException {
+    public BusinessArchive createBusinessArchive(final AbstractProcess process, final Configuration configuration)
+            throws BarCreationException {
 
         checkArgument(configuration != null);
         BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...",
                 EnginePlugin.PLUGIN_ID);
         final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
-        procBuilder.seteObjectNotExported(excludedObject);
         DesignProcessDefinition def;
         try {
             def = procBuilder.createDefinition(process);
@@ -109,7 +106,7 @@ public class BarExporter {
 
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
             try {
-                resourceProvider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+                resourceProvider.addResourcesForConfiguration(builder, process, configuration);
             } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Process resources from configuration.", e);
             }
@@ -119,7 +116,7 @@ public class BarExporter {
         final BARResourcesProvider provider = getBARApplicationResourcesProvider();
         if (provider != null) {
             try {
-                provider.addResourcesForConfiguration(builder, process, configuration, excludedObject);
+                provider.addResourcesForConfiguration(builder, process, configuration);
             } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Application resources from configuration.", e);
             }
@@ -177,10 +174,9 @@ public class BarExporter {
      * @param configurationId
      * @param excludedObject elements of the process not exported in process definition
      */
-    public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId,
-            final Set<EObject> excludedObject)
+    public BusinessArchive createBusinessArchive(final AbstractProcess process, final String configurationId)
             throws BarCreationException {
-        return createBusinessArchive(process, getConfiguration(process, configurationId), excludedObject);
+        return createBusinessArchive(process, getConfiguration(process, configurationId));
     }
 
     public Configuration getConfiguration(final AbstractProcess process, String configurationId) {

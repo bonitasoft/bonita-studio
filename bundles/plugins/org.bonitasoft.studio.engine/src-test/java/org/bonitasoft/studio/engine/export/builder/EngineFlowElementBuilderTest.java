@@ -122,8 +122,7 @@ public class EngineFlowElementBuilderTest {
     public void setUp() throws Exception {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(
-                new EngineFlowElementBuilder(instance, builderProvider, new ModelSearch(Collections::emptyList),
-                Collections.<EObject> emptySet()));
+                new EngineFlowElementBuilder(instance, builderProvider, new ModelSearch(Collections::emptyList)));
         doReturn(engineContractBuilder).when(builderProvider).getEngineDefinitionBuilder(any(EObject.class),
                 any(Contract.class), eq(FlowElementBuilder.class));
         doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
