@@ -525,7 +525,9 @@ public class BonitaToBPMNExporter {
                                 bpmnProcess.getArtifact().add(association);
 
                                 final BPMNEdge edge = shapeFactory.createBPMNEdge(association.getId(), attachement);
-                                bpmnPlane.getDiagramElement().add(edge);
+                                if (edge != null) {
+                                    bpmnPlane.getDiagramElement().add(edge);
+                                }
                             }
                         }
                     }
@@ -749,7 +751,9 @@ public class BonitaToBPMNExporter {
 
                     // graphic
                     final BPMNEdge edge = shapeFactory.createBPMNEdge(bpmnFlow.getId(), bonitaFlow);
-                    bpmnPlane.getDiagramElement().add(edge);
+                    if (edge != null) {
+                        bpmnPlane.getDiagramElement().add(edge);
+                    }
                     if (bonitaFlow.isIsDefault()) {
                         if (bonitaFlow instanceof SequenceFlow) {
                             if (source instanceof TInclusiveGateway) {

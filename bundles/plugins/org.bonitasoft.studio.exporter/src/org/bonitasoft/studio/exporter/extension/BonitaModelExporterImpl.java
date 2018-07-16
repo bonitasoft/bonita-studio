@@ -19,7 +19,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.model.IModelSearch;
@@ -189,13 +188,10 @@ public class BonitaModelExporterImpl implements IBonitaModelExporter {
 
     @Override
     public Edge getElementNotationEdge(EObject connection) {
-        Optional<Edge> edgeOptional = getDiagram().getPersistedEdges().stream()
+        return (Edge) getDiagram().getPersistedEdges().stream()
                 .filter(edge -> Objects.equals(((Edge) edge).getElement(), connection))
-                .findFirst();
-        if (!edgeOptional.isPresent()) {
-            throw new IllegalStateException(String.format("No edge found for %s", connection));
-        }
-        return edgeOptional.get();
+                .findFirst()
+                .orElse(null);
     }
 
     /*
