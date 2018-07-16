@@ -287,29 +287,31 @@ public class BPMNShapeFactory {
     @SuppressWarnings("unchecked")
     public BPMNEdge createBPMNEdge(final String bpmnFlowId, EObject bonitaElement) {
         Edge bonitaEdge = modelExporter.getElementNotationEdge(bonitaElement);
-        final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
-        edge.setBpmnElement(QName.valueOf(bpmnFlowId));
-        edge.setId(modelExporter.getEObjectID(bonitaEdge));
+        if (bonitaEdge != null) {
+            final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
+            edge.setBpmnElement(QName.valueOf(bpmnFlowId));
+            edge.setId(modelExporter.getEObjectID(bonitaEdge));
 
-        PolylineConnection conn = createConnectorFigure(bonitaEdge);
-        PointList points = conn.getPoints();
-        for (int i = 0; i < points.size(); i++) {
-            final org.omg.spec.dd.dc.Point sourcePoint = DcFactory.eINSTANCE.createPoint();
-            Point point = points.getPoint(i);
-            sourcePoint.setX(point.x);
-            sourcePoint.setY(point.y);
-            edge.getWaypoint().add(sourcePoint);
+            PolylineConnection conn = createConnectorFigure(bonitaEdge);
+            PointList points = conn.getPoints();
+            for (int i = 0; i < points.size(); i++) {
+                final org.omg.spec.dd.dc.Point sourcePoint = DcFactory.eINSTANCE.createPoint();
+                Point point = points.getPoint(i);
+                sourcePoint.setX(point.x);
+                sourcePoint.setY(point.y);
+                edge.getWaypoint().add(sourcePoint);
+            }
+
+            if (bonitaElement instanceof SequenceFlow) {
+                bonitaEdge.getPersistedChildren().stream()
+                        .filter(DecorationNode.class::isInstance)
+                        .findFirst()
+                        .ifPresent(decorationNode -> attachEdgeLabel((DecorationNode) decorationNode, edge,
+                                ((SequenceFlow) bonitaElement).getName(), bonitaEdge));
+            }
+            return edge;
         }
-
-        if (bonitaElement instanceof SequenceFlow) {
-            bonitaEdge.getPersistedChildren().stream()
-                    .filter(DecorationNode.class::isInstance)
-                    .findFirst()
-                    .ifPresent(decorationNode -> attachEdgeLabel((DecorationNode) decorationNode, edge,
-                            ((SequenceFlow) bonitaElement).getName(), bonitaEdge));
-        }
-
-        return edge;
+        return null;
     }
 
     private void attachEdgeLabel(final DecorationNode decorationNode, final BPMNEdge edge, String labelText,
