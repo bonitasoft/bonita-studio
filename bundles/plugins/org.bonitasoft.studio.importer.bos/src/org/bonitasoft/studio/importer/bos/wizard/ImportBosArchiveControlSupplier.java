@@ -104,7 +104,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     }
 
     /**
-     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.core.databinding.DataBindingContext)
+     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite,
+     *      org.eclipse.core.databinding.DataBindingContext)
      */
     @Override
     public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
@@ -304,7 +305,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 archiveModel.getBosArchive().getVersion()));
         if (ProductVersion.isBefore780Version(archiveModel.getBosArchive().getVersion())) {
             message.append(System.lineSeparator());
-            message.append(Messages.gwtFormsNotSupported);
+            message.append(String.format("\uD83D\uDEC8 %s", Messages.gwtFormsNotSupported));
             message.append(System.lineSeparator());
             message.append(Messages.formsRemovedFromStudio);
         }
@@ -429,7 +430,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         /*
          * (non-Javadoc)
-         * @see org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanging(org.eclipse.ui.forms.events.ExpansionEvent)
+         * @see
+         * org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanging(org.eclipse.ui.forms.events.ExpansionEvent)
          */
         @Override
         public void expansionStateChanging(ExpansionEvent e) {
@@ -438,7 +440,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         /*
          * (non-Javadoc)
-         * @see org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+         * @see
+         * org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
          */
         @Override
         public void expansionStateChanged(ExpansionEvent e) {
