@@ -307,41 +307,20 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
             </ruleList>
         </substitute>
     </postInstallationActionList>
-    <postBuildActionList>
+  <postBuildActionList>
         <actionGroup>
             <actionList>
                 <createTimeStamp>
                     <format>%Y%m%d%H%M%S</format>
                     <variable>timestamp</variable>
                 </createTimeStamp>
-                <setInstallerVariable>
-                    <name>tempDir</name>
-                    <value>@bitrock.output@/.tmpDir${timestamp}</value>
-                </setInstallerVariable>
-                <setInstallerVariable>
-                    <name>dmgName</name>
-                    <value>@installer.name@.dmg</value>
-                </setInstallerVariable>
-                <deleteFile>
-                    <path>@bitrock.output@/${dmgName}</path>
-                </deleteFile>
-                <deleteFile>
-                    <path>${tempDir}</path>
-                </deleteFile>
                 <createDirectory>
-                    <path>${tempDir}/output/${installerFilename}.app</path>
+                    <path>${outputDirectory}/${installerFilename}.app</path>
                 </createDirectory>
                 <copyFile>
-                    <destination>${tempDir}/output/${installerFilename}.app/</destination>
+                    <destination>${outputDirectory}/${installerFilename}.app/</destination>
                     <origin>@bitrock.output@/${installerFilename}/Contents</origin>
                 </copyFile>
-                <runProgram>
-                    <program>genisoimage</program>
-                    <programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output</programArguments>
-                </runProgram>
-                <deleteFile>
-                    <path>${tempDir}</path>
-                </deleteFile>
             </actionList>
             <ruleList>
                 <compareValues>
@@ -349,22 +328,9 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
                     <value1>${platform_name}</value1>
                     <value2>osx</value2>
                 </compareValues>
-                <programTest>
-                    <condition>is_in_path</condition>
-                    <name>genisoimage</name>
-                </programTest>
             </ruleList>
         </actionGroup>
-        <showWarning>
-            <text>'genisoimage' not found in path, dmg file cannot be generated</text>
-            <ruleList>
-                <programTest>
-                    <condition>is_not_in_path</condition>
-                    <name>genisoimage</name>
-                </programTest>
-            </ruleList>
-        </showWarning>
-    </postBuildActionList>
+    </postBuildActionList> 
     <finalPageActionList>
         <runProgram>
             <ruleList>
