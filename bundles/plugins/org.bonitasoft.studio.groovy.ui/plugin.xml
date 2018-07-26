@@ -28,10 +28,11 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.validator.menu">
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.connector">
          <command
                commandId="org.bonitasoft.studio.groovy.ui.editscripts"
                icon="icons/manage_groovy_scripts.png"
+               id="org.bonitasoft.studio.menu.editscripts"
                label="%editGroovyScript_Label"
                style="push">
          </command>
