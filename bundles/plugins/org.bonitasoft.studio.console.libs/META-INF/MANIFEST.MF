@@ -108,36 +108,36 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  0.0",org.bonitasoft.engine.theme.impl;version="0.0.0",org.bonitasoft.en
  gine.util;version="0.0.0",org.bonitasoft.engine.xml;version="0.0.0",org
  .bonitasoft.engine.xml.parser;version="0.0.0"
-Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/repository/or
- g/bonitasoft/engine/bonita-client/7.8.0-SNAPSHOT/bonita-client-7.8.0-SN
- APSHOT.jar,lib/httpmime.jar=/home/romain/.m2/repository/org/apache/http
- components/httpmime/4.5.2/httpmime-4.5.2.jar,lib/commons-codec.jar=/hom
- e/romain/.m2/repository/commons-codec/commons-codec/1.7/commons-codec-1
- .7.jar,lib/httpclient.jar=/home/romain/.m2/repository/org/apache/httpco
- mponents/httpclient/4.5.2/httpclient-4.5.2.jar,lib/httpcore.jar=/home/r
- omain/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/httpcore-
- 4.4.4.jar,lib/commons-logging.jar=/home/romain/.m2/repository/commons-l
- ogging/commons-logging/1.2/commons-logging-1.2.jar,lib/xstream.jar=/hom
- e/romain/.m2/repository/com/thoughtworks/xstream/xstream/1.4.10/xstream
- -1.4.10.jar,lib/xmlpull.jar=/home/romain/.m2/repository/xmlpull/xmlpull
- /1.1.3.1/xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=/home/romain/.m2/reposito
- ry/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar,lib/bonita-common.jar=/home
- /romain/.m2/repository/org/bonitasoft/engine/bonita-common/7.8.0-SNAPSH
- OT/bonita-common-7.8.0-SNAPSHOT.jar,lib/commons-lang3.jar=/home/romain/
- .m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3
- .2.jar,lib/jackson-annotations.jar=/home/romain/.m2/repository/com/fast
- erxml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0.
- jar,lib/commons-io.jar=/home/romain/.m2/repository/commons-io/commons-i
- o/2.5/commons-io-2.5.jar,lib/jackson-databind.jar=/home/romain/.m2/repo
- sitory/com/fasterxml/jackson/core/jackson-databind/2.9.0/jackson-databi
- nd-2.9.0.jar,lib/jackson-core.jar=/home/romain/.m2/repository/com/faste
- rxml/jackson/core/jackson-core/2.9.0/jackson-core-2.9.0.jar,lib/slf4j-a
- pi.jar=/home/romain/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api
- -1.7.25.jar,lib/console-server.jar=/home/romain/.m2/repository/org/boni
- tasoft/console/console-server/7.8.0-SNAPSHOT/console-server-7.8.0-SNAPS
- HOT-classes.jar,lib/console-common.jar=/home/romain/.m2/repository/org/
- bonitasoft/console/console-common/7.8.0-SNAPSHOT/console-common-7.8.0-S
- NAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=tomcat
+Include-Resource: , lib/bonita-client.jar=/Users/adrien/.m2/repository/o
+ rg/bonitasoft/engine/bonita-client/7.8.0-SNAPSHOT/bonita-client-7.8.0-S
+ NAPSHOT.jar,lib/httpmime.jar=/Users/adrien/.m2/repository/org/apache/ht
+ tpcomponents/httpmime/4.5.2/httpmime-4.5.2.jar,lib/commons-codec.jar=/U
+ sers/adrien/.m2/repository/commons-codec/commons-codec/1.7/commons-code
+ c-1.7.jar,lib/httpclient.jar=/Users/adrien/.m2/repository/org/apache/ht
+ tpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar,lib/httpcore.jar=/Us
+ ers/adrien/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/http
+ core-4.4.4.jar,lib/commons-logging.jar=/Users/adrien/.m2/repository/com
+ mons-logging/commons-logging/1.2/commons-logging-1.2.jar,lib/xstream.ja
+ r=/Users/adrien/.m2/repository/com/thoughtworks/xstream/xstream/1.4.10/
+ xstream-1.4.10.jar,lib/xmlpull.jar=/Users/adrien/.m2/repository/xmlpull
+ /xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=/Users/adrien/.m2
+ /repository/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar,lib/bonita-common.
+ jar=/Users/adrien/.m2/repository/org/bonitasoft/engine/bonita-common/7.
+ 8.0-SNAPSHOT/bonita-common-7.8.0-SNAPSHOT.jar,lib/commons-lang3.jar=/Us
+ ers/adrien/.m2/repository/org/apache/commons/commons-lang3/3.3.2/common
+ s-lang3-3.3.2.jar,lib/jackson-annotations.jar=/Users/adrien/.m2/reposit
+ ory/com/fasterxml/jackson/core/jackson-annotations/2.9.0/jackson-annota
+ tions-2.9.0.jar,lib/commons-io.jar=/Users/adrien/.m2/repository/commons
+ -io/commons-io/2.5/commons-io-2.5.jar,lib/jackson-databind.jar=/Users/a
+ drien/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.9.0/
+ jackson-databind-2.9.0.jar,lib/jackson-core.jar=/Users/adrien/.m2/repos
+ itory/com/fasterxml/jackson/core/jackson-core/2.9.0/jackson-core-2.9.0.
+ jar,lib/slf4j-api.jar=/Users/adrien/.m2/repository/org/slf4j/slf4j-api/
+ 1.7.25/slf4j-api-1.7.25.jar,lib/console-server.jar=/Users/adrien/.m2/re
+ pository/org/bonitasoft/console/console-server/7.8.0-SNAPSHOT/console-s
+ erver-7.8.0-SNAPSHOT-classes.jar,lib/console-common.jar=/Users/adrien/.
+ m2/repository/org/bonitasoft/console/console-common/7.8.0-SNAPSHOT/cons
+ ole-common-7.8.0-SNAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=tomcat
 Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  r.conf.Catalina.localhost,tomcat.server.conf,tomcat.server.lib,tomcat.s
  erver.lib.bonita,tomcat.server.logs,tomcat.server.temp,tomcat.server.we
