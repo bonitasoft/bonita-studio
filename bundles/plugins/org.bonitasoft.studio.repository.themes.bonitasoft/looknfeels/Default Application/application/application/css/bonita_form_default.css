@@ -1,0 +1,679 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face {
+	font-style: normal;
+	font-family: 'Signika-Regular';
+	font-weight: normal;
+	src: local('?'), url("fonts/Signika-Regular.woff") format('woff'), url("fonts/Signika-Regular.ttf") format('truetype'), url("fonts/Signika-Regular.svg") format('svg');
+}
+
+@font-face {
+	font-style: normal;
+	font-family: 'Signika-Semibold';
+	font-weight: normal;
+	src: local('?'), url("fonts/Signika-Semibold.woff") format('woff'), url("fonts/Signika-Semibold.ttf") format('truetype'), url("fonts/Signika-Semibold.svg") format('svg');
+}
+
+body {
+	font-size: 1em;
+	font-family: Signika-Regular;
+}
+
+div.bonita_form_container {
+	font-family: Signika-Regular;
+	width: 1250px;
+	margin: 0 auto;
+}
+
+div.bonita_form_container select{
+	font-family: arial;
+}
+
+div.bonita_form_container select option{
+	font-family: Signika-Regular;
+}
+
+@media screen and (max-width: 1250px) {
+	div.bonita_form_container {
+		width: 100%;
+	}
+}
+
+#bonita_form_step_header {
+	display: none;
+}
+
+span.bonita_form_radio, .bonita_form_text {
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.bonita_form_button {
+	text-align: center;
+	outline-color: #F9F9F9;
+	text-transform: uppercase;
+	background: linear-gradient(to bottom,	#3d3d3d 0%, #272727 100%);
+	cursor: pointer;
+	color: #ffffff;
+	padding: 0px 2px;
+	outline-color: #F9F9F9;
+	min-width: 90px;
+	border: 1px solid #B9B9B9;
+	font-family: "Signika-Semibold";
+	text-shadow:0 0 0 transparent, -1px -1px 0 transparent, 1px -1px 0 transparent, -1px 1px 0 transparent, 1px 1px 0 transparent;
+	font-size: 75%;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	line-height: 25px !important;
+	text-decoration: none;
+	vertical-align: middle;
+	text-align: center;
+	display: -moz-inline-stack;
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	white-space: nowrap;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-color: #3d3d3d; /* Old browsers */ 
+	background: -moz-linear-gradient(top, #3d3d3d 0%, #272727 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3d3d3d), color-stop(100%, #272727)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,	#3d3d3d 0%,#272727 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,	#3d3d3d 0%, #272727 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,	#3d3d3d 0%,#272727 100%); /* IE10+ */
+	background: linear-gradient(to bottom,	#3d3d3d 0%, #272727 100%); /* W3C */
+	-pie-background: linear-gradient(#3d3d3d 0%, #272727 100%) #3d3d3d;
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
+	cursor: pointer;
+	box-shadow: 2px 2px 2px #d8d8d8;
+	-webkit-box-shadow: 2px 2px 2px #d8d8d8;
+	-moz-box-shadow: 2px 2px 2px #d8d8d8;
+	-o-box-shadow: 2px 2px 2px #d8d8d8;
+	behavior: url(../../css/PIE.htc);
+}
+.bonita_form_button * {
+	vertical-align: middle;
+}
+
+.bonita_form_button + button.bonita_form_button {
+	margin-left: 5px;
+}
+
+
+.bonita_form_field.list_container select{
+	width: 110%;
+	background: transparent;
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+	font-family: arial;	
+	font-size: 100%;
+}
+
+.bonita_form_field.list_container select option{
+	font-family: Signika-Regular;
+}
+
+.bonita_form_field.list_container{
+	background: url(../images/form-select.png) no-repeat right center;
+	overflow: hidden;
+	width: 99%;
+}
+
+input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item, .bonita_form_field.list_container {
+	box-shadow: 0 0 0 #cccccc;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 0 0 0 #cccccc;
+	*behavior: url(../../css/boxsizing.htc);
+	-moz-box-sizing: border-box;
+	padding: 5px 5px 5px 5px;
+	box-sizing: border-box;
+	vertical-align: middle;
+	-o-box-shadow: 0 0 0 #cccccc;
+	-webkit-box-sizing: border-box;
+	height: 35px;
+	font-size: 100%;
+	border: 1px solid #c2c2c2;
+	-moz-box-shadow: 0 0 0 #cccccc;
+}
+
+textarea.bonita_form_field, div.bonita_form_field div.bonita_rich_text {
+	box-shadow: 0 0 0 #cccccc;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 0 0 0 #cccccc;
+	-moz-box-sizing: border-box;
+	padding: 5px 5px 5px 5px;
+	box-sizing: border-box;
+	-o-box-shadow: 0 0 0 #cccccc;
+	-webkit-box-sizing: border-box;
+	font-size: 100%;
+	border: 1px solid #c2c2c2;
+	-moz-box-shadow: 0 0 0 #cccccc;
+	height:auto;
+}
+
+.bonita_form_label {
+	color: #282626;
+	font-size: 100%;
+	font-weight: normal;
+}
+
+div#bonita-open-solution-logo {
+	background: url("../images/logo.png") no-repeat scroll 20px 8px #FFFFFF !important;
+    height: 50px;
+    position: absolute;
+    width: 200px;
+}
+
+div#bonita-banneralthaut {
+	display: none;
+	height: 3px;
+	width: 100%;
+	background-color: #de1c18;
+}
+
+div#bonita-banneraltbas {
+	height: 35px;
+	width: 100%;
+	background-color: #DD0033;
+	background: -moz-linear-gradient(top, #CD0807 0%, #DD0033 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #CD0807), color-stop(100%, #DD0033)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #CD0807 0%,#DD0033 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,	#CD0807 0%, #DD0033 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,	#CD0807 0%,#DD0033 100%); /* IE10+ */
+	background: linear-gradient(to bottom,	#CD0807 0%, #DD0033 100%); /* W3C */
+	-pie-background: linear-gradient(#CD0807 0%, #DD0033 100%) #CD0807;
+	behavior: url(../../css/PIE.htc);
+}
+
+.bonita_process_label {
+	height: 50px;
+	line-height: 50px;
+	margin-left: 250px;
+	position: relative;
+	text-align: center;
+	margin-right: 250px;
+	font-size: 184.6153846153846%;
+	color: #282626;
+}
+
+div#bonita-identification-area {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 9999;
+	font-size: 14px;
+	color: #333333;
+	line-height: 25px;
+	margin-right: 10px;
+    margin-top: 15px;
+}
+
+.bonita_username, .bonita_username_label,
+.bonita_logout_button, .bonita_logout_label,
+.bonita_user_xp_link, .bonita_user_xp_label {
+	display: inline-block;
+}
+
+.bonita_username,
+.bonita_logout_button {
+	padding: 0 7px;
+}
+
+.bonita_user_xp_link {
+    padding: 0 7px;
+}
+
+.bonita_user_xp_label {
+	padding: 0 2px;
+	cursor: pointer;
+}
+
+.bonita_logout_button,
+.bonita_user_xp_link {
+	border-left: 1px solid #323232;
+}
+
+.bonita_logout_label, .bonita_logout_label:visited, .bonita_logout_label:hover, .bonita_user_xp_label, .bonita_user_xp_label:visited, .bonita_user_xp_label:hover {
+	text-decoration: none;
+	color: #DD0033;
+}
+
+.bonita_user_xp_icon {
+	cursor: pointer;
+	height: 16px;
+	width: 20px;
+	background: transparent url(../themeResource?theme=portal&location=images/sprite.png) no-repeat scroll
+		-584px 0px;
+}
+
+div#bonita_form {
+	margin: 0;
+	border-width: 0;
+	padding-right: 0;
+	min-height: 200px;
+	padding-bottom: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 0;
+	padding-top: 30px;
+}
+
+/** User ID Card */
+.bonita_identification {
+	margin-right: 15px;
+	height: 98px;
+	width: 230px;
+	margin-top: 5px;
+	float: right;
+	background-image: url(../themeResource?theme=portal&location=images/bloc-identification.png);
+}
+
+.bonita_avatar {
+	height: 60px;
+	width: 60px;
+	display: block;
+	border: 0px solid #FFFFFF;
+	float: left;
+}
+
+.bonita_identified-right {
+	text-align: left;
+	width: 130px;
+	margin-left: 8px;
+	margin-top: 5px;
+	float: left;
+}
+
+.bonita_identified-left {
+	margin-left: 16px;
+	margin-top: 18px;
+	float: left;
+}
+
+.bonita_identif-1 {
+	color: #FFFFFF;
+	font-size: 17px;
+	margin-bottom: 10px;
+}
+
+.bonita_identif-2, .bonita_identif-2:visited, .bonita_identif-2:hover {
+	padding-right: 3px;
+	color: #DBDBDB;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.gwt-SuggestBoxPopup{
+	background: #fff;
+	border: 1px solid #c2c2c2;
+}
+
+
+/** End of User ID Card */
+
+/* default page template style */
+div#bonita-object-area-top {
+	margin-right: auto;
+	height: 0px;
+	width: 500px;
+	margin-left: auto;
+	margin-top: 10px;
+}
+
+div#bonita-object-area-middle {
+	width: 500px;
+	background-color: #ececec;
+	min-height: 40px;
+	padding-bottom: 4px;
+	margin-left: auto;
+	position: relative;
+	margin-right: auto;
+	padding-top: 4px;
+}
+
+div#bonita-object-area-bottom {
+	margin-right: auto;
+	height: 0px;
+	width: 500px;
+	margin-left: auto;
+	margin-bottom: 10px;
+}
+
+div#bonita-object-area-form {
+	height: auto;
+	width: 188px;
+	margin-left: 4px;
+	float: left;
+}
+
+div#bonita-object-area-to {
+	float: left;
+	height: auto;
+	width: 188px;
+	margin-left: 4px;
+}
+
+div#bonita-object-area-priority {
+	height: auto;
+	text-align: right;
+	margin-right: 4px;
+}
+
+div#bonita-object-area-description {
+	margin-left: 4px;
+	margin-top: 4px;
+	text-align: left;
+	clear: both;
+	padding-top: 4px;
+}
+
+.bonita-priority {
+	color: #de1c18;
+}
+
+.bonita_form_container {
+	clear: both;
+}
+
+.bonita_form_page_label {
+	font-weight: bold;
+	padding: 0;
+	height: auto;
+	margin: 0 0 20px 0;
+	display: block;
+	text-align: center;
+	font-size: 138.46153846153845%;
+	color: #282626;
+}
+
+.bonita_form_error_message {
+	padding-bottom: 20px;
+	margin-left: auto;
+	text-align: center;
+	margin-right: auto;
+	font-size: 14px;
+	padding-top: 30px;
+	color: black;
+}
+
+.bonita_form_cause_message {
+	text-align: left;
+	color: black;
+	font-size: 12px;
+	padding: 30px;
+}
+
+.gwt-SuggestBoxPopup .item.item-selected{
+	background: #DD0033;
+	color: #ffffff;
+}
+/* ------------------------------------------------------------------------- */
+/* Date picker bonita_forms.css override
+/* ------------------------------------------------------------------------- */
+.dateBoxPopup table {
+	width: 205px;
+}
+
+.dateBoxPopup .datePickerDays {
+	width: 205px;
+}
+
+.dateBoxPopup .tr, .dateBoxPopup .td, .dateBoxPopup .th, .dateBoxPopup div {
+	-webkit-box-sizing: border-box;
+	margin: 0;
+	-moz-box-sizing: border-box;
+	padding: 0;
+	border: 1px solid transparent;
+	box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------------- */
+/* Date picker
+/* ------------------------------------------------------------------------- */
+.dateBoxPopup {
+	-o-box-shadow: 1px 1px 8px #d0d0d0;
+	box-shadow: 1px 1px 8px #d0d0d0;
+	background: #ffffff;
+	-webkit-box-shadow: 1px 1px 8px #d0d0d0;
+	border: 1px solid #a9a9a9;
+	-moz-box-shadow: 1px 1px 8px #d0d0d0;
+	z-index: 9999;
+}
+
+.dateBoxPopup .datePickerDays .datePickerDay {
+	vertical-align: middle;
+	height: 37px;
+	color: #666666;
+	text-align: center;
+	width: 29px;
+	border-color: #c4c4c4;
+	display: table-cell;
+}
+
+.datePickerPreviousButton,
+.datePickerMonth,
+.datePickerNextButton {
+	border-collapse: collapse;
+	color: #ffffff;
+	font-size: 123.07692307692308%;
+	font-weight: normal;
+	padding: 15px 0;
+}
+
+.bonita_datetime_label_item {
+	line-height: 35px;
+	font-size: 100%;
+	margin-left: 0.25em;
+}
+
+.dateBoxPopup .datePickerPreviousButton {
+	padding-left: 15px;
+}
+
+.dateBoxPopup .datePickerNextButton {
+	padding-right: 15px;
+}
+
+.dateBoxPopup table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.dateBoxPopup .datePickerDays tr {
+	background: linear-gradient(to bottom, #ededed 0%, #dedede 100%);
+	-pie-background: linear-gradient(#ededed 0%, #dedede 100%) #ededed;
+	background-color: #ededed;
+}
+
+.dateBoxPopup .datePickerMonthSelector {
+	background: #323232;
+	width: 205px;
+}
+
+.dateBoxPopup .datepickerDay {
+	height: 15px;
+	text-align: center;
+	color: #666666;
+	display: block;
+	padding: 9.5px 0 9.5px 0;
+}
+
+.dateBoxPopup .datePickerDayIsHighlighted:hover {
+	border-color: #DD0033;
+}
+
+.dateBoxPopup .datePickerDayIsValue {
+	color: #ffffff;
+	background: linear-gradient(to bottom, #e40908 0%, #ab0706 100%);
+	-pie-background: linear-gradient(#e40908 0%, #ab0706 100%) #e40908;
+	background-color: #e40908;
+	border-color: #5f8a96;
+	font-weight: bold;
+}
+
+.dateBoxPopup .datePickerMonthSelector {
+	border-collapse: collapse;
+	text-align: center;
+	font-weight: bold;
+	border: 0 none;
+}
+
+.dateBoxPopup .datePickerDays tr {
+	line-height: 16px;
+}
+
+.dateBoxPopup .datePickerDays .datePickerWeekendLabel, .dateBoxPopup .datePickerDays .datePickerWeekdayLabel {
+	height: 9px;
+	color: #6E6F6B;
+	text-align: center;
+	text-transform: uppercase;
+	width: 30px;
+	font-size: 69.23076923076922%;
+	background: linear-gradient(to bottom, #f1f1f1 0%, #f7f7f7 100%);
+	-pie-background: linear-gradient(#f1f1f1 0%, #f7f7f7 100%) #f1f1f1;
+	background-color: #f1f1f1;
+	font-weight: 400;
+	padding: 8px 0;
+	border: 0 none;
+}
+
+.dateBoxPopup .datePickerDays .datePickerDay.datePickerDayIsFiller {
+	text-align: center;
+	color: #B4B3B3;
+	background: rgba(255, 255, 255, 0.55);
+	border: 1px solid lightgray;
+}
+
+.bonita_form_date {
+	padding-right: 41px;
+	-webkit-box-sizing: border-box;
+	background: url("../images/form-input-date.png") transparent no-repeat right center !important;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+div#bonita-object-area-from {
+}
+
+.bonita_table_container {
+}
+.bonita_form_field_sub_title{
+	margin-left: 0;	
+}
+.bonita_form_popup_tooltip .popupContent{
+	border: 1px solid #B9B9B9;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	padding: 5px;
+	background: #ffffff;
+	margin-left: 10px
+}
+
+
+.bonita_form_popup_tooltip .popupContent:after,
+.bonita_form_popup_tooltip .popupContent:before {
+  right: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  display: block;
+  margin-top: 0px;
+  border-width: 5px 10px 5px 0;
+  top: 4px;
+}
+.bonita_form_popup_tooltip .popupContent:after {
+  border-color: rgba(255, 255, 15, 0) #ffffff rgba(255, 255, 15, 0) rgba(255, 255, 15, 0);
+  left: 2px;
+}
+.bonita_form_popup_tooltip .popupContent:before {
+  border-color: rgba(220, 220, 220, 0) #c2c2c2 rgba(220, 220, 220, 0) rgba(220, 220, 220, 0);
+  left: 0px;
+}
+
+
+.details_panel .comments .table .tbody .tr .td_content:after {
+  border-color: rgba(255, 255, 15, 0) #ffffff rgba(255, 255, 15, 0) rgba(255, 255, 15, 0);
+}
+.details_panel .comments .table .tbody .tr .td_content:before {
+  border-color: rgba(220, 220, 220, 0) #c2c2c2 rgba(220, 220, 220, 0) rgba(220, 220, 220, 0);
+}
+
+
+
+.bonita_form_field_validation_message{
+	margin-left: 0;
+}
+
+.bonita_form_radio {
+	position: relative;
+}
+.bonita_form_radio input[type="radio"],
+.bonita_form_radio input[type="checkbox"] {
+	width: 1px;
+	height: 1px;
+	vertical-align: middle;
+	position: absolute;
+	left: 5px;
+	top: 50%;
+	margin: -8px 0 0 0;
+	z-index: 0;
+	line-height: 25px;
+}
+.bonita_form_radio .custom-radio, .bonita_form_radio .custom-checkbox{
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 25px;
+}
+
+.bonita_form_radio .custom-checkbox label , 
+.bonita_form_radio .custom-radio label {
+	cursor: pointer;
+	display: block;
+	left: 0;
+	margin: 0;
+	position: relative;
+	top: 0;
+	padding-left: 30px;
+}
+
+
+.bonita_form_radio .custom-checkbox label {
+	background: url("../images/form-checkbox.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-checkbox label.checked {
+	background: url("../images/form-checkbox-checked.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-radio label {
+	background: url("../images/form-radio.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-radio label.checked {
+	background: url("../images/form-radio-selected.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio{
+	margin-bottom: 0;
+}
+select.bonita_form_field[multiple]{
+	height: auto;
+}
