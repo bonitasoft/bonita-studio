@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2018 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,22 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.ui.editors;
+package org.bonitasoft.studio.explorer.i18n;
 
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
+import org.eclipse.osgi.util.NLS;
 
-public class FilteredXMLEditor extends XMLMultiPageEditorPart {
+public class Messages extends NLS {
 
-    public static final String ID = "org.bonitasoft.studio.rest.api.extension.XMLMultiPageEditorPart";
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart#createPages()
-     */
-    @Override
-    protected void createPages() {
-        super.createPages();
-        new MenuManagerFilter().filter(getSite());
+    static {
+        NLS.initializeMessages("messages", Messages.class);
     }
 
 }
