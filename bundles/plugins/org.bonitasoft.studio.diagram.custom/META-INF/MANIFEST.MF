@@ -33,7 +33,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding,
  org.eclipse.core.databinding.beans,
  org.eclipse.jface.databinding,
- org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
+ org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
+ org.bonitasoft.studio.explorer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.diagram.custom;

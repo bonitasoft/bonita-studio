@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bonita package explorer
+Bundle-SymbolicName: org.bonitasoft.studio.explorer;singleton:=true
+Bundle-Version: 7.8.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.explorer.BonitaPackageExplorerPlugin
+Bundle-Vendor: Bonitasoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.ui,
+ org.eclipse.core.resources,
+ org.bonitasoft.studio.common.repository
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.bonitasoft.studio.explorer
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.explorer.parts
