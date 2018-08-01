@@ -25,7 +25,8 @@ Require-Bundle: org.bonitasoft.studio.common.repository;bundle-version="7.5.0",
  org.mockito;bundle-version="1.10.19";resolution:=optional,
  org.eclipse.jface.text,
  org.bonitasoft.studio.actors,
- org.bonitasoft.studio.engine
+ org.bonitasoft.studio.engine,
+ org.bonitasoft.studio.explorer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
