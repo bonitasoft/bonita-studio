@@ -31,6 +31,12 @@
                   visible="true">
             </separator>
             <command
+                  commandId="org.bonitasoft.studio.businessobject.importCommand"
+                  icon="icons/import-bdm.png"
+                  id="org.bonitasoft.studio.businessobject.import.menu"
+                  style="push">
+            </command>
+            <command
                   commandId="org.bonitasoft.studio.businessobject.exportCommand"
                   icon="icons/export-bdm.png"
                   id="org.bonitasoft.studio.businessobject.export.menu"

@@ -374,6 +374,13 @@ public class Messages extends NLS {
     public static String severalCompositionReferenceForABusinessObject;
     public static String multipleAggregationToItself;
     public static String legacyDateTooltip;
+    public static String importButtonLabel;
+    public static String importBdm;
+    public static String importBdmDesc;
+    public static String bdmImportedTitle;
+    public static String bdmImported;
+    public static String bdmWillBeOverwritten;
+    public static String bdmZipInvalid;
 
     private Messages() {
     }
