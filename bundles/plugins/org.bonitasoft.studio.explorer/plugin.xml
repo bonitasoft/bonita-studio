@@ -4,6 +4,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.explorer.parts.BonitaPackageExplorerPart"
             icon="icons/bonitasoft-icon-16-16-transparent.png"
             id="org.bonitasoft.studio.explorer"
