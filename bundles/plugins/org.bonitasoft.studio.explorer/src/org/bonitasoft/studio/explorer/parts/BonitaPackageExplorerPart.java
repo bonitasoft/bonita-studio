@@ -19,10 +19,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang.reflect.FieldUtils;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.explorer.filters.CurrentProjectFilter;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.internal.resources.File;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -31,8 +31,6 @@ import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 
 @SuppressWarnings("restriction")
@@ -45,16 +43,21 @@ public class BonitaPackageExplorerPart extends PackageExplorerPart {
 
     private ECommandService eCommandService;
     private EHandlerService eHandlerService;
+    private RepositoryAccessor repositoryAccessor;
+
+    public BonitaPackageExplorerPart() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+    }
 
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
         eCommandService = getSite().getService(ECommandService.class);
         eHandlerService = getSite().getService(EHandlerService.class);
-        IProject currentProject = RepositoryManager.getInstance().getCurrentRepository().getProject();
 
         TreeViewer treeViewer = getTreeViewer();
-        treeViewer.addFilter(onlyCurrentProject(currentProject));
+        treeViewer.addFilter(new CurrentProjectFilter(repositoryAccessor));
 
         try {
             Field listenersField = StructuredViewer.class.getDeclaredField("openListeners");
@@ -96,19 +99,5 @@ public class BonitaPackageExplorerPart extends PackageExplorerPart {
         ParameterizedCommand openCommand = ParameterizedCommand.generateCommand(
                 eCommandService.getCommand(command), null);
         eHandlerService.executeHandler(openCommand);
-    }
-
-    private ViewerFilter onlyCurrentProject(IProject currentProject) {
-        return new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IProject) {
-                    IProject project = (IProject) element;
-                    return Objects.equals(currentProject, project);
-                }
-                return true;
-            }
-        };
     }
 }
