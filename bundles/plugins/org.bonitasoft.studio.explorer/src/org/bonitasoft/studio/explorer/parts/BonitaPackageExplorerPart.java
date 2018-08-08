@@ -68,6 +68,8 @@ public class BonitaPackageExplorerPart extends PackageExplorerPart {
             throw new RuntimeException(e);
         }
         // TODO: filter unwanted folder, add popup menu filter ect
+
+        setLinkingEnabled(true);
     }
 
     /**
