@@ -14,31 +14,18 @@
  */
 package org.bonitasoft.studio.explorer.filters;
 
-import java.util.Objects;
-
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
+import org.eclipse.jdt.internal.ui.packageview.LibraryContainer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-public class CurrentProjectFilter extends ViewerFilter {
+public class LibraryFilter extends ViewerFilter {
 
-    private RepositoryAccessor repositoryAccessor;
-
-    public CurrentProjectFilter(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
-    }
-
+    @SuppressWarnings("restriction")
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        IProject currentProject = repositoryAccessor.getCurrentRepository().getProject();
-        if (element instanceof JavaProject) {
-            JavaProject project = (JavaProject) element;
-            return Objects.equals(currentProject.getName(), project.getElementName());
-        } else if (element instanceof IProject) {
-            IProject project = (IProject) element;
-            return Objects.equals(currentProject, project);
+        if (element instanceof ClassPathContainer || element instanceof LibraryContainer) {
+            return false;
         }
         return true;
     }

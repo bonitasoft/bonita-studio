@@ -16,29 +16,19 @@ package org.bonitasoft.studio.explorer.filters;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-public class CurrentProjectFilter extends ViewerFilter {
+public class PackageFragmentFilter extends ViewerFilter {
 
-    private RepositoryAccessor repositoryAccessor;
+    public static final String PROVIDED_GROOVY = "src-providedGroovy";
 
-    public CurrentProjectFilter(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
-    }
-
+    @SuppressWarnings("restriction")
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        IProject currentProject = repositoryAccessor.getCurrentRepository().getProject();
-        if (element instanceof JavaProject) {
-            JavaProject project = (JavaProject) element;
-            return Objects.equals(currentProject.getName(), project.getElementName());
-        } else if (element instanceof IProject) {
-            IProject project = (IProject) element;
-            return Objects.equals(currentProject, project);
+        if (element instanceof PackageFragment) {
+            return !Objects.equals(((PackageFragment) element).getElementName(), PROVIDED_GROOVY);
         }
         return true;
     }
