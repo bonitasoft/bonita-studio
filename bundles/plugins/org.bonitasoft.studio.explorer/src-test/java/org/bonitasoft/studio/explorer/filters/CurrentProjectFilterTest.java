@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.junit.Test;
 
 public class CurrentProjectFilterTest {
@@ -38,6 +39,26 @@ public class CurrentProjectFilterTest {
         CurrentProjectFilter filter = new CurrentProjectFilter(repositoryAccessor);
         assertThat(filter.select(null, null, otherProject)).isFalse();
         assertThat(filter.select(null, null, currentProject)).isTrue();
+    }
+
+    @SuppressWarnings("restriction")
+    @Test
+    public void should_only_accept_current_java_project() {
+        JavaProject currentJavaProject = mock(JavaProject.class);
+        when(currentJavaProject.getElementName()).thenReturn("default");
+        JavaProject otherJavaProject = mock(JavaProject.class);
+        when(otherJavaProject.getElementName()).thenReturn("aProject");
+
+        IProject currentProject = mock(IProject.class);
+        when(currentProject.getName()).thenReturn("default");
+        Repository currentRepo = mock(Repository.class);
+        when(currentRepo.getProject()).thenReturn(currentProject);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        when(repositoryAccessor.getCurrentRepository()).thenReturn(currentRepo);
+
+        CurrentProjectFilter filter = new CurrentProjectFilter(repositoryAccessor);
+        assertThat(filter.select(null, null, otherJavaProject)).isFalse();
+        assertThat(filter.select(null, null, currentJavaProject)).isTrue();
     }
 
 }

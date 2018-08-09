@@ -14,31 +14,32 @@
  */
 package org.bonitasoft.studio.explorer.filters;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-public class CurrentProjectFilter extends ViewerFilter {
+public class FilesFilter extends ViewerFilter {
 
-    private RepositoryAccessor repositoryAccessor;
+    public static final String CLASSPATH_FILE = ".classpath";
+    public static final String PROJECT_FILE = ".project";
+    public static final String BUILD_PROPERTIES_FILE = "build.properties";
 
-    public CurrentProjectFilter(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
+    private List<String> filesToFilter;
+
+    public FilesFilter() {
+        filesToFilter = new ArrayList<>();
+        filesToFilter.add(CLASSPATH_FILE);
+        filesToFilter.add(PROJECT_FILE);
+        filesToFilter.add(BUILD_PROPERTIES_FILE);
     }
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        IProject currentProject = repositoryAccessor.getCurrentRepository().getProject();
-        if (element instanceof JavaProject) {
-            JavaProject project = (JavaProject) element;
-            return Objects.equals(currentProject.getName(), project.getElementName());
-        } else if (element instanceof IProject) {
-            IProject project = (IProject) element;
-            return Objects.equals(currentProject, project);
+        if (element instanceof IFile) {
+            return !filesToFilter.contains(((IFile) element).getName());
         }
         return true;
     }

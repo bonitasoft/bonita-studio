@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.lang,
  org.junit,
  org.mockito,
- assertj-core;bundle-version="3.6.1"
+ assertj-core;bundle-version="3.6.1",
+ org.eclipse.jdt.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.bonitasoft.studio.explorer
 Bundle-ActivationPolicy: lazy
