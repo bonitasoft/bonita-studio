@@ -21,6 +21,10 @@ import java.util.Optional;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.explorer.filters.CurrentProjectFilter;
+import org.bonitasoft.studio.explorer.filters.FilesFilter;
+import org.bonitasoft.studio.explorer.filters.FoldersFilter;
+import org.bonitasoft.studio.explorer.filters.LibraryFilter;
+import org.bonitasoft.studio.explorer.filters.PackageFragmentFilter;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.runtime.ListenerList;
@@ -58,6 +62,10 @@ public class BonitaPackageExplorerPart extends PackageExplorerPart {
 
         TreeViewer treeViewer = getTreeViewer();
         treeViewer.addFilter(new CurrentProjectFilter(repositoryAccessor));
+        treeViewer.addFilter(new FilesFilter());
+        treeViewer.addFilter(new FoldersFilter());
+        treeViewer.addFilter(new LibraryFilter());
+        treeViewer.addFilter(new PackageFragmentFilter());
 
         try {
             Field listenersField = StructuredViewer.class.getDeclaredField("openListeners");
