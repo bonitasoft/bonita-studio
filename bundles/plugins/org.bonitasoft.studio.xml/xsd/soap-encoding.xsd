@@ -251,15 +251,6 @@
     </xs:simpleContent>
   </xs:complexType>
 
-  <xs:attribute name="NOTATION" type="tns:NOTATION"/>
-  <xs:complexType name="NOTATION">
-    <xs:simpleContent>
-      <xs:extension base="xs:NOTATION">
-        <xs:attributeGroup ref="tns:commonAttributes"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
   <xs:element name="string" type="tns:string"/>
   <xs:complexType name="string">
     <xs:simpleContent>

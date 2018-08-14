@@ -70,7 +70,6 @@
         <module>org.bonitasoft.studio.xpdl</module>
         <module>org.omg.schema.spec.bpmn</module>
         <module>org.bonitasoft.studio-product</module>
-        <module>org.bonitasoft.studio.explorer</module>
     </modules>
 
     <dependencies>
