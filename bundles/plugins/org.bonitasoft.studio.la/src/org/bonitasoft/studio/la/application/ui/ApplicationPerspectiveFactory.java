@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.la.application.ui;
 
+import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.explorer.parts.BonitaPackageExplorerPart;
 import org.bonitasoft.studio.ui.editors.FilteredXMLEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -32,7 +32,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
         final IFolderLayout leftFolder = layout.createFolder(
                 "leftFolder", IPageLayout.LEFT, 0.2f, editorArea);
-        leftFolder.addView(BonitaPackageExplorerPart.VIEW_ID);
+        leftFolder.addView(BonitaProjectExplorer.ID);
         leftFolder.addView(IPageLayout.ID_OUTLINE);
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
             leftFolder.addView("org.eclipse.egit.ui.StagingView");

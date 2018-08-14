@@ -86,6 +86,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotApplicationWorkbenchWindow save() {
+        bot.activeEditor().setFocus();
         bot.toolbarButton("Save").click();
         bot.waitUntil(new DefaultCondition() {
 
