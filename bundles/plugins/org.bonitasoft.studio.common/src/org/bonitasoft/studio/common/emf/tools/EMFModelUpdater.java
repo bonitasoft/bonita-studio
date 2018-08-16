@@ -85,7 +85,6 @@ public class EMFModelUpdater<T extends EObject> {
     }
 
     private void deepEObjectUpdate(EObject source, EObject target) {
-        source.eSetDeliver(false);
         source.eClass()
                 .getEAllStructuralFeatures()
                 .stream()
@@ -113,7 +112,6 @@ public class EMFModelUpdater<T extends EObject> {
                         }
                     }
                 });
-        source.eSetDeliver(true);
     }
 
     @SuppressWarnings("unchecked")
