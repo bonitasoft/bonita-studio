@@ -1058,7 +1058,7 @@
                 </or>
             </possibleChildren> 
          <actionProvider
-               class="org.bonitasoft.studio.application.views.CustomOpenActionProvider"
+               class="org.bonitasoft.studio.application.views.provider.CustomOpenActionProvider"
                id="org.bonitasoft.studio.application.views.OpenActionProvider">
          </actionProvider>
          <commonSorter

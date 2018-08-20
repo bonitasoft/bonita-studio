@@ -53,16 +53,19 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
  */
 public class ManageOrganizationWizard extends Wizard {
 
-    private final List<Organization> organizations;
-    private final List<Organization> organizationsWorkingCopy;
-    private final OrganizationRepositoryStore store;
+    private List<Organization> organizations;
+    private List<Organization> organizationsWorkingCopy;
+    private OrganizationRepositoryStore store;
     private final OrganizationValidator validator = new OrganizationValidator();
     private Organization activeOrganization;
     private boolean activeOrganizationHasBeenModified = false;
@@ -71,15 +74,29 @@ public class ManageOrganizationWizard extends Wizard {
     private final ActiveOrganizationProvider activeOrganizationProvider;
     private ECommandService commandService;
     private EHandlerService handlerService;
+    Optional<Organization> organizationToEdit = Optional.empty();
 
-    public ManageOrganizationWizard(ECommandService commandService, EHandlerService handlerService) {
-        this.commandService = commandService;
-        this.handlerService = handlerService;
+    public ManageOrganizationWizard(Organization organization) {
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        this.commandService = activeWorkbenchWindow.getService(ECommandService.class);
+        this.handlerService = activeWorkbenchWindow.getService(EHandlerService.class);
         activeOrganizationProvider = new ActiveOrganizationProvider();
-        organizations = new ArrayList<>();
-        organizationsWorkingCopy = new ArrayList<>();
         setWindowTitle(Messages.manageOrganizationTitle);
         store = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(OrganizationRepositoryStore.class);
+        setDefaultPageImageDescriptor(Pics.getWizban());
+        setNeedsProgressMonitor(true);
+        organizationToEdit = Optional.ofNullable(organization);
+        organizationToEdit.ifPresent(orga -> {
+            if (activeOrganizationProvider.getActiveOrganization().equals(orga.getName())) {
+                addActiveOrganizationAdapter(orga);
+            }
+        });
+    }
+
+    public ManageOrganizationWizard() {
+        this(null);
+        organizations = new ArrayList<>();
+        organizationsWorkingCopy = new ArrayList<>();
         for (final IRepositoryFileStore file : store.getChildren()) {
             try {
                 organizations.add((Organization) file.getContent());
@@ -91,34 +108,49 @@ public class ManageOrganizationWizard extends Wizard {
         for (final Organization orga : organizations) {
             final Organization copy = EcoreUtil.copy(orga);
             if (activeOrganizationName.equals(orga.getName())) {
-                activeOrganization = copy;
-                final EContentAdapter adapter = new EContentAdapter() {
-
-                    @Override
-                    public void notifyChanged(final Notification notification) {
-                        super.notifyChanged(notification);
-                        activeOrganizationHasBeenModified = true;
-                        if (notification.getFeatureID(Organization.class) == OrganizationPackage.ORGANIZATION__NAME) {
-                            newActiveOrganizationName = Optional.ofNullable((String) notification.getNewValue());
-                        }
-                    }
-                };
-                activeOrganization.eAdapters().add(adapter);
+                addActiveOrganizationAdapter(copy);
             }
             organizationsWorkingCopy.add(copy);
 
         }
+    }
 
-        setDefaultPageImageDescriptor(Pics.getWizban());
-        setNeedsProgressMonitor(true);
+    private void addActiveOrganizationAdapter(final Organization orga) {
+        activeOrganization = orga;
+        final EContentAdapter adapter = new EContentAdapter() {
+
+            @Override
+            public void notifyChanged(final Notification notification) {
+                super.notifyChanged(notification);
+                activeOrganizationHasBeenModified = true;
+                if (notification.getFeatureID(Organization.class) == OrganizationPackage.ORGANIZATION__NAME) {
+                    newActiveOrganizationName = Optional.ofNullable((String) notification.getNewValue());
+                }
+            }
+        };
+        activeOrganization.eAdapters().add(adapter);
+    }
+
+    @Override
+    public void createPageControls(Composite pageContainer) {
+        super.createPageControls(pageContainer);
+        organizationToEdit.ifPresent(orga -> {
+            for (final IWizardPage p : getPages()) {
+                if (p instanceof AbstractOrganizationWizardPage) {
+                    ((AbstractOrganizationWizardPage) p).setOrganization(orga);
+                }
+            }
+        });
     }
 
     @Override
     public void addPages() {
-        addPage(new ManageOrganizationWizardPage(organizationsWorkingCopy));
         final GroupsWizardPage p = new GroupsWizardPage();
         final RolesWizardPage p1 = new RolesWizardPage();
         final UsersWizardPage p2 = new UsersWizardPage();
+        if (!organizationToEdit.isPresent()) {
+            addPage(new ManageOrganizationWizardPage(organizationsWorkingCopy));
+        }
         addPage(p);
         addPage(p1);
         addPage(p2);
@@ -147,49 +179,59 @@ public class ManageOrganizationWizard extends Wizard {
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(Messages.saveOrganization, IProgressMonitor.UNKNOWN);
-                    for (final Organization organization : organizationsWorkingCopy) {
-                        monitor.subTask(Messages.validatingOrganizationContent);
-                        final IStatus status = validator.validate(organization);
-                        if (!status.isOK()) {
-                            throw new InvocationTargetException(
-                                    new OrganizationValidationException((MultiStatus) status, organization.getName()));
+                    if (organizationToEdit.isPresent()) {
+                        saveOrga(monitor, organizationToEdit.get());
+                    } else {
+                        for (final Organization organization : organizationsWorkingCopy) {
+                            saveOrga(monitor, organization);
                         }
-                        final String fileName = organization.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
-                        IRepositoryFileStore file = store.getChild(fileName);
-                        Organization oldOrga = null;
-                        if (file == null) {
-                            file = store.createRepositoryFileStore(fileName);
-                        } else {
-                            try {
-                                oldOrga = (Organization) file.getContent();
-                            } catch (final ReadFileStoreException e) {
-                                BonitaStudioLog.error("Failed read organization content", e);
+                        for (final Organization orga : organizations) {
+                            boolean exists = false;
+                            for (final Organization orgCopy : organizationsWorkingCopy) {
+                                if (orgCopy.getName().equals(orga.getName())) {
+                                    exists = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (oldOrga != null) {
-                            final RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga,
-                                    organization);
-                            refactorOp.run(monitor);
-                        }
-                        file.save(organization);
-                    }
-                    for (final Organization orga : organizations) {
-                        boolean exists = false;
-                        for (final Organization orgCopy : organizationsWorkingCopy) {
-                            if (orgCopy.getName().equals(orga.getName())) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            final IRepositoryFileStore f = store
-                                    .getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
-                            if (f != null) {
-                                f.delete();
+                            if (!exists) {
+                                final IRepositoryFileStore f = store
+                                        .getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                                if (f != null) {
+                                    f.delete();
+                                }
                             }
                         }
                     }
                     monitor.done();
+                }
+
+                private void saveOrga(final IProgressMonitor monitor, final Organization organization)
+                        throws InvocationTargetException, InterruptedException {
+                    monitor.subTask(Messages.validatingOrganizationContent);
+                    final IStatus status = validator.validate(organization);
+                    if (!status.isOK()) {
+                        throw new InvocationTargetException(
+                                new OrganizationValidationException((MultiStatus) status, organization.getName()));
+                    }
+                    final String fileName = organization.getName() + "."
+                            + OrganizationRepositoryStore.ORGANIZATION_EXT;
+                    IRepositoryFileStore file = store.getChild(fileName);
+                    Organization oldOrga = null;
+                    if (file == null) {
+                        file = store.createRepositoryFileStore(fileName);
+                    } else {
+                        try {
+                            oldOrga = (Organization) file.getContent();
+                        } catch (final ReadFileStoreException e) {
+                            BonitaStudioLog.error("Failed read organization content", e);
+                        }
+                    }
+                    if (oldOrga != null) {
+                        final RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga,
+                                organization);
+                        refactorOp.run(monitor);
+                    }
+                    file.save(organization);
                 }
             });
         } catch (final InterruptedException | InvocationTargetException e) {
