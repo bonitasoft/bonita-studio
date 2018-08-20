@@ -15,9 +15,6 @@
 package org.bonitasoft.studio.actors.ui.handler;
 
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -27,14 +24,10 @@ import org.eclipse.swt.widgets.Display;
 public class ManageOrganizationHandler {
 
     @Execute
-    public void execute(ECommandService commmandService, EHandlerService handlerService) throws ExecutionException {
-        final Wizard newWizard = new ManageOrganizationWizard(commmandService, handlerService);
+    public void execute() {
+        final Wizard newWizard = new ManageOrganizationWizard();
         final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), newWizard) {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
-             */
             @Override
             protected Point getInitialSize() {
                 return new Point(1200, 800);

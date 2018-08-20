@@ -37,11 +37,16 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
@@ -55,9 +60,13 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
 
+    private static final String DEFINE_BDM_COMMAND_ID = "org.bonitasoft.studio.businessobject.manage";
+
     private final BusinessObjectModelConverter converter;
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
+    private ECommandService commandService;
+    private EHandlerService handlerService;
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);
@@ -126,8 +135,20 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
         return RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
+    @SuppressWarnings("restriction")
     @Override
+    /**
+     * we use the command to call the handler, so we do not have to extend this class for sp features.
+     */
     protected IWorkbenchPart doOpen() {
+        if (commandService == null) {
+            IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            commandService = activeWorkbenchWindow.getService(ECommandService.class);
+            handlerService = activeWorkbenchWindow.getService(EHandlerService.class);
+        }
+        ParameterizedCommand command = ParameterizedCommand.generateCommand(commandService.getCommand(DEFINE_BDM_COMMAND_ID),
+                null);
+        handlerService.executeHandler(command);
         return null;
     }
 
