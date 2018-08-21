@@ -96,4 +96,6 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_PROCESS_DATA_LIST = "SWTBOT_ID_PROCESS_DATA_LIST";
     public static final String SWTBOT_ID_BUSINESS_DATA_LIST = "SWTBOT_ID_BUSINESS_DATA_LIST";
 
+    public static final String SWTBOT_ID_SAVE_EDITOR = "SWTBOT_ID_SAVE_EDITOR";
+
 }

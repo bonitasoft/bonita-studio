@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -75,6 +76,7 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.SaveProcessButtonLabel);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_SAVE_EDITOR);
         if (iconSize < 0) {
             item.setText(Messages.SaveProcessButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_save_48));
