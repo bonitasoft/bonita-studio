@@ -1,17 +1,22 @@
 package org.bonitasoft.studio.tests.diagram;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withId;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.commands.Command;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -20,15 +25,14 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,62 +41,10 @@ public class TestSave {
 
     private final SWTGefBot bot = new SWTGefBot();
 
-    // Before and After
-    private static boolean disablePopup;
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
-
-    private final ICondition saveMenuDisabled = new ICondition() {
-
-        @Override
-        public boolean test() throws Exception {
-            return !bot.menu("File").click().menu("Save").isEnabled();
-        }
-
-        @Override
-        public void init(final SWTBot bot) {
-
-        }
-
-        @Override
-        public String getFailureMessage() {
-            return "Save menu is still enabled !";
-        }
-    };
-    private final ICondition saveMenuEnabled = new ICondition() {
-
-        @Override
-        public boolean test() throws Exception {
-            return bot.menu("File").menu("Save").isEnabled();
-        }
-
-        @Override
-        public void init(final SWTBot bot) {
-
-        }
-
-        @Override
-        public String getFailureMessage() {
-            return "Save menu is still disabled !";
-        }
-    };
-
-    @After
-    public void tearDown() throws Exception {
-        bot.saveAllEditors();
-    }
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     final static String SAVE_BUTTON_TEXT = "Save";
-    final static String WELCOME_EDITOR_TEXT = "Welcome to Bonita Studio";
     private static final String SAVE_COMMAND_ID = "org.eclipse.ui.file.save";
 
     @Test
@@ -100,19 +52,20 @@ public class TestSave {
         // When opening Bonita soft
         final Matcher<MenuItem> matcher = withMnemonic(SAVE_BUTTON_TEXT);
         bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher));
+        bot.waitUntil(Conditions.waitForWidget(withId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR)));
 
         // test button
-        new AssertionCondition() {
+        bot.waitUntil(new AssertionCondition() {
 
             @Override
             protected void makeAssert() throws Exception {
                 Assert.assertFalse("Error: Save button must be disabled when opening Bonita Studio.",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
             }
-        };
+        });
 
         // test menu
-        bot.waitUntil(saveMenuDisabled, 5000, 500);
+        bot.waitUntil(widgetIsDisabled(bot.menu("File").click().menu("Save")));
 
         // When Creating a new Diagram
         SWTBotTestUtil.createNewDiagram(bot);
@@ -139,15 +92,15 @@ public class TestSave {
             @Override
             protected void makeAssert() throws Exception {
                 Assert.assertTrue("Error: Save button must be enabled when creating a new diagram.",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
 
             }
         });
 
         // test menu
-        bot.waitUntil(saveMenuEnabled, 5000, 500);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File").menu("Save")));
 
-        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
 
         // test button
         bot.waitUntil(new AssertionCondition() {
@@ -155,7 +108,7 @@ public class TestSave {
             @Override
             protected void makeAssert() throws Exception {
                 Assert.assertFalse("Error: Save button must be disabled after saving a diagram.",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
 
             }
         });
@@ -165,17 +118,46 @@ public class TestSave {
         assertFalse(cmd.isEnabled());
     }
 
+    private ICondition widgetIsDisabled(AbstractSWTBot<? extends Widget> widget) {
+        return new ICondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return !widget.isEnabled();
+            }
+
+            @Override
+            public void init(final SWTBot bot) {
+
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return widget.toString() + "is still enabled !";
+            }
+        };
+    }
+
     @Test
     public void testSaveButtonAndMenuEnableWhenNewDiagram() {
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotTestUtil.changeDiagramName(bot, "testSave2");
+        BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        BotProcessDiagramPerspective newDiagram = botApplicationWorkbenchWindow
+                .createNewDiagram();
+        newDiagram.activeProcessDiagramEditor().selectDiagram();
+        newDiagram.getDiagramPropertiesPart().selectGeneralTab()
+                .selectDiagramTab()
+                .setName("testSave2");
+        newDiagram.activeProcessDiagramEditor().selectDiagram();
+        
+        bot.waitUntil(Conditions.waitForWidget(withId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR)));
+
 
         // test button
         bot.waitUntil(new AssertionCondition() {
 
             protected void makeAssert() throws Exception {
                 Assert.assertFalse("Error: Save button must not be enabled when changing diagram name.",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
             }
         });
 
@@ -183,28 +165,31 @@ public class TestSave {
         Assert.assertFalse("Error: Save menu must not be enabled when changing diagram name.",
                 bot.menu("File").menu("Save").isEnabled());
 
-        SWTBotTestUtil.createNewDiagram(bot);
+        new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram()
+                .activeProcessDiagramEditor()
+                .selectDiagram();
 
         // test button
         bot.waitUntil(new AssertionCondition() {
 
             protected void makeAssert() throws Exception {
                 Assert.assertTrue("Error: Save button must enabled for the new editor of a new Dragram created.",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
             }
         });
 
         // test menu
-        bot.waitUntil(saveMenuEnabled, 5000, 500);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File").menu("Save")));
 
-        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
 
         // test button
         bot.waitUntil(new AssertionCondition() {
 
             protected void makeAssert() throws Exception {
                 Assert.assertFalse("Error: Save button must be disabled just after saving a new diagram..",
-                        bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled());
+                        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
             }
         });
 
