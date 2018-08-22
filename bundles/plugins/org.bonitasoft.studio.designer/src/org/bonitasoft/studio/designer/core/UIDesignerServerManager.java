@@ -252,6 +252,7 @@ public class UIDesignerServerManager {
                         : "\"" + locateUIDjar() + "\"" + System.getProperty("path.separator") + "\""
                                 + cpJar.getAbsolutePath() + "\"",
                 "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
+                "-Xmx256m",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
                 workspaceSystemProperties.getFragmentRepositoryLocation(),

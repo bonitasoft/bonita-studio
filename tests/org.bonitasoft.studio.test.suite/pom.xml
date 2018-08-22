@@ -13,7 +13,7 @@
     <packaging>eclipse-test-plugin</packaging>
 
     <properties>
-        <javaOPTS>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=TestSuite.hprof</javaOPTS>
+        <javaOPTS>-Xmx1g</javaOPTS>
         <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
 		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
     </properties>

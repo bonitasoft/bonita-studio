@@ -102,9 +102,7 @@ public class TomcatVmArgsBuilder {
     }
 
     protected void addMemoryOptions(final StringBuilder args) {
-        args.append("-Xms128m");
-        args.append(" ");
-        args.append("-Xmx768m");
+        args.append("-Xms128m -Xmx768m");
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {
