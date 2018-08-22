@@ -52,7 +52,7 @@
 					<includes>
 						<include>**/*TestSuite.java</include>
 					</includes>
-					<argLine>-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
+					<argLine>-Xmx1g -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap</argLine>
 					<appArgLine>-nl en -clean</appArgLine>
 					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
 					<bundleStartLevel>
