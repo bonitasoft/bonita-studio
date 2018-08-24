@@ -79,6 +79,7 @@ public class EMFModelUpdater<T extends EObject> {
 
             @Override
             protected void doExecute() {
+                synched.clear();
                 deepEObjectUpdate(source, workingCopy);
             }
         };
