@@ -14,16 +14,14 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import org.bonitasoft.engine.bdm.model.QueryParameterTypes;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.common.jface.databinding.CellEditorViewerProperties;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
@@ -33,7 +31,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -43,17 +40,21 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class QueryParameterTypeEditingSupport extends ObservableValueEditingSupport {
 
+    private DataBindingContext dbc;
+
     public QueryParameterTypeEditingSupport(final ColumnViewer viewer, final DataBindingContext dbc) {
         super(viewer, dbc);
+        this.dbc = dbc;
     }
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
         final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
                 SWT.READ_ONLY);
-        cellEditor.setLabelProvider(new LabelProvider());
+        cellEditor.setLabelProvider(new LabelProviderBuilder<QueryParameterTypes>()
+                .withTextProvider(QueryParameterTypes::getName).createLabelProvider());
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
-        cellEditor.setInput(getAvailableClassnames());
+        cellEditor.setInput(QueryParameterTypes.values());
         return cellEditor;
     }
 
@@ -70,9 +71,23 @@ public class QueryParameterTypeEditingSupport extends ObservableValueEditingSupp
         return cellEditorProperty.observe(cellEditor);
     }
 
-    protected List<String> getAvailableClassnames() {
-        return Arrays.asList(String.class.getName(), Boolean.class.getName(), Integer.class.getName(), Long.class.getName(),
-                Double.class.getName(), LocalDate.class.getName(), LocalDateTime.class.getName(),
-                OffsetDateTime.class.getName(), Date.class.getName());
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#createBinding(org.eclipse.core.databinding.observable.value.IObservableValue,
+     * org.eclipse.core.databinding.observable.value.IObservableValue)
+     */
+    @Override
+    protected Binding createBinding(IObservableValue target, IObservableValue model) {
+        UpdateValueStrategy targetToModel = new UpdateValueStrategy(
+                UpdateValueStrategy.POLICY_CONVERT);
+        targetToModel
+                .setConverter(
+                        ConverterBuilder.<QueryParameterTypes, String> newConverter()
+                                .fromType(QueryParameterTypes.class)
+                                .toType(String.class)
+                                .withConvertFunction(type -> type != null ? type.getClazz().getName() : null)
+                                .create());
+        return dbc.bindValue(target, model, targetToModel, null);
     }
+
 }

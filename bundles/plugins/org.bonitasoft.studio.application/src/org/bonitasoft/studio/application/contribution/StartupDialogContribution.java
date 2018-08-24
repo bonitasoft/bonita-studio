@@ -35,7 +35,8 @@ public class StartupDialogContribution implements IPostStartupContribution {
     public void execute() {
         IPreferenceStore store = ApplicationPlugin.getDefault().getPreferenceStore();
         if (shouldOpenStartupDialog(store)) {
-            StartupMessageDialog.open(Display.getDefault().getActiveShell(), SWT.NONE, store, DO_NOT_OPEN_STARTUP_DIALOG);
+            Display.getDefault().asyncExec(() -> StartupMessageDialog.open(Display.getDefault().getActiveShell(), SWT.NONE,
+                    store, DO_NOT_OPEN_STARTUP_DIALOG));
         }
     }
 
