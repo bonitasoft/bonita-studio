@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.net.MalformedURLException;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
@@ -31,5 +35,21 @@ public class WebFragmentFileStore extends InFolderJSONFileStore {
     public Image getIcon() {
         return getParentStore().getIcon();
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.designer.core.repository.JSONFileStore#doOpen()
+     */
+    @Override
+    protected IWorkbenchPart doOpen() {
+        try {
+            openBrowserOperation(urlFactory().openFragment(getId())).execute();
+        } catch (final MalformedURLException e) {
+            BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
+        }
+        return null;
+    }
+
+
 
 }

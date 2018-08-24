@@ -57,6 +57,14 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(baseURL() + "/#/" + locale() + "/pages/" + pageId);
     }
 
+    public URL openFragment(String id) throws MalformedURLException {
+        return new URL(baseURL() + "/#/" + locale() + "/fragments/" + id);
+    }
+
+    public URL openWidget(String id) throws MalformedURLException {
+        return new URL(baseURL() + "/#/" + locale() + "/widget/" + id);
+    }
+
     public URL newPage() throws MalformedURLException {
         return new URL(baseURL() + "/rest/pages/");
     }
@@ -95,4 +103,5 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     protected UIDesignerServerManager getUIDesignerServerManager() {
         return UIDesignerServerManager.getInstance();
     }
+
 }
