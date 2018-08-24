@@ -58,8 +58,6 @@ import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -429,7 +427,14 @@ public class QueryWizardPage extends WizardPage {
             @Override
             public String getText(final Object element) {
                 if (element instanceof QueryParameter) {
-                    return ((QueryParameter) element).getClassName();
+                    String classname = ((QueryParameter) element).getClassName();
+                    Class<?> clazz;
+                    try {
+                        clazz = Class.forName(classname);
+                    } catch (ClassNotFoundException e) {
+                        return null;
+                    }
+                    return clazz.getCanonicalName();
                 }
                 return super.getText(element);
             }
@@ -439,7 +444,7 @@ public class QueryWizardPage extends WizardPage {
     }
 
     protected String generateName() {
-        final Set<String> existingNames = new HashSet<String>();
+        final Set<String> existingNames = new HashSet<>();
         final Query query = getQuery();
         for (final QueryParameter param : query.getQueryParameters()) {
             existingNames.add(param.getName());

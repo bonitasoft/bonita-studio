@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.scripting.provider;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -29,6 +31,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -83,8 +86,6 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     private Composite mainComposite, inputNameComposite;
 
     private Text expressionNameText;
-
-    //  private Combo expressionInterpreterCombo;
 
     private IExpressionEditor editor;
 
@@ -204,6 +205,22 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         });
     }
 
+    private String toDisplayName(Object className) {
+        if (className != null) {
+            String displayName = className.toString();
+            try {
+                Class<?> clazz = Class.forName(displayName);
+                if (clazz.isArray()) {
+                    return clazz.getCanonicalName();
+                }
+                return displayName;
+            } catch (ClassNotFoundException e) {
+                return displayName;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param classText
      */
@@ -260,10 +277,27 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
             returnTypeModelObservable.setValue(defaultReturnType);
         }
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable);
-        dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable);
+        dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable,
+                updateValueStrategy().withConverter(ConverterBuilder.<String, String> newConverter()
+                        .withConvertFunction(this::toClassName)
+                        .create())
+                        .create(),
+                updateValueStrategy().withConverter(ConverterBuilder.<String, String> newConverter()
+                        .withConvertFunction(this::toDisplayName)
+                        .create())
+                        .create());
 
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
         browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed());
+    }
+
+    private String toClassName(String comboText) {
+        if (comboText != null) {
+            if (comboText.endsWith("[]")) {
+                return "[L" + comboText.substring(0, comboText.length() - 2) + ";";
+            }
+        }
+        return comboText;
     }
 
     private IValueChangeListener handleValidationStatusChanged() {
