@@ -15,16 +15,22 @@
 package org.bonitasoft.studio.application.views.provider;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.jdt.core.ISourceReference;
+import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.ui.actions.OpenAction;
 import org.eclipse.jdt.ui.actions.OpenEditorActionGroup;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.navigator.CommonActionProvider;
@@ -72,6 +78,10 @@ public class CustomOpenActionProvider extends CommonActionProvider {
         if (openFileAction.getOpenAction().isEnabled()) {
             theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN,
                     customOpenAction);
+        } else if (UIDArtifactFilters
+                .isUIDArtifact(((IStructuredSelection) getContext().getSelection()).getFirstElement())) {
+            theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN,
+                    customOpenAction);
         }
     }
 
@@ -82,13 +92,20 @@ public class CustomOpenActionProvider extends CommonActionProvider {
         return new OpenAction(((IViewPart) viewSite.getPart()).getSite()) {
 
             @Override
+            public void run(IStructuredSelection selection) {
+                if (!checkEnabled(selection))
+                    return;
+                run(selection.toArray());
+            }
+
+            @Override
             public void run(Object[] elements) {
                 List<Object> elementsToKeep = new ArrayList<>();
 
                 for (Object element : elements) {
-                    if (element instanceof File) {
+                    if (element instanceof File || UIDArtifactFilters.isUIDArtifact(element)) {
                         IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository()
-                                .getFileStore((File) element);
+                                .getFileStore((IResource) element);
                         if (fileStore != null) {
                             fileStore.open();
                             continue;
@@ -98,6 +115,24 @@ public class CustomOpenActionProvider extends CommonActionProvider {
                 }
 
                 ((OpenAction) openFileAction.getOpenAction()).run(elementsToKeep.toArray());
+            }
+
+            private boolean checkEnabled(IStructuredSelection selection) {
+                if (selection.isEmpty())
+                    return false;
+                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+                    Object element = iter.next();
+                    if (element instanceof ISourceReference)
+                        continue;
+                    if (element instanceof IFile)
+                        continue;
+                    if (UIDArtifactFilters.isUIDArtifact(element))
+                        continue;
+                    if (JavaModelUtil.isOpenableStorage(element))
+                        continue;
+                    return false;
+                }
+                return true;
             }
         };
     }

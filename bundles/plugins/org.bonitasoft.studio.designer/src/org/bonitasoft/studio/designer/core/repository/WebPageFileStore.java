@@ -16,7 +16,6 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -25,12 +24,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -69,14 +64,6 @@ public class WebPageFileStore extends InFolderJSONFileStore {
             BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
         }
         return null;
-    }
-
-    protected OpenBrowserOperation openBrowserOperation(final URL url) throws MalformedURLException {
-        return new OpenBrowserOperation(url);
-    }
-
-    protected PageDesignerURLFactory urlFactory() {
-        return new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
     }
 
     @Override

@@ -1034,9 +1034,9 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
             activeByDefault="true"
-            contentProvider="org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider"
+            contentProvider="org.bonitasoft.studio.application.views.provider.BonitaExplorerContentProvider"
             id="org.bonitasoft.studio.application.navigatorContent"
-            labelProvider="org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider"
+            labelProvider="org.bonitasoft.studio.application.views.provider.BonitaExplorerLabelProvider"
             name="Bonita Project Explorer Content">
          <triggerPoints>
                 <or>

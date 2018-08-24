@@ -14,11 +14,18 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.json.JSONObject;
 
 /**
@@ -58,4 +65,11 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
         return getResource().getFile(getName() + JSON_EXTENSION);
     }
 
+    protected PageDesignerURLFactory urlFactory() {
+        return new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID));
+    }
+
+    protected OpenBrowserOperation openBrowserOperation(final URL url) throws MalformedURLException {
+        return new OpenBrowserOperation(url);
+    }
 }

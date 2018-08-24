@@ -14,11 +14,14 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.net.MalformedURLException;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
 
 /**
@@ -43,5 +46,19 @@ public class WebWidgetFileStore extends InFolderJSONFileStore {
     @Override
     public Image getIcon() {
         return getParentStore().getIcon();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.designer.core.repository.JSONFileStore#doOpen()
+     */
+    @Override
+    protected IWorkbenchPart doOpen() {
+        try {
+            openBrowserOperation(urlFactory().openWidget(getId())).execute();
+        } catch (final MalformedURLException e) {
+            BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
+        }
+        return null;
     }
 }
