@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.views;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.swt.SWT;
@@ -58,13 +59,19 @@ public class BonitaProjectExplorer extends CommonNavigator {
         CommonViewer commonViewer = new CommonViewer(getViewSite().getId(), aParent,
                 SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL) {
 
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.ui.navigator.CommonViewer#initDragAndDrop()
+             */
             @Override
             protected void initDragAndDrop() {
-
+                //Disable drag and drop
             }
         };
+        commonViewer.addFilter(UIDArtifactFilters.filterUIDArtifactChildren());
         return commonViewer;
     }
+
 
     @SuppressWarnings("unchecked")
     @Override
