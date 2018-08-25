@@ -13,7 +13,7 @@
     <packaging>eclipse-test-plugin</packaging>
 
     <properties>
-        <javaOPTS>-Xmx1g -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap</javaOPTS>
+        <javaOPTS>-Xmx1g -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dtomcat.extra.params="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"</javaOPTS>
         <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
 		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
     </properties>
