@@ -198,7 +198,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
             bot.button(Messages.add).click();
             typeText(paramEntry.getKey());
             paramTableBot.getTableItem(paramEntry.getKey()).click(1);
-            bot.ccomboBox(String.class.getName()).setSelection(paramEntry.getValue());
+            bot.ccomboBox().setSelection(paramEntry.getValue());
             pressShortcut(Keystrokes.CR);
         }
 
