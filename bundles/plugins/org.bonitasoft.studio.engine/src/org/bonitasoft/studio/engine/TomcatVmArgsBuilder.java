@@ -102,7 +102,7 @@ public class TomcatVmArgsBuilder {
     }
 
     protected void addMemoryOptions(final StringBuilder args) {
-        args.append("-Xmx512m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap");
+        args.append("-Xmx512m");
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {

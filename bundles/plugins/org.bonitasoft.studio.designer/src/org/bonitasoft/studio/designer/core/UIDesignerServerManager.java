@@ -253,8 +253,6 @@ public class UIDesignerServerManager {
                                 + cpJar.getAbsolutePath() + "\"",
                 "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
                 "-Xmx256m",
-                "-XX:+UnlockExperimentalVMOptions",
-                "-XX:+UseCGroupMemoryLimitForHeap",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
