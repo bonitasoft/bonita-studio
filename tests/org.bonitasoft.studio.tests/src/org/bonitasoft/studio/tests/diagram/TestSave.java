@@ -168,7 +168,8 @@ public class TestSave {
         new BotApplicationWorkbenchWindow(bot)
                 .createNewDiagram()
                 .activeProcessDiagramEditor()
-                .selectDiagram();
+                .selectDiagram()
+                .selectElement("Step1");
 
         // test button
         bot.waitUntil(new AssertionCondition() {
@@ -177,7 +178,7 @@ public class TestSave {
                 Assert.assertTrue("Error: Save button must enabled for the new editor of a new Dragram created.",
                         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).isEnabled());
             }
-        });
+        }, 10000);
 
         // test menu
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File").menu("Save")));
