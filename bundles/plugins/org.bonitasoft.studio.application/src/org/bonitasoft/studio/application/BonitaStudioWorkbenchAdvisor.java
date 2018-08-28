@@ -524,12 +524,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         DebugUIPlugin.getDefault().getProcessConsoleManager();
         SourceLookupManager.getDefault();
         IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-        if (!preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE)) {
+        if (!isLazyModeEnabled(preferenceStore)) {
             final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
             job.setPriority(Job.DECORATE);
             job.setUser(false);
             job.schedule();
         }
+    }
+
+    private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
+        return preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE) || System.getProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE) != null;
     }
 
     @Override

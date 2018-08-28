@@ -33,6 +33,8 @@ import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 
 /**
  * @author Romain Bioteau
@@ -79,15 +81,16 @@ public class SWTGefBotRule implements TestRule {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
             bot.captureScreenshot(String.format("screenshots/OpenedShellAfterTest%s.jpg", System.currentTimeMillis()));
-            closeAllShells(bot);
+            closeAllShells(bot,e);
         }
         closeAllAndReturnToWelcomePage();
     }
 
-    private void closeAllShells(SWTWorkbenchBot bot) {
+    private void closeAllShells(SWTWorkbenchBot bot,Exception e) {
         final SWTBotShell[] shells = bot.shells();
         for (final SWTBotShell shell : shells) {
             if (shell.isOpen() && !isEclipseShell(shell)) {
+				System.out.println(String.format("Trying to close shell '%s' after test failure %s",shell.getText(),e));
                 shell.close();
             }
         }
@@ -126,6 +129,7 @@ public class SWTGefBotRule implements TestRule {
                 .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+		EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
     }
