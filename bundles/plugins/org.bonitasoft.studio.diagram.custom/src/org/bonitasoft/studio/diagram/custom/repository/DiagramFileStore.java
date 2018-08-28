@@ -58,6 +58,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -66,6 +67,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -84,7 +86,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
@@ -264,7 +265,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             final MainProcess content = getContent();
             Assert.isLegal(content != null);
             Assert.isLegal(emfResource != null && emfResource.isLoaded());
-            part = IDE.openEditor(getActivePage(), getResource());
+            part = EditorService.getInstance().openEditor(new URIEditorInput(getResourceURI()));
             if (part instanceof DiagramEditor) {
                 final DiagramEditor editor = (DiagramEditor) part;
                 final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
@@ -283,10 +284,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             BonitaStudioLog.error(e);
         }
         return part;
-    }
-
-    private IWorkbenchPage getActivePage() {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     }
 
     protected IWorkbenchPage closeOpenedEditorWithoutSaving() {
