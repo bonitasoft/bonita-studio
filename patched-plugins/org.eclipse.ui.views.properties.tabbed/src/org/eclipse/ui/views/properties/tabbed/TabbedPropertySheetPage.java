@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.action.IAction;
@@ -194,7 +195,7 @@ public class TabbedPropertySheetPage
                 // but different section depending on the selection
                 tab = (TabContents) descriptorToTab.get(descriptor);
 
-                if (tab != currentTab) {
+                if (!Objects.equals(tab, currentTab)) {
                     hideTab(currentTab);
                 }
 

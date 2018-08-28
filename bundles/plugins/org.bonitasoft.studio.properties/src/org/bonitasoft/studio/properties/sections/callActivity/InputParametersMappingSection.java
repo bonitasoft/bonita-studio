@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -58,6 +59,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -67,6 +69,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -101,31 +104,13 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
         this.callActivityHelper = new CallActivityHelper(repositoryAccessor, selectionProvider);
     }
 
-    @Override
-    public void refresh() {
-        super.refresh();
 
-        /* Dispose and then redraw */
-        for (final Control c : mainComposite.getChildren()) {
-            c.dispose();
-        }
-        doCreateControls(mainComposite);
-        /* Fill with existing in/out mappings */
-        updateMappings(mainComposite);
-        /* layout with potential add of in/out mappings */
-        mainComposite.layout();
-        mainComposite.getParent().layout();
-
-        mainComposite.layout();
-    }
-
-    private void updateMappings(Composite parent) {
+    private void updateMappings() {
         final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
         for (final InputMapping input : callActivity.getInputMappings()) {
             addInputMappingLine(inputMappingControl, input);
         }
-        parent.layout();
-        parent.getParent().layout();
+        mainComposite.getParent().layout();
     }
 
     private void doCreateControls(final Composite mainComposite) {
@@ -404,6 +389,19 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
     @Override
     public void setInput(IWorkbenchPart part, ISelection selection) {
         super.setInput(part, selection);
+        ISelection current = selectionProvider.getSelection();
         selectionProvider.setSelection(selection);
+
+        if (!Objects.equals(current, selectionProvider.getSelection())) {
+            BusyIndicator.showWhile(Display.getDefault(), () -> {
+                /* Dispose and then redraw */
+                for (final Control c : mainComposite.getChildren()) {
+                    c.dispose();
+                }
+                doCreateControls(mainComposite);
+                /* Fill with existing in/out mappings */
+                updateMappings();
+            });
+        }
     }
 }
