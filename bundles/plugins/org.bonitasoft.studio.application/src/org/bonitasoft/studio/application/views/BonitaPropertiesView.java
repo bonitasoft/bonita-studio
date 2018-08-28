@@ -84,8 +84,9 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         // Don't interfere with other property views
         String partID = part.getSite().getId();
         boolean isPropertyView = BonitaPerspectivesUtils.getAllPropertiesViews().contains(partID);
-        return !isPropertyView && super.isImportant(part);
+        return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer);
     }
+
 
     @Override
     protected IWorkbenchPart getBootstrapPart() {

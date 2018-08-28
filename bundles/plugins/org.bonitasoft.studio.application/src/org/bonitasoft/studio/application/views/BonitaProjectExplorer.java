@@ -18,15 +18,11 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.gmf.runtime.diagram.ui.properties.views.PropertiesBrowserPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 
 public class BonitaProjectExplorer extends CommonNavigator {
 
@@ -73,15 +69,10 @@ public class BonitaProjectExplorer extends CommonNavigator {
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == IPropertySheetPage.class) {
-            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor();
-            if (activeEditor instanceof ITabbedPropertySheetPageContributor) {
-                return (T) new PropertiesBrowserPage((ITabbedPropertySheetPageContributor) activeEditor);
-            }
+            return null;
         }
         return super.getAdapter(adapter);
     }
