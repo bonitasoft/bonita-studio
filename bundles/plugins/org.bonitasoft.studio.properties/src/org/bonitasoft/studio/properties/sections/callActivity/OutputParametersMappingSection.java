@@ -18,6 +18,7 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -57,12 +58,14 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -100,31 +103,12 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
         for (final OutputMapping mapping : callActivity.getOutputMappings()) {
             addOutputMappingLine(outputMappingControl, mapping);
         }
-        mainComposite.layout();
         mainComposite.getParent().layout();
     }
 
     protected void refreshScrolledComposite(final Composite parent) {
         parent.getParent().getParent().layout(true, true);
         getTabbedPropertySheetPage().resizeScrolledComposite();
-    }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-
-        /* Dispose and then redraw */
-        for (final Control c : mainComposite.getChildren()) {
-            c.dispose();
-        }
-        doCreateControls(mainComposite);
-        /* Fill with existing in/out mappings */
-        updateMappings();
-        /* layout with potential add of in/out mappings */
-        mainComposite.layout();
-        mainComposite.getParent().layout();
-
-        mainComposite.layout();
     }
 
     /*
@@ -316,7 +300,20 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
     @Override
     public void setInput(IWorkbenchPart part, ISelection selection) {
         super.setInput(part, selection);
+        ISelection current = selectionProvider.getSelection();
         selectionProvider.setSelection(selection);
+
+        if (!Objects.equals(current, selectionProvider.getSelection())) {
+            BusyIndicator.showWhile(Display.getDefault(), () -> {
+                /* Dispose and then redraw */
+                for (final Control c : mainComposite.getChildren()) {
+                    c.dispose();
+                }
+                doCreateControls(mainComposite);
+                /* Fill with existing in/out mappings */
+                updateMappings();
+            });
+        }
     }
 
     /*
