@@ -71,6 +71,16 @@ public class BosArchiveTest {
 
         StatusAssert.assertThat(status).isNotOK();
     }
+    
+    @Test
+    public void should_fail_when_archiveFile_edition_is_incompatible() throws Exception {
+        final BosArchive bosArchive = newBosArchive(loadArchiveFile("/archiveWithIncompatibleManifest2.bos"));
+        doReturn(false).when(bosArchive).canImportFromEdition(Boolean.FALSE.toString());
+        
+        final IStatus status = bosArchive.validate();
+
+        StatusAssert.assertThat(status).isNotOK();
+    }
 
     @Test
     public void should_validate_beta_manifest() throws Exception {

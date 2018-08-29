@@ -18,6 +18,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -43,6 +44,7 @@ public class BosArchive {
     private static final String MANIFEST_ENTRY = "/MANIFEST";
     private static final String VERSION = "version";
     private static final String TO_OPEN = "toOpen";
+    private static final String COMMUNITY_EDITION = "communityEdition";
     private static final Properties FALLBACK_PROPERTIES = new Properties();
     private String version;
 
@@ -200,11 +202,19 @@ public class BosArchive {
             return ValidationStatus
                     .error(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
         }
+		if (!canImportFromEdition(manifest.getProperty(COMMUNITY_EDITION))) {
+            return ValidationStatus
+                    .error(Messages.incompatibleWithCommunityEdition);
+        }
         return ValidationStatus.ok();
     }
 
     public boolean canImport(String version) {
         return ProductVersion.canBeImported(version);
+    }
+    
+    public boolean canImportFromEdition(String edition) {
+        return !PlatformUtil.isACommunityBonitaProduct() || edition == null || Boolean.valueOf(edition);
     }
 
     private Properties readManifest() throws IOException {

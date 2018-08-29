@@ -54,6 +54,7 @@ public final class Messages extends NLS {
 
     public static String importErrorTitle;
     public static String incompatibleProductVersion;
+    public static String incompatibleWithCommunityEdition;
     public static String initializingJavaProject;
     public static String creatingStore;
     public static String initializingProjectClasspath;

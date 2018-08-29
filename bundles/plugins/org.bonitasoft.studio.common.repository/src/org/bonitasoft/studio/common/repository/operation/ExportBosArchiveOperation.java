@@ -55,6 +55,7 @@ public class ExportBosArchiveOperation {
     public static final String BOS_ARCHIVE_MANIFEST = "MANIFEST";
     public static final String TO_OPEN = "toOpen";
     public static final String NONE = "<NONE>";
+    public static final String COMMUNITY_EDITION = "communityEdition";
 
     private Set<IResource> resources;
     private IStatus status;
@@ -118,6 +119,7 @@ public class ExportBosArchiveOperation {
         }
         final Properties prop = new Properties();
         prop.put(VERSION, ProductVersion.CURRENT_VERSION);
+        prop.put(COMMUNITY_EDITION, Boolean.valueOf(PlatformUtil.isACommunityBonitaProduct()).toString());
 
         if (resourcesToReOpen != null && !resourcesToReOpen.isEmpty()) {
             final StringBuilder sb = new StringBuilder();
