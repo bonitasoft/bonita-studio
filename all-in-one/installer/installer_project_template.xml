@@ -14,6 +14,7 @@
     <windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
     <osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
     <osxPlatforms>osx-intel osx-x86_64</osxPlatforms>
+    <createOsxBundleZip>1</createOsxBundleZip>
     <createUninstaller>@enable.uninstaller@</createUninstaller>
     <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
@@ -306,30 +307,6 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</v
             </ruleList>
         </substitute>
     </postInstallationActionList>
-  <postBuildActionList>
-        <actionGroup>
-            <actionList>
-                <createTimeStamp>
-                    <format>%Y%m%d%H%M%S</format>
-                    <variable>timestamp</variable>
-                </createTimeStamp>
-                <createDirectory>
-                    <path>${outputDirectory}/${installerFilename}.app</path>
-                </createDirectory>
-                <copyFile>
-                    <destination>${outputDirectory}/${installerFilename}.app/</destination>
-                    <origin>@bitrock.output@/${installerFilename}/Contents</origin>
-                </copyFile>
-            </actionList>
-            <ruleList>
-                <compareValues>
-                    <logic>equals</logic>
-                    <value1>${platform_name}</value1>
-                    <value2>osx</value2>
-                </compareValues>
-            </ruleList>
-        </actionGroup>
-    </postBuildActionList> 
     <finalPageActionList>
         <runProgram>
             <ruleList>
