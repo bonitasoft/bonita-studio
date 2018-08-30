@@ -90,6 +90,13 @@
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -281,61 +288,26 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>make-macos-zip-assembly</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>${basedir}/assembly-macos-zip-descriptor.xml</descriptor>
+                            </descriptors>
+                            <finalName>${product.short.name}-${project.version}.app</finalName>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <profile>
-            <id>sign</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-x86_64-exe</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "curl --request POST -F exeFile=@${product.short.name}.exe ${signServiceURL} &gt; /tmp/${product.short.name}.exe &#38;&#38; cat /tmp/${product.short.name}.exe > ${product.short.name}.exe"</commandlineArgs>    
-                                    <workingDirectory>${project.build.directory}/products/${productId}/win32/win32/x86_64/</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>sign-x86-exe</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "curl --request POST -F exeFile=@${product.short.name}.exe ${signServiceURL} &gt; /tmp/${product.short.name}.exe &#38;&#38; cat /tmp/${product.short.name}.exe > ${product.short.name}.exe"</commandlineArgs>
-                                     <workingDirectory>${project.build.directory}/products/${productId}/win32/win32/x86/</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>sign-osx-app</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "zip -q ${product.short.name}-${project.version}.zip -r ${product.short.name}-${project.version}.app &#38;&#38; curl --request POST -F exeFile=@${product.short.name}-${project.version}.zip ${macSignServiceURL} &gt; /tmp/${product.short.name}-${project.version}.zip &#38;&#38; cat /tmp/${product.short.name}-${project.version}.zip > ${product.short.name}-${project.version}.zip &#38;&#38; rm -r ${product.short.name}-${project.version}.app &#38;&#38; unzip -q ${product.short.name}-${project.version}.zip &#38;&#38; rm ${product.short.name}-${project.version}.zip"</commandlineArgs>    
-                                    <workingDirectory>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</workingDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>buildInstaller</id>
             <activation>
@@ -402,18 +374,6 @@
                                 </goals>
                             </execution>
                             <execution>
-                            	<id>build-and-sign-osx-dmg</id>
-                            	<phase>verify</phase>
-                            	<goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            	<configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "mv ${product.short.name}-${project.version}-osx ${product.short.name}-${project.version}-osx.app &#38;&#38; zip -q ${product.short.name}-${project.version}-osx.zip -r ${product.short.name}-${project.version}-osx.app &#38;&#38; curl --request POST -F exeFile=@${product.short.name}-${project.version}-osx.zip ${macBuildAndSignInstallerServiceURL} &gt; /tmp/${product.short.name}-${project.version}-osx.zip &#38;&#38; cat /tmp/${product.short.name}-${project.version}-osx.zip > ${product.short.name}-${project.version}-osx.zip &#38;&#38; unzip -q ${product.short.name}-${project.version}-osx.zip &#38;&#38; rm ${product.short.name}-${project.version}-osx.zip"</commandlineArgs>    
-                                    <workingDirectory>${project.build.directory}/installers/output/</workingDirectory>
-                            	</configuration>
-                            </execution>
-                            <execution>
                                 <id>win-x86</id>
                                 <phase>package</phase>
                                 <configuration>
@@ -440,30 +400,6 @@
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
-                            </execution>
-                            <execution>
-                                <id>sign-installer-x86_64-exe</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "curl --request POST -F exeFile=@${product.short.name}-${project.version}-x86_64.exe ${signServiceURL} &gt; /tmp/${product.short.name}-${project.version}-x86_64.exe &#38;&#38; cat /tmp/${product.short.name}-${project.version}-x86_64.exe > ${product.short.name}-${project.version}-x86_64.exe"</commandlineArgs>    
-                                    <workingDirectory>${project.build.directory}/installers/output/</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>sign-installer-x86-exe</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "curl --request POST -F exeFile=@${product.short.name}-${project.version}-x86.exe ${signServiceURL} &gt; /tmp/${product.short.name}-${project.version}-x86.exe &#38;&#38; cat /tmp/${product.short.name}-${project.version}-x86.exe > ${product.short.name}-${project.version}-x86.exe"</commandlineArgs>
-                                     <workingDirectory>${project.build.directory}/installers/output/</workingDirectory>
-                                </configuration>
                             </execution>
                         </executions>
                         <configuration>
@@ -527,7 +463,7 @@
                                         <property name="bitrock.install" value="${project.build.directory}/installers" />
                                         <property name="os_arch" value="64" />
                                         <property file="installer/installer.properties" />
-                                        <property name="installer.name" value="${product.short.name}-${product.version}-osx" />
+                                        <property name="installer.name" value="${product.short.name}-${product.version}-macOs" />
                                         <property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
                                         <ant antfile="createInstallerProject.xml" />
                                     </target>
@@ -701,6 +637,110 @@
                                         <get src="${jre.url}/${jre.osx.url}.tar.gz"
                                             dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse/${jre.osx.url}.tar.gz" />
                                     </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-x86_64-exe</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                   <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}.exe</argument>
+                                        <argument>${signServiceURL}</argument>
+                                        <argument>${project.build.directory}/products/${productId}/win32/win32/x86_64/</argument>
+                                    </arguments>
+                                     <workingDirectory>${basedir}/codesign</workingDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>sign-x86-exe</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}.exe</argument>
+                                        <argument>${signServiceURL}</argument>
+                                        <argument>${project.build.directory}/products/${productId}/win32/win32/x86/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>    
+                            <execution>
+                                <id>sign-osx-app</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${project.build.directory}</argument>
+                                        <argument>${macSignServiceURL}</argument>
+                                        <argument>${product.short.name}-${project.version}.app.zip</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>                    
+                            <execution>
+                                <id>sign-installer-x86_64-exe</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}-${project.version}-x86_64.exe</argument>
+                                        <argument>${signServiceURL}</argument>
+                                        <argument>${project.build.directory}/installers/output/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>sign-installer-x86-exe</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}-${project.version}-x86.exe</argument>
+                                        <argument>${signServiceURL}</argument>
+                                        <argument>${project.build.directory}/installers/output/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-and-sign-osx-dmg</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}-${project.version}-macOs.zip</argument>
+                                        <argument>${macBuildAndSignInstallerServiceURL}</argument>
+                                        <argument>${project.build.directory}/installers/output/</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
