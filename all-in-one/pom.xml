@@ -327,7 +327,7 @@
                                 </goals>
                                 <configuration>
                                     <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "zip -q ${product.short.name}-${project.version}.zip -r ${product.short.name}-${project.version}.app &#38;&#38; curl --request POST -F exeFile=@${product.short.name}-${project.version}.zip ${macSignServiceURL} &gt; /tmp/${product.short.name}-${project.version}.zip &#38;&#38; cat /tmp/${product.short.name}-${project.version}.zip > ${product.short.name}-${project.version}.zip &#38;&#38; rm -r ${product.short.name}-${project.version}.app &#38;&#38; unzip -q ${product.short.name}-${project.version}.zip &#38;&#38; rm ${product.short.name}-${project.version}.zip"</commandlineArgs>    
+                                    <commandlineArgs>-c "zip -q ${product.short.name}-${project.version}.app.zip -r ${product.short.name}-${project.version}.app &#38;&#38; curl --request POST -F exeFile=@${product.short.name}-${project.version}.app.zip ${macSignServiceURL} &gt; /tmp/${product.short.name}-${project.version}.app.zip &#38;&#38; cat /tmp/${product.short.name}-${project.version}.app.zip > ${product.short.name}-${project.version}.app.zip &#38;&#38; rm -r ${product.short.name}-${project.version}.app &#38;&#38; unzip -q ${product.short.name}-${project.version}.app.zip &#38;&#38; rm ${product.short.name}-${project.version}.app.zip"</commandlineArgs>      
                                     <workingDirectory>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</workingDirectory>
                                 </configuration>
                             </execution>
@@ -409,7 +409,7 @@
                                 </goals>
                             	<configuration>
                                     <executable>/bin/bash</executable>
-                                    <commandlineArgs>-c "mv ${product.short.name}-${project.version}-osx ${product.short.name}-${project.version}-osx.app &#38;&#38; zip -q ${product.short.name}-${project.version}-osx.zip -r ${product.short.name}-${project.version}-osx.app &#38;&#38; curl --request POST -F exeFile=@${product.short.name}-${project.version}-osx.zip ${macBuildAndSignInstallerServiceURL} &gt; /tmp/${product.short.name}-${project.version}-osx.zip &#38;&#38; cat /tmp/${product.short.name}-${project.version}-osx.zip > ${product.short.name}-${project.version}-osx.zip &#38;&#38; unzip -q ${product.short.name}-${project.version}-osx.zip &#38;&#38; rm ${product.short.name}-${project.version}-osx.zip"</commandlineArgs>    
+                                    <commandlineArgs>-c "zip -q ${product.short.name}-${project.version}.app.zip -r ${product.short.name}-${project.version}.app &#38;&#38; curl --max-time 6000 --request POST -F exeFile=@${product.short.name}-${project.version}.app.zip ${macBuildAndSignInstallerServiceURL} &gt; /tmp/${product.short.name}-${project.version}-osx.dmg &#38;&#38; cat /tmp/${product.short.name}-${project.version}-osx.dmg > ${product.short.name}-${project.version}-osx.dmg &#38;&#38; rm ${product.short.name}-${project.version}.app.zip"</commandlineArgs>       
                                     <workingDirectory>${project.build.directory}/installers/output/</workingDirectory>
                             	</configuration>
                             </execution>
@@ -527,7 +527,7 @@
                                         <property name="bitrock.install" value="${project.build.directory}/installers" />
                                         <property name="os_arch" value="64" />
                                         <property file="installer/installer.properties" />
-                                        <property name="installer.name" value="${product.short.name}-${product.version}-osx" />
+                                        <property name="installer.name" value="${product.short.name}-${product.version}.app" />
                                         <property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
                                         <ant antfile="createInstallerProject.xml" />
                                     </target>
