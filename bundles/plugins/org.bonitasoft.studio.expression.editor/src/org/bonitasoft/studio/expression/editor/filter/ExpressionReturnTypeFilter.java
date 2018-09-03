@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.expression.editor.filter;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -44,8 +46,11 @@ public class ExpressionReturnTypeFilter {
      * @return true if currentReturnType is in the targetReturnType hierarchy or if one of the both types is unknown
      */
     public boolean compatibleReturnTypes(final String currentReturnType, final String targetReturnType) {
-        if (currentReturnType.equals(targetReturnType)) {
+        if (Objects.equals(currentReturnType, targetReturnType)) {
             return true;
+        }
+        if (currentReturnType == null || targetReturnType == null) {
+            return false;
         }
         try {
             final Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
