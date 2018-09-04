@@ -116,6 +116,8 @@ public final class Messages extends NLS {
 
     public static String maxScriptLength;
 
+    public static String onlyReadOnly;
+
     private Messages() {
         // Do not instantiate
     }

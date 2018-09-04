@@ -67,9 +67,11 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -86,6 +88,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.tablecomboviewer.TableComboViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -149,6 +152,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     };
 
     private Button testButton;
+
+    private CLabel writeOperationWarning;
 
     public GroovyScriptExpressionEditor() {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -407,11 +412,18 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         final Composite buttonBarComposite = new Composite(parent, SWT.NONE);
         buttonBarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+
+        writeOperationWarning = new CLabel(buttonBarComposite, SWT.NONE);
+        writeOperationWarning.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
+        writeOperationWarning.setText(Messages.onlyReadOnly);
+        writeOperationWarning.setVisible(false);
+        writeOperationWarning
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         testButton = new Button(buttonBarComposite, SWT.PUSH);
         testButton.setText(Messages.testButtonLabel);
-        testButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
+        testButton.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.END, SWT.FILL).create());
         testButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -568,6 +580,13 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                     if (deps != null) {
                         mergeList(referencedElements, new ArrayList<>(deps));
                     }
+                    Display.getDefault().asyncExec(() -> {
+                        writeOperationWarning.setVisible(
+                            referencedElements.stream().filter(Expression.class::isInstance).map(Expression.class::cast)
+                                        .map(Expression::getName).anyMatch("apiAccessor"::equals));
+                        writeOperationWarning.getParent().layout(true);
+                    });
+
                 }
             }
 
