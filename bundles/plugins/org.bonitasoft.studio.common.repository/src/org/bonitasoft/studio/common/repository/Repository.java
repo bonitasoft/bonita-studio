@@ -202,8 +202,9 @@ public class Repository implements IRepository, IJavaContainer {
     protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName,
             final IWorkspace workspace) {
         return new CreateBonitaBPMProjectOperation(workspace, projectName)
+                .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature("org.eclipse.xtext.ui.shared.xtextNature")
-                .addNature("org.bonitasoft.studio.common.repository.bonitaNature").addNature(JavaCore.NATURE_ID)
+                .addNature(JavaCore.NATURE_ID)
                 .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addBuilder("org.eclipse.jdt.core.javabuilder")
@@ -342,6 +343,7 @@ public class Repository implements IRepository, IJavaContainer {
                     BonitaStudioLog.error(e);
                 }
             }
+            monitor.setTaskName("");
             if (migrationEnabled()) {
                 try {
                     migrate(monitor);
