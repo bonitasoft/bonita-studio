@@ -14,9 +14,11 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,8 +31,8 @@ import org.eclipse.core.resources.ICommand;
 public class ProjectDescriptionBuilder {
 
     private final ProjectDescription projectDescription;
-    private final Set<String> natureIds = new HashSet<String>();
-    private final Set<String> builderIds = new HashSet<String>();;
+    private final List<String> natureIds = new ArrayList<>();
+    private final Set<String> builderIds = new HashSet<>();
 
     public ProjectDescriptionBuilder() {
         projectDescription = new ProjectDescription();
@@ -67,8 +69,8 @@ public class ProjectDescriptionBuilder {
     }
 
     public ProjectDescription build() {
-        projectDescription.setNatureIds(natureIds.toArray(new String[natureIds.size()]));
-        final Map<String, ICommand> builderCommmands = new HashMap<String, ICommand>();
+        projectDescription.setNatureIds(natureIds.stream().distinct().toArray(String[]::new));
+        final Map<String, ICommand> builderCommmands = new HashMap<>();
         for (final String builderId : builderIds) {
             final ICommand command = projectDescription.newCommand();
             command.setBuilderName(builderId);
