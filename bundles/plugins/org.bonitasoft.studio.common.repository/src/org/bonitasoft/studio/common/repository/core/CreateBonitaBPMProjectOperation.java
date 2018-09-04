@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
@@ -41,7 +43,7 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
     private final IWorkspace workspace;
     private final String projectName;
     private final Set<String> builders = new HashSet<>();
-    private final Set<String> natures = new HashSet<>();
+    private final List<String> natures = new ArrayList<>();
 
     public CreateBonitaBPMProjectOperation(final IWorkspace workspace, final String projectName) {
         this.workspace = workspace;
