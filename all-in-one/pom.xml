@@ -90,13 +90,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -691,12 +684,11 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>./sign.sh</executable>
+                                    <executable>./sign-macosx.sh</executable>
                                     <arguments>
-                                        <argument>${product.short.name}-${project.version}.app.zip</argument>
+                                        <argument>${product.short.name}-${project.version}.app</argument>
                                         <argument>${macSignServiceURL}</argument>
-                                        <argument>${product.short.name}-${project.version}.app.zip</argument>
-                                        <argument>${project.build.directory}</argument>
+                                        <argument>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</argument>
                                     </arguments>
                                 </configuration>
                             </execution>                    
