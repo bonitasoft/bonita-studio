@@ -1019,6 +1019,15 @@
             <contentExtension
                   pattern="org.bonitasoft.studio.application.project.explorer.filters.*">
             </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.nested.nestedProjectContentProvider">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.nested.HideTopLevelProjectIfNested">
+            </contentExtension>
          </includes>
          <excludes>
             <contentExtension

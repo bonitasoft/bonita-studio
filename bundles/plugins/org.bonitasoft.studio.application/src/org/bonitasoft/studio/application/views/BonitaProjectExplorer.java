@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.application.views;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
@@ -22,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.navigator.ICommonFilterDescriptor;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
 public class BonitaProjectExplorer extends CommonNavigator {
@@ -44,6 +49,22 @@ public class BonitaProjectExplorer extends CommonNavigator {
     public void createPartControl(Composite aParent) {
         super.createPartControl(aParent);
         setLinkingEnabled(true);
+        activateNestedProjectsState();
+    }
+
+    private void activateNestedProjectsState() {
+        getNavigatorContentService().getActivationService().activateExtensions(
+                new String[] { "org.eclipse.ui.navigator.resources.nested.nestedProjectContentProvider" },
+                false);
+        List<String> activeFilters = Arrays
+                .asList(getNavigatorContentService().getFilterService().getVisibleFilterDescriptors()).stream()
+                .filter(ICommonFilterDescriptor::isActiveByDefault)
+                .map(ICommonFilterDescriptor::getId)
+                .collect(Collectors.toList());
+        activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested");
+        activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideTopLevelProjectIfNested");
+        getNavigatorContentService().getFilterService()
+                .activateFilterIdsAndUpdateViewer((activeFilters.toArray(new String[activeFilters.size()])));
     }
 
     /*
@@ -67,7 +88,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
         commonViewer.addFilter(UIDArtifactFilters.filterUIDArtifactChildren());
         return commonViewer;
     }
-
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {

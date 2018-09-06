@@ -59,12 +59,8 @@ public class ProvidedContentFilter extends ViewerFilter {
                     .contains(((ClassPathContainer) element).getClasspathEntry().getPath());
         }
 
-       
         if (element instanceof IProject
-                && (((IProject) element).getName().equals("server_configuration")
-                        //Hide rest api projects for now
-                        || ((IProject) element).getLocation().toFile().getParentFile().getName()
-                                .equals("restAPIExtensions"))) {
+                && ((IProject) element).getName().equals("server_configuration")) {
             return false;
         }
 
