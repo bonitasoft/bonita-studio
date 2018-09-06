@@ -38,6 +38,12 @@ public class RepositoryNotifier {
         repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
     }
 
+    private void delete(IRepositoryFileStore fileStore) {
+        if (fileStore != null) {
+            fileStore.delete();
+        }
+    }
+
     public void postDelete(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
         if (fileStore != null) {
             fileStore.getParentStore().refresh();
@@ -81,6 +87,9 @@ public class RepositoryNotifier {
                 break;
             case POST_CLOSE:
                 postClose(fileStore);
+                break;
+            case DELETE:
+                delete(fileStore);
                 break;
             case POST_DELETE:
                 postDelete(fileStore);
