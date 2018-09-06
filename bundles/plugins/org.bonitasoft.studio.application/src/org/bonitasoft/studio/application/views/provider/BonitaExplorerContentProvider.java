@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.views.provider;
 
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
 
-
 public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider {
 
     /*

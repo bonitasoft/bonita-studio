@@ -42,6 +42,4 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         return super.getImage(element);
     }
 
-
-
 }
