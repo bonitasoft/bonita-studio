@@ -22,9 +22,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.Ev
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.designer.core.resources.RepositoryNotifier;
-import org.bonitasoft.studio.designer.core.resources.ResourceNotFoundException;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceAPIEvent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.junit.Before;
@@ -93,6 +90,13 @@ public class RepositoryNotifierTest {
 
         verify(store).refresh();
         verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
+    }
+
+    @Test
+    public void should_delete_fileStore_when_dispatching_a_delete_event() throws Exception {
+        repositoryNotifier.dispatch(WorkspaceAPIEvent.DELETE, fileStore);
+
+        verify(fileStore).delete();
     }
 
     @Test

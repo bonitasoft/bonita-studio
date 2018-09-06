@@ -18,5 +18,5 @@ package org.bonitasoft.studio.designer.core.resources;
  * @author Romain Bioteau
  */
 public enum WorkspaceAPIEvent {
-    PRE_OPEN, POST_OPEN, POST_CLOSE, PRE_CLOSE, PRE_DELETE, POST_DELETE, PRE_SAVE, POST_SAVE, POST_IMPORT, PRE_IMPORT
+    PRE_OPEN, POST_OPEN, POST_CLOSE, PRE_CLOSE, PRE_DELETE, POST_DELETE, PRE_SAVE, POST_SAVE, POST_IMPORT, PRE_IMPORT, DELETE
 }
