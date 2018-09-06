@@ -3,10 +3,12 @@
 filename=$1
 url=$2
 output=$3
-workDir=$4
+workdir="$4"
 
-cd $workDir
-echo "cd into $workDir"
+echo "URL=$url"
+echo "Current folder = $PWD"
+cd $workdir
+echo "cd into $workdir"
 if [ -f $filename ]; then
     echo "Signing $filename..."
     curl --request POST -F exeFile=@$filename $url > /tmp/$filename
@@ -16,5 +18,5 @@ if [ -f $filename ]; then
         echo "rm $filename"
     fi
 else
-   echo "$filename not found in $workDir. Codesign skipped."
+   echo "$filename not found in $workdir. Codesign skipped."
 fi
