@@ -76,12 +76,8 @@ public class ProjectManifestFactory {
         headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
         headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "Bonitasoft S.A.");
         headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.8");
-        headers.put(org.osgi.framework.Constants.REQUIRE_BUNDLE,
-                new StringBuilder()
-                        .append("javax.persistence;bundle-version=\"2.0.3\"").append(",")
-                        .append(System.lineSeparator())
-                        .append(" ")
-                        .append(engineBundleSymbolicName()).toString());
+        headers.put(org.osgi.framework.Constants.REQUIRE_BUNDLE, engineBundleSymbolicName());
+        
         return headers;
     }
 
