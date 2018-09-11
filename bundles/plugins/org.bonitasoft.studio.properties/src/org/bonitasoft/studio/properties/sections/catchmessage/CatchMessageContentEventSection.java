@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
@@ -138,12 +139,17 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
                 final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
                 assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
                 newActionMessageContent.setOperator(assignment);
-                final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
-                createExpression.setName(throwMessageContentExpressionName);
-                createExpression.setContent(throwMessageContentExpressionName);
-                createExpression.setReturnType(String.class.getName());
-                createExpression.setType(ExpressionConstants.MESSAGE_ID_TYPE);
-                newActionMessageContent.setRightOperand(createExpression);
+                Expression rightExpression = ExpressionProviderService.getInstance()
+                        .getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE)
+                        .getExpressions(lastEObject).stream()
+                        .filter(exp -> throwMessageContentExpressionName.equals(exp.getName()))
+                        .findFirst().orElse(null);
+                if (rightExpression != null) {
+                    newActionMessageContent.setRightOperand(rightExpression);
+                } else {
+                    newActionMessageContent.setRightOperand(ExpressionFactory.eINSTANCE.createExpression());
+                }
+
                 newActionMessageContent.setLeftOperand(ExpressionFactory.eINSTANCE.createExpression());
 
                 /*
