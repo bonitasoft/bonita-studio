@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.codehaus.groovy.ast.ASTNode;
@@ -85,7 +84,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
                 computeIdentifierPrefix.toString(),
                 (JavaContentAssistInvocationContext) context,
                 contentAssistContext,
-                getProjectClassloader(monitor),
+                getProjectClassloader(compilationUnit),
                 new GroovyCompletionProposalComputer(),
                 createMethodProposalCreator(),
                 compilationUnit.getModuleNode());
@@ -121,8 +120,8 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         return inputs;
     }
 
-    protected ClassLoader getProjectClassloader(final IProgressMonitor monitor) {
-        return RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader(monitor);
+    protected ClassLoader getProjectClassloader(GroovyCompilationUnit compilationUnit) {
+        return compilationUnit.getModuleNode().getUnit().getClassLoader();
     }
 
 }

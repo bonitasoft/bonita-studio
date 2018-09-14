@@ -153,7 +153,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         APISession session = null;
         ProcessAPI processApi = null;
         long procId = -1;
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
@@ -171,7 +170,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             procId = def.getId();
             processApi.enableProcess(procId);
 
-            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader(monitor));
             result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters,
                     inputValues, outputOperations, outputValues, procId);
             status = Status.OK_STATUS;
@@ -180,9 +178,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             status = new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, e.getMessage(), e);
             throw new InvocationTargetException(e);
         } finally {
-            if (cl != null) {
-                Thread.currentThread().setContextClassLoader(cl);
-            }
             if (processApi != null && procId != -1) {
                 try {
                     processApi.disableProcess(procId);
