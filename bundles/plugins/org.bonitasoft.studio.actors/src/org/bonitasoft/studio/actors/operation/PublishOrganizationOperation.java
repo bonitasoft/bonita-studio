@@ -41,9 +41,7 @@ import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
-import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -131,27 +129,11 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
         final Organization exportedCopy = EcoreUtil.copy(organization);
         exportedCopy.setName(null);
         exportedCopy.setDescription(null);
-        addStudioTechnicalUser(exportedCopy);
         root.setOrganization(exportedCopy);
         final XMLResource resource = new XMLResourceImpl();
         resource.setEncoding("UTF-8");
         resource.getContents().add(root);
         return resource;
-    }
-
-    /**
-     * @param exportedCopy
-     */
-    private void addStudioTechnicalUser(final Organization exportedCopy) {
-        final org.bonitasoft.studio.actors.model.organization.User user = OrganizationFactory.eINSTANCE.createUser();
-        final PasswordType passwordType = OrganizationFactory.eINSTANCE.createPasswordType();
-        passwordType.setValue("bpm");
-        passwordType.setEncrypted(false);
-        user.setUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-        user.setFirstName(BonitaConstants.STUDIO_TECHNICAL_USER_FIRST_NAME);
-        user.setJobTitle(BonitaConstants.STUDIO_TECHNICAL_USER_JOB_TITLE);
-        user.setPassword(passwordType);
-        exportedCopy.getUsers().getUser().add(user);
     }
 
     protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI)
