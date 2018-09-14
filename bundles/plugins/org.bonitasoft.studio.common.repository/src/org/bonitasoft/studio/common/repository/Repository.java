@@ -628,45 +628,6 @@ public class Repository implements IRepository, IJavaContainer {
 
     }
 
-    @Override
-    public ClassLoader createProjectClassloader(final IProgressMonitor monitor) {
-        final List<URL> jars = new ArrayList<>();
-        try {
-            final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
-            if (!bonitaBPMProjectClasspath.classpathExists(this)) {
-                bonitaBPMProjectClasspath.create(this, monitor);
-            }
-
-            // Synchronize with build jobs
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
-
-            final IProject project = getProject();
-            final String workspacePath = project.getLocation().toFile().getParent();
-            final String outputPath = workspacePath + getJavaProject().getOutputLocation().toString();
-            jars.add(new File(outputPath).toURI().toURL());
-            for (final IClasspathEntry entry : getJavaProject().getRawClasspath()) {
-                if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-                    File jar = entry.getPath().toFile();
-                    if (!jar.exists()) { // jar location relative to project
-                        jar = new File(workspacePath + File.separator + jar);
-                    }
-                    jars.add(jar.toURI().toURL());
-                }
-            }
-            final IFolder folder = project.getFolder("lib");
-            for (final IResource member : folder.members()) {
-                if (Objects.equals(member.getFileExtension(), "jar")) {
-                    jars.add(member.getLocation().toFile().toURI().toURL());
-                }
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-
-        return new NonLockingJarFileClassLoader(getName() + "_URLClassLoader", jars.toArray(new URL[jars.size()]),
-                BusinessArchive.class.getClassLoader());
-    }
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores() {

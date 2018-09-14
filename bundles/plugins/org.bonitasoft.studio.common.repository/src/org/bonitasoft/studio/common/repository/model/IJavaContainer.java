@@ -35,6 +35,4 @@ public interface IJavaContainer {
 
     JDTTypeHierarchyManager getJdtTypeHierarchyManager();
 
-    ClassLoader createProjectClassloader(IProgressMonitor monitor);
-
 }

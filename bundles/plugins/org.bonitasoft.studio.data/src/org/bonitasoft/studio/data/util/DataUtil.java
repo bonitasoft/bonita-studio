@@ -82,42 +82,4 @@ public class DataUtil {
         return sb.toString();
     }
 
-    public static Class<?> getClassForData(final Data data) {
-        Class<?> clazz = null;
-        final DataType type = data.getDataType();
-        if (type instanceof DateType) {
-            clazz = Date.class;
-        } else if (type instanceof StringType) {
-            clazz = String.class;
-        } else if (type instanceof IntegerType) {
-            clazz = Long.class;
-        } else if (type instanceof FloatType) {
-            clazz = Float.class;
-        } else if (type instanceof BooleanType) {
-            clazz = Boolean.class;
-        } else if (type instanceof JavaType) {
-            try {
-                final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-                final IType javaType = project.findType(((JavaObjectData) data).getClassName());
-                if (javaType != null) {
-                    final ClassLoader urlClassLoader = RepositoryManager.getInstance().getCurrentRepository()
-                            .createProjectClassloader(Repository.NULL_PROGRESS_MONITOR);
-                    clazz = urlClassLoader.loadClass(((JavaObjectData) data).getClassName());
-
-                } else {
-                    clazz = Object.class;
-                }
-            } catch (final Exception ex) {
-                BonitaStudioLog.error(ex);
-                clazz = Object.class;
-            }
-        } else if (type instanceof EnumType) {
-            clazz = String.class;
-        } else if (type instanceof XMLType) {
-            clazz = Document.class;
-        }
-
-        return clazz;
-    }
-
 }
