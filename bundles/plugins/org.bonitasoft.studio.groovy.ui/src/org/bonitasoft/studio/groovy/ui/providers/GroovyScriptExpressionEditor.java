@@ -581,10 +581,12 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                         mergeList(referencedElements, new ArrayList<>(deps));
                     }
                     Display.getDefault().asyncExec(() -> {
-                        writeOperationWarning.setVisible(
-                            referencedElements.stream().filter(Expression.class::isInstance).map(Expression.class::cast)
-                                        .map(Expression::getName).anyMatch("apiAccessor"::equals));
-                        writeOperationWarning.getParent().layout(true);
+                        if(writeOperationWarning != null && !writeOperationWarning.isDisposed()) {
+                            writeOperationWarning.setVisible(
+                                    referencedElements.stream().filter(Expression.class::isInstance).map(Expression.class::cast)
+                                                .map(Expression::getName).anyMatch("apiAccessor"::equals));
+                                writeOperationWarning.getParent().layout(true);
+                        }
                     });
 
                 }

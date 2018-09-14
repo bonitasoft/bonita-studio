@@ -100,7 +100,7 @@ public class ContractInputCompletionProposalComputerTest {
         doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(GroovyCompilationUnit.class),
                 anyInt(), any(Document.class));
         doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer)
-                .getProjectClassloader(monitor);
+                .getProjectClassloader(any(GroovyCompilationUnit.class));
         doReturn(methodProposalCreator).when(proposalComputer).createMethodProposalCreator();
         doReturn(moduleNode).when(proposalComputer).getModuleNode(contentAssistContext);
         when(context.computeIdentifierPrefix()).thenReturn("");
