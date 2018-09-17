@@ -37,8 +37,10 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.bonitasoft.studio.common,
  org.eclipse.wst.sse.ui,
  org.bonitasoft.studio.common.repository,
- org.eclipse.e4.core.commands
+ org.eclipse.e4.core.commands,
+ org.eclipse.e4.ui.bindings
 Export-Package: org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.ui.contribution,
  org.bonitasoft.studio.ui.converter,
  org.bonitasoft.studio.ui.databinding,
  org.bonitasoft.studio.ui.dialog,
