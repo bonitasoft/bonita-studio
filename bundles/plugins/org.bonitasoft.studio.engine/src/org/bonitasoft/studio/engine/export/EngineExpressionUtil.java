@@ -157,8 +157,7 @@ public class EngineExpressionUtil {
             builder.setOperatorInputType(operatorInputTypes.get(0));
         }
         final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
-        rightOperand.setType(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())
-                ? ExpressionConstants.VARIABLE_TYPE : operation.getRightOperand().getType());
+        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
         if (!operatorInputTypes.isEmpty()) {
             rightOperand.setReturnType(operatorInputTypes.get(0));
         } else {
