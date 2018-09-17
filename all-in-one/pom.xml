@@ -281,20 +281,6 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>make-macos-zip-assembly</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>${basedir}/assembly-macos-zip-descriptor.xml</descriptor>
-                            </descriptors>
-                            <finalName>${product.short.name}-${project.version}.app</finalName>
-                        </configuration>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
