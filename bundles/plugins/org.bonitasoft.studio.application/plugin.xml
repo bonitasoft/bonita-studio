@@ -970,32 +970,30 @@
          <popupMenu
                allowsPlatformContributions="false"
                id="org.bonitasoft.studio.application.project.explorer#PopupMenu">
-             <insertionPoint name="group.new"/>
+            <insertionPoint
+                  name="group.new"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.open"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.edit"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.reorganize"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.build"
+                  separator="true">
+            </insertionPoint>
              <insertionPoint
-                   name="group.open"
-                   separator="true"/>
-             <insertionPoint name="group.openWith"/>
-             <insertionPoint name="group.edit"
-                   separator="true"/>
-             <insertionPoint name="group.reorganize" />
-             <insertionPoint
-                   name="group.port"
-                   separator="true"/>
-             <insertionPoint
-                   name="group.build"
-                   separator="true"/>
-             <insertionPoint
-                   name="group.generate"
-                   separator="true"/>
-             <insertionPoint
-                   name="group.search"
-                   separator="true"/>
-             <insertionPoint
-                   name="additions"
-                   separator="true"/>
-             <insertionPoint
-                   name="group.properties"
-                   separator="true"/>
+                   name="group.restapi"
+                   separator="true">
+             </insertionPoint>
           </popupMenu>
       </viewer>
       <viewerContentBinding
@@ -1027,6 +1025,9 @@
             </contentExtension>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.nested.HideTopLevelProjectIfNested">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.bonitasoft.studio.rest.api.extension.navigatorContent">
             </contentExtension>
          </includes>
          <excludes>

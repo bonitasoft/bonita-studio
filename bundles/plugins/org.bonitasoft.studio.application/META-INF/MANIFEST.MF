@@ -81,4 +81,5 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.job,
  org.bonitasoft.studio.application.splash,
  org.bonitasoft.studio.application.views,
- org.bonitasoft.studio.application.views.process
+ org.bonitasoft.studio.application.views.process,
+ org.bonitasoft.studio.application.views.provider
