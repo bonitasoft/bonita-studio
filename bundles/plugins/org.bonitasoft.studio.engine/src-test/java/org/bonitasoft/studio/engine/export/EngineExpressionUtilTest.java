@@ -524,6 +524,6 @@ public class EngineExpressionUtilTest {
                         .havingOperator(anAssignmentOperator())
                         .build());
 
-        assertThat(operation.getRightOperand().getExpressionType()).isEqualTo(ExpressionType.TYPE_CONSTANT.name());
+        assertThat(operation.getRightOperand().getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
     }
 }
