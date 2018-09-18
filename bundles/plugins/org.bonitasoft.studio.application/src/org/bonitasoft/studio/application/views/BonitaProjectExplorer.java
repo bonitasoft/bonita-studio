@@ -76,14 +76,11 @@ public class BonitaProjectExplorer extends CommonNavigator {
         CommonViewer commonViewer = new CommonViewer(getViewSite().getId(), aParent,
                 SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL) {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.ui.navigator.CommonViewer#initDragAndDrop()
-             */
             @Override
             protected void initDragAndDrop() {
                 //Disable drag and drop
             }
+
         };
         commonViewer.addFilter(UIDArtifactFilters.filterUIDArtifactChildren());
         return commonViewer;
