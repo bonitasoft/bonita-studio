@@ -1028,7 +1028,7 @@
                   pattern="org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested">
             </contentExtension>
             <contentExtension
-                  pattern="org.eclipse.ui.navigator.resources.nested.HideTopLevelProjectIfNested">
+                  pattern="org.bonitasoft.studio.application.HideTopLevelProjectIfNested">
             </contentExtension>
             <contentExtension
                   pattern="org.bonitasoft.studio.rest.api.extension.navigatorContent">
@@ -1087,6 +1087,13 @@
             id="org.bonitasoft.studio.application.project.explorer.filters.providedContent"
             name="Provided content"
             visibleInUI="true">
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            class="org.bonitasoft.studio.application.views.filters.HideTopLevelProjectIfNested"
+            description="When a project is shown as nested under its container, hide the view of the project as immediate child of workspace or working set"
+            id="org.bonitasoft.studio.application.HideTopLevelProjectIfNested"
+            name="Nested Projects: hide top-level project if shown as nested">
       </commonFilter>
    </extension>
 
