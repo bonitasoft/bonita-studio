@@ -990,6 +990,10 @@
                   name="group.build"
                   separator="true">
             </insertionPoint>
+            <insertionPoint
+                  name="additions"
+                  separator="true">
+            </insertionPoint>
              <insertionPoint
                    name="group.restapi"
                    separator="true">
