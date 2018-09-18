@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.groovy.ui.providers;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
@@ -49,6 +52,7 @@ import org.bonitasoft.studio.groovy.ui.wizard.ProcessVariableContentProvider;
 import org.bonitasoft.studio.groovy.ui.wizard.ProcessVariableLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -67,11 +71,9 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -88,7 +90,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.tablecomboviewer.TableComboViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -97,6 +98,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.common.collect.Lists;
@@ -107,6 +109,17 @@ import com.google.common.collect.Lists;
 public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor, IBonitaVariableContext {
 
+    private static URL EXPRESSION_AND_SCRIPTS_URL;
+    static {
+        try {
+            EXPRESSION_AND_SCRIPTS_URL = new URL(
+                    String.format(
+                            "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=678&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                            ProductVersion.majorVersion()));
+        } catch (MalformedURLException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
     protected Composite mainComposite;
 
     protected Expression inputExpression;
@@ -153,7 +166,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
     private Button testButton;
 
-    private CLabel writeOperationWarning;
+    private Link writeOperationWarning;
 
     public GroovyScriptExpressionEditor() {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -414,9 +427,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         buttonBarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-        writeOperationWarning = new CLabel(buttonBarComposite, SWT.NONE);
-        writeOperationWarning.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
-        writeOperationWarning.setText(Messages.onlyReadOnly);
+        writeOperationWarning = new Link(buttonBarComposite, SWT.NONE);
+        writeOperationWarning.addListener(SWT.Selection,
+                e -> new OpenBrowserOperation(EXPRESSION_AND_SCRIPTS_URL).execute());
+        writeOperationWarning
+                .setText(Messages.onlyReadOnly);
         writeOperationWarning.setVisible(false);
         writeOperationWarning
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -604,7 +619,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                         }
                     }
                     if (removed) {
-                        System.out.println(String.format("Removing %s", originalDep));
                         removedDependencies.add(originalDep);
                     }
                 }
