@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -90,5 +91,18 @@ public class WebPageFileStore extends InFolderJSONFileStore {
                     UIDesignerPlugin.PLUGIN_ID);
             return "page";
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#getStyledString()
+     */
+    @Override
+    public StyledString getStyledString() {
+        StyledString styledString = new StyledString();
+        styledString.append(getDisplayName());
+        styledString.append(" ");
+        styledString.append(String.format("(%s)", getType()), StyledString.QUALIFIER_STYLER);
+        return styledString;
     }
 }

@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.common.base.Function;
@@ -434,5 +435,14 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     @Override
     public void repositoryUpdated() {
         //NOTHING TO UPDATE
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
+     */
+    @Override
+    public StyledString getStyledString() {
+        return new StyledString(getDisplayName());
     }
 }

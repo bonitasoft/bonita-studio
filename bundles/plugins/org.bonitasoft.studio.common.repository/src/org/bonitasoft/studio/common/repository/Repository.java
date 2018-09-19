@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +34,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
-import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
@@ -80,7 +77,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
@@ -644,6 +640,10 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
         final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
+        if (resourcePath.isRoot() || resourcePath.isEmpty()
+                || Objects.equals(org.eclipse.core.runtime.Path.fromOSString(".."), resourcePath)) {
+            return null;
+        }
         final IResource iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
         if (!iResource.exists()) {
             iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);

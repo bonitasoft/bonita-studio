@@ -1033,6 +1033,12 @@
             <contentExtension
                   pattern="org.bonitasoft.studio.rest.api.extension.navigatorContent">
             </contentExtension>
+            <contentExtension
+                  pattern="org.bonitasoft.studio.application.hideEmptyFolders">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.bonitasoft.studio.application.hideClasspathContainers">
+            </contentExtension>
          </includes>
          <excludes>
             <contentExtension
@@ -1076,7 +1082,7 @@
                id="org.bonitasoft.studio.application.views.OpenActionProvider">
          </actionProvider>
          <commonSorter
-               class="org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionSorter"
+               class="org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator"
                id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
          </commonSorter>
       </navigatorContent>
@@ -1094,6 +1100,19 @@
             description="When a project is shown as nested under its container, hide the view of the project as immediate child of workspace or working set"
             id="org.bonitasoft.studio.application.HideTopLevelProjectIfNested"
             name="Nested Projects: hide top-level project if shown as nested">
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            class="org.bonitasoft.studio.application.views.filters.HideEmptyRepository"
+            id="org.bonitasoft.studio.application.hideEmptyFolders"
+            name="Hide empty repository"
+            visibleInUI="true">
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            class="org.bonitasoft.studio.application.views.filters.HideClasspathContainer"
+            id="org.bonitasoft.studio.application.hideClasspathContainers"
+            name="Hide classpath containers">
       </commonFilter>
    </extension>
 
