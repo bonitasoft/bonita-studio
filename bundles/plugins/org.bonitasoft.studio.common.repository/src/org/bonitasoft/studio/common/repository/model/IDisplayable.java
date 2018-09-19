@@ -14,15 +14,14 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-/**
- * @author Romain Bioteau
- */
 public interface IDisplayable {
 
     String getDisplayName();
 
     Image getIcon();
 
+    StyledString getStyledString();
 }

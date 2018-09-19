@@ -551,11 +551,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                         && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
                     final boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                            .closeAllEditors(true);
+                            .saveAllEditors(true);
                     if (closeEditor) {
                         PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false,
-                                true);
                     }
                     return closeEditor;
                 }

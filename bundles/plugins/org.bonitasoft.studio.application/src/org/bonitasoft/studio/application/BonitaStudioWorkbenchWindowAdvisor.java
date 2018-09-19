@@ -16,24 +16,31 @@ package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.EditorHistory;
+import org.eclipse.ui.internal.EditorHistoryItem;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -73,16 +80,36 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void openIntro() {
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
         PrefUtil.saveAPIPrefs();
-        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (!PlatformUtil.isIntroOpen()) {
-                    PlatformUtil.openIntro();
-                }
+        EditorHistory editorHistory = ((Workbench) ((WorkbenchPage) window.getActivePage()).getWorkbenchWindow()
+                .getWorkbench()).getEditorHistory();
+        EditorHistoryItem[] items = editorHistory.getItems();
+        Display display = window.getShell().getDisplay();
+        if(items.length > 0) {
+            for (EditorHistoryItem item : items) {
+                item.restoreState();
+                IEditorDescriptor descriptor = item.getDescriptor();
+                display.asyncExec(() -> {
+                    try {
+                        IEditorPart findEditor = window.getActivePage().findEditor(item.getInput());
+                        if (findEditor == null) {
+                            window.getActivePage().openEditor(item.getInput(), descriptor.getId());
+                        }
+                    } catch (PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
             }
-        });
+        }else {
+            display.asyncExec(new Runnable() {
 
+                @Override
+                public void run() {
+                    if (!PlatformUtil.isIntroOpen()) {
+                        PlatformUtil.openIntroIfNoOtherEditorOpen();
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -97,7 +124,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         if (widget instanceof Shell) {
             ((Widget) widget).setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_MAIN_SHELL);
         }
-        BonitaPerspectivesUtils.initializePerspectives();
     }
 
     @Override
@@ -109,7 +135,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // workbench to close in due course - prompt the user for confirmation
         if (promptOnExit(getWindowConfigurer().getWindow().getShell())) {
             if (PlatformUI.isWorkbenchRunning() && window != null && window.getActivePage() != null) {
-                window.getActivePage().closeAllEditors(true);
+                window.getActivePage().saveAllEditors(true);
             }
             return true;
 

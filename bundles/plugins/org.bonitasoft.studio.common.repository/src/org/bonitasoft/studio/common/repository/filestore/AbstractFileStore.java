@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
+import org.bonitasoft.studio.common.repository.model.IDisplayable;
 import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -39,6 +40,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -51,7 +53,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractFileStore implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
+public abstract class AbstractFileStore
+        implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener, IDisplayable {
 
     public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
@@ -91,6 +94,15 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
             return getName().substring(0, getName().lastIndexOf('.'));
         }
         return getName();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
+     */
+    @Override
+    public StyledString getStyledString() {
+        return new StyledString(getName());
     }
 
     public Repository getRepository() {

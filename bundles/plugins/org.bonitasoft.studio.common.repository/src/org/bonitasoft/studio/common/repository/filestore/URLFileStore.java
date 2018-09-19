@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -226,6 +227,15 @@ public class URLFileStore implements IRepositoryFileStore {
         try (final InputStream inputStream = getContent();) {
             return ByteStreams.toByteArray(inputStream);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
+     */
+    @Override
+    public StyledString getStyledString() {
+        return null;
     }
 
 }

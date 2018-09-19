@@ -22,6 +22,9 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -35,6 +38,16 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
     @Inject
     private RepositoryAccessor repositoryAccessor;
+
+    private IResourceChangeListener updateFiltersListener = new IResourceChangeListener() {
+
+        @Override
+        public void resourceChanged(IResourceChangeEvent event) {
+            if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+                getNavigatorContentService().update();
+            }
+        }
+    };
 
     @Override
     protected Object getInitialInput() {
@@ -62,9 +75,19 @@ public class BonitaProjectExplorer extends CommonNavigator {
                 .map(ICommonFilterDescriptor::getId)
                 .collect(Collectors.toList());
         activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested");
-        activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideTopLevelProjectIfNested");
         getNavigatorContentService().getFilterService()
                 .activateFilterIdsAndUpdateViewer((activeFilters.toArray(new String[activeFilters.size()])));
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(updateFiltersListener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.navigator.CommonNavigator#dispose()
+     */
+    @Override
+    public void dispose() {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(updateFiltersListener);
+        super.dispose();
     }
 
     /*
