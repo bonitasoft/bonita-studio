@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,6 +35,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
@@ -222,6 +226,13 @@ public class RepositoryManager {
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
+        Object resource = element instanceof IJavaElement ? ((IJavaElement) element).getResource() : element;
+        return getCurrentRepository().getAllStores().stream()
+                .filter(repo -> java.util.Objects.equals(resource, repo.getResource()))
+                .findFirst();
     }
 
 }

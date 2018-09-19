@@ -14,11 +14,23 @@
  */
 package org.bonitasoft.studio.application.views.provider;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
@@ -30,6 +42,9 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     @Override
     public Image getImage(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
+        if (!repositoryManager.getCurrentRepository().isLoaded()) {
+            return super.getImage(element);
+        }
         if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_page")) {
             return repositoryManager.getRepositoryStore(WebPageRepositoryStore.class).getIcon();
         }
@@ -39,7 +54,49 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_fragments")) {
             return repositoryManager.getRepositoryStore(WebFragmentRepositoryStore.class).getIcon();
         }
+        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
+                .getRepositoryStore(element);
+        if (repositoryStore.isPresent()) {
+            return repositoryStore.get().getIcon();
+        }
         return super.getImage(element);
+    }
+
+    @Override
+    public StyledString getStyledText(Object element) {
+        RepositoryManager repositoryManager = RepositoryManager.getInstance();
+        if (!repositoryManager.getCurrentRepository().isLoaded()) {
+            return super.getStyledText(element);
+        }
+        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
+                .getRepositoryStore(element);
+        if (repositoryStore.isPresent()) {
+            return new StyledString(repositoryStore.get().getDisplayName());
+        }
+        IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
+        if (fStore != null) {
+            return fStore.getStyledString();
+        }
+        return super.getStyledText(element);
+    }
+
+    private IRepositoryFileStore asFileStore(Object element, RepositoryManager repositoryManager) {
+        try {
+            if (element instanceof IFile) {
+                return repositoryManager.getCurrentRepository()
+                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath());
+            }
+        } catch (IOException | CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+
+    public static boolean isFolder(Object element, String folderName) {
+        return element instanceof IFolder
+                && ((IFolder) element).getParent() != null
+                && Path.fromOSString(folderName).equals(((IFolder) element).getProjectRelativePath())
+                && !((IFolder) element).getName().startsWith(".");
     }
 
 }
