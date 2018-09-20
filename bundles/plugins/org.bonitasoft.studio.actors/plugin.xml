@@ -133,7 +133,7 @@
                visible="true">
          </separator>
          <command
-               commandId="org.bonitasoft.studio.connectors.newDefinition"
+               commandId="org.bonitasoft.studio.actors.newFilterDef"
                label="%newFilterDefMenu"
                style="push">
             <visibleWhen
@@ -155,7 +155,7 @@
             </visibleWhen>
          </command>
          <command
-               commandId="org.bonitasoft.studio.connectors.newImplementation"
+               commandId="org.bonitasoft.studio.actors.newFilterImpl"
                label="%newFilterImplMenu"
                style="push">
             <visibleWhen
