@@ -58,10 +58,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -73,6 +75,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -85,7 +88,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
@@ -265,7 +267,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             final MainProcess content = getContent();
             Assert.isLegal(content != null);
             Assert.isLegal(emfResource != null && emfResource.isLoaded());
-            part = EditorService.getInstance().openEditor(new FileEditorInput(getResource()));
+            final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
+            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
             if (part instanceof DiagramEditor) {
                 final DiagramEditor editor = (DiagramEditor) part;
                 final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();

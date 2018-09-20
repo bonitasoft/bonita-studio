@@ -43,9 +43,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.io.Files;
@@ -144,6 +146,7 @@ public abstract class AbstractFileStore
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_DELETE, this));
             doDelete();
             getParentStore().refresh();
+            refreshExplorerView();
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, this));
         }
     }
@@ -165,11 +168,16 @@ public abstract class AbstractFileStore
     public void save(final Object content) {
         if (!isReadOnly()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this));
+            IResource resource = getResource();
+            boolean exists = resource.exists();
             doSave(content);
             try {
                 getResource().refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
+            }
+            if (!exists) {
+                refreshExplorerView();
             }
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this));
         } else {
@@ -177,6 +185,23 @@ public abstract class AbstractFileStore
                     () -> MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
                             Messages.bind(Messages.readOnlyFileWarning, getDisplayName())));
         }
+    }
+
+    public static void refreshExplorerView() {
+        Display.getDefault().asyncExec(() -> {
+            if (PlatformUI.isWorkbenchRunning()
+                    && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                    && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+                IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .findView("org.bonitasoft.studio.application.project.explorer");
+                if (viewPart != null) {
+                    CommonViewer viewer = viewPart.getAdapter(CommonViewer.class);
+                    if (viewer != null) {
+                        viewer.refresh(true);
+                    }
+                }
+            }
+        });
     }
 
     @Override

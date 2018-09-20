@@ -22,14 +22,21 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
+import org.eclipse.ui.navigator.NavigatorActionService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
 public class BonitaProjectExplorer extends CommonNavigator {
@@ -38,16 +45,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
     @Inject
     private RepositoryAccessor repositoryAccessor;
-
-    private IResourceChangeListener updateFiltersListener = new IResourceChangeListener() {
-
-        @Override
-        public void resourceChanged(IResourceChangeEvent event) {
-            if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-                getNavigatorContentService().update();
-            }
-        }
-    };
 
     @Override
     protected Object getInitialInput() {
@@ -63,7 +60,48 @@ public class BonitaProjectExplorer extends CommonNavigator {
         super.createPartControl(aParent);
         setLinkingEnabled(true);
         activateNestedProjectsState();
+        getNavigatorContentService().bindExtensions(
+                new String[] { "org.bonitasoft.studio.application.extendedResourceLinkHelper" },
+                false);
+        initContextMenu();
     }
+
+    private void initContextMenu() {
+        TreeViewer commonViewer = getCommonViewer();
+        Menu previousMenu = commonViewer.getTree().getMenu();
+        //Remove menu created by default
+        if (previousMenu != null) {
+            previousMenu.dispose();
+        }
+        MenuManager menuMgr = new MenuManager(getNavigatorContentService()
+                .getViewerDescriptor().getPopupMenuId());
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+
+            @Override
+            public void menuAboutToShow(IMenuManager manager) {
+                fillContextMenu(manager);
+            }
+        });
+
+        Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
+
+        commonViewer.getTree().setMenu(menu);
+
+        IEclipseContext e4Context = ((PartSite) getSite()).getContext();
+        getCommonViewer().getTree().getMenu();
+        new CustomPopupMenuExtender(ID, menuMgr, getSite().getSelectionProvider(), getSite().getPart(), e4Context, true);
+    }
+
+
+    protected void fillContextMenu(IMenuManager aMenuManager) {
+        ISelection selection = getCommonViewer().getSelection();
+        NavigatorActionService navigatorActionService = getNavigatorActionService();
+        navigatorActionService.setContext(new ActionContext(selection));
+        navigatorActionService.fillContextMenu(aMenuManager);
+    }
+
+
 
     private void activateNestedProjectsState() {
         getNavigatorContentService().getActivationService().activateExtensions(
@@ -77,23 +115,8 @@ public class BonitaProjectExplorer extends CommonNavigator {
         activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested");
         getNavigatorContentService().getFilterService()
                 .activateFilterIdsAndUpdateViewer((activeFilters.toArray(new String[activeFilters.size()])));
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(updateFiltersListener);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.navigator.CommonNavigator#dispose()
-     */
-    @Override
-    public void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(updateFiltersListener);
-        super.dispose();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.navigator.CommonNavigator#createCommonViewerObject(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected CommonViewer createCommonViewerObject(Composite aParent) {
         CommonViewer commonViewer = new CommonViewer(getViewSite().getId(), aParent,
@@ -116,5 +139,4 @@ public class BonitaProjectExplorer extends CommonNavigator {
         }
         return super.getAdapter(adapter);
     }
-
 }
