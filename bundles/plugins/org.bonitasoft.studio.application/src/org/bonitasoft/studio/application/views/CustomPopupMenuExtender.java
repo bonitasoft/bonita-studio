@@ -75,10 +75,6 @@ public class CustomPopupMenuExtender implements IMenuListener2,
     private static Set<String> INCLUDES = new HashSet<>();
     static {
         INCLUDES.add("team.main");
-        INCLUDES.add("compareWithMenu");
-        INCLUDES.add("replaceWithMenu");
-        INCLUDES.add("org.eclipse.jdt.ui.source.menu");
-        INCLUDES.add("org.eclipse.jdt.ui.refactoring.menu");
     }
 
     /**
@@ -344,18 +340,28 @@ public class CustomPopupMenuExtender implements IMenuListener2,
      */
     @Override
     public void menuAboutToShow(IMenuManager mgr) {
+        INCLUDES.add("compareWithMenu");
+        INCLUDES.add("replaceWithMenu");
+        INCLUDES.add("org.eclipse.jdt.ui.source.menu");
+        INCLUDES.add("org.eclipse.jdt.ui.refactoring.menu");
         IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         StructuredSelection repositoryProject = new StructuredSelection(project);
         ISelection selection = selProvider.getSelection();
         if (repositoryProject.equals(selection)) {
-            return;
+            INCLUDES.remove("compareWithMenu");
+            INCLUDES.remove("replaceWithMenu");
+            INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
+            INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
         }
         Object resource = ((StructuredSelection) selection).getFirstElement();
         if (resource instanceof IResource) {
             IProject parentProject = ((IResource) resource).getProject();
             StructuredSelection structuredSelection = new StructuredSelection(parentProject);
             if (structuredSelection.equals(repositoryProject)) {
-                return;
+                INCLUDES.remove("compareWithMenu");
+                INCLUDES.remove("replaceWithMenu");
+                INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
+                INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
             }
         }
 
@@ -417,8 +423,10 @@ public class CustomPopupMenuExtender implements IMenuListener2,
             for (MMenuElement e : menuModel.getChildren()) {
                 if (!(e instanceof MMenuSeparator || INCLUDES.contains(e.getElementId())
                         || e.getElementId() == null)) {
-                    toRemove.add(e);
-                    e.setVisible(false);
+                    if (e.getElementId() != null && !e.getElementId().startsWith("org.bonitasoft.studio.")) {
+                        toRemove.add(e);
+                        e.setVisible(false);
+                    }
                 }
             }
             menuModel.getChildren().removeAll(toRemove);

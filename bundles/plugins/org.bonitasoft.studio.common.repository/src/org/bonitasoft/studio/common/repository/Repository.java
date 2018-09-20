@@ -644,7 +644,12 @@ public class Repository implements IRepository, IJavaContainer {
                 || Objects.equals(org.eclipse.core.runtime.Path.fromOSString(".."), resourcePath)) {
             return null;
         }
-        final IResource iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
+        IResource iResource = null;
+        try {
+            iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
         if (!iResource.exists()) {
             iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
             if (!iResource.exists()) {

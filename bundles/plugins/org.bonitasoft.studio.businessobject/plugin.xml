@@ -44,6 +44,41 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.organization.manage.popup.menu">
+         <separator
+               name="bdmSeparator"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.bonitasoft.studio.businessobject.manage"
+               id="org.bonitasoft.studio.businessobject.manage.popup.menu"
+               label="%defineBDMMenu"
+               mnemonic="B"
+               style="push">
+            <visibleWhen>
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                        <test
+                              property="org.bonitasoft.studio.businessobject.bdmExists">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.bonitasoft.studio.bosArchiveProvider">
@@ -86,6 +121,16 @@
       <fragment
             uri="fragment.e4xmi">
       </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.bonitasoft.studio.businessobject.ui.BDMPropertyTester"
+            id="org.bonitasoft.studio.businessobject.CheckBDMExists"
+            namespace="org.bonitasoft.studio.businessobject"
+            properties="bdmExists"
+            type="org.eclipse.core.resources.IProject">
+      </propertyTester>
    </extension>
 
 
