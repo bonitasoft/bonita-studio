@@ -18,10 +18,6 @@ import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
 
 public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider#hasChildren(java.lang.Object)
-     */
     @Override
     public boolean hasChildren(Object element) {
         if (UIDArtifactFilters.isUIDArtifact(element)) {
@@ -29,5 +25,6 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         }
         return super.hasChildren(element);
     }
+
 
 }

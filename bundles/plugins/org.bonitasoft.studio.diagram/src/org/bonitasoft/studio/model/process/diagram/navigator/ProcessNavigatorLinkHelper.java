@@ -45,6 +45,7 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class ProcessNavigatorLinkHelper implements ILinkHelper {
 
+
 	/**
 	* @generated
 	*/
