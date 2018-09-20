@@ -54,7 +54,6 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
             actionIds.add(COMPARE_ACTIONS_ID);
             actionIds.add(REPLACE_WITH_EDITION_ID);
             actionIds.add(COMPARE_WITH_EDITION_ID);
-            actionIds.add(ADD_FROM_HISTORY_ID);
         }
         return actionIds;
     }

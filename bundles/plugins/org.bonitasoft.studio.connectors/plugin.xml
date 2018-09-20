@@ -187,6 +187,64 @@
             </visibleWhen>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new">
+         <separator
+               name="groupConnector1"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.bonitasoft.studio.connectors.newDefinition"
+               label="%newConnectorDefMenu"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.connectors.newImplementation"
+               label="%newConnectorImplementationMenu"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+         <separator
+               name="groupConnector2"
+               visible="true">
+         </separator>
+      </menuContribution>
    </extension>
    <extension
          point="org.bonitasoft.studio.configuration.synchronizer">

@@ -359,6 +359,33 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?before=org.bonitasoft.studio.organization.manage.popup.menu">
+         <command
+               commandId="org.bonitasoft.studio.diagram.command.newDiagram"
+               id="org.bonitasoft.studio.diagram.command.newDiagram.popup.menu"
+               mnemonic="D"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate></or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -398,7 +425,7 @@
       <command
             defaultHandler="org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler"
             id="org.bonitasoft.studio.diagram.command.newDiagram"
-            name="NewDiagram">
+            name="%newDiagram">
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.diagram.custom.commands.OpenDiagramCommandHandler"

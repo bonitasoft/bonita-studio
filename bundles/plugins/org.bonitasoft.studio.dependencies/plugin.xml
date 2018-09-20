@@ -50,6 +50,37 @@
            </visibleWhen>
         </menu>
    </menuContribution>
+   <menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.application.project.explorer.new">
+      <command
+            commandId="org.bonitasoft.studio.dependencies.manageJars"
+            id="org.bonitasoft.studio.dependencies.manageDependencies.menu"
+            style="push">
+         <visibleWhen
+               checkEnabled="true">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <or>
+                  <iterate>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                     <test
+                           property="org.bonitasoft.studio.application.isBonitaProject">
+                     </test>
+                  </iterate>
+               </or>
+            </and>
+         </visibleWhen>
+      </command>
+      <separator
+            name="group1"
+            visible="true">
+      </separator>
+   </menuContribution>
 </extension>
 <extension
       point="org.bonitasoft.studio.common.barResourcesProvider">
