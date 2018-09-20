@@ -1115,5 +1115,21 @@
             name="Hide classpath containers">
       </commonFilter>
    </extension>
+   <extension
+         point="org.eclipse.ui.navigator.linkHelper">
+      <linkHelper
+            class="org.bonitasoft.studio.application.views.ExtendendResourceLinkHelper"
+            id="org.bonitasoft.studio.application.extendedResourceLinkHelper">
+         <editorInputEnablement>
+            <instanceof
+                  value="org.eclipse.emf.common.ui.URIEditorInput">
+            </instanceof></editorInputEnablement>
+         <selectionEnablement>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof>
+         </selectionEnablement>
+      </linkHelper>
+   </extension>
 
 </plugin>

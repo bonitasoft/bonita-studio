@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -82,7 +81,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
     private IRepositoryFileStore asFileStore(Object element, RepositoryManager repositoryManager) {
         try {
-            if (element instanceof IFile) {
+            if (element instanceof IResource) {
                 return repositoryManager.getCurrentRepository()
                         .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath());
             }

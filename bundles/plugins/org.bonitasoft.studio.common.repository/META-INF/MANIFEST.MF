@@ -39,7 +39,8 @@ Require-Bundle: org.eclipse.ui,
  com.google.guava;bundle-version="11.0.1";visibility:=reexport,
  org.eclipse.core.filesystem;visibility:=reexport,
  org.eclipse.e4.core.services,
- org.eclipse.team.svn.core
+ org.eclipse.team.svn.core,
+ org.eclipse.ui.navigator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,
