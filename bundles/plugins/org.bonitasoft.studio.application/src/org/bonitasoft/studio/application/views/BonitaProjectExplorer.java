@@ -93,7 +93,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
         new CustomPopupMenuExtender(ID, menuMgr, getSite().getSelectionProvider(), getSite().getPart(), e4Context, true);
     }
 
-
     protected void fillContextMenu(IMenuManager aMenuManager) {
         ISelection selection = getCommonViewer().getSelection();
         NavigatorActionService navigatorActionService = getNavigatorActionService();

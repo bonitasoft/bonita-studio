@@ -56,6 +56,35 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.diagram.command.newDiagram.popup.menu">
+         <command
+               commandId="org.bonitasoft.studio.la.new.command"
+               id="org.bonitasoft.studio.la.new.popup.menu"
+               label="%newApplicationMenu"
+               mnemonic="A"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
       
    </extension>
    <extension
