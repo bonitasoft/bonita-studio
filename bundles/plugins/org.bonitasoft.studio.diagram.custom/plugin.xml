@@ -361,7 +361,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?before=org.bonitasoft.studio.organization.manage.popup.menu">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.diagram">
          <command
                commandId="org.bonitasoft.studio.diagram.command.newDiagram"
                icon="icons/ProcessDiagramFile.gif"
