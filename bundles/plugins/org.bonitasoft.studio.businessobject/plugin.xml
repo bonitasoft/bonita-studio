@@ -46,11 +46,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.organization.manage.popup.menu">
-         <separator
-               name="bdmSeparator"
-               visible="true">
-         </separator>
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.bdm">
          <command
                commandId="org.bonitasoft.studio.businessobject.manage"
                icon="icons/bdm.png"
