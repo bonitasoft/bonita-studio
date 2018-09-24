@@ -196,6 +196,7 @@
          </separator>
          <command
                commandId="org.bonitasoft.studio.connectors.newDefinition"
+               icon="icons/connector_def-new.png"
                label="%newConnectorDefMenu"
                style="push">
             <visibleWhen
@@ -219,6 +220,7 @@
          </command>
          <command
                commandId="org.bonitasoft.studio.connectors.newImplementation"
+               icon="icons/connector_implem-new.png"
                label="%newConnectorImplementationMenu"
                style="push">
             <visibleWhen

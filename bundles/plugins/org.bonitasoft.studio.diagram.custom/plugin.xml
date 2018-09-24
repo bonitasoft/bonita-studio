@@ -364,6 +364,7 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?before=org.bonitasoft.studio.organization.manage.popup.menu">
          <command
                commandId="org.bonitasoft.studio.diagram.command.newDiagram"
+               icon="icons/ProcessDiagramFile.gif"
                id="org.bonitasoft.studio.diagram.command.newDiagram.popup.menu"
                mnemonic="D"
                style="push">
