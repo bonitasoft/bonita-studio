@@ -53,6 +53,7 @@
          </separator>
          <command
                commandId="org.bonitasoft.studio.businessobject.manage"
+               icon="icons/bdm.png"
                id="org.bonitasoft.studio.businessobject.manage.popup.menu"
                label="%defineBDMMenu"
                mnemonic="B"
