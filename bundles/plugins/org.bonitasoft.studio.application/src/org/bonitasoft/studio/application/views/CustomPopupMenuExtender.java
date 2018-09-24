@@ -410,7 +410,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
      *
      * @param mgr
      */
-    private void addMenuContributions(IMenuManager mgr) {
+    public void addMenuContributions(IMenuManager mgr) {
         IRendererFactory factory = modelPart.getContext().get(IRendererFactory.class);
         AbstractPartRenderer obj = factory.getRenderer(menuModel, null);
         if (obj instanceof MenuManagerRenderer) {
@@ -637,6 +637,20 @@ public class CustomPopupMenuExtender implements IMenuListener2,
 
     public MenuManager getManager() {
         return menu;
+    }
+    
+    
+    public MenuManagerRenderer getMenuManagerRenderer() {
+        IRendererFactory factory = modelPart.getContext().get(IRendererFactory.class);
+        AbstractPartRenderer obj = factory.getRenderer(menuModel, null);
+        if (obj instanceof MenuManagerRenderer) {
+            return  (MenuManagerRenderer) obj;
+        }
+        return null;
+    }
+    
+    public MPopupMenu getMenuModel() {
+        return menuModel;
     }
 
 }
