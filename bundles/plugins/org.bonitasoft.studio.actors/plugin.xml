@@ -102,12 +102,12 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.organization">
          <command
                commandId="org.bonitasoft.studio.organization.manage"
                icon="icons/organization.png"
                id="org.bonitasoft.studio.organization.manage.popup.menu"
-               label="%actors_Label"
+               label="%newOrganizationLabel"
                mnemonic="O"
                style="push">
             <visibleWhen
@@ -129,10 +129,10 @@
                </and>
             </visibleWhen>
          </command>
-         <separator
-               name="group1"
-               visible="true">
-         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.actor">
          <command
                commandId="org.bonitasoft.studio.actors.newFilterDef"
                icon="icons/actor_filter-def-new.png"
@@ -180,10 +180,6 @@
                </and>
             </visibleWhen>
          </command>
-         <separator
-               name="group2"
-               visible="true">
-         </separator>
       </menuContribution>
    </extension>
    <extension

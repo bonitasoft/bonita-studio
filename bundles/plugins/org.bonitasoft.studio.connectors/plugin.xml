@@ -189,11 +189,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new">
-         <separator
-               name="groupConnector1"
-               visible="true">
-         </separator>
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.connector">
          <command
                commandId="org.bonitasoft.studio.connectors.newDefinition"
                icon="icons/connector_def-new.png"
@@ -242,10 +238,6 @@
                </and>
             </visibleWhen>
          </command>
-         <separator
-               name="groupConnector2"
-               visible="true">
-         </separator>
       </menuContribution>
    </extension>
    <extension

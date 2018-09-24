@@ -374,6 +374,38 @@
                id="org.bonitasoft.studio.application.project.explorer.new"
                label="%new"
                mnemonic="w">
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.organization"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.bdm"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.profile"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.application"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.diagram"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.restapi"
+                  visible="false">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.connector"
+                  visible="true">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.actor"
+                  visible="true">
+            </separator>
          </menu>
          <separator
                name="newSeparator"
