@@ -66,6 +66,7 @@ public class BonitaProjectExplorer extends CommonNavigator {
         initContextMenu();
     }
 
+
     private void initContextMenu() {
         TreeViewer commonViewer = getCommonViewer();
         Menu previousMenu = commonViewer.getTree().getMenu();
@@ -85,11 +86,9 @@ public class BonitaProjectExplorer extends CommonNavigator {
         });
 
         Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
-
         commonViewer.getTree().setMenu(menu);
 
         IEclipseContext e4Context = ((PartSite) getSite()).getContext();
-        getCommonViewer().getTree().getMenu();
         new CustomPopupMenuExtender(ID, menuMgr, getSite().getSelectionProvider(), getSite().getPart(), e4Context, true);
     }
 

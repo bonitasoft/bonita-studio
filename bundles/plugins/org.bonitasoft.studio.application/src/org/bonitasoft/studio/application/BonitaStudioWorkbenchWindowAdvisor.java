@@ -23,6 +23,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
@@ -35,9 +36,13 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+import org.eclipse.ui.part.EditorInputTransfer;
+import org.eclipse.ui.part.MarkerTransfer;
+import org.eclipse.ui.part.ResourceTransfer;
 
 public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
@@ -87,6 +92,14 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      */
     @Override
     public void postWindowOpen() {
+        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+        configurer.addEditorAreaTransfer(EditorInputTransfer.getInstance());
+        configurer.addEditorAreaTransfer(ResourceTransfer.getInstance());
+        configurer.addEditorAreaTransfer(FileTransfer.getInstance());
+        configurer.addEditorAreaTransfer(MarkerTransfer.getInstance());
+        configurer.configureEditorAreaDropListener(new EditorAreaDropAdapter(
+                configurer.getWindow()));
+
         final MWindow model = ((WorkbenchPage) window.getActivePage()).getWindowModel();
         model.getContext().get(EPartService.class).addPartListener(new AutomaticSwitchPerspectivePartListener());
         final Object widget = model.getWidget();

@@ -23,8 +23,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.ui.actions.OpenAction;
@@ -44,8 +42,6 @@ public class CustomOpenActionProvider extends CommonActionProvider {
     private OpenEditorActionGroup openFileAction;
     private ICommonViewerWorkbenchSite viewSite = null;
     private boolean contribute = false;
-    private ECommandService eCommandService;
-    private EHandlerService eHandlerService;
     private RepositoryAccessor repositoryAccessor;
 
     @Override
@@ -54,8 +50,6 @@ public class CustomOpenActionProvider extends CommonActionProvider {
             viewSite = (ICommonViewerWorkbenchSite) aConfig.getViewSite();
             openFileAction = new OpenEditorActionGroup((IViewPart) viewSite.getPart());
             contribute = true;
-            eCommandService = viewSite.getSite().getService(ECommandService.class);
-            eHandlerService = viewSite.getSite().getService(EHandlerService.class);
         }
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
