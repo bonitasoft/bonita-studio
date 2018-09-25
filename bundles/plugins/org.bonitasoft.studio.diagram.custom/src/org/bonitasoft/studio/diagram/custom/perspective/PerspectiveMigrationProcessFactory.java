@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.diagram.custom.perspective;
 
-import org.bonitasoft.studio.diagram.custom.views.BPMNPaletteView;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -39,7 +38,6 @@ public class PerspectiveMigrationProcessFactory extends PerspectiveProcessFactor
 				(float) 0.3,
 				editorArea);
 		left.addView("org.bonitasoft.studio.migration.view");
-		left.addView(BPMNPaletteView.ID);	
 	}
 	
 	@Override

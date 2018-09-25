@@ -92,11 +92,16 @@ public class TestWebPurchase implements SWTBotConstants {
         SWTBotView viewById = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
         viewById.setFocus();
         bot.tree().select(0);
+
+        gmfEditor.setFocus();
+
         new BotProcessDiagramPerspective(bot).getDiagramPropertiesPart()
                 .selectGeneralTab()
                 .selectPoolTab()
                 .setName("Web Purchase")
                 .setVersion("1.6");
+
+        gmfEditor.setFocus();
 
         selectPoolVariablesTabbedPropertyView();
         bot.buttonWithId(SWTBOT_ID_ADD_PROCESS_DATA).click();

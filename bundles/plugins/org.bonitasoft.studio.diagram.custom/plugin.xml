@@ -749,16 +749,6 @@
    </configurationIdProvider>
 </extension>
 <extension
-      point="org.eclipse.ui.views">
-   <view
-         class="org.bonitasoft.studio.diagram.custom.views.BPMNPaletteView"
-         icon="icons/ProcessDiagramFile.gif"
-         id="org.bonitasoft.studio.bpmn.palette_view"
-         name="%bpmnPalette"
-         restorable="true">
-   </view>
-</extension>
-<extension
       point="org.eclipse.gmf.runtime.common.ui.services.editorProviders">
    <EditorProvider
          class="org.bonitasoft.studio.diagram.custom.providers.DiagramEditorProvider">
