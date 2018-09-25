@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2018 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,29 +23,27 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 
-/**
- * @author Romain Bioteau
- */
-public class CreateFormOperation extends CreateUIDArtifactOperation {
+public class CreatePageOperation extends CreateUIDArtifactOperation {
 
-    public CreateFormOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
+    public CreatePageOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
         super(pageDesignerURLBuilder);
     }
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
-        JSONObject jsonBody = createBody();
+        monitor.beginTask(Messages.creatingNewPage, IProgressMonitor.UNKNOWN);
+        JSONObject bodyObject = createBody();
         try {
-            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(jsonBody));
+            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(bodyObject));
         } catch (MalformedURLException e) {
-            throw new InvocationTargetException(e, "Failed to create new form URL.");
+            throw new InvocationTargetException(e, "Failed to create new page URL.");
         }
+        openArtifact(getNewPageId());
     }
 
     @Override
     protected ArtifactyType getArtifactType() {
-        return ArtifactyType.FORM;
+        return ArtifactyType.PAGE;
     }
 
 }

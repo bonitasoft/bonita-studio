@@ -395,6 +395,10 @@
                   visible="false">
             </separator>
             <separator
+                  name="org.bonitasoft.studio.application.placeholder.uidpage"
+                  visible="false">
+            </separator>
+            <separator
                   name="org.bonitasoft.studio.application.placeholder.restapi"
                   visible="false">
             </separator>
