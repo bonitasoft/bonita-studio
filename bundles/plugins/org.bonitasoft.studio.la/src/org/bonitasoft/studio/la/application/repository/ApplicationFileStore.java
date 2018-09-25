@@ -35,6 +35,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -119,7 +120,10 @@ public class ApplicationFileStore extends AbstractFileStore {
                             throw new RuntimeException("an error occured while trying to close an application", e);
                         }
                     })
-                    .forEach(editorRef -> activePage.closeEditor(editorRef.getEditor(true), false));
+                    .forEach(editorRef -> {
+                        IEditorPart editor = editorRef.getEditor(false);
+                        activePage.closeEditor(editor, false);
+                    });
         }
     }
 

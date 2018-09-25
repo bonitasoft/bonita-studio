@@ -317,8 +317,12 @@ public abstract class AbstractFileStore
     @Override
     public void partClosed(final IWorkbenchPart part) {
         if (Objects.equals(part, activePart)) {
-            close();
+            partClosed();
         }
+    }
+
+    protected void partClosed() {
+        //SUBCLASS MAY OVERRIDE THIS METHOD
     }
 
     protected boolean checkWritePermission(File file) throws IOException {

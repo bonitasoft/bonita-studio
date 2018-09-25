@@ -76,7 +76,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllShareableStores();
 
-    IRepositoryFileStore asRepositoryFileStore(Path path) throws IOException, CoreException;
+    IRepositoryFileStore asRepositoryFileStore(Path path, boolean force) throws IOException, CoreException;
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 

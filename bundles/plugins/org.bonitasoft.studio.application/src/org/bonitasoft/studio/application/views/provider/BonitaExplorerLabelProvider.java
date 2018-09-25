@@ -83,7 +83,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         try {
             if (element instanceof IResource) {
                 return repositoryManager.getCurrentRepository()
-                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath());
+                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);
             }
         } catch (IOException | CoreException e) {
             BonitaStudioLog.error(e);
