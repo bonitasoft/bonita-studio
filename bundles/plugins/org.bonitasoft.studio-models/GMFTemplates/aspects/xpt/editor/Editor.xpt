@@ -619,11 +619,14 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 					public void setLayoutSetting(int newVal) {
 						getPreferenceStore().setValue(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT+preferencesKey, newVal);
 					}
+					@Override
+	                public boolean useLargeIcons() {
+	                    return false;
+	                }
 				};
 			}
 		
 			final org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer constructPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer();
-			constructPaletteViewer.hidePaletteEntry("standardGroup");
 			constructPaletteViewer.setPaletteViewerPreferences(processPref);
 			//add property change listener to refresh the items (the default one does not work anymore with an other key)
 			paletteChangeListener = new java.beans.PropertyChangeListener() {
@@ -687,7 +690,7 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 	 *  @generated BonitaSoft
 	 */
 	protected int getInitialPaletteSize() {
-		return 137;
+		return 160;
 	}
 «ENDDEFINE»
 
