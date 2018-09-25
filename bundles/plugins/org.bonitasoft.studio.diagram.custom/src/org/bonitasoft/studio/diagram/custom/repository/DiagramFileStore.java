@@ -30,9 +30,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainRegistry;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
-import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -55,7 +53,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.ui.URIEditorInput;
@@ -85,7 +82,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -289,6 +285,19 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return part;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.EMFFileStore#doClose()
+     */
+    @Override
+    protected void doClose() {
+        DiagramEditor openedEditor = getOpenedEditor();
+        if (openedEditor != null) {
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            activePage.closeEditor(openedEditor, false);
+        }
+    }
+
     protected IWorkbenchPage closeOpenedEditorWithoutSaving() {
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         final DiagramEditor openedEditor = getOpenedEditor();
@@ -366,35 +375,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
             }
         }
-    }
-
-    @Override
-    protected void doClose() {
-        final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
-            final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getEditorReferences();
-            // look for the resource in other editors
-            for (final IEditorReference iEditorReference : editors) {
-                try {
-                    final IEditorInput input = iEditorReference.getEditorInput();
-                    final IResource iResource = EditorUtil.retrieveResourceFromEditorInput(input);
-                    if (getResource().equals(iResource)) {
-                        final IWorkbenchPart part = iEditorReference.getPart(false);
-                        if (part != null && part instanceof DiagramDocumentEditor) {
-                            //remove editing domain now. Close is perform asynchronously and it may leads
-                            //to inconsistency when importing a diagram with same name as an opened diagram
-                            BonitaEditingDomainRegistry.INSTANCE
-                                    .remove("org.bonitasoft.studio.diagram.EditingDomain." + input.getName());
-                            ((DiagramDocumentEditor) part).close(true);
-                        }
-                    }
-                } catch (final PartInitException e) {
-                    // no input? -> nothing to do
-                }
-            }
-        }
-        super.doClose();
     }
 
     @Override

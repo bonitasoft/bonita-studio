@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.perspectives;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
-import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
@@ -58,7 +57,7 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
                     }
                     final String activePerspective = getActivePerspectiveId(part);
                     final CompatibilityEditor compatibilityEditor = (CompatibilityEditor) part.getObject();
-                    if (compatibilityEditor != null) {
+                    if (compatibilityEditor != null && activePerspective != null) {
                         final String id = BonitaPerspectivesUtils.getPerspectiveId(compatibilityEditor.getEditor());
                         if (id != null && !id.equals(activePerspective)) {
                             BonitaPerspectivesUtils.switchToPerspective(id);
@@ -72,16 +71,16 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
     }
 
     protected String getActivePerspectiveId(final MPart part) {
-        final EModelService service = part.getContext().get(EModelService.class);
-        final MWindow window = service.getTopLevelWindowFor(part);
-        final MPerspectiveStack pStack = (MPerspectiveStack) service.find("PerspectiveStack", window);
-        String activePerspective = null;
-        if (pStack != null) {
-            final MPerspective selectedElement = pStack.getSelectedElement();
+        if (part != null && part.getContext() != null) {
+            final EModelService service = part.getContext().get(EModelService.class);
+            final MWindow window = service.getTopLevelWindowFor(part);
+            String activePerspective = null;
+            final MPerspective selectedElement = service.getActivePerspective(window);
             if (selectedElement != null) {
                 activePerspective = selectedElement.getElementId();
             }
+            return activePerspective;
         }
-        return activePerspective;
+        return null;
     }
 }

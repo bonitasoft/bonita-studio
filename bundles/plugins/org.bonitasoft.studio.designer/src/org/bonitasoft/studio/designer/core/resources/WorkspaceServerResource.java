@@ -126,7 +126,7 @@ public class WorkspaceServerResource extends ServerResource {
     protected IRepositoryFileStore toFileStore(final String filePath) {
         checkArgument(!isNullOrEmpty(filePath), "filePath is null or empty");
         try {
-            return repository.asRepositoryFileStore(new File(filePath).toPath());
+            return repository.asRepositoryFileStore(new File(filePath).toPath(), true);
         } catch (final IOException | CoreException e) {
             return null;
         }
