@@ -624,7 +624,6 @@ public class Repository implements IRepository, IJavaContainer {
 
     }
 
-
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores() {
         final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<>();
@@ -638,7 +637,7 @@ public class Repository implements IRepository, IJavaContainer {
     }
 
     @Override
-    public IRepositoryFileStore asRepositoryFileStore(final Path path) throws IOException, CoreException {
+    public IRepositoryFileStore asRepositoryFileStore(final Path path, boolean force) throws IOException, CoreException {
         final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
         if (resourcePath.isRoot() || resourcePath.isEmpty()
                 || Objects.equals(org.eclipse.core.runtime.Path.fromOSString(".."), resourcePath)) {
@@ -651,7 +650,9 @@ public class Repository implements IRepository, IJavaContainer {
             return null;
         }
         if (!iResource.exists()) {
-            iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+            if (force) {
+                iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+            }
             if (!iResource.exists()) {
                 throw new FileNotFoundException(path.toFile().getAbsolutePath());
             }
@@ -716,14 +717,14 @@ public class Repository implements IRepository, IJavaContainer {
         workspace.run(newProjectMigrationOperation(project), monitor);
     }
 
-    private void removeFolder(String folderName, final IProgressMonitor monitor){
+    private void removeFolder(String folderName, final IProgressMonitor monitor) {
         IFolder resourceFolder = project.getFolder(folderName);
         if (resourceFolder.exists()) {
             try {
                 resourceFolder.delete(true, monitor);
             } catch (CoreException e) {
                 BonitaStudioLog.error(String.format("Failed to delete folder %s during migration", folderName),
-                      CommonRepositoryPlugin.PLUGIN_ID);
+                        CommonRepositoryPlugin.PLUGIN_ID);
             }
             BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folderName),
                     CommonRepositoryPlugin.PLUGIN_ID);

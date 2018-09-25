@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.views.filters;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -24,11 +25,17 @@ public class HideEmptyRepository extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
+        RepositoryManager repositoryManager = RepositoryManager.getInstance();
+        IRepository repository = repositoryManager.getCurrentRepository();
         if (repository.isLoaded()) {
-            IRepositoryStore<?> store = RepositoryManager.getInstance().getRepositoryStore(element).orElse(null);
+            IRepositoryStore<?> store = repositoryManager.getRepositoryStore(element).orElse(null);
             if (store != null) {
-                return !store.isEmpty() && !store.getName().equals("xsd"); //Always hide xsd repo as it is not a "true" development source
+                try {
+                    return store.getResource().members().length > 0
+                            && !store.getName().equals("xsd");//Always hide xsd repo as it is not a "true" development source
+                } catch (CoreException e) {
+                    return false;
+                }
             }
         }
         return true;

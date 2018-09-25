@@ -159,6 +159,15 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
 
     @Override
     protected void doClose() {
+        unloadEMFResource();
+    }
+
+    @Override
+    protected void partClosed() {
+        unloadEMFResource();
+    }
+
+    private void unloadEMFResource() {
         if(eResource != null && eResource.isLoaded()){
             eResource.unload();
         }

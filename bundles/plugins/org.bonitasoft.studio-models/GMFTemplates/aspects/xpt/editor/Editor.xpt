@@ -221,7 +221,9 @@ protected org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDo
 @Override
 public void dispose() {
   	org.eclipse.emf.transaction.TransactionalEditingDomain domain = getEditingDomain();
- 	processPref.removePropertyChangeListener(paletteChangeListener);
+  	if(processPref != null){
+  	      processPref.removePropertyChangeListener(paletteChangeListener);
+  	}
 	org.eclipse.core.commands.operations.IOperationHistory history = (org.eclipse.core.commands.operations.IOperationHistory) getAdapter(org.eclipse.core.commands.operations.IOperationHistory.class);
 	if(history != null){
 		history.dispose(getUndoContext(), true, true, true);

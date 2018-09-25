@@ -707,7 +707,10 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 	@Override
 	public void dispose() {
 		TransactionalEditingDomain domain = getEditingDomain();
-		processPref.removePropertyChangeListener(paletteChangeListener);
+        if (processPref != null) {
+            processPref.removePropertyChangeListener(paletteChangeListener);
+        }
+
 		IOperationHistory history = (IOperationHistory) getAdapter(IOperationHistory.class);
 		if (history != null) {
 			history.dispose(getUndoContext(), true, true, true);
