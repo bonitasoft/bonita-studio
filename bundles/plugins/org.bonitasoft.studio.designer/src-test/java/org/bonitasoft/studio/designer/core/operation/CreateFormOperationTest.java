@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.net.URL;
 
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.junit.After;
@@ -33,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.restlet.representation.Representation;
 
 /**
  * @author Romain Bioteau
@@ -55,7 +55,7 @@ public class CreateFormOperationTest {
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", "newPage");
         jsonObject.put("id", "page-id");
-        doReturn(jsonObject.toString()).when(createFormOperation).doPost(any(URL.class), any(JSONObject.class));
+        doReturn(jsonObject.toString()).when(createFormOperation).doPost(any(URL.class), any(Representation.class));
     }
 
     /**
@@ -71,7 +71,8 @@ public class CreateFormOperationTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void should_getNewPageName_throw_illegal_argument_exception_if_operation_has_not_been_executed() throws Exception {
+    public void should_getNewPageName_throw_illegal_argument_exception_if_operation_has_not_been_executed()
+            throws Exception {
         createFormOperation.getNewPageName();
     }
 

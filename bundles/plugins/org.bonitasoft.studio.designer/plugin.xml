@@ -11,6 +11,34 @@
                  style="push">
            </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidpage">
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.page"
+               icon="icons/ui_designer_16x16.png"
+               label="%newApplicationPage"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
 <extension
       point="org.eclipse.ui.commands">
@@ -123,5 +151,12 @@
          class="org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem"
          toolbarPosition="9">
    </coolbarItem>
+</extension>
+<extension
+      id="id1"
+      point="org.eclipse.e4.workbench.model">
+   <fragment
+         uri="fragment.e4xmi">
+   </fragment>
 </extension>
 </plugin>

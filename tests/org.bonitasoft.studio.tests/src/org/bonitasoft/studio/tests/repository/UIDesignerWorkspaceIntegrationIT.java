@@ -84,7 +84,7 @@ public class UIDesignerWorkspaceIntegrationIT {
 
         final CreateFormOperation createFormOperation = new CreateFormOperation(new PageDesignerURLFactory(
                 InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
-        createFormOperation.setFormName("MyNewForm");
+        createFormOperation.setArtifactName("MyNewForm");
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         service.run(true, false, createFormOperation);
 
