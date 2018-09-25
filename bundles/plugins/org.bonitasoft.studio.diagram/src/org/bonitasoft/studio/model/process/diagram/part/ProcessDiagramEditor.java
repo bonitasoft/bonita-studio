@@ -855,11 +855,16 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 				public void setLayoutSetting(int newVal) {
 					getPreferenceStore().setValue(PaletteViewerPreferences.PREFERENCE_LAYOUT + preferencesKey, newVal);
 				}
+
+                @Override
+                public boolean useLargeIcons() {
+                    return false;
+                }
 			};
 		}
 
 		final CustomMainPaletteViewer constructPaletteViewer = new CustomMainPaletteViewer();
-		constructPaletteViewer.hidePaletteEntry("standardGroup");
+        //constructPaletteViewer.hidePaletteEntry("standardGroup");
 		constructPaletteViewer.setPaletteViewerPreferences(processPref);
 		//add property change listener to refresh the items (the default one does not work anymore with an other key)
 		paletteChangeListener = new PropertyChangeListener() {
@@ -921,7 +926,7 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 	 *  @generated BonitaSoft
 	 */
 	protected int getInitialPaletteSize() {
-		return 137;
+        return 160;
 	}
 
 	/**
