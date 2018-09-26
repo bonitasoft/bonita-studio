@@ -32,7 +32,6 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private static final String COMPARE_ACTIONS_ID = "org.eclipse.compare.CompareAction";
     private static final String REPLACE_WITH_EDITION_ID = "org.eclipse.compare.ReplaceWithEditionAction";
     private static final String COMPARE_WITH_EDITION_ID = "org.eclipse.compare.CompareWithEditionAction";
-    private static final String ADD_FROM_HISTORY_ID = "org.eclipse.compare.AddFromHistoryAction";
 
     private static CustomObjectActionContributorManager sharedInstance;
 
