@@ -75,6 +75,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
     private static Set<String> INCLUDES = new HashSet<>();
     static {
         INCLUDES.add("team.main");
+        INCLUDES.add("org.eclipse.ui.file.refresh");
     }
 
     /**
@@ -638,17 +639,16 @@ public class CustomPopupMenuExtender implements IMenuListener2,
     public MenuManager getManager() {
         return menu;
     }
-    
-    
+
     public MenuManagerRenderer getMenuManagerRenderer() {
         IRendererFactory factory = modelPart.getContext().get(IRendererFactory.class);
         AbstractPartRenderer obj = factory.getRenderer(menuModel, null);
         if (obj instanceof MenuManagerRenderer) {
-            return  (MenuManagerRenderer) obj;
+            return (MenuManagerRenderer) obj;
         }
         return null;
     }
-    
+
     public MPopupMenu getMenuModel() {
         return menuModel;
     }
