@@ -26,6 +26,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionDelta;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -76,6 +77,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
     static {
         INCLUDES.add("team.main");
         INCLUDES.add("org.eclipse.ui.file.refresh");
+        INCLUDES.add("org.eclipse.ui.edit.delete");
     }
 
     /**
@@ -345,7 +347,6 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         INCLUDES.add("replaceWithMenu");
         INCLUDES.add("org.eclipse.jdt.ui.source.menu");
         INCLUDES.add("org.eclipse.jdt.ui.refactoring.menu");
-        INCLUDES.add("org.eclipse.jdt.ui.edit.text.java.open.editor");
         IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         StructuredSelection repositoryProject = new StructuredSelection(project);
         ISelection selection = selProvider.getSelection();
@@ -356,8 +357,9 @@ public class CustomPopupMenuExtender implements IMenuListener2,
             INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
         }
         Object resource = ((StructuredSelection) selection).getFirstElement();
-        if (resource instanceof IResource) {
-            IProject parentProject = ((IResource) resource).getProject();
+        if (resource instanceof IAdaptable && ((IAdaptable) resource).getAdapter(IResource.class) != null) {
+            IResource adapter = ((IAdaptable) resource).getAdapter(IResource.class);
+            IProject parentProject = adapter.getProject();
             StructuredSelection structuredSelection = new StructuredSelection(parentProject);
             if (structuredSelection.equals(repositoryProject)) {
                 INCLUDES.remove("compareWithMenu");
