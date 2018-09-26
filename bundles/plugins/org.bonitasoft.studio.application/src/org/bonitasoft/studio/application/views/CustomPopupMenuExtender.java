@@ -345,6 +345,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         INCLUDES.add("replaceWithMenu");
         INCLUDES.add("org.eclipse.jdt.ui.source.menu");
         INCLUDES.add("org.eclipse.jdt.ui.refactoring.menu");
+        INCLUDES.add("org.eclipse.jdt.ui.edit.text.java.open.editor");
         IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         StructuredSelection repositoryProject = new StructuredSelection(project);
         ISelection selection = selProvider.getSelection();

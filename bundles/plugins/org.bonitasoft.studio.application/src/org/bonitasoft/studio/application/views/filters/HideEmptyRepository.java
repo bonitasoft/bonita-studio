@@ -14,9 +14,17 @@
  */
 package org.bonitasoft.studio.application.views.filters;
 
+import java.util.stream.Stream;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -31,10 +39,26 @@ public class HideEmptyRepository extends ViewerFilter {
             IRepositoryStore<?> store = repositoryManager.getRepositoryStore(element).orElse(null);
             if (store != null) {
                 try {
-                    return store.getResource().members().length > 0
+                    IFolder resource = store.getResource();
+                    IResource[] members = resource.members();
+                    if (store instanceof WebWidgetRepositoryStore) {
+                        return Stream.of(members)
+                                .filter(r -> !r.getName().startsWith("."))
+                                .anyMatch(r -> !r.getName().startsWith("pb"));
+
+                    }
+                    if (store instanceof WebPageRepositoryStore) {
+                        return Stream.of(members)
+                                .anyMatch(r -> !r.getName().startsWith("."));
+                    }
+                    if (store instanceof WebFragmentRepositoryStore) {
+                        return Stream.of(members)
+                                .anyMatch(r -> !r.getName().startsWith("."));
+                    }
+                    return members.length > 0
                             && !store.getName().equals("xsd");//Always hide xsd repo as it is not a "true" development source
                 } catch (CoreException e) {
-                    return false;
+                    BonitaStudioLog.error(e);
                 }
             }
         }
