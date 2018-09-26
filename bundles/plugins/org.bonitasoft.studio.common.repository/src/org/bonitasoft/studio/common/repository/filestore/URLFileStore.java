@@ -238,4 +238,13 @@ public class URLFileStore implements IRepositoryFileStore {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#canBeDeleted()
+     */
+    @Override
+    public boolean canBeDeleted() {
+        return false;
+    }
+
 }

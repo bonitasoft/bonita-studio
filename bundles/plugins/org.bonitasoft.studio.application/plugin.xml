@@ -450,6 +450,17 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.edit">
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -718,6 +729,10 @@
             class="org.bonitasoft.studio.application.handler.OpenHandler"
             commandId="org.bonitasoft.studio.application.open">
       </handler>
+      <handler
+            class="org.bonitasoft.studio.application.handler.DeleteHandler"
+            commandId="org.eclipse.ui.edit.delete">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -753,7 +768,7 @@
                      property="org.eclipse.core.runtime.product"
                      value="org.bonitasoft.studio.product">
                </test>
-            </with>
+			 </with>
          </or>
       </definition>
       <definition
@@ -1211,6 +1226,9 @@
                class="org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator"
                id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
          </commonSorter>
+         <actionProvider
+               class="org.bonitasoft.studio.application.views.provider.CreationActionProvider">
+         </actionProvider>
       </navigatorContent>
       <commonFilter
             activeByDefault="true"

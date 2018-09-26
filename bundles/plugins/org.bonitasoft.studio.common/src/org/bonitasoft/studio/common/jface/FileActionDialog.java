@@ -109,7 +109,7 @@ public class FileActionDialog {
                     public void run() {
                         returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),
                                 Messages.deleteConfirmationTitle,
-                                Messages.bind(Messages.deleteConfirmationMsg, fileName)).open();
+                                String.format(Messages.deleteConfirmationMsg, fileName)).open();
                     }
                 });
 
@@ -127,7 +127,7 @@ public class FileActionDialog {
                     public void run() {
                         answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
                                 Messages.deleteConfirmationTitle,
-                                Messages.bind(Messages.deleteConfirmationMsg, fileName));
+                                String.format(Messages.deleteConfirmationMsg, fileName));
                     }
                 });
                 return answer;

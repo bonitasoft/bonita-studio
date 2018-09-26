@@ -61,4 +61,6 @@ public interface IRepositoryFileStore extends IDisplayable {
 
     byte[] toByteArray() throws IOException;
 
+    boolean canBeDeleted();
+
 }

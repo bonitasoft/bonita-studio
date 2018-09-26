@@ -98,6 +98,11 @@ public abstract class AbstractFileStore
         return getName();
     }
 
+    @Override
+    public boolean canBeDeleted() {
+        return true;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
