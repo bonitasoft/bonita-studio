@@ -14,11 +14,17 @@
  */
 package org.bonitasoft.studio.application.views.filters;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
@@ -68,7 +74,17 @@ public class ProvidedContentFilter extends ViewerFilter {
         if (element instanceof IJavaElement) {
             return ((IJavaElement) element).getJavaProject().getProject().isOpen();
         }
+
         if (element instanceof IResource) {
+            try {
+                IRepositoryFileStore fStore = RepositoryManager.getInstance().getCurrentRepository()
+                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);
+                if (fStore instanceof WebWidgetFileStore && fStore.getName().startsWith("pb")) { //Hide provided widgets
+                    return false;
+                }
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+            }
             return ((IResource) element).getProject().isOpen()
                     && !HIDDEN_RESOURCES.contains(((IResource) element).getProjectRelativePath());
         }

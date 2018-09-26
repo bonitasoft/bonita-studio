@@ -57,7 +57,20 @@ public class CustomOpenActionProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager aMenu) {
-
+        //        if (!contribute) {
+        //            return;
+        //        }
+        //        openFileAction.setContext(getContext());
+        //
+        //        OpenAction customOpenAction = createCustomOpenAction();
+        //
+        //        IAction openAction = openFileAction.getOpenAction();
+        //        if (openAction.isEnabled()) {
+        //            aMenu.insertAfter(IContextMenuConstants.GROUP_OPEN, customOpenAction);
+        //        } else if (UIDArtifactFilters
+        //                .isUIDArtifact(((IStructuredSelection) getContext().getSelection()).getFirstElement())) {
+        //            aMenu.insertAfter(IContextMenuConstants.GROUP_OPEN, customOpenAction);
+        //        }
     }
 
     @Override
@@ -68,7 +81,6 @@ public class CustomOpenActionProvider extends CommonActionProvider {
         openFileAction.setContext(getContext());
 
         OpenAction customOpenAction = createCustomOpenAction();
-
         if (openFileAction.getOpenAction().isEnabled()) {
             theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN,
                     customOpenAction);

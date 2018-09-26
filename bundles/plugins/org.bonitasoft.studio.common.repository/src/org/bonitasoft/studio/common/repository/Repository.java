@@ -652,9 +652,11 @@ public class Repository implements IRepository, IJavaContainer {
         if (!iResource.exists()) {
             if (force) {
                 iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
-            }
-            if (!iResource.exists()) {
-                throw new FileNotFoundException(path.toFile().getAbsolutePath());
+                if (!iResource.exists()) {
+                    throw new FileNotFoundException(path.toFile().getAbsolutePath());
+                }
+            } else {
+                return null;
             }
         }
 

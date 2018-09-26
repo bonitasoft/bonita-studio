@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.resources;
 
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -47,6 +48,7 @@ public class RepositoryNotifier {
     public void postDelete(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
         if (fileStore != null) {
             fileStore.getParentStore().refresh();
+            AbstractFileStore.refreshExplorerView();
             repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
         }
     }
@@ -67,6 +69,7 @@ public class RepositoryNotifier {
     public void postSave(final IRepositoryFileStore fileStore) {
         if (fileStore != null) {
             fileStore.getParentStore().refresh();
+            AbstractFileStore.refreshExplorerView();
             repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
         }
     }
