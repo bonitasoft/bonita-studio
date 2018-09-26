@@ -52,9 +52,10 @@
    </menuContribution>
    <menuContribution
          allPopups="false"
-         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.application.project.explorer.new">
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.manage.dependencies">
       <command
             commandId="org.bonitasoft.studio.dependencies.manageJars"
+            icon="icons/add_remove_jar_files.png"
             id="org.bonitasoft.studio.dependencies.manageDependencies.menu"
             style="push">
          <visibleWhen
@@ -76,10 +77,6 @@
             </and>
          </visibleWhen>
       </command>
-      <separator
-            name="group1"
-            visible="true">
-      </separator>
    </menuContribution>
 </extension>
 <extension

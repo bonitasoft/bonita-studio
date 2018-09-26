@@ -45,9 +45,10 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.dependencies.manageDependencies.menu">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.manage.dependencies">
          <command
                commandId="org.bonitasoft.studio.groovy.ui.editscripts"
+               icon="icons/manage_groovy_scripts.png"
                style="push">
             <visibleWhen
                   checkEnabled="true">
