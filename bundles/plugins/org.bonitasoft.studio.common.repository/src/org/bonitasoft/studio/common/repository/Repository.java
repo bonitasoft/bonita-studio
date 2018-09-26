@@ -638,6 +638,9 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path, boolean force) throws IOException, CoreException {
+        if (!project.isAccessible() || project.getLocation() == null) {
+            return null;
+        }
         final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
         if (resourcePath.isRoot() || resourcePath.isEmpty()
                 || Objects.equals(org.eclipse.core.runtime.Path.fromOSString(".."), resourcePath)) {
