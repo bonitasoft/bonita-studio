@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
-import static com.google.common.collect.Iterables.all;
-
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -27,22 +24,20 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.ImportDefinitionDepedenciesOperation;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -58,8 +53,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-
-import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
@@ -237,56 +230,21 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             return;
         }
         if (page instanceof AbstractConnectorConfigurationWizardPage) {
-            addDefinitionDependencies(((AbstractConnectorConfigurationWizardPage) page).getDefinition(),
+            ImportDefinitionDepedenciesOperation importDefinitionDepedenciesOperation = new ImportDefinitionDepedenciesOperation(
+                    ((AbstractConnectorConfigurationWizardPage) page).getDefinition(),
                     ((AbstractConnectorConfigurationWizardPage) page).getMessageProvider(), RepositoryManager.getInstance().getRepositoryStore(
                             DependencyRepositoryStore.class));
+            try {
+                run(true, false, importDefinitionDepedenciesOperation);
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
         }
 
         // show the next page
         showPage(page);
     }
 
-    protected void addDefinitionDependencies(final ConnectorDefinition definition, final DefinitionResourceProvider definitionResourceProvider,
-            final DependencyRepositoryStore depStore) {
-        if (shouldAddNewDependencies(definition, depStore)) {
-            try {
-                run(true, false, new IRunnableWithProgress() {
 
-                    @Override
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        boolean shouldBuild = false;
-                        for (final String jarName : definition.getJarDependency()) {
-                            if (depStore.getChild(jarName) == null) {
-                                final InputStream is = definitionResourceProvider.getDependencyInputStream(jarName);
-                                if (is != null) {
-                                    depStore.importInputStream(jarName, is);
-                                    shouldBuild = true;
-                                }
-                            }
-                        }
-                        if (shouldBuild) {
-                            RepositoryManager.getInstance().getCurrentRepository().build(monitor);
-                        }
-                    }
-                });
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
-
-    private boolean shouldAddNewDependencies(final ConnectorDefinition definition, final DependencyRepositoryStore depStore) {
-        return !all(definition.getJarDependency(), alreadyExists(depStore));
-    }
-
-    private Predicate<String> alreadyExists(final DependencyRepositoryStore depStore) {
-        return new Predicate<String>() {
-
-            @Override
-            public boolean apply(final String jarName) {
-                return depStore.getChild(jarName) != null;
-            }
-        };
-    }
 
 }
