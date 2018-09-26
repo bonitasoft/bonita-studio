@@ -439,6 +439,17 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.open">
+             <command
+               commandId="org.bonitasoft.studio.application.open"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -541,6 +552,10 @@
             defaultHandler="org.bonitasoft.studio.application.actions.OpenUIDLogCommand"
             id="org.bonitasoft.studio.application.openUidLog"
             name="%openUidLog">
+      </command>
+      <command
+            id="org.bonitasoft.studio.application.open"
+            name="%Open">
       </command>
    </extension>
    <extension
@@ -698,6 +713,10 @@
                   </or>
                </and>
             </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.application.handler.OpenHandler"
+            commandId="org.bonitasoft.studio.application.open">
       </handler>
    </extension>
    <extension
@@ -944,6 +963,12 @@
                value="org.bonitasoft.studio.views.overview">
          </parameter>
       </key>
+      <key
+            commandId="org.bonitasoft.studio.application.open"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="F3">
+      </key>
       <scheme
             id="org.bonitasoft.studio.application.scheme"
             name="BonitaBPM Scheme"
@@ -1175,10 +1200,6 @@
                class="org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator"
                id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
          </commonSorter>
-         <actionProvider
-               class="org.bonitasoft.studio.application.views.provider.CreationActionProvider"
-               id="org.bonitasoft.studio.application.views.CreationActionProvider">
-         </actionProvider>
       </navigatorContent>
       <commonFilter
             activeByDefault="true"
