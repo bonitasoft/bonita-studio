@@ -461,6 +461,34 @@
             </visibleWhen>
          </command>
       </menuContribution>
+<menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.deploy">
+         <command
+               commandId="org.bonitasoft.studio.deployCommand"
+               icon="icons/menuIcons/deploy_16.png"
+               label="%deploy"
+               style="push">
+               <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IFile">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.deployablePropertyTester.isDeployable">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -567,6 +595,10 @@
       <command
             id="org.bonitasoft.studio.application.open"
             name="%Open">
+      </command>
+      <command
+            id="org.bonitasoft.studio.deployCommand"
+            name="%deploy">
       </command>
    </extension>
    <extension
@@ -732,6 +764,10 @@
       <handler
             class="org.bonitasoft.studio.application.handler.DeleteHandler"
             commandId="org.eclipse.ui.edit.delete">
+	  </handler>
+	  <handler
+            class="org.bonitasoft.studio.application.handler.DeployHandler"
+            commandId="org.bonitasoft.studio.deployCommand">
       </handler>
    </extension>
    <extension
@@ -989,6 +1025,12 @@
             name="BonitaBPM Scheme"
             parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </scheme>
+      <key
+            commandId="org.bonitasoft.studio.deployCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+M2+D">
+      </key>
    </extension>
    <extension
          point="org.bonitasoft.studio.application.prestartup">
@@ -1129,6 +1171,10 @@
             </insertionPoint>
             <insertionPoint
                   name="group.manage.dependencies"
+				  separator="true">
+            </insertionPoint>
+			<insertionPoint
+                  name="group.deploy"
                   separator="true">
             </insertionPoint>
             <insertionPoint
@@ -1278,10 +1324,17 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="org.bonitasoft.studio.application.views.BonitaProjectPropertyTester"
+            class="org.bonitasoft.studio.application.property.tester.BonitaProjectPropertyTester"
             id="org.bonitasoft.studio.application.project.propertyTester"
             namespace="org.bonitasoft.studio.application"
             properties="isBonitaProject"
+            type="org.eclipse.core.resources.IResource">
+      </propertyTester>
+      <propertyTester
+            class="org.bonitasoft.studio.application.property.tester.DeployableResourcePropertyTester"
+            id="org.bonitasoft.studio.application.deployablePropertyTester"
+            namespace="org.bonitasoft.studio.application.deployablePropertyTester"
+            properties="isDeployable"
             type="org.eclipse.core.resources.IResource">
       </propertyTester>
    </extension>

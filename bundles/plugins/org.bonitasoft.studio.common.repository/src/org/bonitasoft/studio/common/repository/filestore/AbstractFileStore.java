@@ -31,14 +31,16 @@ import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
-import org.bonitasoft.studio.common.repository.model.IDisplayable;
 import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
@@ -56,7 +58,7 @@ import com.google.common.io.Files;
  * @author Romain Bioteau
  */
 public abstract class AbstractFileStore
-        implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener, IDisplayable {
+        implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
 
     public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
@@ -64,6 +66,9 @@ public abstract class AbstractFileStore
     final IRepositoryStore<? extends IRepositoryFileStore> store;
     private IWorkbenchPart activePart;
     private Map<String, Object> parameters;
+
+    protected ECommandService eCommandService;
+    protected EHandlerService eHandlerService;
 
     public AbstractFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         name = fileName;
@@ -415,5 +420,23 @@ public abstract class AbstractFileStore
 
     public Map<String, Object> getParameters() {
         return parameters;
+    }
+
+    @SuppressWarnings("restriction")
+    protected void executeCommand(String command, Map<String, Object> parameters) {
+        initServices();
+        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
+        if (eHandlerService.canExecute(parameterizedCommand)) {
+            eHandlerService.executeHandler(parameterizedCommand);
+        } else {
+            throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
+        }
+    }
+
+    private void initServices() {
+        if (eCommandService == null || eHandlerService == null) {
+            eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
+            eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
+        }
     }
 }

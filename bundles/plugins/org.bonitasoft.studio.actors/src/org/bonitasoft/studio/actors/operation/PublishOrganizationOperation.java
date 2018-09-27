@@ -38,6 +38,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.ActorsPlugin;
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
@@ -77,6 +78,8 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
+
+        monitor.beginTask(String.format(Messages.deployingOrganization, organization.getName()), IProgressMonitor.UNKNOWN);
 
         flushSession = false;
         BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", ActorsPlugin.PLUGIN_ID);
