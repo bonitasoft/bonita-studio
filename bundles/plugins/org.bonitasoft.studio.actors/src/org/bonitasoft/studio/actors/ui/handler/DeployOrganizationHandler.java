@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -27,6 +29,7 @@ import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.actors.ui.control.DeployOrganizationControlSupplier;
 import org.bonitasoft.studio.actors.validator.OrganizationValidationException;
 import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -54,15 +57,17 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 public class DeployOrganizationHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
+    public static final String DEPLOY_ORGA_PARAMETER_NAME = "organization";
+
     @Execute
-    public void execute(ExceptionDialogHandler exceptionDialogHandler, RepositoryAccessor repositoryAccessor,
-            ActiveOrganizationProvider activeOrganizationProvider) {
-        DeployOrganizationControlSupplier controlSupplier = newPublishOrganizationControlSupplier(repositoryAccessor,
-                activeOrganizationProvider);
+    public void execute(ExceptionDialogHandler exceptionDialogHandler,
+            RepositoryAccessor repositoryAccessor,
+            ActiveOrganizationProvider activeOrganizationProvider,
+            @org.eclipse.e4.core.di.annotations.Optional @Named(DEPLOY_ORGA_PARAMETER_NAME) String organization) {
+
+        Optional<Organization> orgaToDeploy = findOrganizationToDeploy(repositoryAccessor, organization);
+        DeployOrganizationControlSupplier controlSupplier = createDeployOrganizationControlSupplier(repositoryAccessor,
+                activeOrganizationProvider, orgaToDeploy);
 
         WizardBuilder.<IStatus> newWizard()
                 .withTitle(Messages.deployOrganizationTitle)
@@ -71,9 +76,15 @@ public class DeployOrganizationHandler {
                         .withTitle(Messages.deployOrganizationPageTitle)
                         .withDescription(Messages.deployOrganizationDesc)
                         .withControl(controlSupplier))
-                .onFinish(wizardContainer -> publish(wizardContainer, activeOrganizationProvider, controlSupplier))
+                .onFinish(wizardContainer -> deploy(wizardContainer, activeOrganizationProvider, controlSupplier))
                 .open(Display.getDefault().getActiveShell(), Messages.deploy)
                 .ifPresent(status -> openResultDialog(exceptionDialogHandler, controlSupplier, status));
+    }
+
+    private Optional<Organization> findOrganizationToDeploy(RepositoryAccessor repositoryAccessor, String organization) {
+        return Optional.ofNullable(organization)
+                .map(repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)::getChild)
+                .map(OrganizationFileStore::getContent);
     }
 
     protected void openResultDialog(ExceptionDialogHandler exceptionDialogHandler,
@@ -93,14 +104,16 @@ public class DeployOrganizationHandler {
         return Messages.deployOrganizationSuccessMsg;
     }
 
-    protected DeployOrganizationControlSupplier newPublishOrganizationControlSupplier(
-            RepositoryAccessor repositoryAccessor, ActiveOrganizationProvider activeOrganizationProvider) {
+    protected DeployOrganizationControlSupplier createDeployOrganizationControlSupplier(
+            RepositoryAccessor repositoryAccessor, ActiveOrganizationProvider activeOrganizationProvider,
+            Optional<Organization> orgaToDeploy) {
         return new DeployOrganizationControlSupplier(
                 activeOrganizationProvider.getDefaultUser(),
-                repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class));
+                repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class),
+                orgaToDeploy);
     }
 
-    protected Optional<IStatus> publish(IWizardContainer wizardContainer,
+    protected Optional<IStatus> deploy(IWizardContainer wizardContainer,
             ActiveOrganizationProvider activeOrganizationProvider, DeployOrganizationControlSupplier controlSupplier) {
         updateDefaultUserPreference(activeOrganizationProvider, controlSupplier);
         try {
@@ -160,6 +173,5 @@ public class DeployOrganizationHandler {
                     .map(PasswordType::getValue)
                     .orElse(""));
         }
-
     }
 }

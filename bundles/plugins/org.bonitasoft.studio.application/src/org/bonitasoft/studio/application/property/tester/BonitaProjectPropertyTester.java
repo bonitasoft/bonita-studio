@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.application.views;
+package org.bonitasoft.studio.application.property.tester;
 
 import java.util.Objects;
 

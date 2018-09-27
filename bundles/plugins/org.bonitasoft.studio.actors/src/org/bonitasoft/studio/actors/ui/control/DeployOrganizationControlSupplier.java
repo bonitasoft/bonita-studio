@@ -12,11 +12,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.actors.ui.handler;
+package org.bonitasoft.studio.actors.ui.control;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -37,8 +38,8 @@ import org.bonitasoft.studio.ui.validator.MultiValidator.Builder;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -60,32 +61,76 @@ import org.eclipse.swt.widgets.TableColumn;
 
 public class DeployOrganizationControlSupplier implements ControlSupplier {
 
-    private OrganizationFileStore fileStore;
-    private final OrganizationRepositoryStore organizationStore;
-    private String username;
+    private IObservableValue<OrganizationFileStore> fileStoreObservable = new WritableValue<>();
+    private OrganizationRepositoryStore organizationRepositoryStore;
+    private IObservableValue<String> usernameObservable = new WritableValue<>();
     private ActiveOrganizationProvider activeOrganizationprovider;
+    protected Optional<Organization> orgaToDeploy;
 
-    public DeployOrganizationControlSupplier(String username, OrganizationRepositoryStore organizationStore) {
-        this.organizationStore = organizationStore;
-        this.username = username;
+    public DeployOrganizationControlSupplier(String username, OrganizationRepositoryStore organizationStore,
+            Optional<Organization> orgaToDeploy) {
+        this.organizationRepositoryStore = organizationStore;
+        this.orgaToDeploy = orgaToDeploy;
         this.activeOrganizationprovider = new ActiveOrganizationProvider();
+        usernameObservable.setValue(username);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.jface.wizard.IWizardContainer,
-     * org.eclipse.core.databinding.DataBindingContext)
-     */
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setLayout(
-                GridLayoutFactory.swtDefaults().numColumns(1).spacing(LayoutConstants.getSpacing().x, 10).create());
+        mainComposite.setLayout(GridLayoutFactory.swtDefaults().spacing(LayoutConstants.getSpacing().x, 10).create());
 
+        if (!orgaToDeploy.isPresent()) {
+            createOrganizationViewer(mainComposite, fileStoreObservable, ctx);
+        }
+        createDefaultUserTextWidget(ctx, mainComposite, fileStoreObservable);
+        initializeOrganizationFileStore();
+
+        return mainComposite;
+    }
+
+    private void initializeOrganizationFileStore() {
+        String orgaName = orgaToDeploy.map(Organization::getName).orElse(activeOrganizationprovider.getActiveOrganization());
+        organizationRepositoryStore.getChildren().stream()
+                .filter(orga -> Objects.equals(orga.getDisplayName(), orgaName))
+                .findFirst()
+                .ifPresent(fileStoreObservable::setValue);
+    }
+
+    private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite,
+            IObservableValue<OrganizationFileStore> fileStoreObservable) {
+        SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(usernames());
+        proposalProvider.setFiltering(true);
+
+        TextWidget widget = new TextWidget.Builder()
+                .withLabel(Messages.defaultUser)
+                .grabHorizontalSpace()
+                .fill()
+                .labelAbove()
+                .withProposalProvider(proposalProvider)
+                .withTootltip(Messages.defaultUserTooltip)
+                .bindTo(usernameObservable)
+                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withValidator(defaultUserValidator()))
+                .inContext(ctx)
+                .createIn(mainComposite);
+
+        fileStoreObservable.addValueChangeListener(event -> {
+            organizationChanged(event.diff.getNewValue().getContent(), proposalProvider);
+            widget.getValueBinding().validateTargetToModel();
+        });
+    }
+
+    protected void organizationChanged(Organization organization, SimpleContentProposalProvider proposalProvider) {
+        proposalProvider.setProposals(usernames());
+    }
+
+    private void createOrganizationViewer(Composite mainComposite,
+            IObservableValue<OrganizationFileStore> fileStoreObservable, DataBindingContext ctx) {
         TableViewer viewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
-        final TableLayout layout = new TableLayout();
+        TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(30));
         layout.addColumnData(new ColumnWeightData(70));
         viewer.getTable().setLayout(layout);
@@ -94,7 +139,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
         viewer.setContentProvider(ArrayContentProvider.getInstance());
 
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL);
-        final TableColumn nameColumn = column.getColumn();
+        TableColumn nameColumn = column.getColumn();
         column.getColumn().setText(Messages.name);
         column.setLabelProvider(new OrganizationLabelProvider());
 
@@ -113,13 +158,8 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
             }
         });
 
-        final TableColumnSorter sorter = new TableColumnSorter(viewer);
+        TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(nameColumn);
-
-        IObservableValue<OrganizationFileStore> fileStoreObservable = PojoProperties.value("fileStore").observe(this);
-
-        SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(usernames());
-        proposalProvider.setFiltering(true);
 
         ctx.bindValue(ViewersObservables.observeSingleSelection(viewer),
                 fileStoreObservable,
@@ -127,38 +167,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
                         .withValidator(value -> value == null ? ValidationStatus.error("") : ValidationStatus.ok()).create(),
                 updateValueStrategy().create());
 
-        viewer.setInput(organizationStore.getChildren());
-
-        TextWidget widget = new TextWidget.Builder()
-                .withLabel(Messages.defaultUser)
-                .grabHorizontalSpace()
-                .fill()
-                .labelAbove()
-                .withProposalProvider(proposalProvider)
-                .withTootltip(Messages.defaultUserTooltip)
-                .bindTo(PojoProperties.value("username", String.class).observe(this))
-                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
-                        .withValidator(defaultUserValidator()))
-                .inContext(ctx)
-                .createIn(mainComposite);
-
-        fileStoreObservable.addValueChangeListener(event -> {
-            organizationChanged(event.diff.getNewValue().getContent(), ctx, proposalProvider);
-            //re-evaluate validators for selected organization
-            widget.getValueBinding().validateTargetToModel();
-        });
-
-        organizationStore.getChildren().stream()
-                .filter(orga -> Objects.equals(orga.getDisplayName(), activeOrganizationprovider.getActiveOrganization()))
-                .findFirst()
-                .ifPresent(fileStoreObservable::setValue);
-
-        return mainComposite;
-    }
-
-    protected void organizationChanged(Organization organization, DataBindingContext ctx,
-            SimpleContentProposalProvider proposalProvider) {
-        proposalProvider.setProposals(usernames());
+        viewer.setInput(organizationRepositoryStore.getChildren());
     }
 
     protected Builder defaultUserValidator() {
@@ -175,28 +184,22 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
     }
 
     private String[] usernames() {
-        return fileStore == null ? new String[0] : fileStore.getContent()
-                .getUsers()
-                .getUser()
-                .stream()
-                .map(User::getUserName)
-                .toArray(String[]::new);
+        return fileStoreObservable.getValue() == null
+                ? new String[0]
+                : fileStoreObservable.getValue().getContent()
+                        .getUsers()
+                        .getUser()
+                        .stream()
+                        .map(User::getUserName)
+                        .toArray(String[]::new);
     }
 
     public OrganizationFileStore getFileStore() {
-        return fileStore;
-    }
-
-    public void setFileStore(OrganizationFileStore file) {
-        this.fileStore = file;
+        return fileStoreObservable.getValue();
     }
 
     public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        return usernameObservable.getValue();
     }
 
 }

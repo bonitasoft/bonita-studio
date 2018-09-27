@@ -40,7 +40,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.filesystem;visibility:=reexport,
  org.eclipse.e4.core.services,
  org.eclipse.team.svn.core,
- org.eclipse.ui.navigator
+ org.eclipse.ui.navigator,
+ org.eclipse.e4.core.commands
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,

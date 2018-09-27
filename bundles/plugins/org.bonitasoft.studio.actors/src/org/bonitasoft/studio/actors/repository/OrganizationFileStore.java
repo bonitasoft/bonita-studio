@@ -23,12 +23,14 @@ import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -49,7 +51,9 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore {
+public class OrganizationFileStore extends EMFFileStore implements IDeployable {
+
+    private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
 
     public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
         super(fileName, store);
@@ -175,8 +179,14 @@ public class OrganizationFileStore extends EMFFileStore {
     public boolean isCorrectlySyntaxed() {
         if (getContent() == null) {
             return false;
-        } else {
-            return true;
         }
+        return true;
+    }
+
+    @Override
+    public void deploy() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(DeployOrganizationHandler.DEPLOY_ORGA_PARAMETER_NAME, getName());
+        executeCommand(DEPLOY_ORGA_CMD, parameters);
     }
 }
