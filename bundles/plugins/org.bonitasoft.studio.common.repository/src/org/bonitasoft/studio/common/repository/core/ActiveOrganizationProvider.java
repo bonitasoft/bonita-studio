@@ -38,6 +38,10 @@ public class ActiveOrganizationProvider {
                 OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
     }
 
+    public String getActiveOrganizationFileName() {
+        return String.format("%s.organization", getActiveOrganization());
+    }
+
     public String getDefaultUser() {
         return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_USER,
                 OrganizationPreferenceConstants.DEFAULT_USER_NAME);
