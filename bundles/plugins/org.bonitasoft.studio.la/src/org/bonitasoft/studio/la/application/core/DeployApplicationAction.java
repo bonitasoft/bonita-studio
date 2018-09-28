@@ -113,6 +113,10 @@ public class DeployApplicationAction {
 
     public int deployApplicationNodeContainer(Shell shell, ApplicationNodeContainer applicationNodeContainer,
             String[] onFinishButtons) {
+        if (applicationNodeContainer.getApplications().isEmpty()) {
+            MessageDialog.openInformation(shell, Messages.deployDoneTitle, Messages.nothingToDeploy);
+            return Dialog.CANCEL;
+        }
         final GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         try {
             final APISession apiSession = apiSessionOperation.execute();

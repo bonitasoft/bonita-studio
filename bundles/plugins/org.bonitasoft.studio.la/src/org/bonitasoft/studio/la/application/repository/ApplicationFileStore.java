@@ -19,6 +19,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
@@ -28,6 +30,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -46,7 +49,10 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore {
+public class ApplicationFileStore extends AbstractFileStore implements IDeployable {
+
+    public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
+    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
     private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
 
@@ -151,6 +157,13 @@ public class ApplicationFileStore extends AbstractFileStore {
 
     protected IWorkbenchPage getActivePage() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    }
+
+    @Override
+    public void deploy() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(APPLICATION_TO_DEPLOY_PARAMETER_NAME, getName());
+        executeCommand(DEPLOY_COMMAND, parameters);
     }
 
 }
