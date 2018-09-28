@@ -6,7 +6,9 @@
     <elements xsi:type="commands:Command" xmi:id="_2helYP6PEeaqYIbFhsSGFw" elementId="org.bonitasoft.studio.la.delete.command" commandName="%deleteApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_YHf6AAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.export.command" commandName="%exportApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_g4OJ8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.import.command" commandName="%importApplication"/>
-    <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication">
+      <parameters xmi:id="_tvi1sMI4EeiSmOxE9tpWmw" elementId="application" name="Application to deploy"/>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>
