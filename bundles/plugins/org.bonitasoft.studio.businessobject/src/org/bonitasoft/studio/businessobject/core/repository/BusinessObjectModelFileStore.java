@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -27,25 +28,26 @@ import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.google.common.io.ByteSource;
@@ -54,7 +56,7 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
+public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements IDeployable {
 
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
@@ -65,8 +67,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     private final BusinessObjectModelConverter converter;
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
-    private ECommandService commandService;
-    private EHandlerService handlerService;
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);
@@ -135,20 +135,12 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
         return RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
-    @SuppressWarnings("restriction")
     @Override
     /**
      * we use the command to call the handler, so we do not have to extend this class for sp features.
      */
     protected IWorkbenchPart doOpen() {
-        if (commandService == null) {
-            IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            commandService = activeWorkbenchWindow.getService(ECommandService.class);
-            handlerService = activeWorkbenchWindow.getService(EHandlerService.class);
-        }
-        ParameterizedCommand command = ParameterizedCommand.generateCommand(commandService.getCommand(DEFINE_BDM_COMMAND_ID),
-                null);
-        handlerService.executeHandler(command);
+        executeCommand(DEFINE_BDM_COMMAND_ID, null);
         return null;
     }
 
@@ -220,5 +212,23 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
             return businessObjectModel.equals(originalContent);
         }
         return false;
+    }
+
+    @Override
+    public void deploy() {
+        GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this);
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
+
+                @Override
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    generateBDMOperation.run(monitor);
+                    deployBDMOperation.run(monitor);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            throw new RuntimeException("An error occured while depoying the BDM", e);
+        }
     }
 }

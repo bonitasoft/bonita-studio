@@ -435,7 +435,7 @@ public abstract class AbstractFileStore
         }
     }
 
-    private void initServices() {
+    protected void initServices() {
         if (eCommandService == null || eHandlerService == null) {
             eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
             eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
