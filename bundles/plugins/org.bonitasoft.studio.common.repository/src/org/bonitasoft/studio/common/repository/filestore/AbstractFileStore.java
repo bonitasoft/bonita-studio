@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
@@ -69,6 +70,7 @@ public abstract class AbstractFileStore
 
     protected ECommandService eCommandService;
     protected EHandlerService eHandlerService;
+    private RepositoryAccessor repositoryAccessor;
 
     public AbstractFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         name = fileName;
@@ -438,5 +440,13 @@ public abstract class AbstractFileStore
             eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
             eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
         }
+    }
+
+    public RepositoryAccessor getRepositoryAccessor() {
+        if (repositoryAccessor == null) {
+            repositoryAccessor = new RepositoryAccessor();
+            repositoryAccessor.init();
+        }
+        return repositoryAccessor;
     }
 }
