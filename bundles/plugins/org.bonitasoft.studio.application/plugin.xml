@@ -489,6 +489,28 @@
             </visibleWhen>
          </command>
       </menuContribution>
+   <menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
+      <command
+            commandId="org.bonitasoft.studio.application.import"
+            style="push">
+         <visibleWhen
+               checkEnabled="true">
+         </visibleWhen>
+      </command>
+   </menuContribution>
+   <menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
+      <command
+            commandId="org.bonitasoft.studio.application.export"
+            style="push">
+         <visibleWhen
+               checkEnabled="true">
+         </visibleWhen>
+      </command>
+   </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -599,6 +621,14 @@
       <command
             id="org.bonitasoft.studio.deployCommand"
             name="%deploy">
+      </command>
+      <command
+            id="org.bonitasoft.studio.application.import"
+            name="%import">
+      </command>
+      <command
+            id="org.bonitasoft.studio.application.export"
+            name="%export">
       </command>
    </extension>
    <extension

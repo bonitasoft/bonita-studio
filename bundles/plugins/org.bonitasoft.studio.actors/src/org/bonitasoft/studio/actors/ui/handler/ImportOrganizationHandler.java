@@ -29,6 +29,8 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -43,18 +45,14 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class ImportOrganizationHandler {
+public class ImportOrganizationHandler extends AbstractHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) throws ExecutionException {
         final OrganizationRepositoryStore organizationStore = repositoryAccessor
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
-        fd.setFilterExtensions(new String[] { "*.xml;*.zip" });
+        fd.setFilterExtensions(new String[] { "*.xml" });
         final String filePath = fd.open();
         if (filePath != null) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -138,4 +136,13 @@ public class ImportOrganizationHandler {
     protected IStatus validateImportedOrganization(final OrganizationFileStore fileStore) {
         return new OrganizationValidator().validate(fileStore.getContent());
     }
+
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        execute(repositoryAccessor);
+        return null;
+    }
+
 }
