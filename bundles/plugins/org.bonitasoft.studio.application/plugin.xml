@@ -410,6 +410,10 @@
                   name="org.bonitasoft.studio.application.placeholder.actor"
                   visible="true">
             </separator>
+            <separator
+                  name="additions"
+                  visible="true">
+            </separator>
          </menu>
          <separator
                name="newSeparator"
@@ -461,12 +465,11 @@
             </visibleWhen>
          </command>
       </menuContribution>
-<menuContribution
+	  <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.deploy">
          <command
                commandId="org.bonitasoft.studio.deployCommand"
-               icon="icons/menuIcons/deploy_16.png"
                label="%deploy"
                style="push">
                <visibleWhen
@@ -477,15 +480,12 @@
                   </count>
                   <or>
                      <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IFile">
-                        </instanceof>
                         <test
                               property="org.bonitasoft.studio.application.deployablePropertyTester.isDeployable">
                         </test>
                      </iterate>
                   </or>
-               </and>
+               </and> 
             </visibleWhen>
          </command>
       </menuContribution>
@@ -1159,8 +1159,11 @@
                   separator="true">
             </insertionPoint>
             <insertionPoint
+                  name="group.deploy">
+            </insertionPoint>
+            <insertionPoint
                   name="group.build"
-                  separator="true">
+                  separator="false">
             </insertionPoint>
             <insertionPoint
                   name="group.import"
@@ -1173,18 +1176,10 @@
                   name="group.manage.dependencies"
 				  separator="true">
             </insertionPoint>
-			<insertionPoint
-                  name="group.deploy"
-                  separator="true">
-            </insertionPoint>
             <insertionPoint
                   name="additions"
                   separator="true">
             </insertionPoint>
-             <insertionPoint
-                   name="group.restapi"
-                   separator="true">
-             </insertionPoint>
           </popupMenu>
       </viewer>
       <viewerContentBinding
@@ -1335,7 +1330,7 @@
             id="org.bonitasoft.studio.application.deployablePropertyTester"
             namespace="org.bonitasoft.studio.application.deployablePropertyTester"
             properties="isDeployable"
-            type="org.eclipse.core.resources.IResource">
+            type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
    </extension>
 
