@@ -1363,5 +1363,13 @@
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.application.PerspectiveJavaFactory"
+            id="org.bonitasoft.studio.perspective.java"
+            name="Java Perspective">
+      </perspective>
+   </extension>
 
 </plugin>

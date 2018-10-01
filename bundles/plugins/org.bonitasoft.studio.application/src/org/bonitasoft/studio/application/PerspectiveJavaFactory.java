@@ -12,8 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.perspectives;
+package org.bonitasoft.studio.application;
 
+import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -35,12 +37,18 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
     public void createInitialLayout(final IPageLayout layout) {
         final String editorArea = layout.getEditorArea();
 
-        // Bottom left.
-        final IFolderLayout leftView = layout.createFolder(
-                "leftView", IPageLayout.LEFT, 0.2f, editorArea);
-        leftView.addView("org.bonitasoft.studio.application.project.explorer");
-        leftView.addView(IPageLayout.ID_OUTLINE);
-        layout.setFixed(true);
+        final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, (float) 0.2, editorArea); //$NON-NLS-1$
+        leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
+
+        final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
+        bottomfolder.addView("org.eclipse.ui.views.ProblemView");
+        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
+            bottomfolder.addView("org.eclipse.egit.ui.StagingView");
+            bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
+        }
+
+        final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
+        rightFolder.addView(IPageLayout.ID_OUTLINE);
     }
 
     /*
