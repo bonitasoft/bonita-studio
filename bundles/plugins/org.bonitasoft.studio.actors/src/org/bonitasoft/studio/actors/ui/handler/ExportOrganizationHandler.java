@@ -17,9 +17,12 @@
 package org.bonitasoft.studio.actors.ui.handler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -28,25 +31,51 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Romain Bioteau
- *
- */
+
 public class ExportOrganizationHandler extends AbstractHandler {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         final IRepositoryStore<? extends IRepositoryFileStore> organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
         List<IRepositoryStore<? extends IRepositoryFileStore>> stores = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>() ;
         stores.add(organizationStore) ;
-        CommonRepositoryPlugin.exportArtifactsToFile(stores, null,Messages.exportOrganizationTitle) ;
+
+        CommonRepositoryPlugin.exportArtifactsToFile(stores, getSelection(), Messages.exportOrganizationTitle);
 
         return null;
     }
 
+    private Set<Object> getSelection() {
+        Set<Object> res = new HashSet<>();
+        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+        if (service == null) {
+            return res;
+        }
+        ISelection selection = service.getSelection();
+        if (selection instanceof IStructuredSelection
+                && ((IStructuredSelection) selection).size() == 1) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if (sel instanceof IAdaptable && ((IAdaptable) sel).getAdapter(IResource.class) != null) {
+                IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
+                if (adapter instanceof IFile) {
+                    IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
+                            .getFileStore(adapter);
+                    if (fileStore instanceof OrganizationFileStore) {
+                        res.add(fileStore);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 
 }

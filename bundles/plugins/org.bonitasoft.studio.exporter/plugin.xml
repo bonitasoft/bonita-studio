@@ -70,7 +70,7 @@
          <command
                commandId="org.bonitasoft.studio.exportBosArchive"
                icon="icons/export.png"
-               label="%exportBosArchive"
+               label="%export"
                style="push">
                <visibleWhen
                   checkEnabled="true">

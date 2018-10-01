@@ -40,7 +40,7 @@
          <command
                commandId="org.bonitasoft.studio.importer.bos.command"
                icon="icons/import.png"
-               label="%importBosArchive"
+               label="%import"
                style="push">
                <visibleWhen
                   checkEnabled="true">
