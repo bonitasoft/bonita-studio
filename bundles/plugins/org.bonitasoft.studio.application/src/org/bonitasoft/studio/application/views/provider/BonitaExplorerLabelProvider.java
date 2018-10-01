@@ -28,6 +28,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
@@ -53,10 +55,18 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_fragments")) {
             return repositoryManager.getRepositoryStore(WebFragmentRepositoryStore.class).getIcon();
         }
-        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
-                .getRepositoryStore(element);
-        if (repositoryStore.isPresent()) {
-            return repositoryStore.get().getIcon();
+        if (!(element instanceof IJavaElement)) {
+            Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
+                    .getRepositoryStore(element);
+            if (repositoryStore.isPresent()) {
+                return repositoryStore.get().getIcon();
+            }
+            if (element instanceof IResource) {
+                IRepositoryFileStore fileStore = repositoryManager.getCurrentRepository().getFileStore((IResource) element);
+                if (fileStore != null) {
+                    return fileStore.getIcon();
+                }
+            }
         }
         return super.getImage(element);
     }
@@ -67,14 +77,17 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         if (!repositoryManager.getCurrentRepository().isLoaded()) {
             return super.getStyledText(element);
         }
-        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
-                .getRepositoryStore(element);
-        if (repositoryStore.isPresent()) {
-            return new StyledString(repositoryStore.get().getDisplayName());
-        }
-        IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
-        if (fStore != null) {
-            return fStore.getStyledString();
+        if (!(element instanceof IPackageFragment)) {
+            Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
+                    .getRepositoryStore(element);
+            if (repositoryStore.isPresent()) {
+                return new StyledString(repositoryStore.get().getDisplayName());
+            }
+
+            IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
+            if (fStore != null) {
+                return fStore.getStyledString();
+            }
         }
         return super.getStyledText(element);
     }
