@@ -78,6 +78,8 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         INCLUDES.add("team.main");
         INCLUDES.add("org.eclipse.ui.file.refresh");
         INCLUDES.add("org.eclipse.jdt.junit.junitShortcut.run");
+        INCLUDES.add("org.eclipse.ui.file.import");
+        INCLUDES.add("org.eclipse.ui.file.export");
     }
 
     /**
