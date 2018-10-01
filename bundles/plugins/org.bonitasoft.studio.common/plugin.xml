@@ -42,11 +42,6 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.bonitasoft.studio.common.perspectives.PerspectiveJavaFactory"
-            id="org.bonitasoft.studio.perspective.java"
-            name="Java perspective">
-      </perspective>
-      <perspective
             class="org.bonitasoft.studio.common.perspectives.TextEditorPerspectiveFactory"
             id="org.bonitasoft.studio.perspective.textEditor"
             name="Text Perspective">
