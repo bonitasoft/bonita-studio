@@ -77,13 +77,13 @@ public class DeleteHandler extends AbstractHandler {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
             if (sel instanceof IAdaptable && ((IAdaptable) sel).getAdapter(IResource.class) != null) {
                 IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
-                if (adapter instanceof IFile) {
+                if (adapter instanceof IResource) {
                     IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
                             .getFileStore(adapter);
                     if (fileStore != null) {
                         return fileStore.canBeDeleted();
                     } else {
-                        return true;
+                        return adapter instanceof IFile;
                     }
                 }
             }

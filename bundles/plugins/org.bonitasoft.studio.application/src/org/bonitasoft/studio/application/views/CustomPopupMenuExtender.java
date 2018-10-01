@@ -77,7 +77,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
     static {
         INCLUDES.add("team.main");
         INCLUDES.add("org.eclipse.ui.file.refresh");
-        INCLUDES.add("org.eclipse.ui.edit.delete");
+        INCLUDES.add("org.eclipse.jdt.junit.junitShortcut.run");
     }
 
     /**
@@ -347,6 +347,8 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         INCLUDES.add("replaceWithMenu");
         INCLUDES.add("org.eclipse.jdt.ui.source.menu");
         INCLUDES.add("org.eclipse.jdt.ui.refactoring.menu");
+        INCLUDES.remove("org.eclipse.ui.edit.delete");
+
         IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         StructuredSelection repositoryProject = new StructuredSelection(project);
         ISelection selection = selProvider.getSelection();
@@ -355,6 +357,9 @@ public class CustomPopupMenuExtender implements IMenuListener2,
             INCLUDES.remove("replaceWithMenu");
             INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
             INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
+            INCLUDES.add("org.eclipse.ui.edit.delete");
+        } else if (((StructuredSelection) selection).getFirstElement() instanceof IProject) {
+            INCLUDES.add("org.eclipse.ui.edit.delete");
         }
         Object resource = ((StructuredSelection) selection).getFirstElement();
         if (resource instanceof IAdaptable && ((IAdaptable) resource).getAdapter(IResource.class) != null) {
@@ -366,6 +371,7 @@ public class CustomPopupMenuExtender implements IMenuListener2,
                 INCLUDES.remove("replaceWithMenu");
                 INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
                 INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
+                INCLUDES.add("org.eclipse.ui.edit.delete");
             }
         }
 
