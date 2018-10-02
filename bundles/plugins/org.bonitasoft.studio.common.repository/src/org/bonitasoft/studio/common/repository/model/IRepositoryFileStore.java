@@ -49,7 +49,7 @@ public interface IRepositoryFileStore extends IDisplayable {
 
     void delete();
 
-    void rename(String newName);
+    void renameLegacy(String newName);
 
     void save(Object content);
 

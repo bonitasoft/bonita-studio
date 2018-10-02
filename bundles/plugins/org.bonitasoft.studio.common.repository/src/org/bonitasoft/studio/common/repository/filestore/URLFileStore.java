@@ -149,7 +149,7 @@ public class URLFileStore implements IRepositoryFileStore {
      * @see org.bonitasoft.studio.common.repository.IRepositoryFileStore#rename(java.lang.String)
      */
     @Override
-    public void rename(final String newName) {
+    public void renameLegacy(final String newName) {
 
     }
 

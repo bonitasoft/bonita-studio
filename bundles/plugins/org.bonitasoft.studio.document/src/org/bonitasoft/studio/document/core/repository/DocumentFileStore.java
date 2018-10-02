@@ -71,7 +71,7 @@ public class DocumentFileStore extends AbstractFileStore implements IRepositoryF
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#rename(java.lang.String)
      */
     @Override
-    public void rename(String newName) {
+    public void renameLegacy(String newName) {
 
     }
 

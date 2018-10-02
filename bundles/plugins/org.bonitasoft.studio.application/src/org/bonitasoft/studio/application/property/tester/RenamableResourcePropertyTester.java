@@ -12,29 +12,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.handler;
+package org.bonitasoft.studio.application.property.tester;
 
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 
-public class DeployHandler extends AbstractHandler {
+public class RenamableResourcePropertyTester extends PropertyTester {
 
     private FileStoreFinder fileStoreFinder;
 
-    public DeployHandler() {
+    public RenamableResourcePropertyTester() {
         fileStoreFinder = new FileStoreFinder();
     }
 
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        fileStoreFinder
-                .findElementToDeploy(RepositoryManager.getInstance().getCurrentRepository())
-                .ifPresent(IDeployable::deploy);
-        return null;
+    public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        IResource resource = ((IAdaptable) receiver).getAdapter(IResource.class);
+        if (resource != null) {
+            return fileStoreFinder.findElementToRename(resource, currentRepository).isPresent();
+        }
+        return false;
     }
 
 }

@@ -32,7 +32,7 @@ public class RenameXMLFileDialog {
         final InputDialog dialog = new InputDialog(shell, Messages.rename, Messages.renameFile,
                 currentFileName, new InputValidatorWrapper(validator));
         if (dialog.open() == Dialog.OK && !currentFileName.equals(stripXmlExtension(dialog.getValue()))) {
-            fileStore.rename(stripXmlExtension(dialog.getValue()) + ".xml");
+            fileStore.renameLegacy(stripXmlExtension(dialog.getValue()) + ".xml");
         }
 
         return !Objects.equal(currentFileName, fileStore.getDisplayName());

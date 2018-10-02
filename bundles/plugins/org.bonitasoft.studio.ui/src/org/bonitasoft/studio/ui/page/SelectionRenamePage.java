@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.ui.dialog.RenameXMLFileDialog;
 import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -43,7 +44,7 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
 
     public SelectionRenamePage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider provider) {
         super(repositoryAccessor, type, provider);
-        this.nameValidator = new FileNameValidator(repositoryAccessor.getRepositoryStore(type));
+        this.nameValidator = new FileNameValidator(repositoryAccessor.getRepositoryStore(type), ExtensionSupported.XML);
     }
 
     @Override
