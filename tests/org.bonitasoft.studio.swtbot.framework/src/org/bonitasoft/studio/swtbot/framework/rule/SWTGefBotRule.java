@@ -16,12 +16,20 @@ package org.bonitasoft.studio.swtbot.framework.rule;
 
 import static org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions.activeWelcomePage;
 
+import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
@@ -33,8 +41,6 @@ import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 
 /**
  * @author Romain Bioteau
@@ -121,16 +127,26 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void initPreferences() {
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         ConnectorEditPlugin.getPlugin().getPreferenceStore()
                 .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+        IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+        preferenceStore.setValue(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE,
+                BonitaCoolBarPreferenceConstant.NORMAL);
+        Display.getDefault().asyncExec(() -> {
+            try {
+                new NormalCoolBarHandler().execute(null);
+            } catch (ExecutionException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+
+        preferenceStore
+                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        preferenceStore
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-		EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
-        disablePopup = FileActionDialog.getDisablePopup();
+        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
         FileActionDialog.setDisablePopup(true);
     }
 
