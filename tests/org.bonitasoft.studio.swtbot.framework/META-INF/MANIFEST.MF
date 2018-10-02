@@ -36,7 +36,8 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.eclipse.egit.ui,
  org.eclipse.jgit;bundle-version="4.10.0",
  org.bonitasoft.studio.common;bundle-version="7.8.0",
- org.bonitasoft.studio.diagram
+ org.bonitasoft.studio.diagram,
+ org.bonitasoft.studio.application
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.connector.model.i18n,

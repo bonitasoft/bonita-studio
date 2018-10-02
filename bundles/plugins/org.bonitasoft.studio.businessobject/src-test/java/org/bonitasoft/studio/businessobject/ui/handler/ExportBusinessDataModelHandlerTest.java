@@ -56,9 +56,6 @@ public class ExportBusinessDataModelHandlerTest {
     @Mock
     private RepositoryAccessor repositoryAccessor;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         Mockito.doReturn(businessStore).when(repositoryAccessor)
@@ -66,16 +63,9 @@ public class ExportBusinessDataModelHandlerTest {
         doReturn(wizardDialog).when(handlerUnderTest).createWizardDialog(shell, Messages.export);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void shouldExecute_OpenWizardDialogWithExportWizard() throws Exception {
-        handlerUnderTest.execute(repositoryAccessor, shell);
+        handlerUnderTest.execute(shell, repositoryAccessor);
         verify(handlerUnderTest).createWizardDialog(shell, Messages.export);
         verify(wizardDialog).open();
     }
