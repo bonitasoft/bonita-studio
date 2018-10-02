@@ -16,24 +16,22 @@ package org.bonitasoft.studio.application.handler;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-public class DeployHandler extends AbstractHandler {
+public class RenameHandler extends AbstractHandler {
 
-    private FileStoreFinder fileStoreFinder;
+    private FileStoreFinder elementToRenameFinder;
 
-    public DeployHandler() {
-        fileStoreFinder = new FileStoreFinder();
+    public RenameHandler() {
+        elementToRenameFinder = new FileStoreFinder();
     }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        fileStoreFinder
-                .findElementToDeploy(RepositoryManager.getInstance().getCurrentRepository())
-                .ifPresent(IDeployable::deploy);
+        elementToRenameFinder.findElementToRename(RepositoryManager.getInstance().getCurrentRepository())
+                .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
         return null;
     }
 

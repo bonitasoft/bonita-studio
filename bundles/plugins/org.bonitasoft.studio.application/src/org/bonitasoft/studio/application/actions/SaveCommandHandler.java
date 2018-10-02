@@ -131,7 +131,7 @@ public class SaveCommandHandler extends SaveHandler {
                     formIds.add(ModelHelper.getEObjectID(diagramDocumentEditor.getDiagramEditPart().resolveSemanticElement()));
                     diagramDocumentEditor.close(true);
                 }
-                oldArtifact.rename(NamingUtils.toDiagramFilename(proc));
+                oldArtifact.renameLegacy(NamingUtils.toDiagramFilename(proc));
                 oldArtifact.open();
             } else {
                 final EObject root = editorPart.getDiagramEditPart().resolveSemanticElement();
