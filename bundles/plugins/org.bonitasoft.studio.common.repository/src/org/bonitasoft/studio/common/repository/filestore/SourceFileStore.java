@@ -201,7 +201,7 @@ public class SourceFileStore extends AbstractFileStore {
     }
 
     @Override
-    public void rename(final String newQualifiedClassName) {
+    public void renameLegacy(final String newQualifiedClassName) {
         final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         String packageName = "";
         String className = newQualifiedClassName;

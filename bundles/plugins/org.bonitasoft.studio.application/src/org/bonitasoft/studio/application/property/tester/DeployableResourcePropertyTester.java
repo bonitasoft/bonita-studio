@@ -14,97 +14,38 @@
  */
 package org.bonitasoft.studio.application.property.tester;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 
 public class DeployableResourcePropertyTester extends PropertyTester {
+
+    private FileStoreFinder fileStoreFinder;
+
+    public DeployableResourcePropertyTester() {
+        fileStoreFinder = new FileStoreFinder();
+    }
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         IFile file = ((IAdaptable) receiver).getAdapter(IFile.class);
         if (file != null) {
-            return findElementToDeploy(file, currentRepository).isPresent();
+            return fileStoreFinder.findElementToDeploy(file, currentRepository).isPresent();
         }
         IResource resource = ((IAdaptable) receiver).getAdapter(IResource.class);
         if (resource != null) {
             IProject project = (resource).getProject();
             return project != null
-                    ? findElementToDeploy(project, currentRepository).isPresent()
+                    ? fileStoreFinder.findElementToDeploy(project, currentRepository).isPresent()
                     : false;
         }
         return false;
-    }
-
-    public Optional<IDeployable> findElementToDeploy(Repository currentRepository) {
-        return getCurrentViewPart()
-                .map(vp -> {
-                    ISelection selection = vp.getViewSite().getSelectionProvider().getSelection();
-                    if (selection instanceof IStructuredSelection) {
-                        Object element = ((IStructuredSelection) selection).getFirstElement();
-                        if (element instanceof IAdaptable) {
-                            IFile file = ((IAdaptable) element).getAdapter(IFile.class);
-                            if (file != null) {
-                                return findElementToDeploy(file, currentRepository).orElse(null);
-                            }
-                            IResource resource = ((IAdaptable) element).getAdapter(IResource.class);
-                            if (resource != null) {
-                                IProject project = (resource).getProject();
-                                return project != null
-                                        ? findElementToDeploy(project, currentRepository).orElse(null)
-                                        : null;
-                            }
-                        }
-                    }
-                    return null;
-                });
-    }
-
-    private Optional<IDeployable> findElementToDeploy(IFile file, Repository currentRepository) {
-        Optional<IDeployable> deployable = currentRepository.getAllStores().stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(IDeployable.class::isInstance)
-                .filter(fileStore -> Objects.equals(fileStore.getName(), file.getName()))
-                .findFirst()
-                .map(IDeployable.class::cast);
-        if (!deployable.isPresent()) {
-            IProject project = file.getProject();
-            if (project != null) {
-                return findElementToDeploy(project, currentRepository);
-            }
-        }
-        return deployable;
-    }
-
-    private Optional<IDeployable> findElementToDeploy(IProject resource, Repository currentRepository) {
-        IRepositoryFileStore fileStore = currentRepository.getFileStore(resource);
-        if (fileStore != null && fileStore instanceof IDeployable) {
-            return Optional.of((IDeployable) fileStore);
-        }
-        return Optional.empty();
-    }
-
-    private Optional<IViewPart> getCurrentViewPart() {
-        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
-        return Optional.ofNullable(activePart.getAdapter(IViewPart.class));
     }
 
 }

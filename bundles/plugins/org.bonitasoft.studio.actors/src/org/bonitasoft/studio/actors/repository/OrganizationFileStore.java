@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -29,8 +30,14 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
+import org.bonitasoft.studio.ui.i18n.Messages;
+import org.bonitasoft.studio.ui.validator.ExtensionSupported;
+import org.bonitasoft.studio.ui.validator.FileNameValidator;
+import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -39,6 +46,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Image;
@@ -46,34 +55,28 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.base.Objects;
 import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore implements IDeployable {
+public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
+    private static final String ORGANIZATION_EXT = ".organization";
+    private ActiveOrganizationProvider activeOrganizationProvider;
 
     public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
         super(fileName, store);
+        activeOrganizationProvider = new ActiveOrganizationProvider();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#
-     * getDisplayName()
-     */
     @Override
     public String getDisplayName() {
         return getContent().getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#
-     * getIcon()
-     */
     @Override
     public Image getIcon() {
         return getParentStore().getIcon();
@@ -188,5 +191,36 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(DeployOrganizationHandler.DEPLOY_ORGA_PARAMETER_NAME, getName());
         executeCommand(DEPLOY_ORGA_CMD, parameters);
+    }
+
+    @Override
+    public void rename(String newName) {
+        Organization organization = getContent();
+        String oldName = organization.getName();
+        String newNameWithoutExtension = stripOrgaExtension(newName);
+        organization.setName(newNameWithoutExtension);
+        if (Objects.equal(activeOrganizationProvider.getActiveOrganization(), oldName)) {
+            activeOrganizationProvider.saveActiveOrganization(newNameWithoutExtension);
+        }
+        doSave(organization);
+        renameLegacy(newName);
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        String currentName = getDisplayName();
+        OrganizationRepositoryStore repositoryStore = (OrganizationRepositoryStore) store;
+        FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.ORGANIZATION, currentName);
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
+                Messages.renameFile, currentName, new InputValidatorWrapper(validator));
+        if (dialog.open() == Dialog.OK
+                && !currentName.equals(stripOrgaExtension(dialog.getValue()))) {
+            return Optional.of(stripOrgaExtension(dialog.getValue()) + ORGANIZATION_EXT);
+        }
+        return Optional.empty();
+    }
+
+    private String stripOrgaExtension(String name) {
+        return name.toLowerCase().endsWith(ORGANIZATION_EXT) ? name.replace(ORGANIZATION_EXT, "") : name;
     }
 }

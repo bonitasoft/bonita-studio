@@ -29,18 +29,20 @@ import org.eclipse.core.runtime.IStatus;
 public class FileNameValidator extends TypedValidator<String, IStatus> {
 
     private static final String[] reservedChars = new String[] { "/", "\\", ":", "*", "?", "\"", "<", ">", ";", "|" };
-    private static final String XML_EXTENSION = ".xml";
+    private ExtensionSupported extension;
 
     private final IRepositoryStore<? extends IRepositoryFileStore> store;
 
     private Optional<String> currentFileName;
 
-    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store) {
-        this(store, null);
+    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store, ExtensionSupported extension) {
+        this(store, extension, null);
     }
 
-    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store, String currentFileName) {
+    public FileNameValidator(IRepositoryStore<? extends IRepositoryFileStore> store, ExtensionSupported extension,
+            String currentFileName) {
         this.store = store;
+        this.extension = extension;
         this.currentFileName = Optional.ofNullable(currentFileName);
     }
 
@@ -48,17 +50,13 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
         this.currentFileName = Optional.ofNullable(currentFileName);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.validator.TypedValidator#doValidate(java.util.Optional)
-     */
     @Override
     protected IStatus doValidate(Optional<String> value) {
         final String fileName = value.orElse("");
         if (fileName.isEmpty()) {
             return ValidationStatus.error(Messages.required);
         }
-        if (Objects.equals(fileName, XML_EXTENSION)) {
+        if (Objects.equals(fileName, extension)) {
             return ValidationStatus.error(String.format(Messages.invalidFileName, fileName));
         }
 
@@ -67,7 +65,8 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
             return ValidationStatus.error(String.format(Messages.invalidCharFileName, invalidChar.get()));
         }
         return UniqueValidatorFactory.uniqueValidator().in(getExistingFileNames()).create()
-                .validate((fileName.endsWith(XML_EXTENSION) ? fileName.replace(XML_EXTENSION, "") : fileName).toLowerCase());
+                .validate((fileName.endsWith(extension.toString()) ? fileName.replace(extension.toString(), "") : fileName)
+                        .toLowerCase());
     }
 
     protected Optional<String> isValidFileName(final String fileName) {
@@ -82,7 +81,7 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
     private List<String> getExistingFileNames() {
         return store.getChildren().stream()
                 .map(file -> file.getName().substring(0,
-                        file.getName().length() - XML_EXTENSION.length()))
+                        file.getName().length() - extension.toString().length()))
                 .filter(filename -> !currentFileName.filter(filename::equals).isPresent())
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());

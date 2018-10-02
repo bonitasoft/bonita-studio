@@ -29,7 +29,7 @@ public class FileNameValidatorTest {
         final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
         when(repositoryStore.getChildren()).thenReturn(children);
 
-        final FileNameValidator validator = new FileNameValidator(repositoryStore);
+        final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
 
         assertThat(validator.validate("fileName1")).isNotOK();
         assertThat(validator.validate("fileName1.xml")).isNotOK();
@@ -44,8 +44,7 @@ public class FileNameValidatorTest {
         final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
         when(repositoryStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final FileNameValidator validator = new FileNameValidator(
-                repositoryStore);
+        final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
 
         assertThat(validator.validate("fileName1/")).isNotOK();
         assertThat(validator.validate("fileName2:")).isNotOK();
@@ -57,8 +56,7 @@ public class FileNameValidatorTest {
         final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
         when(repositoryStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final FileNameValidator validator = new FileNameValidator(
-                repositoryStore);
+        final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
 
         assertThat(validator.validate(null)).isNotOK();
     }

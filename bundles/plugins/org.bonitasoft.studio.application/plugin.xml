@@ -508,6 +508,29 @@
             style="push">
          <visibleWhen
                checkEnabled="true">
+               </visibleWhen>
+      </command>
+   </menuContribution>
+	<menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.edit">
+      <command
+            commandId="org.bonitasoft.studio.renameCommand"
+            style="push">
+         <visibleWhen
+               checkEnabled="true">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <or>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.application.renamablePropertyTester.isRenamable">
+                     </test>
+                  </iterate>
+               </or>
+            </and>
          </visibleWhen>
       </command>
    </menuContribution>
@@ -629,6 +652,10 @@
       <command
             id="org.bonitasoft.studio.application.export"
             name="%export">
+            </command>
+	  <command
+            id="org.bonitasoft.studio.renameCommand"
+            name="%rename">
       </command>
    </extension>
    <extension
@@ -799,6 +826,10 @@
             class="org.bonitasoft.studio.application.handler.DeployHandler"
             commandId="org.bonitasoft.studio.deployCommand">
       </handler>
+   <handler
+         class="org.bonitasoft.studio.application.handler.RenameHandler"
+         commandId="org.bonitasoft.studio.renameCommand">
+   </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -1060,6 +1091,12 @@
             contextId="org.eclipse.ui.contexts.window"
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+M2+D">
+      </key>
+      <key
+            commandId="org.bonitasoft.studio.renameCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+R">
       </key>
    </extension>
    <extension
@@ -1360,6 +1397,13 @@
             id="org.bonitasoft.studio.application.deployablePropertyTester"
             namespace="org.bonitasoft.studio.application.deployablePropertyTester"
             properties="isDeployable"
+            type="org.eclipse.core.runtime.IAdaptable">
+      </propertyTester>
+      <propertyTester
+            class="org.bonitasoft.studio.application.property.tester.RenamableResourcePropertyTester"
+            id="org.bonitasoft.studio.application.renamablePropertyTester"
+            namespace="org.bonitasoft.studio.application.renamablePropertyTester"
+            properties="isRenamable"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
    </extension>

@@ -64,7 +64,7 @@ public abstract class AbstractFileStore
     public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
     private String name;
-    final IRepositoryStore<? extends IRepositoryFileStore> store;
+    protected final IRepositoryStore<? extends IRepositoryFileStore> store;
     private IWorkbenchPart activePart;
     private Map<String, Object> parameters;
 
@@ -261,7 +261,7 @@ public abstract class AbstractFileStore
     }
 
     @Override
-    public void rename(final String newName) {
+    public void renameLegacy(final String newName) {
         if (!isReadOnly()) {
             if (getParentStore().getChild(newName) != null) {
                 throw new IllegalArgumentException(newName + " already exists in this store");

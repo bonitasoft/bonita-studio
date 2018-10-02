@@ -225,7 +225,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 						if(!originalImpl.getImplementationClassname().equals(implWorkingCopy.getImplementationClassname())){
 							SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname()) ;
 							if(sourceFile != null){
-								sourceFile.rename(qualifiedClassname) ;
+								sourceFile.renameLegacy(qualifiedClassname) ;
 								try {
 									ClassGenerator.updateConnectorImplementationAbstractClassName(implWorkingCopy, ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname()), sourceFile, monitor);
 								} catch (Exception e) {
