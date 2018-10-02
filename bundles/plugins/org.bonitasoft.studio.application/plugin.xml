@@ -1371,5 +1371,23 @@
             name="Java Perspective">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="*">
+         <hiddenMenuItem
+               id="org.eclipse.jdt.ui.refactoring.menu">
+         </hiddenMenuItem>
+         <hiddenMenuItem
+               id="org.eclipse.search.menu">
+         </hiddenMenuItem>
+         <hiddenMenuItem
+               id="org.eclipse.jdt.ui/org.eclipse.jdt.ui.refactoring.menu">
+         </hiddenMenuItem>
+         <hiddenMenuItem
+               id="org.eclipse.jdt.ui.source.menu">
+         </hiddenMenuItem>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>

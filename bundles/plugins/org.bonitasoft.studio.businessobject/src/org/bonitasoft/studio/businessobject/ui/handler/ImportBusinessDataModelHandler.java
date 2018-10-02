@@ -22,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -29,19 +31,23 @@ import org.bonitasoft.studio.businessobject.ui.wizard.ImportBdmPage;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class ImportBusinessDataModelHandler {
+public class ImportBusinessDataModelHandler extends AbstractHandler {
 
     @Execute
-    public void importBdmWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void importBdmWizard(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+            RepositoryAccessor repositoryAccessor) {
         createWizard(newWizard(), repositoryAccessor)
                 .open(activeShell, Messages.importButtonLabel)
-                .ifPresent(o -> {
-                    MessageDialog.openInformation(activeShell, Messages.bdmImportedTitle, Messages.bdmImported);
-                });
+                .ifPresent(o -> MessageDialog.openInformation(activeShell, Messages.bdmImportedTitle, Messages.bdmImported));
     }
 
     private WizardBuilder<BusinessObjectModelFileStore> createWizard(WizardBuilder<BusinessObjectModelFileStore> builder,
@@ -76,6 +82,18 @@ public class ImportBusinessDataModelHandler {
         } catch (final IOException e) {
             throw new RuntimeException("Failed to import the bdm file", e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+     */
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        importBdmWizard(Display.getDefault().getActiveShell(), repositoryAccessor);
+        return null;
     }
 
 }
