@@ -31,10 +31,14 @@ import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStor
 import org.bonitasoft.studio.la.application.ui.control.ImportApplicationPage;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class ImportApplicationhandler {
+public class ImportApplicationhandler extends AbstractHandler {
 
     @Execute
     public void importApplicationDescriptorWizard(Shell activeShell, RepositoryAccessor repositoryAccessor) {
@@ -75,6 +79,14 @@ public class ImportApplicationhandler {
         } catch (final IOException e) {
             throw new RuntimeException("Failed to import the application descriptor", e);
         }
+    }
+
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        importApplicationDescriptorWizard(Display.getDefault().getActiveShell(), repositoryAccessor);
+        return null;
     }
 
 }

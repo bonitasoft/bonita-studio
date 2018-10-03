@@ -70,7 +70,6 @@ public class FileStoreFinder {
                     }
                     return null;
                 });
-
     }
 
     public Optional<IDeployable> findElementToDeploy(IFile file, Repository currentRepository) {
@@ -84,6 +83,17 @@ public class FileStoreFinder {
             }
         }
         return deployable;
+    }
+
+    public Optional<? extends IRepositoryFileStore> findSelectedFileStore(Repository currentRepository) {
+        return getCurrentStructuredSelection()
+                .map(selection -> {
+                    Object element = selection.getFirstElement();
+                    if (element instanceof IFile) {
+                        return findFileStore(((IFile) element).getName(), currentRepository).orElse(null);
+                    }
+                    return null;
+                });
     }
 
     public Optional<IDeployable> findElementToDeploy(IProject project, Repository currentRepository) {
