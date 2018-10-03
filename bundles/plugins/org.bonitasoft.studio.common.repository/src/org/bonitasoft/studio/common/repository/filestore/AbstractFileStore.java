@@ -37,9 +37,11 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -289,7 +291,7 @@ public abstract class AbstractFileStore
     }
 
     @Override
-    public void export(final String targetAbsoluteFilePath) throws IOException {
+    public IStatus export(final String targetAbsoluteFilePath) throws IOException {
         checkWritePermission(new File(targetAbsoluteFilePath));
         final IResource file = getResource();
         if (file != null) {
@@ -300,12 +302,13 @@ public abstract class AbstractFileStore
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
                     PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
                 } else {
-                    return;
+                    return ValidationStatus.cancel("");
                 }
             }
             PlatformUtil.copyResource(to, file.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
-
+            return ValidationStatus.ok();
         }
+        return ValidationStatus.error(String.format(Messages.failedToRetrieveResourceToExport, getName()));
     }
 
     protected IProgressService getProgressService() {
