@@ -415,6 +415,14 @@
                   visible="true">
             </separator>
          </menu>
+         <command
+               commandId="org.bonitasoft.studio.application.new"
+               mnemonic="w"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
          <separator
                name="newSeparator"
                visible="true">
@@ -657,6 +665,10 @@
             id="org.bonitasoft.studio.renameCommand"
             name="%rename">
       </command>
+   <command
+         id="org.bonitasoft.studio.application.new"
+         name="%newWithWizard">
+   </command>
    </extension>
    <extension
          point="org.eclipse.ui.views">

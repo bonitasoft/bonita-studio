@@ -15,13 +15,16 @@
 package org.bonitasoft.studio.actors.ui.handler;
 
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-public class ManageOrganizationHandler {
+public class ManageOrganizationHandler extends AbstractHandler {
 
     @Execute
     public void execute() {
@@ -35,6 +38,12 @@ public class ManageOrganizationHandler {
 
         };
         dialog.open();
+    }
+
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        execute();
+        return null;
     }
 
 }
