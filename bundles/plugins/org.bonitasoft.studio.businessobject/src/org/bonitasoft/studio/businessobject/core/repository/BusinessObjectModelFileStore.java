@@ -41,10 +41,12 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
@@ -170,7 +172,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     @Override
-    public void export(String targetAbsoluteFilePath) throws IOException {
+    public IStatus export(String targetAbsoluteFilePath) throws IOException {
         checkWritePermission(new File(targetAbsoluteFilePath));
         final IResource file = getResource();
         if (file != null) {
@@ -181,13 +183,16 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
                     PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
                 } else {
-                    return;
+                    return ValidationStatus.cancel("");
                 }
             }
             try (InputStream inputStream = ByteSource.wrap(toByteArray()).openBufferedStream();) {
                 Files.copy(inputStream, target.toPath());
+                return ValidationStatus.ok();
             }
         }
+        return ValidationStatus.error(
+                String.format(org.bonitasoft.studio.common.repository.Messages.failedToRetrieveResourceToExport, getName()));
     }
 
     @Override

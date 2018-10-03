@@ -24,10 +24,13 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
@@ -182,29 +185,22 @@ public class URLFileStore implements IRepositoryFileStore {
     }
 
     @Override
-    public void export(final String targetAbsoluteFilePath) {
-        final InputStream is = getContent();
-        if (is != null) {
-            final File to = new File(targetAbsoluteFilePath);
-            to.mkdirs();
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(to);
-                FileUtil.copy(is, fos);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                    is.close();
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
+    public IStatus export(final String targetAbsoluteFilePath) {
+        try (InputStream is = getContent()) {
+            if (is != null) {
+                File to = new File(targetAbsoluteFilePath);
+                to.mkdirs();
+                try (FileOutputStream fos = new FileOutputStream(to)) {
+                    FileUtil.copy(is, fos);
+                    return ValidationStatus.ok();
                 }
             }
+            return ValidationStatus.error(String
+                    .format(Messages.failedToRetrieveResourceToExport, url.toString()));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+            return ValidationStatus.error(Messages.exportFailed, e);
         }
-
     }
 
     @Override

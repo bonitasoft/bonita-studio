@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -57,7 +58,7 @@ public interface IRepositoryFileStore extends IDisplayable {
 
     boolean canBeExported();
 
-    void export(String targetAbsoluteFilePath) throws IOException;
+    IStatus export(String targetAbsoluteFilePath) throws IOException;
 
     byte[] toByteArray() throws IOException;
 

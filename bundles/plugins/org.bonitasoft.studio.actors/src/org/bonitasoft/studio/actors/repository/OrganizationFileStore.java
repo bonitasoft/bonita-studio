@@ -38,7 +38,9 @@ import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -114,49 +116,43 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     @Override
-    public void export(final String targetAbsoluteFilePath) throws IOException {
+    public IStatus export(String targetAbsoluteFilePath) throws IOException {
         checkWritePermission(new File(targetAbsoluteFilePath));
-        final Organization organization = getContent();
-        final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
-        final Organization exportedCopy = EcoreUtil.copy(organization);
+        Organization organization = getContent();
+        DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
+        Organization exportedCopy = EcoreUtil.copy(organization);
         exportedCopy.setName(null);
         exportedCopy.setDescription(null);
         root.setOrganization(exportedCopy);
-        try {
-            final File to = new File(targetAbsoluteFilePath);
-            if (targetAbsoluteFilePath.endsWith(".xml")) {
-                to.getParentFile().mkdirs();
-            } else {
-                to.mkdirs();
-            }
-
-            File target = null;
-            if (to.isDirectory()) {
-                final String targetFilename = organization.getName() + ".xml";
-                target = new File(to, targetFilename);
-            } else {
-                target = to;
-            }
-            if (target.exists()) {
-                if (FileActionDialog.overwriteQuestion(target.getName())) {
-                    PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
-                } else {
-                    return;
-                }
-            }
-
-            final Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath()));
-            resource.getContents().add(root);
-            final Map<String, Object> options = new HashMap<>();
-            options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-            options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-            options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
-            final XMLProcessor processor = new OrganizationXMLProcessor();
-            Files.write(processor.saveToString(resource, options).getBytes("UTF-8"), target);
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
+        File to = new File(targetAbsoluteFilePath);
+        if (targetAbsoluteFilePath.endsWith(".xml")) {
+            to.getParentFile().mkdirs();
+        } else {
+            to.mkdirs();
         }
-
+        File target = null;
+        if (to.isDirectory()) {
+            String targetFilename = organization.getName() + ".xml";
+            target = new File(to, targetFilename);
+        } else {
+            target = to;
+        }
+        if (target.exists()) {
+            if (FileActionDialog.overwriteQuestion(target.getName())) {
+                PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+            } else {
+                return ValidationStatus.cancel("");
+            }
+        }
+        Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath()));
+        resource.getContents().add(root);
+        Map<String, Object> options = new HashMap<>();
+        options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+        options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+        options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
+        XMLProcessor processor = new OrganizationXMLProcessor();
+        Files.write(processor.saveToString(resource, options).getBytes("UTF-8"), target);
+        return ValidationStatus.ok();
     }
 
     @Override
