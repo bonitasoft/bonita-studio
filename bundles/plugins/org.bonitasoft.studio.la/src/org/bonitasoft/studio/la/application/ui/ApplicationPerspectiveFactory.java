@@ -31,7 +31,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
         final String editorArea = layout.getEditorArea();
 
         final IFolderLayout leftFolder = layout.createFolder(
-                "leftFolder", IPageLayout.LEFT, 0.2f, editorArea);
+                "leftFolder", IPageLayout.LEFT, getExplorerViewRatio(), editorArea);
         leftFolder.addView(BonitaProjectExplorer.ID);
         leftFolder.addView(IPageLayout.ID_OUTLINE);
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
