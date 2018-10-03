@@ -20,11 +20,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -38,8 +42,8 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -47,7 +51,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -69,7 +72,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 
 /**
  * @author Romain Bioteau
@@ -213,79 +215,77 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     public boolean finish() {
         saveWidgetValues();
-
-        if (isZip) {
-            return performFinishForZipExport();
-        } else {
-            return performFinishForNotZipExport();
+        boolean exportSuccessful = isZip
+                ? performFinishForZipExport()
+                : performFinishForNotZipExport();
+        if (exportSuccessful) {
+            MessageDialog.openInformation(getContainer().getShell(), Messages.exportLabel,
+                    Messages.bind(Messages.exportFinishMessage, getDetinationPath()));
         }
+        return exportSuccessful;
     }
 
     protected boolean performFinishForNotZipExport() {
         try {
-            getContainer().run(false, false, new IRunnableWithProgress() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
-                    final Set<IRepositoryFileStore> selectedFileStores = getSelectedFileStores();
-                    monitor.beginTask(Messages.exporting, selectedFileStores.size());
-                    final File dest = new File(getDetinationPath());
-                    if (!dest.exists()) {
-                        dest.mkdirs();
-                    }
-                    for (final IRepositoryFileStore file : selectedFileStores) {
-                        if (file.getResource() != null && file.getResource().exists()) {
-                            try {
-                                file.export(dest.getAbsolutePath());
-                            } catch (final IOException e) {
-                                throw new InvocationTargetException(e);
-                            }
-                            monitor.worked(1);
+            MultiStatus status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, "", null);
+            getContainer().run(false, false, monitor -> {
+                Set<IRepositoryFileStore> selectedFileStores = getSelectedFileStores();
+                monitor.beginTask(Messages.exporting, selectedFileStores.size());
+                File dest = new File(getDetinationPath());
+                if (!dest.exists()) {
+                    dest.mkdirs();
+                }
+                for (IRepositoryFileStore file : selectedFileStores) {
+                    if (file.getResource() != null && file.getResource().exists()) {
+                        try {
+                            status.add(file.export(dest.getAbsolutePath()));
+                        } catch (IOException e) {
+                            throw new InvocationTargetException(e);
                         }
+                        monitor.worked(1);
                     }
-
                 }
             });
-        } catch (final Exception e) {
+
+            if (Objects.equals(status.getSeverity(), ValidationStatus.ERROR)) {
+                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed,
+                        getErrorMessages(status));
+                return false;
+            }
+            return !allExportCancel(status);
+        } catch (InterruptedException | InvocationTargetException e) {
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+            return false;
+        }
+    }
+
+    private boolean allExportCancel(MultiStatus multiStatus) {
+        return Stream.of(multiStatus.getChildren())
+                .allMatch(status -> Objects.equals(status.getSeverity(), ValidationStatus.CANCEL));
+    }
+
+    private String getErrorMessages(MultiStatus multiStatus) {
+        return Stream.of(multiStatus.getChildren())
+                .filter(status -> Objects.equals(status.getSeverity(), ValidationStatus.ERROR))
+                .map(IStatus::getMessage)
+                .collect(Collectors.joining("\n"));
+    }
+
+    protected boolean performFinishForZipExport() {
+        ExportBosArchiveOperation operation = createExportBOSOperation();
+        try {
+            getContainer().run(false, true, operation::run);
+        } catch (InterruptedException | InvocationTargetException e) {
+            BonitaStudioLog.error(e);
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
             return false;
         }
 
+        if (!operation.getStatus().isOK()) {
+            ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, null, operation.getStatus());
+            return false;
+        }
         return true;
-    }
-
-    protected boolean performFinishForZipExport() {
-        final ExportBosArchiveOperation operation = createExportBOSOperation();
-
-        try {
-            getContainer().run(false, true, new IRunnableWithProgress() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    operation.run(monitor);
-                }
-            });
-        } catch (final InterruptedException e) {
-            return false;
-        } catch (final InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-            return false;
-        }
-
-        final IStatus status = operation.getStatus();
-        if (!status.isOK()) {
-            ErrorDialog.openError(Display.getDefault().getActiveShell(),
-                    DataTransferMessages.DataTransfer_exportProblems,
-                    null, // no special message
-                    status);
-            return false;
-        } else {
-            MessageDialog.openInformation(getContainer().getShell(), Messages.exportLabel,
-                    Messages.bind(Messages.exportFinishMessage, getDetinationPath()));
-        }
-
-        return status.getSeverity() == IStatus.OK;
     }
 
     protected ExportBosArchiveOperation createExportBOSOperation() {
