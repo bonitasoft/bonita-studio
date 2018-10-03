@@ -19,10 +19,9 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
@@ -61,6 +60,8 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 import com.google.common.base.Joiner;
 
@@ -74,6 +75,7 @@ public class UIDesignerServerManager {
     private int portalPort;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
+    private static final int MAX_TIMEOUT = 60000;
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager(RepositoryAccessor repositoryAccessor) {
@@ -149,28 +151,18 @@ public class UIDesignerServerManager {
     protected boolean waitForUID(final PageDesignerURLFactory pageDesignerURLBuilder) {
         try {
             connectToURL(pageDesignerURLBuilder.openPageDesignerHome());
-        } catch (MalformedURLException e) {
+        } catch (ResourceException | URISyntaxException | MalformedURLException e) {
             return false;
         }
         return true;
     }
 
-    private void connectToURL(final URL url) {
-        try {
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
-            connection.setRequestMethod("HEAD");
-            connection.setReadTimeout(200);
-            final int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                connectToURL(url);
-            }
-        } catch (final IOException e) {
-            try {
-                Thread.sleep(500);
-            } catch (final InterruptedException e1) {
-            }
-            connectToURL(url);
-        }
+    private void connectToURL(final URL url) throws URISyntaxException {
+        ClientResource cr = new ClientResource(url.toURI());
+        cr.setRetryOnError(true);
+        cr.setRetryDelay(500);
+        cr.setRetryAttempts(120);
+        cr.get();
     }
 
     private Path logLocation() {
