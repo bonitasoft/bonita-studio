@@ -192,7 +192,7 @@ public class TestConnectorResultDialog extends Dialog {
             GridData gd = new GridData();
             gd.horizontalSpan = 2;
             foundExceptionLabel.setLayoutData(gd);
-            Text text = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+            Text text = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.WRAP);
             text.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             String exception = ""; //$NON-NLS-1$
@@ -240,8 +240,7 @@ public class TestConnectorResultDialog extends Dialog {
 
     @Override
     protected Point getInitialSize() {
-        Point initialSize = super.getInitialSize();
-        return new Point(initialSize.x,500);
+        return new Point(800, 500);
     }
 
     @Override
