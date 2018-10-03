@@ -30,10 +30,12 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,6 +43,9 @@ import org.junit.runner.RunWith;
 public class TestOrganizationPassword {
 
     private SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testImportExportWithPasswordUpdated() throws IOException {

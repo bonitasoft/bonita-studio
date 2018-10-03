@@ -33,6 +33,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -44,6 +45,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,6 +53,9 @@ import org.junit.runner.RunWith;
 public class ActorFilterImplementationTest implements SWTBotConstants {
 
     private SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     protected void selectDefinition(final String definition) {
         bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
