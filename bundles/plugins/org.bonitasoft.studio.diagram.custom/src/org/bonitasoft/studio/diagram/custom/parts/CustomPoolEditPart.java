@@ -65,7 +65,7 @@ public class CustomPoolEditPart extends PoolEditPart {
     private static int CONSTANT_LEFT_MARGIN = 20;
     private static int CONSTANT_RIGHT_MARGIN = 240;
     private static int CONSTANT_DEFAULT_HEIGHT = 250;
-    public static final int MIN_POOL_WIDTH = 1000;
+    public static final int MIN_POOL_WIDTH = 800;
 
     /**
      * @return the defaultWidth

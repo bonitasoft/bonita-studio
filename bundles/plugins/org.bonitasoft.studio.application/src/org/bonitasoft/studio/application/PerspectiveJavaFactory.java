@@ -37,7 +37,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
     public void createInitialLayout(final IPageLayout layout) {
         final String editorArea = layout.getEditorArea();
 
-        final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, (float) 0.2, editorArea); //$NON-NLS-1$
+        final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
         leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
 
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$

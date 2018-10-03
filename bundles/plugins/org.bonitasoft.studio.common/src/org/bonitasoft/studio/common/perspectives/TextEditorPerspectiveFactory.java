@@ -33,7 +33,7 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
         final String editorArea = layout.getEditorArea();
 
         final IFolderLayout leftView = layout.createFolder(
-                "leftView", IPageLayout.LEFT, 0.2f, editorArea);
+                "leftView", IPageLayout.LEFT, getExplorerViewRatio(), editorArea);
         leftView.addView("org.bonitasoft.studio.application.project.explorer");
     }
 
