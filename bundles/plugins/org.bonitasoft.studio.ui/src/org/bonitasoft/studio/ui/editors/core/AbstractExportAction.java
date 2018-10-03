@@ -52,10 +52,8 @@ public abstract class AbstractExportAction {
             MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.exportDoneTitle,
                     String.format(getExportDoneMessage(), targetFile.getAbsolutePath()));
             return Optional.of(fileStore);
-
         }
         return Optional.empty();
-
     }
 
     protected void openExportMessageDialog(Shell shell) {
