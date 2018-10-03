@@ -94,7 +94,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
     private IRepositoryFileStore asFileStore(Object element, RepositoryManager repositoryManager) {
         try {
-            if (element instanceof IResource) {
+            if (element instanceof IResource && ((IResource) element).getLocation() != null) {
                 return repositoryManager.getCurrentRepository()
                         .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);
             }
