@@ -1232,6 +1232,9 @@
                   separator="false">
             </insertionPoint>
             <insertionPoint
+                  name="group.uninstall">
+            </insertionPoint>
+            <insertionPoint
                   name="group.import"
                   separator="true">
             </insertionPoint>
