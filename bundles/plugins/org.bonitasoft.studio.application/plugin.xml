@@ -842,18 +842,6 @@
                      value="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor">
                </instanceof>
             </with>
-            <with
-                  variable="activeEditor">
-               <instanceof
-                     value="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor">
-               </instanceof>
-            </with>
-            <with
-                  variable="activeEditor">
-               <instanceof
-                     value="org.bonitasoft.studio.themes.editors.themeMultiPageEditor">
-               </instanceof>
-            </with>
          </or>
       </definition>
       <definition
@@ -1003,8 +991,7 @@
    <extension
          point="org.bonitasoft.studio.common.poststartup">
       <contribution
-            class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor"
-            priority="0">
+            class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor">
       </contribution>
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">

@@ -28,6 +28,7 @@ import org.bonitasoft.studio.connector.model.definition.Password;
 import org.bonitasoft.studio.connector.model.definition.RadioGroup;
 import org.bonitasoft.studio.connector.model.definition.Select;
 import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -38,6 +39,7 @@ import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +47,9 @@ import org.junit.runner.RunWith;
 public class ActorFilterDefinitionWizardPageTest {
 
     private SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     private void openActorFilterDefinitionWizardPage(String id) {
         final String packageLang = "java.lang.";
