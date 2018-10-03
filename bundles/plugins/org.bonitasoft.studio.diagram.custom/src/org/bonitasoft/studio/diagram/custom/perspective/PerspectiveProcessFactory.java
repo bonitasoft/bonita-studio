@@ -71,7 +71,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         final IFolderLayout left = layout.createFolder(
                 "left",
                 IPageLayout.LEFT,
-                (float) 0.2,
+                getExplorerViewRatio(),
                 editorArea);
         left.addView("org.bonitasoft.studio.application.project.explorer");
     }

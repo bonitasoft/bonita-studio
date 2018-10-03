@@ -49,6 +49,10 @@ public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory 
      */
     public abstract String getID();
 
+    protected float getExplorerViewRatio() {
+        return 0.18f;
+    }
+
     protected boolean isInsideprojectWithREStApiExtensionNature(final IEditorPart part) {
         final IEditorInput editorInput = part.getEditorInput();
         IFile file = editorInput.getAdapter(IFile.class);

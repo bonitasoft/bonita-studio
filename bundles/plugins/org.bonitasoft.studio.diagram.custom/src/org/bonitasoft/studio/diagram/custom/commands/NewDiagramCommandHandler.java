@@ -88,9 +88,9 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     private int getDefaultWidth() {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - 240;
+            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - 600;
         }
-        return 1000;
+        return 800;
     }
 
     /*
