@@ -413,6 +413,22 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.ManageOrganizationHandler"
+            commandId="org.bonitasoft.studio.application.new">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isOrganizationFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          id="org.bonitasoft.studio.actors.fragment"
