@@ -466,6 +466,29 @@
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.edit">
          <command
+               commandId="org.bonitasoft.studio.renameCommand"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <test
+                              property="org.bonitasoft.studio.application.renamablePropertyTester.isRenamable">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+         <separator
+               name="org.bonitasoft.studio.application.edit.separator"
+               visible="true">
+         </separator>
+         <command
                commandId="org.eclipse.ui.edit.delete"
                style="push">
             <visibleWhen
@@ -517,29 +540,6 @@
          <visibleWhen
                checkEnabled="true">
                </visibleWhen>
-      </command>
-   </menuContribution>
-	<menuContribution
-         allPopups="false"
-         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.edit">
-      <command
-            commandId="org.bonitasoft.studio.renameCommand"
-            style="push">
-         <visibleWhen
-               checkEnabled="true">
-            <and>
-               <count
-                     value="1">
-               </count>
-               <or>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.application.renamablePropertyTester.isRenamable">
-                     </test>
-                  </iterate>
-               </or>
-            </and>
-         </visibleWhen>
       </command>
    </menuContribution>
    </extension>

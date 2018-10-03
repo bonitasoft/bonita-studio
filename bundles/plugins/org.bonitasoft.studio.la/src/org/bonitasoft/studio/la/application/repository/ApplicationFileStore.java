@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
@@ -31,13 +32,21 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.ui.i18n.Messages;
+import org.bonitasoft.studio.ui.validator.ExtensionSupported;
+import org.bonitasoft.studio.ui.validator.FileNameValidator;
+import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -49,7 +58,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore implements IDeployable {
+public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IRenamable {
 
     public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
@@ -164,6 +173,23 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(APPLICATION_TO_DEPLOY_PARAMETER_NAME, getName());
         executeCommand(DEPLOY_COMMAND, parameters);
+    }
+
+    @Override
+    public void rename(String newName) {
+        renameLegacy(newName);
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        FileNameValidator validator = new FileNameValidator(store, ExtensionSupported.XML, getDisplayName());
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
+                Messages.renameFile, getDisplayName(), new InputValidatorWrapper(validator));
+        if (dialog.open() == Dialog.OK
+                && !getDisplayName().equals(stripExtension(dialog.getValue(), ".xml"))) {
+            return Optional.of(stripExtension(dialog.getValue(), ".xml") + ".xml");
+        }
+        return Optional.empty();
     }
 
 }

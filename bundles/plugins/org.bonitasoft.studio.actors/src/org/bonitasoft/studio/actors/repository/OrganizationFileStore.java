@@ -193,7 +193,7 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     public void rename(String newName) {
         Organization organization = getContent();
         String oldName = organization.getName();
-        String newNameWithoutExtension = stripOrgaExtension(newName);
+        String newNameWithoutExtension = stripExtension(newName, ORGANIZATION_EXT);
         organization.setName(newNameWithoutExtension);
         if (Objects.equal(activeOrganizationProvider.getActiveOrganization(), oldName)) {
             activeOrganizationProvider.saveActiveOrganization(newNameWithoutExtension);
@@ -210,13 +210,10 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
         InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
                 Messages.renameFile, currentName, new InputValidatorWrapper(validator));
         if (dialog.open() == Dialog.OK
-                && !currentName.equals(stripOrgaExtension(dialog.getValue()))) {
-            return Optional.of(stripOrgaExtension(dialog.getValue()) + ORGANIZATION_EXT);
+                && !currentName.equals(stripExtension(dialog.getValue(), ORGANIZATION_EXT))) {
+            return Optional.of(stripExtension(dialog.getValue(), ORGANIZATION_EXT) + ORGANIZATION_EXT);
         }
         return Optional.empty();
     }
 
-    private String stripOrgaExtension(String name) {
-        return name.toLowerCase().endsWith(ORGANIZATION_EXT) ? name.replace(ORGANIZATION_EXT, "") : name;
-    }
 }
