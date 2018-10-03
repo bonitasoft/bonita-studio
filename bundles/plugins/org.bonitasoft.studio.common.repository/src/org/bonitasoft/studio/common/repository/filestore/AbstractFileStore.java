@@ -452,4 +452,8 @@ public abstract class AbstractFileStore
         }
         return repositoryAccessor;
     }
+
+    protected String stripExtension(String name, String extension) {
+        return name.toLowerCase().endsWith(extension) ? name.replace(extension, "") : name;
+    }
 }
