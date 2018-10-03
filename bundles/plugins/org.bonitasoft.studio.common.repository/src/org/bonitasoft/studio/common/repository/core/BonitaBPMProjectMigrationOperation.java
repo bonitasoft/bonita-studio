@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
@@ -30,8 +32,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
 
     private final IProject project;
-    private final Set<String> builders = new HashSet<String>();
-    private final Set<String> natures = new HashSet<String>();
+    private final Set<String> builders = new HashSet<>();
+    private final List<String> natures = new ArrayList<>();
     private final Repository repository;
 
     public BonitaBPMProjectMigrationOperation(final IProject project, final Repository repository) {

@@ -709,6 +709,11 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
+        IFolder settings = project.getFolder(".settings");
+        if (settings.exists()) {
+            settings.delete(true, null);
+        }
+
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.createRepositoryStore(this);
             store.migrate(monitor);
@@ -743,8 +748,8 @@ public class Repository implements IRepository, IJavaContainer {
 
     protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
         return new BonitaBPMProjectMigrationOperation(project, this)
+                .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature("org.eclipse.xtext.ui.shared.xtextNature")
-                .addNature("org.bonitasoft.studio.common.repository.bonitaNature")
                 .addNature(JavaCore.NATURE_ID)
                 .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")

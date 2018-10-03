@@ -72,7 +72,6 @@ import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
-import org.bonitasoft.studio.tests.migration.MigrationReporTest;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
@@ -135,7 +134,6 @@ import org.junit.runners.Suite;
         DuplicateCommandTest.class,
         TestSave.class,
         TestMoveBetweenLane.class,
-        MigrationReporTest.class,
         TestTimer.class,
         ConnectorEditedInAsingleCommandIT.class,
         ProcessDependenciesConfigurationIT.class,

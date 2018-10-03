@@ -16,7 +16,6 @@ import org.eclipse.ui.internal.IObjectContributor;
 import org.eclipse.ui.internal.ObjectActionContributor;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 
-@SuppressWarnings("restriction")
 public class CustomObjectActionContributorManager extends ObjectActionContributorManager {
 
     private static final String MAVEN_PROJECT_MENU_ID = "org.eclipse.m2e.core.projectMenu";
@@ -32,6 +31,7 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private static final String COMPARE_ACTIONS_ID = "org.eclipse.compare.CompareAction";
     private static final String REPLACE_WITH_EDITION_ID = "org.eclipse.compare.ReplaceWithEditionAction";
     private static final String COMPARE_WITH_EDITION_ID = "org.eclipse.compare.CompareWithEditionAction";
+    private static final String SVN_ACTION_ID_PREFIX = "org.eclipse.team.svn.ui";
 
     private static CustomObjectActionContributorManager sharedInstance;
 
@@ -61,7 +61,7 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     public void registerContributor(IObjectContributor contributor, String targetType) {
         if (contributor instanceof ObjectActionContributor) {
             String id = ((ObjectActionContributor) contributor).getAdapter(IConfigurationElement.class).getAttribute("id");
-            if (getActions().contains(id)) {
+            if (getActions().contains(id) || id.startsWith(SVN_ACTION_ID_PREFIX)) {
                 super.registerContributor(contributor, targetType);
             }
         }

@@ -62,7 +62,6 @@ import org.bonitasoft.studio.tests.importer.extensions.TestImportExtensionPoint;
 import org.bonitasoft.studio.tests.importer.jpdl.TestJBPMImport;
 import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
 import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
-import org.bonitasoft.studio.tests.migration.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
@@ -131,7 +130,6 @@ import org.junit.runners.Suite;
         TestNonInterruptingBoundaryTimerEvent.class,
         TestUserFilterMatchingEngineVersion.class,
         TestDeployCommand.class,
-        MigrationReportPDFExportTest.class,
         TestValidationConstraints.class,
         TestTestConnectorOperation.class,
         TestWebserviceVersionForBPMNImport.class,
