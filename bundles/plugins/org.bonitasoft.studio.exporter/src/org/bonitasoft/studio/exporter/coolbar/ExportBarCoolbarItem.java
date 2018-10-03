@@ -61,7 +61,6 @@ public class ExportBarCoolbarItem extends ContributionItem implements IBonitaCon
             item.setImage(Pics.getImage(PicsConstants.coolbar_export_16));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_export_disabled_16));
         }
-        item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
