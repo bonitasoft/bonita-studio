@@ -372,6 +372,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             if (!fs.isReadOnly() && fs.canBeShared()) {
                 final IResource r = fs.getResource();
                 if (r instanceof IFile && r.exists()) {
+                    monitor.subTask(r.getName());
                     final IFile iFile = (IFile) r;
                     InputStream newIs;
                     try (final InputStream is = iFile.getContents()) {

@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.application.views;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,17 +25,31 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jdt.core.IClassFile;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.internal.PartSite;
+import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
@@ -117,15 +134,8 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
     @Override
     protected CommonViewer createCommonViewerObject(Composite aParent) {
-        CommonViewer commonViewer = new CommonViewer(getViewSite().getId(), aParent,
-                SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL) {
-
-            @Override
-            protected void initDragAndDrop() {
-                //Disable drag and drop
-            }
-
-        };
+        CommonViewer commonViewer = new PackageExplorerProblemTreeViewer(getViewSite().getId(), aParent,
+                SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         commonViewer.addFilter(UIDArtifactFilters.filterUIDArtifactChildren());
         return commonViewer;
     }
@@ -137,4 +147,135 @@ public class BonitaProjectExplorer extends CommonNavigator {
         }
         return super.getAdapter(adapter);
     }
+
+    private class PackageExplorerProblemTreeViewer extends ProblemTreeViewer {
+        // fix for 64372  Projects showing up in Package Explorer twice [package explorer]
+        private final List<Object> fPendingRefreshes;
+
+        public PackageExplorerProblemTreeViewer(String id, Composite parent, int style) {
+            super(id, parent, style);
+            fPendingRefreshes = Collections.synchronizedList(new ArrayList<>());
+            initizialize();
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.ui.navigator.CommonViewer#init()
+         */
+        @Override
+        protected void init() {
+
+        }
+
+        protected void initizialize() {
+            setUseHashlookup(true);
+            setContentProvider(getNavigatorContentService().createCommonContentProvider());
+            setLabelProvider(new NavigatorDecoratingLabelProvider(getNavigatorContentService().createCommonLabelProvider()));
+            initDragAndDrop();
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.ui.navigator.CommonViewer#initDragAndDrop()
+         */
+        @Override
+        protected void initDragAndDrop() {
+
+        }
+
+        @Override
+        public void add(Object parentElement, Object[] childElements) {
+            if (fPendingRefreshes.contains(parentElement)) {
+                return;
+            }
+            super.add(parentElement, childElements);
+        }
+
+        @Override
+        protected void internalRefresh(Object element, boolean updateLabels) {
+            try {
+                fPendingRefreshes.add(element);
+                super.internalRefresh(element, updateLabels);
+            } finally {
+                fPendingRefreshes.remove(element);
+            }
+        }
+
+        @Override
+        protected boolean evaluateExpandableWithFilters(Object parent) {
+            if (parent instanceof IJavaProject
+                    || parent instanceof ICompilationUnit || parent instanceof IClassFile
+                    || parent instanceof ClassPathContainer) {
+                return false;
+            }
+            if (parent instanceof IPackageFragmentRoot && ((IPackageFragmentRoot) parent).isArchive()) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected boolean isFiltered(Object object, Object parent, ViewerFilter[] filters) {
+            boolean res = super.isFiltered(object, parent, filters);
+            if (res && isEssential(object)) {
+                return false;
+            }
+            return res;
+        }
+
+        /*
+         * Checks if a filtered object in essential (i.e. is a parent that
+         * should not be removed).
+         */
+        private boolean isEssential(Object object) {
+            try {
+                if (object instanceof IPackageFragment) {
+                    IPackageFragment fragment = (IPackageFragment) object;
+                    if (!fragment.isDefaultPackage() && fragment.hasSubpackages()) {
+                        return hasFilteredChildren(fragment);
+                    }
+                }
+            } catch (JavaModelException e) {
+                JavaPlugin.log(e);
+            }
+            return false;
+        }
+
+        @Override
+        protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
+            IStructuredSelection is = (IStructuredSelection) invalidSelection;
+            List<Object> ns = null;
+            if (newSelection instanceof IStructuredSelection) {
+                ns = new ArrayList<Object>(((IStructuredSelection) newSelection).toList());
+            } else {
+                ns = new ArrayList<>();
+            }
+            boolean changed = false;
+            for (Iterator<?> iter = is.iterator(); iter.hasNext();) {
+                Object element = iter.next();
+                if (element instanceof IJavaProject) {
+                    IProject project = ((IJavaProject) element).getProject();
+                    if (!project.isOpen() && project.exists()) {
+                        ns.add(project);
+                        changed = true;
+                    }
+                } else if (element instanceof IProject) {
+                    IProject project = (IProject) element;
+                    if (project.isOpen()) {
+                        IJavaProject jProject = JavaCore.create(project);
+                        if (jProject != null && jProject.exists())
+                            ns.add(jProject);
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) {
+                newSelection = new StructuredSelection(ns);
+                setSelection(newSelection);
+            }
+            super.handleInvalidSelection(invalidSelection, newSelection);
+        }
+
+    }
+
 }

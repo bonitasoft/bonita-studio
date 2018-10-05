@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,11 +44,19 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
+        //In order to force the reorder of natures we must reset description
+        project.setDescription(
+                new ProjectDescriptionBuilder().withProjectName(project.getName())
+                        .withComment(ProductVersion.CURRENT_VERSION).build(),
+                IResource.FORCE,
+                monitor);
         project.setDescription(new ProjectDescriptionBuilder()
                 .withProjectName(project.getName())
                 .withComment(ProductVersion.CURRENT_VERSION)
                 .havingNatures(natures)
-                .havingBuilders(builders).build(), monitor);
+                .havingBuilders(builders).build(),
+                IResource.FORCE,
+                monitor);
 
         final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
         bonitaBPMProjectClasspath.delete(repository, monitor);
