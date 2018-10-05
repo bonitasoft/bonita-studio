@@ -16,4 +16,11 @@ public interface IRenamable {
 
     public Optional<String> retrieveNewName();
 
+    /**
+     * Used to handle some specific cases, like the default profiles file
+     */
+    public default boolean canBeRenamed() {
+        return true;
+    }
+
 }

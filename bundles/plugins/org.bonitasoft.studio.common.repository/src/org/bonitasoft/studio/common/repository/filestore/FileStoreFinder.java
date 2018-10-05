@@ -48,7 +48,8 @@ public class FileStoreFinder {
     public Optional<IRenamable> findElementToRename(IResource resource, Repository currentRepository) {
         return findFileStore(resource.getName(), currentRepository)
                 .filter(IRenamable.class::isInstance)
-                .map(IRenamable.class::cast);
+                .map(IRenamable.class::cast)
+                .filter(IRenamable::canBeRenamed);
     }
 
     public Optional<IDeployable> findElementToDeploy(Repository currentRepository) {
