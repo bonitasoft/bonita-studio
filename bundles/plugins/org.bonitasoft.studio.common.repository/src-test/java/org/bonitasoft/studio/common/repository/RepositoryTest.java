@@ -14,20 +14,29 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -93,6 +102,34 @@ public class RepositoryTest {
         repository.delete(monitor);
 
         verify(project).refreshLocal(anyInt(), any(IProgressMonitor.class));
+    }
+
+    @Test
+    public void should_return_the_correct_file_store_when_two_resources_have_the_same_name() throws Exception {
+        IResource resource1 = mock(IResource.class);
+        IResource resource2 = mock(IResource.class);
+        when(resource1.getName()).thenReturn("name.xml");
+        when(resource2.getName()).thenReturn("name.xml");
+
+        IRepositoryStore<IRepositoryFileStore> repositoryStore1 = mock(IRepositoryStore.class);
+        IRepositoryStore<IRepositoryFileStore> repositoryStore2 = mock(IRepositoryStore.class);
+        IFolder container1 = mock(IFolder.class);
+        IFolder container2 = mock(IFolder.class);
+        when(repositoryStore1.getResource()).thenReturn(container1);
+        when(repositoryStore2.getResource()).thenReturn(container2);
+        when(resource1.getParent()).thenReturn(container1);
+        when(resource2.getParent()).thenReturn(container2);
+
+        IRepositoryFileStore fileStore1 = mock(IRepositoryFileStore.class);
+        IRepositoryFileStore fileStore2 = mock(IRepositoryFileStore.class);
+        when(repositoryStore1.createRepositoryFileStore("name.xml")).thenReturn(fileStore1);
+        when(repositoryStore2.createRepositoryFileStore("name.xml")).thenReturn(fileStore2);
+
+        Repository repository = newRepository();
+        doReturn(Arrays.asList(repositoryStore1, repositoryStore2)).when(repository).getAllStores();
+
+        assertThat(repository.getFileStore(resource1)).isEqualTo(fileStore1);
+        assertThat(repository.getFileStore(resource2)).isEqualTo(fileStore2);
     }
 
     private Repository newRepository() throws CoreException, MigrationException {
