@@ -415,7 +415,7 @@
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ManageOrganizationHandler"
-            commandId="org.bonitasoft.studio.application.new">
+            commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
             <and>
                <count

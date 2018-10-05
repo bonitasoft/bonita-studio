@@ -17,17 +17,24 @@ package org.bonitasoft.studio.ui.handler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class NewFileHandler {
+public abstract class NewFileHandler extends AbstractHandler {
 
     @Execute
-    public void execute(Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
         openHelpDialog(activeShell);
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
                 .map(IRepositoryFileStore::getDisplayName).collect(Collectors.toList());
@@ -43,4 +50,12 @@ public abstract class NewFileHandler {
             RepositoryAccessor repositoryAccessor);
 
     protected abstract String getDefaultFileName();
+
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        execute(Display.getDefault().getActiveShell(), repositoryAccessor);
+        return null;
+    }
 }

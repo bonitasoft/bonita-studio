@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -27,13 +29,14 @@ import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.page.SelectionPage;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class DeleteFileHandler {
 
     @Execute
-    public void deleteFile(Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void deleteFile(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
         createWizard(newWizard(), repositoryAccessor, activeShell)
                 .open(activeShell, Messages.delete)
                 .ifPresent(selection -> {
