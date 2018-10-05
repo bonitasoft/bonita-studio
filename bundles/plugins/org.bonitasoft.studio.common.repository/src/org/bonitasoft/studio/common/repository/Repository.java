@@ -111,6 +111,7 @@ public class Repository implements IRepository, IJavaContainer {
         LEGACY_REPOSITORIES.add("looknfeels");
         LEGACY_REPOSITORIES.add("validators");
         LEGACY_REPOSITORIES.add("src-validators");
+        LEGACY_REPOSITORIES.add("simulation");
     }
 
     private static final String CLASS = "class";
@@ -707,6 +708,7 @@ public class Repository implements IRepository, IJavaContainer {
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
+        monitor.beginTask(String.format(Messages.migratingRepository, getName()), IProgressMonitor.UNKNOWN);
         IFolder settings = project.getFolder(".settings");
         if (settings.exists()) {
             settings.delete(true, null);

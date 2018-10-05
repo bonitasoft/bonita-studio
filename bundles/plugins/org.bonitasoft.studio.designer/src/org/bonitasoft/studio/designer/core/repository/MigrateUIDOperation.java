@@ -40,6 +40,9 @@ public class MigrateUIDOperation implements IRunnableWithProgress {
         try {
             ClientResource clientResource = new ClientResource(
                     UIDesignerServerManager.getInstance().getPageDesignerURLBuilder().migrate().toURI());
+            clientResource.setRetryOnError(true);
+            clientResource.setRetryDelay(500);
+            clientResource.setRetryAttempts(10);
             clientResource.post(new EmptyRepresentation());
         } catch (MalformedURLException | URISyntaxException | ResourceException e) {
             throw new InvocationTargetException(new MigrationException(e));

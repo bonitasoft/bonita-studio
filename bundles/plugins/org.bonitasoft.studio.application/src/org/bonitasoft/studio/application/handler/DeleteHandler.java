@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -83,7 +82,7 @@ public class DeleteHandler extends AbstractHandler {
                     if (fileStore != null) {
                         return fileStore.canBeDeleted();
                     } else {
-                        return adapter instanceof IFile;
+                        return RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(adapter) == null;
                     }
                 }
             }
