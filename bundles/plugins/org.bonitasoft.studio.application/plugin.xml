@@ -416,6 +416,14 @@
             </separator>
          </menu>
          <command
+               commandId="org.bonitasoft.studio.application.newWithWizard"
+               mnemonic="w"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+         <command
                commandId="org.bonitasoft.studio.application.new"
                mnemonic="w"
                style="push">
@@ -667,6 +675,10 @@
       </command>
    <command
          id="org.bonitasoft.studio.application.new"
+         name="%new">
+   </command>
+   <command
+         id="org.bonitasoft.studio.application.newWithWizard"
          name="%newWithWizard">
    </command>
    </extension>
