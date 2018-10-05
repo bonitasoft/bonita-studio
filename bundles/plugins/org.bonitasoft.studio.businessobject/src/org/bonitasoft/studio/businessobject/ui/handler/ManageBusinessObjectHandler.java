@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.ui.handler;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.difflog.NullDiffLogger;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -23,8 +25,8 @@ import org.bonitasoft.studio.businessobject.ui.wizard.ManageBusinessDataModelWiz
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -41,7 +43,7 @@ public class ManageBusinessObjectHandler {
     protected RepositoryAccessor repositoryAccessor;
 
     @Execute
-    public Object execute(RepositoryAccessor repositoryAccessor, Shell shell) throws ExecutionException {
+    public Object execute(RepositoryAccessor repositoryAccessor, @Named(IServiceConstants.ACTIVE_SHELL) Shell shell) {
         this.repositoryAccessor = repositoryAccessor;
         final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL,
