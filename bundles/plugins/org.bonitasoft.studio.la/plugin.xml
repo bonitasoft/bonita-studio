@@ -186,6 +186,22 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.bonitasoft.studio.la.application.handler.NewApplicationHandler"
+            commandId="org.bonitasoft.studio.application.new">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.la.isApplicationFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
