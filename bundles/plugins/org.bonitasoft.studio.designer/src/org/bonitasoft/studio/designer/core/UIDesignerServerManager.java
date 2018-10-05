@@ -75,7 +75,6 @@ public class UIDesignerServerManager {
     private int portalPort;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
-    private static final int MAX_TIMEOUT = 60000;
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager(RepositoryAccessor repositoryAccessor) {
@@ -140,6 +139,8 @@ public class UIDesignerServerManager {
                 new MigrateUIDOperation().run(monitor);
             } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
+            } finally {
+                monitor.done();
             }
         }
     }

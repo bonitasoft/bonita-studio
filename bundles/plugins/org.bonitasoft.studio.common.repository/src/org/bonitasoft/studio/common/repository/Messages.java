@@ -80,6 +80,8 @@ public final class Messages extends NLS {
 
     public static String failedToRetrieveResourceToExport;
 
+    public static String migratingRepository;
+
     private Messages() {
         // Do not instantiate
     }

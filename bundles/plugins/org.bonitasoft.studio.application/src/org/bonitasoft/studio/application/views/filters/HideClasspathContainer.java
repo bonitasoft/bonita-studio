@@ -26,9 +26,11 @@ public class HideClasspathContainer extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        if (element instanceof ClassPathContainer) {
-            return !(Objects.equals(((ClassPathContainer) element).getJavaProject(), javaProject));
+        if (RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+            if (element instanceof ClassPathContainer) {
+                return !(Objects.equals(((ClassPathContainer) element).getJavaProject(), javaProject));
+            }
         }
         return true;
     }
