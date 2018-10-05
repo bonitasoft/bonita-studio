@@ -35,7 +35,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -43,7 +42,6 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -348,11 +346,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     protected void openNewBusinessObjectWizard() {
-        try {
-            new ManageBusinessObjectHandler().execute(repositoryAccessor, getShell());
-        } catch (ExecutionException e) {
-            BonitaStudioLog.error(e);
-        }
+        new ManageBusinessObjectHandler().execute(repositoryAccessor, getShell());
     }
 
     protected List<BusinessObject> getAllBusinessObjects() {
