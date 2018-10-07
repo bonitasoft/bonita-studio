@@ -159,4 +159,33 @@
          uri="fragment.e4xmi">
    </fragment>
 </extension>
+<extension
+      point="org.eclipse.ui.handlers">
+   <handler
+         class="org.bonitasoft.studio.designer.ui.handler.CreatePageHandler"
+         commandId="org.bonitasoft.studio.application.new">
+      <activeWhen>
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <test
+                     property="org.bonitasoft.studio.designer.isWebPageFolder">
+               </test>
+            </iterate>
+         </and>
+      </activeWhen>
+   </handler>
+</extension>
+<extension
+      point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+         class="org.bonitasoft.studio.designer.core.propertytester.WebArtifactPropertyTester"
+         id="org.bonitasoft.studio.designer.propertyTester"
+         namespace="org.bonitasoft.studio.designer"
+         properties="isWebPageFolder"
+         type="org.eclipse.core.runtime.IAdaptable">
+   </propertyTester>
+</extension>
 </plugin>
