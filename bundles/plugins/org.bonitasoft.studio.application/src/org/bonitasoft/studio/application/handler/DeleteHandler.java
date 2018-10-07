@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -70,21 +73,25 @@ public class DeleteHandler extends AbstractHandler {
             return false;
         }
         ISelection selection = service.getSelection();
+        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        return selection instanceof IStructuredSelection
+                ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)
+                : false;
+    }
 
-        if (selection instanceof IStructuredSelection
-                && ((IStructuredSelection) selection).size() == 1) {
-            Object sel = ((IStructuredSelection) selection).getFirstElement();
-            if (sel instanceof IAdaptable && ((IAdaptable) sel).getAdapter(IResource.class) != null) {
-                IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
-                if (adapter instanceof IResource) {
-                    IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
-                            .getFileStore(adapter);
-                    if (fileStore != null) {
-                        return fileStore.canBeDeleted();
-                    } else {
-                        return RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(adapter) == null;
-                    }
+    protected boolean selectionCanBeDeleted(IStructuredSelection selection, Repository currentRepository) {
+        if (selection.size() == 1 && selection.getFirstElement() instanceof IAdaptable) {
+            IAdaptable sel = (IAdaptable) selection.getFirstElement();
+            IResource adapter = sel.getAdapter(IResource.class);
+            if (adapter != null) {
+                if (Objects.equals(currentRepository.getProject(), adapter)) {
+                    return false;
                 }
+                IRepositoryFileStore fileStore = currentRepository.getFileStore(adapter);
+                if (fileStore != null) {
+                    return fileStore.canBeDeleted();
+                }
+                return currentRepository.getRepositoryStore(adapter) == null;
             }
         }
         return false;
