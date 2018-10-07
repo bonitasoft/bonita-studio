@@ -16,19 +16,26 @@ package org.bonitasoft.studio.designer.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreatePageOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class CreatePageHandler {
+public class CreatePageHandler extends AbstractHandler {
 
     @Execute
-    public void createPage(Shell shell, PageDesignerURLFactory urlFactory) {
+    public void createPage(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, PageDesignerURLFactory urlFactory) {
         CreatePageOperation operation = new CreatePageOperation(urlFactory);
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
@@ -36,6 +43,12 @@ public class CreatePageHandler {
         } catch (InvocationTargetException | InterruptedException e) {
             new ExceptionDialogHandler().openErrorDialog(shell, Messages.createPageFailed, e);
         }
+    }
+
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        createPage(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE);
+        return null;
     }
 
 }
