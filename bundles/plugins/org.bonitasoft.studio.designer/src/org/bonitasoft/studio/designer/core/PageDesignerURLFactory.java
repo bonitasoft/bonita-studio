@@ -32,6 +32,8 @@ import org.eclipse.e4.core.di.extensions.Preference;
 @Singleton
 public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
+    public static PageDesignerURLFactory INSTANCE;
+
     private static final String WAR_CONTEXT_NAME = "bonita";
 
     private IEclipsePreferences preferenceStore;
@@ -43,6 +45,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
             @Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
         checkNotNull(preferenceStore);
         this.preferenceStore = preferenceStore;
+        INSTANCE = this;
     }
 
     public PageDesignerURLFactory(int uidPort) {

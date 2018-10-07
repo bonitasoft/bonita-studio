@@ -64,7 +64,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.ui,
  org.eclipse.jdt.core,
  org.eclipse.e4.ui.workbench,
- org.bonitasoft.studio.ui
+ org.bonitasoft.studio.ui,
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
