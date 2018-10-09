@@ -31,15 +31,43 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider;
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerProblemsDecorator;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 
 public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
+    private PackageExplorerProblemsDecorator packageExplorerProblemsDecorator;
+
+
+    @Override
+    public void init(ICommonContentExtensionSite commonContentExtensionSite) {
+        super.init(commonContentExtensionSite);
+        packageExplorerProblemsDecorator = new PackageExplorerProblemsDecorator();
+    }
+
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#getImage(java.lang.Object)
+     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
+    @Override
+    public void addListener(ILabelProviderListener listener) {
+        super.addListener(listener);
+        packageExplorerProblemsDecorator.addListener(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    @Override
+    public void removeListener(ILabelProviderListener listener) {
+        super.removeListener(listener);
+        packageExplorerProblemsDecorator.removeListener(listener);
+    }
+
     @Override
     public Image getImage(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
@@ -56,16 +84,17 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             return repositoryManager.getRepositoryStore(WebFragmentRepositoryStore.class).getIcon();
         }
         if (!(element instanceof IJavaElement)) {
-            Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
-                    .getRepositoryStore(element);
-            if (repositoryStore.isPresent()) {
-                return repositoryStore.get().getIcon();
-            }
             if (element instanceof IResource) {
                 IRepositoryFileStore fileStore = repositoryManager.getCurrentRepository().getFileStore((IResource) element);
                 if (fileStore != null) {
-                    return fileStore.getIcon();
+                    return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
                 }
+            }
+            Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
+                    .getRepositoryStore(element);
+            if (repositoryStore.isPresent()) {
+                IRepositoryStore<? extends IRepositoryFileStore> store = repositoryStore.get();
+                return packageExplorerProblemsDecorator.decorateImage(store.getIcon(), element);
             }
         }
         return super.getImage(element);
