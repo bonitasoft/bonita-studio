@@ -31,38 +31,51 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private static final String COMPARE_ACTIONS_ID = "org.eclipse.compare.CompareAction";
     private static final String REPLACE_WITH_EDITION_ID = "org.eclipse.compare.ReplaceWithEditionAction";
     private static final String COMPARE_WITH_EDITION_ID = "org.eclipse.compare.CompareWithEditionAction";
-    private static final String SVN_ACTION_ID_PREFIX = "org.eclipse.team.svn.ui";
+    private static final String SVN_ACTION_ID_PREFIX = "org.eclipse.team.svn.ui.*";
+    private static final String SVN_SHARE_PROJECT_ACTION_ID = "org.eclipse.team.svn.ui.IProjectContributions";
 
     private static CustomObjectActionContributorManager sharedInstance;
 
-    private List<String> actionIds;
+    private List<String> includes;
+    private List<String> excludes;
 
-    private List<String> getActions() {
-        if (actionIds == null) {
-            actionIds = new ArrayList<>();
-            actionIds.add(MAVEN_PROJECT_MENU_ID);
-            actionIds.add(MAVEN_MODULE_PROJECT_ID);
-            actionIds.add(MAVEN_ADD_DEPENDENCY_PLUGIN_ID);
-            actionIds.add(MAVEN_UPDATE_PROJECT_ID);
-            actionIds.add(MAVEN_FILE_MENU_ID);
-            actionIds.add(MAVEN_FILE_MODULE_PROJECT_ID);
-            actionIds.add(MAVEN_FILE_ADD_DEPENDENCY_PLUGIN_ID);
-            actionIds.add(MAVEN_PROFILE_FROM_PROJECT_ID);
-            actionIds.add(MAVEN_PROFILE_FROM_POM_ID);
-            actionIds.add(COMPARE_MENU_ID);
-            actionIds.add(COMPARE_ACTIONS_ID);
-            actionIds.add(REPLACE_WITH_EDITION_ID);
-            actionIds.add(COMPARE_WITH_EDITION_ID);
+    private List<String> getIncludedActions() {
+        if (includes == null) {
+            includes = new ArrayList<>();
+            includes.add(MAVEN_PROJECT_MENU_ID);
+            includes.add(MAVEN_MODULE_PROJECT_ID);
+            includes.add(MAVEN_ADD_DEPENDENCY_PLUGIN_ID);
+            includes.add(MAVEN_UPDATE_PROJECT_ID);
+            includes.add(MAVEN_FILE_MENU_ID);
+            includes.add(MAVEN_FILE_MODULE_PROJECT_ID);
+            includes.add(MAVEN_FILE_ADD_DEPENDENCY_PLUGIN_ID);
+            includes.add(MAVEN_PROFILE_FROM_PROJECT_ID);
+            includes.add(MAVEN_PROFILE_FROM_POM_ID);
+            includes.add(COMPARE_MENU_ID);
+            includes.add(COMPARE_ACTIONS_ID);
+            includes.add(REPLACE_WITH_EDITION_ID);
+            includes.add(COMPARE_WITH_EDITION_ID);
+            includes.add(SVN_ACTION_ID_PREFIX);
         }
-        return actionIds;
+        return includes;
+    }
+
+    private List<String> getExcludedActions() {
+        if (excludes == null) {
+            excludes = new ArrayList<>();
+            excludes.add(SVN_SHARE_PROJECT_ACTION_ID);
+        }
+        return excludes;
     }
 
     @Override
     public void registerContributor(IObjectContributor contributor, String targetType) {
         if (contributor instanceof ObjectActionContributor) {
             String id = ((ObjectActionContributor) contributor).getAdapter(IConfigurationElement.class).getAttribute("id");
-            if (getActions().contains(id) || id.startsWith(SVN_ACTION_ID_PREFIX)) {
-                super.registerContributor(contributor, targetType);
+            if (getIncludedActions().stream().anyMatch(include ->  id.matches(include))) {
+                if (getExcludedActions().stream().noneMatch(exclude -> id.matches(exclude))) {
+                    super.registerContributor(contributor, targetType);
+                }
             }
         }
     }
