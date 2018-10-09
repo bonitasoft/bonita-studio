@@ -80,7 +80,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotOpenDiagramDialog open() {
-        bot.toolbarButton("Open").click();
+        bot.menu("File").menu("Open diagram...").click();
         bot.waitUntil(Conditions.shellIsActive("Open an existing diagram"));
         return new BotOpenDiagramDialog(bot);
     }

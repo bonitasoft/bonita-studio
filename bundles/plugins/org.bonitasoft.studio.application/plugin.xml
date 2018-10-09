@@ -1139,19 +1139,9 @@
             toolbarPosition="0">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.OpenDiagramCoolbarItem"
-            priority="0"
-            toolbarPosition="1">
-      </coolbarItem>
-      <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.SaveCoolbarItem"
             priority="0"
             toolbarPosition="2">
-      </coolbarItem>
-      <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.PrintCoolbarItem"
-            priority="0"
-            toolbarPosition="3">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.CopyCoolbarItem"
