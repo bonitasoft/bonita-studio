@@ -243,8 +243,13 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
         migrator.setLevel(ValidationLevel.RELEASE);
         Map<String, Object> loadOptions = new HashMap<>();
         loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-        migrator.migrateAndSave(Collections.singletonList(resourceURI),
-                release, null, Repository.NULL_PROGRESS_MONITOR, loadOptions);
+        try {
+            migrator.migrateAndSave(Collections.singletonList(resourceURI),
+                    release, null, Repository.NULL_PROGRESS_MONITOR, loadOptions);
+        } catch (RuntimeException e) {
+            throw new MigrationException(String.format("Failed to migrate %s", resourceURI), e);
+        }
+
     }
 
     protected Resource getTmpEMFResource(final String fileName,
