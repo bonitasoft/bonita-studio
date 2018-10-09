@@ -51,6 +51,7 @@ import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -76,6 +77,8 @@ public class DeployProcessOperation {
 
     private boolean disablePopup;
 
+    private IStatus status = ValidationStatus.ok();
+
     public void addProcessToDeploy(final AbstractProcess process) {
         Assert.isTrue(!(process instanceof MainProcess), "process can't be a MainProcess");
         if (!processes.contains(process)) {
@@ -100,26 +103,25 @@ public class DeployProcessOperation {
 
     public IStatus run(final IProgressMonitor monitor) {
         Assert.isTrue(!processes.isEmpty());
-        IStatus status = null;
         try {
             status = undeploy(processes, monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.undeploymentFailedMessage, e);
+            status = ValidationStatus.error(Messages.undeploymentFailedMessage, e);
         }
         if (!status.isOK()) {
             return status;
         }
         try {
             status = deploy(monitor);
-            if (status.getSeverity() == IStatus.OK) {
+            if (status.isOK()) {
                 status = enable(monitor);
             }
-            return status;
-        } catch (final Exception e) {
+        } catch (Exception e) {
             BonitaStudioLog.error(e);
-            return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.deploymentFailedMessage, e);
+            status = ValidationStatus.error(Messages.deploymentFailedMessage, e);
         }
+        return status;
     }
 
     private IStatus enable(final IProgressMonitor monitor) {
@@ -153,9 +155,8 @@ public class DeployProcessOperation {
             BonitaStudioLog.error(e);
             if (e.getMessage() != null) {
                 return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
-            } else {
-                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.deploymentFailedMessage, e);
             }
+            return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.deploymentFailedMessage, e);
         }
 
         return Status.OK_STATUS;
@@ -325,6 +326,10 @@ public class DeployProcessOperation {
 
     public void setDisablePopup(boolean synchronousExecution) {
         this.disablePopup = synchronousExecution;
+    }
+
+    public IStatus getStatus() {
+        return status;
     }
 
 }

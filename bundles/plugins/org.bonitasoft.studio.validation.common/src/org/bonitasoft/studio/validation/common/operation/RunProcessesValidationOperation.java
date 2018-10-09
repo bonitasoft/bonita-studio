@@ -40,7 +40,7 @@ import com.google.common.base.Predicates;
 
 public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
-    private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<AbstractProcess>();
+    private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<>();
     private IStatus status;
     private final BatchValidationOperation validationOperation;
 
@@ -76,15 +76,15 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                 final String errorMessage = Messages.errorValidationMessage
                         + getActiveEditorTitle()
                         + Messages.errorValidationContinueAnywayMessage;
-                final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
+                final int result = new ValidationDialog(Display.getDefault().getActiveShell(),
+                        Messages.validationFailedTitle, errorMessage,
                         ValidationDialog.YES_NO_SEEDETAILS).open();
                 if (result == ValidationDialog.NO) {
                     return false;
-                } else {
-                    if (result == ValidationDialog.SEE_DETAILS) {
-                        showValidationPart();
-                        return false;
-                    }
+                }
+                if (result == ValidationDialog.SEE_DETAILS) {
+                    showValidationPart();
+                    return false;
                 }
             }
         }
@@ -109,7 +109,8 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         if (statusContainsError()) {
             final String errorMessage = Messages.errorValidationMessage
                     + getActiveEditorTitle();
-            final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
+            final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
+                    errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
             if (result == ValidationDialog.SEE_DETAILS) {
                 showValidationPart();
@@ -126,7 +127,8 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         final IEditorPart part = activePage.getActiveEditor();
         if (part != null && part instanceof DiagramEditor) {
-            final MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement());
+            final MainProcess proc = ModelHelper
+                    .getMainProcess(((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement());
             final String partName = proc.getName() + " (" + proc.getVersion() + ")";
             for (final IEditorReference ref : activePage.getEditorReferences()) {
                 if (partName.equals(ref.getPartName())) {
@@ -168,7 +170,8 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
     }
 
     protected DiagramFileStore asDiagramFileStore(final AbstractProcess process) {
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         final Resource eResource = process.eResource();
         if (eResource != null) {
             return store.getChild(URI.decode(eResource.getURI().lastSegment()));

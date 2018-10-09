@@ -159,6 +159,12 @@ public class Messages extends NLS {
 
     public static String engineLazyLoad;
 
+    public static String diagramDoesntExist;
+
+    public static String deploymentFailed;
+    public static String deployDoneTitle;
+    public static String deployDoneMessage;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }
