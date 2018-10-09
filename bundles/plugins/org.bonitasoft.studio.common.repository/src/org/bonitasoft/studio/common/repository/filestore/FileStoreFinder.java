@@ -57,33 +57,26 @@ public class FileStoreFinder {
                 .map(selection -> {
                     Object element = selection.getFirstElement();
                     if (element instanceof IAdaptable) {
-                        IFile file = ((IAdaptable) element).getAdapter(IFile.class);
-                        if (file != null) {
-                            return findElementToDeploy(file, currentRepository).orElse(null);
-                        }
                         IResource resource = ((IAdaptable) element).getAdapter(IResource.class);
                         if (resource != null) {
-                            IProject project = (resource).getProject();
-                            return project != null
-                                    ? findElementToDeploy(project, currentRepository).orElse(null)
-                                    : null;
+                            Optional<IDeployable> toDeploy = findElementToDeploy(resource.getName(), currentRepository);
+                            if (!toDeploy.isPresent()) {
+                                IProject project = (resource).getProject();
+                                if (project != null) {
+                                    toDeploy = findElementToDeploy(project.getName(), currentRepository);
+                                }
+                            }
+                            return toDeploy.orElse(null);
                         }
                     }
                     return null;
                 });
     }
 
-    public Optional<IDeployable> findElementToDeploy(IFile file, Repository currentRepository) {
-        Optional<IDeployable> deployable = findFileStore(file.getName(), currentRepository)
+    public Optional<IDeployable> findElementToDeploy(String resourceName, Repository currentRepository) {
+        return findFileStore(resourceName, currentRepository)
                 .filter(IDeployable.class::isInstance)
                 .map(IDeployable.class::cast);
-        if (!deployable.isPresent()) {
-            IProject project = file.getProject();
-            if (project != null) {
-                return findElementToDeploy(project, currentRepository);
-            }
-        }
-        return deployable;
     }
 
     public Optional<? extends IRepositoryFileStore> findSelectedFileStore(Repository currentRepository) {
@@ -95,12 +88,6 @@ public class FileStoreFinder {
                     }
                     return null;
                 });
-    }
-
-    public Optional<IDeployable> findElementToDeploy(IProject project, Repository currentRepository) {
-        return findFileStore(project.getName(), currentRepository)
-                .filter(IDeployable.class::isInstance)
-                .map(IDeployable.class::cast);
     }
 
     protected Optional<IStructuredSelection> getCurrentStructuredSelection() {

@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -70,7 +71,7 @@ public class FileStoreFinderTest {
         IFile file = mock(IFile.class);
         when(file.getName()).thenReturn(ORGA_NAME);
         IAdaptable adaptable = mock(IAdaptable.class);
-        when(adaptable.getAdapter(IFile.class)).thenReturn(file);
+        when(adaptable.getAdapter(IResource.class)).thenReturn(file);
         IStructuredSelection selection = new StructuredSelection(adaptable);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
         Repository repository = initRepository();
