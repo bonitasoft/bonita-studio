@@ -80,9 +80,9 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         PrefUtil.saveAPIPrefs();
         Display display = window.getShell().getDisplay();
         display.asyncExec(() -> {
-                    if (!PlatformUtil.isIntroOpen()) {
-                        PlatformUtil.openIntroIfNoOtherEditorOpen();
-                    }
+            if (!PlatformUtil.isIntroOpen()) {
+                PlatformUtil.openIntroIfNoOtherEditorOpen();
+            }
         });
     }
 

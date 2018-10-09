@@ -886,18 +886,6 @@
          <with
                variable="activeWorkbenchWindow.activePerspective">
             <equals
-                  value="org.bonitasoft.studio.common.perspective.form">
-            </equals>
-         </with>
-         <with
-               variable="activeWorkbenchWindow.activePerspective">
-            <equals
-                  value="org.bonitasoft.studio.birt.ui.perspective.birt">
-            </equals>
-         </with>
-         <with
-               variable="activeWorkbenchWindow.activePerspective">
-            <equals
                   value="org.bonitasoft.studio.perspective.process">
             </equals>
          </with>
@@ -916,19 +904,7 @@
          <with
                variable="activeWorkbenchWindow.activePerspective">
             <equals
-                  value="org.bonitasoft.studio.perspective.theme">
-            </equals>
-         </with>
-         <with
-               variable="activeWorkbenchWindow.activePerspective">
-            <equals
-                  value="org.bonitasoft.studio.common.perspective.form.migration">
-            </equals>
-         </with>
-         <with
-               variable="activeWorkbenchWindow.activePerspective">
-            <equals
-                  value="org.bonitasoft.studio.migration.perspective.process">
+                  value="org.bonitasoft.studio.perspective.welcomePage">
             </equals>
          </with>
          <with
@@ -1414,9 +1390,14 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.bonitasoft.studio.application.PerspectiveJavaFactory"
+            class="org.bonitasoft.studio.application.perspective.PerspectiveJavaFactory"
             id="org.bonitasoft.studio.perspective.java"
             name="Java Perspective">
+      </perspective>
+      <perspective
+            class="org.bonitasoft.studio.application.perspective.WelcomePagePerspectiveFactory"
+            id="org.bonitasoft.studio.perspective.welcomePage"
+            name="No editor opened perspective">
       </perspective>
    </extension>
    <extension
