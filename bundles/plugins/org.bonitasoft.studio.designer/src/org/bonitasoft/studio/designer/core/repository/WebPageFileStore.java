@@ -16,10 +16,13 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -34,7 +37,7 @@ import org.json.JSONException;
 /**
  * @author Romain Bioteau
  */
-public class WebPageFileStore extends InFolderJSONFileStore {
+public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
@@ -42,6 +45,7 @@ public class WebPageFileStore extends InFolderJSONFileStore {
 
     public static final String LAYOUT_TYPE = "layout";
     public static final String PAGE_TYPE = "page";
+    public static final String DEPLOY_PAGE_COMMAND = "org.bonitasoft.studio.engine.deploy.page.command";
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
@@ -104,5 +108,12 @@ public class WebPageFileStore extends InFolderJSONFileStore {
         styledString.append(" ");
         styledString.append(String.format("(%s)", getType()), StyledString.QUALIFIER_STYLER);
         return styledString;
+    }
+
+    @Override
+    public void deploy() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", getName());
+        executeCommand(DEPLOY_PAGE_COMMAND, parameters);
     }
 }
