@@ -20,13 +20,10 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 
-/**
- * @author Aurelien Pupier
- */
-@SuppressWarnings("restriction")
+
 public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
 
-    public static String PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.textEditor";
+    public static final String PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.textEditor";
 
     @Override
     public void createInitialLayout(final IPageLayout layout) {
@@ -37,25 +34,14 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
         leftView.addView("org.bonitasoft.studio.application.project.explorer");
     }
 
-    protected void configureIntroView(final IPageLayout layout) {
-        layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
-        layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
-     */
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
         return (part instanceof TextEditor || part instanceof WebBrowserEditor)
                 && !isInsideprojectWithREStApiExtensionNature(part);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#getID()
-     */
+
     @Override
     public String getID() {
         return PERSPECTIVE_ID;

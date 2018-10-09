@@ -19,11 +19,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -123,11 +121,6 @@ public class BonitaPerspectivesUtils {
                     final IWorkbenchPage page = window.getActivePage();
                     final IPerspectiveDescriptor desc = registry.findPerspectiveWithId(perspectiveID);
                     page.setPerspective(desc);
-                    if (!Stream.of(activePage.getEditorReferences()).findAny().isPresent()) {
-                        PlatformUtil.openIntro();
-                    } else {
-                        PlatformUtil.closeIntro();
-                    }
                 }
             }
         }

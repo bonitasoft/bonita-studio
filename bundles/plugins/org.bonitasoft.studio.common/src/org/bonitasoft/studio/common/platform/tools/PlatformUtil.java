@@ -33,6 +33,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.IFileSystem;
@@ -175,10 +176,14 @@ public class PlatformUtil {
                 && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
             model.getPresentation().navigateHome();
         }
+        BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
+        page.setEditorAreaVisible(false);
         introManager.showIntro(
                 page.getWorkbenchWindow(),
                 false);
-        PlatformUtil.maximizeWindow(page);
+
+        page.setPartState(page.findViewReference("org.bonitasoft.studio.application.project.explorer"),
+                IWorkbenchPage.STATE_RESTORED);
     }
 
     /**

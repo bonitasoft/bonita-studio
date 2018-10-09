@@ -12,43 +12,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application;
+package org.bonitasoft.studio.application.perspective;
 
+import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.internal.intro.IIntroConstants;
 
-/**
- * @author Aurelien Pupier
- */
-public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 
-    public static String JAVA_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.java";
+public class WelcomePagePerspectiveFactory extends AbstractPerspectiveFactory {
 
-    protected void configureIntroView(final IPageLayout layout) {
-        layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
-        layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
-    }
+    public static final String ID = "org.bonitasoft.studio.perspective.welcomePage";
 
     @Override
     public void createInitialLayout(final IPageLayout layout) {
+        layout.setEditorAreaVisible(false);
         final String editorArea = layout.getEditorArea();
-
         final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
-        leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
-
-        final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
-        bottomfolder.addView("org.eclipse.ui.views.ProblemView");
-        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
-            bottomfolder.addView("org.eclipse.egit.ui.StagingView");
-            bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
-        }
-
+        leftFolder.addView(BonitaProjectExplorer.ID);
         final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
-        rightFolder.addView(IPageLayout.ID_OUTLINE);
+        rightFolder.addView(IIntroConstants.INTRO_VIEW_ID);
+        PlatformUtil.openIntro();
     }
 
     /*
@@ -57,7 +44,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
      */
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return part instanceof JavaEditor && !isInsideprojectWithREStApiExtensionNature(part);
+        return part == null;
     }
 
     /*
@@ -66,7 +53,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
      */
     @Override
     public String getID() {
-        return JAVA_PERSPECTIVE_ID;
+        return ID;
     }
 
 }
