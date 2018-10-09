@@ -510,6 +510,22 @@
             </reference>
          </activeWhen>
       </handler>
+      <handler
+            class="org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler"
+            commandId="org.bonitasoft.studio.application.new">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.diagram.isDiagramFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -751,5 +767,15 @@
             name="Medium">
       </Priority>
    </EditorProvider>
+</extension>
+<extension
+      point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+         class="org.bonitasoft.studio.diagram.custom.DiagramPropertyTester"
+         id="org.bonitasoft.studio.diagram.custom.propertyTester"
+         namespace="org.bonitasoft.studio.diagram"
+         properties="isDiagramFolder"
+         type="org.eclipse.core.runtime.IAdaptable">
+   </propertyTester>
 </extension>
 </plugin>
