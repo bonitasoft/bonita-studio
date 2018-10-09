@@ -42,7 +42,6 @@ import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvide
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -50,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class RunProcessCommand extends AbstractHandler implements IHandler {
+public class RunProcessCommand extends AbstractHandler {
 
     protected static final String APPLI_PATH = "/bonita?"; //$NON-NLS-1$;
     protected boolean runSynchronously;
@@ -64,11 +63,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
     public RunProcessCommand(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
-        excludedObject = new HashSet<EObject>();
+        excludedObject = new HashSet<>();
     }
 
     public RunProcessCommand(final Set<EObject> excludedObject) {
-        new RunProcessCommand(excludedObject, false);
+        this(excludedObject, false);
     }
 
     public RunProcessCommand(final Set<EObject> excludedObject, final boolean runSynchronously) {
@@ -76,19 +75,19 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         this.excludedObject = excludedObject;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
+        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
             final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
-            final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(new BatchValidationOperation(
-                    new OffscreenEditPartFactory(org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()), new ValidationMarkerProvider()));
+            final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
+                    new BatchValidationOperation(
+                            new OffscreenEditPartFactory(
+                                    org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                            new ValidationMarkerProvider()));
             validationOperation.addProcesses(processes);
             try {
                 if (runSynchronously) {
@@ -132,7 +131,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
                         StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
                         sb.append("\n");
                         sb.append(status.getMessage());
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, sb.toString(), status,
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
+                                sb.toString(), status,
                                 IStatus.ERROR)
                                         .open();
                     }
@@ -142,7 +142,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return status;
     }
 
-    protected RunProcessOperation createRunProcessOperation(final ExecutionEvent event, final RunOperationExecutionContext executionContext) {
+    protected RunProcessOperation createRunProcessOperation(final ExecutionEvent event,
+            final RunOperationExecutionContext executionContext) {
         return new RunProcessOperation(executionContext, new ProcessSelector(event));
     }
 
@@ -152,7 +153,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
             configurationId = event.getParameter("configuration");
         }
         if (configurationId == null) {
-            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
+                    .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
         return configurationId;
     }

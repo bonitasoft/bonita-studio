@@ -19,6 +19,16 @@
                  optional="true">
            </commandParameter>
       </command>
+        <command
+              defaultHandler="org.bonitasoft.studio.engine.command.DeployDiagramHandler"
+              id="org.bonitasoft.studio.engine.deployDiagramCommand"
+              name="%deployDiagram">
+           <commandParameter
+                 id="diagram"
+                 name="diagram"
+                 optional="false">
+           </commandParameter>
+        </command>
       <command
             defaultHandler="org.bonitasoft.studio.engine.command.ResetServerCommand"
             id="org.bonitasoft.studio.engine.resetServerCommand"
