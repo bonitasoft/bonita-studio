@@ -18,7 +18,6 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -34,16 +33,16 @@ public class DeployableResourcePropertyTester extends PropertyTester {
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        IFile file = ((IAdaptable) receiver).getAdapter(IFile.class);
-        if (file != null) {
-            return fileStoreFinder.findElementToDeploy(file, currentRepository).isPresent();
-        }
         IResource resource = ((IAdaptable) receiver).getAdapter(IResource.class);
         if (resource != null) {
-            IProject project = (resource).getProject();
-            return project != null
-                    ? fileStoreFinder.findElementToDeploy(project, currentRepository).isPresent()
-                    : false;
+            boolean resourceMatch = fileStoreFinder.findElementToDeploy(resource.getName(), currentRepository).isPresent();
+            if (!resourceMatch) {
+                IProject project = resource.getProject();
+                if (project != null) {
+                    resourceMatch = fileStoreFinder.findElementToDeploy(project.getName(), currentRepository).isPresent();
+                }
+            }
+            return resourceMatch;
         }
         return false;
     }
