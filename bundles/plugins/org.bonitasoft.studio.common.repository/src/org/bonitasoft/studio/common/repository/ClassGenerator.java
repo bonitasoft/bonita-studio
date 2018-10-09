@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -45,8 +43,10 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.jdt.internal.corext.refactoring.RefactoringExecutionStarter;
+import org.eclipse.jdt.internal.corext.template.java.CodeTemplateContextType;
 import org.eclipse.jdt.internal.ui.fix.CodeFormatCleanUp;
 import org.eclipse.jdt.internal.ui.viewsupport.ProjectTemplateStore;
 import org.eclipse.jdt.ui.cleanup.CleanUpOptions;
@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ClassGenerator {
 
@@ -68,7 +67,8 @@ public class ClassGenerator {
 
     private static final String USER_FILTER_EXCEPTION_QUALIFIED_NAME = UserFilterException.class.getName();
 
-    public static IFile generateConnectorImplementationAbstractClass(ConnectorImplementation implementation, ConnectorDefinition definition,
+    public static IFile generateConnectorImplementationAbstractClass(ConnectorImplementation implementation,
+            ConnectorDefinition definition,
             String superClassName, SourceRepositoryStore sourceStore, IProgressMonitor monitor) throws Exception {
         final String className = implementation.getImplementationClassname();
         String packageName = "";
@@ -90,9 +90,14 @@ public class ClassGenerator {
         }
         classType = generateAbstractClass(packageName, abstractClassName, superClassName, sourceStore, monitor);
 
+        Template template = StubUtility.getCodeTemplate(CodeTemplateContextType.FILECOMMENT_ID, javaProject);
+        if (template == null) {
+            return null;
+        }
+
         createAbstractClassContent(classType, definition, className, monitor);
 
-        final Map<String, String> settings = new Hashtable<String, String>();
+        final Map<String, String> settings = new Hashtable<>();
         settings.put(CleanUpConstants.FORMAT_SOURCE_CODE, CleanUpOptions.TRUE);
         Shell activeShell = Display.getDefault().getActiveShell();
         boolean disposeShell = false;
@@ -100,8 +105,10 @@ public class ClassGenerator {
             activeShell = new Shell();
             disposeShell = true;
         }
-        RefactoringExecutionStarter.startCleanupRefactoring(new ICompilationUnit[] { classType.getCompilationUnit() }, new ICleanUp[] { new CodeFormatCleanUp(
-                settings) }, false, activeShell, false, "");
+        RefactoringExecutionStarter.startCleanupRefactoring(new ICompilationUnit[] { classType.getCompilationUnit() },
+                new ICleanUp[] { new CodeFormatCleanUp(
+                        settings) },
+                false, activeShell, false, "");
         if (disposeShell) {
             activeShell.dispose();
         }
@@ -109,7 +116,8 @@ public class ClassGenerator {
         return (IFile) classType.getResource();
     }
 
-    public static void updateConnectorImplementationAbstractClassName(ConnectorImplementation implementation, String oldSuperClassName,
+    public static void updateConnectorImplementationAbstractClassName(ConnectorImplementation implementation,
+            String oldSuperClassName,
             SourceFileStore fileStore, IProgressMonitor monitor) throws Exception {
         final String className = implementation.getImplementationClassname();
         String oldSimpleName = oldSuperClassName;
@@ -126,7 +134,8 @@ public class ClassGenerator {
         fileStore.getResource().setContents(new ByteArrayInputStream(newSource.getBytes()), IResource.FORCE, monitor);
     }
 
-    public static IFile generateConnectorImplementationClass(ConnectorImplementation implementation, ConnectorDefinition definition,
+    public static IFile generateConnectorImplementationClass(ConnectorImplementation implementation,
+            ConnectorDefinition definition,
             SourceRepositoryStore sourceStore, IProgressMonitor monitor) throws Exception {
         final String className = implementation.getImplementationClassname();
 
@@ -147,7 +156,8 @@ public class ClassGenerator {
             final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, monitor);
 
             if (hierarchy.contains(abstractConnectorType)) {
-                StringBuilder executeMethodContent = new StringBuilder("@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t");
+                StringBuilder executeMethodContent = new StringBuilder(
+                        "@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t");
 
                 executeMethodContent.append("//Get access to the connector input parameters");
                 generateGetterComment(definition, executeMethodContent);
@@ -158,7 +168,8 @@ public class ClassGenerator {
                 executeMethodContent.append("//[Optional] Open a connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
-                executeMethodContent = new StringBuilder("@Override\npublic void disconnect() throws ConnectorException{\n\t");
+                executeMethodContent = new StringBuilder(
+                        "@Override\npublic void disconnect() throws ConnectorException{\n\t");
                 executeMethodContent.append("//[Optional] Close connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
@@ -170,13 +181,16 @@ public class ClassGenerator {
                 executeMethodContent.append("//TODO validate input parameters here \n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
-                executeMethodContent = new StringBuilder("@Override\npublic List<Long> filter(final String actorName) throws UserFilterException {\n\t");
-                executeMethodContent.append("//TODO execute the user filter here\n\t//The method must return a list of user id's\n\t");
+                executeMethodContent = new StringBuilder(
+                        "@Override\npublic List<Long> filter(final String actorName) throws UserFilterException {\n\t");
+                executeMethodContent
+                        .append("//TODO execute the user filter here\n\t//The method must return a list of user id's\n\t");
                 executeMethodContent.append("//you can use getApiAccessor() and getExecutionContext()");
                 executeMethodContent.append("\n\treturn null;\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
-                executeMethodContent = new StringBuilder("@Override\npublic boolean shouldAutoAssignTaskIfSingleResult() {\n\t");
+                executeMethodContent = new StringBuilder(
+                        "@Override\npublic boolean shouldAutoAssignTaskIfSingleResult() {\n\t");
                 executeMethodContent.append("// If this method returns true, the step will be assigned to ");
                 executeMethodContent.append("\n\t//the user if there is only one result returned by the filter method");
                 executeMethodContent.append("\n\treturn super.shouldAutoAssignTaskIfSingleResult();\n\n}\n");
@@ -191,12 +205,24 @@ public class ClassGenerator {
         return (IFile) classType.getResource();
     }
 
-    private static IType generateAbstractClass(String packageName, String className, String superClassName, SourceRepositoryStore sourceStore,
+    private static IType generateAbstractClass(String packageName, String className, String superClassName,
+            SourceRepositoryStore sourceStore,
             IProgressMonitor progressMonitor) throws Exception {
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(
+                RepositoryManager.getInstance().getCurrentRepository().getProject());
+        try {
+            fTemplateStore.load();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        final Template t = fTemplateStore.findTemplateById("org.eclipse.jdt.ui.text.codetemplates.typecomment");
+        String tempatePattern = "/**\n*This abstract class is generated and should not be modified. */";
+        t.setPattern(tempatePattern);
 
         final NewClassWizardPage classWizard = new NewClassWizardPage();
+        classWizard.enableCommentControl(true);
         classWizard.setSuperClass(superClassName, false);
         classWizard.setAddComments(true, false);
         classWizard.setModifiers(classWizard.F_PUBLIC | classWizard.F_ABSTRACT, false);
@@ -215,7 +241,8 @@ public class ClassGenerator {
         return classWizard.getCreatedType();
     }
 
-    private static IType generateImplementationClass(String packageName, String className, SourceRepositoryStore sourceStore, IProgressMonitor progressMonitor)
+    private static IType generateImplementationClass(String packageName, String className, SourceRepositoryStore sourceStore,
+            IProgressMonitor progressMonitor)
             throws Exception {
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 
@@ -250,7 +277,8 @@ public class ClassGenerator {
         final NewClassWizardPage classWizard = new NewClassWizardPage();
         classWizard.enableCommentControl(true);
 
-        final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(RepositoryManager.getInstance().getCurrentRepository().getProject());
+        final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(
+                RepositoryManager.getInstance().getCurrentRepository().getProject());
         try {
             fTemplateStore.load();
         } catch (final IOException e) {
@@ -277,9 +305,9 @@ public class ClassGenerator {
         return classWizard.getCreatedType();
     }
 
-    private static void createAbstractClassContent(IType classType, ConnectorDefinition definition, String className, IProgressMonitor monitor)
+    private static void createAbstractClassContent(IType classType, ConnectorDefinition definition, String className,
+            IProgressMonitor monitor)
             throws Exception {
-
         for (final Input input : definition.getInput()) {
             final String fieldName = NamingUtils.toJavaIdentifier(input.getName().toUpperCase(), true) + "_INPUT_PARAMETER";
             final IField field = classType.getField(fieldName);
@@ -301,12 +329,14 @@ public class ClassGenerator {
             classType.createMethod(
                     "protected final " + input.getType() + " " + getterName + "() {\n" +
                             "\t return (" + input.getType() + ") getInputParameter(" + fieldName + ");\n" +
-                            "}", null, true, null);
+                            "}",
+                    null, true, null);
 
         }
 
         for (final Output output : definition.getOutput()) {
-            final String fieldName = NamingUtils.toJavaIdentifier(output.getName().toUpperCase(), true) + "_OUTPUT_PARAMETER";
+            final String fieldName = NamingUtils.toJavaIdentifier(output.getName().toUpperCase(), true)
+                    + "_OUTPUT_PARAMETER";
             final IField field = classType.getField(fieldName);
 
             /* check a field with this name not already exist */
@@ -323,7 +353,8 @@ public class ClassGenerator {
             classType.createMethod(
                     "protected final void " + setterName + "(" + output.getType() + " " + inputName + ") {\n" +
                             "\t setOutputParameter(" + fieldName + " , " + inputName + " );\n" +
-                            "}\n", null, true, null);
+                            "}\n",
+                    null, true, null);
         }
 
         final IMethod validateMethod = classType.getMethod("validateInputParameters", null);
@@ -331,7 +362,8 @@ public class ClassGenerator {
             validateMethod.delete(true, monitor);
         }
 
-        final StringBuilder validateMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException{\n\t");
+        final StringBuilder validateMethodContent = new StringBuilder(
+                "@Override\npublic void validateInputParameters() throws ConnectorValidationException{\n\t");
 
         for (final Input input : definition.getInput()) {
             final String getterName = "get" + NamingUtils.toJavaIdentifier(input.getName(), true);
@@ -370,9 +402,11 @@ public class ClassGenerator {
             stringBuilder.append(getter);
         }
         stringBuilder.append("\n\n\t//TODO execute your business logic here \n");
-        stringBuilder.append("\n\t//WARNING : Set the output of the connector execution. If outputs are not set, connector fails");
+        stringBuilder.append(
+                "\n\t//WARNING : Set the output of the connector execution. If outputs are not set, connector fails");
         for (final Output output : definition.getOutput()) {
-            final String setter = "\n\t//set" + NamingUtils.toJavaIdentifier(output.getName(), true) + "(" + NamingUtils.toJavaIdentifier(output.getName(), false)
+            final String setter = "\n\t//set" + NamingUtils.toJavaIdentifier(output.getName(), true) + "("
+                    + NamingUtils.toJavaIdentifier(output.getName(), false)
                     + ");";
             stringBuilder.append(setter);
 
