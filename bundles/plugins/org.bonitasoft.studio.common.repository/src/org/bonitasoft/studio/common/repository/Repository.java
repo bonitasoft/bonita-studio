@@ -577,6 +577,9 @@ public class Repository implements IRepository, IJavaContainer {
 
     @Override
     public IRepositoryFileStore getFileStore(final IResource resource) {
+        if (resource == null) {
+            return null;
+        }
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             IFolder container = store.getResource();
             if (Objects.equals(resource.getParent(), container)) {

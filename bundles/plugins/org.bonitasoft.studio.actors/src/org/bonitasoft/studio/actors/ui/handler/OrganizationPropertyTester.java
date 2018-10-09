@@ -36,7 +36,7 @@ public class OrganizationPropertyTester extends PropertyTester {
                     adapter);
         } else if (Objects.equals("isOrganizationFile", property)) {
             IResource adapter = ((IAdaptable) receiver).getAdapter(IResource.class);
-            return RepositoryManager.getInstance().getCurrentRepository()
+            return adapter != null && RepositoryManager.getInstance().getCurrentRepository()
                     .getFileStore(adapter) instanceof OrganizationFileStore;
 
         }
