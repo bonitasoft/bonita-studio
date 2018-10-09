@@ -22,6 +22,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -91,9 +93,10 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IRepositoryFileStore {
+public class DiagramFileStore extends EMFFileStore implements IDeployable {
 
     public static final String PROC_EXT = "proc";
+    public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 
@@ -466,6 +469,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(getEMFResource());
         final BonitaResourceSetInfoDelegate resourceSetInfoDelegate = BonitaResourceSetInfoDelegate.adapt(editingDomain);
         resourceSetInfoDelegate.stopResourceListening();
+    }
+
+    @Override
+    public void deploy() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("diagram", getName());
+        executeCommand(DEPLOY_DIAGRAM_COMMAND, parameters);
     }
 
 }
