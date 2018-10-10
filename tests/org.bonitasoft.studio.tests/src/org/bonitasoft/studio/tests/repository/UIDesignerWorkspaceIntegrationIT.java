@@ -90,8 +90,8 @@ public class UIDesignerWorkspaceIntegrationIT {
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
-        newPageResource = repositoryStore.getChild(createFormOperation.getNewPageId()).getResource()
-                .getFile(createFormOperation.getNewPageId() + ".json");
+        newPageResource = repositoryStore.getChild(createFormOperation.getNewArtifactId()).getResource()
+                .getFile(createFormOperation.getNewArtifactId() + ".json");
         assertThat(newPageResource.exists()).overridingErrorMessage(
                 "Workspace should be in sync with new page file").isTrue();
     }

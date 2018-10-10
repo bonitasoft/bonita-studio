@@ -59,7 +59,7 @@ public class ExportBosArchiveIT {
                 new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
         createFormOperation.run(Repository.NULL_PROGRESS_MONITOR);
         final String pageName = createFormOperation.getNewPageName();
-        final String pageId = createFormOperation.getNewPageId();
+        final String pageId = createFormOperation.getNewArtifactId();
 
         assertThat(pageName).isNotEmpty();
         assertThat(pageId).isNotEmpty();

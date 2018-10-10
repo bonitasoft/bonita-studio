@@ -19,13 +19,17 @@ import java.lang.reflect.InvocationTargetException;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreatePageOperation;
+import org.bonitasoft.studio.designer.core.operation.CreateCustomWidgetOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Display;
@@ -33,17 +37,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class CreatePageHandler extends AbstractHandler {
+public class CreateCustomWidgetHandler extends AbstractHandler {
 
     @Execute
-    public void createPage(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, PageDesignerURLFactory urlFactory,
-            RepositoryAccessor repositoryAccessor) {
-        CreatePageOperation operation = new CreatePageOperation(urlFactory, repositoryAccessor);
+    public void create(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
+            PageDesignerURLFactory urlFactory, RepositoryAccessor repositoryAccessor) {
+        CreateCustomWidgetOperation operation = new CreateCustomWidgetOperation(urlFactory, repositoryAccessor);
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, operation);
+            repositoryAccessor.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+            AbstractFileStore.refreshExplorerView();
         } catch (InvocationTargetException | InterruptedException e) {
-            new ExceptionDialogHandler().openErrorDialog(shell, Messages.createPageFailed, e);
+            new ExceptionDialogHandler().openErrorDialog(shell, Messages.createWidgetFailed, e);
+        } catch (CoreException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,8 +59,7 @@ public class CreatePageHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
-        createPage(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE, repositoryAccessor);
+        create(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE, repositoryAccessor);
         return null;
     }
-
 }

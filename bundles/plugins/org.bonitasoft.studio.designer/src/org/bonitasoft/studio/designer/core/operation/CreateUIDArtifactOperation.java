@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -36,8 +37,11 @@ import org.restlet.resource.ResourceException;
 
 public abstract class CreateUIDArtifactOperation implements IRunnableWithProgress {
 
+    public static final String DEFAULT_PAGE_NAME = "newPage";
+    public static final String DEFAULT_WIDGET_NAME = "newWidget";
+
     enum ArtifactyType {
-        PAGE("page"), FORM("form");
+        PAGE("page"), FORM("form"), WIDGET("widget");
 
         private String type;
 
@@ -53,7 +57,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
 
     protected Optional<JSONObject> responseObject = Optional.empty();
     protected PageDesignerURLFactory pageDesignerURLBuilder;
-    protected String artifactName = "newPage";
+    protected String artifactName = DEFAULT_PAGE_NAME;
 
     public CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
         checkArgument(pageDesignerURLBuilder != null);
@@ -77,7 +81,9 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type", getArtifactType());
             jsonObject.put("name", artifactName);
-            jsonObject.put("rows", Arrays.asList(new ArrayList<>()));
+            if (getArtifactType() == ArtifactyType.FORM || getArtifactType() == ArtifactyType.PAGE) {
+                jsonObject.put("rows", Arrays.asList(new ArrayList<>()));
+            }
             return jsonObject;
         } catch (JSONException e) {
             throw new InvocationTargetException(e, "An error occured while creating JSON body for the request");
@@ -95,13 +101,23 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
 
     protected void openArtifact(String artifactId) throws InvocationTargetException {
         try {
-            new OpenBrowserOperation(pageDesignerURLBuilder.openPage(artifactId)).execute();
+            switch (getArtifactType()) {
+                case FORM:
+                case PAGE:
+                    new OpenBrowserOperation(pageDesignerURLBuilder.openPage(artifactId)).execute();
+                    break;
+                case WIDGET:
+                    new OpenBrowserOperation(pageDesignerURLBuilder.openWidget(artifactId)).execute();
+                default:
+                    break;
+            }
+            AbstractFileStore.refreshExplorerView();
         } catch (final MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create open artifact URL.");
         }
     }
 
-    public String getNewPageId() {
+    public String getNewArtifactId() {
         if (responseObject.isPresent()) {
             try {
                 return responseObject.get().getString("id");

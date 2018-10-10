@@ -89,7 +89,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         createNewFormProposal = spy(
                 new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
 
-        when(createFormOperation.getNewPageId()).thenReturn("page-id");
+        when(createFormOperation.getNewArtifactId()).thenReturn("page-id");
         when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
         when(preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT)).thenReturn(DEFAULT_PORT);
         doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory),
