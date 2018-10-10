@@ -67,7 +67,7 @@ public class CreateFormOperationTest {
 
     @Test(expected = IllegalStateException.class)
     public void should_getNewPageId_throw_illegal_argument_exception_if_operation_has_not_been_executed() throws Exception {
-        createFormOperation.getNewPageId();
+        createFormOperation.getNewArtifactId();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -83,7 +83,7 @@ public class CreateFormOperationTest {
         createFormOperation.run(monitor);
 
         verify(pageDesignerURLFactory).newPage();
-        assertThat(createFormOperation.getNewPageId()).isEqualTo("page-id");
+        assertThat(createFormOperation.getNewArtifactId()).isEqualTo("page-id");
         assertThat(createFormOperation.getNewPageName()).isEqualTo("newPage");
     }
 }

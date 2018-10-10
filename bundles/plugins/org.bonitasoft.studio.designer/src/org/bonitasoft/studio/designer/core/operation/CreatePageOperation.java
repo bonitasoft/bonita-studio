@@ -16,34 +16,52 @@ package org.bonitasoft.studio.designer.core.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 
 public class CreatePageOperation extends CreateUIDArtifactOperation {
 
-    public CreatePageOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
+    private RepositoryAccessor repositoryAccessor;
+
+    public CreatePageOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
         super(pageDesignerURLBuilder);
+        this.repositoryAccessor = repositoryAccessor;
     }
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.creatingNewPage, IProgressMonitor.UNKNOWN);
+        setArtifactName(getNewName());
         JSONObject bodyObject = createBody();
         try {
             responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(bodyObject));
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new page URL.");
         }
-        openArtifact(getNewPageId());
+        openArtifact(getNewArtifactId());
     }
 
     @Override
     protected ArtifactyType getArtifactType() {
         return ArtifactyType.PAGE;
+    }
+
+    private String getNewName() {
+        List<String> existingPages = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
+                .stream()
+                .map(WebPageFileStore::getDisplayName)
+                .collect(Collectors.toList());
+        return StringIncrementer.getIncrementedString(DEFAULT_PAGE_NAME, existingPages);
     }
 
 }

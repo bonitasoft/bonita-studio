@@ -72,6 +72,8 @@ public class Messages extends NLS {
     public static String migratingUID;
     public static String creatingNewPage;
     public static String createPageFailed;
+    public static String creatingNewWidget;
+    public static String createWidgetFailed;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IAdaptable;
@@ -25,18 +26,28 @@ import org.eclipse.core.runtime.IAdaptable;
 public class WebArtifactPropertyTester extends PropertyTester {
 
     public final static String WEB_PAGE_FOLDER_PROPERTY = "isWebPageFolder";
+    public final static String WEB_WIDGET_FOLDER_PROPERTY = "isWebWidgetFolder";
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-        WebPageRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
-        if (Objects.equals(property, WEB_PAGE_FOLDER_PROPERTY)) {
-            return isWebPageFolder((IAdaptable) receiver, store);
+        switch (property) {
+            case WEB_PAGE_FOLDER_PROPERTY:
+                return isWebPageFolder((IAdaptable) receiver);
+            case WEB_WIDGET_FOLDER_PROPERTY:
+                return isWebWidgetFolder((IAdaptable) receiver);
+            default:
+                throw new IllegalArgumentException(String.format("property %s is unknown", property));
         }
-        return false;
     }
 
-    protected boolean isWebPageFolder(IAdaptable receiver, WebPageRepositoryStore repositoryStore) {
-        return Objects.equals(receiver.getAdapter(IFolder.class), repositoryStore.getResource());
+    protected boolean isWebPageFolder(IAdaptable receiver) {
+        WebPageRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
+        return Objects.equals(receiver.getAdapter(IFolder.class), store.getResource());
+    }
+
+    protected boolean isWebWidgetFolder(IAdaptable receiver) {
+        WebWidgetRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(WebWidgetRepositoryStore.class);
+        return Objects.equals(receiver.getAdapter(IFolder.class), store.getResource());
     }
 
 }
