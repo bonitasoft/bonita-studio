@@ -1314,9 +1314,6 @@
                class="org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator"
                id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
          </commonSorter>
-         <actionProvider
-               class="org.bonitasoft.studio.application.views.provider.CreationActionProvider">
-         </actionProvider>
       </navigatorContent>
       <commonFilter
             activeByDefault="true"
