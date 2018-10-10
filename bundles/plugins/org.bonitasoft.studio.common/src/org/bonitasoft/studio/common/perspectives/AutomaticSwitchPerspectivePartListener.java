@@ -51,11 +51,11 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
         if (!isSwitching) {
             isSwitching = true;
             try {
-                if ("org.eclipse.e4.ui.compatibility.editor".equals(part.getElementId())) {
+                final String activePerspective = getActivePerspectiveId(part);
+                if (part != null && "org.eclipse.e4.ui.compatibility.editor".equals(part.getElementId())) {
                     if (PlatformUtil.isIntroOpen()) {
                         PlatformUtil.closeIntro();
                     }
-                    final String activePerspective = getActivePerspectiveId(part);
                     final CompatibilityEditor compatibilityEditor = (CompatibilityEditor) part.getObject();
                     if (compatibilityEditor != null && activePerspective != null) {
                         final String id = BonitaPerspectivesUtils.getPerspectiveId(compatibilityEditor.getEditor());
