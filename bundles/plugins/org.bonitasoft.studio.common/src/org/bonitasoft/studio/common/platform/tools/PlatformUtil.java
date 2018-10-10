@@ -136,7 +136,7 @@ public class PlatformUtil {
     public static void openIntroIfNoOtherEditorOpen() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            workbench.getDisplay().syncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
+            workbench.getDisplay().asyncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
                     .map(IWorkbench::getActiveWorkbenchWindow)
                     .map(IWorkbenchWindow::getActivePage)
                     .map(page -> page.getEditorReferences().length)

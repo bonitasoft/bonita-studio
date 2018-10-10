@@ -46,6 +46,7 @@ public class DeleteApplicationWizardBot extends SelectApplicationWizardEditorBot
         bot.button(Messages.delete).click();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.deleteDoneTitle));
+        bot.shell(Messages.deleteDoneTitle).activate();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }

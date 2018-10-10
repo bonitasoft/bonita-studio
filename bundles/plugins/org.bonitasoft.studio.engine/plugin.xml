@@ -20,7 +20,6 @@
            </commandParameter>
       </command>
         <command
-              defaultHandler="org.bonitasoft.studio.engine.command.DeployDiagramHandler"
               id="org.bonitasoft.studio.engine.deployDiagramCommand"
               name="%deployDiagram">
            <commandParameter
@@ -145,6 +144,15 @@
      <handler
            class="org.bonitasoft.studio.engine.command.RunProcessCommand"
            commandId="org.bonitasoft.studio.engine.runCommand">
+        <activeWhen>
+           <reference
+                 definitionId="isABonitaProduct">
+           </reference>
+        </activeWhen>
+     </handler>
+     <handler
+           class="org.bonitasoft.studio.engine.command.DeployDiagramHandler"
+           commandId="org.bonitasoft.studio.engine.deployDiagramCommand">
         <activeWhen>
            <reference
                  definitionId="isABonitaProduct">
