@@ -36,7 +36,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
@@ -83,7 +82,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
         initContextMenu();
     }
 
-
     private void initContextMenu() {
         TreeViewer commonViewer = getCommonViewer();
         Menu previousMenu = commonViewer.getTree().getMenu();
@@ -94,13 +92,7 @@ public class BonitaProjectExplorer extends CommonNavigator {
         MenuManager menuMgr = new MenuManager(getNavigatorContentService()
                 .getViewerDescriptor().getPopupMenuId());
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(manager -> fillContextMenu(manager));
 
         Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
         commonViewer.getTree().setMenu(menu);
@@ -115,8 +107,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
         navigatorActionService.setContext(new ActionContext(selection));
         navigatorActionService.fillContextMenu(aMenuManager);
     }
-
-
 
     private void activateNestedProjectsState() {
         getNavigatorContentService().getActivationService().activateExtensions(
@@ -149,6 +139,7 @@ public class BonitaProjectExplorer extends CommonNavigator {
     }
 
     private class PackageExplorerProblemTreeViewer extends ProblemTreeViewer {
+
         // fix for 64372  Projects showing up in Package Explorer twice [package explorer]
         private final List<Object> fPendingRefreshes;
 
@@ -263,8 +254,9 @@ public class BonitaProjectExplorer extends CommonNavigator {
                     IProject project = (IProject) element;
                     if (project.isOpen()) {
                         IJavaProject jProject = JavaCore.create(project);
-                        if (jProject != null && jProject.exists())
+                        if (jProject != null && jProject.exists()) {
                             ns.add(jProject);
+                        }
                         changed = true;
                     }
                 }
@@ -277,5 +269,4 @@ public class BonitaProjectExplorer extends CommonNavigator {
         }
 
     }
-
 }

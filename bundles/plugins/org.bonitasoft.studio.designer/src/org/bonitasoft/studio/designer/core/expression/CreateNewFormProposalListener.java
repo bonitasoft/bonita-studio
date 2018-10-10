@@ -83,7 +83,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
             BonitaStudioLog.error(e);
         }
 
-        final String newPageId = operation.getNewPageId();
+        final String newPageId = operation.getNewArtifactId();
         WebPageFileStore pagStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId);
         pagStore.open();
         return pagStore.getUUID();

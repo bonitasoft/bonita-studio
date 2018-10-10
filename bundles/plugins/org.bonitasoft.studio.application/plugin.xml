@@ -376,31 +376,31 @@
                mnemonic="w">
             <separator
                   name="org.bonitasoft.studio.application.placeholder.organization"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.bdm"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.profile"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.application"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.diagram"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
-                  name="org.bonitasoft.studio.application.placeholder.uidpage"
-                  visible="false">
+                  name="org.bonitasoft.studio.application.placeholder.uidartifact"
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.restapi"
-                  visible="false">
+                  visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.connector"

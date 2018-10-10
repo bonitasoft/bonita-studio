@@ -13,10 +13,38 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidpage">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.widget"
+               icon="icons/custom_widget.png"
+               label="%newCustomWidget"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
          <command
                commandId="org.bonitasoft.studio.designer.command.create.page"
-               icon="icons/ui_designer_16x16.png"
+               icon="icons/page.png"
                label="%newApplicationPage"
                style="push">
             <visibleWhen
@@ -177,6 +205,22 @@
          </and>
       </activeWhen>
    </handler>
+   <handler
+         class="org.bonitasoft.studio.designer.ui.handler.CreateCustomWidgetHandler"
+         commandId="org.bonitasoft.studio.application.new">
+      <activeWhen>
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <test
+                     property="org.bonitasoft.studio.designer.isWebWidgetFolder">
+               </test>
+            </iterate>
+         </and>
+      </activeWhen>
+   </handler>
 </extension>
 <extension
       point="org.eclipse.core.expressions.propertyTesters">
@@ -184,7 +228,7 @@
          class="org.bonitasoft.studio.designer.core.propertytester.WebArtifactPropertyTester"
          id="org.bonitasoft.studio.designer.propertyTester"
          namespace="org.bonitasoft.studio.designer"
-         properties="isWebPageFolder"
+         properties="isWebPageFolder,isWebWidgetFolder"
          type="org.eclipse.core.runtime.IAdaptable">
    </propertyTester>
 </extension>

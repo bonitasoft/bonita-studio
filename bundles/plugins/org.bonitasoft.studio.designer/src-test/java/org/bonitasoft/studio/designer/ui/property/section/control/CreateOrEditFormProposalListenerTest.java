@@ -63,7 +63,7 @@ public class CreateOrEditFormProposalListenerTest {
     public void should_execute_create_form_operation_if_new_form() throws Exception {
         final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
         doReturn(operation).when(listener).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(), any(Contract.class), any(FormScope.class));
-        when(operation.getNewPageId()).thenReturn("page-id");
+        when(operation.getNewArtifactId()).thenReturn("page-id");
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         when(pageStore.getChild("page-id")).thenReturn(fileStore);
         when(fileStore.getUUID()).thenReturn("page-id");
