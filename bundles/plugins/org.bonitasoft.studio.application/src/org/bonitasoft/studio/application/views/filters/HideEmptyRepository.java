@@ -55,8 +55,7 @@ public class HideEmptyRepository extends ViewerFilter {
                         return Stream.of(members)
                                 .anyMatch(r -> !r.getName().startsWith("."));
                     }
-                    return members.length > 0
-                            && !store.getName().equals("xsd");//Always hide xsd repo as it is not a "true" development source
+                    return members.length > 0;
                 } catch (CoreException e) {
                     BonitaStudioLog.error(e);
                 }
