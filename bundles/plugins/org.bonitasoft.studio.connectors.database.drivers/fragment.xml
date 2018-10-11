@@ -4,9 +4,6 @@
    <extension
          point="org.bonitasoft.studio.repository.fileContribution">
       <fileContribution
-            class="org.bonitasoft.studio.connectors.database.drivers.DriversFileStoreContribution">
-      </fileContribution>
-      <fileContribution
             class="org.bonitasoft.studio.connectors.database.drivers.DriversAssociationFileStoreContribution">
       </fileContribution>
    </extension>

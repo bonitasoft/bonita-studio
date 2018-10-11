@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +25,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -35,6 +38,8 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -141,7 +146,23 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 		final DatabaseConnectorPropertiesFileStore fileStore = store.getChild(implementation.getDefinitionId() + "."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		if (fileStore !=null){
 			final String defaultDriver = fileStore.getDefault();
+            DependencyRepositoryStore depStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
 			final List<String> jars = fileStore.getJarList();
+            for (String jar : jars) {
+                DependencyFileStore driverFilseStore = depStore.getChild(jar);
+                if (driverFilseStore == null) {
+                    URL entry = ConnectorPlugin.getDefault().getBundle().getResource("/drivers/" + jar);
+                    if (entry != null) {
+                        try {
+                            depStore.importInputStream(jar, entry.openStream());
+                        } catch (IOException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    }
+                }
+            }
+
 			final boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
 			final Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
 			FragmentContainer otherDependencies = null;

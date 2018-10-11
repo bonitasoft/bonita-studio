@@ -61,9 +61,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
     private Button automaticallyAddDriver;
     private DataBindingContext context;
 
-    /**
-     * @param pageName
-     */
+
     public DatabaseConnectorDriversWizardPage(String connectorId) {
         super(DatabaseConnectorDriversWizardPage.class.getName());
         setTitle(Messages.databaseConnectorDriversWizardPageTitle);
@@ -80,10 +78,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
+
     @Override
     public void createControl(Composite parent) {
         setControl(createDriverManager(parent));
@@ -134,10 +129,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
         add.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
+
             @Override
             public void widgetSelected(SelectionEvent e) {
                 SelectJarsDialog dialog = new SelectJarsDialog(getShell());
@@ -200,7 +192,6 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
         automaticallyAddDriver = new Button(parent, SWT.CHECK);
         automaticallyAddDriver.setText(Messages.automaticallyAddDriver);
         automaticallyAddDriver.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
-        //	automaticallyAddDriver.setSelection(true);
         automaticallyAddDriver.setSelection(getAutoAddDriverProperty(connectorId));
         automaticallyAddDriver.addSelectionListener(new SelectionAdapter() {
 
@@ -261,7 +252,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
         fileStore.setJarList(jars);
     }
 
-    private String getDefaultDriver(String connectorId) {
+    public String getDefaultDriver(String connectorId) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
                 .getChild(getDBPrefFilename(connectorId));
         if (fileStore != null) {
