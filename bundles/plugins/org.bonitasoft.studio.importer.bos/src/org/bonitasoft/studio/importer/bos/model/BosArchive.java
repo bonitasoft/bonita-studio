@@ -117,7 +117,7 @@ public class BosArchive {
                 && directStoreChild) { // File
             final ImportFileStoreModel file = new ImportFileStoreModel(Joiner.on('/').join(concat(parentSegments, segments)),
                     store);
-            if(!isALegacyProfile(store, file)) {
+            if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
                 store.addFile(file);
             }
@@ -146,6 +146,11 @@ public class BosArchive {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false);
         }
+    }
+
+    private boolean isLegacySoapXSD(AbstractFolderModel store, ImportFileStoreModel file) {
+        return (file.getFileName().equals("soap-envelope.xsd") || file.getFileName().equals("soap-encoding.xsd"))
+                && "xsd".equals(store.getFolderName());
     }
 
     protected boolean isALegacyProfile(AbstractFolderModel store, final ImportFileStoreModel file) {
