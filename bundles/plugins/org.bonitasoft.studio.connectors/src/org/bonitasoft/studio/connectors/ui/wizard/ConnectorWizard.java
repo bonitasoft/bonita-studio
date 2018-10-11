@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,6 +32,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -64,6 +68,7 @@ import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorOutputWi
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
@@ -428,6 +433,22 @@ public class ConnectorWizard extends ExtensibleWizard implements
             if (definition != null) {
                 extension = findCustomWizardExtension(definition);
                 recreateConnectorConfigurationPages(definition, true);
+            }
+        } else if (page instanceof DatabaseConnectorDriversWizardPage && selectionPage != null) {
+            final ConnectorDefinition definition = selectionPage
+                    .getSelectedConnectorDefinition();
+            DependencyRepositoryStore store = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
+            String defaultDriver = ((DatabaseConnectorDriversWizardPage) page).getDefaultDriver(definition.getId());
+            if (defaultDriver != null && store.getChild(defaultDriver) == null) {
+                URL resource = ConnectorPlugin.getDefault().getBundle().getResource("/drivers/" + defaultDriver);
+                if (resource != null) {
+                    try (InputStream is = resource.openStream()) {
+                        store.importInputStream(defaultDriver, is);
+                    } catch (IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
             }
         }
         return super.getNextPage(page);

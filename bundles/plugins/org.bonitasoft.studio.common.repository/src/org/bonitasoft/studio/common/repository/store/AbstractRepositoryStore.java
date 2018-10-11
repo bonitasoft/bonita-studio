@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -151,7 +152,16 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         if (newIs == null) {
             return null;
         }
+        boolean exists = false;
+        try {
+            exists = getResource().members().length > 0;
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         final T store = doImportInputStream(fileName, newIs);
+        if (!exists) {
+            AbstractFileStore.refreshExplorerView();
+        }
         return store;
     }
 
