@@ -8,12 +8,6 @@
       </repositoryStore>
    </extension>
    <extension
-         point="org.bonitasoft.studio.repository.fileContribution">
-      <fileContribution
-            class="org.bonitasoft.studio.xml.repository.DefaultXSDFileStore">
-      </fileContribution>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.expression.operatorEditor">
       <operatorEditor
             class="org.bonitasoft.studio.xml.ui.XPathOperatorEditor">
@@ -29,6 +23,28 @@
          point="org.bonitasoft.studio.expression.expressionProvider">
       <expressionProvider
             providerClass="org.bonitasoft.studio.xml.ui.XPathExpressionProvider"></expressionProvider>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="soap-encoding">
+         <public
+               publicId="http://www.w3.org/2001/12/soap-encoding"
+               uri="xsd/soap-encoding.xsd"
+               webURL="http://www.w3.org/2001/12/soap-encoding">
+         </public>
+      </catalogContribution>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="soap-envelope">
+         <public
+               publicId="http://www.w3.org/2001/12/soap-envelope"
+               uri="xsd/soap-envelope.xsd"
+               webURL="http://www.w3.org/2001/12/soap-envelope">
+         </public>
+      </catalogContribution>
    </extension>
 
 </plugin>

@@ -120,7 +120,7 @@ public class XSDFileStore extends EMFFileStore {
     }
 
     public List<String> getElements() {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         XSDSchema schema = (XSDSchema) getContent();
         if (schema != null) {
             for (XSDElementDeclaration element : schema.getElementDeclarations()) {
