@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -38,10 +37,11 @@ import org.restlet.resource.ResourceException;
 public abstract class CreateUIDArtifactOperation implements IRunnableWithProgress {
 
     public static final String DEFAULT_PAGE_NAME = "newPage";
+    public static final String DEFAULT_LAYOUT_NAME = "newLayout";
     public static final String DEFAULT_WIDGET_NAME = "newWidget";
 
     enum ArtifactyType {
-        PAGE("page"), FORM("form"), WIDGET("widget");
+        PAGE("page"), FORM("form"), WIDGET("widget"), LAYOUT("layout");
 
         private String type;
 
@@ -103,6 +103,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         try {
             switch (getArtifactType()) {
                 case FORM:
+                case LAYOUT:
                 case PAGE:
                     new OpenBrowserOperation(pageDesignerURLBuilder.openPage(artifactId)).execute();
                     break;
@@ -111,7 +112,6 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
                 default:
                     break;
             }
-            AbstractFileStore.refreshExplorerView();
         } catch (final MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create open artifact URL.");
         }
