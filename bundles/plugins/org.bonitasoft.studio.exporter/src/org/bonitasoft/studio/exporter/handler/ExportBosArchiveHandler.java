@@ -21,12 +21,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -36,6 +39,7 @@ import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
@@ -62,10 +66,13 @@ public class ExportBosArchiveHandler {
     private static ArrayList<IBOSArchiveFileStoreProvider> providers;
 
     @Execute
-    public void execute() {
+    public void execute(RepositoryAccessor repositoryAccessor,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("diagram") String diagramToExport) {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
-            Set<Object> selectedFiles = new HashSet<Object>();
-            final MainProcess diagram = getDiagramInEditor();
+            Set<Object> selectedFiles = new HashSet<>();
+            final MainProcess diagram = diagramToExport != null
+                    ? getDiagram(repositoryAccessor, diagramToExport)
+                    : getDiagramInEditor();
             final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager.getInstance()
                     .getCurrentRepository()
                     .getAllExportableStores();
@@ -103,6 +110,15 @@ public class ExportBosArchiveHandler {
         }
     }
 
+    private MainProcess getDiagram(RepositoryAccessor repositoryAccessor, String diagramToExport) {
+        DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+                .getChild(diagramToExport);
+        if (fileStore != null) {
+            return fileStore.getContent();
+        }
+        throw new IllegalArgumentException(String.format("The diagram '%s' doesn't exist", diagramToExport));
+    }
+
     private String getDefaultName() {
         final MainProcess diagram = getDiagramInEditor();
         if (diagram == null) {
@@ -113,7 +129,7 @@ public class ExportBosArchiveHandler {
     }
 
     public static Set<Object> getAllDiagramRelatedFiles(final MainProcess diagram) {
-        final Set<Object> result = new HashSet<Object>();
+        final Set<Object> result = new HashSet<>();
         final List<Pool> processes = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
         final List<IBOSArchiveFileStoreProvider> fileStoreProvider = getFileStoreProviders();
 
@@ -138,7 +154,7 @@ public class ExportBosArchiveHandler {
 
     private static List<IBOSArchiveFileStoreProvider> getFileStoreProviders() {
         if (providers == null) {
-            providers = new ArrayList<IBOSArchiveFileStoreProvider>();
+            providers = new ArrayList<>();
             final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance()
                     .getConfigurationElements(
                             BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT);

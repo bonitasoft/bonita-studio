@@ -17,20 +17,35 @@ package org.bonitasoft.studio.diagram.custom;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IAdaptable;
 
 public class DiagramPropertyTester extends PropertyTester {
 
     public static final String DIAGRAM_FOLDER_PROPERTY = "isDiagramFolder";
+    public static final String DIAGRAM_FILE_PROPERTY = "isDiagramFile";
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         if (Objects.equals(property, DIAGRAM_FOLDER_PROPERTY)) {
             return isDiagramFolder((IAdaptable) receiver, store);
+        } else if (Objects.equals(property, DIAGRAM_FILE_PROPERTY)) {
+            return isDiagramFile((IAdaptable) receiver, store);
+        }
+        return false;
+    }
+
+    private boolean isDiagramFile(IAdaptable receiver, DiagramRepositoryStore store) {
+        IFile file = receiver.getAdapter(IFile.class);
+        if (file != null) {
+            return store.getChildren().stream()
+                    .map(DiagramFileStore::getResource)
+                    .anyMatch(file::equals);
         }
         return false;
     }

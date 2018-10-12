@@ -456,4 +456,5 @@ public abstract class AbstractFileStore
     protected String stripExtension(String name, String extension) {
         return name.toLowerCase().endsWith(extension) ? name.replace(extension, "") : name;
     }
+
 }
