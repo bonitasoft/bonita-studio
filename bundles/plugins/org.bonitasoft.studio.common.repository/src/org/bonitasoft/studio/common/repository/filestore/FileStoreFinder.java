@@ -23,7 +23,6 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -83,8 +82,8 @@ public class FileStoreFinder {
         return getCurrentStructuredSelection()
                 .map(selection -> {
                     Object element = selection.getFirstElement();
-                    if (element instanceof IFile) {
-                        return findFileStore(((IFile) element).getName(), currentRepository).orElse(null);
+                    if (element instanceof IResource) {
+                        return findFileStore(((IResource) element).getName(), currentRepository).orElse(null);
                     }
                     return null;
                 });
