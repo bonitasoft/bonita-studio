@@ -30,18 +30,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 
-public class CreatePageOperation extends CreateUIDArtifactOperation {
+public class CreateLayoutOperation extends CreateUIDArtifactOperation {
 
     private RepositoryAccessor repositoryAccessor;
 
-    public CreatePageOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
+    public CreateLayoutOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
         super(pageDesignerURLBuilder);
         this.repositoryAccessor = repositoryAccessor;
     }
 
     @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewPage, IProgressMonitor.UNKNOWN);
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        monitor.beginTask(Messages.creatingNewLayout, IProgressMonitor.UNKNOWN);
         setArtifactName(getNewName());
         JSONObject bodyObject = createBody();
         try {
@@ -54,16 +54,16 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
 
     @Override
     protected ArtifactyType getArtifactType() {
-        return ArtifactyType.PAGE;
+        return ArtifactyType.LAYOUT;
     }
 
     private String getNewName() {
-        List<String> existingPages = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
+        List<String> existingLayouts = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
                 .stream()
-                .filter(store -> Objects.equals(store.getType(), "page"))
+                .filter(store -> Objects.equals(store.getType(), "layout"))
                 .map(WebPageFileStore::getDisplayName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(DEFAULT_PAGE_NAME, existingPages);
+        return StringIncrementer.getIncrementedString(DEFAULT_LAYOUT_NAME, existingLayouts);
     }
 
 }

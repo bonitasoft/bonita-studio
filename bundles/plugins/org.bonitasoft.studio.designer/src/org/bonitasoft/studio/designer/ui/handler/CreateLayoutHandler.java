@@ -20,7 +20,7 @@ import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreatePageOperation;
+import org.bonitasoft.studio.designer.core.operation.CreateLayoutOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -29,18 +29,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class CreatePageHandler {
+public class CreateLayoutHandler {
 
     @Execute
-    public void createPage(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, PageDesignerURLFactory urlFactory,
+    public void createLayout(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, PageDesignerURLFactory urlFactory,
             RepositoryAccessor repositoryAccessor) {
-        CreatePageOperation operation = new CreatePageOperation(urlFactory, repositoryAccessor);
+        CreateLayoutOperation operation = new CreateLayoutOperation(urlFactory, repositoryAccessor);
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, operation);
         } catch (InvocationTargetException | InterruptedException e) {
-            new ExceptionDialogHandler().openErrorDialog(shell, Messages.createPageFailed, e);
+            new ExceptionDialogHandler().openErrorDialog(shell, Messages.createLayoutFailed, e);
         }
     }
-
 }
