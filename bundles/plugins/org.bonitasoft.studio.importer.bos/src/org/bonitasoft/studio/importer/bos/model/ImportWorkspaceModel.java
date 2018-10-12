@@ -15,7 +15,7 @@ public class ImportWorkspaceModel {
     private static final String VALID_SYMBOL = "\u2713 ";
     private static final String CROSS_SYMBOL = "\u2718 ";
     private static final String WARN_SYMBOL = "\u26A0 ";
-    private static final String INFO_SYMBOL = "\uD83D\uDEC8";
+    private static final String INFO_SYMBOL = "\u26A0";
     private final List<ImportRepositoryModel> repositories = new ArrayList<>();
     private final String worksapceFolder;
     private IStatus status = Status.OK_STATUS;
