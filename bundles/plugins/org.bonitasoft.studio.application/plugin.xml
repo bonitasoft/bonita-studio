@@ -1388,6 +1388,13 @@
             properties="isRenamable"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
+      <propertyTester
+            class="org.bonitasoft.studio.application.property.tester.GroovySrcPropertyTester"
+            id="org.bonitasoft.studio.groovy.ui.GroovySrcPropertyTester"
+            namespace="org.bonitasoft.studio.groovy.ui"
+            properties="isGroovySrcFolder"
+            type="org.eclipse.core.runtime.IAdaptable">
+      </propertyTester>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

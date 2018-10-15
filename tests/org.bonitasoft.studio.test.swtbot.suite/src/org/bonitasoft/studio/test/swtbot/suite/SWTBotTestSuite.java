@@ -70,7 +70,6 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
-import org.bonitasoft.studio.tests.groovy.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
@@ -114,7 +113,6 @@ import org.junit.runners.Suite;
         TestOpenDiagram.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
         ConnectorDefinitionTranslationsTest.class,
-        TestBonitaGroovyEditorDialog.class,
         CopyPasteTests.class,
         DeleteCommandTest.class,
         NewRunTest.class,
