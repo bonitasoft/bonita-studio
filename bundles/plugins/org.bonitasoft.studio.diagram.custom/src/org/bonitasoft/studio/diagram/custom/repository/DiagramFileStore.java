@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -81,7 +83,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -93,10 +94,11 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IDeployable {
+public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable {
 
     public static final String PROC_EXT = "proc";
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
+    public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 
@@ -261,29 +263,24 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable {
         final IWorkbenchPage activePage = closeOpenedEditorWithoutSaving();
 
         IEditorPart part = null;
-        try {
-            final Resource emfResource = getEMFResource();
-            final MainProcess content = getContent();
-            Assert.isLegal(content != null);
-            Assert.isLegal(emfResource != null && emfResource.isLoaded());
-            final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
-            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
-            if (part instanceof DiagramEditor) {
-                final DiagramEditor editor = (DiagramEditor) part;
-                final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-                mainProcess.eAdapters().add(new PoolNotificationListener());
-                if (isReadOnly()) {
-                    setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
-                }
-                registerListeners(mainProcess, editor.getEditingDomain());
-                handleMigrationReportIfPresent(activePage);
-
-                setDefaultSelection(editor);
-
-                return editor;
+        final Resource emfResource = getEMFResource();
+        final MainProcess content = getContent();
+        Assert.isLegal(content != null);
+        Assert.isLegal(emfResource != null && emfResource.isLoaded());
+        final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
+        part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
+        if (part instanceof DiagramEditor) {
+            final DiagramEditor editor = (DiagramEditor) part;
+            final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
+            mainProcess.eAdapters().add(new PoolNotificationListener());
+            if (isReadOnly()) {
+                setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
             }
-        } catch (final PartInitException e) {
-            BonitaStudioLog.error(e);
+            registerListeners(mainProcess, editor.getEditingDomain());
+
+            setDefaultSelection(editor);
+
+            return editor;
         }
         return part;
     }
@@ -311,33 +308,25 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable {
     }
 
     protected void setDefaultSelection(final DiagramEditor editor) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                //default selection
-                editor.setFocus();
-                final IGraphicalEditPart editPart = editor.getDiagramEditPart()
-                        .getChildBySemanticHint(String.valueOf(PoolEditPart.VISUAL_ID));
-                if (editPart != null && editPart.getFigure() != null) {
-                    editor.getDiagramEditPart().getViewer().select(editPart);
-                    //force viewer to flush selection event
-                    editor.getDiagramEditPart().getViewer().flush();
-                }
+        Display.getDefault().syncExec(() -> {
+            //default selection
+            editor.setFocus();
+            final IGraphicalEditPart editPart = editor.getDiagramEditPart()
+                    .getChildBySemanticHint(String.valueOf(PoolEditPart.VISUAL_ID));
+            if (editPart != null && editPart.getFigure() != null) {
+                editor.getDiagramEditPart().getViewer().select(editPart);
+                //force viewer to flush selection event
+                editor.getDiagramEditPart().getViewer().flush();
             }
         });
     }
 
     private void setReadOnlyAndOpenWarningDialogAboutReadOnly(final DiagramEditor editor) {
         setReadOnly(true);
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
-                        Messages.readOnlyFileWarning);
-            }
-        });
+        Display.getDefault()
+                .asyncExec(() -> MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                        Messages.readOnlyFileTitle,
+                        Messages.readOnlyFileWarning));
     }
 
     @Override
@@ -354,28 +343,6 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable {
             }
             if (openedEditor instanceof ProcessDiagramEditor) {
                 ((ProcessDiagramEditor) openedEditor).setReadOnly(readOnly);
-            }
-        }
-    }
-
-    private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
-            throws PartInitException {
-        if (hasMigrationReport()) {
-            Display.getDefault().syncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        activePage.showView("org.bonitasoft.studio.migration.view");
-                    } catch (final PartInitException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            });
-        } else {
-            final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
-            if (migrationView != null) {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
             }
         }
     }
@@ -400,13 +367,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable {
     }
 
     private Function<AbstractProcess, String> toUUID() {
-        return new Function<AbstractProcess, String>() {
-
-            @Override
-            public String apply(final AbstractProcess process) {
-                return ModelHelper.getEObjectID(process);
-            }
-        };
+        return ModelHelper::getEObjectID;
     }
 
     /**
@@ -476,6 +437,18 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("diagram", getName());
         executeCommand(DEPLOY_DIAGRAM_COMMAND, parameters);
+    }
+
+    @Override
+    public void rename(String newName) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("diagram", getName());
+        executeCommand(RENAME_DIAGRAM_COMMAND, parameters);
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        return Optional.of(""); // Specific behavior for diagrams, all is done in the rename method
     }
 
 }
