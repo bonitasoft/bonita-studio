@@ -32,11 +32,8 @@ import org.restlet.ext.json.JsonRepresentation;
 
 public class CreateLayoutOperation extends CreateUIDArtifactOperation {
 
-    private RepositoryAccessor repositoryAccessor;
-
     public CreateLayoutOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
-        super(pageDesignerURLBuilder);
-        this.repositoryAccessor = repositoryAccessor;
+        super(pageDesignerURLBuilder, repositoryAccessor);
     }
 
     @Override

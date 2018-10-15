@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.net.URL;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
@@ -42,16 +43,21 @@ public class CreateFormOperationTest {
 
     @Mock
     private PageDesignerURLFactory pageDesignerURLFactory;
+
     private CreateFormOperation createFormOperation;
+
     @Mock
     private IProgressMonitor monitor;
+
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createFormOperation = spy(new CreateFormOperation(pageDesignerURLFactory));
+        createFormOperation = spy(new CreateFormOperation(pageDesignerURLFactory, repositoryAccessor));
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", "newPage");
         jsonObject.put("id", "page-id");

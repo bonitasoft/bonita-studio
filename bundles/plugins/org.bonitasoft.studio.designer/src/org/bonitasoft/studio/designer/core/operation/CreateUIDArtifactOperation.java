@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -39,9 +40,10 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     public static final String DEFAULT_PAGE_NAME = "newPage";
     public static final String DEFAULT_LAYOUT_NAME = "newLayout";
     public static final String DEFAULT_WIDGET_NAME = "newWidget";
+    public static final String DEFAULT_FRAGMENT_NAME = "newFragment";
 
-    enum ArtifactyType {
-        PAGE("page"), FORM("form"), WIDGET("widget"), LAYOUT("layout");
+    public enum ArtifactyType {
+        PAGE("page"), FORM("form"), WIDGET("widget"), LAYOUT("layout"), FRAGMENT("fragment");
 
         private String type;
 
@@ -58,8 +60,10 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     protected Optional<JSONObject> responseObject = Optional.empty();
     protected PageDesignerURLFactory pageDesignerURLBuilder;
     protected String artifactName = DEFAULT_PAGE_NAME;
+    protected RepositoryAccessor repositoryAccessor;
 
-    public CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
+    public CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
@@ -81,7 +85,9 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type", getArtifactType());
             jsonObject.put("name", artifactName);
-            if (getArtifactType() == ArtifactyType.FORM || getArtifactType() == ArtifactyType.PAGE) {
+            if (getArtifactType() == ArtifactyType.FORM
+                    || getArtifactType() == ArtifactyType.PAGE
+                    || getArtifactType() == ArtifactyType.FRAGMENT) {
                 jsonObject.put("rows", Arrays.asList(new ArrayList<>()));
             }
             return jsonObject;
@@ -109,6 +115,10 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
                     break;
                 case WIDGET:
                     new OpenBrowserOperation(pageDesignerURLBuilder.openWidget(artifactId)).execute();
+                    break;
+                case FRAGMENT:
+                    new OpenBrowserOperation(pageDesignerURLBuilder.openFragment(artifactId)).execute();
+                    break;
                 default:
                     break;
             }

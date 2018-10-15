@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
@@ -52,11 +53,14 @@ public class ExportBosArchiveIT {
 
     @Test
     public void should_not_export_ui_designer_metadata() throws Exception {
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final WebPageRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
                 .getRepositoryStore(WebPageRepositoryStore.class);
 
         final CreateFormOperation createFormOperation = new CreateFormOperation(
-                new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
+                new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)),
+                repositoryAccessor);
         createFormOperation.run(Repository.NULL_PROGRESS_MONITOR);
         final String pageName = createFormOperation.getNewPageName();
         final String pageId = createFormOperation.getNewArtifactId();
