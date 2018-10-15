@@ -28,27 +28,15 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.connector">
-         <command
-               commandId="org.bonitasoft.studio.groovy.ui.editscripts"
-               icon="icons/manage_groovy_scripts.png"
-               id="org.bonitasoft.studio.menu.editscripts"
-               label="%editGroovyScript_Label"
-               style="push">
-         </command>
-         <visibleWhen
-               checkEnabled="true">
-            <reference
-                  definitionId="isBonitaPerspectiveActive">
-            </reference>
-         </visibleWhen>
-      </menuContribution>
-      <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.manage.dependencies">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.actors.newFilterImpl">
+         <separator
+               name="org.bonitasoft.studio.groovy.ui.separator"
+               visible="true">
+         </separator>
          <command
-               commandId="org.bonitasoft.studio.groovy.ui.editscripts"
-               icon="icons/manage_groovy_scripts.png"
+               commandId="org.bonitasoft.studio.groovy.ui.newScript"
+               icon="icons/newgroovyclass_wiz.gif"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -74,9 +62,8 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.bonitasoft.studio.groovy.ui.handler.EditGroovyScriptHandler"
-            id="org.bonitasoft.studio.groovy.ui.editscripts"
-            name="%editGroovyScript_Label">
+            id="org.bonitasoft.studio.groovy.ui.newScript"
+            name="%GroovyClass">
       </command>
    </extension>
    <extension
@@ -105,6 +92,29 @@
       		<appliesTo projectNature="org.bonitasoft.studio.common.repository.bonitaNature"/>
     	</lookup>
 	</extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.groovy.ui.handler.NewGroovyScript"
+            commandId="org.bonitasoft.studio.groovy.ui.newScript">
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.groovy.ui.handler.NewGroovyScript"
+            commandId="org.bonitasoft.studio.application.newWithWizard">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.groovy.ui.isGroovySrcFolder">
+                  </test>
+                </iterate>
+            </and>
+          </activeWhen>
+      </handler>
+   </extension>
 
 
 </plugin>
