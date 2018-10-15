@@ -642,6 +642,11 @@
             defaultHandler="org.bonitasoft.studio.application.actions.RenameDiagramCommandHandler"
             id="org.bonitasoft.studio.application.command.rename"
             name="Rename Command">
+         <commandParameter
+               id="diagram"
+               name="Diagram to rename"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.application.handler.ImportArtifactsFromZipHandler"

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.properties.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
@@ -46,25 +47,20 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     private MainProcess diagram;
     private String diagramVersion;
     private String diagramName;
-    private List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
+    private List<ProcessesNameVersion> pools = new ArrayList<>();
     private DiagramEditor editor;
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(diagram);
         Assert.isNotNull(diagramVersion);
         Assert.isNotNull(diagramName);
-        Assert.isNotNull(editor);
         monitor.beginTask(Messages.renamingDiagram, IProgressMonitor.UNKNOWN);
 
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
 
-        final String partName = editor.getPartName();
+        Optional<String> partName = Optional.ofNullable(editor).map(DiagramEditor::getPartName);
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
@@ -77,9 +73,12 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
-            diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+            DiagramEditor openedEditor = diagramFileStore.getOpenedEditor();
+            if (openedEditor != null) {
+                openedEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
+            }
             cleanOldFileStores(diagramFileStore);
-            reopenEditors(partName, diagramStore);
+            partName.ifPresent(pName -> reopenEditors(pName, diagramStore));
         }
     }
 
