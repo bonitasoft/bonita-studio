@@ -5,22 +5,20 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine.operation;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -41,7 +39,6 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ProcessSelector {
 
@@ -53,40 +50,45 @@ public class ProcessSelector {
     }
 
     public AbstractProcess getSelectedProcess() {
-        if (event != null && event.getParameters().get(PROCESS) != null) {
-            return (AbstractProcess) event.getParameters().get(PROCESS);
-        } else {
-            final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-            final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
-            if (isADiagram) {
-                final List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer().getSelectedEditParts();
-                if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
-                    final Object selectedEp = selectedEditParts.iterator().next();
-                    if (selectedEp != null) {
-                        return ModelHelper.getParentProcess(((IGraphicalEditPart) selectedEp).resolveSemanticElement());
-                    }
-                } else {
-                    final EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-                    return ModelHelper.getParentProcess(element);
+        Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
+        if (processFromEvent.isPresent()) {
+            return processFromEvent.get();
+        }
+        final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
+        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+        if (isADiagram) {
+            final List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer()
+                    .getSelectedEditParts();
+            if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
+                final Object selectedEp = selectedEditParts.iterator().next();
+                if (selectedEp != null) {
+                    return ModelHelper.getParentProcess(((IGraphicalEditPart) selectedEp).resolveSemanticElement());
                 }
+            } else {
+                final EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
+                return ModelHelper.getParentProcess(element);
             }
         }
         return null;
     }
 
-    public Set<AbstractProcess> getExecutableProcesses() {
-        final Set<AbstractProcess> result = new TreeSet<AbstractProcess>(new Comparator<AbstractProcess>() {
+    private Optional<AbstractProcess> getProcessFromEvent() {
+        return Optional.ofNullable(event)
+                .map(e -> e.getParameters().get(PROCESS))
+                .filter(AbstractProcess.class::isInstance)
+                .map(AbstractProcess.class::cast);
+    }
 
-            @Override
-            public int compare(final AbstractProcess p1, final AbstractProcess p2) {
-                final String s1 = p1.getName() + "--" + p1.getVersion();
-                final String s2 = p2.getName() + "--" + p2.getVersion();
-                return s1.compareTo(s2);
-            }
+    public Set<AbstractProcess> getExecutableProcesses() {
+        final Set<AbstractProcess> result = new TreeSet<>((p1, p2) -> {
+            final String s1 = p1.getName() + "--" + p1.getVersion();
+            final String s2 = p2.getName() + "--" + p2.getVersion();
+            return s1.compareTo(s2);
         });
-        if (event != null && event.getParameters().get(PROCESS) != null) {
-            final AbstractProcess selectedProcess = (AbstractProcess) event.getParameters().get(PROCESS);
-            final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+        Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
+        if (processFromEvent.isPresent()) {
+            AbstractProcess selectedProcess = processFromEvent.get();
+            final Set<AbstractProcess> calledProcesses = new HashSet<>();
             findCalledProcesses(selectedProcess, calledProcesses);
             if (!calledProcesses.isEmpty()) {
                 result.addAll(calledProcesses);
@@ -99,14 +101,14 @@ public class ProcessSelector {
             if (processInEditor instanceof MainProcess) {
                 for (final EObject p : ModelHelper.getAllItemsOfType(processInEditor, ProcessPackage.Literals.POOL)) {
                     result.add((AbstractProcess) p);
-                    final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+                    final Set<AbstractProcess> calledProcesses = new HashSet<>();
                     findCalledProcesses((AbstractProcess) p, calledProcesses);
                     if (!calledProcesses.isEmpty()) {
                         result.addAll(calledProcesses);
                     }
                 }
             } else {
-                final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+                final Set<AbstractProcess> calledProcesses = new HashSet<>();
                 findCalledProcesses(processInEditor, calledProcesses);
                 if (!calledProcesses.isEmpty()) {
                     result.addAll(calledProcesses);
@@ -121,8 +123,10 @@ public class ProcessSelector {
     }
 
     private void findCalledProcesses(final AbstractProcess process, final Set<AbstractProcess> result) {
-        final List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CALL_ACTIVITY);
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process,
+                ProcessPackage.Literals.CALL_ACTIVITY);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         for (final CallActivity callActivity : callActivities) {
             final Expression calledName = callActivity.getCalledActivityName();
             if (calledName != null && calledName.getContent() != null && !calledName.getContent().isEmpty()) {
@@ -131,7 +135,8 @@ public class ProcessSelector {
                 if (calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
-                final AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version, diagramStore.getAllProcesses());
+                final AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version,
+                        diagramStore.getAllProcesses());
                 if (subProcess != null && !containsSubProcess(subProcess, result)) {
                     result.add(subProcess);
                     findCalledProcesses(subProcess, result);
@@ -164,7 +169,7 @@ public class ProcessSelector {
     }
 
     public static ExecutionEvent createExecutionEvent(final AbstractProcess processToRun) {
-        final Map<String, Object> param = new HashMap<String, Object>();
+        final Map<String, Object> param = new HashMap<>();
         param.put(PROCESS, processToRun);
         return new ExecutionEvent(null, param, null, null);
     }

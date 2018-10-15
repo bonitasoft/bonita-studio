@@ -167,11 +167,12 @@ public class Messages extends NLS {
     public static String deploySuccessMessage;
     public static String deployingPage;
     public static String deployFailedTitle;
-
     public static String tomcatXmxOption;
     public static String restartServer;
     public static String restartServerConfirmationMsg;
     public static String tomcatExtraParams;
+    public static String noProcessToRunTitle;
+    public static String noProcessToRun;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
