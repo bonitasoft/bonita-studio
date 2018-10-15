@@ -272,7 +272,7 @@
          class="org.bonitasoft.studio.designer.core.propertytester.WebArtifactPropertyTester"
          id="org.bonitasoft.studio.designer.propertyTester"
          namespace="org.bonitasoft.studio.designer"
-         properties="isWebPageFolder,isWebWidgetFolder"
+         properties="isWebPageFolder,isWebWidgetFolder,isWebFragmentFolder"
          type="org.eclipse.core.runtime.IAdaptable">
    </propertyTester>
 </extension>

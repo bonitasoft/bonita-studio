@@ -111,4 +111,8 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return UIDesignerServerManager.getInstance();
     }
 
+    public URL newFragment() throws MalformedURLException {
+        return new URL(baseURL() + "/rest/fragments/");
+    }
+
 }

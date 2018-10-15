@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.converter.ToWebContract;
@@ -39,8 +40,8 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     private FormScope formScope;
 
     public CreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder, String formName,
-            Contract contract, FormScope formScope) {
-        super(pageDesignerURLBuilder);
+            Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
+        super(pageDesignerURLBuilder, repositoryAccessor);
         checkArgument(!isNullOrEmpty(formName));
         checkArgument(contract != null);
         this.contract = contract;

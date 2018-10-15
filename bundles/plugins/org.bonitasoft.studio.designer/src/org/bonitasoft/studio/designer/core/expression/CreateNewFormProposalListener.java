@@ -68,7 +68,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#handleEvent(org.eclipse.emf.ecore.EObject, java.lang.String)
+     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#handleEvent(org.eclipse.emf.ecore.EObject,
+     * java.lang.String)
      */
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
@@ -112,7 +113,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalAdapter#isRelevant(org.eclipse.emf.ecore.EObject, org.eclipse.jface.viewers.ISelection)
+     * @see org.bonitasoft.studio.expression.editor.provider.IProposalAdapter#isRelevant(org.eclipse.emf.ecore.EObject,
+     * org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public boolean isRelevant(EObject context, ISelection selection) {
@@ -129,7 +131,8 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder,
             final String formName,
             final Contract contract, final FormScope formScope) {
-        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope);
+        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope,
+                repositoryAccessor);
     }
 
 }
