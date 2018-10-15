@@ -60,8 +60,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
@@ -69,7 +67,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -116,7 +113,9 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+     * @see
+     * org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.
+     * Composite)
      */
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
@@ -185,24 +184,12 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
                 return t1.compareTo(t2);
             }
         });
-        typeCombo.getCombo().addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                fireSelectionChanged();
-            }
-        });
+        typeCombo.getCombo().addModifyListener(e -> fireSelectionChanged());
 
         browseClassesButton = new Button(typeComposite, SWT.PUSH);
         browseClassesButton.setText(Messages.browse);
         browseClassesButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
-        browseClassesButton.addListener(SWT.Selection, new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-                openClassSelectionDialog();
-            }
-        });
+        browseClassesButton.addListener(SWT.Selection, event -> openClassSelectionDialog());
     }
 
     private String toDisplayName(Object className) {
