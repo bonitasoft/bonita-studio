@@ -16,28 +16,25 @@ package org.bonitasoft.studio.ui.handler;
 
 import org.eclipse.ui.internal.statushandlers.IStatusDialogConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.statushandlers.WorkbenchErrorHandler;
 import org.eclipse.ui.statushandlers.WorkbenchStatusDialogManager;
 
 public class BonitaStatusHandler extends WorkbenchErrorHandler {
 
-    public BonitaStatusHandler() {
-        // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.statushandlers.AbstractStatusHandler#handle(org.eclipse.ui.statushandlers.StatusAdapter, int)
-     */
     @Override
     public void handle(StatusAdapter statusAdapter, int style) {
-        super.handle(statusAdapter, style);
+        if (style == StatusManager.SHOW) {
+            String message = statusAdapter.getStatus().getMessage();
+            if (message != null && message.contains("Server Tomcat")) {
+                return;
+            }
+        } else {
+            super.handle(statusAdapter, style);
+        }
+
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.statushandlers.WorkbenchErrorHandler#configureStatusDialog(org.eclipse.ui.statushandlers.WorkbenchStatusDialogManager)
-     */
     @Override
     protected void configureStatusDialog(WorkbenchStatusDialogManager statusDialog) {
         super.configureStatusDialog(statusDialog);

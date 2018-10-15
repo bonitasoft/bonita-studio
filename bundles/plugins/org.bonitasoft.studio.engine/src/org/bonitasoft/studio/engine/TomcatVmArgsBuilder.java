@@ -20,8 +20,10 @@ import java.io.IOException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TomcatVmArgsBuilder {
 
@@ -30,15 +32,17 @@ public class TomcatVmArgsBuilder {
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
 
     private final RepositoryAccessor repositoryAccessor;
+    private IPreferenceStore enginePreference;
 
-    public TomcatVmArgsBuilder(final RepositoryAccessor repositoryAccessor) {
+    public TomcatVmArgsBuilder(final RepositoryAccessor repositoryAccessor, IPreferenceStore enginePreference) {
         this.repositoryAccessor = repositoryAccessor;
+        this.enginePreference = enginePreference;
     }
 
     public String getVMArgs(final String bundleLocation) {
         final StringBuilder args = new StringBuilder();
         addMemoryOptions(args);
-        final String tomcatExtraParams = System.getProperty("tomcat.extra.params");
+        final String tomcatExtraParams = enginePreference.getString(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS);
         if (tomcatExtraParams != null) {
             args.append(" " + tomcatExtraParams);
         }
@@ -102,7 +106,7 @@ public class TomcatVmArgsBuilder {
     }
 
     protected void addMemoryOptions(final StringBuilder args) {
-        args.append("-Xmx512m");
+        args.append(String.format("-Xmx%sm", enginePreference.getInt(EnginePreferenceConstants.TOMCAT_XMX_OPTION)));
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {

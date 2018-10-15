@@ -30,17 +30,21 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
-
 public class ServerPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
     private Integer newPort = new Integer(-1);
     private IntegerFieldEditor port;
+    private IntegerFieldEditor xmxOption;
+    private Integer xmx = new Integer(-1);
+    private String newExtraParams;
+    private StringFieldEditor extraParamsField;
 
     public ServerPreferencePage() {
         super(GRID);
@@ -66,12 +70,24 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 getFieldEditorParent());
         port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
         addField(port);
-    }
 
+        xmxOption = new IntegerFieldEditor(EnginePreferenceConstants.TOMCAT_XMX_OPTION, Messages.tomcatXmxOption,
+                getFieldEditorParent());
+        addField(xmxOption);
+        getContributedEditors().put(xmxOption, EnginePlugin.getDefault().getPreferenceStore());
+
+        extraParamsField = new StringFieldEditor(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, Messages.tomcatExtraParams,
+                getFieldEditorParent());
+        addField(extraParamsField);
+        getContributedEditors().put(extraParamsField, EnginePlugin.getDefault().getPreferenceStore());
+    }
 
     @Override
     public boolean performOk() {
         if (!port.isValid()) {
+            return false;
+        }
+        if (!xmxOption.isValid()) {
             return false;
         }
 
@@ -86,6 +102,10 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         final boolean ok = super.performOk();
         if (newPort != -1) {
             updatePortConfiguration(newPort);
+        } else if (xmx != -1) {
+            restartServer();
+        } else if (newExtraParams != null) {
+            restartServer();
         }
         return ok;
     }
@@ -97,14 +117,20 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
             return;
         }
         getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_PORT, newPort);
-        new Job(Messages.restartingWebServer) {
+        restartServer();
+    }
 
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                BOSWebServerManager.getInstance().resetServer(monitor);
-                return Status.OK_STATUS;
-            }
-        }.schedule();
+    private void restartServer() {
+        if (MessageDialog.openConfirm(getShell(), Messages.restartServer, Messages.restartServerConfirmationMsg)) {
+            new Job(Messages.restartingWebServer) {
+
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    BOSWebServerManager.getInstance().resetServer(monitor);
+                    return Status.OK_STATUS;
+                }
+            }.schedule();
+        }
     }
 
     @Override
@@ -114,9 +140,16 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 newPort = port.getIntValue();
             }
         }
+        if (event.getSource().equals(xmxOption)) {
+            if (xmxOption.isValid()) {
+                xmx = xmxOption.getIntValue();
+            }
+        }
+        if (event.getSource().equals(extraParamsField)) {
+            newExtraParams = extraParamsField.getStringValue();
+        }
         super.propertyChange(event);
     }
-
 
     /*
      * (non-Javadoc)
@@ -126,6 +159,5 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
     @Override
     public void init(final IWorkbench workbench) {
     }
-
 
 }
