@@ -24,8 +24,11 @@ import java.util.Set;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
@@ -42,9 +45,11 @@ import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvide
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -56,6 +61,7 @@ public class RunProcessCommand extends AbstractHandler {
     private Set<EObject> excludedObject;
     private IStatus status;
     private URL url;
+    private FileStoreFinder fileStoreFinder;
 
     public RunProcessCommand() {
         this(false);
@@ -64,6 +70,7 @@ public class RunProcessCommand extends AbstractHandler {
     public RunProcessCommand(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
         excludedObject = new HashSet<>();
+        fileStoreFinder = new FileStoreFinder();
     }
 
     public RunProcessCommand(final Set<EObject> excludedObject) {
@@ -80,6 +87,11 @@ public class RunProcessCommand extends AbstractHandler {
         final String configurationId = retrieveConfigurationId(event);
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
+        if (executableProcesses.isEmpty()) {
+            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.noProcessToRunTitle,
+                    Messages.noProcessToRun);
+            return ValidationStatus.cancel(Messages.noProcessToRunTitle);
+        }
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
             final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
@@ -124,18 +136,14 @@ public class RunProcessCommand extends AbstractHandler {
             BonitaStudioLog.error(e);
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
             if (!runSynchronously && !status.isOK()) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
-                        sb.append("\n");
-                        sb.append(status.getMessage());
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
-                                sb.toString(), status,
-                                IStatus.ERROR)
-                                        .open();
-                    }
+                Display.getDefault().syncExec(() -> {
+                    StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
+                    sb.append("\n");
+                    sb.append(status.getMessage());
+                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
+                            sb.toString(), status,
+                            IStatus.ERROR)
+                                    .open();
                 });
             }
         }
@@ -161,7 +169,12 @@ public class RunProcessCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+        boolean diagramSelectedInExplorer = fileStoreFinder
+                .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                .filter(DiagramFileStore.class::isInstance).isPresent();
+        if (diagramSelectedInExplorer) {
+            return true;
+        } else if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             final MainProcess process = ProcessSelector.getProcessInEditor();
             return process != null && process.isEnableValidation();
         }

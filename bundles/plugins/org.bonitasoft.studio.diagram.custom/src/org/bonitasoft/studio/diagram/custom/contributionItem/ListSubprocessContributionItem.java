@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.diagram.custom;
+package org.bonitasoft.studio.diagram.custom.contributionItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
