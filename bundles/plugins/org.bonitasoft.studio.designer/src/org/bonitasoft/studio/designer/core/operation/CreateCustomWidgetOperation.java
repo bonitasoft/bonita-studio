@@ -35,12 +35,9 @@ import org.restlet.ext.json.JsonRepresentation;
 
 public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
 
-    private RepositoryAccessor repositoryAccessor;
-
     public CreateCustomWidgetOperation(PageDesignerURLFactory pageDesignerURLBuilder,
             RepositoryAccessor repositoryAccessor) {
-        super(pageDesignerURLBuilder);
-        this.repositoryAccessor = repositoryAccessor;
+        super(pageDesignerURLBuilder, repositoryAccessor);
     }
 
     @Override

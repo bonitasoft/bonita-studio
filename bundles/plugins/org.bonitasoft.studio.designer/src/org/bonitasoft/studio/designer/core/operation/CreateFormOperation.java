@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.core.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,8 +29,8 @@ import org.restlet.ext.json.JsonRepresentation;
  */
 public class CreateFormOperation extends CreateUIDArtifactOperation {
 
-    public CreateFormOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
-        super(pageDesignerURLBuilder);
+    public CreateFormOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
+        super(pageDesignerURLBuilder, repositoryAccessor);
     }
 
     @Override

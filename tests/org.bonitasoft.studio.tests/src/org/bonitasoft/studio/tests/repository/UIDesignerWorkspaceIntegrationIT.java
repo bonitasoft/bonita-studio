@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -81,9 +82,10 @@ public class UIDesignerWorkspaceIntegrationIT {
     @Test
     public void create_a_new_page_should_trigger_a_refresh_on_a_page_filestore() throws Exception {
         waitForServer();
-
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
         final CreateFormOperation createFormOperation = new CreateFormOperation(new PageDesignerURLFactory(
-                InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
+                InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)), repositoryAccessor);
         createFormOperation.setArtifactName("MyNewForm");
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         service.run(true, false, createFormOperation);
