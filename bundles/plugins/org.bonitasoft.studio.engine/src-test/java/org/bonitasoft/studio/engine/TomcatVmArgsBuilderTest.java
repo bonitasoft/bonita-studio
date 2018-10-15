@@ -19,10 +19,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,10 +39,12 @@ public class TomcatVmArgsBuilderTest {
     protected RepositoryAccessor repositoryAccessor;
     protected TomcatVmArgsBuilder tomcatVmArgsBuilder;
     private final File dbLocation = new File("dbLocation");
+    @Mock
+    private IPreferenceStore preferenceStore;
 
     @Before
     public void setUp() throws Exception {
-        tomcatVmArgsBuilder = spy(new TomcatVmArgsBuilder(repositoryAccessor));
+        tomcatVmArgsBuilder = spy(new TomcatVmArgsBuilder(repositoryAccessor, preferenceStore));
         doNothing().when(tomcatVmArgsBuilder).createBitronixConfiguration();
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
         doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
@@ -67,7 +72,7 @@ public class TomcatVmArgsBuilderTest {
     @Test
     public void testLoggingPropertyCanBeOverriden() throws Exception {
         final String overridenValue = "-Djava.util.logging.config.file=test";
-        System.setProperty("tomcat.extra.params", overridenValue);
+        when(preferenceStore.getString(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS)).thenReturn(overridenValue);
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue).containsOnlyOnce("java.util.logging.config.file");
     }
 
@@ -84,6 +89,11 @@ public class TomcatVmArgsBuilderTest {
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
     }
 
+    @Test
+    public void testXMXCanBeOverriden() throws Exception {
+        when(preferenceStore.getInt(EnginePreferenceConstants.TOMCAT_XMX_OPTION)).thenReturn(1024);
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Xmx").containsOnlyOnce("1024m");
+    }
     @Test
     public void should_launch_tomcat_with_bonita_csrf_cookie_path() throws Exception {
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Dbonita.csrf.cookie.path=\"/\"");

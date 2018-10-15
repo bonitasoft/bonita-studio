@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -107,6 +108,7 @@ public class BOSWebServerManager {
     private static BOSWebServerManager INSTANCE;
     private IServer tomcat;
     private PortConfigurator portConfigurator;
+    private IStatus startResult;
 
     public synchronized static BOSWebServerManager getInstance() {
         if (INSTANCE == null) {
@@ -196,9 +198,20 @@ public class BOSWebServerManager {
                 }
                 createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
-                tomcat.start("run", Repository.NULL_PROGRESS_MONITOR);
+                startResult = null;
+                tomcat.start(ILaunchManager.RUN_MODE, result -> {
+                    startResult = result;
+                });
                 waitServerRunning();
             } catch (final CoreException e) {
+                if(tomcat != null) {
+                    try {
+                        tomcat.delete();
+                        tomcat = null;
+                    } catch (CoreException e1) {
+                       BonitaStudioLog.error(e1);
+                    }
+                }
                 handleCoreExceptionWhileStartingTomcat(e);
             }
         }
@@ -206,14 +219,9 @@ public class BOSWebServerManager {
 
     private void handleCoreExceptionWhileStartingTomcat(final CoreException e) {
         BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Tomcat server startup error",
-                        e.getMessage());
-            }
-        });
+        Display.getDefault().asyncExec(() ->
+                MessageDialog.openError(Display.getDefault().getActiveShell(), "Tomcat server startup error",
+                e.getMessage()));
     }
 
     private void updateRuntimeLocationIfNeeded() {
@@ -245,19 +253,18 @@ public class BOSWebServerManager {
 
     private void waitServerRunning() {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (final InterruptedException ex) {
             BonitaStudioLog.error(ex, EnginePlugin.PLUGIN_ID);
         }
-        int serverState = tomcat.getServerState();
-        while (serverState != IServer.STATE_STARTING && serverState != IServer.STATE_STOPPED) {
+        while (startResult == null) {
             try {
                 Thread.sleep(500);
             } catch (final InterruptedException ex) {
                 BonitaStudioLog.error(ex, EnginePlugin.PLUGIN_ID);
             }
         }
-        if (serverState == IServer.STATE_STARTING || serverState == IServer.STATE_STARTED) {
+        if (startResult.isOK()) {
             connectWithRetries();
             BonitaStudioLog.debug("Tomcat server started.",
                     EnginePlugin.PLUGIN_ID);
@@ -266,16 +273,11 @@ public class BOSWebServerManager {
                     "Tomcat failed to start. Check the log file for more informations. (bonita.log or catalina.log)",
                     EnginePlugin.PLUGIN_ID);
             if (!PlatformUtil.isHeadless()) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        MessageDialog.openInformation(PlatformUI.getWorkbench()
+                Display.getDefault().asyncExec(() ->
+                MessageDialog.openError(PlatformUI.getWorkbench()
                                 .getActiveWorkbenchWindow().getShell(),
                                 Messages.cannotStartTomcatTitle,
-                                Messages.cannotStartTomcatMessage);
-                    }
-                });
+                        Messages.cannotStartTomcatMessage));
             }
         }
     }
@@ -328,9 +330,11 @@ public class BOSWebServerManager {
             throws CoreException {
         final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-                getTomcatVMArgsBuilder(repositoryAccessor).getVMArgs(bundleLocation));
+                getTomcatVMArgsBuilder(repositoryAccessor, EnginePlugin.getDefault().getPreferenceStore())
+                        .getVMArgs(bundleLocation));
         workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE,
                 getTomcatLogFile());
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
@@ -338,8 +342,9 @@ public class BOSWebServerManager {
         return workingCopy.doSave();
     }
 
-    protected TomcatVmArgsBuilder getTomcatVMArgsBuilder(final RepositoryAccessor repositoryAccessor) {
-        return new TomcatVmArgsBuilder(repositoryAccessor);
+    protected TomcatVmArgsBuilder getTomcatVMArgsBuilder(final RepositoryAccessor repositoryAccessor,
+            IPreferenceStore enginePreference) {
+        return new TomcatVmArgsBuilder(repositoryAccessor, enginePreference);
     }
 
     protected String getTomcatLogFile() {
