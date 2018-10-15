@@ -387,6 +387,31 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.build">
+         <menu
+               icon="icons/run.png"
+               id="org.bonitasoft.studio.diagram.run"
+               label="%run">
+            <dynamic
+                  class="org.bonitasoft.studio.diagram.custom.contributionItem.RunProcessContributionItem"
+                  id="org.bonitasoft.studio.diagram.custom.runContributionItem">
+            </dynamic>
+            <visibleWhen>
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
