@@ -44,5 +44,7 @@ public class EnginePreferenceConstants {
     public static final String DROP_BUSINESS_DATA_DB_ON_EXIT_PREF = "DROP_BUSINESS_DATA_DB_ON_EXIT_PREF";
     public static final String DROP_BUSINESS_DATA_DB_ON_INSTALL = "DROP_BUSINESS_DATA_DB_ON_INSTALL";
     public static final String LAZYLOAD_ENGINE = "LAZYLOAD_ENGINE";
+    public static final String TOMCAT_XMX_OPTION = "TOMCAT_XMX_OPTION";
+    public static final String TOMCAT_EXTRA_PARAMS = "tomcat.extra.params";
 
 }

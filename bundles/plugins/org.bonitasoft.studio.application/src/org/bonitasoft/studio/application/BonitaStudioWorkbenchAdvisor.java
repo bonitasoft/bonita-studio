@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJ
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
@@ -101,7 +102,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
             executePreShutdownContribution();
-            if (BOSEngineManager.getInstance().isRunning()) {
+            if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
                 BOSEngineManager.getInstance().stop();
             }
             FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
