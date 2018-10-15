@@ -74,6 +74,24 @@ public class Messages extends NLS {
     public static String letsStart;
     public static String _6xFormsDontWorkAnymore;
 
+    public static String NewButtonTooltip;
+    public static String NewButtonLabel;
+
+    public static String organization;
+    public static String businessDataModel;
+    public static String bdmAccessControl;
+    public static String profile;
+    public static String applicationDescriptor;
+    public static String applicationPage;
+    public static String layout;
+    public static String customWidget;
+    public static String fragment;
+    public static String restAPIExtension;
+    public static String connectorDef;
+    public static String connectorImpl;
+    public static String actorFilterDef;
+    public static String actorFilterImpl;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
