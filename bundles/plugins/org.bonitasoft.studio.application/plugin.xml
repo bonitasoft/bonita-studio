@@ -1115,7 +1115,7 @@
    <extension
          point="org.bonitasoft.studio.coolbarContributionItem">
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.NewDiagramCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.NewCoolbarItem"
             priority="0"
             toolbarPosition="0">
       </coolbarItem>
