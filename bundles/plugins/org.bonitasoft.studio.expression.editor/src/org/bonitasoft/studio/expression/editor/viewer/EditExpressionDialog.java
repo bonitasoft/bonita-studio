@@ -73,6 +73,8 @@ import org.eclipse.ui.internal.Workbench;
 
 public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext {
 
+    private static final String DEFAULT_NAME_SCRIPT = "newScript";
+
     private static final int HEIGHT = 600;
 
     private static final int WIDTH = 800;
@@ -99,18 +101,14 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private boolean isPageFlowContext;
 
-    private final Listener openTrayListener = new Listener() {
-
-        @Override
-        public void handleEvent(final Event event) {
-            if (getShell() != null
-                    && currentExpressionEditor != null
-                    && currentExpressionEditor.provideDialogTray()
-                    && getTray() == null) {
-                openTray(currentExpressionEditor.createDialogTray());
-            } else {
-                closeTray();
-            }
+    private final Listener openTrayListener = event -> {
+        if (getShell() != null
+                && currentExpressionEditor != null
+                && currentExpressionEditor.provideDialogTray()
+                && getTray() == null) {
+            openTray(currentExpressionEditor.createDialogTray());
+        } else {
+            closeTray();
         }
     };
 
@@ -382,7 +380,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             } else {
                 inputExpression.setType(type);
             }
-            inputExpression.setName(shouldClearName() ? "" : inputExpression.getName());
+            inputExpression.setName(shouldClearName() ? "" : getExpressionName());
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
@@ -396,6 +394,15 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             });
             DialogSupport.create(this, dataBindingContext);
         }
+    }
+
+    private String getExpressionName() {
+        String currentName = inputExpression.getName();
+        if ((currentName == null || currentName.isEmpty())
+                && ExpressionConstants.SCRIPT_TYPE.equals(inputExpression.getType())) {
+            currentName = DEFAULT_NAME_SCRIPT;
+        }
+        return currentName;
     }
 
     private boolean shouldClearName() {
