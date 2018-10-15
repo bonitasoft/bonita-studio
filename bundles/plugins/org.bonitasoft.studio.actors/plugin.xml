@@ -55,7 +55,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.editscripts">
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.connector">
          <menu
                label="%Filters"
                icon="icons/actor_filter.png"
