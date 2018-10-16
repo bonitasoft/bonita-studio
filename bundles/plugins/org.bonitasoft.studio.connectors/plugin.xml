@@ -192,7 +192,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.connector">
          <command
                commandId="org.bonitasoft.studio.connectors.newDefinition"
-               icon="icons/connector_def-new.png"
                label="%newConnectorDefMenu"
                style="push">
             <visibleWhen
@@ -216,7 +215,6 @@
          </command>
          <command
                commandId="org.bonitasoft.studio.connectors.newImplementation"
-               icon="icons/connector_implem-new.png"
                label="%newConnectorImplementationMenu"
                style="push">
             <visibleWhen
@@ -337,5 +335,16 @@
             </and>
          </activeWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.connectors.newDefinition"
+            icon="icons/connector_def-new.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.connectors.newImplementation"
+            icon="icons/connector_implem-new.png">
+      </image>
    </extension>
 </plugin>
