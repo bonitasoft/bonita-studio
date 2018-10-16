@@ -364,7 +364,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.diagram">
          <command
                commandId="org.bonitasoft.studio.diagram.command.newDiagram"
-               icon="icons/ProcessDiagramFile.gif"
                id="org.bonitasoft.studio.diagram.command.newDiagram.popup.menu"
                mnemonic="D"
                style="push">
@@ -839,5 +838,12 @@
          properties="isDiagramFolder,isDiagramFile,isSelectedDiagramActive"
          type="org.eclipse.core.runtime.IAdaptable">
    </propertyTester>
+</extension>
+<extension
+      point="org.eclipse.ui.commandImages">
+   <image
+         commandId="org.bonitasoft.studio.diagram.command.newDiagram"
+         icon="icons/ProcessDiagramFile.gif">
+   </image>
 </extension>
 </plugin>

@@ -105,7 +105,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.organization">
          <command
                commandId="org.bonitasoft.studio.organization.manage"
-               icon="icons/organization.png"
                id="org.bonitasoft.studio.organization.manage.popup.menu"
                label="%newOrganizationLabel"
                mnemonic="O"
@@ -135,7 +134,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.actor">
          <command
                commandId="org.bonitasoft.studio.actors.newFilterDef"
-               icon="icons/actor_filter-def-new.png"
                label="%newFilterDefMenu"
                style="push">
             <visibleWhen
@@ -158,7 +156,6 @@
          </command>
          <command
                commandId="org.bonitasoft.studio.actors.newFilterImpl"
-               icon="icons/actor_filter-implem-new.png"
                label="%newFilterImplMenu"
                style="push">
             <visibleWhen
@@ -446,6 +443,21 @@
             properties="isOrganizationFolder,isOrganizationFile"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.organization.manage"
+            icon="icons/organization.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.actors.newFilterDef"
+            icon="icons/actor_filter-def-new.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.actors.newFilterImpl"
+            icon="icons/actor_filter-implem-new.png">
+      </image>
    </extension>
 
 </plugin>

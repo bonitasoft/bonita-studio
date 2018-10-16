@@ -16,7 +16,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
          <command
                commandId="org.bonitasoft.studio.designer.command.create.page"
-               icon="icons/page.png"
                label="%newApplicationPage"
                style="push">
             <visibleWhen
@@ -40,7 +39,6 @@
          </command>
          <command
                commandId="org.bonitasoft.studio.designer.command.create.layout"
-               icon="icons/page.png"
                label="%newLayout"
                style="push">
             <visibleWhen
@@ -64,7 +62,6 @@
          </command>
          <command
                commandId="org.bonitasoft.studio.designer.command.create.widget"
-               icon="icons/custom_widget.png"
                label="%newCustomWidget"
                style="push">
             <visibleWhen
@@ -275,5 +272,20 @@
          properties="isWebPageFolder,isWebWidgetFolder,isWebFragmentFolder"
          type="org.eclipse.core.runtime.IAdaptable">
    </propertyTester>
+</extension>
+<extension
+      point="org.eclipse.ui.commandImages">
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.page"
+         icon="icons/page.png">
+   </image>
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.widget"
+         icon="icons/custom_widget.png">
+   </image>
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.layout"
+         icon="icons/page.png">
+   </image>
 </extension>
 </plugin>

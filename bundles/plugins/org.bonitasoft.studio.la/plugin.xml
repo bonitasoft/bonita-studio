@@ -61,7 +61,6 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.application">
          <command
                commandId="org.bonitasoft.studio.la.new.command"
-               icon="icons/applicationStore.gif"
                id="org.bonitasoft.studio.la.new.popup.menu"
                label="%newApplicationMenu"
                mnemonic="A"
@@ -212,5 +211,12 @@
             properties="isApplicationFolder,isApplicationFile"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.la.new.command"
+            icon="icons/applicationStore.gif">
+      </image>
    </extension>
 </plugin>
