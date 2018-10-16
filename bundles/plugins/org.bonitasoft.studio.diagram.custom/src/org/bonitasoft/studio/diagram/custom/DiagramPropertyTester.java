@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.diagram.custom;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -23,21 +24,52 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 public class DiagramPropertyTester extends PropertyTester {
 
     public static final String DIAGRAM_FOLDER_PROPERTY = "isDiagramFolder";
     public static final String DIAGRAM_FILE_PROPERTY = "isDiagramFile";
+    public static final String DIAGRAM_ACTIVE_EDITOR_PROPERTY = "isSelectedDiagramActive";
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        if (Objects.equals(property, DIAGRAM_FOLDER_PROPERTY)) {
-            return isDiagramFolder((IAdaptable) receiver, store);
-        } else if (Objects.equals(property, DIAGRAM_FILE_PROPERTY)) {
-            return isDiagramFile((IAdaptable) receiver, store);
+        switch (property) {
+            case DIAGRAM_FOLDER_PROPERTY:
+                return isDiagramFolder((IAdaptable) receiver, store);
+            case DIAGRAM_FILE_PROPERTY:
+                return isDiagramFile((IAdaptable) receiver, store);
+            case DIAGRAM_ACTIVE_EDITOR_PROPERTY:
+                return isSelectedDiagramActiveEditor((IAdaptable) receiver, store);
+            default:
+                return false;
+        }
+    }
+
+    private boolean isSelectedDiagramActiveEditor(IAdaptable receiver, DiagramRepositoryStore store) {
+        IFile file = receiver.getAdapter(IFile.class);
+        if (file != null) {
+            Optional<DiagramEditor> editor = store.getChildren().stream()
+                    .filter(fileStore -> Objects.equals(fileStore.getResource(), file))
+                    .findFirst()
+                    .map(DiagramFileStore::getOpenedEditor);
+            if (editor.isPresent()) {
+                Optional<IEditorPart> activeEditor = getActiveEditor();
+                return activeEditor.isPresent() && Objects.equals(editor.get(), activeEditor.get());
+            }
         }
         return false;
+    }
+
+    private Optional<IEditorPart> getActiveEditor() {
+        return Optional.ofNullable(PlatformUI.getWorkbench().getActiveWorkbenchWindow())
+                .map(IWorkbenchWindow::getActivePage)
+                .map(IWorkbenchPage::getActiveEditor);
     }
 
     private boolean isDiagramFile(IAdaptable receiver, DiagramRepositoryStore store) {
