@@ -129,6 +129,36 @@
            </visibleWhen>
         </menu>
      </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.build">
+        <menu
+              icon="icons/export.png"
+              id="org.bonitasoft.studio.engine.buildDiagram"
+              label="%build">
+           <dynamic
+                 class="org.bonitasoft.studio.engine.ui.contributionItem.BuildProcessContributionItem"
+                 id="org.bonitasoft.studio.engine.buildContributionItem">
+              <visibleWhen>
+                 <reference
+                       definitionId="isABonitaProduct">
+                 </reference>
+              </visibleWhen>
+           </dynamic>
+           <visibleWhen>
+              <and>
+                 <count
+                       value="1">
+                 </count>
+                 <iterate>
+                    <test
+                          property="org.bonitasoft.studio.diagram.isDiagramFile">
+                    </test>
+                 </iterate>
+              </and>
+           </visibleWhen>
+        </menu>
+     </menuContribution>
   </extension>
   <extension
         point="org.eclipse.ui.handlers">
