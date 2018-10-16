@@ -1205,6 +1205,26 @@
                   visible="true">
             </separator>
        </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
+         <command
+               commandId="org.bonitasoft.studio.validation.command.validateDiagram"
+               style="push">
+            <visibleWhen>
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
       </extension>
       <extension
             point="org.eclipse.ui.commands">
@@ -1222,6 +1242,10 @@
                      optional="true">
                </commandParameter>
       </command>
+            <command
+                  id="org.bonitasoft.studio.validation.command.validateDiagram"
+                  name="%batchValidationAction_Label">
+            </command>
       </extension>
       <extension
             point="org.eclipse.ui.views">
@@ -1242,6 +1266,10 @@
             <class
                   class="org.bonitasoft.studio.validation.BatchValidationHandler">
             </class>
+         </handler>
+         <handler
+               class="org.bonitasoft.studio.validation.ValidateDiagramHandler"
+               commandId="org.bonitasoft.studio.validation.command.validateDiagram">
          </handler>
       </extension>
 </plugin>
