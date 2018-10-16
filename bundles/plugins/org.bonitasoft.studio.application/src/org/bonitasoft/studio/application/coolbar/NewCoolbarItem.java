@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.coolbar;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -25,9 +27,11 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Menu;
@@ -35,6 +39,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
@@ -43,10 +48,12 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
     protected static final String NEW_DIAGRAM_CMD_ID = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ICommandService commandService;
     private IHandlerService handlerService;
+    private ICommandImageService imageService;
 
     public NewCoolbarItem() {
         commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
         handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+        imageService = PlatformUI.getWorkbench().getService(ICommandImageService.class);
     }
 
     @Override
@@ -77,6 +84,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                 final MenuItem menuItem = new MenuItem(menu, SWT.CHECK);
                 try {
                     menuItem.setText(label != null ? label : command.getName());
+                    getCommandImage(commandId).ifPresent(menuItem::setImage);
                 } catch (NotDefinedException e1) {
                     BonitaStudioLog.error(e1);
                     menuItem.setText("unknown command: " + commandId);
@@ -170,6 +178,11 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
         });
 
+    }
+
+    private Optional<Image> getCommandImage(String command) {
+        return Optional.ofNullable(imageService.getImageDescriptor(command))
+                .map(ImageDescriptor::createImage);
     }
 
 }

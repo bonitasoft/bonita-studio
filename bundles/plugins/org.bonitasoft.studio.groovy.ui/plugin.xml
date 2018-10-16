@@ -36,7 +36,6 @@
          </separator>
          <command
                commandId="org.bonitasoft.studio.groovy.ui.newScript"
-               icon="icons/newgroovyclass_wiz.gif"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -114,6 +113,13 @@
             </and>
           </activeWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.groovy.ui.newScript"
+            icon="icons/newgroovyclass_wiz.gif">
+      </image>
    </extension>
 
 
