@@ -1210,6 +1210,7 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
          <command
                commandId="org.bonitasoft.studio.validation.command.validateDiagram"
+               icon="icons/Accept-icon.png"
                style="push">
             <visibleWhen>
                <and>

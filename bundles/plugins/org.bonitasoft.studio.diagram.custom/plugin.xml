@@ -412,6 +412,27 @@
             </visibleWhen>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
+         <command
+               commandId="org.bonitasoft.studio.application.printCommand"
+               icon="icons/menuIcons/print.png"
+               style="push">
+            <visibleWhen>
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isSelectedDiagramActive">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -815,7 +836,7 @@
          class="org.bonitasoft.studio.diagram.custom.DiagramPropertyTester"
          id="org.bonitasoft.studio.diagram.custom.propertyTester"
          namespace="org.bonitasoft.studio.diagram"
-         properties="isDiagramFolder,isDiagramFile"
+         properties="isDiagramFolder,isDiagramFile,isSelectedDiagramActive"
          type="org.eclipse.core.runtime.IAdaptable">
    </propertyTester>
 </extension>
