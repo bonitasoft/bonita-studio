@@ -173,6 +173,9 @@ public class Messages extends NLS {
     public static String tomcatExtraParams;
     public static String noProcessToRunTitle;
     public static String noProcessToRun;
+    public static String buildDoneTitle;
+    public static String buildDoneMessage;
+    public static String buildFailedTitle;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

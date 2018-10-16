@@ -45,6 +45,7 @@ Export-Package: org.bonitasoft.studio.diagram.custom;
  org.bonitasoft.studio.diagram.custom.actions,
  org.bonitasoft.studio.diagram.custom.clipboard,
  org.bonitasoft.studio.diagram.custom.commands,
+ org.bonitasoft.studio.diagram.custom.contributionItem,
  org.bonitasoft.studio.diagram.custom.editPolicies,
  org.bonitasoft.studio.diagram.custom.figures,
  org.bonitasoft.studio.diagram.custom.i18n,
