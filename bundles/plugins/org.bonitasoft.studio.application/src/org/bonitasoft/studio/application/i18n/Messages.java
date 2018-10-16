@@ -91,6 +91,7 @@ public class Messages extends NLS {
     public static String connectorImpl;
     public static String actorFilterDef;
     public static String actorFilterImpl;
+    public static String groovyClass;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
