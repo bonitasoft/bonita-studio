@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
@@ -39,8 +38,7 @@ import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobC
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
@@ -55,16 +53,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.debug.internal.ui.DebugUIPlugin;
-import org.eclipse.debug.internal.ui.sourcelookup.SourceLookupManager;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
@@ -403,13 +395,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             BonitaStudioLog.error(e);
         }
         if (monitor == null) {
-            BonitaStudioLog.log("Progress Monitor is null");
             monitor = Repository.NULL_PROGRESS_MONITOR;
         }
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
-        monitor.subTask(Messages.initializingCurrentRepository);
-
         disableInternalWebBrowser();
         disableGroovyDSL();
         doInitWorkspace();
@@ -429,22 +418,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     protected void doInitWorkspace() {
         //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
-        DebugUIPlugin.getDefault().getProcessConsoleManager();
-        SourceLookupManager.getDefault();
+        //   DebugUIPlugin.getDefault().getProcessConsoleManager();
+        //  SourceLookupManager.getDefault();
+        //     GroovyPlugin.getDefault();
         WorkspaceInitializationJob workspaceInitializationJob = new WorkspaceInitializationJob(repositoryAccessor);
-        workspaceInitializationJob.addJobChangeListener(new JobChangeAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-             */
-            @Override
-            public void done(IJobChangeEvent event) {
-                if (event.getResult().isOK()) {
-                    UIDesignerServerManager.getInstance().start(new NullProgressMonitor());
-                }
-            }
-        });
         workspaceInitializationJob.schedule();
     }
 
@@ -519,23 +496,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
     }
 
-    protected void doStartEngine() {
-        //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
-        DebugUIPlugin.getDefault().getProcessConsoleManager();
-        SourceLookupManager.getDefault();
-        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-        if (!isLazyModeEnabled(preferenceStore)) {
-            final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
-            job.setPriority(Job.DECORATE);
-            job.setUser(false);
-            job.schedule();
-        }
-    }
-
-    private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
-        return preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE) || System.getProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE) != null;
-    }
-
     @Override
     public void postShutdown() {
         super.postShutdown();
@@ -589,7 +549,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
-        doStartEngine();
     }
 
     private void preLoad() {
@@ -619,13 +578,4 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
     }
 
-    @Override
-    public void postStartup() {
-        super.postStartup();
-        try {
-            Job.getJobManager().join(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY, monitor);
-        } catch (final OperationCanceledException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
 }

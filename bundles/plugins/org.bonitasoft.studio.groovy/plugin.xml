@@ -28,5 +28,11 @@
             providerClass="org.bonitasoft.studio.groovy.provider.GroovyResourceProvider">
       </bosArchiveProvider>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.repository.projectListenerProvider">
+      <projectListenerProvider
+            class="org.bonitasoft.studio.groovy.provider.GroovyProjectListenerProvider">
+      </projectListenerProvider>
+   </extension>
 
 </plugin>

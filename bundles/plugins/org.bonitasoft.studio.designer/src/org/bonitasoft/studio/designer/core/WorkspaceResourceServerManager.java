@@ -15,7 +15,7 @@ public class WorkspaceResourceServerManager {
     private Server server;
     private static WorkspaceResourceServerManager INSTANCE;
 
-    public synchronized static WorkspaceResourceServerManager getInstance() {
+    public static synchronized WorkspaceResourceServerManager getInstance() {
         if (INSTANCE == null) {
             Engine.setRestletLogLevel(Level.OFF);
             INSTANCE = new WorkspaceResourceServerManager();

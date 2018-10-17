@@ -18,22 +18,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.File;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
-import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.google.common.base.Joiner;
 
-/**
- * @author Romain Bioteau
- */
-@Creatable
-@Singleton
 public class WorkspaceSystemProperties {
 
     private static final String REPOSITORY_PAGES_PROPERTIES = "repository.pages";
@@ -42,19 +33,14 @@ public class WorkspaceSystemProperties {
     private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
     private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
-    @Inject
-    private RepositoryAccessor repositoryAccessor;
+    private Repository repository;
 
-    WorkspaceSystemProperties() {
-
-    }
-
-    public WorkspaceSystemProperties(final RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
+    public WorkspaceSystemProperties(final Repository repository) {
+        this.repository = repository;
     }
 
     public String getPageRepositoryLocation() {
-        final WebPageRepositoryStore webFormRepository = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+        final WebPageRepositoryStore webFormRepository = repository.getRepositoryStore(WebPageRepositoryStore.class);
         if (webFormRepository == null) {
             throw new IllegalStateException("WebFormRepositoryStore has not be loaded yet.");
         }
@@ -62,7 +48,8 @@ public class WorkspaceSystemProperties {
     }
 
     public String getFragmentRepositoryLocation() {
-        final WebFragmentRepositoryStore webFragmentRepository = repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class);
+        final WebFragmentRepositoryStore webFragmentRepository = repository
+                .getRepositoryStore(WebFragmentRepositoryStore.class);
         if (webFragmentRepository == null) {
             throw new IllegalStateException("WebFragmentRepositoryStore has not be loaded yet.");
         }
@@ -70,7 +57,7 @@ public class WorkspaceSystemProperties {
     }
 
     public String getWidgetRepositoryLocation() {
-        final WebWidgetRepositoryStore webWidgetRepository = repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class);
+        final WebWidgetRepositoryStore webWidgetRepository = repository.getRepositoryStore(WebWidgetRepositoryStore.class);
         if (webWidgetRepository == null) {
             throw new IllegalStateException("WebWidgetRepositoryStore has not be loaded yet.");
         }

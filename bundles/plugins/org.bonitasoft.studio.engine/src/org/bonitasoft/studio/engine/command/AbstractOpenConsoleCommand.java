@@ -14,12 +14,15 @@
  */
 package org.bonitasoft.studio.engine.command;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
@@ -27,17 +30,16 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
+import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 
-/**
- * @author Mickael Istria
- */
+
 public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
     public static final String REFRESH_THEME_PARAMETER = "refreshTheme";
@@ -53,7 +55,6 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         try {
-            //close intro
             executeJob();
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -67,62 +68,47 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
     }
 
     private void executeJob() {
-        try {
-
-            final IRunnableWithProgress runnable = new IRunnableWithProgress() {
+        if (runSynchronously) {
+            doOpen(Repository.NULL_PROGRESS_MONITOR);
+        } else {
+            Job job = new Job(Messages.initializingUserXP) {
 
                 @Override
-                public void run(final IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    try {
-                        monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
-                        BOSEngineManager.getInstance().start();
-                        setURL(getURLBuilder().toURL(monitor));
-                        if (!runSynchronously) {
-                            new OpenBrowserOperation(url).execute(); //$NON-NLS-1$
-                        }
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        monitor.done();
-                    }
+                public IStatus run(IProgressMonitor monitor) {
+                    return doOpen(monitor);
                 }
             };
-
-            if (runSynchronously) {
-                runnable.run(new NullProgressMonitor());
-            } else {
-                final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            progressManager.run(true, false, runnable);
-                        } catch (final Exception e) {
-                            BonitaStudioLog.error(e);
-                        }
-
-                    }
-                });
-
-            }
-
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
+            job.setUser(true);
+            job.schedule();
+            Shell activeShell = Display.getDefault().getActiveShell();
+            ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
+            dialog.show(job, activeShell);
         }
+    }
 
+    private IStatus doOpen(IProgressMonitor monitor) {
+        monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
+        BOSEngineManager.getInstance().start();
+        try {
+            setURL(getURLBuilder().toURL(monitor));
+        } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
+            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
+        }
+        if (!runSynchronously) {
+            new OpenBrowserOperation(url).execute(); //$NON-NLS-1$
+        }
+        return Status.OK_STATUS;
     }
 
     protected PortalURLBuilder getURLBuilder() {
         return new PortalURLBuilder();
     }
 
-    public URL getURL() throws MalformedURLException {
+    public URL getURL() {
         return url;
     }
 
-    public void setURL(final URL url) throws MalformedURLException {
+    public void setURL(final URL url) {
         this.url = url;
     }
 

@@ -9,6 +9,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -31,7 +32,11 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         final boolean isOpen = repository.getProject().isOpen();
-        repository.open(monitor);
+        try {
+            repository.getProject().open(monitor);
+        } catch (CoreException e1) {
+            throw new InvocationTargetException(e1);
+        }
         final ImportConflictsChecker parser = new ImportConflictsChecker(repository);
         try {
             archiveModel = parser.checkConflicts(new BosArchive(archiveFile), monitor);
@@ -39,7 +44,11 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
             throw new InvocationTargetException(e);
         } finally {
             if (!isOpen) {
-                repository.close();
+                try {
+                    repository.getProject().close(monitor);
+                } catch (CoreException e) {
+                    throw new InvocationTargetException(e);
+                }
             }
         }
     }

@@ -1,30 +1,24 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ * Copyright (C) 2018 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-package org.bonitasoft.studio.common;
+package org.bonitasoft.studio.common.repository.core;
 
-/**
- * @author Romain Bioteau
- *
- */
-public class BonitaJobsFamily {
+import java.util.List;
 
-	public static final Object INIT_REPOSITORY_FAMILY = "init_repository"; //$NON-NLS-1$
-	public static final Object INIT_GROOVY_FUNCTIONS = "int_groovy_func" ;
-	
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
+
+public interface IBonitaProjectListenerProvider {
+
+    List<IBonitaProjectListener> getListeners();
 }

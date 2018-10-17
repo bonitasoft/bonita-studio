@@ -17,7 +17,6 @@ package org.bonitasoft.studio.tests.actors;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.MenuItem;
@@ -227,7 +226,7 @@ public class SWTBotActorFilterUtil {
      * Development<Connector>Export)
      */
     public static void activateExportActorFilterShell(final SWTWorkbenchBot bot) {
-        SWTBotTestUtil.waitUntilRootShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         final Matcher<MenuItem> matcher = withMnemonic("Development");
         bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
         bot.menu("Development").menu("Actor filters").menu("Export...").click();

@@ -42,7 +42,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
-public final class BonitaSuite extends Suite {
+public class BonitaSuite extends Suite {
 
     static {
         configurePreferencesForTests();

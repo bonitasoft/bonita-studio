@@ -122,7 +122,8 @@ public class TestConditions {
             final boolean evaluateAsync) {
         String errorMessageDetailled = "";
         if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0,
+            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(
+                    session.getUserId(), 0,
                     20, ActivityInstanceCriterion.DEFAULT);
             errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
             for (final TaskInstance taskInstance : actualTask) {

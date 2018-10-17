@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.tests.bug;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -24,8 +24,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 
 public class TestBugs {

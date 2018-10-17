@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +22,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -37,37 +37,55 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * @author Romain Bioteau
  */
 public class RepositoryManager {
 
-    private static final String REPOSITORY_FACTORY_IMPLEMENTATION_ID = "org.bonitasodt.studio.repositoryFactory";
+    private static final String REPOSITORY_FACTORY_IMPLEMENTATION_ID = "org.bonitasoft.studio.repositoryFactory";
+    private static final String PROJECT_LISTENER_PROVIDER_ID = "org.bonitasoft.studio.common.repository.projectListenerProvider";
     private static final String PRIORITY = "priority";
     private static final String CLASS = "class";
+    private static final Object LOCK = new Object();
 
     private static RepositoryManager INSTANCE;
 
+    private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
     private Repository repository;
     private IPreferenceStore preferenceStore;
     private IConfigurationElement repositoryImplementationElement;
 
     private RepositoryManager() {
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                REPOSITORY_FACTORY_IMPLEMENTATION_ID);
-        final List<IConfigurationElement> sortedElems = sortByPriority(elements);
+        final IConfigurationElement[] repositoryFactories = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        REPOSITORY_FACTORY_IMPLEMENTATION_ID);
+        final List<IConfigurationElement> sortedElems = sortByPriority(repositoryFactories);
         if (!sortedElems.isEmpty()) {
             repositoryImplementationElement = sortedElems.get(0); //Higher element
             preferenceStore = CommonRepositoryPlugin.getDefault().getPreferenceStore();
-            final String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            IConfigurationElement[] listenerProviders = BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(
+                            PROJECT_LISTENER_PROVIDER_ID);
+            for (IConfigurationElement elem : listenerProviders) {
+                try {
+                    IBonitaProjectListenerProvider provider = (IBonitaProjectListenerProvider) elem
+                            .createExecutableExtension("class");
+                    provider.getListeners().stream().forEach(this::addBonitaProjectListener);
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            if (currentRepository == null || currentRepository.isEmpty()) {
+                currentRepository = Messages.defaultRepositoryName;
+            }
             repository = createRepository(currentRepository, false);
         }
     }
 
     private List<IConfigurationElement> sortByPriority(final IConfigurationElement[] elements) {
-        final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        final List<IConfigurationElement> sortedConfigElems = new ArrayList<>();
         for (final IConfigurationElement elem : elements) {
             sortedConfigElems.add(elem);
         }
@@ -90,7 +108,6 @@ public class RepositoryManager {
                 }
                 return p2 - p1; //Highest Priority first
             }
-
         });
         return sortedConfigElems;
 
@@ -100,17 +117,17 @@ public class RepositoryManager {
         try {
             final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement
                     .createExecutableExtension(CLASS);
-            return repositoryFactory.newRepository(name, migrationEnabled);
+            Repository newRepository = repositoryFactory.newRepository(name, migrationEnabled);
+            for (IBonitaProjectListener listener : projectListeners) {
+                newRepository.addProjectListener(listener);
+            }
+            return newRepository;
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         return null;
     }
 
-    /**
-     * @deprecated See {@link RepositoryAccessor}
-     */
-    @Deprecated
     public static synchronized RepositoryManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryManager();
@@ -127,7 +144,7 @@ public class RepositoryManager {
     }
 
     public <T> T getRepositoryStore(final Class<T> storeClass) {
-        return storeClass.cast(repository.getRepositoryStore(storeClass));
+        return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
     }
 
     public Repository getRepository(final String repositoryName) {
@@ -166,7 +183,7 @@ public class RepositoryManager {
 
     public List<IRepository> getAllRepositories() {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final List<IRepository> result = new ArrayList<IRepository>();
+        final List<IRepository> result = new ArrayList<>();
         try {
             workspace.run(new IWorkspaceRunnable() {
 
@@ -209,23 +226,19 @@ public class RepositoryManager {
     }
 
     public void setRepository(final String repositoryName, final boolean migrationEnabled, final IProgressMonitor monitor) {
-        if (repository != null && repository.getName().equals(repositoryName)) {
+        Repository currentRepository = getCurrentRepository();
+        if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
             return;
-        } else if (repository != null) {
-            repository.close();
+        } else if (currentRepository != null) {
+            currentRepository.close();
         }
-        repository = getRepository(repositoryName, migrationEnabled);
-        if (repository == null) {
-            repository = createRepository(repositoryName, migrationEnabled);
+        currentRepository = getRepository(repositoryName, migrationEnabled);
+        if (currentRepository == null) {
+            currentRepository = createRepository(repositoryName, migrationEnabled);
         }
-        repository.create(monitor);
-        repository.open(monitor);
-        preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY, repositoryName);
-        try {
-            ((ScopedPreferenceStore) preferenceStore).save();
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
+        currentRepository.create(monitor);
+        currentRepository.open(monitor);
+        this.repository = currentRepository;
     }
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
@@ -233,6 +246,18 @@ public class RepositoryManager {
         return getCurrentRepository().getAllStores().stream()
                 .filter(repo -> java.util.Objects.equals(resource, repo.getResource()))
                 .findFirst();
+    }
+
+    public void addBonitaProjectListener(IBonitaProjectListener listener) {
+        projectListeners.add(listener);
+    }
+
+    public List<IBonitaProjectListener> getBonitaProjectListeners() {
+        return projectListeners;
+    }
+
+    public boolean hasActiveRepository() {
+        return repository != null;
     }
 
 }

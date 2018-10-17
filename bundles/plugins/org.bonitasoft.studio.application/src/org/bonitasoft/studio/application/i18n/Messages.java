@@ -69,7 +69,6 @@ public class Messages extends NLS {
     public static String startDialogMsg;
     public static String startDialogDetails;
     public static String importWorkspace;
-    public static String startingEngineServer;
     public static String releaseNote;
     public static String letsStart;
     public static String _6xFormsDontWorkAnymore;

@@ -197,4 +197,10 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+  <extension
+        point="org.bonitasoft.studio.common.repository.projectListenerProvider">
+     <projectListenerProvider
+           class="org.bonitasoft.studio.engine.contribution.BonitaProjectListenerProvider">
+     </projectListenerProvider>
+  </extension>
 </plugin>

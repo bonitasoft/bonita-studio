@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
@@ -46,13 +47,13 @@ import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
-import org.bonitasoft.studio.common.repository.ui.ShellNameController;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
@@ -81,22 +82,22 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.internal.ViewIntroAdapterPart;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.Version;
 import org.xml.sax.InputSource;
 
-/**
- * @author Romain Bioteau
- */
-public class Repository implements IRepository, IJavaContainer {
+public class Repository implements IRepository, IJavaContainer, IRenamable {
 
     private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 
@@ -136,6 +137,8 @@ public class Repository implements IRepository, IJavaContainer {
 
     private ProjectFileChangeListener projectFileListener;
 
+    private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
+
     public Repository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
@@ -168,16 +171,9 @@ public class Repository implements IRepository, IJavaContainer {
             if (!project.exists()) {
                 workspace.run(newProjectWorkspaceOperation(project.getName(), workspace), monitor);
             }
-            open(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
-            enableBuild();
-            try {
-                getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-            }
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 final long duration = System.currentTimeMillis() - init;
                 BonitaStudioLog.debug(
@@ -259,7 +255,6 @@ public class Repository implements IRepository, IJavaContainer {
                     project.open(NULL_PROGRESS_MONITOR);//Open anyway
                 }
             }
-            Display.getDefault().asyncExec(this::updateStudioShellText);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -272,31 +267,34 @@ public class Repository implements IRepository, IJavaContainer {
             BonitaStudioLog.error(e);
         }
         hookResourceListeners();
+        BonitaStudioLog.info("Triggering Listeners at open" + projectListeners, CommonRepositoryPlugin.PLUGIN_ID);
+        projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
+        if (migrationEnabled()) {
+            try {
+                migrate(monitor);
+            } catch (final MigrationException | CoreException e) {
+                BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+            }
+        }
+        updateCurrentRepositoryPreference();
         return this;
     }
 
-    public void updateStudioShellText() {
-        if (PlatformUI.isWorkbenchRunning()) {
-            Optional.ofNullable(PlatformUI.getWorkbench())
-                    .map(IWorkbench::getActiveWorkbenchWindow)
-                    .map(IWorkbenchWindow::getShell)
-                    .map(this::createShellNameController)
-                    .ifPresent(controller -> controller.update(RepositoryManager.getInstance().getCurrentRepository()));
+    protected void updateCurrentRepositoryPreference() {
+        CommonRepositoryPlugin.getDefault().getPreferenceStore().setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,
+                getName());
+        try {
+            ((ScopedPreferenceStore) CommonRepositoryPlugin.getDefault().getPreferenceStore()).save();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
         }
     }
 
-    protected ShellNameController createShellNameController(Shell shell) {
-        return new ShellNameController(shell);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepository#close()
-     */
     @Override
     public void close() {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
+            closeAllEditors();
             if (project.isOpen()) {
                 if (stores != null) {
                     for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
@@ -314,6 +312,22 @@ public class Repository implements IRepository, IJavaContainer {
         }
         isLoaded = false;
         removeResourceListeners();
+        projectListeners.stream().forEach(l -> l.projectClosed(this, NULL_PROGRESS_MONITOR));
+    }
+
+    protected void closeAllEditors() {
+        Display.getDefault().syncExec(() -> {
+                final IWorkbenchWindow activeWorkbenchWindow = PlatformUI
+                        .getWorkbench().getActiveWorkbenchWindow();
+                if (activeWorkbenchWindow != null
+                        && activeWorkbenchWindow.getActivePage() != null) {
+                    activeWorkbenchWindow.getActivePage().closeAllEditors(true);
+                }
+                while (activeWorkbenchWindow.getActivePage().getActiveEditor() != null
+                        && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {
+                    Display.getDefault().readAndDispatch();
+                }
+        });
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
@@ -338,14 +352,6 @@ public class Repository implements IRepository, IJavaContainer {
                     stores.put(store.getClass(), store);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
-                }
-            }
-            monitor.setTaskName("");
-            if (migrationEnabled()) {
-                try {
-                    migrate(monitor);
-                } catch (final MigrationException | CoreException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
         }
@@ -448,9 +454,6 @@ public class Repository implements IRepository, IJavaContainer {
                 build(NULL_PROGRESS_MONITOR);
             }
             project.delete(true, true, NULL_PROGRESS_MONITOR);
-            if (CommonRepositoryPlugin.getCurrentRepository().equals(getName())) {
-                RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME, monitor);
-            }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -829,6 +832,52 @@ public class Repository implements IRepository, IJavaContainer {
 
     public void validateRepositoryVersion() {
         projectFileListener.checkVersion(getProject());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRenamable#rename(java.lang.String)
+     */
+    @Override
+    public void rename(String newName) {
+        try {
+            new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false,
+                    new WorkspaceModifyOperation() {
+
+                        @Override
+                        protected void execute(IProgressMonitor monitor)
+                                throws CoreException, InvocationTargetException, InterruptedException {
+                            closeAllEditors();
+                            projectListeners.stream().forEach(l -> l.projectClosed(Repository.this, monitor));
+                            disableBuild();
+                            getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
+                            RepositoryManager.getInstance().setRepository(newName, monitor);
+                        }
+                    });
+        } catch (InvocationTargetException | InterruptedException e) {
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Rename failed", e.getMessage(), e).open();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRenamable#retrieveNewName()
+     */
+    @Override
+    public Optional<String> retrieveNewName() {
+        String currentName = getName();
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
+                Messages.renameProject, currentName, new RepositoryNameValidator());
+        if (dialog.open() == Dialog.OK) {
+            return Optional.of(dialog.getValue());
+        }
+        return Optional.empty();
+    }
+
+    public void addProjectListener(IBonitaProjectListener listener) {
+        if (!projectListeners.contains(listener)) {
+            projectListeners.add(listener);
+        }
     }
 
 }

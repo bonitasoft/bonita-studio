@@ -60,7 +60,7 @@ public class TestOrganizationPassword {
         manageOrganizationWizard.manageUsers().selectUser("User1").setPassword("updatedPassord");
         manageOrganizationWizard.finish();
 
-        SWTBotTestUtil.waitUntilRootShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
 
         final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);

@@ -33,8 +33,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.repository.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -65,11 +65,10 @@ import org.restlet.resource.ResourceException;
 
 import com.google.common.base.Joiner;
 
-public class UIDesignerServerManager {
+public class UIDesignerServerManager implements IBonitaProjectListener {
 
     private static final String UI_DESIGNER_BASE_NAME = "ui-designer";
     private static UIDesignerServerManager INSTANCE;
-    private RepositoryAccessor repositoryAccessor;
     private int port = -1;
     private ILaunch launch;
     private int portalPort;
@@ -77,10 +76,7 @@ public class UIDesignerServerManager {
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
-    private UIDesignerServerManager(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
-        this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+    private UIDesignerServerManager() {
         addShutdownHook();
     }
 
@@ -90,9 +86,7 @@ public class UIDesignerServerManager {
 
     public static synchronized UIDesignerServerManager getInstance() {
         if (INSTANCE == null) {
-            RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-            repositoryAccessor.init();
-            INSTANCE = new UIDesignerServerManager(repositoryAccessor);
+            INSTANCE = new UIDesignerServerManager();
         }
         return INSTANCE;
     }
@@ -105,13 +99,14 @@ public class UIDesignerServerManager {
         return portalPort;
     }
 
-    public synchronized void start(IProgressMonitor monitor) {
+    public synchronized void start(Repository repository, IProgressMonitor monitor) {
         if (launch == null
                 || Stream.of(launch.getProcesses())
                         .findFirst()
                         .map(IProcess::isTerminated)
                         .orElse(false)) {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
+            BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
             try {
                 if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
                     WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
@@ -127,7 +122,7 @@ public class UIDesignerServerManager {
                 final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        Joiner.on(" ").join(buildCommand(repositoryAccessor)));
+                        Joiner.on(" ").join(buildCommand(repository)));
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
@@ -217,11 +212,6 @@ public class UIDesignerServerManager {
         }
     }
 
-    public synchronized void restart(IProgressMonitor monitor) {
-        stop();
-        start(monitor);
-    }
-
     protected String javaBinaryLocation() throws FileNotFoundException {
         File javaBinaryPath = StandardVMType.findJavaExecutable(JavaRuntime.getDefaultVMInstall().getInstallLocation());
         if (javaBinaryPath == null) {
@@ -233,8 +223,8 @@ public class UIDesignerServerManager {
         return javaBinaryPath.getAbsolutePath();
     }
 
-    protected List<String> buildCommand(final RepositoryAccessor repositoryAccessor) throws IOException {
-        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repositoryAccessor);
+    protected List<String> buildCommand(Repository repository) throws IOException {
+        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
         if (port == -1 || !isPortAvailable(port)) {
             port = SocketUtil.findFreePort();
         }
@@ -325,6 +315,18 @@ public class UIDesignerServerManager {
 
     public boolean isStarted() {
         return launch != null;
+    }
+
+    @Override
+    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+        this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+        start(repository, monitor);
+    }
+
+    @Override
+    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+        stop();
     }
 
 }

@@ -21,8 +21,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.WorkspaceSystemProperties;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
@@ -67,14 +66,14 @@ public class WorkspaceSystemPropertiesTest {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Mock
-    private RepositoryAccessor repositoryAccessor;
+    private Repository repository;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        workspaceSystemProperties = spy(new WorkspaceSystemProperties(repositoryAccessor));
+        workspaceSystemProperties = spy(new WorkspaceSystemProperties(repository));
 
         final File widgetFolder = tmpFolder.newFolder("widgets");
         when(widgetResource.getLocation()).thenReturn(Path.fromOSString(widgetFolder.getAbsolutePath()));
@@ -89,9 +88,9 @@ public class WorkspaceSystemPropertiesTest {
         when(webFragmentRepository.getResource()).thenReturn(fragmentResource);
         when(webPageRepository.getResource()).thenReturn(formResource);
 
-        doReturn(webPageRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
-        doReturn(webFragmentRepository).when(repositoryAccessor).getRepositoryStore(WebFragmentRepositoryStore.class);
-        doReturn(webWidgetRepository).when(repositoryAccessor).getRepositoryStore(WebWidgetRepositoryStore.class);
+        doReturn(webPageRepository).when(repository).getRepositoryStore(WebPageRepositoryStore.class);
+        doReturn(webFragmentRepository).when(repository).getRepositoryStore(WebFragmentRepositoryStore.class);
+        doReturn(webWidgetRepository).when(repository).getRepositoryStore(WebWidgetRepositoryStore.class);
     }
 
     /**
@@ -103,19 +102,19 @@ public class WorkspaceSystemPropertiesTest {
 
     @Test(expected = IllegalStateException.class)
     public void should_getPageRepositoryLocation_throw_an_IllegalStateException_if_store_is_not_loaded() throws Exception {
-        doReturn(null).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
+        doReturn(null).when(repository).getRepositoryStore(WebPageRepositoryStore.class);
         workspaceSystemProperties.getPageRepositoryLocation();
     }
 
     @Test(expected = IllegalStateException.class)
     public void should_getFragmentRepositoryLocation_throw_an_IllegalStateException_if_store_is_not_loaded() throws Exception {
-        doReturn(null).when(repositoryAccessor).getRepositoryStore(WebFragmentRepositoryStore.class);
+        doReturn(null).when(repository).getRepositoryStore(WebFragmentRepositoryStore.class);
         workspaceSystemProperties.getFragmentRepositoryLocation();
     }
 
     @Test(expected = IllegalStateException.class)
     public void should_getWidgetRepositoryLocation_throw_an_IllegalStateException_if_store_is_not_loaded() throws Exception {
-        doReturn(null).when(repositoryAccessor).getRepositoryStore(WebWidgetRepositoryStore.class);
+        doReturn(null).when(repository).getRepositoryStore(WebWidgetRepositoryStore.class);
         workspaceSystemProperties.getWidgetRepositoryLocation();
     }
 

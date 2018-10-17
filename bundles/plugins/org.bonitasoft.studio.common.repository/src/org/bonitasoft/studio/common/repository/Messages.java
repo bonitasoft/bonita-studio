@@ -82,6 +82,15 @@ public final class Messages extends NLS {
 
     public static String migratingRepository;
 
+    public static String defaultRepositoryName;
+
+    public static String createNewProject_emptyText;
+    public static String createNewProject_invalidCharacter;
+    public static String projectAlreadyExist;
+
+    public static String rename;
+    public static String renameProject;
+
     private Messages() {
         // Do not instantiate
     }

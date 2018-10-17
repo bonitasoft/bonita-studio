@@ -16,6 +16,8 @@ package org.bonitasoft.studio.common.repository.core.job;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -28,7 +30,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class WorkspaceInitializationJob extends WorkspaceJob {
 
-    public static Object WORKSPACE_INIT_FAMILY = new Object();
+    public static final Object WORKSPACE_INIT_FAMILY = new Object();
 
     @Inject
     private RepositoryAccessor repositoryAccessor;
@@ -48,6 +50,7 @@ public class WorkspaceInitializationJob extends WorkspaceJob {
      */
     @Override
     public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
+        BonitaStudioLog.info("Initializing workspace..", CommonRepositoryPlugin.PLUGIN_ID);
         repositoryAccessor.start(monitor);
         return Status.OK_STATUS;
     }
