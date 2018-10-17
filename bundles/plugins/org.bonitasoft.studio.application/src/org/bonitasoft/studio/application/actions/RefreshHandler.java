@@ -4,14 +4,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * 
- */
-
-/**
- * @author Romain
- *
- */
 public class RefreshHandler extends AbstractHandler {
 
 	@Override

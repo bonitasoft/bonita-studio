@@ -267,7 +267,6 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
             BonitaStudioLog.error(e);
         }
         hookResourceListeners();
-        BonitaStudioLog.info("Triggering Listeners at open" + projectListeners, CommonRepositoryPlugin.PLUGIN_ID);
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
             try {
@@ -436,8 +435,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     public IJavaProject getJavaProject() {
         if (getProject() != null && getProject().isAccessible()) {
             try {
-                final IJavaProject project = (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
-                return project;
+                return (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
             } catch (final CoreException ex) {
                 BonitaStudioLog.error(ex);
                 return null;
