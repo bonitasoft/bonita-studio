@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -38,6 +39,7 @@ import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
+import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -56,6 +58,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -76,13 +79,8 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 
-/**
- * Provides all methods to manage Tomcat server in BonitaStudio.
- *
- * @author Romain Bioteau
- * @author Celine Souchet
- */
-public class BOSWebServerManager {
+
+public class BOSWebServerManager implements IBonitaProjectListener {
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
@@ -167,9 +165,9 @@ public class BOSWebServerManager {
         }
     }
 
-    public synchronized void startServer(final IProgressMonitor monitor) {
+    public synchronized void startServer(Repository repository, IProgressMonitor monitor) {
         if (!serverIsStarted()) {
-            BonitaHomeUtil.initBonitaHome();
+            BonitaHomeUtil.configureBonitaClient();
             copyTomcatBundleInWorkspace(monitor);
             monitor.subTask(Messages.startingWebServer);
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
@@ -194,7 +192,8 @@ public class BOSWebServerManager {
                 UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
                 if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
                     uidManager.setPortalPort(portConfigurator.getHttpPort());
-                    uidManager.restart(monitor);
+                    uidManager.stop();
+                    uidManager.start(repository, monitor);
                 }
                 createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
@@ -204,12 +203,12 @@ public class BOSWebServerManager {
                 });
                 waitServerRunning();
             } catch (final CoreException e) {
-                if(tomcat != null) {
+                if (tomcat != null) {
                     try {
                         tomcat.delete();
                         tomcat = null;
                     } catch (CoreException e1) {
-                       BonitaStudioLog.error(e1);
+                        BonitaStudioLog.error(e1);
                     }
                 }
                 handleCoreExceptionWhileStartingTomcat(e);
@@ -219,9 +218,9 @@ public class BOSWebServerManager {
 
     private void handleCoreExceptionWhileStartingTomcat(final CoreException e) {
         BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-        Display.getDefault().asyncExec(() ->
-                MessageDialog.openError(Display.getDefault().getActiveShell(), "Tomcat server startup error",
-                e.getMessage()));
+        Display.getDefault().asyncExec(
+                () -> MessageDialog.openError(Display.getDefault().getActiveShell(), "Tomcat server startup error",
+                        e.getMessage()));
     }
 
     private void updateRuntimeLocationIfNeeded() {
@@ -273,10 +272,9 @@ public class BOSWebServerManager {
                     "Tomcat failed to start. Check the log file for more informations. (bonita.log or catalina.log)",
                     EnginePlugin.PLUGIN_ID);
             if (!PlatformUtil.isHeadless()) {
-                Display.getDefault().asyncExec(() ->
-                MessageDialog.openError(PlatformUI.getWorkbench()
-                                .getActiveWorkbenchWindow().getShell(),
-                                Messages.cannotStartTomcatTitle,
+                Display.getDefault().asyncExec(() -> MessageDialog.openError(PlatformUI.getWorkbench()
+                        .getActiveWorkbenchWindow().getShell(),
+                        Messages.cannotStartTomcatTitle,
                         Messages.cannotStartTomcatMessage));
             }
         }
@@ -443,12 +441,13 @@ public class BOSWebServerManager {
     }
 
     public boolean serverIsStarted() {
-        return tomcat != null && tomcat.getServerState() == IServer.STATE_STARTED;
+        return tomcat != null
+                && (tomcat.getServerState() == IServer.STATE_STARTED);
     }
 
-    public void resetServer(final IProgressMonitor monitor) {
+    public void resetServer(IProgressMonitor monitor) {
         stopServer(monitor);
-        startServer(monitor);
+        startServer(RepositoryManager.getInstance().getCurrentRepository(), monitor);
     }
 
     public synchronized void stopServer(final IProgressMonitor monitor) {
@@ -519,6 +518,30 @@ public class BOSWebServerManager {
     private boolean dropBusinessDataDBOnExit() {
         final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
+    }
+
+    @Override
+    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+        if (PlatformUtil.isHeadless()) {
+            return;
+        }
+        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+        if (!isLazyModeEnabled(preferenceStore)) {
+            final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
+            job.setPriority(Job.LONG);
+            job.setUser(false);
+            job.schedule();
+        }
+    }
+
+    private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
+        return preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE)
+                || System.getProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE) != null;
+    }
+
+    @Override
+    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+        stopServer(monitor);
     }
 
 }

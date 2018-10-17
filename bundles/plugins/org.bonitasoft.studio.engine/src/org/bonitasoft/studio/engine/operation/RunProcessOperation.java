@@ -22,6 +22,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -116,7 +117,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         final boolean hasInitiator = hasInitiator(processToRun);
         try {
             if (!executionContext.synchronousExecution()) {
-                BOSWebServerManager.getInstance().startServer(monitor);
+                BOSWebServerManager.getInstance().startServer(RepositoryManager.getInstance().getCurrentRepository(),
+                        monitor);
                 if (hasInitiator) {
                     if (hasInstanciationForm(processToRun)) {
                         url = deployOperation.getUrlFor(processToRun, monitor);

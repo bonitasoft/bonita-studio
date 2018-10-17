@@ -32,7 +32,6 @@ public class RepositoryPreferenceInitializer extends AbstractPreferenceInitializ
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = CommonRepositoryPlugin.getDefault().getPreferenceStore() ; 
-		store.setDefault(CURRENT_REPOSITORY, DEFAULT_REPOSITORY_NAME) ;
 		store.setDefault(BUILD_ENABLE, true) ;
 	}
 

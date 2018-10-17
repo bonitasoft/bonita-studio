@@ -44,8 +44,12 @@ public class OpenDiagramCommandHandler extends AbstractHandler implements IHandl
 	 */
 	@Override
 	public boolean isEnabled() {
-		final DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-		return !diagramSotre.isEmpty();
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            final DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance()
+                    .getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+            return !diagramSotre.isEmpty();
+        }
+        return false;
 	}
 
 }

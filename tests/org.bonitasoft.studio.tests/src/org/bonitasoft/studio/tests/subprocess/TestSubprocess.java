@@ -63,8 +63,7 @@ public class TestSubprocess {
 
     private APISession session;
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private DiagramRepositoryStore store;
 
     private RepositoryAccessor repositoryAccessor;
 
@@ -73,6 +72,8 @@ public class TestSubprocess {
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        store = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     @After

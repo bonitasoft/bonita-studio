@@ -15,26 +15,25 @@
 package org.bonitasoft.studio.tests.groovy;
 
 import static org.bonitasoft.studio.common.Messages.bonitaName;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.common.BonitaJobsFamily;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.Messages;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.groovy.library.IFunctionCategory;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.jobs.Job;
+import org.junit.Test;
 
-import junit.framework.TestCase;
 
-/**
- * @author Mickael Istria
- */
-public class TestFunctionRepository extends TestCase {
+public class TestFunctionRepository {
 
+    @Test
     public void testBonitaCategoryExistsAndNotEmpty() throws OperationCanceledException, InterruptedException {
-        Job.getJobManager().join(BonitaJobsFamily.INIT_GROOVY_FUNCTIONS, new NullProgressMonitor());
         IFunctionCategory bonitaCategory = null;
-        for (IFunctionCategory category : FunctionsRepositoryFactory.getFunctionCatgories().getCategories()) {
+        for (IFunctionCategory category : FunctionsRepositoryFactory
+                .getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository()).getCategories()) {
             if (category.getName().equals(bonitaName)) {
                 bonitaCategory = category;
             }
@@ -45,10 +44,11 @@ public class TestFunctionRepository extends TestCase {
         assertTrue("Doc for Bonita category methods not found", doc != null && doc.length() > 0);
     }
 
+    @Test
     public void testCollectionCategoryHasDoc() throws OperationCanceledException, InterruptedException {
-        Job.getJobManager().join(BonitaJobsFamily.INIT_GROOVY_FUNCTIONS, new NullProgressMonitor());
         IFunctionCategory collectionsCategory = null;
-        for (IFunctionCategory category : FunctionsRepositoryFactory.getFunctionCatgories().getCategories()) {
+        for (IFunctionCategory category : FunctionsRepositoryFactory
+                .getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository()).getCategories()) {
             if (category.getName().equals(Messages.collectionCatLabel)) {
                 collectionsCategory = category;
             }

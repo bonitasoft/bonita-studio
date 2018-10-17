@@ -31,10 +31,6 @@ public class GroovyPlugin extends Plugin  {
 		plugin = this;
 	}
 
-	public static void initFunctionLibrary() {
-		GroovyDocumentUtil.refreshUserLibrary();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)

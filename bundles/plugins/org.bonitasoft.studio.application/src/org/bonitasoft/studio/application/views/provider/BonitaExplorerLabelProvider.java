@@ -71,7 +71,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     @Override
     public Image getImage(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        if (!repositoryManager.getCurrentRepository().isLoaded()) {
+        if (!repositoryManager.hasActiveRepository() || !repositoryManager.getCurrentRepository().isLoaded()) {
             return super.getImage(element);
         }
         if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_page")) {
@@ -103,7 +103,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     @Override
     public StyledString getStyledText(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        if (!repositoryManager.getCurrentRepository().isLoaded()) {
+        if (!repositoryManager.hasActiveRepository() || !repositoryManager.getCurrentRepository().isLoaded()) {
             return super.getStyledText(element);
         }
         if (!(element instanceof IPackageFragment)) {

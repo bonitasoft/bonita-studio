@@ -3,7 +3,7 @@
 <schema targetNamespace="org.bonitasoft.studio.common.repository" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.bonitasoft.studio.common.repository" id="org.bonitasodt.studio.repositoryFactory" name="org.bonitasodt.studio.repositoryFactory"/>
+         <meta.schema plugin="org.bonitasoft.studio.common.repository" id="org.bonitasoft.studio.projectListenerProvider" name="org.bonitasoft.studio.projectListenerProvider"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -17,8 +17,8 @@
          </appinfo>
       </annotation>
       <complexType>
-         <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="repositoryFactory"/>
+         <sequence>
+            <element ref="projectListenerProvider" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
       </complexType>
    </element>
 
-   <element name="repositoryFactory">
+   <element name="projectListenerProvider">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -55,15 +55,8 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.common.repository.IRepositoryFactory"/>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider"/>
                </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="priority" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
             </annotation>
          </attribute>
       </complexType>

@@ -46,12 +46,12 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
-import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -145,13 +145,16 @@ public class BOSEngineManager {
         return new BOSEngineManager(monitor);
     }
 
-    public synchronized void start() {
+    public synchronized void start(Repository repository) {
         if (!isRunning() || !BOSWebServerManager.getInstance().serverIsStarted()) {
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
-            initBonitaHome();
-            BOSWebServerManager.getInstance().startServer(monitor);
+            BOSWebServerManager.getInstance().startServer(repository, monitor);
             isRunning = postEngineStart();
         }
+    }
+
+    public synchronized void start() {
+        start(RepositoryManager.getInstance().getCurrentRepository());
     }
 
     protected boolean postEngineStart() {
@@ -247,10 +250,6 @@ public class BOSEngineManager {
             }
         }
 
-    }
-
-    private void initBonitaHome() {
-        BonitaHomeUtil.initBonitaHome();
     }
 
     public boolean isRunning() {

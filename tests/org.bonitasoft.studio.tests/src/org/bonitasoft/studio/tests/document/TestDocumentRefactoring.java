@@ -25,7 +25,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
@@ -60,8 +59,7 @@ public class TestDocumentRefactoring {
 
     private final String empty = "     ";
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private DiagramRepositoryStore store;
 
     private RepositoryAccessor repositoryAccessor;
 
@@ -69,6 +67,7 @@ public class TestDocumentRefactoring {
     public void init() {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     @Test

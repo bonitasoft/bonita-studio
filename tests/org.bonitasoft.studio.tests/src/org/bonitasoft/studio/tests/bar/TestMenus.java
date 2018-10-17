@@ -16,7 +16,6 @@ package org.bonitasoft.studio.tests.bar;
 
 import static org.junit.Assert.assertEquals;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
@@ -40,8 +39,7 @@ public class TestMenus {
 
     @Test
     public void should_have_only_valid_menus() {
-        SWTBotTestUtil.waitUntilRootShellIsActive(bot,
-                RepositoryManager.getInstance().getCurrentRepository());
+        SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         final SWTBotMenu mainMenu = bot.menu("File");
         Display.getDefault().syncExec(new Runnable() {
 

@@ -6,10 +6,11 @@
    <extension-point id="repositoryServiceListener" name="Listeners on some global repository events" schema="schema/repositoryListener.exsd"/>
    <extension-point id="org.bonitasoft.studio.repositoryStore" name="org.bonitasoft.studio.repositoryStore" schema="schema/org.bonitasoft.studio.repositoryStore.exsd"/>
    <extension-point id="org.bonitasoft.studio.repository.fileContribution" name="org.bonitasoft.studio.repository.fileContribution" schema="schema/org.bonitasoft.studio.repository.fileContribution.exsd"/>
-   <extension-point id="org.bonitasodt.studio.repositoryFactory" name="org.bonitasodt.studio.repositoryFactory" schema="schema/org.bonitasodt.studio.repositoryFactory.exsd"/>
+   <extension-point id="org.bonitasoft.studio.repositoryFactory" name="org.bonitasoft.studio.repositoryFactory" schema="schema/org.bonitasoft.studio.repositoryFactory.exsd"/>
    <extension-point id="org.bonitasoft.studio.bosArchiveProvider" name="org.bonitasoft.studio.bosArchiveProvider" schema="schema/org.bonitasoft.studio.bosArchiveProvider.exsd"/>
    <extension-point id="postinitrepository" name="Actions to hook at the end of the initialization repository job" schema="schema/postinitrepository.exsd"/>
    <extension-point id="lockStatusProvider" name="lockStatusProvider" schema="schema/lockStatusProvider.exsd"/>
+   <extension-point id="projectListenerProvider" name="projectListenerProvider" schema="schema/org.bonitasoft.studio.projectListenerProvider.exsd"/>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
@@ -17,7 +18,7 @@
       </initializer>
    </extension>
    <extension
-         point="org.bonitasodt.studio.repositoryFactory">
+         point="org.bonitasoft.studio.repositoryFactory">
       <repositoryImplementation
             class="org.bonitasoft.studio.common.repository.RepositoryFactory"
             priority="0">

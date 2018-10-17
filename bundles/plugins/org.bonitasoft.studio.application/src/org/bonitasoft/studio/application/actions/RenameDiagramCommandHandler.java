@@ -82,10 +82,13 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        boolean diagramSelected = fileStoreFinder
-                .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
-                .filter(DiagramFileStore.class::isInstance).isPresent();
-        return diagramSelected || getMainProcess() != null;
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            boolean diagramSelected = fileStoreFinder
+                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                    .filter(DiagramFileStore.class::isInstance).isPresent();
+            return diagramSelected || getMainProcess() != null;
+        }
+        return false;
     }
 
     protected MainProcess getMainProcess() {

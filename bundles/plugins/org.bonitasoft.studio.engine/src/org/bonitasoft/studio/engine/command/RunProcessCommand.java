@@ -17,7 +17,6 @@ package org.bonitasoft.studio.engine.command;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,19 +45,21 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler {
 
     protected static final String APPLI_PATH = "/bonita?"; //$NON-NLS-1$;
     protected boolean runSynchronously;
-    private Set<EObject> excludedObject;
     private IStatus status;
     private URL url;
     private FileStoreFinder fileStoreFinder;
@@ -69,17 +70,7 @@ public class RunProcessCommand extends AbstractHandler {
 
     public RunProcessCommand(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
-        excludedObject = new HashSet<>();
         fileStoreFinder = new FileStoreFinder();
-    }
-
-    public RunProcessCommand(final Set<EObject> excludedObject) {
-        this(excludedObject, false);
-    }
-
-    public RunProcessCommand(final Set<EObject> excludedObject, final boolean runSynchronously) {
-        this(runSynchronously);
-        this.excludedObject = excludedObject;
     }
 
     @Override
@@ -119,19 +110,34 @@ public class RunProcessCommand extends AbstractHandler {
 
         final RunOperationExecutionContext executionContext = new RunOperationExecutionContext(configurationId);
         executionContext.setSynchronousExecution(runSynchronously);
-        if (excludedObject != null && !excludedObject.isEmpty()) {
-            executionContext.setExcludedObject(excludedObject);
-        }
         final RunProcessOperation runProcessOperation = createRunProcessOperation(event, executionContext);
 
         try {
             if (runSynchronously) {
                 Display.getDefault().syncExec(runProcessOperation);
+                url = runProcessOperation.getUrl();
+                status = runProcessOperation.getStatus();
             } else {
-                service.run(true, false, runProcessOperation);
+                Job job = new Job(Messages.running) {
+
+                    @Override
+                    public IStatus run(IProgressMonitor monitor) {
+                        try {
+                            runProcessOperation.run(monitor);
+                            url = runProcessOperation.getUrl();
+                            status = runProcessOperation.getStatus();
+                        } catch (InvocationTargetException | InterruptedException e) {
+                            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
+                        }
+                        return runProcessOperation.getStatus();
+                    }
+                };
+                job.setUser(true);
+                job.schedule();
+                Shell activeShell = Display.getDefault().getActiveShell();
+                ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
+                dialog.show(job, activeShell);
             }
-            url = runProcessOperation.getUrl();
-            status = runProcessOperation.getStatus();
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
@@ -169,24 +175,22 @@ public class RunProcessCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        boolean diagramSelectedInExplorer = fileStoreFinder
-                .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
-                .filter(DiagramFileStore.class::isInstance).isPresent();
-        if (diagramSelectedInExplorer) {
-            return true;
-        } else if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-            final MainProcess process = ProcessSelector.getProcessInEditor();
-            return process != null && process.isEnableValidation();
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            boolean diagramSelectedInExplorer = fileStoreFinder
+                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                    .filter(DiagramFileStore.class::isInstance).isPresent();
+            if (diagramSelectedInExplorer) {
+                return true;
+            } else if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+                final MainProcess process = ProcessSelector.getProcessInEditor();
+                return process != null && process.isEnableValidation();
+            }
         }
         return false;
     }
 
     public URL getUrl() {
         return url;
-    }
-
-    public void setExcludedObject(final Set<EObject> exludedObject) {
-        excludedObject = exludedObject;
     }
 
     public void setRunSynchronously(final boolean runSynchronously) {

@@ -139,6 +139,7 @@ public class RepositoryTest {
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
         doNothing().when(repo).hookResourceListeners();
         doNothing().when(repo).removeResourceListeners();
+        doNothing().when(repo).updateCurrentRepositoryPreference();
         doNothing().when(repo).migrate(any(IProgressMonitor.class));
         return repo;
     }

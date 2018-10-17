@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.bonitasoft.studio.application.job;
+package org.bonitasoft.studio.engine.server;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -37,9 +37,7 @@ public class StartEngineJob extends Job {
 		super(name);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-	 */
+
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {

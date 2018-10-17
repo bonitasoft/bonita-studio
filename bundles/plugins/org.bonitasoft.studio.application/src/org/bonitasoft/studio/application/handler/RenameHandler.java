@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.eclipse.core.commands.AbstractHandler;
@@ -30,7 +31,8 @@ public class RenameHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        elementToRenameFinder.findElementToRename(RepositoryManager.getInstance().getCurrentRepository())
+        Repository repo = RepositoryManager.getInstance().getCurrentRepository();
+        elementToRenameFinder.findElementToRename(repo)
                 .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
         return null;
     }

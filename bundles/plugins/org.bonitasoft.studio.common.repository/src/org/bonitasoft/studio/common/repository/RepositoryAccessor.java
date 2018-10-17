@@ -19,16 +19,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 /**
@@ -39,30 +35,22 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 public class RepositoryAccessor {
 
     private RepositoryManager repositoryManagerInstance;
-    private IJobManager jobManager;
 
     public RepositoryAccessor() {
         //KEEP ME
     }
 
-    RepositoryAccessor(final RepositoryManager manager, final IJobManager jobManager) {
+    RepositoryAccessor(final RepositoryManager manager) {
         repositoryManagerInstance = manager;
-        this.jobManager = jobManager;
     }
 
     @PostConstruct
     public RepositoryAccessor init() {
         repositoryManagerInstance = RepositoryManager.getInstance();
-        jobManager = Job.getJobManager();
         return this;
     }
 
     public <T extends IRepositoryStore<? extends IRepositoryFileStore>> T getRepositoryStore(final Class<T> storeClass) {
-        try {
-            jobManager.join(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY, Repository.NULL_PROGRESS_MONITOR);
-        } catch (OperationCanceledException | InterruptedException e) {
-            BonitaStudioLog.error("Synchronization failed", e);
-        }
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 
@@ -71,15 +59,15 @@ public class RepositoryAccessor {
     }
 
     public IRepository start(final IProgressMonitor monitor) {
-        final IRepository repository = getCurrentRepository();
+        Repository repository = getCurrentRepository();
         if (!repository.exists()) {
-            return repository.create(monitor);
+            repository.create(monitor);
         }
         return repository.open(monitor);
     }
 
     public IWorkspace getWorkspace() {
-        return getCurrentRepository().getProject().getWorkspace();
+        return ResourcesPlugin.getWorkspace();
     }
 
     public Repository getRepository(String targetRepository) {
@@ -92,6 +80,10 @@ public class RepositoryAccessor {
 
     public List<IRepository> getAllRepositories() {
         return repositoryManagerInstance.getAllRepositories();
+    }
+
+    public void addBonitaProjectListener(IBonitaProjectListener listener) {
+        repositoryManagerInstance.addBonitaProjectListener(listener);
     }
 
 }

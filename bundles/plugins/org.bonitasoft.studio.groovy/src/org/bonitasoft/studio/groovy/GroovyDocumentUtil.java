@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
@@ -145,10 +146,10 @@ public class GroovyDocumentUtil {
 
 
 
-    public static void refreshUserLibrary(){
+    public static void refreshUserLibrary(Repository repository) {
         try{
             FunctionsRepositoryFactory.getUserFunctionCatgory().removeAllFunctions();
-            GroovyRepositoryStore store = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class) ;
+            GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
             IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
             for(IRepositoryFileStore artifact : store.getChildren()){
                 IType type = javaProject.findType(artifact.getDisplayName()) ;

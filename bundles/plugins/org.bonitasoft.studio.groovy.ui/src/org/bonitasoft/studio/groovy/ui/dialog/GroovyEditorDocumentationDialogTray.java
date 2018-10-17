@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.groovy.ui.dialog;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.groovy.library.IFunction;
@@ -105,7 +106,8 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         categoriesList = new ListViewer(catComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
         categoriesList.setLabelProvider(new CategoryLabelProvider());
         categoriesList.setContentProvider(new FunctionCategoriesProvider());
-        categoriesList.setInput(FunctionsRepositoryFactory.getFunctionCatgories());
+        categoriesList.setInput(
+                FunctionsRepositoryFactory.getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository()));
         categoriesList.getList().setSelection(0);
         final int categorieMinheight = categoriesList.getList().getItemHeight() * categoriesList.getList().getItemCount();
         categoriesList.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, categorieMinheight).create());

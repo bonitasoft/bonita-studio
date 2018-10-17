@@ -221,7 +221,6 @@ public abstract class AbstractFileStore
     @Override
     public IWorkbenchPart open() {
         final Display display = Display.getDefault();
-        display.syncExec(PlatformUtil::hideIntroPart);
         final boolean[] done = new boolean[1];
         display.asyncExec(() -> {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));

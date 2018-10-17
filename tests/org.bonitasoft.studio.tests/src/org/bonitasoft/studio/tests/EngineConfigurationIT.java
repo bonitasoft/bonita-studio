@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.entry;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -26,15 +27,14 @@ import org.bonitasoft.engine.api.PlatformAPI;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.platform.InvalidPlatformCredentialsException;
-import org.bonitasoft.engine.platform.LoginException;
-import org.bonitasoft.engine.platform.PlatformLoginException;
 import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.swt.widgets.Display;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,11 +48,15 @@ public class EngineConfigurationIT {
     private PlatformSession platformSession;
 
     @Before
-    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
-            InvalidPlatformCredentialsException,
-            PlatformLoginException {
-        session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-        platformSession = BOSEngineManager.getInstance().loginPlatform();
+    public void setUp() throws Exception {
+        new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, monitor -> {
+            try {
+                session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+                platformSession = BOSEngineManager.getInstance().loginPlatform();
+            } catch (Exception e) {
+                throw new InvocationTargetException(e);
+            }
+        });
     }
 
     @After

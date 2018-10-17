@@ -53,10 +53,10 @@ public class TestImportActorFilter extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        cdrs = (ActorFilterDefRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
-        cirs = (ActorFilterImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
-        csrs = (ActorFilterSourceRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-        depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+        cdrs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
+        cirs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        csrs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+        depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
     public void testImportConnector() throws Exception {
