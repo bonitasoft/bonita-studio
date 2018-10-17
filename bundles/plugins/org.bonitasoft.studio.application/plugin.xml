@@ -463,8 +463,9 @@
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.open">
              <command
-               commandId="org.bonitasoft.studio.application.open"
-               style="push">
+                   commandId="org.bonitasoft.studio.application.open"
+                   id="org.bonitasoft.studio.application.openMenu"
+                   style="push">
             <visibleWhen
                   checkEnabled="true">
             </visibleWhen>
@@ -549,6 +550,19 @@
                checkEnabled="true">
                </visibleWhen>
       </command>
+   </menuContribution>
+   <menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.application.openMenu">
+      <menu
+            id="org.bonitasoft.studio.application.showInMenu"
+            label="%showIn"
+            mnemonic="S">
+         <dynamic
+               class="org.eclipse.ui.internal.ShowInMenu"
+               id="org.bonitasoft.studio.application.showIn">
+         </dynamic>
+      </menu>
    </menuContribution>
    </extension>
    <extension
