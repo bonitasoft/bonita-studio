@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.property.tester;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
@@ -33,6 +35,9 @@ public class RenamableResourcePropertyTester extends PropertyTester {
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         IResource resource = ((IAdaptable) receiver).getAdapter(IResource.class);
+        if (Objects.equals(resource, currentRepository.getProject())) {
+            return true;
+        }
         if (resource != null) {
             return fileStoreFinder.findElementToRename(resource, currentRepository).isPresent();
         }

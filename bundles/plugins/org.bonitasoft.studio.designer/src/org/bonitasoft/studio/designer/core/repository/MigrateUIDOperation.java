@@ -18,9 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
+import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.restlet.representation.EmptyRepresentation;
@@ -31,15 +34,12 @@ import org.restlet.resource.ResourceException;
 public class MigrateUIDOperation implements IRunnableWithProgress {
 
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.subTask(Messages.migratingUID);
         try {
             ClientResource clientResource = new ClientResource(
-                    UIDesignerServerManager.getInstance().getPageDesignerURLBuilder().migrate().toURI());
+                    new PageDesignerURLFactory(getPreferenceStore()).migrate().toURI());
             clientResource.setRetryOnError(true);
             clientResource.setRetryDelay(500);
             clientResource.setRetryAttempts(10);
@@ -47,6 +47,10 @@ public class MigrateUIDOperation implements IRunnableWithProgress {
         } catch (MalformedURLException | URISyntaxException | ResourceException e) {
             throw new InvocationTargetException(new MigrationException(e));
         }
+    }
+
+    protected IEclipsePreferences getPreferenceStore() {
+        return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID);
     }
 
 }

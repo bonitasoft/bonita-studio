@@ -95,9 +95,11 @@ public class CommonRepositoryPlugin extends AbstractUIPlugin {
 
     public static String getCurrentRepository(){
         if(CommonRepositoryPlugin.getDefault() != null){
-            return CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            String defaultRepo = CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                    .getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            return defaultRepo == null || defaultRepo.isEmpty() ? Messages.defaultRepositoryName : defaultRepo;
         }
-        return "default";
+        return Messages.defaultRepositoryName;
     }
 
 

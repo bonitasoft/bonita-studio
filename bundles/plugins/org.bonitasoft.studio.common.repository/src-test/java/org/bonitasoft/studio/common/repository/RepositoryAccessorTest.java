@@ -17,10 +17,8 @@ package org.bonitasoft.studio.common.repository;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +35,6 @@ public class RepositoryAccessorTest {
     @Mock
     private RepositoryManager repositoryManager;
     @Mock
-    private IJobManager jobManager;
-    @Mock
     private IProgressMonitor monitor;
     @Mock
     private Repository repository;
@@ -48,7 +44,7 @@ public class RepositoryAccessorTest {
      */
     @Before
     public void setUp() throws Exception {
-        repositoryAccessor = new RepositoryAccessor(repositoryManager, jobManager);
+        repositoryAccessor = new RepositoryAccessor(repositoryManager);
     }
 
     @SuppressWarnings("unchecked")
@@ -61,15 +57,6 @@ public class RepositoryAccessorTest {
         verify(repositoryManager).getRepositoryStore(IRepositoryStore.class);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void should_synchronize_with_repository_initialization() throws Exception {
-        //When
-        repositoryAccessor.getRepositoryStore(IRepositoryStore.class);
-
-        //Then
-        verify(jobManager).join(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY, Repository.NULL_PROGRESS_MONITOR);
-    }
 
     @Test
     public void should_open_existing_repository_when_starting() throws Exception {

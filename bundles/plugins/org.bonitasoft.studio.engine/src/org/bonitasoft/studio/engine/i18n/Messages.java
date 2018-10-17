@@ -176,6 +176,8 @@ public class Messages extends NLS {
     public static String buildDoneTitle;
     public static String buildDoneMessage;
     public static String buildFailedTitle;
+    public static String startingEngineServer;
+
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

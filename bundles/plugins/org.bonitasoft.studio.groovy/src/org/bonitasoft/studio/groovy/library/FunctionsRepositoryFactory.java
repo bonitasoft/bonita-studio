@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.Messages;
@@ -51,10 +51,10 @@ public class FunctionsRepositoryFactory {
     private static FunctionCategory bonitaCat;
     private static ArrayList<String> funcName;
 
-    private synchronized static void createFunctionCatgories(){
+    private static synchronized void createFunctionCatgories(Repository repository) {
         try {
-            IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-            IType defaultType = project.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods"); //$NON-NLS-1$
+            IJavaProject javaProject = repository.getJavaProject();
+            IType defaultType = javaProject.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods"); //$NON-NLS-1$
 
             if(defaultType != null){
                 for(IMethod m :defaultType.getMethods()){
@@ -64,16 +64,16 @@ public class FunctionsRepositoryFactory {
                 }
             }
 
-            FunctionsRepositoryFactory.getBonitaFunctionCatgory().removeAllFunctions();
-            final ProvidedGroovyRepositoryStore store = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class) ;
-            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+            getBonitaFunctionCatgory().removeAllFunctions();
+            final ProvidedGroovyRepositoryStore store = repository.getRepositoryStore(ProvidedGroovyRepositoryStore.class);
             for(IRepositoryFileStore artifact : store.getChildren()){
                 GroovyFileStore file = (GroovyFileStore) artifact ;
                 IType type = javaProject.findType(file.getDisplayName()) ;
                 if(type != null){
                     for(IMethod m :type.getMethods()){
                         if(m.getFlags() == (Flags.AccStatic | Flags.AccPublic) ){
-                            FunctionsRepositoryFactory.getBonitaFunctionCatgory().addFunction(new GroovyFunction(m,FunctionsRepositoryFactory.getBonitaFunctionCatgory()));
+                            getBonitaFunctionCatgory().addFunction(
+                                    new GroovyFunction(m, FunctionsRepositoryFactory.getBonitaFunctionCatgory()));
                         }
                     }
                 }
@@ -91,13 +91,13 @@ public class FunctionsRepositoryFactory {
         categories.addCategory(getStringFunctionCatgory());
         categories.addCategory(getOtherFunctionCatgory());
 
-        GroovyDocumentUtil.refreshUserLibrary();
+        GroovyDocumentUtil.refreshUserLibrary(repository);
 
     }
 
-    public synchronized static IFunctionsCategories getFunctionCatgories(){
+    public static synchronized IFunctionsCategories getFunctionCatgories(Repository repository) {
         if(categories == null){
-            createFunctionCatgories();
+            createFunctionCatgories(repository);
         }
         return categories ;
     }
@@ -154,9 +154,9 @@ public class FunctionsRepositoryFactory {
         }
     }
 
-    public synchronized static List<String> getFunctionsNames(){
+    public static synchronized List<String> getFunctionsNames() {
         if(funcName == null){
-            funcName = new ArrayList<String>();
+            funcName = new ArrayList<>();
             List<IFunction> func = FunctionsRepositoryFactory.getStringFunctionCatgory().getFunctions();
             func.addAll( FunctionsRepositoryFactory.getCollectionFunctionCatgory().getFunctions());
             func.addAll( FunctionsRepositoryFactory.getNumberFunctionCatgory().getFunctions());

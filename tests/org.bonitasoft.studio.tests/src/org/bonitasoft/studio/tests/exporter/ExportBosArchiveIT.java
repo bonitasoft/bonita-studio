@@ -74,8 +74,10 @@ public class ExportBosArchiveIT {
 
         assertThat(bosFile).exists();
         try (ZipFile zipFile = new ZipFile(bosFile);) {
-            assertThat(zipFile.getEntry(String.format("default/web_page/%s/%s.json", pageId, pageId))).isNotNull();
-            assertThat(zipFile.getEntry("default/web_page/.metadata")).isNull();
+            assertThat(zipFile.getEntry(String.format("%s/web_page/%s/%s.json",
+                    repositoryAccessor.getCurrentRepository().getName(), pageId, pageId))).isNotNull();
+            assertThat(zipFile.getEntry(String.format("%s/web_page/.metadata",
+                    repositoryAccessor.getCurrentRepository().getName()))).isNull();
         }
     }
 

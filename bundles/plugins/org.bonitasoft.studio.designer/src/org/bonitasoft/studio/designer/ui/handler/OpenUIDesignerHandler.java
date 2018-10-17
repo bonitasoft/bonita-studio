@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -68,7 +69,8 @@ public class OpenUIDesignerHandler extends AbstractHandler {
                             Messages.bind(Messages.waitingForUIDesigner,
                                     org.bonitasoft.studio.common.Messages.uiDesignerModuleName),
                             IProgressMonitor.UNKNOWN);
-                    UIDesignerServerManager.getInstance().start(Repository.NULL_PROGRESS_MONITOR);
+                    UIDesignerServerManager.getInstance().start(RepositoryManager.getInstance().getCurrentRepository(),
+                            Repository.NULL_PROGRESS_MONITOR);
                 }
             });
         } catch (final InvocationTargetException e) {

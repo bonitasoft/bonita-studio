@@ -25,14 +25,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -51,16 +49,10 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.egit.core.GitProvider;
-import org.eclipse.egit.core.RepositoryUtil;
-import org.eclipse.egit.ui.internal.GitLabels;
-import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
@@ -241,34 +233,12 @@ public class SWTBotTestUtil implements SWTBotConstants {
         });
     }
 
-    public static void waitUntilRootShellIsActive(final SWTBot bot, Repository activeRepository) {
-        String repoName = activeRepository.getName();
-        if (repoName == null || Objects.equals(repoName, "default")) {
-            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
-            bot.shell("Bonita Studio").setFocus();
-        } else if (activeRepository.isShared(GitProvider.ID)) {
-            org.eclipse.jgit.lib.Repository gitRepository = getGitRepository(activeRepository);
-            String brancheInfo = GitLabels.getStyledLabelSafe(gitRepository).toString();
-            if (RepositoryUtil.hasChanges(gitRepository)) { // '> ' is added before the branch name, we do not want it
-                brancheInfo = brancheInfo.substring(2);
-            }
-            String shellTitle = String.format("Bonita Studio - %s", brancheInfo);
-            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(shellTitle), 40000);
-            bot.shell(shellTitle).setFocus();
-        } else {
-            bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio - " + repoName), 40000);
-            bot.shell("Bonita Studio - " + repoName).setFocus();
-        }
-    }
 
     public static void waitUntilRootShellIsActive(SWTBot bot) {
-        waitUntilRootShellIsActive(bot, RepositoryManager.getInstance().getCurrentRepository());
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
+        bot.shell("Bonita Studio").setFocus();
     }
 
-    private static org.eclipse.jgit.lib.Repository getGitRepository(Repository repository) {
-        IStructuredSelection selection = new StructuredSelection(repository.getProject());
-        return SelectionUtils.getRepository(selection);
-    }
 
     /**
      * select an event on diagram with the given name

@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import org.bonitasoft.studio.common.BonitaJobsFamily;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -26,8 +25,6 @@ import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.junit.Test;
 
 import junit.framework.TestCase;
@@ -40,7 +37,6 @@ public class TestImportExportAndDeleteRepository extends TestCase {
     @Test
     public void testImportExportGroovy() throws Exception {
         /* Join with the job because it adds DefaultUserScript.groovy to the artifacts */
-        Job.getJobManager().join(BonitaJobsFamily.INIT_GROOVY_FUNCTIONS, new NullProgressMonitor());
         final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
         final int nbOfGroovyArtifacts = store.getChildren().size();
         final InputStream stream = TestImportExportAndDeleteRepository.class

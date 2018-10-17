@@ -19,6 +19,7 @@ Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.preferences,
  org.bonitasoft.studio.engine.ui,
  org.bonitasoft.studio.engine.ui.contributionItem,
+ org.bonitasoft.studio.engine.server,
  org.bonitasoft.studio.engine.ui.dialog,
  org.bonitasoft.studio.engine.ui.wizard
 Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
