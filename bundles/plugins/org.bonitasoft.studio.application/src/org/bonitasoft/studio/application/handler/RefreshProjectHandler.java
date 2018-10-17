@@ -16,9 +16,15 @@ package org.bonitasoft.studio.application.handler;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.ui.actions.RefreshAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,6 +41,16 @@ public class RefreshProjectHandler extends AbstractHandler {
             ISelection selection = vp.getViewSite().getSelectionProvider().getSelection();
             if (selection instanceof IStructuredSelection) {
                 refreshAction.run((IStructuredSelection) selection);
+                AbstractFileStore.refreshExplorerView();
+                Job buildJob = new Job("Building project...") {
+
+                    @Override
+                    protected IStatus run(IProgressMonitor monitor) {
+                        RepositoryManager.getInstance().getCurrentRepository().build(monitor);
+                        return Status.OK_STATUS;
+                    }
+                };
+                buildJob.schedule();
             }
         });
         return null;
