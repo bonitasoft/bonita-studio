@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -32,7 +35,7 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  * @author Baptiste Mesta
  */
-public class ConnectorDefFileStore extends AbstractDefFileStore {
+public class ConnectorDefFileStore extends AbstractDefFileStore implements IRenamable {
 
     public ConnectorDefFileStore(String fileName, AbstractEMFRepositoryStore<ConnectorDefFileStore> store) {
         super(fileName, store);
@@ -78,6 +81,16 @@ public class ConnectorDefFileStore extends AbstractDefFileStore {
                 messageProvider);
         wd.open();
         return null;
+    }
+
+    @Override
+    public void rename(String newName) {
+        doOpen();
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        return Optional.of("");
     }
 
 }
