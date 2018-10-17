@@ -71,7 +71,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static UIDesignerServerManager INSTANCE;
     private int port = -1;
     private ILaunch launch;
-    private int portalPort;
+    private int portalPort = 8080;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
     private PageDesignerURLFactory pageDesignerURLBuilder;
@@ -115,6 +115,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error(e1);
                 return;
             }
+            this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
             final ILaunchManager manager = getLaunchManager();
             final ILaunchConfigurationType ltype = manager
                     .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
@@ -319,8 +321,6 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     @Override
     public void projectOpened(Repository repository, IProgressMonitor monitor) {
-        this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
         start(repository, monitor);
     }
 
