@@ -384,7 +384,7 @@
                </count>
                <iterate>
                   <test
-                        property="org.bonitasoft.studio.actors.isOrganizationFolder">
+                        property="org.bonitasoft.studio.organization.isOrganizationFolder">
                   </test>
                </iterate>
             </and>
@@ -401,10 +401,10 @@
                <iterate>
                   <or>
                      <test
-                           property="org.bonitasoft.studio.actors.isOrganizationFolder">
+                           property="org.bonitasoft.studio.organization.isOrganizationFolder">
                      </test>
                      <test
-                           property="org.bonitasoft.studio.actors.isOrganizationFile">
+                           property="org.bonitasoft.studio.organization.isOrganizationFile">
                      </test></or>
                </iterate>
             </and>
@@ -420,7 +420,39 @@
                </count>
                <iterate>
                   <test
-                        property="org.bonitasoft.studio.actors.isOrganizationFolder">
+                        property="org.bonitasoft.studio.organization.isOrganizationFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.NewFilterDefinitionHandler"
+            commandId="org.bonitasoft.studio.application.newWithWizard">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterDefFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.NewFilterImplementationHandler"
+            commandId="org.bonitasoft.studio.application.newWithWizard">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
                   </test>
                </iterate>
             </and>
@@ -437,10 +469,17 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="org.bonitasoft.studio.actors.ui.handler.OrganizationPropertyTester"
+            class="org.bonitasoft.studio.actors.propertyTester.OrganizationPropertyTester"
             id="org.bonitasoft.studio.actors.organizationTester"
-            namespace="org.bonitasoft.studio.actors"
+            namespace="org.bonitasoft.studio.organization"
             properties="isOrganizationFolder,isOrganizationFile"
+            type="org.eclipse.core.runtime.IAdaptable">
+      </propertyTester>
+      <propertyTester
+            class="org.bonitasoft.studio.actors.propertyTester.ActorPropertyTester"
+            id="org.bonitasoft.studio.actors.actorTester"
+            namespace="org.bonitasoft.studio.actors"
+            properties="isActorFilterDefFolder,isActorFilterDefFile,isActorFilterImplFolder,isActorFilterImplFile"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
    </extension>
