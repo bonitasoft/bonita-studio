@@ -335,6 +335,70 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.bonitasoft.studio.connectors.handler.ImportConnectorHandler"
+            commandId="org.bonitasoft.studio.application.import">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.connectors.handler.ExportConnectorHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.connectors.handler.ExportSingleConnectorHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.connectors.isConnectorImplFile">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.connectors.handler.ExportConnectorFromDefinitionHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.connectors.isConnectorDefFile">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
