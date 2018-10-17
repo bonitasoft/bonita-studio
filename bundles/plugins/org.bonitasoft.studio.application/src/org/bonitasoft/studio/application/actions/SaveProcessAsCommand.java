@@ -14,47 +14,29 @@
  */
 package org.bonitasoft.studio.application.actions;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
-import org.bonitasoft.studio.common.diagram.Identifier;
-import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
-import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.diagram.custom.actions.DuplicateDiagramAction;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mickael Istria
  */
 public class SaveProcessAsCommand extends AbstractHandler {
 
-    private String newProcessLabel;
-    private String newProcessVersion;
-    private List<ProcessesNameVersion> pools;
-    private DiagramRepositoryStore diagramStore;
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
         final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (!(editor instanceof ProcessDiagramEditor)) {
             MessageDialog.openWarning(Display.getDefault().getActiveShell(), "This is not a process diagram!",
@@ -63,45 +45,16 @@ public class SaveProcessAsCommand extends AbstractHandler {
         }
 
         final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
-
-        final MainProcess process = (MainProcess) ((IGraphicalEditPart) processEditor.getDiagramEditPart()).resolveSemanticElement();
-        newProcessLabel = process.getName();
-        newProcessVersion = process.getVersion();
-        final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),
-                ModelHelper.getMainProcess(process), diagramStore);
-        dialog.forceNameUpdate();
-        if (dialog.open() == Dialog.OK) {
-            final Identifier identifier = dialog.getIdentifier();
-            newProcessLabel = identifier.getName();
-            newProcessVersion = dialog.getIdentifier().getVersion();
-            pools = dialog.getPools();
-            final DuplicateDiagramOperation op = new DuplicateDiagramOperation();
-            op.setDiagramToDuplicate(process);
-            op.setNewDiagramName(newProcessLabel);
-            op.setNewDiagramVersion(newProcessVersion);
-            op.setPoolsRenamed(pools);
-            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            try {
-                service.run(true, false, op);
-            } catch (final InvocationTargetException e) {
-                throw new ExecutionException(e.getMessage(), e);
-            } catch (final InterruptedException e) {
-                throw new ExecutionException(e.getMessage(), e);
-            }
-            final DiagramFileStore store = diagramStore.getDiagram(newProcessLabel, newProcessVersion);
-            store.open();
-        }
+        final EObject process = ((IGraphicalEditPart) processEditor.getDiagramEditPart()).resolveSemanticElement();
+        new DuplicateDiagramAction(repositoryAccessor).duplicate(ModelHelper.getMainProcess(process));
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
         if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-            final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
             return editor != null && editor instanceof ProcessDiagramEditor;
         }
         return false;
