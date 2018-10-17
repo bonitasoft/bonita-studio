@@ -80,6 +80,7 @@ public class BonitaProjectExplorer extends CommonNavigator {
                 new String[] { "org.bonitasoft.studio.application.extendedResourceLinkHelper" },
                 false);
         initContextMenu();
+        getCommonViewer().expandToLevel(2);
     }
 
     private void initContextMenu() {
