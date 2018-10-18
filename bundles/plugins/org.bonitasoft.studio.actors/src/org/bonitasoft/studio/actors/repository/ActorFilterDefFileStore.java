@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.actors.repository;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.ui.wizard.FilterDefinitionWizard;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -32,7 +35,7 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  * @author Baptiste Mesta
  */
-public class ActorFilterDefFileStore extends AbstractDefFileStore {
+public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRenamable {
 
     public ActorFilterDefFileStore(String fileName, AbstractEMFRepositoryStore<ActorFilterDefFileStore> store) {
         super(fileName, store);
@@ -78,5 +81,15 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore {
                 messageProvider);
         wd.open();
         return null;
+    }
+
+    @Override
+    public void rename(String newName) {
+        doOpen();
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        return Optional.of("");
     }
 }
