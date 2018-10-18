@@ -82,18 +82,21 @@ public class ExportConnectorWizard extends Wizard {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected IContentProvider getContentProvider() {
+        IRepositoryStore repositoryStore = getRepositoryStore();
         if (connectorImplToExport.isPresent()) {
             return (IStructuredContentProvider) inputElement -> new ConnectorImplementation[] {
                     connectorImplToExport.get() };
         }
-        IRepositoryStore repositoryStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorImplRepositoryStore.class);
         if (connectorDefToExport.isPresent()) {
             ConnectorDefinition definition = connectorDefToExport.get();
             return new ConnectorImplementationContentProvider(repositoryStore, definition.getId(),
                     definition.getVersion());
         }
         return new ConnectorImplementationContentProvider(repositoryStore, false);
+    }
+
+    protected IRepositoryStore getRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
     }
 
     protected String getPageDescription() {

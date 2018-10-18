@@ -458,6 +458,70 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.ImportActorFilterHandler"
+            commandId="org.bonitasoft.studio.application.import">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.ExportActorFilterHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.ExportSingleActorFilterHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterImplFile">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.bonitasoft.studio.actors.ui.handler.ExportActorFilterFromDefinitionHandler"
+            commandId="org.bonitasoft.studio.application.export">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.actors.isActorFilterDefFile">
+                  </test>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          id="org.bonitasoft.studio.actors.fragment"
