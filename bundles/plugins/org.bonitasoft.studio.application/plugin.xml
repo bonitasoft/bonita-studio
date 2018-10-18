@@ -554,15 +554,15 @@
    <menuContribution
          allPopups="false"
          locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.application.openMenu">
-      <menu
-            id="org.bonitasoft.studio.application.showInMenu"
-            label="%showIn"
-            mnemonic="S">
-         <dynamic
-               class="org.eclipse.ui.internal.ShowInMenu"
-               id="org.bonitasoft.studio.application.showIn">
-         </dynamic>
-      </menu>
+      <command
+            commandId="org.eclipse.ui.ide.showInSystemExplorer"
+            icon="icons/menuIcons/showInExplorer.png"
+            label="%showInSystemExplorer"
+            style="push">
+         <visibleWhen
+               checkEnabled="true">
+         </visibleWhen>
+      </command>
    </menuContribution>
    </extension>
    <extension
