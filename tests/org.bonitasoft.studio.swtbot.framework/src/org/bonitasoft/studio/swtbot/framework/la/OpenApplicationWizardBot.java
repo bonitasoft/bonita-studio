@@ -46,5 +46,6 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(Messages.open).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
+        bot.sleep(500); //Multipage xml editor run an asynchronous sanity check on the resource. Let him finish first.
     }
 }
