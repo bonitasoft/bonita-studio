@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -46,9 +47,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -140,26 +141,15 @@ public class SourceFileStore extends AbstractFileStore {
     @Override
     protected IWorkbenchPart doOpen() {
 
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                try {
-                    editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), "org.eclipse.jdt.ui.CompilationUnitEditor");
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
-                    editorPart.addPropertyListener(new IPropertyListener() {
-
-                        @Override
-                        public void propertyChanged(final Object source, final int propId) {
-                            System.out.println(propId);
-
-                        }
-                    });
-                } catch (final PartInitException e) {
-                }
-
+        Display.getDefault().asyncExec(() -> {
+            final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            try {
+                editorPart = IDE.openEditor(page, new FileEditorInput(getResource()),
+                        "org.eclipse.jdt.ui.CompilationUnitEditor");
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
+            } catch (final PartInitException e) {
             }
+
         });
         return editorPart;
     }
@@ -173,7 +163,8 @@ public class SourceFileStore extends AbstractFileStore {
 
     }
 
-    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources) throws InvocationTargetException, InterruptedException {
+    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources)
+            throws InvocationTargetException, InterruptedException {
         try {
             checkWritePermission(new File(absoluteTargetFilePath));
         } catch (final IOException e) {
@@ -208,17 +199,20 @@ public class SourceFileStore extends AbstractFileStore {
 
         if (newQualifiedClassName.indexOf(".") != -1) {
             packageName = newQualifiedClassName.substring(0, newQualifiedClassName.lastIndexOf("."));
-            className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".") + 1, newQualifiedClassName.length());
+            className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".") + 1,
+                    newQualifiedClassName.length());
         }
 
         try {
             final IRepositoryStore<?> store = getParentStore();
             final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
             root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR);
-            final IPackageFragment targetContainer = project.findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
+            final IPackageFragment targetContainer = project
+                    .findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
             final IType type = project.findType(qualifiedClassName);
             if (type != null) {
-                type.getCompilationUnit().move(targetContainer, null, className + ".java", true, Repository.NULL_PROGRESS_MONITOR);
+                type.getCompilationUnit().move(targetContainer, null, className + ".java", true,
+                        Repository.NULL_PROGRESS_MONITOR);
                 qualifiedClassName = newQualifiedClassName;
             }
         } catch (final Exception e) {
@@ -250,7 +244,8 @@ public class SourceFileStore extends AbstractFileStore {
         }
     }
 
-    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment)
+            throws JavaModelException {
         if (packageFragment != null) {
             while (!packageFragment.hasChildren()) {
                 //I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
@@ -267,18 +262,22 @@ public class SourceFileStore extends AbstractFileStore {
     }
 
     private void closeRelatedEditorIfOpened(final ICompilationUnit compilationUnit) throws PartInitException {
-        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        if (editorPart != null) {
-            if (PlatformUI.isWorkbenchRunning()) {
-                activePage.closeEditor(editorPart, false);
-            }
-        } else {
-            if (PlatformUI.isWorkbenchRunning()) {
-                for (final IEditorReference editorReference : activePage.getEditorReferences()) {
-                    final IEditorInput editorInput = editorReference.getEditorInput();
-                    if (compilationUnit.getResource().equals(EditorUtil.retrieveResourceFromEditorInput(editorInput))) {
-                        activePage.closeEditors(new IEditorReference[] { editorReference }, false);
-                        break;
+        Optional<IWorkbenchPage> activePage = Optional.ofNullable(PlatformUI.getWorkbench().getActiveWorkbenchWindow())
+                .map(IWorkbenchWindow::getActivePage);
+        if (activePage.isPresent()) {
+            if (editorPart != null) {
+                if (PlatformUI.isWorkbenchRunning()) {
+                    activePage.get().closeEditor(editorPart, false);
+                }
+            } else {
+                if (PlatformUI.isWorkbenchRunning()) {
+                    for (final IEditorReference editorReference : activePage.get().getEditorReferences()) {
+                        final IEditorInput editorInput = editorReference.getEditorInput();
+                        if (compilationUnit.getResource()
+                                .equals(EditorUtil.retrieveResourceFromEditorInput(editorInput))) {
+                            activePage.get().closeEditors(new IEditorReference[] { editorReference }, false);
+                            break;
+                        }
                     }
                 }
             }
