@@ -18,8 +18,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
@@ -87,6 +90,26 @@ public class ConnectorImplFileStore extends EMFFileStore {
         WizardDialog wd = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
         wd.open();
         return null;
+    }
+
+    @Override
+    protected void doDelete() {
+        if (FileActionDialog.confirmDeletionQuestion(getName())) {
+            ConnectorImplementation implementation = getContent();
+            super.doDelete();
+            String className = implementation.getImplementationClassname();
+            ConnectorSourceRepositoryStore sourceStore = getRepositoryAccessor()
+                    .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+            IRepositoryFileStore sourceFile = sourceStore.getChild(className);
+            String abstarctClassName = ClassGenerator.getAbstractClassName(className);
+            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName);
+            if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
+                sourceFile.delete();
+                if (abstractFile != null) {
+                    abstractFile.delete();
+                }
+            }
+        }
     }
 
 }
