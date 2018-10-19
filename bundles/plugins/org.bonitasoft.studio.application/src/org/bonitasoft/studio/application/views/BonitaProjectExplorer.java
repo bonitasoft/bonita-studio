@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -127,6 +128,8 @@ public class BonitaProjectExplorer extends CommonNavigator {
     protected CommonViewer createCommonViewerObject(Composite aParent) {
         CommonViewer commonViewer = new PackageExplorerProblemTreeViewer(getViewSite().getId(), aParent,
                 SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        commonViewer.getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.application.projectExplorerTree");
         commonViewer.addFilter(UIDArtifactFilters.filterUIDArtifactChildren());
         return commonViewer;
     }

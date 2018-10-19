@@ -72,6 +72,7 @@ import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
+import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
@@ -145,7 +146,8 @@ import org.junit.runners.Suite;
         BPMNConnectorExportImportTest.class,
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
-        OrganizationCreationTest.class
+        OrganizationCreationTest.class,
+        ProjectExplorerOrganizationIT.class
 })
 public class SWTBotTestSuite {
 
