@@ -109,7 +109,7 @@ public abstract class AbstractFileStore
 
     @Override
     public boolean canBeDeleted() {
-        return true;
+        return !isReadOnly();
     }
 
     /*
@@ -156,7 +156,7 @@ public abstract class AbstractFileStore
 
     @Override
     public void delete() {
-        if (!isReadOnly()) {
+        if (canBeDeleted()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_DELETE, this));
             doDelete();
             getParentStore().refresh();
