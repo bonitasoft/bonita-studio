@@ -87,7 +87,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         e4Context.set(APISession.class, session);
         Optional.ofNullable(ParameterizedCommand.generateCommand(
                 commandService().getCommand(UNINSTALL_BDM_AC_CMD), null))
-                .filter(cmd -> handlerService.canExecute(cmd))
+                .filter(handlerService::canExecute)
                 .ifPresent(handlerService::executeHandler);
     }
 

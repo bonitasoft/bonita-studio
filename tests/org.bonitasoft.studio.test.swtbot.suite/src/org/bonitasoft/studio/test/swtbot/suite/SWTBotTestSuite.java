@@ -29,7 +29,7 @@ import org.bonitasoft.studio.tests.bar.TestMenus;
 import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
-import org.bonitasoft.studio.tests.configuration.ProcessDependenciesConfigurationIT;
+import org.bonitasoft.studio.tests.configuration.JavaDependenciesConfigurationIT;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionTranslationsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
@@ -134,7 +134,7 @@ import org.junit.runners.Suite;
         TestMoveBetweenLane.class,
         TestTimer.class,
         ConnectorEditedInAsingleCommandIT.class,
-        ProcessDependenciesConfigurationIT.class,
+        JavaDependenciesConfigurationIT.class,
         ContractIT.class,
         TestOrganizationPassword.class,
         CallActivityMappingIT.class,

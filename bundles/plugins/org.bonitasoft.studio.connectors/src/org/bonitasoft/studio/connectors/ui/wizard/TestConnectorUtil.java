@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.TestConnectorResultDialog;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
@@ -75,28 +77,35 @@ public class TestConnectorUtil {
 				return false;
 			}
 		}
-		
+        DependencyRepositoryStore depStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
 		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, Repository.NULL_PROGRESS_MONITOR);
-		final ManageConnectorJarDialog jd = new ManageConnectorJarDialog(shell,Messages.connectorAdditionalDependencyTitle,Messages.connectorAdditionalDependencyMessage) ;
-		jd.setFilter(new ViewerFilter() {
-			
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof IRepositoryFileStore){
-					if(jars.contains(((IRepositoryFileStore) element).getName())){
-						return false;
-					}
-				}
-				return true;
-			}
-		});
-		int retCode =jd.open();
+        jars.add("bdm-client-pojo.jar");
+        int retCode = Window.OK;
+        ManageConnectorJarDialog jd = null;
+        if (depStore.getChildren().stream().map(IRepositoryFileStore::getName).anyMatch(jar -> !jars.contains(jar))) {
+            jd = new ManageConnectorJarDialog(shell,
+                    Messages.connectorAdditionalDependencyTitle, Messages.connectorAdditionalDependencyMessage);
+            jd.setFilter(new ViewerFilter() {
+
+                @Override
+                public boolean select(Viewer viewer, Object parentElement, Object element) {
+                    if (element instanceof IRepositoryFileStore) {
+                        if (jars.contains(((IRepositoryFileStore) element).getName())) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+            retCode = jd.open();
+        }
 		if(retCode == Window.OK){
 			TestConnectorOperation operation = new TestConnectorOperation() ;
 			operation.setImplementation(impl) ;
 			operation.setConnectorConfiguration(configuration) ;
 			operation.setConnectorOutput(connector);
-			operation.setAdditionalJars(jd.getSelectedJars());
+            operation.setAdditionalJars(jd != null ? jd.getSelectedJars() : Collections.emptySet());
 			Object result = null ;
 			try {
 				wd.run(true, false, operation) ;

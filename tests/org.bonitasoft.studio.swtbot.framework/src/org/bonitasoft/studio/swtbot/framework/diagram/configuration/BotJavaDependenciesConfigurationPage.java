@@ -18,9 +18,9 @@ import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-public class BotProcessDependenciesConfigurationPage extends BotBase {
+public class BotJavaDependenciesConfigurationPage extends BotBase {
 
-    public BotProcessDependenciesConfigurationPage(final SWTGefBot bot) {
+    public BotJavaDependenciesConfigurationPage(final SWTGefBot bot) {
         super(bot);
     }
 

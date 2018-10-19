@@ -19,16 +19,15 @@ import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.codehaus.groovy.eclipse.ui.decorators.GroovyPluginImages;
 import org.codehaus.groovy.eclipse.wizards.NewClassWizardPage;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
-import org.eclipse.jface.viewers.IStructuredSelection;
 
 public class NewGroovyClassWizard extends NewElementWizard {
 
@@ -48,14 +47,10 @@ public class NewGroovyClassWizard extends NewElementWizard {
         addPage(fPage);
         fPage.init(getSelection());
         IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        IFolder srcFolder = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource();
         fPage.setPackageFragmentRoot(project.getPackageFragmentRoot(
-                RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource()), false);
-        IStructuredSelection selection = getSelection();
-        Object firstElement = selection.getFirstElement();
-        if (firstElement instanceof IAdaptable && ((IAdaptable) firstElement).getAdapter(IPackageFragment.class) != null) {
-            fPage.setPackageFragment(((IAdaptable) firstElement).getAdapter(IPackageFragment.class), true);
-        }
-
+                srcFolder), false);
+        fPage.setPackageFragment(srcFolder.getAdapter(IPackageFragment.class), false);
     }
 
     @Override

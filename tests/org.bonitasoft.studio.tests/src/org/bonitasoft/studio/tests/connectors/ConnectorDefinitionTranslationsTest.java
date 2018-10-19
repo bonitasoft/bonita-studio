@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,7 +37,6 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
-import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -55,8 +55,6 @@ public class ConnectorDefinitionTranslationsTest {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     private void openConnectorDefinitionWizardPage(String id, String categoryId) throws Exception {
-        final String packageLang = "java.lang.";
-        final String packageUtil = "java.util.";
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
         Keyboard key = KeyboardFactory.getSWTKeyboard();
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
@@ -69,30 +67,28 @@ public class ConnectorDefinitionTranslationsTest {
         bot.button("Add...").click();
         bot.button("Add...").click();
         table.click(1, 2);
-        bot.ccomboBox().setSelection(packageLang + "Boolean");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(Boolean.class.getName());
+        //   key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(2, 2);
-        bot.ccomboBox().setSelection(packageLang + "Double");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(Double.class.getName());
+        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(3, 2);
-        bot.ccomboBox().setSelection(packageLang + "Float");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(Float.class.getName());
+        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(4, 2);
-        bot.ccomboBox().setSelection(packageLang + "Integer");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(Integer.class.getName());
+        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(5, 2);
-        bot.ccomboBox().setSelection(packageUtil + "List");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(List.class.getName());
+        //   key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(6, 2);
-        bot.ccomboBox().setSelection(packageUtil + "Map");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().setSelection(Map.class.getName());
         bot.button(IDialogConstants.NEXT_LABEL).click();
-
     }
 
     @Before
