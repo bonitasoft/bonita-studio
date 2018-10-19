@@ -26,10 +26,10 @@ public class URIXSDFileStore extends XSDFileStore {
     protected org.eclipse.emf.common.util.URI getResourceURI() {
         return org.eclipse.emf.common.util.URI.createURI(getName());
     }
-
+    
     @Override
-    public boolean canBeDeleted() {
-        return false;
+    public boolean isReadOnly() {
+        return true;
     }
 
     @Override
