@@ -198,9 +198,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
                 confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
                 startResult = null;
-                tomcat.start(ILaunchManager.RUN_MODE, result -> {
-                    startResult = result;
-                });
+                tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                 waitServerRunning();
             } catch (final CoreException e) {
                 if (tomcat != null) {

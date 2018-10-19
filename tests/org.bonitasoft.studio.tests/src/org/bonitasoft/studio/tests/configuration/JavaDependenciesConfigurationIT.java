@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ProcessDependenciesConfigurationIT {
+public class JavaDependenciesConfigurationIT {
 
     private final SWTGefBot bot = new SWTGefBot();
 
@@ -44,7 +44,7 @@ public class ProcessDependenciesConfigurationIT {
     @Test
     public void testImportAndRunProcessWithLotOfDependencies() throws IOException, ExecutionException {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(ProcessDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
+                .setArchive(JavaDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
                 .finish();
 
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -55,11 +55,11 @@ public class ProcessDependenciesConfigurationIT {
     public void should_have_connector_dependencies() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
-                        ProcessDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
+                        JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
                 .finish();
 
         final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();
-        final List<String> items = configureBot.selectProcessDependencies().selectTreeView().items();
+        final List<String> items = configureBot.selectJavaDependencies().selectTreeView().items();
         assertThat(items).contains(Messages.others,
                 Messages.connector);
         configureBot.cancel();

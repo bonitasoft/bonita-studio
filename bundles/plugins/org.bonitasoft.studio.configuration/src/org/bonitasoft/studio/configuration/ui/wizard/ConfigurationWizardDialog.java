@@ -199,8 +199,6 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
             confWizard.setProcess(process);
         }
 
-        // confWizard.updatePages() ;
-
         showPage(getWizard().getStartingPage());
         pageChooserViewer.setSelection(new StructuredSelection(getCurrentPage()));
         pageChooserViewer.refresh();

@@ -28,7 +28,7 @@ import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.ui.wizard.page.ProcessDependenciesConfigurationWizardPage;
+import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -105,7 +105,7 @@ public class ConfigurationSynchronizer {
                     BonitaStudioLog.error(e1);
                 }
             }
-            wizardPages.add(new ProcessDependenciesConfigurationWizardPage());
+            wizardPages.add(new JavaDependenciesConfigurationWizardPage());
         }
     }
 

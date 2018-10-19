@@ -139,16 +139,16 @@ public class ConfigurationDialogIT {
         }
         boolean notFound = false;
         try {
-            bot.table().getTableItem("Process dependencies").select();
+            bot.table().getTableItem("Java dependencies").select();
         } catch (final WidgetNotFoundException e) {
             notFound = true;
         }
-        assertTrue("Proces dependencies menu should not be visible", notFound);
+        assertTrue("Java dependencies menu should not be visible", notFound);
 
         if (!bot.checkBox().isChecked()) {
             bot.checkBox().click();
         }
-        bot.table().getTableItem("Process dependencies").select();
+        bot.table().getTableItem("Java dependencies").select();
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
 

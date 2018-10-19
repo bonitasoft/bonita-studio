@@ -62,7 +62,6 @@ public class BonitaGroovyConfiguration extends GroovyConfiguration {
         final ExtendedJavaCompletionProcessor javaProcessor = new ExtendedJavaCompletionProcessor(getEditor(), assistant,
                 IDocument.DEFAULT_CONTENT_TYPE);
         assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-        //    javaProcessor.setCompletionProposalAutoActivationCharacters(new char[] { '.' });
 
         final ContentAssistProcessor singleLineProcessor = new ExtendedJavaCompletionProcessor(getEditor(), assistant,
                 IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
