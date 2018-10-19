@@ -29,8 +29,8 @@ public class BotConfigureDialog extends BotDialog {
         return new BotActorMappingConfigurationPage(bot);
     }
 
-    public BotProcessDependenciesConfigurationPage selectProcessDependencies() {
-        bot.table().select(Messages.processDependencies);
-        return new BotProcessDependenciesConfigurationPage(bot);
+    public BotJavaDependenciesConfigurationPage selectJavaDependencies() {
+        bot.table().select(Messages.javaDependencies);
+        return new BotJavaDependenciesConfigurationPage(bot);
     }
 }

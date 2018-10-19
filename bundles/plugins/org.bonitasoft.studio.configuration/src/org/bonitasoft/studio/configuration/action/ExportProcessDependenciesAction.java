@@ -49,7 +49,7 @@ public class ExportProcessDependenciesAction extends Action implements IConfigur
 
     public ExportProcessDependenciesAction(){
         super() ;
-        setText(Messages.processDependencies) ;
+        setText(Messages.javaDependencies);
         setImageDescriptor(Pics.getImageDescriptor(PicsConstants.dependencies)) ;
     }
 

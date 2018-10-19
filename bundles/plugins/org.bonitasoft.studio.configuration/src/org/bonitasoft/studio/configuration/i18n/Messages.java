@@ -51,8 +51,6 @@ public class Messages extends NLS {
     public static String password;
     public static String runLoginMessage;
     public static String usernameIsMissingForConfiguration;
-    public static String processDependencies;
-    public static String processDependenciesConfigurationDescription;
     public static String manageJars;
     public static String connector;
     public static String actorfilter;
@@ -79,5 +77,7 @@ public class Messages extends NLS {
 	public static String anonymousUserNameMissingMessage;
 	public static String synchronizingConfiguration;
 	public static String exportFailedTitle;
+    public static String javaDependencies;
+    public static String javaDependenciesConfigurationDescription;
 
 }

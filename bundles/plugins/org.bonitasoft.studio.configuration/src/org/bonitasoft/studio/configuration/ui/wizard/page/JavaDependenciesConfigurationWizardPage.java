@@ -30,27 +30,20 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
-/**
- * @author Romain Bioteau
- *
- */
-public class ProcessDependenciesConfigurationWizardPage extends AbstractDependenciesConfigurationWizardPage {
 
-    public ProcessDependenciesConfigurationWizardPage() {
-        super(ProcessDependenciesConfigurationWizardPage.class.getName());
-        setTitle(Messages.processDependencies) ;
-        setDescription(Messages.processDependenciesConfigurationDescription) ;
+public class JavaDependenciesConfigurationWizardPage extends AbstractDependenciesConfigurationWizardPage {
+
+    public JavaDependenciesConfigurationWizardPage() {
+        super(JavaDependenciesConfigurationWizardPage.class.getName());
+        setTitle(Messages.javaDependencies);
+        setDescription(Messages.javaDependenciesConfigurationDescription);
     }
 
-
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#isConfigurationPageValid()
-     */
     @Override
     public String isConfigurationPageValid(Configuration configuration) {
         if(configuration !=null) {
-            final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+            final DependencyRepositoryStore store = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
             for(EObject f : ModelHelper.getAllItemsOfType(configuration,ConfigurationPackage.Literals.FRAGMENT)){
                 if(f instanceof Fragment && ((Fragment) f).isExported() && isAProcessDependency(f)){
                     String jarName = ((Fragment) f).getValue() ;
@@ -72,10 +65,7 @@ public class ProcessDependenciesConfigurationWizardPage extends AbstractDependen
     private boolean isGeneratedJar(String lib, Fragment fragment) {
     	FragmentContainer container = (FragmentContainer) fragment.eContainer();
     	String id = container.getId();
-    	if(lib.equals(id+".jar")){
-    		return true;
-    	}
-    	return false;
+        return lib.equals(id + ".jar");
 	}
 
 	protected boolean isAProcessDependency(EObject f) {
