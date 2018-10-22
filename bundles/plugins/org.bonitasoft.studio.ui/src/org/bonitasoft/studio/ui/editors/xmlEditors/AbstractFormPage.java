@@ -94,7 +94,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
     private Control createHeader(Form form) {
         final Composite head = form.getHead();
-        final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT);
+        final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
         toolBarManager = new ToolBarManager(toolBar);
         createHeaderContent(toolBar);
         return toolBar;
