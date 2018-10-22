@@ -18,6 +18,7 @@ package org.bonitasoft.studio.engine.preferences;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -42,6 +43,10 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true);
         store.setDefault(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 512);
+
+        DebugUITools.getPreferenceStore().setValue(
+                org.eclipse.debug.internal.ui.IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH,
+                MessageDialogWithToggle.NEVER);
     }
 
 }
