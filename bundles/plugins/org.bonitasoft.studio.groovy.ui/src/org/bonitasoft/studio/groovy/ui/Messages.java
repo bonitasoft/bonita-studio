@@ -28,35 +28,7 @@ public final class Messages extends NLS {
 
     public static String categoriesTitle;
 
-    public static String saveWizardPageTitle;
-
-    public static String saveWizardPageMessage;
-
-    public static String saveWizardPageDescription;
-
-    public static String nameLabel;
-
-    public static String overwriteQuestionTitle;
-
-    public static String overwriteQuestionMessage;
-
-    public static String openScriptWizardPage_title;
-
-    public static String openScriptWizardPage_desc;
-
-    public static String removeScriptLabel;
-
-    public static String confirmScriptDeleteTitle;
-
-    public static String confirmScriptDeleteMessage;
-
-    public static String openScriptLabel;
-
     public static String noProcessVariableAvailable;
-
-    public static String saveSuccesfullTitle;
-
-    public static String saveSuccesfullMessage;
 
     public static String processVariableLabel;
 
@@ -65,20 +37,6 @@ public final class Messages extends NLS {
     public static String groovyDocumentationLink;
 
     public static String browseJava;
-
-    public static String wrongName;
-
-    public static String scriptNameMustBeValid;
-
-    public static String createScript;
-
-    public static String scriptNameDialogTitle;
-
-    public static String scriptNameDialogMessage;
-
-    public static String warning;
-
-    public static String warningMessageSystemExit;
 
     public static String scriptEvaluation;
 
@@ -98,17 +56,11 @@ public final class Messages extends NLS {
 
     public static String groovyUnresolved;
 
-    public static String manageGroovyScripts;
-
     public static String evaluationResults;
 
     public static String testGroovyScriptDialogDescription;
 
     public static String nameHelp;
-
-    public static String scriptNameAlreadyExists;
-
-    public static String wrongNameLowCase;
 
     public static String warningAssigningAVariableWithSameNameAsProcessVariable;
 
