@@ -33,13 +33,13 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.job.WorkspaceInitializationJob;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
@@ -57,6 +57,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
@@ -80,6 +82,10 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
@@ -401,10 +407,25 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
         disableInternalWebBrowser();
         disableGroovyDSL();
-        doInitWorkspace();
+        initXMLandHTMLValidationPreferences();
+        repositoryAccessor.start(monitor);
 
         executeContributions();
     }
+    
+    protected void initXMLandHTMLValidationPreferences() {
+        IEclipsePreferences xmlNode = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
+
+        IEclipsePreferences htmlNode = new DefaultScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
+        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, -1);
+        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, -1);
+        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_VALUE, -1);
+        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, -1);
+        htmlNode.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, -1);
+    }
+
 
     protected void disableGroovyDSL() {
         final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
@@ -416,14 +437,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
     }
 
-    protected void doInitWorkspace() {
-        //Avoid deadlock when starting engine caused by ProcessConsoleManger triggering some UI dependent code in a non UI thread.
-        //   DebugUIPlugin.getDefault().getProcessConsoleManager();
-        //  SourceLookupManager.getDefault();
-        //     GroovyPlugin.getDefault();
-        WorkspaceInitializationJob workspaceInitializationJob = new WorkspaceInitializationJob(repositoryAccessor);
-        workspaceInitializationJob.schedule();
-    }
 
     private void executeContributions() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(

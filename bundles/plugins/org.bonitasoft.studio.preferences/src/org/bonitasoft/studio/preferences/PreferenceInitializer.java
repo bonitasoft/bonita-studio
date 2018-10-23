@@ -29,10 +29,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 
 /**
  * @author Romain Bioteau
@@ -40,10 +36,7 @@ import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer implements BonitaPreferenceConstants {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-     */
+
     @Override
     public void initializeDefaultPreferences() {
         final IPreferenceStore store = getBonitaPreferenceStore();
@@ -73,23 +66,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
-        
-        
-        initXMLandHTMLValidationPreferences();
     }
 
-    protected void initXMLandHTMLValidationPreferences() {
-        IEclipsePreferences xmlNode = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
-        xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
-
-        IEclipsePreferences htmlNode = new DefaultScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_VALUE, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, -1);
-    }
 
     protected IPreferenceStore getJDTPreferenceStore() {
         return PreferenceConstants.getPreferenceStore();
