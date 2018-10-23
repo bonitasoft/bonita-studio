@@ -81,6 +81,7 @@ Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.la,
  org.bonitasoft.studio.swtbot.framework.organization,
  org.bonitasoft.studio.swtbot.framework.projectExplorer,
+ org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm,
  org.bonitasoft.studio.swtbot.framework.projectExplorer.organization,
  org.bonitasoft.studio.swtbot.framework.rule,
  org.bonitasoft.studio.swtbot.framework.widget

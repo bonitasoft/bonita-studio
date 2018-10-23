@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,19 +31,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.PlatformUI;
 
 public class DeleteHandler extends AbstractHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
+    private FileStoreFinder selectionFinder = new FileStoreFinder();
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        ISelection selection = service.getSelection();
+        ISelection selection = selectionFinder.getSelectionInExplorer();
         IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
         IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getFileStore(resource);
@@ -68,11 +64,7 @@ public class DeleteHandler extends AbstractHandler {
      */
     @Override
     public boolean isEnabled() {
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        if (service == null) {
-            return false;
-        }
-        ISelection selection = service.getSelection();
+        ISelection selection = selectionFinder.getSelectionInExplorer();
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         return selection instanceof IStructuredSelection
                 ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)

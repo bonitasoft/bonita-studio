@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.groovy.ui.handler;
 
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.groovy.ui.wizard.NewGroovyClassWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -22,20 +23,17 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
 
 public class NewGroovyScript extends AbstractHandler {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
+    private FileStoreFinder selectionFinder = new FileStoreFinder();
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         final NewGroovyClassWizard wizard = new NewGroovyClassWizard();
-        ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selectionService.getSelection());
+        wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selectionFinder.getSelectionInExplorer());
         new WizardDialog(Display.getDefault().getActiveShell(), wizard).open();
         AbstractFileStore.refreshExplorerView();
         return null;
