@@ -14,7 +14,6 @@ import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
@@ -94,6 +93,8 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)),
                 5000);
         bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
+        bot.shell(Messages.newVariable).activate();
         return this;
     }
 
