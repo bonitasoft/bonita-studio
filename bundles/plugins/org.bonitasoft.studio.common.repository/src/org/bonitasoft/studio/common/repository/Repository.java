@@ -261,8 +261,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
             initRepositoryStores(monitor);
-            enableBuild();
             bonitaBPMProjectClasspath.create(this, monitor);
+            enableBuild();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
