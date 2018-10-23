@@ -39,7 +39,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;

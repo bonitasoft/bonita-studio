@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.perspective;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -34,8 +33,7 @@ public class WelcomePagePerspectiveFactory extends AbstractPerspectiveFactory {
         final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
         leftFolder.addView(BonitaProjectExplorer.ID);
         final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
-        rightFolder.addView(IIntroConstants.INTRO_VIEW_ID);
-        PlatformUtil.openIntro();
+        rightFolder.addPlaceholder(IIntroConstants.INTRO_VIEW_ID);
     }
 
     /*

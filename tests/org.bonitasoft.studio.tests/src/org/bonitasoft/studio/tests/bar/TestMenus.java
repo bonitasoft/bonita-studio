@@ -17,7 +17,7 @@ package org.bonitasoft.studio.tests.bar;
 import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.rule.LegacySWTGefBotRule;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -35,7 +35,7 @@ public class TestMenus {
     private final SWTGefBot bot = new SWTGefBot();
 
     @Rule
-    public LegacySWTGefBotRule rule = new LegacySWTGefBotRule(bot);
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void should_have_only_valid_menus() {
@@ -56,7 +56,7 @@ public class TestMenus {
                 }
                 assertEquals("Run menu should not appears", 0, nbRunMenus);
                 if (Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")) {
-                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 11,
+                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 9,
                             parent.getItemCount());
                 } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
                     assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 7,
