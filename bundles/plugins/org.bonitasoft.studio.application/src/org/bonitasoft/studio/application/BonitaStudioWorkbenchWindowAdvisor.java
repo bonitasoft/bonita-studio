@@ -17,14 +17,12 @@ package org.bonitasoft.studio.application;
 import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
@@ -78,12 +76,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void openIntro() {
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
         PrefUtil.saveAPIPrefs();
-        Display display = window.getShell().getDisplay();
-        display.asyncExec(() -> {
-            if (!PlatformUtil.isIntroOpen()) {
-                PlatformUtil.openIntroIfNoOtherEditorOpen();
-            }
-        });
     }
 
     /**

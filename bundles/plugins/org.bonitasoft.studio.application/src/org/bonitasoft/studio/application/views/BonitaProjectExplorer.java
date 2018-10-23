@@ -19,14 +19,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -63,6 +68,17 @@ public class BonitaProjectExplorer extends CommonNavigator {
     @Inject
     private RepositoryAccessor repositoryAccessor;
 
+    private JobChangeAdapter openIntroListener = new JobChangeAdapter() {
+
+        @Override
+        public void done(IJobChangeEvent event) {
+            Job job = event.getJob();
+            if (Objects.equals(job.getName(), getTitle())) {
+                PlatformUtil.openIntroIfNoOtherEditorOpen();
+            }
+        }
+    };
+
     @Override
     protected Object getInitialInput() {
         return repositoryAccessor.getWorkspace().getRoot();
@@ -82,6 +98,15 @@ public class BonitaProjectExplorer extends CommonNavigator {
                 false);
         initContextMenu();
         getCommonViewer().expandToLevel(2);
+        Job.getJobManager().addJobChangeListener(openIntroListener);
+    }
+
+    @Override
+    public void dispose() {
+        if (openIntroListener != null) {
+            Job.getJobManager().removeJobChangeListener(openIntroListener);
+        }
+        super.dispose();
     }
 
     private void initContextMenu() {
