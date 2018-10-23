@@ -27,12 +27,15 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 public class FileStoreFinder {
+
+    private static final String BONITA_PROJECT_EXPLORER_ID = "org.bonitasoft.studio.application.project.explorer";
 
     public Optional<IRenamable> findElementToRename(Repository currentRepository) {
         return getCurrentStructuredSelection()
@@ -94,15 +97,15 @@ public class FileStoreFinder {
     }
 
     protected Optional<IStructuredSelection> getCurrentStructuredSelection() {
-        return getCurrentViewPart()
+        return getExplorerViewPart()
                 .map(vp -> vp.getViewSite().getSelectionProvider().getSelection())
                 .filter(IStructuredSelection.class::isInstance)
                 .map(IStructuredSelection.class::cast);
     }
 
-    private Optional<IViewPart> getCurrentViewPart() {
-        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
-        return Optional.ofNullable(activePart.getAdapter(IViewPart.class));
+    private Optional<IViewPart> getExplorerViewPart() {
+        return Optional.ofNullable(
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(BONITA_PROJECT_EXPLORER_ID));
     }
 
     private Optional<? extends IRepositoryFileStore> findFileStore(String resourceName, Repository currentRepository) {
@@ -111,6 +114,11 @@ public class FileStoreFinder {
                 .flatMap(Collection::stream)
                 .filter(fileStore -> Objects.equals(fileStore.getName(), resourceName))
                 .findFirst();
+    }
+
+    public ISelection getSelectionInExplorer() {
+        return getExplorerViewPart().map(vp -> vp.getViewSite().getSelectionProvider().getSelection())
+                .orElse(new StructuredSelection());
     }
 
 }

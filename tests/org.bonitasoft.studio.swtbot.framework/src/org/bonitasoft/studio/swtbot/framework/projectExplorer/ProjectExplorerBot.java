@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm.BDMProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.organization.OrganizationProjectExplorerBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -35,12 +39,21 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public BotManageOrganizationWizard newOrganization() {
-        getProjectExplorerTree().getTreeItem(projectName).contextMenu().menu("New").menu("Organization...").click();
+        getProjectTreeItem().contextMenu().menu("New").menu("Organization...").click();
         return new BotManageOrganizationWizard(bot);
+    }
+
+    public DefineBdmWizardBot newBdm() {
+        getProjectTreeItem().contextMenu().menu("New").menu("Business Data Model...").click();
+        return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
     }
 
     public OrganizationProjectExplorerBot organization() {
         return new OrganizationProjectExplorerBot(bot);
+    }
+
+    public BDMProjectExplorerBot bdm() {
+        return new BDMProjectExplorerBot(bot);
     }
 
     public SWTBotTreeItem getProjectTreeItem() {
@@ -89,9 +102,12 @@ public class ProjectExplorerBot extends BotBase {
     protected ICondition contextMenuAvailable(SWTBotTreeItem item, String menu) {
         return new ICondition() {
 
+            private List<String> menuItems;
+
             @Override
             public boolean test() throws Exception {
-                return item.contextMenu().menuItems().contains(menu);
+                menuItems = item.contextMenu().menuItems();
+                return menuItems.contains(menu);
             }
 
             @Override
@@ -100,7 +116,7 @@ public class ProjectExplorerBot extends BotBase {
 
             @Override
             public String getFailureMessage() {
-                return String.format("The menu '%s' of '%s' isn't available", menu, item);
+                return String.format("The menu '%s' of '%s' isn't available (%s)", menu, item, menuItems);
             }
         };
     }
