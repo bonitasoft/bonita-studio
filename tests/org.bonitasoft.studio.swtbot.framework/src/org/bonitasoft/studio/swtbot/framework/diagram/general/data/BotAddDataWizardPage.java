@@ -22,6 +22,6 @@ public class BotAddDataWizardPage extends AbstractBotDataWizardPage {
     public BotAddDataWizardPage(final SWTGefBot bot) {
         super(bot);
         bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
-        bot.shell(Messages.newVariable);
+        bot.shell(Messages.newVariable).activate();
     }
 }
