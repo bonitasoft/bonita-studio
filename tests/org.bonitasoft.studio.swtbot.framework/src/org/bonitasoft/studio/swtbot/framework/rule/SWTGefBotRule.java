@@ -122,7 +122,6 @@ public class SWTGefBotRule implements TestRule {
     protected void closeAllAndReturnToWelcomePage() {
         bot.saveAllEditors();
         bot.closeAllEditors();
-        bot.waitUntil(activeWelcomePage(), 30000);
         FileActionDialog.setDisablePopup(disablePopup);
     }
 

@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.ui.actions.OpenAction;
 import org.eclipse.jdt.ui.actions.OpenEditorActionGroup;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
@@ -55,23 +54,6 @@ public class CustomOpenActionProvider extends CommonActionProvider {
         repositoryAccessor.init();
     }
 
-    @Override
-    public void fillContextMenu(IMenuManager aMenu) {
-        //        if (!contribute) {
-        //            return;
-        //        }
-        //        openFileAction.setContext(getContext());
-        //
-        //        OpenAction customOpenAction = createCustomOpenAction();
-        //
-        //        IAction openAction = openFileAction.getOpenAction();
-        //        if (openAction.isEnabled()) {
-        //            aMenu.insertAfter(IContextMenuConstants.GROUP_OPEN, customOpenAction);
-        //        } else if (UIDArtifactFilters
-        //                .isUIDArtifact(((IStructuredSelection) getContext().getSelection()).getFirstElement())) {
-        //            aMenu.insertAfter(IContextMenuConstants.GROUP_OPEN, customOpenAction);
-        //        }
-    }
 
     @Override
     public void fillActionBars(IActionBars theActionBars) {

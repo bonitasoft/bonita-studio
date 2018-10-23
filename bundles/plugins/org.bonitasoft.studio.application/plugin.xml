@@ -1279,9 +1279,6 @@
                   pattern="org.bonitasoft.studio.application.HideTopLevelProjectIfNested">
             </contentExtension>
             <contentExtension
-                  pattern="org.bonitasoft.studio.rest.api.extension.navigatorContent">
-            </contentExtension>
-            <contentExtension
                   pattern="org.bonitasoft.studio.application.hideEmptyFolders">
             </contentExtension>
             <contentExtension
