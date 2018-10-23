@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.handler;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -26,17 +27,17 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 public class OpenHandler extends AbstractHandler {
 
+    private FileStoreFinder selectionFinder = new FileStoreFinder();
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        ISelection selection = service.getSelection();
+        ISelection selection = selectionFinder.getSelectionInExplorer();
         IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
         IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getFileStore(resource);
@@ -58,12 +59,7 @@ public class OpenHandler extends AbstractHandler {
      */
     @Override
     public boolean isEnabled() {
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        if (service == null) {
-            return false;
-        }
-        ISelection selection = service.getSelection();
-
+        ISelection selection = selectionFinder.getSelectionInExplorer();
         if (selection instanceof IStructuredSelection
                 && ((IStructuredSelection) selection).size() == 1) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();

@@ -16,11 +16,12 @@ package org.bonitasoft.studio.tests.projectExplorer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -33,8 +34,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@SuppressWarnings("unchecked")
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ProjectExplorerOrganizationIT {
+public class ProjectExplorerBdmIT {
 
     private static BOSEngineManager engineManager;
     private static APISession session;
@@ -65,32 +67,26 @@ public class ProjectExplorerOrganizationIT {
     }
 
     @Test
-    public void should_manage_organization_from_explorer() {
+    public void should_manage_bdm_from_explorer() {
+        createBdmIfRequired();
         ProjectExplorerBot projectExplorerBot = new ProjectExplorerBot(bot);
-        projectExplorerBot.newOrganization().cancel();
-        projectExplorerBot.organization().newOrganization().cancel();
-        projectExplorerBot.organization().exportOrganization().cancel();
-        projectExplorerBot.organization().exportOrganization("ACME").cancel();
-        BotManageOrganizationWizard organizationWizard = projectExplorerBot.organization()
-                .openOrganization("ACME");
-        assertThat(bot.button("Add group").isEnabled()).isTrue();
-        organizationWizard.cancel();
-        projectExplorerBot.organization().renameOrganization("ACME", "ACME2");
-        assertThat(repositoryAccessor
-                .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME.organization")).isNull();
-        assertThat(repositoryAccessor
-                .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME2.organization")).isNotNull();
+        projectExplorerBot.bdm().openBdm().cancel();
+        projectExplorerBot.bdm().getBdmTreeItem().doubleClick();
+        new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle)
+                .cancel();
+        projectExplorerBot.bdm().deployBdm();
+        projectExplorerBot.bdm().deleteBdm();
+        assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml"))
+                .isNull();
+    }
 
-        projectExplorerBot.organization().renameOrganization("ACME2", "ACME");
-        assertThat(repositoryAccessor
-                .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME2.organization")).isNull();
-        assertThat(repositoryAccessor
-                .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME.organization")).isNotNull();
-        projectExplorerBot.organization().deployOrganization("ACME", "walter.bates");
+    private void createBdmIfRequired() {
+        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml") == null) {
+            new ProjectExplorerBot(bot).newBdm().addBusinessObject("ProjectExplorerBo1")
+                    .addAttribute("ProjectExplorerBo1", "name", FieldType.STRING.toString()).deploy();
+            assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
+                    .getBusinessObjectByQualifiedName("com.company.model.ProjectExplorerBo1")).isPresent();
+        }
     }
 
 }

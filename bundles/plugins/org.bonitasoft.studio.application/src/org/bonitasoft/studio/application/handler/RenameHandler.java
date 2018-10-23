@@ -23,11 +23,7 @@ import org.eclipse.core.commands.ExecutionException;
 
 public class RenameHandler extends AbstractHandler {
 
-    private FileStoreFinder elementToRenameFinder;
-
-    public RenameHandler() {
-        elementToRenameFinder = new FileStoreFinder();
-    }
+    private FileStoreFinder elementToRenameFinder = new FileStoreFinder();
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
