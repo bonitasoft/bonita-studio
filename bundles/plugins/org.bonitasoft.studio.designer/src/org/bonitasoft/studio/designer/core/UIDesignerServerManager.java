@@ -56,6 +56,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.internal.launching.StandardVMType;
+import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.osgi.framework.Bundle;
@@ -175,13 +176,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     public Optional<File> getLogFile() {
         final File logDir = logLocation().toFile();
-        final List<File> list = Arrays.asList(logDir.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(final File file, final String fileName) {
-                return fileName.contains(UI_DESIGNER_BASE_NAME);
-            }
-        }));
+        final List<File> list = Arrays
+                .asList(logDir.listFiles((FilenameFilter) (file, fileName) -> fileName.contains(UI_DESIGNER_BASE_NAME)));
 
         return list.stream()
                 .sorted((file1, file2) -> file1.lastModified() > file2.lastModified()
@@ -215,7 +211,11 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     protected String javaBinaryLocation() throws FileNotFoundException {
-        File javaBinaryPath = StandardVMType.findJavaExecutable(JavaRuntime.getDefaultVMInstall().getInstallLocation());
+        IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
+        if (defaultVMInstall == null) {
+            throw new FileNotFoundException("Default VM not installed");
+        }
+        File javaBinaryPath = StandardVMType.findJavaExecutable(defaultVMInstall.getInstallLocation());
         if (javaBinaryPath == null) {
             throw new FileNotFoundException("Java binary not configured");
         } else if (!javaBinaryPath.exists()) {
