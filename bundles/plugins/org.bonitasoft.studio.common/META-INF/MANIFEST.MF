@@ -51,7 +51,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.di;bundle-version="1.4.0",
  com.google.guava;bundle-version="11.0.1";visibility:=reexport,
  org.eclipse.emf.edapt.history,
- org.eclipse.m2e.maven.runtime
+ org.eclipse.m2e.maven.runtime,
+ org.eclipse.ui.navigator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.console.common.server.preferences.constants,

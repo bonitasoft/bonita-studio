@@ -32,7 +32,6 @@ import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.status.BusinessDataModelStatusMapper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -42,6 +41,10 @@ import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.jobs.JobGroup;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -67,8 +70,12 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
     private IDiffLogger diffLogger;
 
-    public ManageBusinessDataModelWizard(final BusinessObjectModelFileStore fStore, IDiffLogger diffLogger) {
+    private Runnable deployFinishRunnable;
+
+    public ManageBusinessDataModelWizard(final BusinessObjectModelFileStore fStore, IDiffLogger diffLogger,
+            Runnable deployFinishRunnable) {
         this.fStore = fStore;
+        this.deployFinishRunnable = deployFinishRunnable;
         businessObjectModel = fStore.getContent();
         if (businessObjectModel == null) {
             newBdm = true;
@@ -111,11 +118,8 @@ public class ManageBusinessDataModelWizard extends Wizard {
                         EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
                 confirm = confirmDialog.getReturnCode() == Dialog.OK;
             }
-            if (confirm) {
-                final boolean isValid = validateAndSaveBDM();
-                if (isValid) {
-                    return installBDM();
-                }
+            if (confirm && validateAndSaveBDM()) {
+                return installBDM();
             }
         }
         return false;
@@ -132,7 +136,6 @@ public class ManageBusinessDataModelWizard extends Wizard {
                     } else {
                         monitor.beginTask(Messages.validatingBDM, IProgressMonitor.UNKNOWN);
                         ValidationStatus validate = new BusinessObjectModelValidator().validate(businessObjectModel);
-                        validate.getStatuses().stream().map(Status::getMessage).forEach(System.out::println);
                         if (!validate.getStatuses().isEmpty()) {
                             MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, "", null);
                             for (Status engineStatus : validate.getStatuses()) {
@@ -184,25 +187,56 @@ public class ManageBusinessDataModelWizard extends Wizard {
     }
 
     protected boolean installBDM() {
-        try {
-            getContainer().run(true, false, new IRunnableWithProgress() {
+        JobGroup installBDMJobGroup = new JobGroup("Install BDM", 0, 2);
+        Job generateBDMJarJob = new Job(Messages.generatingJarFromBDMModel) {
 
-                @Override
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    new GenerateBDMOperation(fStore).run(monitor);
-                    new DeployBDMOperation(fStore).run(monitor);
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(fStore);
+                try {
+                    generateBDMOperation.run(monitor);
+                } catch (InvocationTargetException | InterruptedException e) {
+                    return new org.eclipse.core.runtime.Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
+                            e.getMessage(), e);
                 }
-            });
-        } catch (final InvocationTargetException e) {
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.installFailedTitle,
-                    Messages.installFailedMessage,
-                    new DeployBDMStackTraceResolver().reduceHibernateException(e))
-                            .open();
-            return false;
-        } catch (final InterruptedException e) {
-            return false;
-        }
+                return org.eclipse.core.runtime.Status.OK_STATUS;
+            }
+        };
+        Job deployBDMJarJob = new Job(Messages.generatingJarFromBDMModel) {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                return runDeployBDM(monitor);
+            }
+
+        };
+        deployBDMJarJob.addJobChangeListener(new JobChangeAdapter() {
+
+            @Override
+            public void done(IJobChangeEvent event) {
+                Display.getDefault().asyncExec(deployFinishRunnable);
+            }
+
+        });
+        generateBDMJarJob.setJobGroup(installBDMJobGroup);
+        deployBDMJarJob.setJobGroup(installBDMJobGroup);
+        generateBDMJarJob.schedule();
+        deployBDMJarJob.schedule();
         return true;
+    }
+
+    protected IStatus runDeployBDM(IProgressMonitor monitor) {
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fStore);
+        try {
+            deployBDMOperation.run(monitor);
+        } catch (InvocationTargetException e) {
+            return new org.eclipse.core.runtime.Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
+                    Messages.installFailedMessage, new DeployBDMStackTraceResolver().reduceHibernateException(e));
+        } catch (InterruptedException e) {
+            return new org.eclipse.core.runtime.Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
+                    Messages.installFailedMessage, e);
+        }
+        return org.eclipse.core.runtime.Status.OK_STATUS;
     }
 
     protected IDiffLogger getDiffLogger() {

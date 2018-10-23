@@ -32,12 +32,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
  */
-public class ManageBusinessObjectHandler {
+public class ManageBusinessObjectHandler implements Runnable {
 
     private static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
     protected RepositoryAccessor repositoryAccessor;
@@ -49,7 +50,6 @@ public class ManageBusinessObjectHandler {
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL,
                 shell);
         if (dialog.open() == IDialogConstants.OK_ID) {
-            openSuccessDialog(shell);
             return IDialogConstants.OK_ID;
         }
         return IDialogConstants.CANCEL_ID;
@@ -76,7 +76,7 @@ public class ManageBusinessObjectHandler {
     }
 
     protected ManageBusinessDataModelWizard createWizard() {
-        return new ManageBusinessDataModelWizard(getFileStore(), new NullDiffLogger());
+        return new ManageBusinessDataModelWizard(getFileStore(), new NullDiffLogger(), this);
     }
 
     protected BusinessObjectModelFileStore getFileStore() {
@@ -89,6 +89,11 @@ public class ManageBusinessObjectHandler {
                     .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
         }
         return fileStore;
+    }
+
+    @Override
+    public void run() {
+        openSuccessDialog(Display.getDefault().getActiveShell());
     }
 
 }
