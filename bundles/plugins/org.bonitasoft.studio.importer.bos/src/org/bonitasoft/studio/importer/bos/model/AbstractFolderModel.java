@@ -33,6 +33,9 @@ public abstract class AbstractFolderModel extends AbstractImportModel implements
     }
 
     public void addFile(AbstractFileModel file) {
+        if (!file.getValidationStatus().isOK()) {
+            setValidationStatus(file.getValidationStatus());
+        }
         this.files.add(file);
     }
 

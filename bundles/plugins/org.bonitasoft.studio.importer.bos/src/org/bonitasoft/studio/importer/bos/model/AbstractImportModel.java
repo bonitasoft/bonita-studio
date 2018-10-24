@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 public abstract class AbstractImportModel {
 
@@ -13,6 +15,7 @@ public abstract class AbstractImportModel {
     protected Optional<AbstractFolderModel> parent;
     protected String path;
     protected Optional<String> displayName = Optional.empty();
+    private IStatus validationStatus = Status.OK_STATUS;
 
     public AbstractImportModel(String path, AbstractFolderModel parent) {
         requireNonNull(path);
@@ -69,6 +72,14 @@ public abstract class AbstractImportModel {
         }
         return current.map(ImportStoreModel.class::cast)
                 .flatMap(store -> Optional.ofNullable(store.getRepositoryStore()));
+    }
+
+    public IStatus getValidationStatus() {
+        return validationStatus;
+    }
+
+    public void setValidationStatus(IStatus validationStatus) {
+        this.validationStatus = validationStatus;
     }
 
 }

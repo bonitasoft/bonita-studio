@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.importer.bos;
 
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,6 +14,10 @@ public class BosArchiveImporterPlugin extends AbstractUIPlugin {
 
     // The shared instance
     private static BosArchiveImporterPlugin plugin;
+
+    static {
+        FieldDecorationRegistry.getDefault();
+    }
 
     /**
      * The constructor

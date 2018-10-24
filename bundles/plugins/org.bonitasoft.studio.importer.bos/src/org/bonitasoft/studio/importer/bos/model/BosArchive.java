@@ -52,6 +52,7 @@ public class BosArchive {
 
     private boolean openAll = false;
     private final File archiveFile;
+    private DiagramCompatibilityValidator diagramValidator = new DiagramCompatibilityValidator();
 
     public BosArchive(File archiveFile) {
         this.archiveFile = archiveFile;
@@ -102,7 +103,7 @@ public class BosArchive {
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
 
             parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments, resourcesToOpen,
-                    true);
+                    true, archiveModel);
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
@@ -112,13 +113,20 @@ public class BosArchive {
     }
 
     private void parseFolder(AbstractFolderModel store, List<String> segments, List<String> parentSegments,
-            Set<String> resourcesToOpen, boolean directStoreChild) {
+            Set<String> resourcesToOpen, boolean directStoreChild, ImportArchiveModel archiveModel) {
         if (segments.size() == 1
                 && directStoreChild) { // File
             final ImportFileStoreModel file = new ImportFileStoreModel(Joiner.on('/').join(concat(parentSegments, segments)),
                     store);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
+                if (isDiagram(file)) {
+                    IStatus validationStatus = validateDiagram(file);
+                    file.setValidationStatus(validationStatus);
+                    if (validationStatus.getSeverity() == IStatus.ERROR) {
+                        archiveModel.setValidationStatus(validationStatus);
+                    }
+                }
                 store.addFile(file);
             }
         } else if (segments.size() == 1 && !directStoreChild) {
@@ -137,15 +145,28 @@ public class BosArchive {
                     Joiner.on('/').join(folderParentSegments), store);
             parseFolder(store.addFolder(folder), segments.subList(1, segments.size()),
                     Lists.newArrayList(folderParentSegments),
-                    resourcesToOpen, false);
+                    resourcesToOpen, false, archiveModel);
         } else if (segments.size() > 1 && !directStoreChild) {
             final Iterable<String> folderParentSegments = concat(parentSegments, segments.subList(0, 1));
             final ImportFolderModel folder = new ImportFolderModel(
                     Joiner.on('/').join(concat(parentSegments, segments.subList(0, 1))), store);
             parseFolder(store.addFolder(folder), segments.subList(1, segments.size()),
                     Lists.newArrayList(folderParentSegments),
-                    resourcesToOpen, false);
+                    resourcesToOpen, false, archiveModel);
         }
+    }
+
+    public IStatus validateDiagram(ImportFileStoreModel file) {
+        try (ZipFile archive = getZipFile();
+                InputStream is = archive.getInputStream(archive.getEntry(file.getPath()));) {
+            return diagramValidator.validate(is);
+        }catch (IOException e) {
+            return ValidationStatus.error(String.format("Failed to read %s", file.getFileName()));
+        }
+    }
+
+    private boolean isDiagram(ImportFileStoreModel file) {
+        return file.getFileName().endsWith(".proc");
     }
 
     private boolean isLegacySoapXSD(AbstractFolderModel store, ImportFileStoreModel file) {
@@ -282,5 +303,9 @@ public class BosArchive {
 
     public ZipFile getZipFile() throws IOException {
         return new ZipFile(archiveFile);
+    }
+
+    public String getFileName() {
+        return archiveFile.getName();
     }
 }
