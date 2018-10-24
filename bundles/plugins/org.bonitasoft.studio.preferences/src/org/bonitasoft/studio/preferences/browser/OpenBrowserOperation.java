@@ -16,6 +16,7 @@ package org.bonitasoft.studio.preferences.browser;
 
 import java.net.URL;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.preferences.i18n.Messages;
@@ -62,8 +63,9 @@ public class OpenBrowserOperation implements Runnable {
 
     protected boolean browserIsSet() {
         if (noExternalBrowserSet()) {
-            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle,
-                    Messages.noBrowserFoundMsg)) {
+            if (!FileActionDialog.getDisablePopup()
+                    && MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle,
+                            Messages.noBrowserFoundMsg)) {
                 final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
                 dialog.create();
                 dialog.setSelectedPreferencePage(BonitaPreferenceDialog.WEB_BROWSER_PAGE_ID);

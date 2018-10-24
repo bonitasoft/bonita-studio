@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
@@ -59,8 +60,13 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
 
     @Override
     protected JSONObject createBody() throws InvocationTargetException {
-        try (InputStream inputStream = CreateCustomWidgetOperation.class
-                .getResourceAsStream("/CustomWidgetTemplate.json")) {
+
+        try (InputStream inputStream = UIDesignerPlugin.getDefault().getBundle()
+                .getResource("/resources/CustomWidgetTemplate.json")
+                .openStream()) {
+            if (inputStream == null) {
+                throw new IOException("Failed to retrieve CustomWidgetTemplate.json");
+            }
             JSONObject body = new JSONObject(IoUtils.toString(inputStream));
             body.put("name", getNewName());
             return body;
