@@ -443,19 +443,22 @@
                commandId="org.eclipse.ui.file.refresh"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <or>
+                        <iterate>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                        </iterate>
+                     </or>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -478,19 +481,20 @@
                commandId="org.bonitasoft.studio.renameCommand"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
                      <iterate>
                         <test
                               property="org.bonitasoft.studio.application.renamablePropertyTester.isRenamable">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
          <separator
@@ -513,19 +517,20 @@
                label="%deploy"
                style="push">
                <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <test
-                              property="org.bonitasoft.studio.application.deployablePropertyTester.isDeployable">
-                        </test>
-                     </iterate>
-                  </or>
-               </and> 
+                  checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <and>
+                        <count
+                              value="1">
+                        </count>
+                        <iterate>
+                           <test
+                                 property="org.bonitasoft.studio.application.deployablePropertyTester.isDeployable">
+                           </test>
+                        </iterate>
+                     </and>
+                  </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -843,18 +848,19 @@
             class="org.bonitasoft.studio.application.handler.RefreshProjectHandler"
             commandId="org.eclipse.ui.file.refresh">
             <activeWhen>
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
                      <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IResource">
                         </instanceof>
                      </iterate>
-                  </or>
-               </and>
+                  </and>
+               </with>
             </activeWhen>
       </handler>
       <handler

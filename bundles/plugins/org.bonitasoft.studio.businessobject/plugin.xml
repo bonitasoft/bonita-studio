@@ -53,12 +53,14 @@
                label="%defineBDMMenu"
                mnemonic="B"
                style="push">
-            <visibleWhen>
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
                      <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
@@ -70,8 +72,8 @@
                               property="org.bonitasoft.studio.businessobject.bdmExists">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -82,8 +84,11 @@
                commandId="org.bonitasoft.studio.businessobject.openH2Console"
                mnemonic="h"
                style="push">
-            <visibleWhen>
-               <and>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
                   <count
                         value="1">
                   </count>
@@ -93,6 +98,7 @@
                      </test>
                   </iterate>
                </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -155,30 +161,35 @@
             class="org.bonitasoft.studio.businessobject.ui.handler.ImportBusinessDataModelHandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.businessobject.isBDMFolder">
-                  </test>
-               </iterate>
-               <or>
-                  <reference
-                        definitionId="isABonitaProduct">
-                  </reference>
-                  <reference
-                        definitionId="isTeamwork">
-                  </reference>
-               </or>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.businessobject.isBDMFolder">
+                     </test>
+                  </iterate>
+                  <or>
+                     <reference
+                           definitionId="isABonitaProduct">
+                     </reference>
+                     <reference
+                           definitionId="isTeamwork">
+                     </reference>
+                  </or>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.businessobject.ui.handler.ExportBusinessDataModelHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         <with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -189,6 +200,7 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
    </extension>

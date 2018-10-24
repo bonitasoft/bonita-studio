@@ -19,13 +19,14 @@
                label="%newApplicationPage"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -33,8 +34,8 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -42,13 +43,14 @@
                label="%newLayout"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -56,8 +58,8 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -65,13 +67,14 @@
                label="%newCustomWidget"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -79,8 +82,8 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -92,17 +95,20 @@
                label="%newApplicationPage"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
                         value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.designer.isWebPageFolder">
-                     </test>
-                  </iterate>
-               </and>
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.designer.isWebPageFolder">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -110,17 +116,20 @@
                label="%newLayout"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
                         value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.designer.isWebPageFolder">
-                     </test>
-                  </iterate>
-               </and>
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.designer.isWebPageFolder">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -250,16 +259,19 @@
          class="org.bonitasoft.studio.designer.ui.handler.CreateCustomWidgetHandler"
          commandId="org.bonitasoft.studio.application.new">
       <activeWhen>
-         <and>
-            <count
-                  value="1">
-            </count>
-            <iterate>
-               <test
-                     property="org.bonitasoft.studio.designer.isWebWidgetFolder">
-               </test>
-            </iterate>
-         </and>
+         <with
+               variable="activeMenuSelection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.designer.isWebWidgetFolder">
+                  </test>
+               </iterate>
+            </and>
+         </with>
       </activeWhen>
    </handler>
 </extension>

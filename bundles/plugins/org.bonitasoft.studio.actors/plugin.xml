@@ -110,22 +110,25 @@
                mnemonic="O"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <or>
+                        <iterate>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.bonitasoft.studio.application.isBonitaProject">
+                           </test>
+                        </iterate>
+                     </or>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -137,21 +140,25 @@
                label="%newFilterDefMenu"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test></iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <or>
+                        <iterate>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.bonitasoft.studio.application.isBonitaProject">
+                           </test>
+                        </iterate>
+                     </or>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -159,22 +166,25 @@
                label="%newFilterImplMenu"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <or>
+                        <iterate>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.bonitasoft.studio.application.isBonitaProject">
+                           </test>
+                        </iterate>
+                     </or>
+                  </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -378,148 +388,176 @@
             class="org.bonitasoft.studio.actors.ui.handler.ImportOrganizationHandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.organization.isOrganizationFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.organization.isOrganizationFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ExportOrganizationHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <or>
-                     <test
-                           property="org.bonitasoft.studio.organization.isOrganizationFolder">
-                     </test>
-                     <test
-                           property="org.bonitasoft.studio.organization.isOrganizationFile">
-                     </test></or>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <or>
+                        <test
+                              property="org.bonitasoft.studio.organization.isOrganizationFolder">
+                        </test>
+                        <test
+                              property="org.bonitasoft.studio.organization.isOrganizationFile">
+                        </test>
+                     </or>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ManageOrganizationHandler"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.organization.isOrganizationFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.organization.isOrganizationFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.NewFilterDefinitionHandler"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterDefFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterDefFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.NewFilterImplementationHandler"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ImportActorFilterHandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ExportActorFilterHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ExportSingleActorFilterHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterImplFile">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterImplFile">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.actors.ui.handler.ExportActorFilterFromDefinitionHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.actors.isActorFilterDefFile">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.actors.isActorFilterDefFile">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
    </extension>

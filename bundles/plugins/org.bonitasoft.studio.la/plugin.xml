@@ -66,26 +66,26 @@
                mnemonic="A"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                    <instanceof
+	                          value="org.eclipse.core.resources.IProject">
+	                    </instanceof>
+	                    <test
+	                          property="org.bonitasoft.studio.application.isBonitaProject">
+	                    </test>
+	                 </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
-      
    </extension>
    <extension
          point="org.eclipse.wst.xml.core.catalogContributions">
@@ -141,6 +141,8 @@
             class="org.bonitasoft.studio.la.application.handler.ImportApplicationhandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
+         	<with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -151,12 +153,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.la.application.handler.ExportApplicationHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         	<with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -167,12 +172,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.la.application.handler.ExportSingleApplicationHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         	<with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -183,12 +191,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.la.application.handler.NewApplicationHandler"
             commandId="org.bonitasoft.studio.application.new">
          <activeWhen>
+         	<with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -199,6 +210,7 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
    </extension>
