@@ -19,6 +19,7 @@ package org.bonitasoft.studio.application.actions;
 
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.application.actions.coolbar.SmallCoolBarHandler;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
@@ -42,6 +43,7 @@ public class ResetPerspectiveCommand extends AbstractHandler implements IHandler
 		}else if(store.getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE).equals(BonitaCoolBarPreferenceConstant.NORMAL)){
 			new NormalCoolBarHandler().execute(null) ;
 		}
+        PlatformUtil.openIntroIfNoOtherEditorOpen();
 		return null;
 	}
 
