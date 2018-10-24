@@ -42,14 +42,15 @@
                icon="icons/import.png"
                label="%import"
                style="push">
-               <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -57,8 +58,8 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>

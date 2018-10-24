@@ -139,24 +139,32 @@
            <dynamic
                  class="org.bonitasoft.studio.engine.ui.contributionItem.BuildProcessContributionItem"
                  id="org.bonitasoft.studio.engine.buildContributionItem">
-              <visibleWhen>
-                 <reference
-                       definitionId="isABonitaProduct">
-                 </reference>
-              </visibleWhen>
+              <visibleWhen
+                  checkEnabled="false">
+	               <with
+	                     variable="activeMenuSelection">
+	                  <reference
+	                       definitionId="isABonitaProduct">
+	                 </reference>
+	               </with>
+	            </visibleWhen>
            </dynamic>
-           <visibleWhen>
-              <and>
-                 <count
-                       value="1">
-                 </count>
-                 <iterate>
-                    <test
-                          property="org.bonitasoft.studio.diagram.isDiagramFile">
-                    </test>
-                 </iterate>
-              </and>
-           </visibleWhen>
+           <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                 <count
+	                       value="1">
+	                 </count>
+	                 <iterate>
+	                    <test
+	                          property="org.bonitasoft.studio.diagram.isDiagramFile">
+	                    </test>
+	                 </iterate>
+	              </and>
+               </with>
+            </visibleWhen>
         </menu>
      </menuContribution>
   </extension>
