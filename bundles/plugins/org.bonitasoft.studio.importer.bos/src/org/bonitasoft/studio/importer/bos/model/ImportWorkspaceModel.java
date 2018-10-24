@@ -49,11 +49,10 @@ public class ImportWorkspaceModel {
         return status;
     }
 
-    public String buildReport(boolean onlyDefault) {
+    public String buildReport() {
         if (status.isOK()) {
             final StringBuilder sb = new StringBuilder();
             repositories.stream()
-                    .filter(repo -> onlyDefault ? "default".equals(repo.getName()) : true)
                     .map(ImportRepositoryModel::getStatus)
                     .forEach(repoStatus -> {
                         if (repoStatus.isMultiStatus()) {

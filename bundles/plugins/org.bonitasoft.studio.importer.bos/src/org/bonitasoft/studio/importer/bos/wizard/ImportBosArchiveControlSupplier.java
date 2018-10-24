@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
@@ -51,6 +50,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
@@ -96,6 +96,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     protected ConflictStatus archiveStatus;
     private IObservableValue archiveStatusObservable;
     protected final ExceptionDialogHandler exceptionDialogHandler;
+    private DataBindingContext ctx;
 
     public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
             ExceptionDialogHandler exceptionDialogHandler) {
@@ -110,6 +111,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
         this.wizardContainer = container;
+        this.ctx = ctx;
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 25).create());
@@ -193,6 +195,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         layout.addColumnData(new ColumnWeightData(6, true));
         layout.addColumnData(new ColumnWeightData(2, true));
         viewer.getTree().setLayout(layout);
+        ColumnViewerToolTipSupport.enableFor(viewer);
 
         final TreeViewerColumn archiveColumn = new TreeViewerColumn(viewer, SWT.NONE);
         archiveColumn.getColumn().setText(Messages.archiveColumn);
@@ -267,6 +270,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private void updateFilePath(String filePath) {
         textWidget.setText(filePath);
+        if (archiveModel != null) {
+            IObservableValue validationStatus = textWidget.getValueBinding().getValidationStatus();
+            validationStatus.setValue(archiveModel.getValidationStatus());
+        }
         textWidget.getParent().getParent().layout();
         if (new File(filePath).exists()) {
             savePath(filePath);
@@ -289,27 +296,11 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             final File myFile = new File(filePath);
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
-                textWidget
-                        .setMessage(archiveStatusMessages(myFile.getName()));
                 importActionSelector.setArchiveModel(archiveModel);
                 viewer.setInput(archiveModel);
                 openTree();
             }
         });
-    }
-
-    private String archiveStatusMessages(String fileName) {
-        StringBuilder message = new StringBuilder(String.format("%s %s (%s)",
-                Messages.bosArchiveName,
-                fileName,
-                archiveModel.getBosArchive().getVersion()));
-        if (ProductVersion.isBefore780Version(archiveModel.getBosArchive().getVersion())) {
-            message.append(System.lineSeparator());
-            message.append(String.format("\uD83D\uDEC8 %s", Messages.gwtFormsNotSupported));
-            message.append(System.lineSeparator());
-            message.append(Messages.formsRemovedFromStudio);
-        }
-        return message.toString();
     }
 
     protected ImportArchiveModel parseArchive(String path) {

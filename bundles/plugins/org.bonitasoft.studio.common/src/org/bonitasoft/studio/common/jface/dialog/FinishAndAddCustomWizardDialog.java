@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog {
@@ -71,7 +72,7 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
         if (buttonId == CREATE_AND_NEW_ID) {
             if (getWizard().performFinish()) {
                 close();
-                actionOnFinishAndAdd();
+                Display.getDefault().asyncExec(() -> actionOnFinishAndAdd());
             }
         }
     }

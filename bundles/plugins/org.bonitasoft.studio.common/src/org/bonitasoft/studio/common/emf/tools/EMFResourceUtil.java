@@ -29,19 +29,15 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 
 
-/**
- * @author Romain Bioteau
- *
- */
 public class EMFResourceUtil {
 
+    private static final String UTF_8 = "UTF-8";
     private File eResourceFile;
 
     public EMFResourceUtil(File eResourceFile){
         Assert.isNotNull(eResourceFile);
         Assert.isLegal(eResourceFile.exists());
         this.eResourceFile = eResourceFile;
-
     }
 
     /**
@@ -50,26 +46,26 @@ public class EMFResourceUtil {
      * @param featureNames
      * @return return string values of featureNames for EObject with id xmiId 
      */
-    public String[] getFeatureValuesFromEObjectId(String xmiId, String... featureNames) throws FeatureNotFoundException{
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(eResourceFile, "UTF-8");
-            List<String> values = new ArrayList<String>();
+    public String[] getFeatureValuesFromEObjectId(String xmiId, String xmiType, String[] featureNames)
+            throws FeatureNotFoundException {
+        try (Scanner scanner = new Scanner(eResourceFile, UTF_8)) {
+            List<String> values = new ArrayList<>();
             while(scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if(line.contains(toXMIIdPattern(xmiId))){
                     for(String featureName : featureNames){
-                        values.add(getFeatureValue(line, featureName));
+                        try {
+                            values.add(getFeatureValue(line, xmiType, featureName));
+                        } catch (FeatureNotFoundException e) {
+                            //ignore
+                        }
+
                     }
                     return values.toArray(new String[values.size()]);
                 }
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        } finally{
-            if(scanner != null){
-                scanner.close();
-            }
         }
         return null;
     }
@@ -80,8 +76,9 @@ public class EMFResourceUtil {
      * @param featureName
      * @return return string value of featureName for EObject with id xmiId 
      */
-    public String getFeatureValueFromEObjectId(String xmiId, String featureName) throws FeatureNotFoundException{
-        String[] values = getFeatureValuesFromEObjectId(xmiId, featureName);
+    public String getFeatureValueFromEObjectId(String xmiId, String xmiType, String featureName)
+            throws FeatureNotFoundException {
+        String[] values = getFeatureValuesFromEObjectId(xmiId, xmiType, new String[] { featureName });
         if(values != null && values.length == 1){
             return values[0];
         }
@@ -89,10 +86,8 @@ public class EMFResourceUtil {
     }
 
     public String[] getFeatureValuesFromEObjectId(String xmiId, EStructuralFeature... features) {
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(eResourceFile, "UTF-8");
-            List<String> values = new ArrayList<String>();
+        try (Scanner scanner = new Scanner(eResourceFile, UTF_8)) {
+            List<String> values = new ArrayList<>();
             String xmiIdPattern = toXMIIdPattern(xmiId);
             while(scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -105,10 +100,6 @@ public class EMFResourceUtil {
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        } finally{
-            if(scanner != null){
-                scanner.close();
-            }
         }
         return null;
     }
@@ -134,7 +125,7 @@ public class EMFResourceUtil {
         Scanner scanner = null;
         Map<String, String[]> featureValuesByObjectId = new HashMap<String, String[]>();
         try {
-            scanner = new Scanner(eResourceFile, "UTF-8");
+            scanner = new Scanner(eResourceFile, UTF_8);
             String xmiTypePattern = toXMITypePattern(xmiType);
             String xsiTypePattern = toXSITypePattern(xmiType);
             String tagTypePattern = toTagTypePattern(xmiType);
@@ -147,7 +138,7 @@ public class EMFResourceUtil {
                     }
                     String id;
                     try {
-                        id = getFeatureValue(line, "xmi:id");
+                        id = getFeatureValue(line, xmiType, "xmi:id");
                     } catch (FeatureNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -165,23 +156,22 @@ public class EMFResourceUtil {
 
     }
 
-    /**
-     * @param xmiType
-     * @return
-     */
     private String toTagTypePattern(String xmiType) {
         return "<"+xmiType;
     }
 
-    private String getFeatureValue(String line, String featureName) throws FeatureNotFoundException {
+    private String getFeatureValue(String line, String xmiType, String featureName) throws FeatureNotFoundException {
         String featurePattern = toFeaturePattern(featureName);
+        int start = line.indexOf(xmiType);
+        if (start != -1) {
+            line = line.substring(start + xmiType.length());
+        }
         int indexOf = line.indexOf(featurePattern);
         if(indexOf == -1){//Retrieve default value
             throw new FeatureNotFoundException(featureName, null, eResourceFile.getName(),0,0);
         }
         int nextIndex = indexOf+featurePattern.length();
-        String value = line.substring(nextIndex+1, line.indexOf('"', nextIndex+1));
-        return value;
+        return line.substring(nextIndex + 1, line.indexOf('"', nextIndex + 1));
 
     }
 
@@ -197,8 +187,7 @@ public class EMFResourceUtil {
             }
         }else{
             int nextIndex = indexOf+featurePattern.length();
-            String value = line.substring(nextIndex+1, line.indexOf('"', nextIndex+1));
-            return value;
+            return line.substring(nextIndex + 1, line.indexOf('"', nextIndex + 1));
         }
     }
 
@@ -206,15 +195,15 @@ public class EMFResourceUtil {
     public String[] getEObectIfFromEObjectType(String xmiType) throws FeatureNotFoundException {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(eResourceFile, "UTF-8");
-            List<String> values = new ArrayList<String>();
+            scanner = new Scanner(eResourceFile, UTF_8);
+            List<String> values = new ArrayList<>();
             String xmiTypePattern = toXMITypePattern(xmiType);
             String xsiTypePattern = toXSITypePattern(xmiType);
             String tagTypePattern = toTagTypePattern(xmiType);
             while(scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if(line.contains(xmiTypePattern) || line.contains(xsiTypePattern) || line.contains(tagTypePattern)){
-                    values.add(getFeatureValue(line, "xmi:id"));
+                    values.add(getFeatureValue(line, xmiType, "xmi:id"));
                 }
             }
             return values.toArray(new String[values.size()]);

@@ -5,13 +5,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
 public class ImportArchiveModel {
 
     private final List<ImportStoreModel> stores = new ArrayList<>();
     private final BosArchive bosArchive;
+    private IStatus validationStatus = Status.OK_STATUS;
+    private IStatus validationStatus2;
 
     public ImportArchiveModel(BosArchive bosArchive) {
         this.bosArchive = bosArchive;
+        this.validationStatus = createDefaultStatus(bosArchive);
+    }
+
+    private IStatus createDefaultStatus(BosArchive bosArchive) {
+        StringBuilder message = new StringBuilder(String.format("%s %s (%s)",
+                Messages.bosArchiveName,
+                bosArchive.getFileName(),
+                bosArchive.getVersion()));
+        return ValidationStatus.info(message.toString());
     }
 
     public ImportStoreModel addStore(ImportStoreModel store) {
@@ -59,6 +75,14 @@ public class ImportArchiveModel {
      */
     public void resetStatus() {
         stores.stream().forEach(ImportStoreModel::resetStatus);
+    }
+
+    public IStatus getValidationStatus() {
+        return validationStatus;
+    }
+
+    public void setValidationStatus(IStatus validationStatus) {
+        this.validationStatus = validationStatus;
     }
 
 }

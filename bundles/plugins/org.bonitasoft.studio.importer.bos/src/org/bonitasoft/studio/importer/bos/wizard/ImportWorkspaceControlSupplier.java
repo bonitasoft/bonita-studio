@@ -167,7 +167,6 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
             return status;
         }
         if (workspaceModel.getRepositories()
-                .filter(repo -> onlyDefault() ? "default".equals(repo.getName()) : true)
                 .map(ImportRepositoryModel::getStatus)
                 .anyMatch(IStatus::isOK)) {
             return ValidationStatus.ok();
@@ -202,12 +201,8 @@ public class ImportWorkspaceControlSupplier implements ControlSupplier {
     private Control createStatusControl(Section parent) {
         final Label statusReport = new Label(parent, SWT.NONE);
         statusReport.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        statusReport.setText(workspaceModel.buildReport(onlyDefault()));
+        statusReport.setText(workspaceModel.buildReport());
         return statusReport;
-    }
-
-    protected boolean onlyDefault() {
-        return true;
     }
 
     protected ImportWorkspaceModel parseFolder(String folderPath) {
