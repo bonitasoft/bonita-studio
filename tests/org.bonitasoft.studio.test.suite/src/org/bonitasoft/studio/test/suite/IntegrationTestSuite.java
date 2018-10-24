@@ -44,6 +44,7 @@ import org.bonitasoft.studio.tests.connectors.TestTestConnectorOperation;
 import org.bonitasoft.studio.tests.connectors.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
+import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
 import org.bonitasoft.studio.tests.engine.TestJavaDoc;
@@ -143,7 +144,8 @@ import org.junit.runners.Suite;
         ExportBarIT.class,
         UIDesignerWorkspaceIntegrationIT.class,
         CloseAllEditors.class,
-        TestMessageRefactoring.class
+        TestMessageRefactoring.class,
+        UIDArtifactCreationIT.class
 })
 public class IntegrationTestSuite {
 
