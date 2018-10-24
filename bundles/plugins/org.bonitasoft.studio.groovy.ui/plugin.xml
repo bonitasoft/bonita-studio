@@ -38,22 +38,23 @@
                commandId="org.bonitasoft.studio.groovy.ui.newScript"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                    <instanceof
+	                          value="org.eclipse.core.resources.IProject">
+	                    </instanceof>
+	                    <test
+	                          property="org.bonitasoft.studio.application.isBonitaProject">
+	                    </test>
+	                 </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -101,16 +102,19 @@
             class="org.bonitasoft.studio.groovy.ui.handler.NewGroovyScript"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.groovy.ui.isGroovySrcFolder">
-                  </test>
-                </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.groovy.ui.isGroovySrcFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
           </activeWhen>
       </handler>
    </extension>

@@ -363,13 +363,14 @@
                mnemonic="D"
                id="org.bonitasoft.studio.diagram.command.newDiagram.popup.menu">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -377,8 +378,8 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-                  </or>
-               </and>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -393,17 +394,21 @@
                   class="org.bonitasoft.studio.diagram.custom.contributionItem.RunProcessContributionItem"
                   id="org.bonitasoft.studio.diagram.custom.runContributionItem">
             </dynamic>
-            <visibleWhen>
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.diagram.isDiagramFile">
-                     </test>
-                  </iterate>
-               </and>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </menu>
       </menuContribution>
@@ -414,17 +419,21 @@
                commandId="org.bonitasoft.studio.application.printCommand"
                icon="icons/menuIcons/print.png"
                style="push">
-            <visibleWhen>
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.diagram.isSelectedDiagramActive">
-                           </test>
-                  </iterate>
-               </and>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.diagram.isSelectedDiagramActive">
+	                           </test>
+	                  </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -434,17 +443,21 @@
          <command
                commandId="org.bonitasoft.studio.diagram.custom.command.duplicate"
                style="push">
-            <visibleWhen>
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.diagram.isDiagramFile">
-                     </test>
-                  </iterate>
-               </and>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -574,32 +587,38 @@
             commandId="org.bonitasoft.studio.application.new"
             class="org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.diagram.isDiagramFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             commandId="org.bonitasoft.studio.application.export"
             class="org.bonitasoft.studio.diagram.custom.commands.ExportDiagramHandler">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.diagram.isDiagramFile">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
    </extension>

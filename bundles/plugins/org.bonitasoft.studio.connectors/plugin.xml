@@ -195,22 +195,23 @@
                label="%newConnectorDefMenu"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                    <instanceof
+	                          value="org.eclipse.core.resources.IProject">
+	                    </instanceof>
+	                    <test
+	                          property="org.bonitasoft.studio.application.isBonitaProject">
+	                    </test>
+	                 </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
          <command
@@ -218,22 +219,23 @@
                label="%newConnectorImplementationMenu"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+	                    <instanceof
+	                          value="org.eclipse.core.resources.IProject">
+	                    </instanceof>
+	                    <test
+	                          property="org.bonitasoft.studio.application.isBonitaProject">
+	                    </test>
+	                 </iterate>
+	               </and>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -307,38 +309,46 @@
             class="org.bonitasoft.studio.connectors.handler.NewConnectorDefinitionHandler"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.connectors.isConnectorDefFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.connectors.isConnectorDefFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.NewConnectorImplementationHandler"
             commandId="org.bonitasoft.studio.application.newWithWizard">
          <activeWhen>
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate>
-                  <test
-                        property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
-                  </test>
-               </iterate>
-            </and>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.ImportConnectorHandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
+         <with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -349,12 +359,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.ExportConnectorHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         <with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -365,12 +378,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.ExportSingleConnectorHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         <with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -381,12 +397,15 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.ExportConnectorFromDefinitionHandler"
             commandId="org.bonitasoft.studio.application.export">
          <activeWhen>
+         <with
+                  variable="activeMenuSelection">
             <and>
                <count
                      value="1">
@@ -397,6 +416,7 @@
                   </test>
                </iterate>
             </and>
+            </with>
          </activeWhen>
       </handler>
    </extension>
