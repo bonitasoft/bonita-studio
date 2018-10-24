@@ -25,7 +25,7 @@ public class LegacyStoreModel extends ImportStoreModel {
      */
     @Override
     public Image getImage() {
-        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);//Pics.getImageDescriptor(imageName, plugin); //BosArchiveImporterPlugin.getImage("icons/problem.gif");
+        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
     }
 
     /*

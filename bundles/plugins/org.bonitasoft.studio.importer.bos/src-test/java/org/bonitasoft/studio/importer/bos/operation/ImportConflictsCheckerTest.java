@@ -40,9 +40,9 @@ import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.junit.Test;
 
 public class ImportConflictsCheckerTest {
@@ -167,7 +167,7 @@ public class ImportConflictsCheckerTest {
         doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
-
+        doReturn(Status.OK_STATUS).when(bosArchive).validateDiagram(any());
         return bosArchive;
     }
 

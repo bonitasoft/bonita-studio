@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.importer.bos.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -117,7 +119,7 @@ public class BosArchiveTest {
         doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
-
+        doReturn(Status.OK_STATUS).when(bosArchive).validateDiagram(any());
         return bosArchive;
     }
 

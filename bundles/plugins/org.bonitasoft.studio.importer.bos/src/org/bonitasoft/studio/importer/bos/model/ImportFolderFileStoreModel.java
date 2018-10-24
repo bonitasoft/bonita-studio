@@ -17,19 +17,12 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
         super(folderPath, parent);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.bos.model.IPresentable#getImage()
-     */
     @Override
     public Image getImage() {
         return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.bos.model.ImportableUnit#doImport(java.util.zip.ZipFile, org.eclipse.core.runtime.IProgressMonitor)
-     */
+
     @Override
     public IRepositoryFileStore doImport(ZipFile archive, IProgressMonitor monitor) {
         return getParentRepositoryStore()

@@ -21,7 +21,6 @@ import java.io.File;
 
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,10 +52,14 @@ public class EMFResourceUtilTest {
 
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValue_ForSingleFeatureName() throws Exception {
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "name")).containsExactly("Poolū");
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_8mseQKXvEeOHX5ykhwuMLg", "name")).containsExactly("Pool1");
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5yAwIKXvEeOHX5ykhwuMLg", "name")).containsExactly("Start1");
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5CIyaqXvEeOHX5ykhwuMLg", "measurementUnit"))
+        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "process:Pool",
+                new String[] { "name" })).containsExactly("Poolū");
+        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_8mseQKXvEeOHX5ykhwuMLg", "process:Pool",
+                new String[] { "name" })).containsExactly("Pool1");
+        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5yAwIKXvEeOHX5ykhwuMLg", "process:Pool",
+                new String[] { "name" })).containsExactly("Start1");
+        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5CIyaqXvEeOHX5ykhwuMLg", "notation:Diagram",
+                new String[] { "measurementUnit" }))
                 .containsExactly("Pixel");
     }
 
@@ -76,7 +79,8 @@ public class EMFResourceUtilTest {
 
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValues_ForMultipleFeatureNames() throws Exception {
-        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "name", "basedOnLookAndFeel"))
+        assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "process:Pool",
+                new String[] { "name", "basedOnLookAndFeel" }))
                 .containsExactly("Poolū", "Default Application");
     }
 
@@ -85,11 +89,6 @@ public class EMFResourceUtilTest {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg",
                 ProcessPackage.Literals.ELEMENT__NAME, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION))
                         .containsExactly("Poolū", "1.0");
-    }
-
-    @Test(expected = FeatureNotFoundException.class)
-    public void shouldGetFeatureValuesFromEObjectId_ThrowsFeatureNotFoundException() throws Exception {
-        eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "name", "version");
     }
 
     @Test
