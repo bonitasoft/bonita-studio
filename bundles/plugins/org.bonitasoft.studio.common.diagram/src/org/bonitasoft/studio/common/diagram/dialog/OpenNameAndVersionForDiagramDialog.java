@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -42,10 +43,11 @@ import org.eclipse.swt.widgets.Text;
 
 public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog {
 
-    private final List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
+    private final List<ProcessesNameVersion> pools = new ArrayList<>();
     private DataBindingContext dbc;
 
-    public OpenNameAndVersionForDiagramDialog(final Shell parentShell, final MainProcess diagram, final IRepositoryStore<?> diagramStore) {
+    public OpenNameAndVersionForDiagramDialog(final Shell parentShell, final MainProcess diagram,
+            final IRepositoryStore<?> diagramStore) {
         super(parentShell, diagram, diagramStore);
         for (final AbstractProcess pool : ModelHelper.getAllProcesses(diagram)) {
             pools.add(new ProcessesNameVersion(pool));
@@ -92,6 +94,8 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         poolNameLabel.setText(Messages.name);
         final Text poolNameText = new Text(pnvCompo, SWT.BORDER);
         poolNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
+        poolNameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.common.diagram.dialog.poolName.text");
 
         final ISWTObservableValue observePoolNameText = SWTObservables.observeText(poolNameText, SWT.Modify);
         ControlDecorationSupport.create(dbc.bindValue(observePoolNameText,
@@ -111,11 +115,13 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                 null), SWT.LEFT);
 
         if (isForceNameUpdate()) {
-            final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(pnv.getAbstractProcess(), observePoolNameText, observePoolVersionText);
+            final MustUpdateValidator mustUpdateValidator = new MustUpdateValidator(pnv.getAbstractProcess(),
+                    observePoolNameText, observePoolVersionText);
             dbc.addValidationStatusProvider(mustUpdateValidator);
             ControlDecorationSupport.create(mustUpdateValidator, SWT.LEFT);
         }
-        final MultiValidator processesNameVersionUnicityValidator = new ProcessesNameVersionUnicityValidator(pnv.getAbstractProcess(), observePoolNameText,
+        final MultiValidator processesNameVersionUnicityValidator = new ProcessesNameVersionUnicityValidator(
+                pnv.getAbstractProcess(), observePoolNameText,
                 observePoolVersionText, existingProcessIdentifiers(), pools);
         dbc.addValidationStatusProvider(processesNameVersionUnicityValidator);
         ControlDecorationSupport.create(processesNameVersionUnicityValidator, SWT.LEFT);

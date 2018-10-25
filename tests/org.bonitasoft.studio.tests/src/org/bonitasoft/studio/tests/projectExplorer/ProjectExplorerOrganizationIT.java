@@ -16,19 +16,15 @@ package org.bonitasoft.studio.tests.projectExplorer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,32 +32,17 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ProjectExplorerOrganizationIT {
 
-    private static BOSEngineManager engineManager;
-    private static APISession session;
-
     private SWTGefBot bot = new SWTGefBot();
     private RepositoryAccessor repositoryAccessor;
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
-    @BeforeClass
-    public static void init() throws Exception {
-        engineManager = BOSEngineManager.getInstance();
-        session = engineManager.loginDefaultTenant(new NullProgressMonitor());
-    }
-
-    @AfterClass
-    public static void resetPreference() {
-        if (session != null) {
-            engineManager.logoutDefaultTenant(session);
-        }
-    }
-
     @Before
-    public void initRepository() throws Exception {
+    public void init() throws Exception {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        BOSEngineManager.getInstance().start();
     }
 
     @Test

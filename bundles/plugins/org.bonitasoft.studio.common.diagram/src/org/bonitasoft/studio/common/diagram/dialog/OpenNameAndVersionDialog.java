@@ -26,8 +26,6 @@ import static org.bonitasoft.studio.common.jface.databinding.validator.Validator
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.reservedRESTAPIKeywordsValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +33,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -97,15 +96,10 @@ public class OpenNameAndVersionDialog extends Dialog {
     }
 
     protected Set<String> listExistingFileNames(final IRepositoryStore<?> diagramStore) {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         if (diagramStore.getResource() != null) {
-            final String[] files = diagramStore.getResource().getLocation().toFile().list(new FilenameFilter() {
-
-                @Override
-                public boolean accept(final File arg0, final String arg1) {
-                    return arg1.endsWith(".proc");
-                }
-            });
+            final String[] files = diagramStore.getResource().getLocation().toFile()
+                    .list((arg0, arg1) -> arg1.endsWith(".proc"));
             for (final String f : files) {
                 result.add(f);
             }
@@ -115,7 +109,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 
     protected Set<Identifier> computeProcessIdentifiers(
             final IRepositoryStore<? extends IRepositoryFileStore> diagramStore) {
-        final Set<Identifier> result = new HashSet<Identifier>();
+        final Set<Identifier> result = new HashSet<>();
         for (final IRepositoryFileStore irepStore : diagramStore.getChildren()) {
             try {
                 result.addAll(newHashSet(
@@ -128,14 +122,7 @@ public class OpenNameAndVersionDialog extends Dialog {
     }
 
     private Function<AbstractProcess, Identifier> toIdentifier() {
-        return new Function<AbstractProcess, Identifier>() {
-
-            @Override
-            public Identifier apply(final AbstractProcess input) {
-                return new Identifier(input.getName(), input.getVersion());
-            }
-
-        };
+        return input -> new Identifier(input.getName(), input.getVersion());
     }
 
     protected List<Identifier> existingProcessIdentifiers() {
@@ -176,6 +163,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
         final Text nameText = new Text(res, SWT.BORDER);
+        nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.common.diagram.dialog.name.text");
         nameText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(10, 0).create());
         final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
