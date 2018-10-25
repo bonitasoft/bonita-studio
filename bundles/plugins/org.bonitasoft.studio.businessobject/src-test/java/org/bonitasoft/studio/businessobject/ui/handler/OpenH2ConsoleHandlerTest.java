@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
@@ -65,6 +66,9 @@ public class OpenH2ConsoleHandlerTest {
     @Mock
     private ILaunchConfigurationWorkingCopy workingCopy;
 
+    @Mock
+    private ILaunch launch;
+
     @Before
     public void setUp() throws Exception {
         doReturn("/test/h2_db").when(openH2ConsoleHandler).pathToDBFolder(repositoryAccessor);
@@ -74,6 +78,7 @@ public class OpenH2ConsoleHandlerTest {
         when(launchManager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE))
                 .thenReturn(lanchConfigurationType);
         when(lanchConfigurationType.newInstance(any(IContainer.class), notNull(String.class))).thenReturn(workingCopy);
+        when(workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR)).thenReturn(launch);
     }
 
     @Test
