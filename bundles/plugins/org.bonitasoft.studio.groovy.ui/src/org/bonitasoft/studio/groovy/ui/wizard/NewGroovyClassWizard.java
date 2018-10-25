@@ -16,6 +16,7 @@ package org.bonitasoft.studio.groovy.ui.wizard;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.Messages;
 import org.codehaus.groovy.eclipse.ui.decorators.GroovyPluginImages;
 import org.codehaus.groovy.eclipse.wizards.NewClassWizardPage;
 import org.eclipse.core.resources.IFile;
@@ -37,7 +38,7 @@ public class NewGroovyClassWizard extends NewElementWizard {
 
     public NewGroovyClassWizard() {
         super();
-        setWindowTitle("Create a new Groovy class.");
+        setWindowTitle(Messages.createNewGroovyClass);
         setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
         setDefaultPageImageDescriptor(GroovyPluginImages.DESC_NEW_GROOVY_ELEMENT);
     }

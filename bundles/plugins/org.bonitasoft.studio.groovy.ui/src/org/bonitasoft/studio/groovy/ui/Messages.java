@@ -70,6 +70,8 @@ public final class Messages extends NLS {
 
     public static String onlyReadOnly;
 
+    public static String createNewGroovyClass;
+
     private Messages() {
         // Do not instantiate
     }
