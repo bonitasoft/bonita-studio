@@ -18,16 +18,12 @@ import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.la.application.core.ImportApplicationAction;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
-import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.control.ImportApplicationPage;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -62,23 +58,7 @@ public class ImportApplicationhandler extends AbstractHandler {
     private Optional<ApplicationFileStore> finish(ImportApplicationPage importApplicationPage,
             RepositoryAccessor repositoryAccessor) {
         final File file = new File(importApplicationPage.getFilePath());
-        final ApplicationRepositoryStore repositoryStore = repositoryAccessor
-                .getRepositoryStore(ApplicationRepositoryStore.class);
-        if (repositoryStore.getChildren().stream()
-                .anyMatch(applicationFileStore -> Objects.equals(applicationFileStore.getName(), file.getName()))) {
-            if (FileActionDialog.overwriteQuestion(file.getName())) {
-                repositoryStore.getChild(file.getName()).delete();
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        try (FileInputStream fis = new FileInputStream(file)) {
-            final ApplicationFileStore applicationFileStore = repositoryStore.importInputStream(file.getName(), fis);
-            return Optional.ofNullable(applicationFileStore);
-        } catch (final IOException e) {
-            throw new RuntimeException("Failed to import the application descriptor", e);
-        }
+        return new ImportApplicationAction().importApplication(repositoryAccessor, file);
     }
 
     @Override

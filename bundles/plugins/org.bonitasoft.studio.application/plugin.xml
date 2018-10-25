@@ -481,20 +481,7 @@
                commandId="org.bonitasoft.studio.renameCommand"
                style="push">
             <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <test
-                              property="org.bonitasoft.studio.application.renamablePropertyTester.isRenamable">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
+                  checkEnabled="true">
             </visibleWhen>
          </command>
          <separator
@@ -517,20 +504,7 @@
                label="%deploy"
                style="push">
                <visibleWhen
-                  checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-                     <and>
-                        <count
-                              value="1">
-                        </count>
-                        <iterate>
-                           <test
-                                 property="org.bonitasoft.studio.application.deployablePropertyTester.isDeployable">
-                           </test>
-                        </iterate>
-                     </and>
-                  </with>
+                  checkEnabled="true">
             </visibleWhen>
          </command>
       </menuContribution>
@@ -1390,20 +1364,6 @@
             namespace="org.bonitasoft.studio.application"
             properties="isBonitaProject"
             type="org.eclipse.core.resources.IResource">
-      </propertyTester>
-      <propertyTester
-            class="org.bonitasoft.studio.application.property.tester.DeployableResourcePropertyTester"
-            id="org.bonitasoft.studio.application.deployablePropertyTester"
-            namespace="org.bonitasoft.studio.application.deployablePropertyTester"
-            properties="isDeployable"
-            type="org.eclipse.core.runtime.IAdaptable">
-      </propertyTester>
-      <propertyTester
-            class="org.bonitasoft.studio.application.property.tester.RenamableResourcePropertyTester"
-            id="org.bonitasoft.studio.application.renamablePropertyTester"
-            namespace="org.bonitasoft.studio.application.renamablePropertyTester"
-            properties="isRenamable"
-            type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
       <propertyTester
             class="org.bonitasoft.studio.application.property.tester.GroovySrcPropertyTester"

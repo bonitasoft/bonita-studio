@@ -14,23 +14,42 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 public class RenameHandler extends AbstractHandler {
 
-    private FileStoreFinder elementToRenameFinder = new FileStoreFinder();
+    private FileStoreFinder selectionFinder = new FileStoreFinder();
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Repository repo = RepositoryManager.getInstance().getCurrentRepository();
-        elementToRenameFinder.findElementToRename(repo)
+        selectionFinder.findElementToRename(repo)
                 .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
         return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
+        if (selection.isPresent() && selection.get().toList().size() == 1) {
+            if (selection.get().getFirstElement() instanceof IProject) {
+                IProject project = (IProject) selection.get().getFirstElement();
+                return Objects.equals(project, currentRepository.getProject());
+            }
+            return selectionFinder.findElementToRename(RepositoryManager.getInstance().getCurrentRepository()).isPresent();
+        }
+        return false;
     }
 
 }
