@@ -73,7 +73,7 @@ public class DiagramCompatibilityValidator extends TypedValidator<InputStream, I
                 }
             }
         }
-        return ValidationStatus.error("");
+        return ValidationStatus.ok();
     }
 
 }
