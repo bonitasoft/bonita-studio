@@ -52,7 +52,7 @@ public class EngineConfigurationIT {
         new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, monitor -> {
             try {
                 session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-                platformSession = BOSEngineManager.getInstance().loginPlatform();
+                platformSession = BOSEngineManager.getInstance().loginPlatform(Repository.NULL_PROGRESS_MONITOR);
             } catch (Exception e) {
                 throw new InvocationTargetException(e);
             }
@@ -68,7 +68,8 @@ public class EngineConfigurationIT {
 
     @Test
     public void should_enable_debug_mode() throws Exception {
-        final PlatformSession platformSession = BOSEngineManager.getInstance().loginPlatform();
+        final PlatformSession platformSession = BOSEngineManager.getInstance()
+                .loginPlatform(Repository.NULL_PROGRESS_MONITOR);
         final PlatformAPI platformAPI = BOSEngineManager.getInstance().getPlatformAPI(platformSession);
         final Map<Long, Map<String, byte[]>> clientPlatformConfigurations = platformAPI.getClientTenantConfigurations();
         final byte[] content = clientPlatformConfigurations.get(1L).get("security-config.properties");
