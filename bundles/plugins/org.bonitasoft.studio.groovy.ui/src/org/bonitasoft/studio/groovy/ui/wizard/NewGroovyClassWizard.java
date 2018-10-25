@@ -22,12 +22,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 public class NewGroovyClassWizard extends NewElementWizard {
 
@@ -50,7 +52,14 @@ public class NewGroovyClassWizard extends NewElementWizard {
         IFolder srcFolder = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource();
         fPage.setPackageFragmentRoot(project.getPackageFragmentRoot(
                 srcFolder), false);
-        fPage.setPackageFragment(srcFolder.getAdapter(IPackageFragment.class), false);
+        IStructuredSelection selection = getSelection();
+        Object firstElement = selection.getFirstElement();
+        if (firstElement instanceof IAdaptable && ((IAdaptable) firstElement).getAdapter(IPackageFragment.class) != null) {
+            fPage.setPackageFragment(((IAdaptable) firstElement).getAdapter(IPackageFragment.class), true);
+        } else {
+            fPage.setPackageFragment(srcFolder.getAdapter(IPackageFragment.class), true);
+        }
+
     }
 
     @Override
