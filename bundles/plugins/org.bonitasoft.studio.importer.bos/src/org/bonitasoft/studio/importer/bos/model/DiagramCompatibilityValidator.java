@@ -29,6 +29,8 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.TypedValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 
 
@@ -49,7 +51,8 @@ public class DiagramCompatibilityValidator extends TypedValidator<InputStream, I
                             "bonitaModelVersion");
                     String bonitaVersion = emfResourceUtil.getFeatureValueFromEObjectId(uuid, "process:MainProcess",
                             "bonitaVersion");
-                    if (!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(configId, name,
+                    if (!ConfigurationIdProvider.getBosConfigurationIdProvider().isConfigurationIdValid(
+                            EcoreUtil.createFromString(EcorePackage.Literals.EJAVA_OBJECT, configId), name,
                             bonitaModelVersion, bonitaVersion)) {
                         return ValidationStatus.error(Messages.spDiagramCannotBeImportedError);
                     }

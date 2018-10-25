@@ -162,7 +162,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         for (final ViewerFilter filter : filters) {
             treeViewer.addFilter(filter);
         }
-        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
         treeViewer.bindTree(dbc, stores);
         treeViewer.setCheckedElements(defaultSelectedFiles.toArray());
 
