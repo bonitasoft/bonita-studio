@@ -285,7 +285,7 @@ public class BOSEngineManager {
         BonitaStudioLog.debug("Attempt to login as " + login + ":" + password, EnginePlugin.PLUGIN_ID);
         final APISession session = getLoginAPI().login(requireNonNull(login), requireNonNull(password));
         if (session != null) {
-             BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
         }
         return session;
     }
@@ -354,8 +354,12 @@ public class BOSEngineManager {
         return TenantAPIAccessor.getTenantAdministrationAPI(session);
     }
 
-    public PlatformSession loginPlatform()
+    public PlatformSession loginPlatform(IProgressMonitor monitor)
             throws PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        if (!isRunning() && monitor != null) {
+            monitor.beginTask(Messages.waitingForEngineToStart, IProgressMonitor.UNKNOWN);
+        }
+        start();
         return PlatformAPIAccessor.getPlatformLoginAPI().login(PLATFORM_USER, PLATFORM_PASSWORD);
     }
 
@@ -379,21 +383,24 @@ public class BOSEngineManager {
                     monitor);
         } catch (final Exception e1) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername()+":"+configuration.getPassword(), process.getName(), process.getVersion() }), e1);
+                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
+                            process.getVersion() }),
+                    e1);
         }
         if (session == null) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername()+":"+configuration.getPassword(), process.getName(), process.getVersion() }));
+                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
+                            process.getVersion() }));
         }
         return session;
     }
 
-    public byte[] getTenantConfigResourceContent(String resourceName)
+    public byte[] getTenantConfigResourceContent(String resourceName, IProgressMonitor monitor)
             throws PlatformLoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
             PlatformLogoutException, SessionNotFoundException, FileNotFoundException {
         PlatformSession loginPlatform = null;
         try {
-            loginPlatform = loginPlatform();
+            loginPlatform = loginPlatform(monitor);
             final PlatformAPI platformAPI = getPlatformAPI(loginPlatform);
             final Map<Long, Map<String, byte[]>> clientTenantConfigurations = platformAPI.getClientTenantConfigurations();
             final Map<String, byte[]> resources = clientTenantConfigurations.get(DEFAULT_TENANT_ID);
@@ -414,7 +421,7 @@ public class BOSEngineManager {
             UpdateException, PlatformLogoutException, SessionNotFoundException {
         PlatformSession loginPlatform = null;
         try {
-            loginPlatform = loginPlatform();
+            loginPlatform = loginPlatform(null);
             final PlatformAPI platformAPI = getPlatformAPI(loginPlatform);
             platformAPI.updateClientTenantConfigurationFile(DEFAULT_TENANT_ID, resourceName, content);
         } finally {
