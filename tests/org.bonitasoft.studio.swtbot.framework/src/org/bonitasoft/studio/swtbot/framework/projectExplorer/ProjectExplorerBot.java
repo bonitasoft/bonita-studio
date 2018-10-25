@@ -15,12 +15,14 @@
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm.BDMProjectExplorerBot;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.la.LivingApplicationProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.organization.OrganizationProjectExplorerBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -39,13 +41,23 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public BotManageOrganizationWizard newOrganization() {
-        getProjectTreeItem().contextMenu().menu("New").menu("Organization...").click();
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Organization...").click();
         return new BotManageOrganizationWizard(bot);
     }
 
     public DefineBdmWizardBot newBdm() {
-        getProjectTreeItem().contextMenu().menu("New").menu("Business Data Model...").click();
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Business Data Model...").click();
         return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
+    }
+
+    public void newLivingApplication() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Application descriptor").click();
     }
 
     public OrganizationProjectExplorerBot organization() {
@@ -54,6 +66,10 @@ public class ProjectExplorerBot extends BotBase {
 
     public BDMProjectExplorerBot bdm() {
         return new BDMProjectExplorerBot(bot);
+    }
+
+    public LivingApplicationProjectExplorerBot livingApplication() {
+        return new LivingApplicationProjectExplorerBot(bot);
     }
 
     public SWTBotTreeItem getProjectTreeItem() {
@@ -119,6 +135,26 @@ public class ProjectExplorerBot extends BotBase {
                 return String.format("The menu '%s' of '%s' isn't available (%s)", menu, item, menuItems);
             }
         };
+    }
+
+    public void waitUntilActiveEditorTitleIs(String title) {
+        bot.waitUntil(new ICondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return Objects.equals(bot.activeEditor().getTitle(), title + ".xml");
+            }
+
+            @Override
+            public void init(SWTBot bot) {
+            }
+
+            @Override
+            public String getFailureMessage() {
+                String actualTitle = bot.activeEditor().getTitle();
+                return String.format("The active editor title should be  %s instead of %s", title + ".xml", actualTitle);
+            }
+        });
     }
 
 }
