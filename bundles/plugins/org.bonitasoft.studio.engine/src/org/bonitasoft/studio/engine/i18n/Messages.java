@@ -177,6 +177,7 @@ public class Messages extends NLS {
     public static String buildDoneMessage;
     public static String buildFailedTitle;
     public static String startingEngineServer;
+    public static String deployingProcessesFrom;
 
 
     static {
