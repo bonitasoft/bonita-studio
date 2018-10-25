@@ -1036,18 +1036,21 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private void refreshMessageDecoration() {
-        final String message = status.getMessage();
-        if (message != null && !message.isEmpty()) {
-            messageDecoration.setDescriptionText(message);
-            messageDecoration.setShowOnlyOnFocus(false);
-            final Image icon = getImageForMessageKind(status);
-            if (icon != null) {
-                messageDecoration.setImage(icon);
-            }
-            messageDecoration.show();
+        if (messageDecoration.getControl() != null
+                && !messageDecoration.getControl().isDisposed()) {
+            final String message = status.getMessage();
+            if (message != null && !message.isEmpty()) {
+                messageDecoration.setDescriptionText(message);
+                messageDecoration.setShowOnlyOnFocus(false);
+                final Image icon = getImageForMessageKind(status);
+                if (icon != null) {
+                    messageDecoration.setImage(icon);
+                }
+                messageDecoration.show();
 
-        } else {
-            messageDecoration.hide();
+            } else {
+                messageDecoration.hide();
+            }
         }
     }
 

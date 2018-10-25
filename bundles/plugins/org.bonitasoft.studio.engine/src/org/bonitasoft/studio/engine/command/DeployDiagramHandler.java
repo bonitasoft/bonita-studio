@@ -35,11 +35,16 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 
 public class DeployDiagramHandler extends AbstractHandler {
 
@@ -60,12 +65,26 @@ public class DeployDiagramHandler extends AbstractHandler {
             deployOperation.setConfigurationId(configurationId);
             deployOperation.setDisablePopup(false);
             processes.forEach(deployOperation::addProcessToDeploy);
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, deployOperation::run);
-                displayDeployResult(deployOperation);
-            } catch (InvocationTargetException | InterruptedException e) {
-                throw new ExecutionException("An error occured during the deploy operation", e);
-            }
+            Job deployJob = new Job(String.format(Messages.deployingProcessesFrom, diagramFileStore.getName())) {
+
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    deployOperation.run(monitor);
+                    return deployOperation.getStatus();
+                }
+            };
+            deployJob.addJobChangeListener(new JobChangeAdapter() {
+
+                @Override
+                public void done(IJobChangeEvent event) {
+                    Display.getDefault().asyncExec(() -> displayDeployResult(deployOperation));
+                }
+            });
+            deployJob.setUser(true);
+            deployJob.schedule();
+            Shell activeShell = Display.getDefault().getActiveShell();
+            ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
+            dialog.show(deployJob, activeShell);
         }
         return null;
     }

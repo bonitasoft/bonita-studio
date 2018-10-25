@@ -130,7 +130,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createListViewer(final Composite listComposite) {
         fileStoreListViewer = new ListViewer(listComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
-        fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
+        fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 300).create());
         fileStoreListViewer.setContentProvider(new ArrayContentProvider());
         fileStoreListViewer.setLabelProvider(new FileStoreLabelProvider());
         final IRepositoryStore<?> ars = (IRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
