@@ -73,6 +73,7 @@ import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
+import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
@@ -86,6 +87,10 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        ProjectExplorerDiagramIT.class,
+        ProjectExplorerOrganizationIT.class,
+        ProjectExplorerBdmIT.class,
+        ProjectExplorerLivingApplicationIT.class,
         DiagramTests.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
@@ -149,9 +154,6 @@ import org.junit.runners.Suite;
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
         OrganizationCreationTest.class,
-        ProjectExplorerOrganizationIT.class,
-        ProjectExplorerBdmIT.class,
-        ProjectExplorerLivingApplicationIT.class
 })
 public class SWTBotTestSuite {
 

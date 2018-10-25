@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,6 +26,7 @@ import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.business.application.Application;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -37,44 +39,27 @@ import org.bonitasoft.studio.swtbot.framework.projectExplorer.la.LivingApplicati
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class ProjectExplorerLivingApplicationIT {
 
-    private static BOSEngineManager engineManager;
-    private static APISession session;
-
     private SWTGefBot bot = new SWTGefBot();
     private RepositoryAccessor repositoryAccessor;
+    private final Optional<String> ext = Optional.of(".xml");
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
-    @BeforeClass
-    public static void init() throws Exception {
-        engineManager = BOSEngineManager.getInstance();
-        session = engineManager.loginDefaultTenant(new NullProgressMonitor());
-        LivingApplicationPlugin.getDefault().getPreferenceStore()
-                .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, true);
-    }
-
-    @AfterClass
-    public static void logout() {
-        if (session != null) {
-            engineManager.logoutDefaultTenant(session);
-        }
-    }
-
     @Before
-    public void initRepositoryAccessor() throws Exception {
+    public void init() throws Exception {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        BOSEngineManager.getInstance().start();
+        LivingApplicationPlugin.getDefault().getPreferenceStore()
+                .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, true);
     }
 
     @Test
@@ -84,21 +69,21 @@ public class ProjectExplorerLivingApplicationIT {
 
         String appName = findNewApplicationName();
         projectExplorerBot.newLivingApplication();
-        projectExplorerBot.waitUntilActiveEditorTitleIs(appName);
+        projectExplorerBot.waitUntilActiveEditorTitleIs(appName, ext);
         validateApplicatonExists(appName);
         bot.activeEditor().close();
         livingApplicationBot.openApplication(appName);
-        projectExplorerBot.waitUntilActiveEditorTitleIs(appName);
+        projectExplorerBot.waitUntilActiveEditorTitleIs(appName, ext);
         bot.activeEditor().close();
 
         appName = findNewApplicationName();
         livingApplicationBot.newLivingApplication();
-        projectExplorerBot.waitUntilActiveEditorTitleIs(appName);
+        projectExplorerBot.waitUntilActiveEditorTitleIs(appName, ext);
         validateApplicatonExists(appName);
 
         String newName = findNewApplicationName();
         livingApplicationBot.renameApplication(appName, newName);
-        projectExplorerBot.waitUntilActiveEditorTitleIs(newName);
+        projectExplorerBot.waitUntilActiveEditorTitleIs(newName, ext);
         validateApplicatonExists(newName);
         validateApplicatonDoesntExist(appName);
 
@@ -112,10 +97,17 @@ public class ProjectExplorerLivingApplicationIT {
                 .getFile();
         new ImportApplicationAction().importApplication(repositoryAccessor, new File(applicationToDeploy));
         projectExplorerBot.livingApplication().deployApplication("testExplorerApplicationFile");
-        ApplicationAPI applicationAPI = engineManager.getApplicationAPI(session);
-        Stream<Application> deployedAppsStream = applicationAPI
-                .searchApplications(new SearchOptionsBuilder(0, 20).done()).getResult().stream();
-        assertThat(deployedAppsStream).extracting(Application::getToken).contains("testExplorerApplication");
+        BOSEngineManager engineManager = BOSEngineManager.getInstance();
+        APISession session = null;
+        try {
+            session = engineManager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            ApplicationAPI applicationAPI = engineManager.getApplicationAPI(session);
+            Stream<Application> deployedAppsStream = applicationAPI
+                    .searchApplications(new SearchOptionsBuilder(0, 20).done()).getResult().stream();
+            assertThat(deployedAppsStream).extracting(Application::getToken).contains("testExplorerApplication");
+        } finally {
+            engineManager.logoutDefaultTenant(session);
+        }
     }
 
     private void validateApplicatonDoesntExist(String name) {

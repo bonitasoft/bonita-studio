@@ -16,14 +16,18 @@ package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm.BDMProjectExplorerBot;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.diagram.DiagramProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.la.LivingApplicationProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.organization.OrganizationProjectExplorerBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -38,6 +42,16 @@ public class ProjectExplorerBot extends BotBase {
     public ProjectExplorerBot(SWTGefBot bot) {
         super(bot);
         projectName = RepositoryManager.getInstance().getCurrentRepository().getName();
+        showExplorerView();
+    }
+
+    public void showExplorerView() {
+        SWTBotView explorerView = bot.viewById("org.bonitasoft.studio.application.project.explorer");
+        if (explorerView == null) {
+            throw new IllegalStateException("Project explorer view is not present");
+        }
+        explorerView.show();
+        explorerView.setFocus();
     }
 
     public BotManageOrganizationWizard newOrganization() {
@@ -60,6 +74,13 @@ public class ProjectExplorerBot extends BotBase {
         projectTreeItem.contextMenu().menu("New").menu("Application descriptor").click();
     }
 
+    public BotProcessDiagramPerspective newDiagram() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Diagram").click();
+        return new BotProcessDiagramPerspective(bot);
+    }
+
     public OrganizationProjectExplorerBot organization() {
         return new OrganizationProjectExplorerBot(bot);
     }
@@ -70,6 +91,10 @@ public class ProjectExplorerBot extends BotBase {
 
     public LivingApplicationProjectExplorerBot livingApplication() {
         return new LivingApplicationProjectExplorerBot(bot);
+    }
+
+    public DiagramProjectExplorerBot diagram() {
+        return new DiagramProjectExplorerBot(bot);
     }
 
     public SWTBotTreeItem getProjectTreeItem() {
@@ -91,7 +116,7 @@ public class ProjectExplorerBot extends BotBase {
         return bot.treeWithId("org.bonitasoft.studio.application.projectExplorerTree");
     }
 
-    protected ICondition nodeAvailable(SWTBotTreeItem item, String node) {
+    public ICondition nodeAvailable(SWTBotTreeItem item, String node) {
         return new ICondition() {
 
             @Override
@@ -115,7 +140,7 @@ public class ProjectExplorerBot extends BotBase {
         };
     }
 
-    protected ICondition contextMenuAvailable(SWTBotTreeItem item, String menu) {
+    public ICondition contextMenuAvailable(SWTBotTreeItem item, String menu) {
         return new ICondition() {
 
             private List<String> menuItems;
@@ -137,12 +162,14 @@ public class ProjectExplorerBot extends BotBase {
         };
     }
 
-    public void waitUntilActiveEditorTitleIs(String title) {
+    public void waitUntilActiveEditorTitleIs(String title, Optional<String> extension) {
         bot.waitUntil(new ICondition() {
+
+            String expectedTitle = extension.isPresent() ? title + extension.get() : title;
 
             @Override
             public boolean test() throws Exception {
-                return Objects.equals(bot.activeEditor().getTitle(), title + ".xml");
+                return Objects.equals(bot.activeEditor().getTitle(), expectedTitle);
             }
 
             @Override
@@ -152,7 +179,7 @@ public class ProjectExplorerBot extends BotBase {
             @Override
             public String getFailureMessage() {
                 String actualTitle = bot.activeEditor().getTitle();
-                return String.format("The active editor title should be  %s instead of %s", title + ".xml", actualTitle);
+                return String.format("The active editor title should be  %s instead of %s", expectedTitle, actualTitle);
             }
         });
     }

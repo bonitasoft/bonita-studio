@@ -16,11 +16,18 @@ package org.bonitasoft.studio.tests.applicationDescriptor;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
+import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
+import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -35,12 +42,15 @@ public class OpenExistingApplicationIT {
 
     private final SWTGefBot bot = new SWTGefBot();
     private boolean initPref;
+    private RepositoryAccessor repositoryAccessor;
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Before
     public void init() {
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
         initPref = LivingApplicationPlugin.getDefault().getPreferenceStore()
                 .getBoolean(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG);
         LivingApplicationPlugin.getDefault().getPreferenceStore()
@@ -56,44 +66,52 @@ public class OpenExistingApplicationIT {
     @Test
     public void should_create_and_open_applications() {
         final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
-        createApplications(workBenchBot);
+        String applicationName1 = createApplication(workBenchBot);
+        String applicationName2 = createApplication(workBenchBot);
 
-        workBenchBot.openApplication().select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml").finish();
+        workBenchBot.openApplication().select(applicationName1 + ".xml").finish();
         final SWTBotEditor app1Editor = bot.activeEditor();
-        assertEquals(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", app1Editor.getTitle());
+        assertEquals(applicationName1 + ".xml", app1Editor.getTitle());
         app1Editor.close();
 
         workBenchBot.openApplication()
-                .select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", NewApplicationHandler.DEFAULT_FILE_NAME + "1.xml")
+                .select(applicationName1 + ".xml", applicationName2 + ".xml")
                 .finish();
         assertEquals(2, bot.editors().size());
 
-        deleteApplications(workBenchBot);
+        deleteApplications(workBenchBot, applicationName1 + ".xml", applicationName2 + ".xml");
     }
 
     @Test
     public void should_rename_file_using_open_menu() {
         final BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
-        workBenchBot.newApplicationDescriptorFile();
+        String appName = createApplication(workBenchBot);
         OpenApplicationWizardBot openApplicationWizardBot = workBenchBot.openApplication();
-        openApplicationWizardBot.select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml");
+        openApplicationWizardBot.select(appName + ".xml");
         openApplicationWizardBot.rename("custom_name").select("custom_name.xml").finish();
         workBenchBot.deleteApplicationDescriptor()
                 .select("custom_name.xml")
                 .delete();
     }
 
-    private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot) {
+    private void deleteApplications(BotApplicationWorkbenchWindow workBenchBot, String... applications) {
         workBenchBot.deleteApplicationDescriptor()
-                .select(NewApplicationHandler.DEFAULT_FILE_NAME + ".xml", NewApplicationHandler.DEFAULT_FILE_NAME + "1.xml")
+                .select(applications)
                 .delete();
     }
 
-    private void createApplications(BotApplicationWorkbenchWindow workBenchBot) {
+    private String createApplication(BotApplicationWorkbenchWindow workBenchBot) {
+        String newName = findNewApplicationName();
         workBenchBot.newApplicationDescriptorFile();
         bot.activeEditor().close();
+        return newName;
+    }
 
-        workBenchBot.newApplicationDescriptorFile();
-        bot.activeEditor().close();
+    private String findNewApplicationName() {
+        List<String> existingApplicationNameList = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
+                .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
+        String newName = StringIncrementer.getIncrementedString(NewApplicationHandler.DEFAULT_FILE_NAME,
+                existingApplicationNameList);
+        return newName;
     }
 }
