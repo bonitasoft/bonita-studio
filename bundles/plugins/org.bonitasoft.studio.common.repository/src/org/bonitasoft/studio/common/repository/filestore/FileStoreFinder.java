@@ -96,7 +96,7 @@ public class FileStoreFinder {
                 });
     }
 
-    protected Optional<IStructuredSelection> getCurrentStructuredSelection() {
+    public Optional<IStructuredSelection> getCurrentStructuredSelection() {
         return getExplorerViewPart()
                 .map(vp -> vp.getViewSite().getSelectionProvider().getSelection())
                 .filter(IStructuredSelection.class::isInstance)
