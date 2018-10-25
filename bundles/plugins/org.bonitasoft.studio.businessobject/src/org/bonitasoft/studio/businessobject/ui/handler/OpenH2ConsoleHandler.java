@@ -31,10 +31,13 @@ import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jdt.internal.launching.StandardVMType;
@@ -49,9 +52,17 @@ public class OpenH2ConsoleHandler {
     private static final String DRIVER = "org.h2.Driver";
     private static final String USER = "sa";
     private static final int PORT = SocketUtil.findFreePort();
+    private IProcess currentProcess;
 
     @Execute
     public void execute(final RepositoryAccessor repositoryAccessor) {
+        if (currentProcess != null) {
+            try {
+                currentProcess.terminate();
+            } catch (DebugException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
         final ILaunchManager manager = getLaunchManager();
         final ILaunchConfigurationType ltype = manager
                 .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
@@ -62,7 +73,11 @@ public class OpenH2ConsoleHandler {
                     Joiner.on(" ").join(buildCommand(repositoryAccessor)));
             workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
             workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, logFile().getAbsolutePath());
-            workingCopy.launch("run", Repository.NULL_PROGRESS_MONITOR);
+            ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
+            IProcess[] processes = launch.getProcesses();
+            if (processes != null && processes.length == 1) {
+                currentProcess = processes[0];
+            }
         } catch (final CoreException | IOException e) {
             BonitaStudioLog.error("Failed to run h2 console", e);
         }
