@@ -113,10 +113,10 @@ public class DocumentWizard extends Wizard {
         final Pool pool = (Pool) ModelHelper.getParentProcess(context);
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(context);
         if (document == null) {
-            editingDomain.getCommandStack().execute(new AddCommand(editingDomain, pool.getDocuments(), documentWorkingCopy));
+            editingDomain.getCommandStack()
+                    .execute(new AddCommand(editingDomain, pool.getDocuments(), EcoreUtil.copy(documentWorkingCopy)));
         } else {
-            final boolean cancelled = performFinishOnEdition(editingDomain);
-            if (cancelled) {
+            if (!performFinishOnEdition(editingDomain)) {
                 return false;
             }
         }
@@ -127,15 +127,12 @@ public class DocumentWizard extends Wizard {
 
     private boolean performFinishOnEdition(final TransactionalEditingDomain editingDomain) {
         final RefactorDocumentOperation refactorDocumentOperation = createRefactorOperation(editingDomain);
-
         try {
             getContainer().run(false, false, refactorDocumentOperation);
-        } catch (final InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-        return refactorDocumentOperation.isCancelled();
+        return !refactorDocumentOperation.isCancelled();
     }
 
     private RefactorDocumentOperation createRefactorOperation(final TransactionalEditingDomain editingDomain) {
