@@ -73,6 +73,7 @@ import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
+import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
@@ -91,6 +92,7 @@ import org.junit.runners.Suite;
         ProjectExplorerOrganizationIT.class,
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
+        ProjectExplorerConnectorIT.class,
         DiagramTests.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
