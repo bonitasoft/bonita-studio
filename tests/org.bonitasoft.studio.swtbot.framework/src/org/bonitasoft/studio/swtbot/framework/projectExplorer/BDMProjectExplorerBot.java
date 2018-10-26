@@ -12,10 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm;
+package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 

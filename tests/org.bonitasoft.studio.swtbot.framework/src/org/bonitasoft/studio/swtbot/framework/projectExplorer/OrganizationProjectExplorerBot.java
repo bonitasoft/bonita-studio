@@ -12,11 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.projectExplorer.organization;
+package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
