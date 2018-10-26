@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -38,7 +39,6 @@ import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -72,10 +72,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -133,6 +131,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
         final Text idText = new Text(idComposite, SWT.BORDER);
         idText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        idText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.connector.model.definition.wizard.idText");
 
         final Label definitionVersionLabel = new Label(idComposite, SWT.NONE);
         definitionVersionLabel.setText(Messages.versionLabel + " *");
@@ -140,20 +140,18 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
         final Text versionText = new Text(idComposite, SWT.BORDER);
         versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        versionText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.connector.model.definition.wizard.versionText");
 
         final UpdateValueStrategy versionStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
         versionStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.versionLabel));
-        versionStrategy.setBeforeSetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(Object value) {
-                if (!FileUtil.isValidName(
-                        NamingUtils.toConnectorDefinitionFilename(definition.getId(), value.toString(), true))) {
-                    return ValidationStatus.error(Messages.invalidFileName);
-                }
-
-                return Status.OK_STATUS;
+        versionStrategy.setBeforeSetValidator(value -> {
+            if (!FileUtil.isValidName(
+                    NamingUtils.toConnectorDefinitionFilename(definition.getId(), value.toString(), true))) {
+                return ValidationStatus.error(Messages.invalidFileName);
             }
+
+            return Status.OK_STATUS;
         });
 
         final ISWTObservableValue observableIdText = SWTObservables.observeText(idText, SWT.Modify);
@@ -185,16 +183,12 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
         final UpdateValueStrategy idStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
         idStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.definitionIdLabel));
-        idStrategy.setBeforeSetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(Object value) {
-                if (!FileUtil.isValidName(
-                        NamingUtils.toConnectorDefinitionFilename(value.toString(), definition.getVersion(), true))) {
-                    return ValidationStatus.error(Messages.invalidFileName);
-                }
-                return Status.OK_STATUS;
+        idStrategy.setBeforeSetValidator(value -> {
+            if (!FileUtil.isValidName(
+                    NamingUtils.toConnectorDefinitionFilename(value.toString(), definition.getVersion(), true))) {
+                return ValidationStatus.error(Messages.invalidFileName);
             }
+            return Status.OK_STATUS;
         });
 
         context.bindValue(definitionValidator.observeValidatedValue(observableIdText),
@@ -210,6 +204,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
         final Text displayNameText = new Text(mainComposite, SWT.BORDER);
         displayNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        displayNameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.connector.model.definition.wizard.displayNameText");
 
         context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify),
                 PojoProperties.value(DefinitionInformationWizardPage.class, "displayName").observe(this));
@@ -248,27 +244,23 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
         final Button iconButton = new Button(iconComposite, SWT.PUSH);
         iconButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         iconButton.setText("...");
-        iconButton.addListener(SWT.Selection, new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-                FileDialog dialog = new FileDialog(getShell(), SWT.OPEN | SWT.SINGLE);
-                dialog.setFilterExtensions(new String[] { "*.jpg;*.jpeg;*.gif;*.png;*.bmp;" });
-                dialog.setFilterPath(System.getProperty("user.home"));
-                String res = dialog.open();
-                if (res != null) {
-                    try (FileInputStream is = new FileInputStream(res)) {
-                        iconImageFile = new File(res);
-                        setIconName(iconImageFile.getName());
-                        if (iconImage != null) {
-                            iconImage.dispose();
-                        }
-                        iconImage = new Image(Display.getDefault(), new ImageData(is).scaledTo(16, 16));
-                        icon.setImage(iconImage);
-                        icon.getParent().layout(true, true);
-                    } catch (Exception ex) {
-                        BonitaStudioLog.error(ex);
+        iconButton.addListener(SWT.Selection, event -> {
+            FileDialog dialog = new FileDialog(getShell(), SWT.OPEN | SWT.SINGLE);
+            dialog.setFilterExtensions(new String[] { "*.jpg;*.jpeg;*.gif;*.png;*.bmp;" });
+            dialog.setFilterPath(System.getProperty("user.home"));
+            String res = dialog.open();
+            if (res != null) {
+                try (FileInputStream is = new FileInputStream(res)) {
+                    iconImageFile = new File(res);
+                    setIconName(iconImageFile.getName());
+                    if (iconImage != null) {
+                        iconImage.dispose();
                     }
+                    iconImage = new Image(Display.getDefault(), new ImageData(is).scaledTo(16, 16));
+                    icon.setImage(iconImage);
+                    icon.getParent().layout(true, true);
+                } catch (Exception ex) {
+                    BonitaStudioLog.error(ex);
                 }
             }
         });
@@ -328,19 +320,15 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
         if (selectedCategory != null) {
             categoryViewer.setSelection(new StructuredSelection(selectedCategory));
         }
-        categoryViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                if (!((IStructuredSelection) event.getSelection()).isEmpty()) {
-                    Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
-                    definition.getCategory().clear();
-                    definition.getCategory().add(selection);
-                    List<Category> categories = (List<Category>) categoryViewer.getInput();
-                    List<Category> parentCategories = new ArrayList<Category>();
-                    getParentCategories(parentCategories, categories, selection);
-                    definition.getCategory().addAll(parentCategories);
-                }
+        categoryViewer.addSelectionChangedListener(event -> {
+            if (!((IStructuredSelection) event.getSelection()).isEmpty()) {
+                Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                definition.getCategory().clear();
+                definition.getCategory().add(selection);
+                List<Category> categories = (List<Category>) categoryViewer.getInput();
+                List<Category> parentCategories = new ArrayList<>();
+                getParentCategories(parentCategories, categories, selection);
+                definition.getCategory().addAll(parentCategories);
             }
         });
 
@@ -356,7 +344,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                HashSet<String> existingCatIds = new HashSet<String>();
+                HashSet<String> existingCatIds = new HashSet<>();
                 existingCatIds.addAll(messageProvider.getProvidedCategoriesIds());
                 existingCatIds.addAll(messageProvider.getUserCategoriesIds());
                 List<Category> input = (List<Category>) categoryViewer.getInput();

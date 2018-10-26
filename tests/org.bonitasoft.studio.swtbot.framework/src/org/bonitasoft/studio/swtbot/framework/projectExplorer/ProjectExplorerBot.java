@@ -21,12 +21,10 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
+import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.bdm.BDMProjectExplorerBot;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.diagram.DiagramProjectExplorerBot;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.la.LivingApplicationProjectExplorerBot;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.organization.OrganizationProjectExplorerBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -35,6 +33,7 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
+@SuppressWarnings("restriction")
 public class ProjectExplorerBot extends BotBase {
 
     protected String projectName;
@@ -81,6 +80,22 @@ public class ProjectExplorerBot extends BotBase {
         return new BotProcessDiagramPerspective(bot);
     }
 
+    public ConnectorDefinitionWizardBot newConnectorDefinition() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Connector definition...").click();
+        return new ConnectorDefinitionWizardBot(bot,
+                org.bonitasoft.studio.connectors.i18n.Messages.newConnectorDefinition);
+    }
+
+    public ConnectorImplementationWizardBot newConnectorImplementation() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Connector implementation...").click();
+        return new ConnectorImplementationWizardBot(bot,
+                org.bonitasoft.studio.connectors.i18n.Messages.newConnectorImplementation);
+    }
+
     public OrganizationProjectExplorerBot organization() {
         return new OrganizationProjectExplorerBot(bot);
     }
@@ -97,18 +112,26 @@ public class ProjectExplorerBot extends BotBase {
         return new DiagramProjectExplorerBot(bot);
     }
 
+    public ConnectorDefinitionProjectExplorerBot connectorDefinition() {
+        return new ConnectorDefinitionProjectExplorerBot(bot);
+    }
+
+    public ConnectorImplementationProjectExplorerBot connectorImplementation() {
+        return new ConnectorImplementationProjectExplorerBot(bot);
+    }
+
     public SWTBotTreeItem getProjectTreeItem() {
         return getProjectExplorerTree().getTreeItem(projectName);
     }
 
     protected SWTBotTreeItem getTreeItem(SWTBotTreeItem parent, String item) {
         parent.expand();
-        bot.waitUntilWidgetAppears(nodeAvailable(parent, item));
+        bot.waitUntil(nodeAvailable(parent, item));
         return parent.getNode(item);
     }
 
     protected void clickOnContextualMenu(SWTBotTreeItem node, String menu) {
-        bot.waitUntilWidgetAppears(contextMenuAvailable(node, menu));
+        bot.waitUntil(contextMenuAvailable(node, menu));
         node.contextMenu(menu).click();
     }
 
