@@ -77,7 +77,7 @@ public class DeployDiagramHandler extends AbstractHandler {
 
                 @Override
                 public void done(IJobChangeEvent event) {
-                    Display.getDefault().asyncExec(() -> displayDeployResult(deployOperation));
+                    Display.getDefault().syncExec(() -> displayDeployResult(deployOperation));
                 }
             });
             deployJob.setUser(true);
