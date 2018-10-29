@@ -19,9 +19,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
-/**
- * @author Romain Bioteau
- */
 public class FindDiagramRunnable implements Runnable {
 
     private final BatchValidationOperation validateOperation;

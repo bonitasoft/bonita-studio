@@ -41,7 +41,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-
 public class RenameDiagramOperation implements IRunnableWithProgress {
 
     private MainProcess diagram;
@@ -62,24 +61,27 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
-        IFile resource = diagramFileStore.getResource();
-        try {
-            resource.move(Path.fromOSString(NamingUtils.toDiagramFilename(diagramName, diagramVersion)), true, monitor);
-        } catch (CoreException e) {
-            throw new InvocationTargetException(e);
-        }
-        try {
-            resource.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
-        } catch (CoreException e) {
-            throw new InvocationTargetException(e);
+        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
+            IFile resource = diagramFileStore.getResource();
+            try {
+                resource.move(Path.fromOSString(NamingUtils.toDiagramFilename(diagramName, diagramVersion)), true, monitor);
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
+            try {
+                resource.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
         }
         diagramFileStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         diagram = diagramFileStore.getContent();
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagram);
 
         CompoundCommand compoundCommand = new CompoundCommand();
-        changeProcessNameAndVersion(diagram, compoundCommand, diagramName, diagramVersion, editingDomain);
-
+        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
+            changeProcessNameAndVersion(diagram, compoundCommand, diagramName, diagramVersion, editingDomain);
+        }
         for (final ProcessesNameVersion pnv : pools) {
             final AbstractProcess fromPool = pnv.getAbstractProcess();
             final String fromPoolName = fromPool.getName();
@@ -110,7 +112,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         cc.append(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION,
                 newProcessVersion));
     }
-
 
     public void setDiagramToDuplicate(final MainProcess diagram) {
         this.diagram = diagram;

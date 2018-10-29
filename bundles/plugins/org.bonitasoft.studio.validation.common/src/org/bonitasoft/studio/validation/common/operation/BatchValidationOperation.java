@@ -60,51 +60,38 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  */
 public class BatchValidationOperation extends WorkspaceModifyOperation {
 
-    private final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart = new HashMap<Diagram, DiagramEditPart>();
-    private final List<IFile> fileProcessed = new ArrayList<IFile>(); //Avoid duplicate
+    private final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart = new HashMap<>();
+    private final List<IFile> fileProcessed = new ArrayList<>(); //Avoid duplicate
     private final OffscreenEditPartFactory offscreenEditPartFactory;
     private final ValidationMarkerProvider validationMarkerProvider;
 
-    public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory, final ValidationMarkerProvider validationMarkerProvider) {
+    public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory,
+            final ValidationMarkerProvider validationMarkerProvider) {
         this.offscreenEditPartFactory = offscreenEditPartFactory;
         this.validationMarkerProvider = validationMarkerProvider;
     }
 
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
-    protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+    protected void execute(final IProgressMonitor monitor)
+            throws CoreException, InvocationTargetException, InterruptedException {
         Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
         buildEditPart();
         validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
         for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
             final DiagramEditPart diagramEp = entry.getValue();
             final Diagram diagram = entry.getKey();
-            if (diagramEp != null) {
-                if (!monitor.isCanceled()) {
-                    monitor.setTaskName(Messages.bind(
-                            Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
-                            ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
-                    final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
-                    runWithConstraints(txDomain, new Runnable() {
-
-                        @Override
-                        public void run() {
-                            validate(diagramEp, diagram, monitor);
-                        }
-                    });
-                    monitor.worked(1);
-                }
+            if (diagramEp != null && !monitor.isCanceled()) {
+                monitor.setTaskName(Messages.bind(
+                        Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
+                        ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
+                final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
+                runWithConstraints(txDomain, () -> validate(diagramEp, diagram, monitor));
+                monitor.worked(1);
             }
         }
-
         offscreenEditPartFactory.dispose();
     }
-
-
 
     private void buildEditPart() {
         for (final Diagram diagram : diagramsToDiagramEditPart.keySet()) {
@@ -114,14 +101,11 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     }
 
     protected void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {
-        final IFile target = view.eResource() != null ?
-                WorkspaceSynchronizer.getFile(view.eResource()) : null;
+        final IFile target = view.eResource() != null ? WorkspaceSynchronizer.getFile(view.eResource()) : null;
         final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
         validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
-        final IBatchValidator validator =
-                (IBatchValidator)
-                ModelValidationService.getInstance().newValidator(
-                        EvaluationMode.BATCH);
+        final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance().newValidator(
+                EvaluationMode.BATCH);
         validator.setIncludeLiveConstraints(true);
         if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
             final IStatus status = validator.validate(view.getElement(), monitor);
@@ -142,11 +126,11 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         if (activePage != null) {
             for (final IEditorReference ep : activePage.getEditorReferences()) {
                 final IEditorPart editor = ep.getEditor(false);
-                if (editor instanceof DiagramEditor) {
-                    if (((DiagramEditor) editor).getDiagram().equals(d) && ((DiagramEditor) editor).getDiagramEditPart() != null) {
+                if (editor instanceof DiagramEditor
+                        && ((DiagramEditor) editor).getDiagram().equals(d)
+                        && ((DiagramEditor) editor).getDiagramEditPart() != null) {
                         return ((DiagramEditor) editor).getDiagramEditPart();
                     }
-                }
             }
         }
         return null;
@@ -196,14 +180,17 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         String fileName = target.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
         addStatusForMarkerType(target, result, fileName, ProcessMarkerNavigationProvider.MARKER_TYPE);
-        addStatusForMarkerType(target, result, fileName, org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.MARKER_TYPE);
+        addStatusForMarkerType(target, result, fileName,
+                org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.MARKER_TYPE);
         fileProcessed.add(target);
     }
 
-    private void addStatusForMarkerType(final IFile target, final MultiStatus result, final String fileName, final String markerType) throws CoreException {
+    private void addStatusForMarkerType(final IFile target, final MultiStatus result, final String fileName,
+            final String markerType) throws CoreException {
         for (final IMarker m : target.findMarkers(markerType, true, IResource.DEPTH_ZERO)) {
             final int severity = (Integer) m.getAttribute(IMarker.SEVERITY);
-            if (severity == IMarker.SEVERITY_WARNING || severity == IMarker.SEVERITY_INFO || severity == IMarker.SEVERITY_ERROR) {
+            if (severity == IMarker.SEVERITY_WARNING || severity == IMarker.SEVERITY_INFO
+                    || severity == IMarker.SEVERITY_ERROR) {
                 final String fullMessage = computeMarkerMessage(fileName, m);
                 if (!statusExists(result, fullMessage)) {
                     result.add(new Status(toStatusSeverity(severity), ValidationCommonPlugin.PLUGIN_ID, fullMessage));
@@ -215,8 +202,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     private String computeMarkerMessage(final String fileName, final IMarker m) throws CoreException {
         final String location = (String) m.getAttribute(IMarker.LOCATION);
         final String message = (String) m.getAttribute(IMarker.MESSAGE);
-        final String fullMessage = fileName + ":" + location + " : " + message;
-        return fullMessage;
+        return fileName + ":" + location + " : " + message;
     }
 
     private int toStatusSeverity(final int markerSeverity) {
