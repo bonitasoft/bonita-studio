@@ -96,6 +96,20 @@ public class ProjectExplorerBot extends BotBase {
                 org.bonitasoft.studio.connectors.i18n.Messages.newConnectorImplementation);
     }
 
+    public ConnectorDefinitionWizardBot newActorFilterDefinition() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Actor filter definition...").click();
+        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.newFilterDefinition);
+    }
+
+    public ConnectorImplementationWizardBot newActorFilterImplementation() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
+        projectTreeItem.contextMenu().menu("New").menu("Actor filter implementation...").click();
+        return new ConnectorImplementationWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.newFilterImplementation);
+    }
+
     public OrganizationProjectExplorerBot organization() {
         return new OrganizationProjectExplorerBot(bot);
     }
@@ -118,6 +132,14 @@ public class ProjectExplorerBot extends BotBase {
 
     public ConnectorImplementationProjectExplorerBot connectorImplementation() {
         return new ConnectorImplementationProjectExplorerBot(bot);
+    }
+
+    public ActorFilterDefinitionProjectExplorerBot actorFilterDefinition() {
+        return new ActorFilterDefinitionProjectExplorerBot(bot);
+    }
+
+    public ActorFilterImplementationProjectExplorerBot actorFilterImplementation() {
+        return new ActorFilterImplementationProjectExplorerBot(bot);
     }
 
     public SWTBotTreeItem getProjectTreeItem() {
