@@ -92,11 +92,9 @@ public class DeleteHandler extends AbstractHandler {
                     IRepositoryFileStore fileStore = currentRepository.getFileStore(adapter);
                     if (fileStore != null && !fileStore.canBeDeleted()) {
                         return false;
+                    } else if (fileStore == null && currentRepository.getRepositoryStore(adapter) != null) {
+                        return false;
                     }
-                    if (currentRepository.getRepositoryStore(adapter) == null) {
-                        continue;
-                    }
-                    return false;
                 }
             } else {
                 return false;
