@@ -51,7 +51,7 @@ public class DiagramCompatibilityValidator extends TypedValidator<InputStream, I
                             "bonitaModelVersion");
                     String bonitaVersion = emfResourceUtil.getFeatureValueFromEObjectId(uuid, "process:MainProcess",
                             "bonitaVersion");
-                    if (!ConfigurationIdProvider.getBosConfigurationIdProvider().isConfigurationIdValid(
+                    if (!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(
                             EcoreUtil.createFromString(EcorePackage.Literals.EJAVA_OBJECT, configId), name,
                             bonitaModelVersion, bonitaVersion)) {
                         return ValidationStatus.error(Messages.spDiagramCannotBeImportedError);
