@@ -3,7 +3,6 @@
 
 <product name="Bonita Studio" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="7.8.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -13,7 +12,7 @@
       <programArgsLin>--launcher.GTK_version 
 2
       </programArgsLin>
-      <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8  -Dtomcat.extra.params=&quot;-DnoCacheCustomPage=true&quot;
+      <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
@@ -37,7 +36,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
