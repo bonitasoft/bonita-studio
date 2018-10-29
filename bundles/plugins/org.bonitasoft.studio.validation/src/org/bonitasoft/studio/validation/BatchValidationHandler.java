@@ -169,6 +169,7 @@ public class BatchValidationHandler extends AbstractHandler {
     }
 
     protected String[] toFileNames(String files) {
+        files = files.trim().substring(1, files.length() - 1);
         return files.trim().split(",");
     }
 
