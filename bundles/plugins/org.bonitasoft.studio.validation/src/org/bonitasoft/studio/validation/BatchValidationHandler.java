@@ -18,13 +18,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.FindDiagramRunnable;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
@@ -42,9 +40,9 @@ import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -53,6 +51,8 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Romain Bioteau
  */
 public class BatchValidationHandler extends AbstractHandler {
+
+    private DiagramFileStore currentDiagramStore;
 
     /*
      * (non-Javadoc)
@@ -88,7 +88,7 @@ public class BatchValidationHandler extends AbstractHandler {
         }
         if (showReport instanceof Boolean) {
             if (((Boolean) showReport).booleanValue()) {
-                showReport(validateOperation.getResult());
+                showReport(validateOperation);
             }
         }
 
@@ -152,6 +152,7 @@ public class BatchValidationHandler extends AbstractHandler {
             if (fileStore == null) {
                 throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
             }
+            currentDiagramStore = fileStore;
             final Resource eResource = fileStore.getEMFResource();
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
             final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, validateOperation);
@@ -173,27 +174,21 @@ public class BatchValidationHandler extends AbstractHandler {
         return allFiles;
     }
 
-    private void showReport(final IStatus status) {
-        if (statusContainsError(status)) {
+    private void showReport(final BatchValidationOperation validateOperation) {
+        if (statusContainsError(validateOperation.getResult())) {
             final String errorMessage = Messages.validationErrorFoundMessage + " "
-                    + getActiveEditor().getTitle();
+                    + currentDiagramStore.getDisplayName();
             final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
 
             if (result == ValidationDialog.SEE_DETAILS) {
-                final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                final IEditorPart part = activePage.getActiveEditor();
-                if (part != null && part instanceof DiagramEditor) {
-                    final MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement());
-                    final String partName = proc.getName() + " (" + proc.getVersion() + ")";
-                    for (final IEditorReference ref : activePage.getEditorReferences()) {
-                        if (partName.equals(ref.getPartName())) {
-                            activePage.activate(ref.getPart(true));
-                            break;
-                        }
-                    }
-
+                IWorkbenchPart openedEditor = currentDiagramStore.getOpenedEditor();
+                if (openedEditor == null) {
+                    openedEditor = currentDiagramStore.open();
                 }
+                final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                activePage.activate(openedEditor);
+
                 Display.getDefault().asyncExec(new Runnable() {
 
                     @Override
