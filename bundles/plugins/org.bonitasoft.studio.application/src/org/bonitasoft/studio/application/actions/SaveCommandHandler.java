@@ -111,7 +111,7 @@ public class SaveCommandHandler extends SaveHandler {
         final MainProcess proc = findProc(editorPart);
         DiagramFileStore oldArtifact = null;
         final List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
-        if (nameOrVersionChanged(proc)) {
+        if (nameOrVersionChanged(proc, editorPart)) {
             IEditorReference[] editorReferences;
             editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
             final IEditorInput editorInput = editorPart.getEditorInput();
@@ -187,9 +187,10 @@ public class SaveCommandHandler extends SaveHandler {
 
     /**
      * @param proc
+     * @param editorPart
      * @return
      */
-    protected boolean nameOrVersionChanged(final MainProcess proc) {
+    protected boolean nameOrVersionChanged(final MainProcess proc, DiagramEditor editorPart) {
         final MainProcess originalProcess = getOldProcess(proc);
         if (originalProcess.getAuthor() == null
                 && BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE)) {
@@ -227,8 +228,8 @@ public class SaveCommandHandler extends SaveHandler {
                 }
             };
             if (nameDialog.open() == Dialog.OK) {
+                editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
                 final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
-                renameDiagramOperation.setEditor((DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor());
                 renameDiagramOperation.setDiagramToDuplicate(proc);
                 final Identifier identifier = nameDialog.getIdentifier();
                 renameDiagramOperation.setNewDiagramName(identifier.getName());

@@ -17,38 +17,37 @@ package org.bonitasoft.studio.properties.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.IWorkbenchPart;
 
-/**
- * @author Romain Bioteau
- */
+
 public class RenameDiagramOperation implements IRunnableWithProgress {
 
     private MainProcess diagram;
     private String diagramVersion;
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<>();
-    private DiagramEditor editor;
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -60,49 +59,58 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
 
-        Optional<String> partName = Optional.ofNullable(editor).map(DiagramEditor::getPartName);
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-
-        final DuplicateDiagramOperation operation = new DuplicateDiagramOperation();
-        operation.setDiagramToDuplicate(diagram);
-        operation.setNewDiagramName(diagramName);
-        operation.setNewDiagramVersion(diagramVersion);
-        operation.setPoolsRenamed(pools);
-        operation.run(Repository.NULL_PROGRESS_MONITOR);
-
-        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
-            final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
-            DiagramEditor openedEditor = diagramFileStore.getOpenedEditor();
-            if (openedEditor != null) {
-                openedEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-            }
-            cleanOldFileStores(diagramFileStore);
-            partName.ifPresent(pName -> reopenEditors(pName, diagramStore));
+        DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
+        IFile resource = diagramFileStore.getResource();
+        try {
+            resource.move(Path.fromOSString(NamingUtils.toDiagramFilename(diagramName, diagramVersion)), true, monitor);
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
         }
-    }
-
-    protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore) {
-        final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
-        fStore.save(null);
-        IWorkbenchPart partToActivate = fStore.open();
-        partToActivate.getSite().getPage().activate(partToActivate);
-    }
-
-    protected void cleanOldFileStores(final DiagramFileStore diagramFileStore) {
-        final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
-        final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        for (final Pool p : allPools) {
-            ProcessConfigurationFileStore fileStore = confStore
-                    .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
-            if (fileStore != null) {
-                fileStore.delete();
-            }
+        try {
+            resource.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
         }
-        diagramFileStore.close();
-        diagramFileStore.delete();
+        diagramFileStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        diagram = diagramFileStore.getContent();
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagram);
+
+        CompoundCommand compoundCommand = new CompoundCommand();
+        changeProcessNameAndVersion(diagram, compoundCommand, diagramName, diagramVersion, editingDomain);
+
+        for (final ProcessesNameVersion pnv : pools) {
+            final AbstractProcess fromPool = pnv.getAbstractProcess();
+            final String fromPoolName = fromPool.getName();
+            final String fromPoolVersion = fromPool.getVersion();
+            /* Find corresponding element in the duplicated model */
+            for (final Element element : diagram.getElements()) {
+                if (element instanceof AbstractProcess) {
+                    if (element.getName().equals(fromPoolName)
+                            && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
+                        if (!pnv.getNewName().equals(fromPoolName) || !pnv.getNewVersion().equals(fromPoolVersion)) {
+                            changeProcessNameAndVersion((AbstractProcess) element, compoundCommand, pnv.getNewName(),
+                                    pnv.getNewVersion(), editingDomain);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+        editingDomain.getCommandStack().execute(compoundCommand);
+        diagramFileStore.save(null);
     }
+
+    private void changeProcessNameAndVersion(final AbstractProcess process, final CompoundCommand cc,
+            final String newProcessLabel,
+            final String newProcessVersion, EditingDomain editingDomain) {
+        cc.append(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
+        cc.append(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION,
+                newProcessVersion));
+    }
+
 
     public void setDiagramToDuplicate(final MainProcess diagram) {
         this.diagram = diagram;
@@ -118,10 +126,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
     public void setNewDiagramVersion(final String diagramVersion) {
         this.diagramVersion = diagramVersion;
-    }
-
-    public void setEditor(final DiagramEditor editor) {
-        this.editor = editor;
     }
 
 }

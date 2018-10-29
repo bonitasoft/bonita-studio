@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -37,9 +38,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-/**
- * @author Romain Bioteau
- */
+
 public class RenameDiagramCommandHandler extends AbstractHandler {
 
     private FileStoreFinder fileStoreFinder;
@@ -60,9 +59,9 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
                 Display.getDefault().getActiveShell(), diagram,
                 diagramStore);
         if (nameDialog.open() == Dialog.OK) {
-            Optional<ProcessDiagramEditor> editor = getDiagramEditor();
+            getDiagramEditor().filter(IEditorPart::isDirty)
+                    .ifPresent(editor -> editor.doSave(Repository.NULL_PROGRESS_MONITOR));
             RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
-            editor.ifPresent(renameDiagramOperation::setEditor);
             renameDiagramOperation.setDiagramToDuplicate(diagram);
             Identifier identifier = nameDialog.getIdentifier();
             renameDiagramOperation.setNewDiagramName(identifier.getName());
@@ -95,7 +94,8 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
         if (PlatformUI.isWorkbenchRunning()) {
             Optional<ProcessDiagramEditor> diagramEditor = getDiagramEditor();
             if (diagramEditor.isPresent()) {
-                final EObject mainElement = diagramEditor.get().getDiagramEditPart().resolveSemanticElement();
+                ProcessDiagramEditor processDiagramEditor = diagramEditor.get();
+                final EObject mainElement = processDiagramEditor.getDiagramEditPart().resolveSemanticElement();
                 final MainProcess diagram = ModelHelper.getMainProcess(mainElement);
                 return diagram;
             }
