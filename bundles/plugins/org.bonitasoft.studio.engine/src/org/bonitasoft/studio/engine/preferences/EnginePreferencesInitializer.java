@@ -22,15 +22,10 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-/**
- * @author Romain Bioteau
- */
+
 public class EnginePreferencesInitializer extends AbstractPreferenceInitializer {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-     */
+
     @Override
     public void initializeDefaultPreferences() {
         final IPreferenceStore store = EnginePlugin.getDefault().getPreferenceStore();
@@ -43,6 +38,7 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true);
         store.setDefault(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 512);
+        store.setDefault(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, "-DnoCacheCustomPage=true");
 
         DebugUITools.getPreferenceStore().setValue(
                 org.eclipse.debug.internal.ui.IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH,
