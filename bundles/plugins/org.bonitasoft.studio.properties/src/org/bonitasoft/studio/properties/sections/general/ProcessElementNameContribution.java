@@ -334,6 +334,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
             if (new Identifier(oldName, oldVersion).equals(nameDialog.getIdentifier())) {
                 renamePoolsOnly(nameDialog, editor, newProcess);
             } else {
+                editor.doSave(Repository.NULL_PROGRESS_MONITOR);
                 renameDiagramAndPool(nameDialog, editor, newProcess);
             }
         }
@@ -347,7 +348,6 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
         renameDiagramOperation.setNewDiagramName(identifier.getName());
         renameDiagramOperation.setNewDiagramVersion(identifier.getVersion());
         renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
-        renameDiagramOperation.setEditor(editor);
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
             service.run(false, false, renameDiagramOperation);
