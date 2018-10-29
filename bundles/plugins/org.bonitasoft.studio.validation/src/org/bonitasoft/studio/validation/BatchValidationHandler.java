@@ -169,9 +169,7 @@ public class BatchValidationHandler extends AbstractHandler {
     }
 
     protected String[] toFileNames(String files) {
-        files = files.substring(1, files.length() - 1);
-        final String[] allFiles = files.split(",");
-        return allFiles;
+        return files.trim().split(",");
     }
 
     private void showReport(final BatchValidationOperation validateOperation) {
