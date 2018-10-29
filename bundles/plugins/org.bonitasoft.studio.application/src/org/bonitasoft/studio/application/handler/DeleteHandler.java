@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -31,6 +33,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 
 public class DeleteHandler extends AbstractHandler {
 
@@ -38,30 +42,36 @@ public class DeleteHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection selection = selectionFinder.getSelectionInExplorer();
-        IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
-        IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
-                .getFileStore(resource);
-        if (FileActionDialog
-                .confirmDeletionQuestion(resource.getName())) {
-            if (fileStore != null) {
-                fileStore.delete();
-            } else {
-                try {
-                    resource.delete(false, null);
-                    AbstractFileStore.refreshExplorerView();
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
+        IStructuredSelection selection = (IStructuredSelection) selectionFinder.getSelectionInExplorer();
+        List<IResource> selectedResources = new ArrayList<>();
+        for (Object sel : selection.toList()) {
+            selectedResources.add(((IAdaptable) sel).getAdapter(IResource.class));
+        }
+        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        if ((selectedResources.size() == 1 && FileActionDialog
+                .confirmDeletionQuestion(selectedResources.get(0).getName()))
+                || FileActionDialog.confirmDeletionQuestionWithCustomMessage(
+                        NLS.bind(IDEWorkbenchMessages.DeleteResourceAction_confirmN,
+                                selectedResources.size()))) {
+            for (IResource res : selectedResources) {
+                IRepositoryFileStore fileStore = currentRepository
+                        .getFileStore(res);
+                if (fileStore != null) {
+                    fileStore.delete();
+                } else {
+                    try {
+                        res.delete(false, null);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
+            AbstractFileStore.refreshExplorerView();
         }
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
+
     @Override
     public boolean isEnabled() {
         ISelection selection = selectionFinder.getSelectionInExplorer();
@@ -72,21 +82,27 @@ public class DeleteHandler extends AbstractHandler {
     }
 
     protected boolean selectionCanBeDeleted(IStructuredSelection selection, Repository currentRepository) {
-        if (selection.size() == 1 && selection.getFirstElement() instanceof IAdaptable) {
-            IAdaptable sel = (IAdaptable) selection.getFirstElement();
-            IResource adapter = sel.getAdapter(IResource.class);
-            if (adapter != null) {
-                if (Objects.equals(currentRepository.getProject(), adapter)) {
+        for (Object sel : selection.toList()) {
+            if (sel instanceof IAdaptable) {
+                IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
+                if (adapter != null) {
+                    if (Objects.equals(currentRepository.getProject(), adapter)) {
+                        return false;
+                    }
+                    IRepositoryFileStore fileStore = currentRepository.getFileStore(adapter);
+                    if (fileStore != null && !fileStore.canBeDeleted()) {
+                        return false;
+                    }
+                    if (currentRepository.getRepositoryStore(adapter) == null) {
+                        continue;
+                    }
                     return false;
                 }
-                IRepositoryFileStore fileStore = currentRepository.getFileStore(adapter);
-                if (fileStore != null) {
-                    return fileStore.canBeDeleted();
-                }
-                return currentRepository.getRepositoryStore(adapter) == null;
+            } else {
+                return false;
             }
         }
-        return false;
+        return selection.size() > 0;
     }
 
 }
