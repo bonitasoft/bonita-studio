@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -93,14 +94,14 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                 mainComposite);
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(2).margins(0, 0).create());
+        viewerComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
         createConnectorComposite(viewerComposite);
     }
 
     private void createConnectorComposite(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory()
-                .createPlainComposite(parent, SWT.NONE);
+                .createComposite(parent);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults()
@@ -113,8 +114,8 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         downConnectorButton = createDownConnectorButton(buttonsComposite);
         moveButton = createMoveConnectorButton(buttonsComposite);
 
-        tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI
-                | SWT.NO_FOCUS);
+        tableViewer = new TableViewer(parent, GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI
+                | SWT.NO_FOCUS));
         getWidgetFactory().adapt(tableViewer.getTable(), false, false);
         tableViewer.getTable().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true)

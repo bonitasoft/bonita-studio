@@ -18,10 +18,10 @@
 package org.bonitasoft.studio.properties.sections.general;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -44,10 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-/**
- * @author Mickael Istria
- *
- */
+
 public class VersionGridPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
 
     private Text text;
@@ -55,14 +52,12 @@ public class VersionGridPropertySectionContribution implements IExtensibleGridPr
     private TransactionalEditingDomain editingDomain;
     private EMFDataBindingContext context;
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
-     */
+
     @Override
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
         composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         composite.setLayout(new RowLayout());
-        text = widgetFactory.createText(composite, "", SWT.BORDER); //$NON-NLS-1$
+        text = widgetFactory.createText(composite, "", GTKStyleHandler.removeBorderFlag(SWT.BORDER));
         RowData rd = new RowData();
         rd.width = 80 ;
         text.setLayoutData(rd);
@@ -74,7 +69,6 @@ public class VersionGridPropertySectionContribution implements IExtensibleGridPr
         createBinding(context) ;
 
     }
-
 
     protected void createBinding(EMFDataBindingContext context) {
         UpdateValueStrategy versionUpdate = new UpdateValueStrategy();

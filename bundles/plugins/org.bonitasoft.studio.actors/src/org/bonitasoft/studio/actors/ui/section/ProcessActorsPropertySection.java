@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -117,7 +118,8 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
     protected void createTable(final TabbedPropertySheetWidgetFactory widgetFactory,
             final Composite mainComposite, final CLabel statusControl) {
-        actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        actorsViewer = new TableViewer(mainComposite,
+                GTKStyleHandler.removeBorderFlag(SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL));
         widgetFactory.adapt(actorsViewer.getTable(), false, false);
         actorsViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         actorsViewer.setContentProvider(new ArrayContentProvider());

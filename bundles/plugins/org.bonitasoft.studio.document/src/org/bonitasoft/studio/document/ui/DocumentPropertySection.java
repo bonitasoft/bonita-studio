@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.model.process.Document;
@@ -89,7 +90,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
         getWidgetFactory().createLabel(masterComposite, "");// filler
         final Text documentListFilter = getWidgetFactory().createText(
                 masterComposite, "",
-                SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL));
         documentListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
         documentListFilter.addModifyListener(new ModifyListener() {

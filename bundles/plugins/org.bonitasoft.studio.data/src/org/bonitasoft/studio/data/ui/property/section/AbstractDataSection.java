@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -109,7 +110,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
         final Composite dataComposite = getWidgetFactory().createComposite(mainComposite);
         dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        dataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+        dataComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).extendedMargins(0, 20, 5, 15).create());
         createDataComposite(dataComposite);
     }
 
@@ -150,19 +152,20 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
     protected void createDataComposite(final Composite parent) {
         createViewerHeaderLabel(parent);
 
-        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
-        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
+        final Composite buttonsComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).create());
 
         createAddDataButton(buttonsComposite);
         updateDataButton = createEditDataButton(buttonsComposite);
         removeDataButton = createRemoveDataButton(buttonsComposite);
         promoteDataButton = createMoveDataButton(buttonsComposite);
 
-        dataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        dataTableViewer = new TableViewer(
+                getWidgetFactory().createTable(parent, GTKStyleHandler
+                        .removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL)));
         dataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         dataTableViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST);
-        getWidgetFactory().adapt(dataTableViewer.getTable(), false, false);
         dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         dataTableViewer.setSorter(new ViewerSorter());
         dataTableViewer.addDoubleClickListener(this);

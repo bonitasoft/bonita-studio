@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
@@ -504,11 +505,12 @@ public class TextWidget extends EditableControlWidget {
     }
 
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SINGLE);
+        final Text newText = new Text(textContainer, GTKStyleHandler.replaceSingleWithWrap(SWT.SINGLE));
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;
     }
+
 
     public void addTextListener(int eventType, Listener listener) {
         text.addListener(eventType, listener);
