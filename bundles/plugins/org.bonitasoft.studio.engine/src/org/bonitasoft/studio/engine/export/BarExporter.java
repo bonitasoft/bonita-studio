@@ -55,7 +55,6 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 /**
@@ -223,28 +222,9 @@ public class BarExporter {
 
     protected Map<String, String> getParameters(final Configuration configuration) {
         return Maps.newHashMap(
-                transformValues(uniqueIndex(configuration.getParameters(), toParameterKeys()), toParameterValues()));
+                transformValues(uniqueIndex(configuration.getParameters(), Parameter::getName), Parameter::getValue));
     }
 
-    private Function<Parameter, String> toParameterValues() {
-        return new Function<Parameter, String>() {
-
-            @Override
-            public String apply(Parameter parameter) {
-                return parameter.getValue();
-            }
-        };
-    }
-
-    private Function<Parameter, String> toParameterKeys() {
-        return new Function<Parameter, String>() {
-
-            @Override
-            public String apply(Parameter parameter) {
-                return parameter.getName();
-            }
-        };
-    }
 
     protected BARResourcesProvider getBARApplicationResourcesProvider() {
         BARResourcesProvider result = null;
