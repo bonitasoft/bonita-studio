@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
@@ -79,8 +80,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
         }
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
         setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-
-        textControl = new Text(this, style | SWT.SINGLE);
+        textControl = new Text(this, GTKStyleHandler.replaceSingleWithWrap(style | SWT.SINGLE));
         textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         textControl.addFocusListener(new FocusListener() {

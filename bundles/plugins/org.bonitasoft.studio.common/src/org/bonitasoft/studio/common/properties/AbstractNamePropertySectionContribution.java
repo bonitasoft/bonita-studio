@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -123,7 +124,7 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         final GridLayout rl = new GridLayout(3, false);
         composite.setLayout(rl);
 
-        text = widgetFactory.createText(composite, "", SWT.BORDER); //$NON-NLS-1$
+        text = widgetFactory.createText(composite, "", GTKStyleHandler.removeBorderFlag(SWT.BORDER)); //$NON-NLS-1$
         final GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
         rd.widthHint = 250;
 
