@@ -15,38 +15,34 @@
 package org.bonitasoft.studio.validation.ui.view;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Florine Boudin
- */
+
 public class SeverityColumnLabelProvider extends StyledCellLabelProvider
         implements ILabelProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
+
     @Override
     public Image getImage(final Object element) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
+   
     @Override
     public String getText(final Object element) {
         try {
@@ -67,21 +63,28 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
                 final Image image = getImageForSeverity(severity);
                 final Rectangle bounds = ((TableItem) event.item)
                         .getBounds(event.index);
-                final Rectangle imgBounds = image.getBounds();
-                bounds.width /= 2;
-                bounds.width -= imgBounds.width / 2;
-                bounds.height /= 2;
-                bounds.height -= imgBounds.height / 2;
-
-                final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-                final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-
-                event.gc.drawImage(image, x, y);
-
+                Point location = getLocation(image, bounds, (Table) event.widget);
+                GC gc = event.gc;
+                gc.drawImage(image, location.x, location.y);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
+    }
+
+    protected Point getLocation(final Image image, final Rectangle bounds, Table widget) {
+        final Rectangle imgBounds = image.getBounds();
+        bounds.width /= 2;
+        bounds.width -= imgBounds.width / 2;
+        bounds.height /= 2;
+        bounds.height -= imgBounds.height / 2;
+
+        int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+        int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+        if (GTKStyleHandler.isGTK3()) {
+            y = y - widget.getHeaderHeight();
+        }
+        return new Point(x, y);
     }
 
     /**
