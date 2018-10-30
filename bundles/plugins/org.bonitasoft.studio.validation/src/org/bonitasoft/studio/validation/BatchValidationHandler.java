@@ -153,6 +153,7 @@ public class BatchValidationHandler extends AbstractHandler {
                 throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
             }
             currentDiagramStore = fileStore;
+            fileStore.getContent();//force resource to be loaded
             final Resource eResource = fileStore.getEMFResource();
             final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
             final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource, validateOperation);
