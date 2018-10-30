@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
@@ -63,7 +64,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
     private IMessageManager messageManager;
 
     public ContractConstraintsTableViewer(final Composite parent, final FormToolkit toolkit) {
-        super(toolkit.createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
+        super(toolkit.createTable(parent, GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI)));
         getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE);
     }
 

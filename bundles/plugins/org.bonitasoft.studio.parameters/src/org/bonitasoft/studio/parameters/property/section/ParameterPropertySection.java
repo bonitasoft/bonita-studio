@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;
@@ -147,7 +148,8 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         updateButton = createUpdateParameterButton(buttonsComposite);
         createRemoveParameterButton(buttonsComposite);
 
-        parameterTableViewer = new TableViewer(parameterComposite, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        parameterTableViewer = new TableViewer(widgetFactory.createTable(parameterComposite,
+                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL)));
         parameterTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         getWidgetFactory().adapt(parameterTableViewer.getTable(), false, false);
         parameterTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());

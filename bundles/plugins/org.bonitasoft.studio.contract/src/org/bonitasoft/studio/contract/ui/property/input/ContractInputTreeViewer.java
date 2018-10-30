@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
@@ -73,7 +74,7 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit, final IProgressService progressService,
             final ISharedImages sharedImages) {
-        super(toolkit.createTree(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
+        super(toolkit.createTree(parent, GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI)));
         getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
         this.progressService = progressService;
         this.sharedImages = sharedImages;

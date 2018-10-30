@@ -27,6 +27,7 @@ import org.bonitasoft.studio.actors.ui.wizard.FilterWizard;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
@@ -158,7 +159,9 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
         setButton = createSetButton(viewerComposite);
 
-        filterText = getWidgetFactory().createText(viewerComposite,"", SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.READ_ONLY);
+        filterText = getWidgetFactory().createText(viewerComposite, "",
+                GTKStyleHandler.replaceSingleWithWrap(
+                        GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.READ_ONLY)));
         filterText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL,SWT.CENTER).grab(true,false).create());
 
         updateConnectorButton = createUpdateButton(viewerComposite);
