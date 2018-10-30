@@ -23,6 +23,8 @@ import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -32,8 +34,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -61,15 +66,31 @@ public class QueryStatusLabelProvider extends StyledCellLabelProvider {
         if (img != null) {
             final Rectangle bounds = event.item instanceof TableItem ? ((TableItem) event.item).getBounds(event.index)
                     : ((TreeItem) event.item).getBounds(event.index);
+            Widget widget = event.widget;
+            int headerHeight = 0;
+            if (widget instanceof Table) {
+                Table table = (Table) widget;
+                if (table.getHeaderVisible()) {
+                    headerHeight = table.getHeaderHeight();
+                }
+            }
+            if (widget instanceof Tree) {
+                Tree tree = (Tree) widget;
+                if (tree.getHeaderVisible()) {
+                    headerHeight = tree.getHeaderHeight();
+                }
+            }
             final Rectangle imgBounds = img.getBounds();
             bounds.width /= 2;
             bounds.width -= imgBounds.width / 2;
             bounds.height /= 2;
             bounds.height -= imgBounds.height / 2;
 
-            final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-            final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-
+            int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+            if (GTKStyleHandler.isGTK3()) {
+                y = y - headerHeight;
+            }
             if (SWT.getPlatform().equals("carbon")) {
                 event.gc.drawImage(img, x + 2, y - 1);
             } else {

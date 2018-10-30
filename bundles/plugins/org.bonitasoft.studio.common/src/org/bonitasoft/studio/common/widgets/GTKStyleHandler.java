@@ -28,7 +28,7 @@ public class GTKStyleHandler {
         return isGTK() ? style ^ SWT.BORDER : style;
     }
 
-    private static boolean isGTK3() {
+    public static boolean isGTK3() {
         String gtkVersion = System.getProperty("org.eclipse.swt.internal.gtk.version");
         return gtkVersion != null && gtkVersion.startsWith("3");
     }
