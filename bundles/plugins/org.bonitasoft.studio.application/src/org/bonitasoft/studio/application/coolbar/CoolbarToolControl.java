@@ -29,7 +29,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -51,10 +50,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.INullSelectionListener;
@@ -94,6 +94,7 @@ public class CoolbarToolControl
     private Image image;
     private Composite toolbarContainer;
     private boolean isRegistered;
+    private Font biggerFont;
 
     @PostConstruct
     public void createControls(final Composite parent, final IEclipseContext context,
@@ -164,53 +165,38 @@ public class CoolbarToolControl
     }
 
     private void createToolbar(final Composite toolbarContainer) {
-        toolbar = new ToolBar(toolbarContainer, SWT.FLAT);
+        toolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.HORIZONTAL);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
 
         fillBonitaBar();
 
         final ToolBar sizingToolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.VERTICAL);
-        sizingToolbar.setBackgroundMode(SWT.INHERIT_FORCE);
+        Font font = sizingToolbar.getFont();
+        FontData[] fontData = font.getFontData();
+        fontData[0].setHeight(18);
+        if (biggerFont == null || biggerFont.isDisposed()) {
+            biggerFont = new Font(sizingToolbar.getDisplay(), fontData[0]);
+        }
+        sizingToolbar.setFont(biggerFont);
+
         sizingToolbar.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
         sizingToolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
 
-        final ToolItem minimizeButton = new ToolItem(sizingToolbar, SWT.FLAT);
-        minimizeButton.setImage(Pics.getImage("arrow-up.png"));
-        minimizeButton.setToolTipText(Messages.reduceCoolbarTooltip);
-        minimizeButton.addSelectionListener(new SelectionAdapter() {
+        final ToolItem changeSizeButton = new ToolItem(sizingToolbar, SWT.PUSH);
+        changeSizeButton.setText(size == CoolbarSize.SMALL ? "\uD83D\uDDDA" : "\uD83D\uDDDB");
+        changeSizeButton
+                .setToolTipText(size == CoolbarSize.SMALL ? Messages.maximizeCoolbarTooltip : Messages.reduceCoolbarTooltip);
+        changeSizeButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                minimizeCoolbar();
+                if (size == CoolbarSize.SMALL) {
+                    maximizeCoolbar();
+                } else {
+                    minimizeCoolbar();
+                }
             }
         });
-
-        final ToolItem maximizeButton = new ToolItem(sizingToolbar, SWT.FLAT);
-        maximizeButton.setToolTipText(Messages.maximizeCoolbarTooltip);
-        maximizeButton.setImage(Pics.getImage("arrow-down.png"));
-        maximizeButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                maximizeCoolbar();
-            }
-        });
-
-        if (image != null) {
-            image.dispose();
-        }
-
-        if (size == CoolbarSize.SMALL) {
-            image = new Image(Display.getDefault(),
-                    Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 40));
-
-        } else {
-            image = new Image(Display.getDefault(),
-                    Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 85));
-
-        }
-        toolbarContainer.setBackgroundImage(image);
-        toolbarContainer.setBackgroundMode(SWT.INHERIT_FORCE);
     }
 
     private void fillBonitaBar() {
