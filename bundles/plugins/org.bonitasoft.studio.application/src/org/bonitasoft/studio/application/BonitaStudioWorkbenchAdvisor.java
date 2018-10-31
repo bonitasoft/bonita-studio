@@ -411,7 +411,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         executeContributions();
     }
-    
+
     protected void initXMLandHTMLValidationPreferences() {
         IEclipsePreferences xmlNode = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
         xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
@@ -425,7 +425,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         htmlNode.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, -1);
     }
 
-
     protected void disableGroovyDSL() {
         final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
         groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
@@ -435,7 +434,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
         groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
     }
-
 
     private void executeContributions() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
@@ -522,12 +520,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             try {
                 if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                         && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                    final boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                            .saveAllEditors(true);
-                    if (closeEditor) {
-                        PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
-                    }
-                    return closeEditor;
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
+                    return true;
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
