@@ -119,7 +119,7 @@ public abstract class AbstractGroovyScriptConfigurationSynchronizer implements I
         FragmentContainer container = getContainer(configuration);
         for (Fragment f : container.getFragments()) {
             IResource member = srcFolder.findMember(Path.fromOSString(f.getValue()));
-            if (!member.exists()) {
+            if (member == null || !member.exists()) {
                 cc.append(RemoveCommand.create(editingDomain, container,
                         ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, f));
             }
