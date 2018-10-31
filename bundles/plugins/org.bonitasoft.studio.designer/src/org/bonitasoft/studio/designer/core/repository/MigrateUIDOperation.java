@@ -16,6 +16,7 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -34,18 +35,36 @@ import org.restlet.resource.ResourceException;
 public class MigrateUIDOperation implements IRunnableWithProgress {
 
 
+    private PageDesignerURLFactory pageDesignerURLBuilder;
+
+    public MigrateUIDOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
+        this.pageDesignerURLBuilder = pageDesignerURLBuilder;
+    }
+
+    public MigrateUIDOperation() {
+
+    }
+
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.subTask(Messages.migratingUID);
+        PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
+                ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
+        URI uri = null;
         try {
-            ClientResource clientResource = new ClientResource(
-                    new PageDesignerURLFactory(getPreferenceStore()).migrate().toURI());
+            uri = urlBuilder.migrate().toURI();
+        } catch (MalformedURLException | URISyntaxException e1) {
+            throw new InvocationTargetException(new MigrationException(e1));
+        }
+        try {
+            ClientResource clientResource = new ClientResource(uri);
             clientResource.setRetryOnError(true);
             clientResource.setRetryDelay(500);
             clientResource.setRetryAttempts(10);
             clientResource.post(new EmptyRepresentation());
-        } catch (MalformedURLException | URISyntaxException | ResourceException e) {
-            throw new InvocationTargetException(new MigrationException(e));
+        } catch (ResourceException e) {
+            throw new InvocationTargetException(new MigrationException(e),
+                    "Failed to post on " + uri);
         }
     }
 

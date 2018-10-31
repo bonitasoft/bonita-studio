@@ -134,7 +134,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
                         UIDesignerPlugin.PLUGIN_ID);
-                new MigrateUIDOperation().run(monitor);
+                new MigrateUIDOperation(pageDesignerURLBuilder).run(monitor);
             } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
