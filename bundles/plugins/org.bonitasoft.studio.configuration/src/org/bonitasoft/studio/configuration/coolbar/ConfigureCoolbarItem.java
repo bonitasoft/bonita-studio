@@ -35,19 +35,13 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class ConfigureCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.configure";
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isEnabled()
-     */
+
     @Override
     public boolean isEnabled() {
         return getCommand().isEnabled();
@@ -81,7 +75,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
     }
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.configuration.configure");
     }
 

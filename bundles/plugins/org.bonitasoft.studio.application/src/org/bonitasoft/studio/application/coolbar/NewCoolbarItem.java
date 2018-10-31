@@ -113,7 +113,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
             item.setText(Messages.NewButtonLabel);
