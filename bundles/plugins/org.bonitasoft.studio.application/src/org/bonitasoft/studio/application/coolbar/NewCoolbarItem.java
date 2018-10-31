@@ -22,7 +22,6 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
@@ -117,13 +116,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
-            String newButtonLabel = Messages.NewButtonLabel;
-            if (GTKStyleHandler.isGTK3()) {//Ugly workaround as label is align to the right for this ToolItem
-                if (newButtonLabel.length() < 4) {
-                    newButtonLabel = "      " + newButtonLabel;
-                }
-            }
-            item.setText(newButtonLabel);
+            item.setText(Messages.NewButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_new_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_new_disabled_48));
         } else {

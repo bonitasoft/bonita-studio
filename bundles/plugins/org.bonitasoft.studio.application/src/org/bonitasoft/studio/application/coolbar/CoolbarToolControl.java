@@ -52,7 +52,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -83,7 +82,8 @@ public class CoolbarToolControl
         SMALL, NORMAL
     }
 
-    private static final String COOLBAR_PNG = "/bg-coolbar-repeat.png";
+    private static final String UNICODE_REDUCE = "\u25B2";
+    private static final String UNICODE_INCREASE = "\u25BC";
     private static final String CLASS = "class";
     private static final String POSITION = "toolbarPosition";
     private static final String PRIORITY = "priority";
@@ -91,7 +91,6 @@ public class CoolbarToolControl
     private CoolbarSize size;
     private final Map<Integer, IBonitaContributionItem> contributions = new HashMap<Integer, IBonitaContributionItem>();
     private ToolBar toolbar;
-    private Image image;
     private Composite toolbarContainer;
     private boolean isRegistered;
     private Font biggerFont;
@@ -108,7 +107,8 @@ public class CoolbarToolControl
                 toolbarContainer.setLayoutData(
                         GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
                 toolbarContainer
-                        .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create());
+                        .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0)
+                                .extendedMargins(0, 10, 0, 0).create());
                 layout.top = toolbarContainer;
                 final Composite leftTrim = layout.left;
                 if (leftTrim != null) {
@@ -173,17 +173,18 @@ public class CoolbarToolControl
         final ToolBar sizingToolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.VERTICAL);
         Font font = sizingToolbar.getFont();
         FontData[] fontData = font.getFontData();
-        fontData[0].setHeight(18);
+        fontData[0].setHeight(10);
         if (biggerFont == null || biggerFont.isDisposed()) {
             biggerFont = new Font(sizingToolbar.getDisplay(), fontData[0]);
         }
         sizingToolbar.setFont(biggerFont);
-
-        sizingToolbar.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-        sizingToolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
+        sizingToolbar.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0)
+                .spacing(0, 0).create());
+        sizingToolbar.setLayoutData(
+                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
 
         final ToolItem changeSizeButton = new ToolItem(sizingToolbar, SWT.PUSH);
-        changeSizeButton.setText(size == CoolbarSize.SMALL ? "\uD83D\uDDDA" : "\uD83D\uDDDB");
+        changeSizeButton.setText(size == CoolbarSize.SMALL ? UNICODE_INCREASE : UNICODE_REDUCE);
         changeSizeButton
                 .setToolTipText(size == CoolbarSize.SMALL ? Messages.maximizeCoolbarTooltip : Messages.reduceCoolbarTooltip);
         changeSizeButton.addSelectionListener(new SelectionAdapter() {
