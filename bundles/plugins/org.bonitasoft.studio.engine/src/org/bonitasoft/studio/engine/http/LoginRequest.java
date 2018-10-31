@@ -25,10 +25,6 @@ public class LoginRequest extends HttpRequest<String> {
         super(httpClientFactory);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.rest.api.extension.core.remote.http.HttpRequest#doExecute(org.apache.http.impl.client.CloseableHttpClient)
-     */
     @Override
     protected String doExecute(final HttpClient httpClient) throws IOException, HttpException {
         HttpGet loginRequest;
