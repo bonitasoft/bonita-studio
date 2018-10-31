@@ -20,15 +20,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-/**
- * @author Romain Bioteau
- */
 public class SeparatorCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.separator";
@@ -36,7 +29,8 @@ public class SeparatorCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        new ToolItem(toolbar, SWT.SEPARATOR | SWT.VERTICAL).setEnabled(true);
+        ToolItem toolItem = new ToolItem(toolbar, SWT.SEPARATOR | SWT.VERTICAL);
+        toolItem.setEnabled(true);
     }
 
 }
