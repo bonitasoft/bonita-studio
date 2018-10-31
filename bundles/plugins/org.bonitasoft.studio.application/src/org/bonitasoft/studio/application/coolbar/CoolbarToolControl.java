@@ -166,8 +166,8 @@ public class CoolbarToolControl
 
     private void createToolbar(final Composite toolbarContainer) {
         toolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.HORIZONTAL);
+        toolbar.setLayoutDeferred(true);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
-
         fillBonitaBar();
 
         final ToolBar sizingToolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.VERTICAL);
@@ -198,6 +198,8 @@ public class CoolbarToolControl
                 }
             }
         });
+        toolbar.setLayoutDeferred(false);
+        toolbar.layout();
     }
 
     private void fillBonitaBar() {
