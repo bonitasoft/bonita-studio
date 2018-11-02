@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Properties plugin BOS specific
 Bundle-SymbolicName: org.bonitasoft.studio.properties.bos;singleton:=true
-Bundle-Version: 7.8.0.qualifier
+Bundle-Version: 7.8.0.beta-01
 Bundle-Activator: org.bonitasoft.studio.properties.bos.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
