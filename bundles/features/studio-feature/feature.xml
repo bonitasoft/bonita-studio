@@ -2,7 +2,7 @@
 <feature
       id="studio-feature"
       label="Studio"
-      version="7.8.0.qualifier"
+      version="7.9.0.qualifier"
       provider-name="Bonitasoft S.A.">
 
    <description>
@@ -119,7 +119,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <requires>
       <import feature="org.eclipse.rcp" version="4.7.0.v20170612-1255" match="greaterOrEqual"/>
-      <import feature="platform-specific-feature" version="7.8.0" match="equivalent"/>
+      <import feature="platform-specific-feature" version="7.9.0" match="equivalent"/>
       <import feature="org.eclipse.m2m.qvt.oml" version="3.7.0.v20170604-1316"/>
       <import feature="org.eclipse.m2m.qvt.oml.runtime" version="3.7.0.v20170604-1316"/>
       <import feature="org.eclipse.wst.web_ui.feature" version="3.9.0.v201706011953"/>
