@@ -20,11 +20,13 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,8 +59,16 @@ public class ProjectExplorerBdmIT {
                 .cancel();
         projectExplorerBot.bdm().deployBdm();
         projectExplorerBot.bdm().deleteBdm();
-        assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml"))
-                .isNull();
+        validateBdmIsDeleted();
+    }
+
+    private void validateBdmIsDeleted() {
+        ICondition bdmDeletedCondition = new ConditionBuilder()
+                .withTest(() -> repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
+                        .getChild("bom.xml") == null)
+                .withFailureMessage(() -> "Business data model has not been deleted.")
+                .create();
+        bot.waitUntil(bdmDeletedCondition);
     }
 
     private void createBdmIfRequired() {

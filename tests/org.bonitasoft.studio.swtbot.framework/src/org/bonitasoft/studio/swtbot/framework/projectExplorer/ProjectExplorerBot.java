@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
@@ -27,7 +27,6 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -162,71 +161,35 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public ICondition nodeAvailable(SWTBotTreeItem item, String node) {
-        return new ICondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                try {
-                    item.getNode(node);
-                    return true;
-                } catch (WidgetNotFoundException e) {
-                    return false;
-                }
-            }
-
-            @Override
-            public void init(SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return String.format("The node %s of '%s' isn't available", node, item);
-            }
-        };
+        return new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        item.getNode(node);
+                        return true;
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                })
+                .withFailureMessage(() -> String.format("The node %s of '%s' isn't available", node, item))
+                .create();
     }
 
     public ICondition contextMenuAvailable(SWTBotTreeItem item, String menu) {
-        return new ICondition() {
-
-            private List<String> menuItems;
-
-            @Override
-            public boolean test() throws Exception {
-                menuItems = item.contextMenu().menuItems();
-                return menuItems.contains(menu);
-            }
-
-            @Override
-            public void init(SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return String.format("The menu '%s' of '%s' isn't available (%s)", menu, item, menuItems);
-            }
-        };
+        return new ConditionBuilder()
+                .withTest(() -> item.contextMenu().menuItems().contains(menu))
+                .withFailureMessage(() -> String.format("The menu '%s' of '%s' isn't available (%s)", menu, item,
+                        item.contextMenu().menuItems()))
+                .create();
     }
 
     public void waitUntilActiveEditorTitleIs(String title, Optional<String> extension) {
-        bot.waitUntil(new ICondition() {
-
-            String expectedTitle = extension.isPresent() ? title + extension.get() : title;
-
-            @Override
-            public boolean test() throws Exception {
-                return Objects.equals(bot.activeEditor().getTitle(), expectedTitle);
-            }
-
-            @Override
-            public void init(SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                String actualTitle = bot.activeEditor().getTitle();
-                return String.format("The active editor title should be  %s instead of %s", expectedTitle, actualTitle);
-            }
-        });
+        String expectedTitle = extension.isPresent() ? title + extension.get() : title;
+        ICondition condition = new ConditionBuilder()
+                .withTest(() -> Objects.equals(bot.activeEditor().getTitle(), expectedTitle))
+                .withFailureMessage(() -> String.format("The active editor title should be  %s instead of %s", expectedTitle,
+                        bot.activeEditor().getTitle()))
+                .create();
+        bot.waitUntil(condition);
     }
 
 }
