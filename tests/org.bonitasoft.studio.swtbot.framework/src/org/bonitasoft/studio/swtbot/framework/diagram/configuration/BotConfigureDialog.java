@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.configuration;
 
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.BotDialog;
+import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-public class BotConfigureDialog extends BotDialog {
+public class BotConfigureDialog extends BotWizardDialog {
 
     public BotConfigureDialog(final SWTGefBot bot, final String processName) {
         super(bot, Messages.bind(Messages.configurationTitle, "Local", processName));
@@ -33,4 +33,5 @@ public class BotConfigureDialog extends BotDialog {
         bot.table().select(Messages.javaDependencies);
         return new BotJavaDependenciesConfigurationPage(bot);
     }
+
 }

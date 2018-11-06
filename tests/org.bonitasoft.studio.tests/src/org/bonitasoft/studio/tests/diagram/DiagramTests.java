@@ -74,8 +74,8 @@ public class DiagramTests {
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         gmfEditor.activateTool(Messages.Step_title);
         gmfEditor.click(200, 200);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
-        bot.toolbarButton("Save").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR)));
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
         final Pool pool = (Pool) model.getElements().get(0);
@@ -100,8 +100,8 @@ public class DiagramTests {
         gmfEditor.click(x, y);
         y += toolbarFigure.getBounds().height; // move cursor down to first sub item
         gmfEditor.click(x, y);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
-        bot.toolbarButton("Save").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR)));
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         SWTBotGefEditPart editPart = gmfEditor.getEditPart("Step1");
         graphicalEditPart = (IGraphicalEditPart) editPart.part();
         final Activity newModelElement = (Activity) graphicalEditPart.resolveSemanticElement();

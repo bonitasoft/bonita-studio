@@ -87,7 +87,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotApplicationWorkbenchWindow save() {
         bot.activeEditor().setFocus();
-        bot.toolbarButton("Save").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         bot.waitUntil(new DefaultCondition() {
 
             @Override
@@ -139,11 +139,11 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotConfigureDialog configure() {
         if (SWTBotTestUtil.testingBosSp()) {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButton("Configure")));
-            bot.toolbarDropDownButton("Configure").click();
+            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
+            bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         } else {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Configure")));
-            bot.toolbarButton("Configure").click();
+            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
+            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         }
         final DiagramEditor editor = (DiagramEditor) bot.activeEditor().getReference().getEditor(true);
         final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
@@ -152,12 +152,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotExportBOSDialog export() {
-        bot.toolbarButton("Export").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM).click();
         return new BotExportBOSDialog(bot);
     }
 
     public BotImportBOSDialog importBOSArchive() {
-        bot.toolbarButton("Import").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_IMPORT_TOOLITEM).click();
         return new BotImportBOSDialog(bot);
     }
 

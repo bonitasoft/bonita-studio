@@ -33,4 +33,9 @@ public class SeparatorCoolbarItem extends ContributionItem implements IBonitaCon
         toolItem.setEnabled(true);
     }
 
+    @Override
+    public String getText() {
+        return null;
+    }
+
 }

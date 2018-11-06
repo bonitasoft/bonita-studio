@@ -82,7 +82,7 @@ public class TestWebPurchase implements SWTBotConstants {
         stepExpressDelivery(gmfEditor);
         stepArchive(gmfEditor);
         finalEvent(gmfEditor);
-        bot.toolbarButton("Save").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         configureProcess(gmfEditor);
         runProcess(gmfEditor);
     }
@@ -286,9 +286,9 @@ public class TestWebPurchase implements SWTBotConstants {
         final Pool pool = (Pool) model.getElements().get(0);
         final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
         if (SWTBotTestUtil.testingBosSp()) {
-            bot.toolbarDropDownButton("Configure").click();
+            bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         } else {
-            bot.toolbarButton("Configure").click();
+            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         }
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().getTableItem("Actor mapping").select();

@@ -112,11 +112,15 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
     }
 
     @Override
+    public String getText() {
+        return Messages.NewButtonLabel;
+    }
+
+    @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
-            item.setText(Messages.NewButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_new_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_new_disabled_48));
         } else {

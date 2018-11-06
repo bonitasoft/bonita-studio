@@ -17,9 +17,7 @@ package org.bonitasoft.studio.application.coolbar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -42,11 +40,10 @@ import org.eclipse.e4.ui.workbench.UIEvents.UIElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.renderers.swt.TrimmedPartLayout;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -54,19 +51,17 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.INullSelectionListener;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.activities.ActivityManagerEvent;
-import org.eclipse.ui.activities.IActivityManagerListener;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.internal.WorkbenchWindow;
-import org.eclipse.ui.internal.handlers.DirtyStateTracker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
@@ -74,11 +69,9 @@ import org.osgi.service.event.EventHandler;
  * @author Romain Bioteau
  */
 public class CoolbarToolControl
-        implements INullSelectionListener, IActivityManagerListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
+        implements INullSelectionListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
 
-    private static final int ICON_SIZE = 24;
-
-    private enum CoolbarSize {
+    enum CoolbarSize {
         SMALL, NORMAL
     }
 
@@ -89,8 +82,7 @@ public class CoolbarToolControl
     private static final String PRIORITY = "priority";
     private static final int MAX_CONTRIBUTION_SIZE = 25;
     private CoolbarSize size;
-    private final Map<Integer, IBonitaContributionItem> contributions = new HashMap<Integer, IBonitaContributionItem>();
-    private ToolBar toolbar;
+    private final List<CustomToolItem> contributions = new ArrayList<>();
     private Composite toolbarContainer;
     private boolean isRegistered;
     private Font biggerFont;
@@ -98,7 +90,7 @@ public class CoolbarToolControl
     @PostConstruct
     public void createControls(final Composite parent, final IEclipseContext context,
             final IWorkbenchActivitySupport activitySupport) {
-        if (isRendered(context) && toolbarContainer == null ) {
+        if (isRendered(context) && toolbarContainer == null) {
             size = getCoolBarPreferredSize();
             final Composite parentShell = parent.getParent();
             final TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
@@ -121,8 +113,8 @@ public class CoolbarToolControl
                     rightTrim.setVisible(false);
                     rightTrim.setSize(0, 0);
                 }
-                createToolbar(toolbarContainer);
-                activitySupport.getActivityManager().addActivityManagerListener(this);
+                final IWorkbenchPage page = context.get(IWorkbenchPage.class);
+                createToolbar(toolbarContainer, page);
                 final IEventBroker eventBroker = context.get(IEventBroker.class);
                 eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
 
@@ -156,18 +148,22 @@ public class CoolbarToolControl
         isRegistered = false;
         if (toolbarContainer != null) {
             toolbarContainer.dispose();
-            activitySupport.getActivityManager().removeActivityManagerListener(this);
         }
     }
 
-    public Map<Integer, IBonitaContributionItem> getContributions() {
+    public List<CustomToolItem> getContributions() {
         return contributions;
     }
 
-    private void createToolbar(final Composite toolbarContainer) {
-        toolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.HORIZONTAL);
-        toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
-        fillBonitaBar();
+    private void createToolbar(final Composite toolbarContainer, IWorkbenchPage page) {
+        loadContributions(page);
+        Composite leftToolbarContainer = new Composite(toolbarContainer, SWT.NONE);
+        leftToolbarContainer
+                .setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
+        leftToolbarContainer
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(contributions.size())
+                        .spacing(size == CoolbarSize.SMALL ? 3 : 5, LayoutConstants.getSpacing().y).create());
+        contributions.stream().forEach(item -> item.createControl(leftToolbarContainer, size));
 
         final ToolBar sizingToolbar = new ToolBar(toolbarContainer, SWT.FLAT | SWT.VERTICAL);
         Font font = sizingToolbar.getFont();
@@ -199,11 +195,9 @@ public class CoolbarToolControl
         });
     }
 
-    private void fillBonitaBar() {
-
-        for (final IBonitaContributionItem contribution : contributions.values()) {
-            contribution.dispose();
-        }
+    private void loadContributions(IWorkbenchPage page) {
+        contributions.stream().map(CustomToolItem::getContributionItem).filter(IPartListener.class::isInstance)
+                .forEach(partListener -> page.removePartListener((IPartListener) partListener));
         contributions.clear();
 
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
@@ -216,20 +210,18 @@ public class CoolbarToolControl
             if (element != null) {
                 try {
                     final IBonitaContributionItem item = (IBonitaContributionItem) element.createExecutableExtension(CLASS);
-                    if (toolbar.getItemCount() > 1 && item instanceof SeparatorCoolbarItem) {
-                        final int index = toolbar.getItemCount() - 1;
-                        final ToolItem previousItem = toolbar.getItem(index);
-                        if ((previousItem.getStyle() & SWT.SEPARATOR) != 0) {
+                    if (contributions.size() > i && item instanceof SeparatorCoolbarItem) {
+                        final IBonitaContributionItem previousItem = contributions.get(i - 1).getContributionItem();
+                        if (previousItem instanceof SeparatorCoolbarItem) {
                             item.setVisible(false);
                         }
                     }
                     if (item.isVisible()) {
-                        if (size == CoolbarSize.SMALL) {
-                            item.fill(toolbar, i, ICON_SIZE);
-                        } else {
-                            item.fill(toolbar, i, -1);
+                        if (item instanceof SaveCoolbarItem) {
+                            page.addPartListener((IPartListener) item);
+                            ((SaveCoolbarItem) item).partOpened(page.getActivePart());
                         }
-                        contributions.put(toolbar.getItemCount() - 1, item);
+                        contributions.add(new CustomToolItem(item));
                     }
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
@@ -243,7 +235,7 @@ public class CoolbarToolControl
             c.dispose();
         }
         size = CoolbarSize.NORMAL;
-        createToolbar(toolbarContainer);
+        createToolbar(toolbarContainer, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
         toolbarContainer.getParent().layout(true, true);
     }
 
@@ -252,7 +244,7 @@ public class CoolbarToolControl
             c.dispose();
         }
         size = CoolbarSize.SMALL;
-        createToolbar(toolbarContainer);
+        createToolbar(toolbarContainer, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
         toolbarContainer.getParent().layout(true, true);
     }
 
@@ -263,14 +255,7 @@ public class CoolbarToolControl
     }
 
     public void refreshCoolBarButtons() {
-        if (toolbar != null && !toolbar.isDisposed()) {
-            for (final ToolItem item : toolbar.getItems()) {
-                if (!item.isDisposed()) {
-                    final IBonitaContributionItem iBonitaContributionItem = contributions.get(toolbar.indexOf(item));
-                    item.setEnabled(iBonitaContributionItem.isEnabled());
-                }
-            }
-        }
+        Display.getDefault().asyncExec(() -> contributions.stream().forEach(CustomToolItem::update));
     }
 
     private IConfigurationElement findContributionForPosition(final int position, final IConfigurationElement[] elements) {
@@ -320,110 +305,9 @@ public class CoolbarToolControl
 
     }
 
-    private void refreshCoolbar() {
-        for (final Control c : toolbarContainer.getChildren()) {
-            c.dispose();
-        }
-        createToolbar(toolbarContainer);
-        for (final IBonitaContributionItem bcItem : contributions.values()) {
-            if (bcItem instanceof SaveCoolbarItem) {
-                ((SaveCoolbarItem) bcItem).createDirtyStateTracker();
-            }
-        }
-        toolbar.getParent().layout(true, true);
-    }
-
     public void registerHandlers(final WorkbenchWindow workbenchWindow, final IWorkbenchPage page) {
         if (!isRegistered) {
             workbenchWindow.getModel().getContext().get(EPartService.class).addPartListener(CoolbarToolControl.this);
-            if (page != null) {
-                page.addSelectionListener(CoolbarToolControl.this);
-                page.addPartListener(new IPartListener() {
-
-                    @Override
-                    public void partOpened(final IWorkbenchPart wp) {
-                        if (wp instanceof ISaveablePart) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof SaveCoolbarItem) {
-                                    final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-                                    dirtyStateTracker.partOpened(wp);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void partDeactivated(final IWorkbenchPart wp) {
-                        if (wp instanceof ISaveablePart) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof SaveCoolbarItem) {
-                                    final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-                                    dirtyStateTracker.partDeactivated(wp);
-
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void partClosed(final IWorkbenchPart wp) {
-                        if (wp instanceof ISaveablePart) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof SaveCoolbarItem) {
-                                    final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-                                    dirtyStateTracker.partClosed(wp);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void partBroughtToTop(final IWorkbenchPart wp) {
-                        if (wp instanceof ISaveablePart) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof SaveCoolbarItem) {
-                                    final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-                                    dirtyStateTracker.partBroughtToTop(wp);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void partActivated(final IWorkbenchPart wp) {
-                        if (wp instanceof ISaveablePart) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof SaveCoolbarItem) {
-                                    final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-                                    dirtyStateTracker.partActivated(wp);
-                                }
-                            }
-                        }
-                        if (wp instanceof DiagramEditor) {
-                            for (final IBonitaContributionItem bcItem : contributions.values()) {
-                                if (bcItem instanceof ISelectionChangedListener) {
-                                    ((DiagramEditor) wp).getDiagramGraphicalViewer()
-                                            .addSelectionChangedListener((ISelectionChangedListener) bcItem);
-                                }
-                            }
-                        }
-                    }
-
-                    /**
-                     * @param bcItem
-                     * @return
-                     */
-                    public DirtyStateTracker getDirtyStateTracker(
-                            final IBonitaContributionItem bcItem) {
-                        DirtyStateTracker dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
-                        if (dirtyStateTracker == null) {
-                            ((SaveCoolbarItem) bcItem).createDirtyStateTracker();
-                            dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
-                        }
-                        return dirtyStateTracker;
-                    }
-                });
-            }
             isRegistered = true;
         }
     }
@@ -431,11 +315,6 @@ public class CoolbarToolControl
     @Override
     public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
         refreshCoolBarButtons();
-    }
-
-    @Override
-    public void activityManagerChanged(final ActivityManagerEvent activityManagerEvent) {
-        refreshCoolbar();
     }
 
     @Override
