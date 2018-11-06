@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.importer.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -31,21 +32,23 @@ import org.eclipse.ui.PlatformUI;
 
 public class ImportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.import";
     }
 
     @Override
+    public String getText() {
+        return Messages.ImportProcessButtonLabel;
+    }
+
+    @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_IMPORT_TOOLITEM);
         item.setToolTipText(Messages.ImportProcessButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.ImportProcessButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_import_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_import_disabled_48));
         } else {

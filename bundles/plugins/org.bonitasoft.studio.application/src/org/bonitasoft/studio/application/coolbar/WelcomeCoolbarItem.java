@@ -50,11 +50,15 @@ public class WelcomeCoolbarItem extends ContributionItem implements IBonitaContr
     }
 
     @Override
+    public String getText() {
+        return Messages.WelcomeButtonLabel;
+    }
+
+    @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.WelcomeButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.WelcomeButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_welcome_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_welcome_disabled_48));
         } else {

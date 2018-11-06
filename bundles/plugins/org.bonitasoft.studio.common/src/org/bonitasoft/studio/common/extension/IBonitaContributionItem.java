@@ -26,4 +26,6 @@ import org.eclipse.swt.widgets.ToolBar;
 public interface IBonitaContributionItem extends IContributionItem {
 
 	void fill(ToolBar toolbar, int index, int iconSize) ;
+
+    String getText();
 }

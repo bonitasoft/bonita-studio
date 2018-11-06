@@ -49,7 +49,6 @@ public class HelpCoolbarItem extends ContributionItem implements IBonitaContribu
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.HelpButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.HelpButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_help_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_help_disabled_48));
         } else {
@@ -73,6 +72,11 @@ public class HelpCoolbarItem extends ContributionItem implements IBonitaContribu
     private Command getCommand() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.application.showHelp");
+    }
+
+    @Override
+    public String getText() {
+        return Messages.HelpButtonLabel;
     }
 
 }

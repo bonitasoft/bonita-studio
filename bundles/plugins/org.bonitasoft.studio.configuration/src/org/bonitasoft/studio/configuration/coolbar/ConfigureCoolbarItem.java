@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.configuration.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -48,11 +49,16 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
     }
 
     @Override
+    public String getText() {
+        return Messages.ConfigureButtonLabel;
+    }
+
+    @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.ConfigureButtonLabel);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM);
         if (iconSize < 0) {
-            item.setText(Messages.ConfigureButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_configure_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_48));
         } else {

@@ -81,18 +81,9 @@ public class ConfigurationDialogIT {
 
     @Test
     public void importDiagramWithCustomActorMappingAndOpenConfiguration() throws IOException {
-
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(ConfigurationDialogIT.class.getResource("TestImport-1.0.bos")).finish();
-        final SWTBotEditor botEditor = bot.activeEditor();
-        clickOnConfigure();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
-        final MainProcess model = (MainProcess) part.resolveSemanticElement();
-        final Pool pool = (Pool) model.getElements().get(0);
-        final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
-        bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+        new BotApplicationWorkbenchWindow(bot).configure().finish();
     }
 
     @Test
@@ -101,21 +92,9 @@ public class ConfigurationDialogIT {
     }
 
     private void openDialog() {
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
-        final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
-        final MainProcess model = (MainProcess) part.resolveSemanticElement();
-        final Pool pool = (Pool) model.getElements().get(0);
-        final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
-        clickOnConfigure();
-        bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
-
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.table().getTableItem("Parameters").select();
-        }
+        new BotApplicationWorkbenchWindow(bot).configure();
+        bot.table().getTableItem("Parameters").select();
         bot.table().getTableItem("Actor mapping").select();
-
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
@@ -128,12 +107,7 @@ public class ConfigurationDialogIT {
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
         final Pool pool = (Pool) model.getElements().get(0);
         final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.toolbarDropDownButton("Configure").click();
-        } else {
-            bot.toolbarButton("Configure").click();
-        }
-        bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
+        new BotApplicationWorkbenchWindow(bot).configure();
         if (bot.checkBox().isChecked()) {
             bot.checkBox().click();
         }
@@ -153,8 +127,7 @@ public class ConfigurationDialogIT {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         //VALIDATE CHECKBOX STATE RESTORED
-        clickOnConfigure();
-        bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
+        new BotApplicationWorkbenchWindow(bot).configure();
         assertTrue("Advanced checbox should be ckecked", bot.checkBox().isChecked());
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
@@ -168,7 +141,7 @@ public class ConfigurationDialogIT {
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
         final Pool pool = (Pool) model.getElements().get(0);
         final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
-        clickOnConfigure();
+        new BotApplicationWorkbenchWindow(bot).configure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().getTableItem("Actor mapping").select();
         SWTBotShell activeShell = bot.activeShell();
@@ -224,12 +197,7 @@ public class ConfigurationDialogIT {
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).getNode("Membership").expand();
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.toolbarDropDownButton("Configure").click();
-        } else {
-            bot.toolbarButton("Configure").click();
-        }
+        new BotApplicationWorkbenchWindow(bot).configure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().select("Actor mapping");
         bot.tree().getTreeItem(EMPLOYEE_ACTOR).getNode("Groups").expand();
@@ -240,14 +208,5 @@ public class ConfigurationDialogIT {
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
-    protected void clickOnConfigure() {
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButton("Configure")));
-            bot.toolbarDropDownButton("Configure").click();
-        } else {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Configure")));
-            bot.toolbarButton("Configure").click();
-        }
-    }
 
 }
