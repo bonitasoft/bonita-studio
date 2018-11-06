@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.exporter.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -40,23 +41,25 @@ public class ExportBarCoolbarItem extends ContributionItem implements IBonitaCon
         return service.getCommand("org.bonitasoft.studio.exportBosArchive");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.export";
     }
 
     @Override
+    public String getText() {
+        return Messages.ExportButtonLabel;
+    }
+
+    @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM);
         item.setToolTipText(Messages.ExportButtonLabel);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_export_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_export_disabled_48));
-            item.setText(Messages.ExportButtonLabel);
         } else {
             item.setImage(Pics.getImage(PicsConstants.coolbar_export_16));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_export_disabled_16));

@@ -47,9 +47,6 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.openUIDesigner);
-        if (iconSize < 0) {
-            item.setText(Messages.uiDesignerLabel);
-        }
         configureItemImage(item, iconSize < 0 ? "ui_designer_48x48.png" : "ui_designer_24x24.png");
         item.addSelectionListener(new SelectionAdapter() {
 
@@ -109,5 +106,10 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.uiDesigner";
+    }
+
+    @Override
+    public String getText() {
+        return Messages.uiDesignerLabel;
     }
 }

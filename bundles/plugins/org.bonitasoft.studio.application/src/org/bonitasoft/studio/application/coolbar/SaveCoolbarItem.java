@@ -34,16 +34,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISaveablePart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.handlers.DirtyStateTracker;
 
-/**
- * @author Romain Bioteau
- */
-public class SaveCoolbarItem extends ContributionItem implements IBonitaContributionItem, ISelectionChangedListener {
+public class SaveCoolbarItem extends ContributionItem
+        implements IBonitaContributionItem, ISelectionChangedListener, IPartListener {
 
     private ToolItem item;
     private DirtyStateTracker dirtyStateTracker;
@@ -53,19 +53,12 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
         return service.getCommand("org.eclipse.ui.file.save");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.save";
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
         final Command cmd = getCommand();
@@ -78,7 +71,6 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
         item.setToolTipText(Messages.SaveProcessButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_SAVE_EDITOR);
         if (iconSize < 0) {
-            item.setText(Messages.SaveProcessButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_save_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_48));
         } else {
@@ -90,12 +82,15 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .getActiveEditor();
                 if (editor != null) {
                     if (editor instanceof DiagramEditor) {
-                        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+                        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+                                .getService(IHandlerService.class);
                         final Command command = getCommand();
-                        final ExecutionEvent executionEvent = new ExecutionEvent(command, Collections.EMPTY_MAP, null, handlerService.getClass());
+                        final ExecutionEvent executionEvent = new ExecutionEvent(command, Collections.EMPTY_MAP, null,
+                                handlerService.getClass());
                         try {
                             command.executeWithChecks(executionEvent);
                         } catch (final Exception e1) {
@@ -111,6 +106,9 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
     }
 
     public DirtyStateTracker getDirtyStateTracker() {
+        if (dirtyStateTracker == null) {
+            createDirtyStateTracker();
+        }
         return dirtyStateTracker;
     }
 
@@ -119,10 +117,12 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
 
             @Override
             public void propertyChanged(final Object source, final int propID) {
-                if (source instanceof ISaveablePart && propID == ISaveablePart.PROP_DIRTY) {
+                IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .getActiveEditor();
+                if (activeEditor instanceof ISaveablePart && propID == ISaveablePart.PROP_DIRTY) {
                     update();
                     if (item != null && !item.isDisposed()) {
-                        item.setEnabled(((ISaveablePart) source).isDirty());
+                        item.setEnabled(((ISaveablePart) activeEditor).isDirty());
                     }
                 }
             }
@@ -143,6 +143,51 @@ public class SaveCoolbarItem extends ContributionItem implements IBonitaContribu
             });
 
         }
+    }
+
+    @Override
+    public void partActivated(IWorkbenchPart part) {
+        if (part instanceof ISaveablePart) {
+            final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker();
+            dirtyStateTracker.partActivated(part);
+        }
+    }
+
+    @Override
+    public void partBroughtToTop(IWorkbenchPart part) {
+        if (part instanceof ISaveablePart) {
+            final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker();
+            dirtyStateTracker.partBroughtToTop(part);
+        }
+    }
+
+    @Override
+    public void partClosed(IWorkbenchPart part) {
+        if (part instanceof ISaveablePart) {
+            final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker();
+            dirtyStateTracker.partClosed(part);
+        }
+    }
+
+    @Override
+    public void partDeactivated(IWorkbenchPart part) {
+        if (part instanceof ISaveablePart) {
+            final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker();
+            dirtyStateTracker.partDeactivated(part);
+        }
+    }
+
+    @Override
+    public void partOpened(IWorkbenchPart part) {
+        if (part instanceof ISaveablePart) {
+            final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker();
+            dirtyStateTracker.partOpened(part);
+        }
+    }
+
+    @Override
+    public String getText() {
+        return Messages.SaveProcessButtonLabel;
     }
 
 }

@@ -68,7 +68,6 @@ public class CopyCoolbarItem extends ContributionItem implements IBonitaContribu
         item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.CopyButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.CopyButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_copy_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_copy_disabled_48));
         } else {
@@ -96,6 +95,11 @@ public class CopyCoolbarItem extends ContributionItem implements IBonitaContribu
         if (item != null && !item.isDisposed()) {
             item.setEnabled(getCommand().isEnabled());
         }
+    }
+
+    @Override
+    public String getText() {
+        return Messages.CopyButtonLabel;
     }
 
 }

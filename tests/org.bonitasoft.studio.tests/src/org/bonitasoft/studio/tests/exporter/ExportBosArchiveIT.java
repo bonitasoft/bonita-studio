@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.zip.ZipFile;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -104,7 +105,7 @@ public class ExportBosArchiveIT {
 
         bot.saveAllEditors();
 
-        bot.toolbarButton("Export").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.ExportButtonLabel));
 
         final SWTBotCombo destComboBot = bot

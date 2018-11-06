@@ -49,7 +49,6 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.PreferencesButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.PreferencesButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preferences_disabled_48));
         } else {
@@ -74,5 +73,10 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
     private Command getCommand() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.eclipse.ui.window.preferences");
+    }
+
+    @Override
+    public String getText() {
+        return Messages.PreferencesButtonLabel;
     }
 }

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration.ui.handler;
 
@@ -40,80 +38,79 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ConfigureHandler extends AbstractHandler {
 
     private IStatus status;
 
-    public ConfigureHandler(){
+    public ConfigureHandler() {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        status = Status.OK_STATUS ;
+        status = Status.OK_STATUS;
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
-                String configuration = null ;
-                AbstractProcess process = null ;
-                if(event != null){
-                    configuration = event.getParameter("configuration") ;
-                    process = (AbstractProcess) event.getParameters().get("process") ;
+                String configuration = null;
+                AbstractProcess process = null;
+                if (event != null) {
+                    configuration = event.getParameter("configuration");
+                    process = (AbstractProcess) event.getParameters().get("process");
                 }
-                if(configuration == null || configuration.isEmpty()){
-                    configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON ;
+                if (configuration == null || configuration.isEmpty()) {
+                    configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
                 }
 
-                MainProcess diagram = null ;
+                MainProcess diagram = null;
 
-                if( process == null ){
-                    process = getSelectedProcess() ;
+                if (process == null) {
+                    process = getSelectedProcess();
                     diagram = getCurrentDiagram();
-                }else{
+                } else {
                     diagram = (MainProcess) process.eContainer();
                 }
 
-                final ConfigurationWizard wizard = new ConfigurationWizard(diagram,process,configuration) ;
-                final ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(), wizard) ;
-                if(dialog.open() != Dialog.OK){
-                    status = Status.CANCEL_STATUS ;
-                }else{
-                    status = Status.OK_STATUS ;
+                final ConfigurationWizard wizard = new ConfigurationWizard(diagram, process, configuration);
+                final ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(),
+                        wizard);
+                if (dialog.open() != Dialog.OK) {
+                    status = Status.CANCEL_STATUS;
+                } else {
+                    status = Status.OK_STATUS;
                 }
             }
         });
-        return status ;
+        return status;
     }
 
     private MainProcess getCurrentDiagram() {
-        final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-        if(part != null && part instanceof DiagramEditor){
-            final EObject root = ((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement() ;
-            return ModelHelper.getMainProcess(root) ;
+        final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (part != null && part instanceof DiagramEditor) {
+            final EObject root = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement();
+            return ModelHelper.getMainProcess(root);
         }
         return null;
     }
 
     @SuppressWarnings("rawtypes")
     private AbstractProcess getSelectedProcess() {
-        if( PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
-            final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-            if(part != null && part instanceof DiagramEditor){
-                final DiagramEditPart diagramEditPart = ((DiagramEditor)part).getDiagramEditPart();
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+            final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            if (part != null && part instanceof DiagramEditor) {
+                final DiagramEditPart diagramEditPart = ((DiagramEditor) part).getDiagramEditPart();
                 if (diagramEditPart != null) {
-                    final EObject rootElement = diagramEditPart.resolveSemanticElement();
-                    final List selection = ((DiagramEditor)part).getDiagramGraphicalViewer().getSelectedEditParts() ;
-                    if(!selection.isEmpty()){
-                        if(selection.get(0) instanceof IGraphicalEditPart){
-                            final IGraphicalEditPart selectedPart = (IGraphicalEditPart) selection.get(0) ;
-                            return ModelHelper.getParentProcess(selectedPart.resolveSemanticElement());
-                        }
+                    final List selection = ((DiagramEditor) part).getDiagramGraphicalViewer().getSelectedEditParts();
+                    if (!selection.isEmpty() && selection.get(0) instanceof IGraphicalEditPart) {
+                        final IGraphicalEditPart selectedPart = (IGraphicalEditPart) selection.get(0);
+                        return ModelHelper.getParentProcess(selectedPart.resolveSemanticElement());
                     }
                 }
             }
@@ -123,7 +120,7 @@ public class ConfigureHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        return getSelectedProcess() != null ;
+        return getSelectedProcess() != null;
     }
 
 }

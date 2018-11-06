@@ -30,24 +30,23 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-/**
- * @author Romain Bioteau
- */
+
 public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        final Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole");
-        return cmd;
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
+        return service.getCommand("org.bonitasoft.studio.application.openConsole");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.userXp";
+    }
+
+    @Override
+    public String getText() {
+        return Messages.OpenUserXPButtonLabel;
     }
 
     @Override
@@ -55,7 +54,6 @@ public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaCo
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.OpenUserXPButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.OpenUserXPButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_portal_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_portal_disabled_48));
         } else {

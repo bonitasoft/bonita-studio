@@ -63,7 +63,6 @@ public class PasteCoolbarItem extends ContributionItem implements IBonitaContrib
         item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.PasteButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.PasteButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_paste_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_paste_disabled_48));
         } else {
@@ -95,6 +94,11 @@ public class PasteCoolbarItem extends ContributionItem implements IBonitaContrib
     private Command getCommand() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.eclipse.ui.edit.paste");
+    }
+
+    @Override
+    public String getText() {
+        return Messages.PasteButtonLabel;
     }
 
 }

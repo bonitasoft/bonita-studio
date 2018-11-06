@@ -61,7 +61,7 @@ public class OpenUIDesignerCoolBarItemTest {
 
         assertThat(toolbar.getItemCount()).isEqualTo(1);
         final ToolItem toolItem = toolbar.getItem(0);
-        assertThat(toolItem.getText()).isEqualTo(Messages.uiDesignerLabel);
+        assertThat(openUIDesignerCoolBarItem.getText()).isEqualTo(Messages.uiDesignerLabel);
     }
 
     @Test

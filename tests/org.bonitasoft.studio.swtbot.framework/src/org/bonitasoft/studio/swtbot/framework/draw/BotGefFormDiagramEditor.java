@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.draw;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
@@ -51,7 +52,7 @@ public class BotGefFormDiagramEditor extends BotGefBaseEditor {
     }
 
     public BotGefFormDiagramEditor save() {
-        bot.toolbarButton("Save").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         bot.waitUntil(new DefaultCondition() {
 
             @Override

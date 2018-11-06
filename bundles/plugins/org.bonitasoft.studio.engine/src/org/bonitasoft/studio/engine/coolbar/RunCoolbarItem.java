@@ -39,19 +39,13 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class RunCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.run";
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isEnabled()
-     */
+
     @Override
     public boolean isEnabled() {
         final Command cmd = getCommand();
@@ -78,7 +72,6 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.RunButtonLabel);
         if (iconSize < 0) {
-            item.setText(Messages.RunButtonLabel);
             item.setImage(Pics.getImage(PicsConstants.coolbar_run_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_48));
         } else {
@@ -98,6 +91,11 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
                 }
             }
         });
+    }
+
+    @Override
+    public String getText() {
+        return Messages.RunButtonLabel;
     }
 
     private Command getCommand() {

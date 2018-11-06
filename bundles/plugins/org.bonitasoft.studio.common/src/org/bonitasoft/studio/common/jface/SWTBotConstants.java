@@ -98,4 +98,12 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_SAVE_EDITOR = "SWTBOT_ID_SAVE_EDITOR";
 
+    public static final String SWTBOT_ID_TOOLBAR_SAVE = "SWTBOT_ID_TOOLBAR_SAVE";
+
+    public static final String SWTBOT_ID_CONFIGURE_TOOLITEM = "SWTBOT_ID_CONFIGURE_TOOLITEM";
+
+    public static final String SWTBOT_ID_IMPORT_TOOLITEM = "SWTBOT_ID_IMPORT_TOOLITEM";
+
+    public static final String SWTBOT_ID_EXPORT_TOOLITEM = "SWTBOT_ID_EXPORT_TOOLITEM";
+
 }
