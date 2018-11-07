@@ -260,13 +260,13 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         }
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
+            connect(project);
             initRepositoryStores(monitor);
             bonitaBPMProjectClasspath.create(this, monitor);
             enableBuild();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
-        hookResourceListeners();
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
             try {
@@ -275,8 +275,13 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
+        hookResourceListeners();
         updateCurrentRepositoryPreference();
         return this;
+    }
+
+    protected void connect(IProject project) throws CoreException {
+        //May be implemented by sublcasses
     }
 
     protected void updateCurrentRepositoryPreference() {
