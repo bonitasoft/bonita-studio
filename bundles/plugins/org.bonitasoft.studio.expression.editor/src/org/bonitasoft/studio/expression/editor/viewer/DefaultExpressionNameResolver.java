@@ -21,19 +21,18 @@ import com.google.common.base.Strings;
 
 public class DefaultExpressionNameResolver implements ExpressionNameResolver {
 
+    private static final String DEFAULT_NAME_SCRIPT = "newScript";
     private final String defaultScriptName;
 
     public DefaultExpressionNameResolver() {
-        this("");
+        this(DEFAULT_NAME_SCRIPT);
     }
 
     public DefaultExpressionNameResolver(String defaultScriptName) {
         this.defaultScriptName = defaultScriptName;
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionNameResolver#getName(org.bonitasoft.studio.model.expression.Expression)
-     */
+
     @Override
     public String getName(Expression expression) {
         if (Strings.isNullOrEmpty(expression.getName())) {

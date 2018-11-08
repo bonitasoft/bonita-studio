@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -61,7 +62,7 @@ public class DeleteHandlerTest {
 
     @Test
     public void should_be_disable_if_selection_is_a_repository_store() {
-        IResource resource = mock(IResource.class);
+        IFolder resource = mock(IFolder.class);
         IAdaptable selectionContent = mock(IAdaptable.class);
         when(selectionContent.getAdapter(IResource.class)).thenReturn(resource);
         IStructuredSelection selection = new StructuredSelection(selectionContent);
