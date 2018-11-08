@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.views.provider;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -100,6 +101,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         return super.getImage(element);
     }
 
+
     @Override
     public StyledString getStyledText(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
@@ -116,7 +118,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             }
 
             IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
-            if (fStore != null) {
+            if (fStore != null && Objects.equals(fStore.getResource(), element)) {
                 return fStore.getStyledString();
             }
         }
