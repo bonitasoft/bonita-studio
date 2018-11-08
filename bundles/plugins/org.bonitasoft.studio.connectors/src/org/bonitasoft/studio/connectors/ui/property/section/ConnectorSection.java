@@ -61,6 +61,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -123,7 +125,16 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
         tableViewer.addDoubleClickListener(this);
         tableViewer.addSelectionChangedListener(this);
+        tableViewer.getTable().addKeyListener(new KeyAdapter() {
 
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    removeSelectedConnectors();
+                }
+            }
+        });
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(
                 getConnectorFeature()));
         tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
@@ -174,50 +185,46 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         }
     }
 
-    /**
-     * @param buttonsComposite
-     * @return
-     */
+
     private Button createRemoveConnectorButton(final Composite buttonComposite) {
         final Button removeButton = getWidgetFactory().createButton(
                 buttonComposite, Messages.removeData, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults()
                 .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        removeButton.addListener(SWT.Selection, new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-                if (tableViewer != null
-                        && ((IStructuredSelection) tableViewer.getSelection())
-                                .size() > 0) {
-                    final List<?> selection = ((IStructuredSelection) tableViewer
-                            .getSelection()).toList();
-                    if (MessageDialog.openConfirm(buttonComposite.getShell(),
-                            Messages.deleteDialogTitle, createMessage())) {
-                        getEditingDomain().getCommandStack().execute(
-                                new RemoveCommand(getEditingDomain(),
-                                        getEObject(), getConnectorFeature(),
-                                        selection));
-                        tableViewer.refresh();
-                    }
-                }
-            }
-
-            public String createMessage() {
-                final Object[] selection = ((IStructuredSelection) tableViewer
-                        .getSelection()).toArray();
-                final StringBuilder res = new StringBuilder(
-                        Messages.deleteDialogConfirmMessage);
-                res.append(' ');
-                res.append(((Connector) selection[0]).getName());
-                for (int i = 1; i < selection.length; i++) {
-                    res.append(", ");res.append(((Connector) selection[i]).getName()); //$NON-NLS-1$
-                }
-                res.append(" ?"); //$NON-NLS-1$
-                return res.toString();
-            }
-        });
+        removeButton.addListener(SWT.Selection, e -> removeSelectedConnectors());
         return removeButton;
+    }
+
+    protected void removeSelectedConnectors() {
+        if (tableViewer != null
+                && ((IStructuredSelection) tableViewer.getSelection())
+                        .size() > 0) {
+            final List<?> selection = ((IStructuredSelection) tableViewer
+                    .getSelection()).toList();
+            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                    Messages.deleteDialogTitle, createMessage())) {
+                getEditingDomain().getCommandStack().execute(
+                        new RemoveCommand(getEditingDomain(),
+                                getEObject(), getConnectorFeature(),
+                                selection));
+                tableViewer.refresh();
+            }
+        }
+    }
+
+    public String createMessage() {
+        final Object[] selection = ((IStructuredSelection) tableViewer
+                .getSelection()).toArray();
+        final StringBuilder res = new StringBuilder(
+                Messages.deleteDialogConfirmMessage);
+        res.append(' ');
+        res.append(((Connector) selection[0]).getName());
+        for (int i = 1; i < selection.length; i++) {
+            res.append(", "); //$NON-NLS-1$
+            res.append(((Connector) selection[i]).getName());
+        }
+        res.append(" ?"); //$NON-NLS-1$
+        return res.toString();
     }
 
     protected Button createMoveConnectorButton(final Composite buttonsComposite) {

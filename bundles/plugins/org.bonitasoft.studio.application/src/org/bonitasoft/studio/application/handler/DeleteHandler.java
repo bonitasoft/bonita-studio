@@ -51,7 +51,7 @@ public class DeleteHandler extends AbstractHandler {
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         if ((selectedResources.size() == 1 && FileActionDialog
                 .confirmDeletionQuestion(selectedResources.get(0).getName()))
-                || FileActionDialog.confirmDeletionQuestionWithCustomMessage(
+                || selectedResources.size() > 1 && FileActionDialog.confirmDeletionQuestionWithCustomMessage(
                         NLS.bind(IDEWorkbenchMessages.DeleteResourceAction_confirmN,
                                 selectedResources.size()))) {
             for (IResource res : selectedResources) {
