@@ -52,19 +52,19 @@ public abstract class ListProcessContributionItem extends CompoundContributionIt
                 .map(DiagramFileStore.class::cast);
         if (fileStore.isPresent()) {
             return fileStore.get().getProcesses().stream()
-                    .map(process -> createContributionItem(process, fileStore.get()))
+                    .map(this::createContributionItem)
                     .collect(Collectors.toList()).toArray(new IContributionItem[0]);
         }
         return new IContributionItem[0];
     }
 
-    protected IContributionItem createContributionItem(AbstractProcess process, DiagramFileStore fileStore) {
+    private IContributionItem createContributionItem(AbstractProcess process) {
         return new ContributionItem() {
 
             @Override
             public void fill(Menu menu, int index) {
                 MenuItem item = new MenuItem(menu, SWT.PUSH);
-                item.setText(process.getName());
+                item.setText(String.format("%s (%s)", process.getName(), process.getVersion()));
                 item.addListener(SWT.Selection, createSelectionListener(process));
             }
         };
