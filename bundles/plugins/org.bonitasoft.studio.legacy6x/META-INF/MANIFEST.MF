@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Legacy6x
 Bundle-SymbolicName: org.bonitasoft.studio.legacy6x;singleton:=true
-Bundle-Version: 7.7.5.qualifier
+Bundle-Version: 7.7.5
 Bundle-Activator: org.bonitasoft.studio.legacy6x.Activator
 Bundle-Vendor: Bonitasoft S.A.
 Require-Bundle: org.eclipse.ui,

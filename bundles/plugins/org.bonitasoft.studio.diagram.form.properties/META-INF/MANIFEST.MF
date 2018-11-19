@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Properties for the form editor
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.properties;singleton:=true
-Bundle-Version: 7.7.5.qualifier
+Bundle-Version: 7.7.5
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views.properties.tabbed,

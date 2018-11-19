@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Form Preview Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.form.preview;singleton:=true
-Bundle-Version: 7.7.5.qualifier
+Bundle-Version: 7.7.5
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Require-Bundle: org.bonitasoft.studio.common;bundle-version="6.0.0",

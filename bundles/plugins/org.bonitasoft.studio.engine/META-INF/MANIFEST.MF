@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Workflow Engine
 Bundle-SymbolicName: org.bonitasoft.studio.engine;singleton:=true
-Bundle-Version: 7.7.5.qualifier
+Bundle-Version: 7.7.5
 Bundle-Localization: plugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
