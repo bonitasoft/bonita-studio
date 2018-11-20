@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
@@ -43,7 +42,7 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPageFileStore> {
+public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFileStore> {
 
     private static final String PAGE_ICON_PATH = "page.png";
     private static final Set<String> extensions = new HashSet<>();
@@ -77,6 +76,7 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
         return extensions;
     }
 
+
     @Override
     public WebPageFileStore createRepositoryFileStore(final String fileName) {
         final WebPageFileStore webPageFileStore = new WebPageFileStore(fileName, this);
@@ -103,7 +103,6 @@ public class WebPageRepositoryStore extends AbstractFolderRepositoryStore<WebPag
         }
         return page;
     }
-
 
     public String getDisplayNameFor(String uuid) {
         File pageFolder = getResource().getLocation().toFile();
