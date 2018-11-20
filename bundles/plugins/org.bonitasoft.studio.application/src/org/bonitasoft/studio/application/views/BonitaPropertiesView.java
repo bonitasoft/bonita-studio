@@ -18,6 +18,7 @@ import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.Adapters;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -35,10 +36,11 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
  */
 public abstract class BonitaPropertiesView extends PropertySheet implements IContributedContentsView {
 
-    /*
-     * (non-Javadoc)
-     * Method declared on PageBookView.
-     */
+    @Override
+    protected ISaveablePart getSaveablePart() {
+        return null;
+    }
+
     @Override
     protected PageBookView.PageRec doCreatePage(IWorkbenchPart part) {
         // Get a custom property sheet page but not if the part is also a
@@ -75,10 +77,7 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.views.properties.PropertySheet#isImportant(org.eclipse.ui.IWorkbenchPart)
-     */
+
     @Override
     protected boolean isImportant(IWorkbenchPart part) {
         // Don't interfere with other property views

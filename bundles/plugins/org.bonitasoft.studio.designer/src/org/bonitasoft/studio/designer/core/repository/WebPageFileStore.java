@@ -97,16 +97,17 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#getStyledString()
-     */
+
     @Override
     public StyledString getStyledString() {
         StyledString styledString = new StyledString();
-        styledString.append(getDisplayName());
-        styledString.append(" ");
-        styledString.append(String.format("(%s)", getType()), StyledString.QUALIFIER_STYLER);
+        String name = getDisplayName();
+        styledString.append(name != null ? name : getName());
+        String type = getType();
+        if (type != null) {
+            styledString.append(" ");
+            styledString.append(String.format("(%s)", getType()), StyledString.QUALIFIER_STYLER);
+        }
         return styledString;
     }
 
