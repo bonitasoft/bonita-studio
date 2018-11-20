@@ -17,7 +17,6 @@ package org.bonitasoft.studio.designer.core.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -26,10 +25,10 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public class WebFragmentRepositoryStore extends AbstractFolderRepositoryStore<WebFragmentFileStore> {
+public class WebFragmentRepositoryStore extends WebArtifactRepositoryStore<WebFragmentFileStore> {
 
     private static final String FRAGMENT_ICON_PATH = "fragment.png";
-    private final static Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FRAGMENT_REPOSITORY_NAME = "web_fragments";
 

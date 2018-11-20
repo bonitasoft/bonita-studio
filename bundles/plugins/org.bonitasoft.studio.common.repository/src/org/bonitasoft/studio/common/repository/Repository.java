@@ -589,7 +589,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             IFolder container = store.getResource();
             if (Objects.equals(resource.getParent(), container)) {
-                IRepositoryFileStore fStore = store.createRepositoryFileStore(resource.getName());
+                IRepositoryFileStore fStore = store.getChild(resource.getName());
                 if (fStore != null) {
                     return fStore;
                 }
@@ -685,7 +685,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                 return getRepositoryStoreByName(storeName)
                         .filter(repositoryStore -> belongToRepositoryStore(repositoryStore, file))
                         .map(repositoryStore -> repositoryStore
-                                .createRepositoryFileStore(file.getName()))
+                                .getChild(file.getName()))
                         .orElse(null);
             }
         }

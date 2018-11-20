@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
-import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -23,7 +22,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public class WebWidgetRepositoryStore extends AbstractFolderRepositoryStore<WebWidgetFileStore> {
+public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidgetFileStore> {
 
     private static final String CUSTOM_WIDGET_ICON_PATH = "custom_widget.png";
     public static final String WEB_WIDGET_REPOSITORY_NAME = "web_widgets";

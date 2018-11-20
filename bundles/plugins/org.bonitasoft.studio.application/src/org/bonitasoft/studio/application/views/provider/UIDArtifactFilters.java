@@ -53,7 +53,8 @@ public class UIDArtifactFilters {
         return element instanceof IFolder
                 && ((IFolder) element).getParent() != null
                 && Path.fromOSString(folderName).equals(((IFolder) element).getParent().getProjectRelativePath())
-                && !((IFolder) element).getName().startsWith(".");
+                && !((IFolder) element).getName().startsWith(".")
+                && ((IFolder) element).getFile(((IFolder) element).getName() + ".json").exists();
     }
 
     private static boolean isAUIDFolder(Object element, String folderName) {
