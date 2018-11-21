@@ -7,11 +7,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.XXMaxPermSize512m
-      </programArgs>
-      <programArgsLin>--launcher.GTK_version 
-2
-      </programArgsLin>
       <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8
       </vmArgs>
       <vmArgsLin>-Djava.endorsed.dirs=endorsed
