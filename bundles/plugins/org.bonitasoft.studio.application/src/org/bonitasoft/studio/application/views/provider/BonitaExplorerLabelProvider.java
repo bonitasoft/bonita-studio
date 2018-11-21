@@ -76,7 +76,10 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             if (element instanceof IResource) {
                 IRepositoryFileStore fileStore = repositoryManager.getCurrentRepository().getFileStore((IResource) element);
                 if (fileStore != null) {
-                    return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
+                    if (fileStore.getIcon() != null) {
+                        return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
+                    }
+                    return super.getImage(element);
                 }
             }
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
