@@ -42,6 +42,11 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
     }
 
     @Override
+    public boolean isDirtyStateSupported() {
+        return false;
+    }
+
+    @Override
     protected PageBookView.PageRec doCreatePage(IWorkbenchPart part) {
         // Get a custom property sheet page but not if the part is also a
         // PropertySheet. In this case the child property sheet would
