@@ -27,7 +27,7 @@
         <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
         <p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
         <root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
-        <argLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</argLine>
+        <antArgLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</antArgLine>
         <signServiceURL></signServiceURL>
     </properties>
 
@@ -208,7 +208,7 @@
                 <groupId>org.eclipse.tycho.extras</groupId>
                 <artifactId>tycho-eclipserun-plugin</artifactId>
                 <configuration>
-                    <appArgLine>${os-jvm-flags} ${argLine}/</appArgLine>
+                    <appArgLine>${os-jvm-flags} ${antArgLine}</appArgLine>
                     <argLine>-Xmx512m -Xms256m</argLine>
                     <repositories>
                         <repository>
@@ -297,9 +297,7 @@
             <properties>
                 <if.task>net.sf.antcontrib.logic.IfTask</if.task>
                 <jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
-                <jre.winx86.url>jre-8u112-windows-i586</jre.winx86.url>
                 <jre.winx86.x64.url>jre-8u112-windows-x64</jre.winx86.x64.url>
-                <jre.linuxx86.url>jre-8u112-linux-i586</jre.linuxx86.url>
                 <jre.linuxx86.x64.url>jre-8u112-linux-x64</jre.linuxx86.x64.url>
                 <jre.osx.url>jre-8u112-macosx-x64</jre.osx.url>
             </properties>
@@ -310,20 +308,6 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>linux-x86</id>
-                                <phase>package</phase>
-                                <configuration>
-                                    <arguments>
-                                        <argument>build</argument>
-                                        <argument>${basedir}/installer/installer_project_linux_x86.xml</argument>
-                                        <argument>linux</argument>
-                                    </arguments>
-                                </configuration>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            </execution>
                             <execution>
                                 <id>linux-x86_64</id>
                                 <phase>package</phase>
@@ -353,20 +337,6 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <id>win-x86</id>
-                                <phase>package</phase>
-                                <configuration>
-                                    <arguments>
-                                        <argument>build</argument>
-                                        <argument>${basedir}/installer/installer_project_win_x86.xml</argument>
-                                        <argument>windows</argument>
-                                    </arguments>
-                                </configuration>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            </execution>
-                            <execution>
                                 <id>win-x86_64</id>
                                 <phase>package</phase>
                                 <configuration>
@@ -389,26 +359,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>linux x86 installer file</id>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <target>
-                                        <property name="studio.dir"
-                                            value="${project.build.directory}/products/${productId}/linux/gtk/x86" />
-                                        <property name="bitrock.install" value="${project.build.directory}/installers" />
-                                        <property name="os_arch" value="32" />
-                                        <property name="enable.uninstaller" value="1" />
-                                        <property file="installer/installer.properties" />
-                                        <property name="installer.name" value="${product.short.name}-${product.version}-x86.run" />
-                                        <property name="updated.project.file" value="${basedir}/installer/installer_project_linux_x86.xml" />
-                                        <ant antfile="createInstallerProject.xml" />
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
                             <execution>
                                 <id>linux x86_64 installer file</id>
                                 <phase>generate-resources</phase>
@@ -452,26 +402,6 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <id>windows x86 installer file</id>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <target>
-                                        <property name="studio.dir"
-                                            value="${project.build.directory}/products/${productId}/win32/win32/x86" />
-                                        <property name="bitrock.install" value="${project.build.directory}/installers" />
-                                        <property name="os_arch" value="32" />
-                                        <property name="enable.uninstaller" value="1" />
-                                        <property file="installer/installer.properties" />
-                                        <property name="installer.name" value="${product.short.name}-${product.version}-x86.exe" />
-                                        <property name="updated.project.file" value="${basedir}/installer/installer_project_win_x86.xml" />
-                                        <ant antfile="createInstallerProject.xml" />
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                            <execution>
                                 <id>windows x86_64 installer file</id>
                                 <phase>generate-resources</phase>
                                 <configuration>
@@ -490,35 +420,6 @@
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
-                            </execution>
-                            <execution>
-                                <id>jre-win-x86</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.winx86.url}" />
-                                        <if>
-                                            <not>
-                                                <isset property="jre.present" />
-                                            </not>
-                                            <then>
-                                                <get src="${jre.url}/${jre.winx86.url}.tar.gz" dest="${user.home}"
-                                                    verbose="true" />
-                                                <gunzip src="${user.home}/${jre.winx86.url}.tar.gz" />
-                                                <untar src="${user.home}/${jre.winx86.url}.tar" dest="${user.home}/${jre.winx86.url}" />
-                                                <delete file="${user.home}/${jre.winx86.url}.tar" />
-                                                <delete file="${user.home}/${jre.winx86.url}.tar.gz" />
-                                            </then>
-                                        </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/win32/win32/x86/jre">
-                                            <fileset dir="${user.home}/${jre.winx86.url}/jre1.8.0_112" />
-                                        </copy>
-                                    </target>
-                                </configuration>
                             </execution>
                             <execution>
                                 <id>jre-win-x86-x64</id>
@@ -545,34 +446,6 @@
                                         </if>
                                         <copy todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
                                             <fileset dir="${user.home}/${jre.winx86.x64.url}/jre1.8.0_112" />
-                                        </copy>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>jre-linux-x86</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <taskdef name="if" classname="${if.task}" classpathref="maven.runtime.classpath" />
-                                        <available property="jre.present" file="${user.home}/${jre.linuxx86.url}" />
-                                        <if>
-                                            <not>
-                                                <isset property="jre.present" />
-                                            </not>
-                                            <then>
-                                                <get src="${jre.url}/${jre.linuxx86.url}.tar.gz" dest="${user.home}" />
-                                                <gunzip src="${user.home}/${jre.linuxx86.url}.tar.gz" />
-                                                <untar src="${user.home}/${jre.linuxx86.url}.tar" dest="${user.home}/${jre.linuxx86.url}" />
-                                                <delete file="${user.home}/${jre.linuxx86.url}.tar" />
-                                                <delete file="${user.home}/${jre.linuxx86.url}.tar.gz" />
-                                            </then>
-                                        </if>
-                                        <copy todir="${project.build.directory}/products/${productId}/linux/gtk/x86/jre">
-                                            <fileset dir="${user.home}/${jre.linuxx86.url}/jre1.8.0_112" />
                                         </copy>
                                     </target>
                                 </configuration>
@@ -648,22 +521,6 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>sign-x86-exe</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>./sign.sh</executable>
-                                    <arguments>
-                                        <argument>${product.short.name}.exe</argument>
-                                        <argument>${signServiceURL}</argument>
-                                        <argument>${product.short.name}.exe</argument>
-                                        <argument>${project.build.directory}/products/${productId}/win32/win32/x86/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>    
-                            <execution>
                                 <id>sign-osx-app</id>
                                 <phase>process-resources</phase>
                                 <goals>
@@ -690,22 +547,6 @@
                                         <argument>${product.short.name}-${project.version}-x86_64.exe</argument>
                                         <argument>${signServiceURL}</argument>
                                         <argument>${product.short.name}-${project.version}-x86_64.exe</argument>
-                                        <argument>${project.build.directory}/installers/output/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>sign-installer-x86-exe</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>./sign.sh</executable>
-                                    <arguments>
-                                        <argument>${product.short.name}-${project.version}-x86.exe</argument>
-                                        <argument>${signServiceURL}</argument>
-                                        <argument>${product.short.name}-${project.version}-x86.exe</argument>
                                         <argument>${project.build.directory}/installers/output/</argument>
                                     </arguments>
                                 </configuration>

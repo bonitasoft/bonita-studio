@@ -9,52 +9,30 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <files>
         <file>
-            <source>${project.build.directory}/products/${productId}/linux/gtk/x86/${product.short.name}</source>
+            <source>${project.build.directory}/products/${productId}/linux/gtk/x86_64/${product.short.name}</source>
             <destName>${product.short.name}-linux</destName>
             <outputDirectory />
             <fileMode>0755</fileMode>
         </file>
         <file>
-            <source>${project.build.directory}/products/${productId}/linux/gtk/x86/${product.short.name}.ini</source>
-            <destName>${product.short.name}-linux.ini</destName>
-            <outputDirectory />
-        </file>
-        <file>
-            <source>${project.build.directory}/products/${productId}/linux/gtk/x86_64/${product.short.name}</source>
-            <destName>${product.short.name}64-linux</destName>
-            <outputDirectory />
-            <fileMode>0755</fileMode>
-        </file>
-        <file>
             <source>${project.build.directory}/products/${productId}/linux/gtk/x86_64/${product.short.name}.ini</source>
-            <destName>${product.short.name}64-linux.ini</destName>
+            <destName>${product.short.name}-linux.ini</destName>
             <outputDirectory/>
         </file>
         <file>
             <source>${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.exe</source>
-            <destName>${product.short.name}64.exe</destName>
+            <destName>${product.short.name}.exe</destName>
             <outputDirectory />
             <fileMode>0755</fileMode>
         </file>
         <file>
             <source>${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.ini</source>
-            <destName>${product.short.name}64.ini</destName>
+            <destName>${product.short.name}.ini</destName>
             <outputDirectory />
         </file>
     </files>
 
     <fileSets>
-        <fileSet>
-            <directory>${project.build.directory}/products/${productId}/linux/gtk/x86</directory>
-            <includes>
-                <include>**</include>
-            </includes>
-            <excludes>
-                <exclude>${product.short.name}</exclude>
-                <exclude>${product.short.name}.ini</exclude>
-            </excludes>
-            <outputDirectory />
-        </fileSet>
         <fileSet>
             <directory>${project.build.directory}/products/${productId}/linux/gtk/x86_64</directory>
             <includes>
@@ -64,13 +42,6 @@
                 <exclude>${product.short.name}</exclude>
                 <exclude>${product.short.name}.ini</exclude>
             </excludes>
-            <outputDirectory />
-        </fileSet>
-        <fileSet>
-            <directory>${project.build.directory}/products/${productId}/win32/win32/x86</directory>
-            <includes>
-                <include>**</include>
-            </includes>
             <outputDirectory />
         </fileSet>
         <fileSet>
