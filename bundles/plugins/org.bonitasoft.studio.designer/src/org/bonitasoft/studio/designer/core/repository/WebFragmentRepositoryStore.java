@@ -20,6 +20,7 @@ import java.util.Set;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -58,6 +59,10 @@ public class WebFragmentRepositoryStore extends WebArtifactRepositoryStore<WebFr
 
     @Override
     public WebFragmentFileStore createRepositoryFileStore(final String fileName) {
+        IFolder folder = getResource().getFolder(fileName);
+        if (folder.exists()) {
+            return folder.getFile(fileName + ".json").exists() ? new WebFragmentFileStore(fileName, this) : null;
+        }
         return new WebFragmentFileStore(fileName, this);
     }
 
