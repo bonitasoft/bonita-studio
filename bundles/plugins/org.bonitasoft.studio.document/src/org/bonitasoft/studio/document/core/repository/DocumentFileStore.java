@@ -23,6 +23,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
@@ -85,7 +88,11 @@ public class DocumentFileStore extends AbstractFileStore implements IRepositoryF
 
     @Override
     protected IWorkbenchPart doOpen() {
-        return null ;
+        try {
+            return IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), getResource());
+        } catch (PartInitException e) {
+            return null;
+        }
     }
 
 
