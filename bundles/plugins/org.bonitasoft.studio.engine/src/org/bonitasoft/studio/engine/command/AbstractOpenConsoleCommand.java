@@ -37,6 +37,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 
 
@@ -79,10 +81,16 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
                 }
             };
             job.setUser(true);
-            job.schedule();
-            Shell activeShell = Display.getDefault().getActiveShell();
-            ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
-            dialog.show(job, activeShell);
+            boolean runInBackground = WorkbenchPlugin.getDefault().getPreferenceStore()
+                    .getBoolean(IPreferenceConstants.RUN_IN_BACKGROUND);
+            if (!runInBackground) {
+                Shell activeShell = Display.getDefault().getActiveShell();
+                ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
+                dialog.show(job, activeShell);
+                job.schedule();
+            } else {
+                job.schedule();
+            }
         }
     }
 
