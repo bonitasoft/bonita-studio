@@ -685,7 +685,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                 return getRepositoryStoreByName(storeName)
                         .filter(repositoryStore -> belongToRepositoryStore(repositoryStore, file))
                         .map(repositoryStore -> repositoryStore
-                                .getChild(file.getName()))
+                                .createRepositoryFileStore(file.getName()))
                         .orElse(null);
             }
         }

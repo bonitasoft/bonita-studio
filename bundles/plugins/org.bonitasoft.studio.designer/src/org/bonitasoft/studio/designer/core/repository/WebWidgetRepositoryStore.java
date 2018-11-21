@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.core.repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -44,6 +45,11 @@ public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidg
 
     @Override
     public WebWidgetFileStore createRepositoryFileStore(final String widgetFolderName) {
+        IFolder folder = getResource().getFolder(widgetFolderName);
+        if (folder.exists()) {
+            return folder.getFile(widgetFolderName + ".json").exists() ? new WebWidgetFileStore(widgetFolderName, this)
+                    : null;
+        }
         return new WebWidgetFileStore(widgetFolderName, this);
     }
 
