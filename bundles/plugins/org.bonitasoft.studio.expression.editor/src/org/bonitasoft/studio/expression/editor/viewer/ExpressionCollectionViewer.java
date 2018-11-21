@@ -1113,6 +1113,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     public void setViewerFilters(final List<ViewerFilter> viewerFilters) {
         this.viewerFilters = viewerFilters;
         if (expressionEditor != null) {
+            expressionEditor.getFilters().clear();
             for (final ViewerFilter filter : viewerFilters) {
                 expressionEditor.addFilter(filter);
             }
@@ -1231,6 +1232,11 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     public void addLineListener(IAddLineListener listener) {
         addLineLineListeners.add(listener);
+    }
+
+    public void setExpressionEditorFilter(ViewerFilter filter) {
+        expressionEditor.getFilters().clear();
+        expressionEditor.addFilter(filter);
     }
 
 }
