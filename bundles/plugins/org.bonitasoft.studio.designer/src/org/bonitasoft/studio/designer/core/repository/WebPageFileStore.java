@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -73,7 +74,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
 
     @Override
     public Set<IRepositoryFileStore> getRelatedFileStore() {
-        if (PlatformUtil.isHeadless()) {
+        if (PlatformUtil.isHeadless() || !UIDesignerServerManager.getInstance().isStarted()) {
             return super.getRelatedFileStore();
         }
         if (webFormBOSArchiveFileStoreProvider != null) {
