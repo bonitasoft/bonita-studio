@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,15 +25,25 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.bonitasoft.studio.model.parameter.util.ParameterAdapterFactory;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.ui.PlatformUI;
@@ -69,8 +80,8 @@ public class ImportWorkspaceApplication implements IApplication {
                     .map(repositoryAccessor::getRepository)
                     .forEach(repository -> {
                         System.out.println(
-                                String.format("$SCAN_PROGRESS_%s:%s:%s", repository.getName(), repository.getVersion(),
-                                        findEdition(repository)));
+                                String.format("$SCAN_PROGRESS_%s:%s:%s:%s", repository.getName(), repository.getVersion(),
+                                        findEdition(repository), connected(repository)));
                         export
                                 .map(value -> value.split("=")[1])
                                 .map(repositories -> repositories.split(":"))
@@ -108,16 +119,42 @@ public class ImportWorkspaceApplication implements IApplication {
     }
 
     private String findEdition(Repository repository) {
-        final DiagramRepositoryStore diagramStore = repository.getRepositoryStore(DiagramRepositoryStore.class);
-        final WebFragmentRepositoryStore fragmentStore = repository.getRepositoryStore(WebFragmentRepositoryStore.class);
-        if (!fragmentStore.isEmpty()) {
+        File repoDir = repository.getProject().getLocation().toFile();
+        File fragRepo = new File(repoDir, WebFragmentRepositoryStore.WEB_FRAGMENT_REPOSITORY_NAME);
+        if (fragRepo.listFiles(f -> !f.getName().startsWith(".") && f.isDirectory()).length > 0) {
             return "Subscription";
         }
-        if (!diagramStore.isEmpty()
-                && diagramStore.getChildren().get(0).getContent().getConfigId().toString().contains("sp")) {
+        File diagramRepo = new File(repoDir, "diagrams");
+        File[] diagrams = diagramRepo.listFiles(f -> !f.getName().startsWith(".") && f.isFile());
+        if (diagrams.length > 0
+                && isSPDiagram(diagrams[0])) {
             return "Subscription";
         }
         return "Community";
+    }
+
+    private boolean isSPDiagram(File file) {
+        ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
+        adapterFactory.addAdapterFactory(new ParameterAdapterFactory());
+        adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
+        adapterFactory
+                .addAdapterFactory(new ResourceItemProviderAdapterFactory());
+        adapterFactory
+                .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+         AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,
+                new BasicCommandStack(), new HashMap<Resource, Boolean>());
+        URI fileURI = URI.createFileURI(file.getAbsolutePath());
+        Resource resource = editingDomain.getResourceSet().getResource(fileURI, true);
+        MainProcess process = (MainProcess) resource.getContents().get(0);
+        return process.getConfigId().toString().contains("sp");
+    }
+
+    private String connected(Repository repository) {
+        File git = new File(repository.getProject().getLocation().toFile(), ".git");
+        File svn = new File(repository.getProject().getLocation().toFile(), ".svn");
+        return svn.exists() || git.exists() ? "Shared" : "Local";
     }
 
     private Predicate<? super IProject> hasBonitaNature() {
@@ -140,10 +177,6 @@ public class ImportWorkspaceApplication implements IApplication {
         };
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#stop()
-     */
     @Override
     public void stop() {
         try {

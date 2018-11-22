@@ -320,7 +320,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     }
 
     protected void closeAllEditors() {
-        Display.getDefault().syncExec(() -> {
+        if (PlatformUI.isWorkbenchRunning()) {
+            Display.getDefault().syncExec(() -> {
                 final IWorkbenchWindow activeWorkbenchWindow = PlatformUI
                         .getWorkbench().getActiveWorkbenchWindow();
                 if (activeWorkbenchWindow != null
@@ -331,7 +332,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                         && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {
                     Display.getDefault().readAndDispatch();
                 }
-        });
+            });
+        }
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
