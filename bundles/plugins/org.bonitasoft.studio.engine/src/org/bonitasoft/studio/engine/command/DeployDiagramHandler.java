@@ -44,9 +44,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.IPreferenceConstants;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 
 public class DeployDiagramHandler extends AbstractHandler {
 
@@ -83,16 +80,7 @@ public class DeployDiagramHandler extends AbstractHandler {
                 }
             });
             deployJob.setUser(true);
-            boolean runInBackground = WorkbenchPlugin.getDefault().getPreferenceStore()
-                    .getBoolean(IPreferenceConstants.RUN_IN_BACKGROUND);
-            if (!runInBackground) {
-                Shell activeShell = Display.getDefault().getActiveShell();
-                ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
-                dialog.show(deployJob, activeShell);
-                deployJob.schedule();
-            } else {
-                deployJob.schedule();
-            }
+            deployJob.schedule();
         }
         return null;
     }
