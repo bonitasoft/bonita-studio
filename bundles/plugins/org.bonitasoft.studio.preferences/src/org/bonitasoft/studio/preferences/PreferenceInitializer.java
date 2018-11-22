@@ -27,6 +27,7 @@ import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -149,10 +150,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
     }
 
     protected void initDefaultDebugPreferences() {
-        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
-        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
-        DebugPlugin.getDefault().getPluginPreferences().setDefault(IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
-                false);
+        if (PlatformUI.isWorkbenchRunning()) {
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
+            DebugPlugin.getDefault().getPluginPreferences().setDefault(
+                    IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
+                    false);
+        }
     }
 
 }

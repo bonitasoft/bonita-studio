@@ -59,6 +59,7 @@ import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.restlet.resource.ClientResource;
@@ -321,12 +322,16 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     @Override
     public void projectOpened(Repository repository, IProgressMonitor monitor) {
-        start(repository, monitor);
+        if (PlatformUI.isWorkbenchRunning()) {
+            start(repository, monitor);
+        }
     }
 
     @Override
     public void projectClosed(Repository repository, IProgressMonitor monitor) {
-        stop();
+        if (PlatformUI.isWorkbenchRunning()) {
+            stop();
+        }
     }
 
 }
