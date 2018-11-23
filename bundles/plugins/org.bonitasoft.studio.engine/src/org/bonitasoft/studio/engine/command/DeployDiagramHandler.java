@@ -44,7 +44,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
 
 public class DeployDiagramHandler extends AbstractHandler {
 
@@ -82,9 +81,6 @@ public class DeployDiagramHandler extends AbstractHandler {
             });
             deployJob.setUser(true);
             deployJob.schedule();
-            Shell activeShell = Display.getDefault().getActiveShell();
-            ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
-            dialog.show(deployJob, activeShell);
         }
         return null;
     }

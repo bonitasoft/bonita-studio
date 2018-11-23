@@ -50,6 +50,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -91,6 +93,16 @@ public abstract class DataViewer extends Composite {
             @Override
             public void doubleClick(final DoubleClickEvent event) {
                 editData();
+            }
+        });
+        tableViewer.getTable().addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    removeData(dataContainerObservable, dataFeature);
+                }
             }
         });
         addFilters(tableViewer);

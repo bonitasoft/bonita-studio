@@ -44,6 +44,8 @@ public class StringToExpressionConverter {
 
     private final Map<String, Instance> data = new HashMap<String, Instance>();
 
+    private final Map<String, Instance> parameters = new HashMap<>();
+
     private final Map<String, Instance> widget = new HashMap<String, Instance>();
 
     private final Map<String, Instance> documents = new HashMap<String, Instance>();
@@ -55,6 +57,7 @@ public class StringToExpressionConverter {
         Assert.isNotNull(model);
         this.model = model;
         initDataWithProcessData(model, container);
+        initParameters(model, container);
         for (final Instance widget : model.getAllInstances("form.Widget")) {
             if (isInScope(container, widget)) {
                 this.widget.put(FIELD_PREFIX + widget.get("name"),
@@ -74,6 +77,14 @@ public class StringToExpressionConverter {
         for (final Instance data : model.getAllInstances("process.Data")) {
             if (isInScope(container, data) && data.get("dataType") != null) {
                 this.data.put((String) data.get("name"), data);
+            }
+        }
+    }
+
+    private void initParameters(final Model model, Instance container) {
+        for (final Instance parameter : model.getAllInstances("parameter.Parameter")) {
+            if (isInScope(container, parameter)) {
+                this.parameters.put((String) parameter.get("name"), parameter);
             }
         }
     }
@@ -401,6 +412,33 @@ public class StringToExpressionConverter {
         }
         return hasAdded;
     }
+
+    public boolean resolveParameterDependencies(final Instance expression) {
+        boolean hasAdded = false;
+        String currentParamName = expression.get("content");
+        if (currentParamName == null) {
+            currentParamName = expression.get("name");
+        }
+        if (currentParamName != null) {
+            for (final String paramName : parameters.keySet()) {
+                if (currentParamName.contains(paramName)) {
+                    final int index = currentParamName.indexOf(paramName);
+                    final boolean validPrefix = isValidPrefix(currentParamName, index);
+                    final boolean validSuffix = isValidSuffix(currentParamName, paramName, index);
+                    if (validPrefix && validSuffix) {
+                        final Instance dependencyInstance = parameters.get(paramName).copy();
+                        final List<Instance> instList = expression.get("referencedElements");
+                        if (!dependancyAlreadyExists(instList, dependencyInstance)) {
+                            expression.add("referencedElements", dependencyInstance);
+                            hasAdded = true;
+                        }
+                    }
+                }
+            }
+        }
+        return hasAdded;
+    }
+
 
     private boolean isValidSuffix(final String currentDataName,
             final String dataName, final int index) {

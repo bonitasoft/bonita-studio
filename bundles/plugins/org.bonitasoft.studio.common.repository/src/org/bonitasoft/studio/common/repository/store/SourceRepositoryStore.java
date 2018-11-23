@@ -137,18 +137,23 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
         final IFolder packageFolder = packageStore.getResource();
         final IFile file = packageFolder.getFile(className);
-        if (file.exists() && FileActionDialog.overwriteQuestion(fileName)) {
+        if (file.exists()) {
+            if (FileActionDialog.overwriteQuestion(fileName)) {
+                try {
+                    file.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                    file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        } else {
             try {
-                file.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
-        try {
-            file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
+
         return createRepositoryFileStore(packageName);
     }
 

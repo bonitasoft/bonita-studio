@@ -1088,8 +1088,20 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         descriptionText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         descriptionText
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
+        descriptionText.addTraverseListener(e -> {
+            if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+                e.doit = true;
+            }
+        });
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            Display.getDefault().asyncExec(nameText::setFocus);
+        }
+    }
     protected void createDataOptions(final Composite parent) {
 
         new Label(parent, SWT.NONE); // FILLER

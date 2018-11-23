@@ -97,7 +97,8 @@ public class BosArchive {
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
             IRepository repository, Set<String> resourcesToOpen) {
         final List<String> parentSegments = segments.subList(0, 2);
-        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName = repository.getRepositoryStoreByName(segment);
+        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName = repository
+                .getRepositoryStoreByName(segment);
         if (repositoryStoreByName.isPresent()) {
             final ImportStoreModel store = new ImportStoreModel(Joiner.on('/').join(parentSegments),
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
@@ -160,7 +161,7 @@ public class BosArchive {
         try (ZipFile archive = getZipFile();
                 InputStream is = archive.getInputStream(archive.getEntry(file.getPath()));) {
             return diagramValidator.validate(is);
-        }catch (IOException e) {
+        } catch (IOException e) {
             return ValidationStatus.error(String.format("Failed to read %s", file.getFileName()));
         }
     }

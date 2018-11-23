@@ -70,6 +70,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
         bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
         final SWTBotShell activeShell = bot.activeShell();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }

@@ -380,6 +380,7 @@ public class PageComponentSwitchBuilder {
             viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
+
             final Expression exp = (Expression) parameter.getExpression();
             final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {

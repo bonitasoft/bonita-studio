@@ -39,8 +39,8 @@ public class GTKStyleHandler {
 
     public static int replaceSingleWithWrap(int style) {
         if (isGTK3()) {
-            style = style ^ SWT.SINGLE;
-            style = style | SWT.WRAP;
+            //      style = style ^ SWT.SINGLE;
+            //     style = style | SWT.WRAP;
             return style;
         }
         return style;
