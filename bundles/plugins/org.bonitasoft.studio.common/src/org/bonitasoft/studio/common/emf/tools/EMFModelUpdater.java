@@ -106,6 +106,14 @@ public class EMFModelUpdater<T extends EObject> {
                 .getEAllStructuralFeatures()
                 .stream()
                 .filter(EReference.class::isInstance)
+                .filter(feature -> {
+                    if (!target.eClass().getEAllStructuralFeatures().contains(feature)) {
+                        BonitaStudioLog.warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
+                                target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
+                        return false;
+                    }
+                    return true;
+                })
                 .forEach(feature -> {
                     if (feature.isMany()) {
                         handleManyCase(source, target, feature);
