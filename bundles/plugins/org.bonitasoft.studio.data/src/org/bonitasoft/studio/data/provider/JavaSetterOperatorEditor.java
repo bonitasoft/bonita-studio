@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -140,7 +141,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 return JDTMethodHelper.retrieveQualifiedType(typeErasure, declaringType);
             }
         });
-
+        
         String className = null;
         if (data.isMultiple()) {
             className = List.class.getName();
@@ -157,6 +158,11 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
             }
         }
         return client;
+    }
+    
+    @Override
+    public StructuredViewer getViewer() {
+        return javaTreeviewer;
     }
 
     protected void fireSelectionChange(final SelectionChangedEvent event) {
