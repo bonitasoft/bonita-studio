@@ -17,28 +17,37 @@ package org.bonitasoft.studio.migration.custom.migration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
-/**
- * @author Romain Bioteau
- */
+
 public class DependenciesCopyCustomMigration extends CustomMigration {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.spi.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
-     */
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
+
         final List<Instance> allReferencesToBeDeleted = new ArrayList<>();
         for (final Instance expInstance : model.getAllInstances("expression.Expression")) {
             final List<Instance> referencedElements = expInstance.get("referencedElements");
             final List<Instance> newReferencedElements = new ArrayList<>();
             final List<Instance> referencesToBeDeleted = new ArrayList<>();
+            if (referencedElements.isEmpty() && ExpressionConstants.VARIABLE_TYPE.equals(expInstance.get("type"))) {
+                String content = expInstance.get("content");
+                if (content != null && !content.isEmpty()) {
+                    new StringToExpressionConverter(model, getScope(expInstance)).resolveDataDependencies(expInstance);
+                }
+            }
+            if (referencedElements.isEmpty() && ExpressionConstants.PARAMETER_TYPE.equals(expInstance.get("type"))) {
+                String content = expInstance.get("content");
+                if (content != null && !content.isEmpty()) {
+                    new StringToExpressionConverter(model, getScope(expInstance)).resolveParameterDependencies(expInstance);
+                }
+            }
             for (final Instance refElement : referencedElements) {
                 Instance newCleanedDependency = null;
                 if (refElement.instanceOf("process.Data")) {
@@ -100,4 +109,12 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
         return newInstance;
     }
 
+    protected Instance getScope(final Instance element) {
+        Instance container = element;
+        while (container != null
+                && !container.instanceOf("process.AbstractProcess")) {
+            container = container.getContainer();
+        }
+        return container;
+    }
 }

@@ -34,7 +34,7 @@ public class CustomWizardDialog extends WizardDialog {
 
 	protected String finishLabel;
 	protected String closeLabel;
-	private boolean askWhenShellCloses = true && !FileActionDialog.getDisablePopup();
+    private boolean askWhenShellCloses = !FileActionDialog.getDisablePopup();
 
 	/**
 	 * @param parentShell
@@ -53,7 +53,8 @@ public class CustomWizardDialog extends WizardDialog {
 	public CustomWizardDialog(Shell parentShell, IWizard newWizard, String finishLabel,boolean isModal) {
 		super(parentShell, newWizard);
 		if(!isModal){
-			setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE | getDefaultOrientation());
+            setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE
+                    | getDefaultOrientation());
 		}
 		this.finishLabel = finishLabel;
 	}

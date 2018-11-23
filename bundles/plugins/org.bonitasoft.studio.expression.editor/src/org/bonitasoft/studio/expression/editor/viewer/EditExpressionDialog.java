@@ -380,7 +380,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             } else {
                 inputExpression.setType(type);
             }
-            inputExpression.setName(shouldClearName() ? "" : getExpressionName());
+            inputExpression.setName(shouldClearName() ? "" : inputExpression.getName());
             if (expressionNameResolver != null) {
                 inputExpression.setName(expressionNameResolver.getName(inputExpression));
             }
@@ -394,15 +394,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             });
             DialogSupport.create(this, dataBindingContext);
         }
-    }
-
-    private String getExpressionName() {
-        String currentName = inputExpression.getName();
-        if ((currentName == null || currentName.isEmpty())
-                && ExpressionConstants.SCRIPT_TYPE.equals(inputExpression.getType())) {
-            currentName = DEFAULT_NAME_SCRIPT;
-        }
-        return currentName;
     }
 
     private boolean shouldClearName() {

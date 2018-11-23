@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.PlatformUI;
 
 
 public class EnginePreferencesInitializer extends AbstractPreferenceInitializer {
@@ -40,9 +41,11 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 512);
         store.setDefault(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, "-DnoCacheCustomPage=true");
 
-        DebugUITools.getPreferenceStore().setValue(
-                org.eclipse.debug.internal.ui.IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH,
-                MessageDialogWithToggle.NEVER);
+        if (PlatformUI.isWorkbenchRunning()) {
+            DebugUITools.getPreferenceStore().setValue(
+                    org.eclipse.debug.internal.ui.IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH,
+                    MessageDialogWithToggle.NEVER);
+        }
     }
 
 }

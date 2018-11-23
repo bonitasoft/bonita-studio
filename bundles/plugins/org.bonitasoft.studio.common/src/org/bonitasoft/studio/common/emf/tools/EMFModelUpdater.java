@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.Activator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -90,6 +92,14 @@ public class EMFModelUpdater<T extends EObject> {
                 .getEAllStructuralFeatures()
                 .stream()
                 .filter(EAttribute.class::isInstance)
+                .filter(feature -> {
+                    if (!target.eClass().getEStructuralFeatures().contains(feature)) {
+                        BonitaStudioLog.warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
+                                target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
+                        return false;
+                    }
+                    return true;
+                })
                 .forEach(feature -> source.eSet(feature, target.eGet(feature)));
 
         source.eClass()
