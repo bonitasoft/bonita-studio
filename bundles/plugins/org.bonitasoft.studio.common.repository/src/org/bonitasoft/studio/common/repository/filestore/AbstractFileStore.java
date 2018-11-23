@@ -210,7 +210,7 @@ public abstract class AbstractFileStore
                         .findView("org.bonitasoft.studio.application.project.explorer");
                 if (viewPart != null) {
                     CommonViewer viewer = viewPart.getAdapter(CommonViewer.class);
-                    if (viewer != null) {
+                    if (viewer != null && !viewer.getTree().isDisposed()) {
                         viewer.refresh(true);
                     }
                 }

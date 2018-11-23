@@ -80,8 +80,8 @@ public class EngineDataBuilder extends ProcessSwitch<DataDefinitionBuilder> {
         return builder.addLongTextData(data.getName(), expr);
     }
 
-    protected DataDefinitionBuilder addCollectionData(final String name, final Expression expr2) {
-        return builder.addData(data.getName(), Collection.class.getName(), expr);
+    protected DataDefinitionBuilder addCollectionData(final String name, final Expression defaultValue) {
+        return builder.addData(name, Collection.class.getName(), defaultValue);
     }
 
     @Override
