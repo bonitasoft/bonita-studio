@@ -135,27 +135,29 @@ public class EMFModelUpdater<T extends EObject> {
 
     @SuppressWarnings("unchecked")
     private void handleManyCase(EObject source, EObject target, EStructuralFeature feature) {
-        List sourceList = (List) source.eGet(feature);
-        List targetList = (List) target.eGet(feature);
-
-        sourceList.removeIf(
-                sourceElement -> findEObject(targetList, getEObjectID((EObject) sourceElement)) == null);
-
-        for (Object sourceElement : sourceList) {
-            EObject targetElement = findEObject(targetList, getEObjectID((EObject) sourceElement));
-            if (sourceElement instanceof EObject
-                    && targetElement instanceof EObject) {
-                deepEObjectUpdate((EObject) sourceElement,
-                        targetElement);
-            }
-        }
-
-        for (Object targetElement : targetList) {
-            if (targetElement instanceof EObject
-                    && getEObjectID((EObject) targetElement) == null) {//Add new Object
-                sourceList.add(targetList.indexOf(targetElement), EcoreUtil.copy((T) targetElement));
-            }
-        }
+        source.eSet(feature, target.eGet(feature));
+        /// ===> BROKEN
+//        List sourceList = (List) source.eGet(feature);
+//        List targetList = (List) target.eGet(feature);
+//
+//        sourceList.removeIf(
+//                sourceElement -> findEObject(targetList, getEObjectID((EObject) sourceElement)) == null);
+//
+//        for (Object sourceElement : sourceList) {
+//            EObject targetElement = findEObject(targetList, getEObjectID((EObject) sourceElement));
+//            if (sourceElement instanceof EObject
+//                    && targetElement instanceof EObject) {
+//                deepEObjectUpdate((EObject) sourceElement,
+//                        targetElement);
+//            }
+//        }
+//
+//        for (Object targetElement : targetList) {
+//            if (targetElement instanceof EObject
+//                    && getEObjectID((EObject) targetElement) == null) {//Add new Object
+//                sourceList.add(targetList.indexOf(targetElement), EcoreUtil.copy((T) targetElement));
+//            }
+//        }
 
     }
 
