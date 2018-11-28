@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -144,6 +145,12 @@ public class XPathOperatorEditor implements IOperatorEditor {
         });
         return composite ;
     }
+    
+    @Override
+    public StructuredViewer getViewer() {
+        return xsdViewer;
+    }
+
 
 
     protected String computeXPath(ITreeSelection selection) {

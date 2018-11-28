@@ -71,6 +71,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -169,6 +171,16 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         dataTableViewer.setSorter(new ViewerSorter());
         dataTableViewer.addDoubleClickListener(this);
+        dataTableViewer.getTable().addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    removeData((IStructuredSelection) dataTableViewer.getSelection());
+                }
+            }
+        });
         final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
         dataTableViewer.setContentProvider(contentProvider);
         dataTableViewer.addFilter(hideBusinessObjectData());

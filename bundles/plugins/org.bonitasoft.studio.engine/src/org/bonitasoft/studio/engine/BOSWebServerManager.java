@@ -175,13 +175,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                         EnginePlugin.PLUGIN_ID);
             }
             WatchdogManager.getInstance().startWatchdog();
-            if (tomcat != null) {
-                try {
-                    tomcat.delete();
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                }
-            }
             updateRuntimeLocationIfNeeded();
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 

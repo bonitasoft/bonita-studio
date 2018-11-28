@@ -81,7 +81,7 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
                 }
             });
             while (!launch.isTerminated()) {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
             if (workspaceModel.isEmpty()) {
                 workspaceModel.setStatus(ValidationStatus.error(Messages.noRepositoryFoundAtLocation));
@@ -138,8 +138,12 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         final String repoName = scannedRepo[0];
         final String repoVersion = scannedRepo[1];
         final String repoEdition = scannedRepo[2].trim();
+        final String connected = scannedRepo[3].trim();
         final ImportRepositoryModel repositoryModel = new ImportRepositoryModel(repoName, repoVersion, repoEdition);
         final MultiStatus repoStatus = new MultiStatus(BosArchiveImporterPlugin.PLUGIN_ID, 0, "", null);
+        if ("Shared".equals(connected)) {
+            repoStatus.add(ValidationStatus.error(String.format(Messages.projectConnectorToVCS, repoName)));
+        }
         if (!ProductVersion.canBeImported(repoVersion)) {
             repoStatus.add(ValidationStatus
                     .error(String.format(Messages.cannotImportWorkspaceWithVersion, repoName, repoVersion)));

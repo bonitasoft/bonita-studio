@@ -260,13 +260,13 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         }
         try {
             projectManifestFactory.createProjectManifest(project, monitor);
+            connect(project);
             initRepositoryStores(monitor);
             bonitaBPMProjectClasspath.create(this, monitor);
             enableBuild();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
-        hookResourceListeners();
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
             try {
@@ -275,8 +275,13 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
+        hookResourceListeners();
         updateCurrentRepositoryPreference();
         return this;
+    }
+
+    protected void connect(IProject project) throws CoreException {
+        //May be implemented by sublcasses
     }
 
     protected void updateCurrentRepositoryPreference() {
@@ -315,7 +320,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     }
 
     protected void closeAllEditors() {
-        Display.getDefault().syncExec(() -> {
+        if (PlatformUI.isWorkbenchRunning()) {
+            Display.getDefault().syncExec(() -> {
                 final IWorkbenchWindow activeWorkbenchWindow = PlatformUI
                         .getWorkbench().getActiveWorkbenchWindow();
                 if (activeWorkbenchWindow != null
@@ -326,7 +332,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                         && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {
                     Display.getDefault().readAndDispatch();
                 }
-        });
+            });
+        }
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
@@ -584,7 +591,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             IFolder container = store.getResource();
             if (Objects.equals(resource.getParent(), container)) {
-                IRepositoryFileStore fStore = store.createRepositoryFileStore(resource.getName());
+                IRepositoryFileStore fStore = store.getChild(resource.getName());
                 if (fStore != null) {
                     return fStore;
                 }

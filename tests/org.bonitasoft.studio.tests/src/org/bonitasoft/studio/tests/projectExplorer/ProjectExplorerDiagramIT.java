@@ -96,7 +96,7 @@ public class ProjectExplorerDiagramIT {
         bot.waitUntil(projectExplorerBot.contextMenuAvailable(diagramTreeItem, action));
         SWTBotMenu contextMenu = diagramTreeItem.contextMenu(action);
         assertThat(contextMenu.menuItems()).hasSize(1);
-        assertThat(contextMenu.menuItems().get(0)).isEqualTo(poolName);
+        assertThat(contextMenu.menuItems().get(0)).isEqualTo(String.format("%s (%s)", poolName, DEFAULT_VERSION));
     }
 
     private void deployDiagramFromExplorer(String diagramName, String poolName) throws Exception {

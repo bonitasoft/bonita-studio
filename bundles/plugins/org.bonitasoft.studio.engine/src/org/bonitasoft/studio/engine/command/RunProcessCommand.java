@@ -51,9 +51,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.progress.ProgressMonitorFocusJobDialog;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler {
@@ -134,9 +134,6 @@ public class RunProcessCommand extends AbstractHandler {
                 };
                 job.setUser(true);
                 job.schedule();
-                Shell activeShell = Display.getDefault().getActiveShell();
-                ProgressMonitorFocusJobDialog dialog = new ProgressMonitorFocusJobDialog(activeShell);
-                dialog.show(job, activeShell);
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);

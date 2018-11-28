@@ -39,6 +39,8 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -191,6 +193,10 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
             if (editor.appliesTo(operatorType)) {
                 expand = true;
                 client = editor.createOpeartorEditor(parentSection, operator, sourceExpression);
+                StructuredViewer viewer = editor.getViewer();
+                if(viewer != null) {
+                    viewer.addDoubleClickListener(event -> {if(editor.canFinish()) {close();}});
+                }
                 editor.addSelectionChangedListener(new ISelectionChangedListener() {
 
                     @Override

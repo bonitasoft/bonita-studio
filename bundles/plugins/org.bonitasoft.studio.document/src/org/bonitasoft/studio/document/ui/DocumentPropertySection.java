@@ -55,6 +55,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -130,6 +132,17 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
         documentListViewer.setContentProvider(new ObservableListContentProvider());
         documentListViewer.addDoubleClickListener(this);
         documentListViewer.addSelectionChangedListener(this);
+        documentListViewer.getList().addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    removeDocuments();
+                }
+            }
+        });
+
         return documentListViewer;
     }
 
@@ -184,40 +197,44 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                super.widgetSelected(e);
-                final int ok = 0;
-                if (ok == openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())) {
-                    final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection())
-                            .iterator();
-                    if (selection.hasNext()) {
-                        final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
-                        executeDeleteReactorOperation(rdo);
-                        documentListViewer.refresh();
-                        documentListViewer.setSelection(new StructuredSelection());
-                    }
-                }
+                removeDocuments();
             }
 
-            private void executeDeleteReactorOperation(final RefactorDocumentOperation rdo) {
-                try {
-                    rdo.run(new NullProgressMonitor());
-                } catch (final InvocationTargetException e1) {
-                    BonitaStudioLog.error(e1);
-                } catch (final InterruptedException e1) {
-                    BonitaStudioLog.error(e1);
-                }
-            }
-
-            private RefactorDocumentOperation createDeleteRefactorOperation(final Iterator<Document> selection) {
-                final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
-                rdo.setEditingDomain(getEditingDomain());
-                rdo.setAskConfirmation(true);
-                while (selection.hasNext()) {
-                    rdo.addItemToRefactor(null, selection.next());
-                }
-                return rdo;
-            }
         });
+    }
+
+    protected void removeDocuments() {
+        final int ok = 0;
+        if (ok == openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())) {
+            final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection())
+                    .iterator();
+            if (selection.hasNext()) {
+                final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
+                executeDeleteReactorOperation(rdo);
+                documentListViewer.refresh();
+                documentListViewer.setSelection(new StructuredSelection());
+            }
+        }
+    }
+
+    private void executeDeleteReactorOperation(final RefactorDocumentOperation rdo) {
+        try {
+            rdo.run(new NullProgressMonitor());
+        } catch (final InvocationTargetException e1) {
+            BonitaStudioLog.error(e1);
+        } catch (final InterruptedException e1) {
+            BonitaStudioLog.error(e1);
+        }
+    }
+
+    private RefactorDocumentOperation createDeleteRefactorOperation(final Iterator<Document> selection) {
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+        rdo.setEditingDomain(getEditingDomain());
+        rdo.setAskConfirmation(true);
+        while (selection.hasNext()) {
+            rdo.addItemToRefactor(null, selection.next());
+        }
+        return rdo;
     }
 
     @Override

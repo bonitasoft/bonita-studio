@@ -27,6 +27,9 @@ import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
 
@@ -66,6 +69,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+
+        getWorbenchPreferences().setDefault(IPreferenceConstants.RUN_IN_BACKGROUND, false);
+    }
+
+
+    protected IPreferenceStore getWorbenchPreferences() {
+        return WorkbenchPlugin.getDefault().getPreferenceStore();
     }
 
 
@@ -140,10 +150,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
     }
 
     protected void initDefaultDebugPreferences() {
-        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
-        DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
-        DebugPlugin.getDefault().getPluginPreferences().setDefault(IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
-                false);
+        if (PlatformUI.isWorkbenchRunning()) {
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
+            DebugPlugin.getDefault().getPluginPreferences().setDefault(
+                    IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
+                    false);
+        }
     }
 
 }

@@ -83,6 +83,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
         textControl = new Text(this, GTKStyleHandler.replaceSingleWithWrap(style | SWT.SINGLE));
         textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        textControl.addTraverseListener(e -> {
+            if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+                e.doit = true;
+            }
+        });
         textControl.addFocusListener(new FocusListener() {
 
             @Override
