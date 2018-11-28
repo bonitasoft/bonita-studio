@@ -185,7 +185,13 @@ public class ProjectExplorerBot extends BotBase {
     public void waitUntilActiveEditorTitleIs(String title, Optional<String> extension) {
         String expectedTitle = extension.isPresent() ? title + extension.get() : title;
         ICondition condition = new ConditionBuilder()
-                .withTest(() -> Objects.equals(bot.activeEditor().getTitle(), expectedTitle))
+                .withTest(() -> {
+                    try {
+                        return Objects.equals(bot.activeEditor().getTitle(), expectedTitle);
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                })
                 .withFailureMessage(() -> String.format("The active editor title should be  %s instead of %s", expectedTitle,
                         bot.activeEditor().getTitle()))
                 .create();

@@ -15,15 +15,13 @@
 package org.bonitasoft.studio.application.views.provider;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -74,20 +72,14 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         if (!repositoryManager.hasActiveRepository() || !repositoryManager.getCurrentRepository().isLoaded()) {
             return super.getImage(element);
         }
-        if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_page")) {
-            return repositoryManager.getRepositoryStore(WebPageRepositoryStore.class).getIcon();
-        }
-        if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_widgets")) {
-            return repositoryManager.getRepositoryStore(WebWidgetRepositoryStore.class).getIcon();
-        }
-        if (UIDArtifactFilters.isUIDArtifactFrom(element, "web_fragments")) {
-            return repositoryManager.getRepositoryStore(WebFragmentRepositoryStore.class).getIcon();
-        }
         if (!(element instanceof IJavaElement)) {
             if (element instanceof IResource) {
                 IRepositoryFileStore fileStore = repositoryManager.getCurrentRepository().getFileStore((IResource) element);
                 if (fileStore != null) {
-                    return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
+                    if (fileStore.getIcon() != null) {
+                        return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
+                    }
+                    return super.getImage(element);
                 }
             }
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
@@ -99,6 +91,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         }
         return super.getImage(element);
     }
+
 
     @Override
     public StyledString getStyledText(Object element) {
@@ -116,7 +109,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             }
 
             IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
-            if (fStore != null) {
+            if (fStore != null && Objects.equals(fStore.getResource(), element)) {
                 return fStore.getStyledString();
             }
         }

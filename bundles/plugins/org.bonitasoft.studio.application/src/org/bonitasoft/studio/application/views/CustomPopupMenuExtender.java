@@ -48,6 +48,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MPopupMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
 import org.eclipse.e4.ui.workbench.swt.factories.IRendererFactory;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener2;
 import org.eclipse.jface.action.IMenuManager;
@@ -59,6 +60,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -356,13 +358,16 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         StructuredSelection repositoryProject = new StructuredSelection(project);
         ISelection selection = selProvider.getSelection();
         if (repositoryProject.equals(selection)) {
-            INCLUDES.remove("compareWithMenu");
-            INCLUDES.remove("replaceWithMenu");
+            if (isLocalProject(project)) {
+                INCLUDES.remove("compareWithMenu");
+                INCLUDES.remove("replaceWithMenu");
+            }
             INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
             INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
             INCLUDES.add("org.eclipse.ui.edit.delete");
         } else if (((StructuredSelection) selection).getFirstElement() instanceof IProject) {
             INCLUDES.add("org.eclipse.ui.edit.delete");
+            INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
         }
         Object resource = ((StructuredSelection) selection).getFirstElement();
         if (resource instanceof IAdaptable && ((IAdaptable) resource).getAdapter(IResource.class) != null) {
@@ -370,10 +375,14 @@ public class CustomPopupMenuExtender implements IMenuListener2,
             IProject parentProject = adapter.getProject();
             StructuredSelection structuredSelection = new StructuredSelection(parentProject);
             if (structuredSelection.equals(repositoryProject)) {
-                INCLUDES.remove("compareWithMenu");
-                INCLUDES.remove("replaceWithMenu");
-                INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
-                INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
+                if (isLocalProject(project)) {
+                    INCLUDES.remove("compareWithMenu");
+                    INCLUDES.remove("replaceWithMenu");
+                }
+                if (!(resource instanceof IJavaElement)) {
+                    INCLUDES.remove("org.eclipse.jdt.ui.source.menu");
+                    INCLUDES.remove("org.eclipse.jdt.ui.refactoring.menu");
+                }
                 INCLUDES.add("org.eclipse.ui.edit.delete");
             }
         }
@@ -416,6 +425,10 @@ public class CustomPopupMenuExtender implements IMenuListener2,
         }
         addObjectActions(mgr, contributedItems);
         addStaticActions(mgr);
+    }
+
+    private boolean isLocalProject(IProject project) {
+        return !RepositoryProvider.isShared(project);
     }
 
     /**

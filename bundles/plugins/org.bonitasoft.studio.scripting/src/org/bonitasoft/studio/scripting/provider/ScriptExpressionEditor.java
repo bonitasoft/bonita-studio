@@ -111,12 +111,6 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.
-     * Composite)
-     */
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
@@ -208,9 +202,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         return null;
     }
 
-    /**
-     * @param classText
-     */
+
     @SuppressWarnings("restriction")
     private void openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope();
@@ -288,9 +280,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     }
 
     private IValueChangeListener handleValidationStatusChanged() {
-        return event -> {
-            statusChanged((IStatus) bindValue.getValidationStatus().getValue());
-        };
+        return event -> statusChanged((IStatus) bindValue.getValidationStatus().getValue());
     }
 
     private void statusChanged(IStatus status) {

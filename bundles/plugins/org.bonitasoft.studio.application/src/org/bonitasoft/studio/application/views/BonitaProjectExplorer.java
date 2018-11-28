@@ -213,11 +213,13 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
         @Override
         protected void internalRefresh(Object element, boolean updateLabels) {
-            try {
-                fPendingRefreshes.add(element);
-                super.internalRefresh(element, updateLabels);
-            } finally {
-                fPendingRefreshes.remove(element);
+            if (!getTree().isDisposed()) {
+                try {
+                    fPendingRefreshes.add(element);
+                    super.internalRefresh(element, updateLabels);
+                } finally {
+                    fPendingRefreshes.remove(element);
+                }
             }
         }
 

@@ -38,4 +38,5 @@ public class BonitaGeneralProcessPropertiesView extends BonitaPropertiesView {
 			ITabbedPropertySheetPageContributor part) {
 		return new BonitaGeneralProcessPropertiesBrowserPage(part);
 	}
+
 }
