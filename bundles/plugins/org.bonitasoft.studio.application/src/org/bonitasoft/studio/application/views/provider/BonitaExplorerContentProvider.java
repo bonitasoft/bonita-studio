@@ -26,5 +26,13 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         return super.hasChildren(element);
     }
 
+    @Override
+    public Object[] getChildren(Object parentElement) {
+        if (UIDArtifactFilters.isUIDArtifact(parentElement)) {
+            return new Object[0];
+        }
+        return super.getChildren(parentElement);
+    }
+
 
 }

@@ -10,14 +10,15 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Adapters;
+import org.eclipse.jdt.ui.JavaElementSorter;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionSorter;
+import org.eclipse.jface.viewers.ViewerSorter;
 
 
 public class ProjectExplorerViewerComparator extends ViewerComparator {
 
-    private ResourceExtensionSorter defaultSorter = new ResourceExtensionSorter();
+    private ViewerSorter defaultSorter = new JavaElementSorter();
     private static Map<String, Integer> ORDER = new HashMap<>();
     static {
         ORDER.put("organizations", 1);

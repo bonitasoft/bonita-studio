@@ -74,6 +74,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -156,6 +158,16 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         parameterTableViewer.setSorter(new ViewerSorter());
         parameterTableViewer.addDoubleClickListener(this);
         parameterTableViewer.addSelectionChangedListener(this);
+        parameterTableViewer.getTable().addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    remove();
+                }
+            }
+        });
 
         parameterTableViewer.setContentProvider(new ArrayContentProvider());
         parameterTableViewer.setLabelProvider(new ParameterStyledLabelProvider());
@@ -169,47 +181,56 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final IStructuredSelection selection = (IStructuredSelection) parameterTableViewer.getSelection();
-                final StringBuilder sb = new StringBuilder();
-                for (final Object selectionElement : selection.toList()) {
-                    if (selectionElement instanceof Parameter) {
-                        sb.append(((Parameter) selectionElement).getName() + "\n");
-                    }
-                }
-                if (sb.length() > 0) {
-                    sb.delete(sb.length() - 1, sb.length());
-                }
-                final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-                final List<Object> selectionList = ((IStructuredSelection) parameterTableViewer.getSelection()).toList();
-                final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
-                        .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
-                        1, selectionList);
-                final int ok = 0;
-                if (ok == dialog.open()) {
-                    for (final Object parameter : selection.toList()) {
-                        final RemoveParametersOperation op = new RemoveParametersOperation((Parameter) parameter, (AbstractProcess) getEObject());
-                        op.setEditingDomain(getEditingDomain());
-                        op.setAskConfirmation(true);
-                        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                        try {
-                            service.busyCursorWhile(op);
-                        } catch (final InvocationTargetException ex) {
-                            BonitaStudioLog.error(ex);
-                        } catch (final InterruptedException ex) {
-                            BonitaStudioLog.error(ex);
-                        }
-                    }
-                    parameterTableViewer.refresh();
-                    try {
-                        RepositoryManager.getInstance().getCurrentRepository().getProject()
-                        .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
-                    } catch (final CoreException e1) {
-                        BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
-                    }
-                }
+                remove();
             }
+
         });
 
+    }
+
+    protected void remove() {
+        final IStructuredSelection selection = (IStructuredSelection) parameterTableViewer.getSelection();
+        final StringBuilder sb = new StringBuilder();
+        for (final Object selectionElement : selection.toList()) {
+            if (selectionElement instanceof Parameter) {
+                sb.append(((Parameter) selectionElement).getName() + "\n");
+            }
+        }
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 1, sb.length());
+        }
+        final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
+        final List<Object> selectionList = ((IStructuredSelection) parameterTableViewer.getSelection()).toList();
+        final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                removalConfirmationDialogTitle, Display
+                        .getCurrent().getSystemImage(SWT.ICON_WARNING),
+                NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
+                1, selectionList);
+        final int ok = 0;
+        if (ok == dialog.open()) {
+            for (final Object parameter : selection.toList()) {
+                final RemoveParametersOperation op = new RemoveParametersOperation((Parameter) parameter,
+                        (AbstractProcess) getEObject());
+                op.setEditingDomain(getEditingDomain());
+                op.setAskConfirmation(true);
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                try {
+                    service.busyCursorWhile(op);
+                } catch (final InvocationTargetException ex) {
+                    BonitaStudioLog.error(ex);
+                } catch (final InterruptedException ex) {
+                    BonitaStudioLog.error(ex);
+                }
+            }
+            parameterTableViewer.refresh();
+            try {
+                RepositoryManager.getInstance().getCurrentRepository().getProject()
+                        .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID,
+                                Collections.<String, String> emptyMap(), null);
+            } catch (final CoreException e1) {
+                BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
+            }
+        }
     }
 
     protected Parameter createDefaultParameter() {
