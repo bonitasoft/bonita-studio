@@ -2,7 +2,7 @@
 <feature
       id="bos-branding-feature"
       label="Bonitasoft Branding Feature"
-      version="7.8.0.qualifier"
+      version="7.8.0.rc-01"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
