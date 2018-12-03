@@ -85,9 +85,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type", getArtifactType());
             jsonObject.put("name", artifactName);
-            if (getArtifactType() == ArtifactyType.FORM
-                    || getArtifactType() == ArtifactyType.PAGE
-                    || getArtifactType() == ArtifactyType.FRAGMENT) {
+            if (getArtifactType() != ArtifactyType.WIDGET) {
                 jsonObject.put("rows", Arrays.asList(new ArrayList<>()));
             }
             return jsonObject;
