@@ -18,12 +18,14 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,17 +63,19 @@ public class BosArchive {
     public ImportArchiveModel toImportModel(Repository repository, IProgressMonitor monitor) throws IOException {
         final IStatus validationStatus = validate();
         if (!validationStatus.isOK()) {
-            throw new IOException(Messages.unvalidBossArchive);
+            throw new IllegalArgumentException(validationStatus.getMessage());
         }
         final Set<String> resourcesToOpen = getResourcesToOpen();
 
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
         try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            int entryCount = (int) zipFile.stream().filter(entry -> !entry.isDirectory()).count();
             monitor.beginTask(org.bonitasoft.studio.importer.bos.i18n.Messages.parsingArchive,
-                    (int) zipFile.stream().filter(e -> !e.isDirectory()).count());
-            zipFile.stream().filter(e -> !e.isDirectory())
-                    .forEach(e -> {
-                        parseEntry(e, archiveModel, repository, resourcesToOpen);
+                    entryCount);
+            zipFile.stream()
+                    .filter(entry -> !entry.isDirectory())
+                    .forEach(entry -> {
+                        parseEntry(entry, archiveModel, repository, resourcesToOpen);
                         monitor.worked(1);
                     });
         } catch (final IOException e) {
@@ -82,7 +86,6 @@ public class BosArchive {
 
     private void parseEntry(ZipEntry entry, ImportArchiveModel archiveModel, IRepository repository,
             Set<String> resourcesToOpen) {
-
         final String entryName = entry.getName();
         final List<String> segments = Splitter.on('/').splitToList(entryName);
         segments.stream()
@@ -138,6 +141,9 @@ public class BosArchive {
                 file.getParent().ifPresent(parent -> parent
                         .setDisplayName(String.format("%s (%s)", name, parent.getFolderName())));
             }
+            if (isFragment(file) && PlatformUtil.isACommunityBonitaProduct()) {
+                return;
+            }
             store.addFile(file);
         } else if (segments.size() > 1 && directStoreChild) { // Folder
             final Iterable<String> folderParentSegments = concat(parentSegments, segments.subList(0, 1));
@@ -155,6 +161,14 @@ public class BosArchive {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false, archiveModel);
         }
+    }
+
+    private boolean isFragment(ImportFileModel file) {
+        if (file.getParentRepositoryStore().isPresent()) {
+            IRepositoryStore repositoryStore = file.getParentRepositoryStore().get();
+            return repositoryStore instanceof WebFragmentRepositoryStore;
+        }
+        return false;
     }
 
     public IStatus validateDiagram(ImportFileStoreModel file) {
