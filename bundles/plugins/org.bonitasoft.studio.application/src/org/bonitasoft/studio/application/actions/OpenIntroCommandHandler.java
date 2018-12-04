@@ -25,7 +25,6 @@ import org.eclipse.core.commands.ExecutionException;
 public class OpenIntroCommandHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-        //PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
         PlatformUtil.openIntro();
 		return null;
 	}

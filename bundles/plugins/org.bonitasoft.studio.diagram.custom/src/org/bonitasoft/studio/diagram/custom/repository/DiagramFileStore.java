@@ -113,10 +113,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         return (MainProcess) super.getContent();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.EMFFileStore#getDisplayName()
-     */
+
     @Override
     public String getDisplayName() {
         final String displayName = getResource().getLocation().removeFileExtension().lastSegment();
@@ -291,15 +288,6 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
             IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             activePage.closeEditor(openedEditor, false);
         }
-    }
-
-    protected IWorkbenchPage closeOpenedEditorWithoutSaving() {
-        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        final DiagramEditor openedEditor = getOpenedEditor();
-        if (openedEditor != null) {
-            activePage.closeEditor(openedEditor, false);
-        }
-        return activePage;
     }
 
     protected void setDefaultSelection(final DiagramEditor editor) {
