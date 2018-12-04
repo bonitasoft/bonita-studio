@@ -133,10 +133,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         return URI.createPlatformResourceURI(fullPath.toOSString(), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.EMFFileStore#getIcon()
-     */
+
     @Override
     public Image getIcon() {
         return Pics.getImage("ProcessDiagramFile.gif", Activator.getDefault());
@@ -260,15 +257,13 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final IWorkbenchPage activePage = closeOpenedEditorWithoutSaving();
-
         IEditorPart part = null;
         final Resource emfResource = getEMFResource();
         final MainProcess content = getContent();
         Assert.isLegal(content != null);
         Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
-        part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
+        part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram).trimFragment()));
         if (part instanceof DiagramEditor) {
             final DiagramEditor editor = (DiagramEditor) part;
             final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
