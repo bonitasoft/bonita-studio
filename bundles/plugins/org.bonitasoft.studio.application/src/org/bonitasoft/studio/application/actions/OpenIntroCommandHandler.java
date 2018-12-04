@@ -22,17 +22,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-/**
- * @author Mickael Istria
- *
- */
 public class OpenIntroCommandHandler extends AbstractHandler {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		PlatformUtil.openIntro();
+        //PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
+        PlatformUtil.openIntro();
 		return null;
 	}
 
