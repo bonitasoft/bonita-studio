@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -43,6 +44,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
@@ -228,6 +232,13 @@ public class SaveCommandHandler extends SaveHandler {
                 }
             };
             if (nameDialog.open() == Dialog.OK) {
+                final String author = System.getProperty("user.name", "unknown");
+                final TransactionalEditingDomain editingDomain = TransactionUtil
+                        .getEditingDomain(proc.eResource());
+                editingDomain.getCommandStack().execute(
+                        SetCommand.create(editingDomain,
+                                ((DiagramEditor) editorPart).getDiagramEditPart().resolveSemanticElement(),
+                                ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
                 editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
                 final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
                 renameDiagramOperation.setDiagramToDuplicate(proc);
