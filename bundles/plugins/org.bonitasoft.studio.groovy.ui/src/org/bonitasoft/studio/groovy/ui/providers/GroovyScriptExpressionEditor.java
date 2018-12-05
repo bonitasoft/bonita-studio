@@ -679,6 +679,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
                 SWTObservables.observeText(groovyViewer.getSourceViewer().getTextWidget(), SWT.Modify), null,
                 evaluateStrategy);
+
+        sourceViewer.getUndoManager().reset();
     }
 
     @Override
