@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
-import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +48,7 @@ public abstract class AbstractGroovyScriptConfigurationSynchronizer implements I
     @Override
     public void synchronize(Configuration configuration, AbstractProcess process, CompoundCommand cc,
             EditingDomain editingDomain) {
-        GroovyRepositoryStore store = (GroovyRepositoryStore) RepositoryManager.getInstance()
+        GroovyRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(GroovyRepositoryStore.class);
         addNewPackage(configuration, process, store, cc, editingDomain);
         removeDeletedPackage(configuration, store, cc, editingDomain);
@@ -83,8 +82,12 @@ public abstract class AbstractGroovyScriptConfigurationSynchronizer implements I
                             List<Expression> expressions = ModelHelper.getAllItemsOfType(process,
                                     ExpressionPackage.Literals.EXPRESSION);
                             newFragment.setExported(false);
-                            String qualifiedName = path.replaceAll(File.separator, ".").substring(0,
-                                    path.lastIndexOf(".groovy"));
+                            String qualifiedName = path;
+                            if (path.contains("/")) {
+                                qualifiedName = qualifiedName.replaceAll("/", ".");
+                            }
+                            qualifiedName = qualifiedName.substring(0,
+                                    qualifiedName.lastIndexOf(".groovy"));
                             for (Expression exp : expressions) {
                                 if (exp.getType() != null && exp.getType().equals(ExpressionConstants.SCRIPT_TYPE)) {
                                     if (exp.getContent() != null && exp.getContent().contains(qualifiedName)) {

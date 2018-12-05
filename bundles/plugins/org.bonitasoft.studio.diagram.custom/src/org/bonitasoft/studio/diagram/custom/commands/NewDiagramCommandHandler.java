@@ -41,10 +41,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
         final DiagramFileStore diagramFileStore = newDiagram();
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
+        Display.getDefault().asyncExec(() -> {
                 final IEditorPart editor = (IEditorPart) diagramFileStore.open();
                 if (editor instanceof DiagramEditor) {
                     final String author = System.getProperty("user.name", "unknown");
@@ -56,7 +53,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                                     ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
                 }
-            }
         });
         return diagramFileStore;
     }
