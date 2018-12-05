@@ -28,7 +28,7 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
     @Override
     public void partActivated(final MPart part) {
-
+        switchPerspective(part);
     }
 
     @Override
@@ -48,6 +48,10 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
     @Override
     public void partVisible(final MPart part) {
+        switchPerspective(part);
+    }
+
+    protected void switchPerspective(final MPart part) {
         if (!isSwitching) {
             isSwitching = true;
             try {

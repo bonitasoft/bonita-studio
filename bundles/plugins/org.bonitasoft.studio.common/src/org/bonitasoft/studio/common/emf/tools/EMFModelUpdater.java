@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.Activator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -44,6 +46,7 @@ public class EMFModelUpdater<T extends EObject> {
     private T workingCopy;
     private CustomCopier copier = new CustomCopier();
     private List<EObject> synched = new ArrayList<>();
+    private Set<String> manyFeaturesSynched = new HashSet<>();
 
     /**
      * Original (before edition) EMF object with UUID
@@ -82,6 +85,7 @@ public class EMFModelUpdater<T extends EObject> {
             @Override
             protected void doExecute() {
                 synched.clear();
+                manyFeaturesSynched.clear();
                 deepEObjectUpdate(source, workingCopy);
             }
         };
@@ -116,7 +120,12 @@ public class EMFModelUpdater<T extends EObject> {
                 })
                 .forEach(feature -> {
                     if (feature.isMany()) {
-                        handleManyCase(source, target, feature);
+                        String uuid = getEObjectID(source);
+                        String key = uuid + feature.getName();
+                        if (!manyFeaturesSynched.contains(key)) {
+                            manyFeaturesSynched.add(key);
+                            handleManyCase(source, target, feature);
+                        }
                     } else {
                         Object sourceRef = source.eGet(feature);
                         Object targetRef = target.eGet(feature);
