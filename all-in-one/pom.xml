@@ -27,7 +27,6 @@
         <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
         <p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
         <root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
-        <argLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</argLine>
         <signServiceURL></signServiceURL>
     </properties>
 
@@ -208,7 +207,7 @@
                 <groupId>org.eclipse.tycho.extras</groupId>
                 <artifactId>tycho-eclipserun-plugin</artifactId>
                 <configuration>
-                    <appArgLine>${os-jvm-flags} ${argLine}/</appArgLine>
+                    <appArgLine>${os-jvm-flags} ${antRunner} ${p2BuildFile} ${root.dir.arg}</appArgLine>
                     <argLine>-Xmx512m -Xms256m</argLine>
                     <repositories>
                         <repository>
