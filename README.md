@@ -1,6 +1,6 @@
 # Bonita Studio
 
-This repository contains the source code of the Bonita Studio component from the Bonita tool suite.  
+This repository contains the source code of the Bonita Studio component from Bonita Platform.  
 In order to build this repository it is required to build its dependencies. To help you achieve this there is a dedicated repository [here](https://github.com/Bonitasoft-Community/Build-Bonita).
 
 ## Run build
