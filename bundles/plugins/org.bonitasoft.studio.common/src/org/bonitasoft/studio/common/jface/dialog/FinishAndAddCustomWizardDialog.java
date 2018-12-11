@@ -69,11 +69,9 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
     @Override
     protected void buttonPressed(final int buttonId) {
         super.buttonPressed(buttonId);
-        if (buttonId == CREATE_AND_NEW_ID) {
-            if (getWizard().performFinish()) {
+        if (buttonId == CREATE_AND_NEW_ID && getWizard().performFinish()) {
                 close();
-                Display.getDefault().asyncExec(() -> actionOnFinishAndAdd());
-            }
+                Display.getDefault().asyncExec(this::actionOnFinishAndAdd);
         }
     }
 

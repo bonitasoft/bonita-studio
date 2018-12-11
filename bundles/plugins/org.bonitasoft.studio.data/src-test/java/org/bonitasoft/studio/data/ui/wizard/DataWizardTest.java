@@ -16,7 +16,6 @@ package org.bonitasoft.studio.data.ui.wizard;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -80,7 +79,6 @@ public class DataWizardTest {
         doReturn(workingCopy).when(wizard).getWorkingCopy();
         doReturn(wizardContainer).when(wizard).getContainer();
         doReturn(true).when(wizard).isEdited(workingCopy);
-        doNothing().when(wizard).refreshXtextReferences();
     }
 
     @Test
