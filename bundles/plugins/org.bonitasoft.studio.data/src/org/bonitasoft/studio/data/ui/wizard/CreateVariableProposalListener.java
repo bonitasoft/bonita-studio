@@ -19,6 +19,7 @@ import java.util.Collections;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -62,6 +63,7 @@ public class CreateVariableProposalListener implements IDataProposalListener {
         newWizard.setIsPageFlowContext(isPageFlowContext);
         final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard, IDialogConstants.FINISH_LABEL);
         if (wizardDialog.open() == Dialog.OK) {
+            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
             final Data newData = newWizard.getNewData();
             if (newData != null) {
                 return newData.getName();
