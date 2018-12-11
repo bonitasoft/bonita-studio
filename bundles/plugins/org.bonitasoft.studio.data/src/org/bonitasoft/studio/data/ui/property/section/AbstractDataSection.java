@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
@@ -46,6 +48,8 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -87,6 +91,8 @@ import org.eclipse.swt.widgets.Shell;
  * @author Romain Bioteau
  */
 public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext, IAddData {
+
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
     private Button updateDataButton;
 
@@ -282,6 +288,17 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         wizard.setIsOverviewContext(isOverViewContext());
         if (new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard, this).open() == Dialog.OK) {
             dataTableViewer.refresh();
+            refreshXtextReferences();
+        }
+    }
+
+    protected void refreshXtextReferences() {
+        try {
+            RepositoryManager.getInstance().getCurrentRepository().getProject()
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(),
+                            null);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }
     }
 
