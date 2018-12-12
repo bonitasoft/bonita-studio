@@ -108,7 +108,7 @@ public class FileStoreFinder {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(BONITA_PROJECT_EXPLORER_ID));
     }
 
-    private Optional<? extends IRepositoryFileStore> findFileStore(String resourceName, Repository currentRepository) {
+    public Optional<? extends IRepositoryFileStore> findFileStore(String resourceName, Repository currentRepository) {
         return currentRepository.getAllStores().stream()
                 .map(IRepositoryStore::getChildren)
                 .flatMap(Collection::stream)

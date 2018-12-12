@@ -65,7 +65,7 @@ public class TestDuplicate {
             public String getFailureMessage() {
                 return "Duplicate has failed !";
             }
-        });
+        }, 10000);
 
         final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final MainProcess mainProcess = drs.getDiagram("DuplicatedTestDuplicateWithSeveralPool", "2.0").getContent();
@@ -115,7 +115,7 @@ public class TestDuplicate {
             public String getFailureMessage() {
                 return "Duplicate has failed !";
             }
-        });
+        }, 10000);
     }
 
 }

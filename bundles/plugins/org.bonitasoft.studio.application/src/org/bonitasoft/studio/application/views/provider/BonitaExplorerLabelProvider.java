@@ -14,17 +14,15 @@
  */
 package org.bonitasoft.studio.application.views.provider;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -38,17 +36,19 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
     private PackageExplorerProblemsDecorator packageExplorerProblemsDecorator;
-
+    private FileStoreFinder fileStoreFinder;
 
     @Override
     public void init(ICommonContentExtensionSite commonContentExtensionSite) {
         super.init(commonContentExtensionSite);
         packageExplorerProblemsDecorator = new PackageExplorerProblemsDecorator();
+        fileStoreFinder = new FileStoreFinder();
     }
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#addListener(org.eclipse.jface.viewers.
+     * ILabelProviderListener)
      */
     @Override
     public void addListener(ILabelProviderListener listener) {
@@ -58,7 +58,8 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     * @see org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider#removeListener(org.eclipse.jface.viewers.
+     * ILabelProviderListener)
      */
     @Override
     public void removeListener(ILabelProviderListener listener) {
@@ -74,12 +75,12 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         }
         if (!(element instanceof IJavaElement)) {
             if (element instanceof IResource) {
-                IRepositoryFileStore fileStore = repositoryManager.getCurrentRepository().getFileStore((IResource) element);
-                if (fileStore != null) {
-                    if (fileStore.getIcon() != null) {
-                        return packageExplorerProblemsDecorator.decorateImage(fileStore.getIcon(), element);
-                    }
-                    return super.getImage(element);
+                Optional<? extends IRepositoryFileStore> fileStore = asFileStore(element, repositoryManager);
+                if (fileStore.isPresent()) {
+                    return fileStore
+                            .map(IRepositoryFileStore::getIcon)
+                            .map(icon -> packageExplorerProblemsDecorator.decorateImage(icon, element))
+                            .orElse(super.getImage(element));
                 }
             }
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
@@ -91,7 +92,6 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         }
         return super.getImage(element);
     }
-
 
     @Override
     public StyledString getStyledText(Object element) {
@@ -107,25 +107,20 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                 String displayName = iRepositoryStore.getDisplayName();
                 return new StyledString(displayName != null ? displayName : iRepositoryStore.getName());
             }
-
-            IRepositoryFileStore fStore = asFileStore(element, repositoryManager);
-            if (fStore != null && Objects.equals(fStore.getResource(), element)) {
-                return fStore.getStyledString();
-            }
+            return asFileStore(element, repositoryManager)
+                    .filter(fStore -> Objects.equals(fStore.getResource(), element))
+                    .map(IRepositoryFileStore::getStyledString)
+                    .orElse(super.getStyledText(element));
         }
         return super.getStyledText(element);
     }
 
-    private IRepositoryFileStore asFileStore(Object element, RepositoryManager repositoryManager) {
-        try {
-            if (element instanceof IResource && ((IResource) element).getLocation() != null) {
-                return repositoryManager.getCurrentRepository()
-                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);
-            }
-        } catch (IOException | CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-        return null;
+    private Optional<? extends IRepositoryFileStore> asFileStore(Object element, RepositoryManager repositoryManager) {
+        return Optional.ofNullable(element)
+                .filter(IResource.class::isInstance)
+                .map(IResource.class::cast)
+                .flatMap(resource -> fileStoreFinder.findFileStore(resource.getName(),
+                        repositoryManager.getCurrentRepository()));
     }
 
     public static boolean isFolder(Object element, String folderName) {

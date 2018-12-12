@@ -17,8 +17,10 @@ package org.bonitasoft.studio.application.views.provider;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
@@ -42,6 +44,7 @@ public class CustomOpenActionProvider extends CommonActionProvider {
     private ICommonViewerWorkbenchSite viewSite = null;
     private boolean contribute = false;
     private RepositoryAccessor repositoryAccessor;
+    private FileStoreFinder fileStoreFinder;
 
     @Override
     public void init(ICommonActionExtensionSite aConfig) {
@@ -52,8 +55,8 @@ public class CustomOpenActionProvider extends CommonActionProvider {
         }
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        fileStoreFinder = new FileStoreFinder();
     }
-
 
     @Override
     public void fillActionBars(IActionBars theActionBars) {
@@ -81,8 +84,9 @@ public class CustomOpenActionProvider extends CommonActionProvider {
 
             @Override
             public void run(IStructuredSelection selection) {
-                if (!checkEnabled(selection))
+                if (!checkEnabled(selection)) {
                     return;
+                }
                 run(selection.toArray());
             }
 
@@ -92,12 +96,12 @@ public class CustomOpenActionProvider extends CommonActionProvider {
 
                 for (Object element : elements) {
                     if (element instanceof File || UIDArtifactFilters.isUIDArtifact(element)) {
-                        IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository()
-                                .getFileStore((IResource) element);
-                        if (fileStore != null) {
-                            fileStore.open();
+                        Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder
+                                .findFileStore(((IResource) element).getName(), repositoryAccessor.getCurrentRepository());
+                        if (fileStore.isPresent()) {
+                            fileStore.get().open();
                             continue;
-                        }
+                        } ;
                     }
                     elementsToKeep.add(element);
                 }
@@ -106,18 +110,23 @@ public class CustomOpenActionProvider extends CommonActionProvider {
             }
 
             private boolean checkEnabled(IStructuredSelection selection) {
-                if (selection.isEmpty())
+                if (selection.isEmpty()) {
                     return false;
+                }
                 for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                     Object element = iter.next();
-                    if (element instanceof ISourceReference)
+                    if (element instanceof ISourceReference) {
                         continue;
-                    if (element instanceof IFile)
+                    }
+                    if (element instanceof IFile) {
                         continue;
-                    if (UIDArtifactFilters.isUIDArtifact(element))
+                    }
+                    if (UIDArtifactFilters.isUIDArtifact(element)) {
                         continue;
-                    if (JavaModelUtil.isOpenableStorage(element))
+                    }
+                    if (JavaModelUtil.isOpenableStorage(element)) {
                         continue;
+                    }
                     return false;
                 }
                 return true;
