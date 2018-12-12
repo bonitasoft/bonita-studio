@@ -44,7 +44,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-cmis</artifactId>
-                                    <version>3.0.1</version>
+                                    <version>3.0.3</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
