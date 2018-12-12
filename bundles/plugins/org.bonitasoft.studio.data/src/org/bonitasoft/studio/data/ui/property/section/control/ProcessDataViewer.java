@@ -19,6 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.IAddData;
@@ -109,8 +110,11 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
     @Override
     public void addData() {
         final DataAware container = (DataAware) getDataContainerObservable().getValue();
-        new DataWizardDialog(Display.getDefault().getActiveShell(), dataWizardFactory.createAddWizard(TransactionUtil.getEditingDomain(container), container),
-                this).open();
+        if (new DataWizardDialog(Display.getDefault().getActiveShell(),
+                dataWizardFactory.createAddWizard(TransactionUtil.getEditingDomain(container), container),
+                this).open() == Dialog.OK) {
+            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
+        }
     }
 
     private ViewerFilter hideBusinessObjectData() {

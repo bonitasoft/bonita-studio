@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,8 +24,6 @@ import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
@@ -36,9 +33,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -75,8 +70,6 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     private boolean isOverviewContext = false;
 
     private EMFModelUpdater<Data> dataUpdater;
-
-    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
     public DataWizard(final TransactionalEditingDomain editingDomain, final EObject container, final EStructuralFeature dataContainmentFeature,
             final Set<EStructuralFeature> featureToCheckForUniqueID,
@@ -204,7 +197,6 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         if (page != null) {
             page.setWorkingCopy(createWorkingCopy(container));
         }
-        refreshXtextReferences();
         return true;
     }
 
@@ -215,15 +207,6 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     protected boolean isEdited(final Data workingCopy) {
         return !(originalData.eClass().equals(workingCopy.eClass()) && originalData.getName().equals(workingCopy.getName()) && originalData.getDataType()
                 .equals(workingCopy.getDataType()));
-    }
-
-    protected void refreshXtextReferences() {
-        try {
-            RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-        }
     }
 
     protected RefactorDataOperation createRefactorOperation(final TransactionalEditingDomain editingDomain, final Data workingCopy) {

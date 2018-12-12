@@ -103,6 +103,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
 
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
+
     public static final Set<String> LEGACY_REPOSITORIES = new HashSet<>();
 
     static {
@@ -882,6 +884,16 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     public void addProjectListener(IBonitaProjectListener listener) {
         if (!projectListeners.contains(listener)) {
             projectListeners.add(listener);
+        }
+    }
+
+    public void buildXtext() {
+        try {
+            getProject()
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(),
+                            null);
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
         }
     }
 
