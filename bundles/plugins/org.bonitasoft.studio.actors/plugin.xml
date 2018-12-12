@@ -188,6 +188,22 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
+         <command
+               commandId="org.bonitasoft.studio.organization.setAsActive"
+               mnemonic="A"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+         <separator
+               name="org.bonitasoft.studio.actors.separator1"
+               visible="true">
+         </separator>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

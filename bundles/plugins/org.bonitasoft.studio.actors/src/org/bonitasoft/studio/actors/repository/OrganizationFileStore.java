@@ -24,6 +24,7 @@ import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.styler.ActiveOrganizationStyler;
 import org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -50,6 +51,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Image;
@@ -68,10 +70,12 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     private static final String ORGANIZATION_EXT = ".organization";
     private ActiveOrganizationProvider activeOrganizationProvider;
+    private ActiveOrganizationStyler activeOrganizationStyler;
 
     public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
         super(fileName, store);
         activeOrganizationProvider = new ActiveOrganizationProvider();
+        activeOrganizationStyler = new ActiveOrganizationStyler();
     }
 
     @Override
@@ -214,6 +218,16 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
             return Optional.of(stripExtension(dialog.getValue(), ORGANIZATION_EXT) + ORGANIZATION_EXT);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public StyledString getStyledString() {
+        StyledString styledString = super.getStyledString();
+        if (Objects.equal(activeOrganizationProvider.getActiveOrganization(), getContent().getName())) {
+            styledString.append(String.format("  (%s)", org.bonitasoft.studio.actors.i18n.Messages.active),
+                    activeOrganizationStyler);
+        }
+        return styledString;
     }
 
 }

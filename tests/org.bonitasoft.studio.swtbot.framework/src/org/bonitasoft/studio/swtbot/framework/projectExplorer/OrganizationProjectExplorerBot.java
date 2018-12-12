@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
+import java.util.Objects;
+
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -27,9 +30,11 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
     private static final String ORGA_EXT = ".organization";
+    private ActiveOrganizationProvider activeOrganizationProvider;
 
     public OrganizationProjectExplorerBot(SWTGefBot bot) {
         super(bot);
+        activeOrganizationProvider = new ActiveOrganizationProvider();
     }
 
     @Override
@@ -64,7 +69,7 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
     public void deployOrganization(String organization, String user) {
         SWTBotTreeItem organizationTreeItem = getOrganizationFolderTreeItem();
-        clickOnContextualMenu(getTreeItem(organizationTreeItem, addOrgaExtension(organization)), "Deploy");
+        clickOnContextualMenu(getTreeItem(organizationTreeItem, getDisplayName(organization)), "Deploy");
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.actors.i18n.Messages.deployOrganizationTitle));
         bot.text().setText(user);
         bot.button("Deploy").click();
@@ -80,14 +85,18 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
     private SWTBotTreeItem getOrganizationTreeItem(String organization) {
         SWTBotTreeItem organizationFolderTreeItem = getOrganizationFolderTreeItem();
-        return getTreeItem(organizationFolderTreeItem, addOrgaExtension(organization));
+        return getTreeItem(organizationFolderTreeItem, getDisplayName(organization));
     }
 
-    private String addOrgaExtension(String orgaName) {
-        if (!orgaName.endsWith(ORGA_EXT)) {
-            orgaName += ORGA_EXT;
+    private String getDisplayName(String name) {
+        String displayName = name;
+        if (!displayName.endsWith(ORGA_EXT)) {
+            displayName += ORGA_EXT;
         }
-        return orgaName;
+        if (Objects.equals(activeOrganizationProvider.getActiveOrganization(), name)) {
+            displayName = String.format("%s  (active)", displayName);
+        }
+        return displayName;
     }
 
 }
