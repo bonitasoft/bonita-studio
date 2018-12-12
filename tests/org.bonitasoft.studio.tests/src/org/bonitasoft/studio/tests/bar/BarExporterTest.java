@@ -136,7 +136,7 @@ public class BarExporterTest {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         //  click 'OK' button to close 'Export' shell
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(Messages.exportSuccessTitle));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(Messages.exportSuccessTitle), 10000);
         bot.button(IDialogConstants.OK_LABEL).click();
 
         // wait the shell to close before checking creation of files

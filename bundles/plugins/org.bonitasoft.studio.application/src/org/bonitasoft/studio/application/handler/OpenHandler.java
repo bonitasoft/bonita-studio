@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -33,16 +35,16 @@ import org.eclipse.ui.ide.IDE;
 
 public class OpenHandler extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
+    private FileStoreFinder fileStoreFinder = new FileStoreFinder();
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection selection = selectionFinder.getSelectionInExplorer();
+        ISelection selection = fileStoreFinder.getSelectionInExplorer();
         IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
-        IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
-                .getFileStore(resource);
-        if (fileStore != null) {
-            fileStore.open();
+        Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder.findFileStore(resource.getName(),
+                RepositoryManager.getInstance().getCurrentRepository());
+        if (fileStore.isPresent()) {
+            fileStore.get().open();
         } else {
             try {
                 IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) resource);
@@ -59,7 +61,7 @@ public class OpenHandler extends AbstractHandler {
      */
     @Override
     public boolean isEnabled() {
-        ISelection selection = selectionFinder.getSelectionInExplorer();
+        ISelection selection = fileStoreFinder.getSelectionInExplorer();
         if (selection instanceof IStructuredSelection
                 && ((IStructuredSelection) selection).size() == 1) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();

@@ -14,6 +14,13 @@
  */
 package org.bonitasoft.studio.application.views.provider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
 
 public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider {
@@ -31,8 +38,24 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         if (UIDArtifactFilters.isUIDArtifact(parentElement)) {
             return new Object[0];
         }
+        if (parentElement instanceof IFolder && isEnvironmentsFolder((IFolder) parentElement)) {
+            return addLocalEnvironment(parentElement);
+        }
         return super.getChildren(parentElement);
     }
 
+    // The local environment is not persisted in a fileStore, we must 'fake' it to display it.
+    private Object[] addLocalEnvironment(Object parentElement) {
+        IFolder parent = (IFolder) parentElement;
+        IFile localEnv = parent.getFile("Local.xml");
+        List<Object> children = new ArrayList<>();
+        children.add(localEnv);
+        children.addAll(Arrays.asList(super.getChildren(parentElement)));
+        return children.toArray();
+    }
+
+    private boolean isEnvironmentsFolder(IFolder parentElement) {
+        return Objects.equals(parentElement.getName(), "environements");
+    }
 
 }
