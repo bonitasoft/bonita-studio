@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
@@ -282,6 +283,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         wizard.setIsOverviewContext(isOverViewContext());
         if (new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard, this).open() == Dialog.OK) {
             dataTableViewer.refresh();
+            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
         }
     }
 
