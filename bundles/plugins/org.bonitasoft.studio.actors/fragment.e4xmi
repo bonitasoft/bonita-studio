@@ -6,10 +6,12 @@
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_tLmfcJbPEeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.organization.manage" commandName="%manageOrganization_Label"/>
     <elements xsi:type="commands:Command" xmi:id="_bOsOIJb0Eeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.actors.import" commandName="%import_Label"/>
+    <elements xsi:type="commands:Command" xmi:id="_f5ZhgPxdEeicTeF1RHOGZw" elementId="org.bonitasoft.studio.organization.setAsActive" commandName="%setAsActiveOrganization"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_9OWy0JPZEeefAocV7_rPmw" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_AM0IAJPaEeefAocV7_rPmw" elementId="org.bonitasoft.studio.organization.publish.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler" command="_3qAZcJPZEeefAocV7_rPmw"/>
     <elements xsi:type="commands:Handler" xmi:id="_uqPnsJbPEeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.organization.manage.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.ManageOrganizationHandler" command="_tLmfcJbPEeew-Jqtlwxc8Q"/>
     <elements xsi:type="commands:Handler" xmi:id="_cpyTIJb0Eeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.actors.import.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.ImportOrganizationHandler" command="_bOsOIJb0Eeew-Jqtlwxc8Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_nl-LoPxdEeicTeF1RHOGZw" elementId="org.bonitasoft.studio.organization.setAsActive.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.SetAsActiveOrganizationHandler" command="_f5ZhgPxdEeicTeF1RHOGZw"/>
   </fragments>
 </fragment:ModelFragments>
