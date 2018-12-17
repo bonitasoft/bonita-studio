@@ -214,7 +214,7 @@ public class ActorFilterImplementationTest implements SWTBotConstants {
         });
         bot.table().select(id + " (1.0.0) -- " + packageName + "." + className);
         bot.button(Messages.Edit).click();
-        selectDefinition(definition);
+        bot.button(IDialogConstants.NEXT_LABEL).click();
         assertEquals("Implementation id should be " + id,
                 bot.textWithLabel("Implementation id *").getText(), id);
         assertEquals("Version should be 1.0.0", bot.textWithLabel("Version *")
