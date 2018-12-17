@@ -178,9 +178,9 @@
                                 <!--EMAIL CONNECTOR -->
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-email-impl</artifactId>
-                                    <version>1.0.15</version>
-                                    <classifier>connector</classifier>
+                                    <artifactId>bonita-connector-email</artifactId>
+                                    <version>1.1.0</version>
+                                    <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
                                 <!--GOOGLE CALENDAR CONNECTOR -->
