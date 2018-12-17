@@ -88,9 +88,9 @@ public class CoolbarToolControl
     private Font biggerFont;
 
     @PostConstruct
-    public void createControls(final Composite parent, final IEclipseContext context,
-            final IWorkbenchActivitySupport activitySupport) {
-        if (isRendered(context) && toolbarContainer == null) {
+    public void createControls(final Composite parent, final IEclipseContext context) {
+        if (isRendered(context) && toolbarContainer == null && context.get(IWorkbenchPage.class) != null) {
+            IWorkbenchPage page = context.get(IWorkbenchPage.class);
             size = getCoolBarPreferredSize();
             final Composite parentShell = parent.getParent();
             final TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
@@ -113,7 +113,6 @@ public class CoolbarToolControl
                     rightTrim.setVisible(false);
                     rightTrim.setSize(0, 0);
                 }
-                final IWorkbenchPage page = context.get(IWorkbenchPage.class);
                 createToolbar(toolbarContainer, page);
                 final IEventBroker eventBroker = context.get(IEventBroker.class);
                 eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
