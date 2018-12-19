@@ -15,7 +15,6 @@ public class ImportArchiveModel {
     private final List<ImportStoreModel> stores = new ArrayList<>();
     private final BosArchive bosArchive;
     private IStatus validationStatus = Status.OK_STATUS;
-    private IStatus validationStatus2;
 
     public ImportArchiveModel(BosArchive bosArchive) {
         this.bosArchive = bosArchive;
@@ -43,7 +42,7 @@ public class ImportArchiveModel {
     public void removeStore(ImportStoreModel store) {
         stores.remove(store);
     }
-    
+
     public List<ImportStoreModel> getStores() {
         Collections.sort(stores, (f1, f2) -> f1.getFolderName().compareTo(f2.getFolderName()));
         return Collections.unmodifiableList(stores);
