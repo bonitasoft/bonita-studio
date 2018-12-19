@@ -41,7 +41,19 @@ public class ImportStoreModel extends AbstractFolderModel {
     }
 
     public Stream<ImportableUnit> importableUnits() {
-        return Stream.concat(getFiles().stream().filter(ImportableUnit.class::isInstance).map(ImportableUnit.class::cast),
-                getFolders().stream().filter(ImportableUnit.class::isInstance).map(ImportableUnit.class::cast));
+        return Stream.concat(importableFiles(), importableFolders());
+    }
+
+    private Stream<ImportableUnit> importableFolders() {
+        return getFolders().stream()
+                .filter(ImportableUnit.class::isInstance)
+                .map(ImportableUnit.class::cast);
+    }
+
+    private Stream<ImportableUnit> importableFiles() {
+        return getFiles().stream()
+                .filter(AbstractFileModel::shouldBeImported)
+                .filter(ImportableUnit.class::isInstance)
+                .map(ImportableUnit.class::cast);
     }
 }
