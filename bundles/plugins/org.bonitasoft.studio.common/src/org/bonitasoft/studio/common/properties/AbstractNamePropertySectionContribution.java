@@ -124,7 +124,11 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         final GridLayout rl = new GridLayout(3, false);
         composite.setLayout(rl);
 
-        text = widgetFactory.createText(composite, "", GTKStyleHandler.removeBorderFlag(SWT.BORDER)); //$NON-NLS-1$
+        text = new Text(composite, GTKStyleHandler.removeBorderFlag(SWT.BORDER));
+        if (!GTKStyleHandler.isGTK3()) {
+            widgetFactory.adapt(text, true, true);
+        }
+
         final GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
         rd.widthHint = 250;
 
