@@ -57,4 +57,8 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
         this.status = ConflictStatus.NONE;
     }
 
+    public boolean shouldBeImported() {
+        return importAction == ImportAction.OVERWRITE;
+    }
+
 }
