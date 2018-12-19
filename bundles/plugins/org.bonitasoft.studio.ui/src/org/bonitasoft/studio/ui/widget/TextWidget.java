@@ -132,12 +132,12 @@ public class TextWidget extends EditableControlWidget {
             if (transactionalEdit && targetToModelStrategy == null) {
                 throw new IllegalStateException("A target to model strategy is required with transactionalEdit");
             }
-            if (transactionalEdit && targetToModelStrategy != null
+            if (transactionalEdit
                     && targetToModelStrategy.getUpdatePolicy() != UpdateValueStrategy.POLICY_CONVERT) {
                 throw new IllegalStateException(
                         "Target to model strategy must have a POLICY_CONVERT strategy with transactionalEdit");
             }
-            final TextWidget control = useNativeRender ? new NativeTextWidget(container,
+            final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3()) ? new NativeTextWidget(container,
                     id,
                     labelAbove,
                     horizontalLabelAlignment,
@@ -505,7 +505,7 @@ public class TextWidget extends EditableControlWidget {
     }
 
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer, GTKStyleHandler.replaceSingleWithWrap(SWT.SINGLE));
+        final Text newText = new Text(textContainer, SWT.SINGLE);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;
