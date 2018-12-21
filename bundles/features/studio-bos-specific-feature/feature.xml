@@ -2,7 +2,7 @@
 <feature
       id="studio-bos-specific-feature"
       label="BOS specific bundles"
-      version="7.9.0.qualifier"
+      version="7.9.0.W51"
       provider-name="BonitaSoft S.A.">
 
    <description>
