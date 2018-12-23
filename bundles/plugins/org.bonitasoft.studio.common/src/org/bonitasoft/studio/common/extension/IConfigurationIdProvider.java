@@ -29,4 +29,6 @@ public interface IConfigurationIdProvider {
 	boolean isConfigurationIdValid(MainProcess diagram);
 
     boolean isConfigurationIdValid(Object configId, String diagramName, String modelVersion, String bonitaVersion);
+
+    Object getConfigurationId(String diagramName, String bonitaModelVersion, String bonitaVersion);
 }
