@@ -42,4 +42,9 @@ public class ConfigurationIdProvider implements IConfigurationIdProvider {
         return configId != null && configId.toString().equals(get(diagramName, modelVersion, bonitaVersion));
     }
 
+    @Override
+    public Object getConfigurationId(String diagramName, String bonitaModelVersion, String bonitaVersion) {
+        return get(diagramName, bonitaModelVersion, bonitaVersion);
+    }
+
 }
