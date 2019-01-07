@@ -29,7 +29,7 @@ public class ProductVersion {
     public static final String CURRENT_VERSION = manifestVersion();
     public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
-    public static final String CURRENT_YEAR = "2018";
+    public static final String CURRENT_YEAR = "2019";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
@@ -39,7 +39,7 @@ public class ProductVersion {
         Bundle bundle = FrameworkUtil.getBundle(ProductVersion.class);
         if (bundle == null) {
             String implementationVersion = ProductVersion.class.getPackage().getImplementationVersion();
-            if(implementationVersion == null) {
+            if (implementationVersion == null) {
                 return "7.6.0";//fake version used in unit test
             }
             return stripSnaphot(implementationVersion);
@@ -49,7 +49,7 @@ public class ProductVersion {
     }
 
     private static String stripSnaphot(String version) {
-        if(version.endsWith("-SNAPSHOT")) {
+        if (version.endsWith("-SNAPSHOT")) {
             return version.substring(0, version.indexOf("-SNAPSHOT"));
         }
         return version;
