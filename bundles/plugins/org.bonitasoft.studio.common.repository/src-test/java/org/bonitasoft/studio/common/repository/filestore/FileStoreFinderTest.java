@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,7 +41,9 @@ import org.junit.Test;
 
 public class FileStoreFinderTest {
 
-    private static final String ORGA_NAME = "ACME.organization";
+    private static final String DIAGRAMS_FOLDER_NAME = "Diagrams";
+    private static final String ORGANIZATION_FOLDER_NAME = "Organization";
+    private static final String FILE_NAME = "ACME.organization";
     private static final String DOCUMENT_NAME = "doc.pdf";
 
     @Test
@@ -48,7 +51,11 @@ public class FileStoreFinderTest {
         FileStoreFinder finder = spy(FileStoreFinder.class);
 
         IFile file = mock(IFile.class);
-        when(file.getName()).thenReturn(ORGA_NAME);
+        IFolder parent = mock(IFolder.class);
+        when(parent.getName()).thenReturn(ORGANIZATION_FOLDER_NAME);
+        when(file.getName()).thenReturn(FILE_NAME);
+        when(file.getParent()).thenReturn(parent);
+
         IStructuredSelection selection = new StructuredSelection(file);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
         Repository repository = initRepository();
@@ -56,7 +63,7 @@ public class FileStoreFinderTest {
         Optional<IRenamable> elementToRename = finder.findElementToRename(repository);
         assertThat(elementToRename).isPresent();
         FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToRename.get();
-        assertThat(fileStore.getName()).isEqualTo(ORGA_NAME);
+        assertThat(fileStore.getName()).isEqualTo(FILE_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
 
@@ -69,7 +76,11 @@ public class FileStoreFinderTest {
         FileStoreFinder finder = spy(FileStoreFinder.class);
 
         IFile file = mock(IFile.class);
-        when(file.getName()).thenReturn(ORGA_NAME);
+        IFolder parent = mock(IFolder.class);
+        when(parent.getName()).thenReturn(ORGANIZATION_FOLDER_NAME);
+        when(file.getName()).thenReturn(FILE_NAME);
+        when(file.getParent()).thenReturn(parent);
+
         IAdaptable adaptable = mock(IAdaptable.class);
         when(adaptable.getAdapter(IResource.class)).thenReturn(file);
         IStructuredSelection selection = new StructuredSelection(adaptable);
@@ -79,7 +90,7 @@ public class FileStoreFinderTest {
         Optional<IDeployable> elementToDeploy = finder.findElementToDeploy(repository);
         assertThat(elementToDeploy).isPresent();
         FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToDeploy.get();
-        assertThat(fileStore.getName()).isEqualTo(ORGA_NAME);
+        assertThat(fileStore.getName()).isEqualTo(FILE_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
 
@@ -87,17 +98,55 @@ public class FileStoreFinderTest {
         assertThat(elementToDeploy).isEmpty();
     }
 
+    @Test
+    public void should_find_correct_file_store_if_two_files_have_the_same_name() {
+        FileStoreFinder finder = spy(FileStoreFinder.class);
+
+        IFile file = mock(IFile.class);
+        IFolder parent = mock(IFolder.class);
+        when(parent.getName()).thenReturn(ORGANIZATION_FOLDER_NAME);
+        when(file.getName()).thenReturn(FILE_NAME);
+        when(file.getParent()).thenReturn(parent);
+
+        IStructuredSelection selection = new StructuredSelection(file);
+        doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
+        Repository repository = initRepository();
+
+        Optional<? extends IRepositoryFileStore> selectedFileStore = finder.findSelectedFileStore(repository);
+        assertThat(selectedFileStore).isPresent();
+        assertThat(selectedFileStore.get().getName()).isEqualTo(FILE_NAME);
+        assertThat(selectedFileStore.get().getParentStore().getName()).isEqualTo(ORGANIZATION_FOLDER_NAME);
+
+        when(parent.getName()).thenReturn(DIAGRAMS_FOLDER_NAME);
+
+        selectedFileStore = finder.findSelectedFileStore(repository);
+        assertThat(selectedFileStore).isPresent();
+        assertThat(selectedFileStore.get().getName()).isEqualTo(FILE_NAME);
+        assertThat(selectedFileStore.get().getParentStore().getName()).isEqualTo(DIAGRAMS_FOLDER_NAME);
+    }
+
     private Repository initRepository() {
         Repository repository = mock(Repository.class);
         IRepositoryStore<? extends IRepositoryFileStore> storeWithInterfaces = initStoreWithInterfaces();
+        IRepositoryStore<? extends IRepositoryFileStore> storeWithInterfaces2 = initStoreWithInterfaces2();
         IRepositoryStore<? extends IRepositoryFileStore> storeWithoutInterface = initStoreWithoutInterface();
-        when(repository.getAllStores()).thenReturn(Arrays.asList(storeWithInterfaces, storeWithoutInterface));
+        when(repository.getAllStores())
+                .thenReturn(Arrays.asList(storeWithInterfaces, storeWithInterfaces2, storeWithoutInterface));
         return repository;
     }
 
     private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithInterfaces() {
         IRepositoryStore<FileStoreWithInterface> repositoryStore = mock(IRepositoryStore.class);
-        FileStoreWithInterface fileStore = new FileStoreWithInterface(ORGA_NAME, repositoryStore);
+        when(repositoryStore.getName()).thenReturn(ORGANIZATION_FOLDER_NAME);
+        FileStoreWithInterface fileStore = new FileStoreWithInterface(FILE_NAME, repositoryStore);
+        when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore));
+        return repositoryStore;
+    }
+
+    private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithInterfaces2() {
+        IRepositoryStore<FileStoreWithInterface> repositoryStore = mock(IRepositoryStore.class);
+        when(repositoryStore.getName()).thenReturn(DIAGRAMS_FOLDER_NAME);
+        FileStoreWithInterface fileStore = new FileStoreWithInterface(FILE_NAME, repositoryStore);
         when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore));
         return repositoryStore;
     }

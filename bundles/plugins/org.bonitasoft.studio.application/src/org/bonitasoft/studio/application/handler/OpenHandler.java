@@ -41,7 +41,7 @@ public class OpenHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ISelection selection = fileStoreFinder.getSelectionInExplorer();
         IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
-        Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder.findFileStore(resource.getName(),
+        Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder.findFileStore(resource,
                 RepositoryManager.getInstance().getCurrentRepository());
         if (fileStore.isPresent()) {
             fileStore.get().open();

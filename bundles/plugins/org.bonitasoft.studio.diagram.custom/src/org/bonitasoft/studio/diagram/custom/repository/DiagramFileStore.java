@@ -80,12 +80,9 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Function;
@@ -113,7 +110,6 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         return (MainProcess) super.getContent();
     }
 
-
     @Override
     public String getDisplayName() {
         final String displayName = getResource().getLocation().removeFileExtension().lastSegment();
@@ -129,7 +125,6 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         final IPath fullPath = getResource().getFullPath();
         return URI.createPlatformResourceURI(fullPath.toOSString(), true);
     }
-
 
     @Override
     public Image getIcon() {
@@ -182,32 +177,14 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     public DiagramEditor getOpenedEditor() {
-        if (PlatformUI.isWorkbenchRunning()
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-            final String resourceName = getResource().getName();
-            for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getEditorReferences()) {
-                String inputName;
-                try {
-                    final IEditorInput editorInput = ref.getEditorInput();
-                    if (editorInput != null) {
-                        inputName = editorInput.getName();
-                        if (resourceName.equals(inputName)) {
-                            final IEditorPart editor = ref.getEditor(false);
-                            if (editor instanceof ProcessDiagramEditor) {
-                                return (DiagramEditor) editor;
-                            }
-                        }
-                    } else {
-                        BonitaStudioLog.log("There is an editor without input.");
-                    }
-                } catch (final PartInitException e) {
-                    BonitaStudioLog.error(e, Activator.PLUGIN_ID);
-                }
-            }
-        }
-        return null;
+        return findOpenedEditor()
+                .map(DiagramEditor.class::cast)
+                .orElse(null);
+    }
+
+    @Override
+    protected boolean validateEditorInstance(IEditorPart editor) {
+        return editor instanceof ProcessDiagramEditor;
     }
 
     public List<AbstractProcess> getProcesses() {
