@@ -52,5 +52,7 @@ public class Messages extends NLS {
     public static String deleteDoneMessage;
     public static String deleteConfirmation;
     public static String deleteConfirmationMessage;
+    public static String saveAndDeploy;
+    public static String deployCurrent;
 
 }

@@ -119,7 +119,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
         return Optional.ofNullable(element)
                 .filter(IResource.class::isInstance)
                 .map(IResource.class::cast)
-                .flatMap(resource -> fileStoreFinder.findFileStore(resource.getName(),
+                .flatMap(resource -> fileStoreFinder.findFileStore(resource,
                         repositoryManager.getCurrentRepository()));
     }
 

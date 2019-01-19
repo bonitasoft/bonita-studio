@@ -97,7 +97,7 @@ public class CustomOpenActionProvider extends CommonActionProvider {
                 for (Object element : elements) {
                     if (element instanceof File || UIDArtifactFilters.isUIDArtifact(element)) {
                         Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder
-                                .findFileStore(((IResource) element).getName(), repositoryAccessor.getCurrentRepository());
+                                .findFileStore(((IResource) element), repositoryAccessor.getCurrentRepository());
                         if (fileStore.isPresent()) {
                             fileStore.get().open();
                             continue;
