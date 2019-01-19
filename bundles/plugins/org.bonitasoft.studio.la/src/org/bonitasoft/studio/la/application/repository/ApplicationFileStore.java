@@ -192,4 +192,14 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
         return Optional.empty();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Optional<IEditorPart> findOpenedEditor() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("fileStore", getName());
+        Optional<IEditorPart> editor = (Optional<IEditorPart>) executeCommand(
+                "org.bonitasoft.studio.la.findOpenedEditor.command", parameters);
+        return editor;
+    }
+
 }

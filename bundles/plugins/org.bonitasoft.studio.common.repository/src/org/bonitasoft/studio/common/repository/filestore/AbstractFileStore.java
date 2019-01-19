@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -42,11 +43,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -427,14 +430,13 @@ public abstract class AbstractFileStore
     }
 
     @SuppressWarnings("restriction")
-    protected void executeCommand(String command, Map<String, Object> parameters) {
+    protected Object executeCommand(String command, Map<String, Object> parameters) {
         initServices();
         ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
         if (eHandlerService.canExecute(parameterizedCommand)) {
-            eHandlerService.executeHandler(parameterizedCommand);
-        } else {
-            throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
+            return eHandlerService.executeHandler(parameterizedCommand);
         }
+        throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
     }
 
     protected void initServices() {
@@ -454,6 +456,28 @@ public abstract class AbstractFileStore
 
     protected String stripExtension(String name, String extension) {
         return name.toLowerCase().endsWith(extension) ? name.replace(extension, "") : name;
+    }
+
+    public boolean isDirty() {
+        return findOpenedEditor()
+                .map(IEditorPart::isDirty)
+                .orElse(false);
+    }
+
+    protected Optional<IEditorPart> findOpenedEditor() {
+        return EditorFinder.findOpenedEditor(this, this::validateEditorInstance);
+    }
+
+    public void saveOpenedEditor() {
+        EditorFinder.findOpenedEditor(this, this::validateEditorInstance)
+                .ifPresent(editor -> editor.doSave(new NullProgressMonitor()));
+    }
+
+    /**
+     * Should be overwritten by fileStores with dedicated editors!!
+     */
+    protected boolean validateEditorInstance(IEditorPart editor) {
+        return true;
     }
 
 }

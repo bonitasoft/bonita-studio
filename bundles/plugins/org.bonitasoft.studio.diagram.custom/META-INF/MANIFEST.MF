@@ -56,6 +56,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.model.workbench;bundle-version="2.0.1.v20170713-1800",
- org.eclipse.e4.core.di.annotations
+ org.eclipse.e4.core.di.annotations,
+ org.bonitasoft.studio.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
