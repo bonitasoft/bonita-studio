@@ -17,9 +17,12 @@ package org.bonitasoft.studio.engine.ui.contributionItem;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
+import org.bonitasoft.studio.engine.operation.ProcessValidationOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -37,18 +40,39 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
     protected Listener createSelectionListener(AbstractProcess process) {
         return e -> {
             getPath(Display.getDefault().getActiveShell()).ifPresent(path -> {
-                ExportBarOperation exportBarOperation = getExportOperation();
-                exportBarOperation.addProcessToDeploy(process);
-                exportBarOperation.setTargetFolder(path);
-                try {
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, exportBarOperation);
-                    displayOperatonStatus(exportBarOperation, path, process.getName());
-                } catch (InvocationTargetException | InterruptedException e1) {
-                    throw new RuntimeException(
-                            String.format("An error occurred while building bar for process %s", process.getName()), e1);
+                if (validateBeforExport(process)) {
+                    ExportBarOperation exportBarOperation = getExportOperation();
+                    exportBarOperation.addProcessToDeploy(process);
+                    exportBarOperation.setTargetFolder(path);
+                    try {
+                        PlatformUI.getWorkbench().getProgressService().run(true, false, exportBarOperation);
+                        displayOperatonStatus(exportBarOperation, path, process.getName());
+                    } catch (InvocationTargetException | InterruptedException e1) {
+                        throw new RuntimeException(
+                                String.format("An error occurred while building bar for process %s", process.getName()), e1);
+                    }
                 }
             });
+
         };
+    }
+
+    private boolean validateBeforExport(AbstractProcess process) {
+        ProcessValidationOperation processValidationOperation = new ProcessValidationOperation(process);
+        processValidationOperation.run();
+        IStatus status = processValidationOperation.getStatus();
+        if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
+            if (!FileActionDialog.getDisablePopup()) {
+                String generalMessage = status.getSeverity() == IStatus.ERROR ? Messages.errorValidationInDiagramToExport
+                        : Messages.warningValidationInDiagramToExport;
+                String errorMessage = String.format("%s\n%s%s", generalMessage, process.getName(),
+                        Messages.errorValidationContinueAnywayMessage);
+                return new ValidationDialog(Display.getDefault().getActiveShell(),
+                        Messages.validationFailedTitle, errorMessage,
+                        ValidationDialog.YES_NO).open() != ValidationDialog.NO;
+            }
+        }
+        return true;
     }
 
     protected ExportBarOperation getExportOperation() {

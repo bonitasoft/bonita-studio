@@ -27,18 +27,15 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
+import org.bonitasoft.studio.engine.operation.ProcessValidationOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.Parameterization;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -48,9 +45,7 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -80,9 +75,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Romain Bioteau
@@ -97,7 +89,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     protected DataBindingContext dbc;
 
     private Combo destinationCombo;
-    private Set<AbstractProcess> selectedProcess = new HashSet<AbstractProcess>();
+    private Set<AbstractProcess> selectedProcess = new HashSet<>();
     private String detinationPath;
     private final ComposedAdapterFactory adapterFactory;
     private Button destinationBrowseButton;
@@ -109,7 +101,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         setTitle(Messages.buildTitle);
         setDescription(Messages.buildDesc);
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        final String confId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+        final String confId = ConfigurationPlugin.getDefault().getPreferenceStore()
+                .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         setConfigurationId(confId);
     }
 
@@ -179,7 +172,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         viewer.setContentProvider(new AbstractProcessContentProvider());
         viewer.setInput(new Object());
 
-        final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(viewer, AbstractProcess.class);
+        final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(viewer,
+                AbstractProcess.class);
         final MultiValidator notEmptyValidator = new MultiValidator() {
 
             @Override
@@ -196,7 +190,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         };
 
         dbc.addValidationStatusProvider(notEmptyValidator);
-        dbc.bindSet(notEmptyValidator.observeValidatedSet(checkedElementsObservable), PojoObservables.observeSet(this, "selectedProcess"));
+        dbc.bindSet(notEmptyValidator.observeValidatedSet(checkedElementsObservable),
+                PojoObservables.observeSet(this, "selectedProcess"));
         serachBox.addModifyListener(new ModifyListener() {
 
             @Override
@@ -242,12 +237,14 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 
         // destination name entry field
         destinationCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
-        destinationCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+        destinationCombo
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
         restoreWidgetValues();
         final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
         pathStrategy.setBeforeSetValidator(new EmptyInputValidator(Messages.destinationPath));
-        dbc.bindValue(SWTObservables.observeText(destinationCombo), PojoProperties.value(ExportBarWizardPage.class, "detinationPath").observe(this),
+        dbc.bindValue(SWTObservables.observeText(destinationCombo),
+                PojoProperties.value(ExportBarWizardPage.class, "detinationPath").observe(this),
                 pathStrategy, null);
 
         // destination browse button
@@ -380,7 +377,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         operation.setTargetFolder(getDetinationPath());
         operation.setConfigurationId(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
 
-        if (!ExportBarWizardPage.validateBeforeExport(selectedProcess)) {
+        if (!validateBeforeExport(selectedProcess)) {
             return Status.CANCEL_STATUS;
         }
 
@@ -394,65 +391,34 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     }
 
     /**
-	 *
-	 */
-    protected static boolean validateBeforeExport(final Set<AbstractProcess> selectedList) {
-        //Validate before run
-        final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        final Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-        if (!cmd.isEnabled()) {
-            return true;
-        }
-        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-        final Set<String> procFiles = new HashSet<String>();
-        for (final AbstractProcess p : selectedList) {
-            final Resource eResource = p.eResource();
-            if (eResource != null) {
-                procFiles.add(URI.decode(eResource.getURI().lastSegment()));
-            }
-        }
-        try {
-            final Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
-            final Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"), procFiles.toString());
-            final IStatus status = (IStatus) handlerService.executeCommand(
-                    new ParameterizedCommand(cmd, new Parameterization[] { showReportParam, filesParam }), null);
-            if (statusContainsError(status)) {
-                final StringBuilder report = new StringBuilder("");
-                final List<String> alreadyInReport = new ArrayList<String>(selectedList.size());
-                for (final IStatus s : status.getChildren()) {
-                    final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
-                    if (!alreadyInReport.contains(fileName)) {
-                        report.append(fileName);
-                        report.append("\n");
-                        alreadyInReport.add(fileName);
-                    }
-                }
-                if (!FileActionDialog.getDisablePopup()) {
-                    final String errorMessage = Messages.errorValidationInDiagramToExport + "\n" + report + Messages.errorValidationContinueAnywayMessage;
-                    final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
-                            ValidationDialog.YES_NO).open();
-                    if (result == ValidationDialog.NO) {
-                        return false;
-                    }
-
+     *
+     */
+    protected boolean validateBeforeExport(final Set<AbstractProcess> selectedList) {
+        ProcessValidationOperation processValidationOperation = new ProcessValidationOperation(selectedList);
+        processValidationOperation.run();
+        IStatus status = processValidationOperation.getStatus();
+        if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
+            final StringBuilder report = new StringBuilder("");
+            final List<String> alreadyInReport = new ArrayList<>(selectedList.size());
+            for (final IStatus s : status.getChildren()) {
+                final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
+                if (!alreadyInReport.contains(fileName)) {
+                    report.append(fileName);
+                    report.append("\n");
+                    alreadyInReport.add(fileName);
                 }
             }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-            return false;
+            if (!FileActionDialog.getDisablePopup()) {
+                String generalMessage = status.getSeverity() == IStatus.ERROR ? Messages.errorValidationInDiagramToExport
+                        : Messages.warningValidationInDiagramToExport;
+                String errorMessage = String.format("%s\n%s%s", generalMessage, report,
+                        Messages.errorValidationContinueAnywayMessage);
+                return new ValidationDialog(Display.getDefault().getActiveShell(),
+                        Messages.validationFailedTitle, errorMessage,
+                        ValidationDialog.YES_NO).open() != ValidationDialog.NO;
+            }
         }
         return true;
-    }
-
-    private static boolean statusContainsError(final IStatus validationStatus) {
-        if (validationStatus != null) {
-            for (final IStatus s : validationStatus.getChildren()) {
-                if (s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override
