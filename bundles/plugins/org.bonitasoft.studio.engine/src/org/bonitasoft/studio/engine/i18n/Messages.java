@@ -113,6 +113,8 @@ public class Messages extends NLS {
 
     public static String errorValidationInDiagramToExport;
 
+    public static String warningValidationInDiagramToExport;
+
     public static String loginFailed;
 
     public static String errorActorMappingGroup;
@@ -178,7 +180,6 @@ public class Messages extends NLS {
     public static String buildFailedTitle;
     public static String startingEngineServer;
     public static String deployingProcessesFrom;
-
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
