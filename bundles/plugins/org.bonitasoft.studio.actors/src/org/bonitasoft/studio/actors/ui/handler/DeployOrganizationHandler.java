@@ -35,6 +35,7 @@ import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -138,6 +139,7 @@ public class DeployOrganizationHandler {
                         final Parameterization p = new Parameterization(cmd.getParameter("artifact"), fileStore.getName());
                         handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }), null);
                         activeOrganizationProvider.saveActiveOrganization(fileStore.getDisplayName());
+                        AbstractFileStore.refreshExplorerView();
                     } catch (final Exception e) {
                         throw new InvocationTargetException(e);
                     }
