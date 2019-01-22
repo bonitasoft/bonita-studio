@@ -63,7 +63,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.emf.edapt.runtime.feature"
-         version="1.2.2.201705070604"/>
+         version="1.3.1.201812130816"/>
 
    <includes
          id="org.eclipse.equinox.p2.extras.feature"
@@ -114,18 +114,38 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.compare.rcp.ui"
+         id="org.eclipse.babel.nls_eclipse_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.egit_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.jgit_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.recommenders_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_webtools_pt_BR"
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.rcp" version="4.7.0.v20170612-1255" match="greaterOrEqual"/>
+      <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.9.0" match="equivalent"/>
-      <import feature="org.eclipse.m2m.qvt.oml" version="3.7.0.v20170604-1316"/>
-      <import feature="org.eclipse.m2m.qvt.oml.runtime" version="3.7.0.v20170604-1316"/>
-      <import feature="org.eclipse.wst.web_ui.feature" version="3.9.0.v201706011953"/>
-      <import feature="org.eclipse.e4.rcp" version="1.6.0.v20170612-1255"/>
-      <import feature="org.eclipse.gmf" version="1.11.0.201706061437"/>
+      <import feature="org.eclipse.wst.web_ui.feature" version="3.11.0.v201811192212" match="greaterOrEqual"/>
+      <import feature="org.eclipse.gmf" version="1.12.0.201806010809" match="greaterOrEqual"/>
    </requires>
+
+   <plugin
+         id="org.eclipse.equinox.ds"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio"
@@ -536,7 +556,21 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.views.properties.tabbed"
+         id="javax.activation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.xml.bind"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.annotation"
          download-size="0"
          install-size="0"
          version="0.0.0"

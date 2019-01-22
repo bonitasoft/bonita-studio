@@ -151,6 +151,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -160,6 +161,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -172,6 +174,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -181,6 +184,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -193,6 +197,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.MESSAGE_FLOW__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -205,6 +210,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AbstractCatchMessageEvent getTarget() {
 		if (target != null && target.eIsProxy()) {
 			InternalEObject oldTarget = (InternalEObject)target;
@@ -246,6 +252,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTarget(AbstractCatchMessageEvent newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -265,6 +272,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThrowMessageEvent getSource() {
 		if (source != null && source.eIsProxy()) {
 			InternalEObject oldSource = (InternalEObject)source;
@@ -306,6 +314,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(ThrowMessageEvent newSource) {
 		if (newSource != source) {
 			NotificationChain msgs = null;
@@ -472,7 +481,7 @@ public class MessageFlowImpl extends EObjectImpl implements MessageFlow {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

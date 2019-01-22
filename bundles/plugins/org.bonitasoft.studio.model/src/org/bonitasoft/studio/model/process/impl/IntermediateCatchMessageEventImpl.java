@@ -144,6 +144,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEvent() {
 		return event;
 	}
@@ -153,6 +154,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEvent(String newEvent) {
 		String oldEvent = event;
 		event = newEvent;
@@ -165,6 +167,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MessageFlow getIncomingMessag() {
 		if (incomingMessag != null && incomingMessag.eIsProxy()) {
 			InternalEObject oldIncomingMessag = (InternalEObject)incomingMessag;
@@ -206,6 +209,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIncomingMessag(MessageFlow newIncomingMessag) {
 		if (newIncomingMessag != incomingMessag) {
 			NotificationChain msgs = null;
@@ -225,6 +229,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getCorrelation() {
 		return correlation;
 	}
@@ -249,6 +254,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelation(TableExpression newCorrelation) {
 		if (newCorrelation != correlation) {
 			NotificationChain msgs = null;
@@ -268,6 +274,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getMessageContent() {
 		if (messageContent == null) {
 			messageContent = new EObjectContainmentEList<Operation>(Operation.class, this, ProcessPackage.INTERMEDIATE_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT);
@@ -280,6 +287,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.INTERMEDIATE_CATCH_MESSAGE_EVENT__DATA);
@@ -484,7 +492,7 @@ public class IntermediateCatchMessageEventImpl extends MessageEventImpl implemen
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (event: "); //$NON-NLS-1$
 		result.append(event);
 		result.append(')');

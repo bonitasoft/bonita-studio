@@ -120,6 +120,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExpressionBased() {
 		return expressionBased;
 	}
@@ -129,6 +130,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpressionBased(boolean newExpressionBased) {
 		boolean oldExpressionBased = expressionBased;
 		expressionBased = newExpressionBased;
@@ -141,6 +143,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -165,6 +168,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -184,6 +188,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getProbabilityOfTrue() {
 		return probabilityOfTrue;
 	}
@@ -193,6 +198,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProbabilityOfTrue(double newProbabilityOfTrue) {
 		double oldProbabilityOfTrue = probabilityOfTrue;
 		probabilityOfTrue = newProbabilityOfTrue;
@@ -301,7 +307,7 @@ public class SimulationBooleanImpl extends SimulationElementImpl implements Simu
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (expressionBased: "); //$NON-NLS-1$
 		result.append(expressionBased);
 		result.append(", probabilityOfTrue: "); //$NON-NLS-1$

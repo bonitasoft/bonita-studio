@@ -85,6 +85,7 @@ public class IntermediateErrorCatchEventImpl extends BoundaryEventImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getErrorCode() {
 		return errorCode;
 	}
@@ -94,6 +95,7 @@ public class IntermediateErrorCatchEventImpl extends BoundaryEventImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setErrorCode(String newErrorCode) {
 		String oldErrorCode = errorCode;
 		errorCode = newErrorCode;
@@ -200,7 +202,7 @@ public class IntermediateErrorCatchEventImpl extends BoundaryEventImpl implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (errorCode: "); //$NON-NLS-1$
 		result.append(errorCode);
 		result.append(')');

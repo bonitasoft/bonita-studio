@@ -109,6 +109,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FeatureMap getMixed() {
 		if (mixed == null) {
 			mixed = new BasicFeatureMap(this, ActorMappingPackage.DOCUMENT_ROOT__MIXED);
@@ -121,6 +122,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getXMLNSPrefixMap() {
 		if (xMLNSPrefixMap == null) {
 			xMLNSPrefixMap = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, ActorMappingPackage.DOCUMENT_ROOT__XMLNS_PREFIX_MAP);
@@ -133,6 +135,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getXSISchemaLocation() {
 		if (xSISchemaLocation == null) {
 			xSISchemaLocation = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, ActorMappingPackage.DOCUMENT_ROOT__XSI_SCHEMA_LOCATION);
@@ -145,6 +148,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMappingsType getActorMappings() {
 		return (ActorMappingsType)getMixed().get(ActorMappingPackage.Literals.DOCUMENT_ROOT__ACTOR_MAPPINGS, true);
 	}
@@ -163,6 +167,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActorMappings(ActorMappingsType newActorMappings) {
 		((FeatureMap.Internal)getMixed()).set(ActorMappingPackage.Literals.DOCUMENT_ROOT__ACTOR_MAPPINGS, newActorMappings);
 	}
@@ -287,7 +292,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (mixed: "); //$NON-NLS-1$
 		result.append(mixed);
 		result.append(')');

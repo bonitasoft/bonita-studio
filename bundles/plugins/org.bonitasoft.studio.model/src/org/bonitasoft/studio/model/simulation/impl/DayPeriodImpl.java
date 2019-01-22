@@ -165,6 +165,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Integer> getDay() {
 		if (day == null) {
 			day = new EDataTypeUniqueEList<Integer>(Integer.class, this, SimulationPackage.DAY_PERIOD__DAY);
@@ -177,6 +178,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getStartHour() {
 		return startHour;
 	}
@@ -186,6 +188,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStartHour(int newStartHour) {
 		int oldStartHour = startHour;
 		startHour = newStartHour;
@@ -198,6 +201,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getEndHour() {
 		return endHour;
 	}
@@ -207,6 +211,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEndHour(int newEndHour) {
 		int oldEndHour = endHour;
 		endHour = newEndHour;
@@ -219,6 +224,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getStartMinute() {
 		return startMinute;
 	}
@@ -228,6 +234,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStartMinute(int newStartMinute) {
 		int oldStartMinute = startMinute;
 		startMinute = newStartMinute;
@@ -240,6 +247,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getEndMinute() {
 		return endMinute;
 	}
@@ -249,6 +257,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEndMinute(int newEndMinute) {
 		int oldEndMinute = endMinute;
 		endMinute = newEndMinute;
@@ -365,7 +374,7 @@ public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (day: "); //$NON-NLS-1$
 		result.append(day);
 		result.append(", startHour: "); //$NON-NLS-1$

@@ -155,6 +155,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isIsDefault() {
 		return isDefault;
 	}
@@ -164,6 +165,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIsDefault(boolean newIsDefault) {
 		boolean oldIsDefault = isDefault;
 		isDefault = newIsDefault;
@@ -176,6 +178,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SequenceFlowConditionType getConditionType() {
 		return conditionType;
 	}
@@ -185,6 +188,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConditionType(SequenceFlowConditionType newConditionType) {
 		SequenceFlowConditionType oldConditionType = conditionType;
 		conditionType = newConditionType == null ? CONDITION_TYPE_EDEFAULT : newConditionType;
@@ -197,6 +201,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionTable getDecisionTable() {
 		return decisionTable;
 	}
@@ -221,6 +226,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDecisionTable(DecisionTable newDecisionTable) {
 		if (newDecisionTable != decisionTable) {
 			NotificationChain msgs = null;
@@ -240,6 +246,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCondition() {
 		return condition;
 	}
@@ -264,6 +271,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCondition(Expression newCondition) {
 		if (newCondition != condition) {
 			NotificationChain msgs = null;
@@ -283,6 +291,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPathToken() {
 		return pathToken;
 	}
@@ -292,6 +301,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPathToken(String newPathToken) {
 		String oldPathToken = pathToken;
 		pathToken = newPathToken;
@@ -422,7 +432,7 @@ public class SequenceFlowImpl extends ConnectionImpl implements SequenceFlow {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isDefault: "); //$NON-NLS-1$
 		result.append(isDefault);
 		result.append(", conditionType: "); //$NON-NLS-1$

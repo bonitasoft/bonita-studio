@@ -990,7 +990,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ProcessPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -1004,21 +1004,32 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		if (isInited) return (ProcessPackage)EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ProcessPackageImpl());
+		Object registeredProcessPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ProcessPackageImpl theProcessPackage = registeredProcessPackage instanceof ProcessPackageImpl ? (ProcessPackageImpl)registeredProcessPackage : new ProcessPackageImpl();
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theProcessPackage.createPackageContents();
@@ -1049,7 +1060,6 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 		// Mark meta-data to indicate it can't be changed
 		theProcessPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ProcessPackage.eNS_URI, theProcessPackage);
 		return theProcessPackage;
@@ -1060,6 +1070,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractCatchMessageEvent() {
 		return abstractCatchMessageEventEClass;
 	}
@@ -1069,6 +1080,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractCatchMessageEvent_Event() {
 		return (EAttribute)abstractCatchMessageEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -1078,6 +1090,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractCatchMessageEvent_IncomingMessag() {
 		return (EReference)abstractCatchMessageEventEClass.getEStructuralFeatures().get(1);
 	}
@@ -1087,6 +1100,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractCatchMessageEvent_Correlation() {
 		return (EReference)abstractCatchMessageEventEClass.getEStructuralFeatures().get(2);
 	}
@@ -1096,6 +1110,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractCatchMessageEvent_MessageContent() {
 		return (EReference)abstractCatchMessageEventEClass.getEStructuralFeatures().get(3);
 	}
@@ -1105,6 +1120,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractPageFlow() {
 		return abstractPageFlowEClass;
 	}
@@ -1114,6 +1130,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractProcess() {
 		return abstractProcessEClass;
 	}
@@ -1123,6 +1140,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractProcess_Version() {
 		return (EAttribute)abstractProcessEClass.getEStructuralFeatures().get(0);
 	}
@@ -1132,6 +1150,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractProcess_Author() {
 		return (EAttribute)abstractProcessEClass.getEStructuralFeatures().get(1);
 	}
@@ -1141,6 +1160,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractProcess_CreationDate() {
 		return (EAttribute)abstractProcessEClass.getEStructuralFeatures().get(2);
 	}
@@ -1150,6 +1170,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractProcess_ModificationDate() {
 		return (EAttribute)abstractProcessEClass.getEStructuralFeatures().get(3);
 	}
@@ -1159,6 +1180,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractProcess_Datatypes() {
 		return (EReference)abstractProcessEClass.getEStructuralFeatures().get(4);
 	}
@@ -1168,6 +1190,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractProcess_Connections() {
 		return (EReference)abstractProcessEClass.getEStructuralFeatures().get(5);
 	}
@@ -1177,6 +1200,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractProcess_Categories() {
 		return (EAttribute)abstractProcessEClass.getEStructuralFeatures().get(6);
 	}
@@ -1186,6 +1210,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractProcess_Actors() {
 		return (EReference)abstractProcessEClass.getEStructuralFeatures().get(7);
 	}
@@ -1195,6 +1220,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractProcess_Configurations() {
 		return (EReference)abstractProcessEClass.getEStructuralFeatures().get(8);
 	}
@@ -1204,6 +1230,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractProcess_Parameters() {
 		return (EReference)abstractProcessEClass.getEStructuralFeatures().get(9);
 	}
@@ -1213,6 +1240,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractTimerEvent() {
 		return abstractTimerEventEClass;
 	}
@@ -1222,6 +1250,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractTimerEvent_Condition() {
 		return (EReference)abstractTimerEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -1231,6 +1260,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActivity() {
 		return activityEClass;
 	}
@@ -1240,6 +1270,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActivity_BoundaryIntermediateEvents() {
 		return (EReference)activityEClass.getEStructuralFeatures().get(0);
 	}
@@ -1249,6 +1280,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActor() {
 		return actorEClass;
 	}
@@ -1258,6 +1290,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getActor_Initiator() {
 		return (EAttribute)actorEClass.getEStructuralFeatures().get(0);
 	}
@@ -1267,6 +1300,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActorFilter() {
 		return actorFilterEClass;
 	}
@@ -1276,6 +1310,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getANDGateway() {
 		return andGatewayEClass;
 	}
@@ -1285,6 +1320,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAssignable() {
 		return assignableEClass;
 	}
@@ -1294,6 +1330,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAssignable_Actor() {
 		return (EReference)assignableEClass.getEStructuralFeatures().get(0);
 	}
@@ -1303,6 +1340,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAssignable_Filters() {
 		return (EReference)assignableEClass.getEStructuralFeatures().get(1);
 	}
@@ -1312,6 +1350,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAssociation() {
 		return associationEClass;
 	}
@@ -1321,6 +1360,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAssociation_IsDirected() {
 		return (EAttribute)associationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1330,6 +1370,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBooleanType() {
 		return booleanTypeEClass;
 	}
@@ -1339,6 +1380,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBoundaryEvent() {
 		return boundaryEventEClass;
 	}
@@ -1348,6 +1390,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBoundaryMessageEvent() {
 		return boundaryMessageEventEClass;
 	}
@@ -1357,6 +1400,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBoundarySignalEvent() {
 		return boundarySignalEventEClass;
 	}
@@ -1366,6 +1410,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBoundaryTimerEvent() {
 		return boundaryTimerEventEClass;
 	}
@@ -1375,6 +1420,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBusinessObjectData() {
 		return businessObjectDataEClass;
 	}
@@ -1384,6 +1430,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBusinessObjectData_BusinessDataRepositoryId() {
 		return (EAttribute)businessObjectDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -1393,6 +1440,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBusinessObjectData_CreateNewInstance() {
 		return (EAttribute)businessObjectDataEClass.getEStructuralFeatures().get(1);
 	}
@@ -1402,6 +1450,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBusinessObjectData_EClassName() {
 		return (EAttribute)businessObjectDataEClass.getEStructuralFeatures().get(2);
 	}
@@ -1411,6 +1460,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBusinessObjectType() {
 		return businessObjectTypeEClass;
 	}
@@ -1420,6 +1470,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCallActivity() {
 		return callActivityEClass;
 	}
@@ -1429,6 +1480,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCallActivity_InputMappings() {
 		return (EReference)callActivityEClass.getEStructuralFeatures().get(0);
 	}
@@ -1438,6 +1490,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCallActivity_OutputMappings() {
 		return (EReference)callActivityEClass.getEStructuralFeatures().get(1);
 	}
@@ -1447,6 +1500,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCallActivity_CalledActivityName() {
 		return (EReference)callActivityEClass.getEStructuralFeatures().get(2);
 	}
@@ -1456,6 +1510,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCallActivity_CalledActivityVersion() {
 		return (EReference)callActivityEClass.getEStructuralFeatures().get(3);
 	}
@@ -1465,6 +1520,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCatchLinkEvent() {
 		return catchLinkEventEClass;
 	}
@@ -1474,6 +1530,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCatchLinkEvent_From() {
 		return (EReference)catchLinkEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -1483,6 +1540,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCatchMessageEvent() {
 		return catchMessageEventEClass;
 	}
@@ -1492,6 +1550,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCatchSignalEvent() {
 		return catchSignalEventEClass;
 	}
@@ -1501,6 +1560,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnectableElement() {
 		return connectableElementEClass;
 	}
@@ -1510,6 +1570,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectableElement_Connectors() {
 		return (EReference)connectableElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -1519,6 +1580,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectableElement_Kpis() {
 		return (EReference)connectableElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -1528,6 +1590,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnector() {
 		return connectorEClass;
 	}
@@ -1537,6 +1600,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_DefinitionId() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(0);
 	}
@@ -1546,6 +1610,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_Event() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(1);
 	}
@@ -1555,6 +1620,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_IgnoreErrors() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(2);
 	}
@@ -1564,6 +1630,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_ThrowErrorEvent() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(3);
 	}
@@ -1573,6 +1640,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_NamedError() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(4);
 	}
@@ -1582,6 +1650,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_DefinitionVersion() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(5);
 	}
@@ -1591,6 +1660,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnector_Configuration() {
 		return (EReference)connectorEClass.getEStructuralFeatures().get(6);
 	}
@@ -1600,6 +1670,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnector_Outputs() {
 		return (EReference)connectorEClass.getEStructuralFeatures().get(7);
 	}
@@ -1609,6 +1680,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContainer() {
 		return containerEClass;
 	}
@@ -1618,6 +1690,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContainer_Elements() {
 		return (EReference)containerEClass.getEStructuralFeatures().get(0);
 	}
@@ -1627,6 +1700,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContract() {
 		return contractEClass;
 	}
@@ -1636,6 +1710,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContract_Inputs() {
 		return (EReference)contractEClass.getEStructuralFeatures().get(0);
 	}
@@ -1645,6 +1720,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContract_Constraints() {
 		return (EReference)contractEClass.getEStructuralFeatures().get(1);
 	}
@@ -1654,6 +1730,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContractInputMapping() {
 		return contractInputMappingEClass;
 	}
@@ -1663,6 +1740,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContractInputMapping_Data() {
 		return (EReference)contractInputMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -1672,6 +1750,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInputMapping_SetterName() {
 		return (EAttribute)contractInputMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -1681,6 +1760,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInputMapping_SetterParamType() {
 		return (EAttribute)contractInputMappingEClass.getEStructuralFeatures().get(2);
 	}
@@ -1690,6 +1770,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContractInput() {
 		return contractInputEClass;
 	}
@@ -1699,6 +1780,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInput_Name() {
 		return (EAttribute)contractInputEClass.getEStructuralFeatures().get(0);
 	}
@@ -1708,6 +1790,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInput_Type() {
 		return (EAttribute)contractInputEClass.getEStructuralFeatures().get(1);
 	}
@@ -1717,6 +1800,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInput_Description() {
 		return (EAttribute)contractInputEClass.getEStructuralFeatures().get(2);
 	}
@@ -1726,6 +1810,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractInput_Multiple() {
 		return (EAttribute)contractInputEClass.getEStructuralFeatures().get(3);
 	}
@@ -1735,6 +1820,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContractInput_Mapping() {
 		return (EReference)contractInputEClass.getEStructuralFeatures().get(4);
 	}
@@ -1744,6 +1830,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContractInput_Inputs() {
 		return (EReference)contractInputEClass.getEStructuralFeatures().get(5);
 	}
@@ -1753,6 +1840,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContractConstraint() {
 		return contractConstraintEClass;
 	}
@@ -1762,6 +1850,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractConstraint_Expression() {
 		return (EAttribute)contractConstraintEClass.getEStructuralFeatures().get(0);
 	}
@@ -1771,6 +1860,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractConstraint_ErrorMessage() {
 		return (EAttribute)contractConstraintEClass.getEStructuralFeatures().get(1);
 	}
@@ -1780,6 +1870,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractConstraint_Name() {
 		return (EAttribute)contractConstraintEClass.getEStructuralFeatures().get(2);
 	}
@@ -1789,6 +1880,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getContractConstraint_InputNames() {
 		return (EAttribute)contractConstraintEClass.getEStructuralFeatures().get(3);
 	}
@@ -1798,6 +1890,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContractContainer() {
 		return contractContainerEClass;
 	}
@@ -1807,6 +1900,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContractContainer_Contract() {
 		return (EReference)contractContainerEClass.getEStructuralFeatures().get(0);
 	}
@@ -1816,6 +1910,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnection() {
 		return connectionEClass;
 	}
@@ -1825,6 +1920,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnection_Target() {
 		return (EReference)connectionEClass.getEStructuralFeatures().get(0);
 	}
@@ -1834,6 +1930,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnection_Source() {
 		return (EReference)connectionEClass.getEStructuralFeatures().get(1);
 	}
@@ -1843,6 +1940,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCorrelation() {
 		return correlationEClass;
 	}
@@ -1852,6 +1950,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCorrelation_CorrelationType() {
 		return (EAttribute)correlationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1861,6 +1960,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCorrelation_CorrelationAssociation() {
 		return (EReference)correlationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1870,6 +1970,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCorrelationAssociation() {
 		return correlationAssociationEClass;
 	}
@@ -1879,6 +1980,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCorrelationAssociation_CorrelationExpression() {
 		return (EReference)correlationAssociationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1888,6 +1990,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCorrelationAssociation_CorrelationKey() {
 		return (EReference)correlationAssociationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1897,6 +2000,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getData() {
 		return dataEClass;
 	}
@@ -1906,6 +2010,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getData_Generated() {
 		return (EAttribute)dataEClass.getEStructuralFeatures().get(0);
 	}
@@ -1915,6 +2020,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getData_Multiple() {
 		return (EAttribute)dataEClass.getEStructuralFeatures().get(1);
 	}
@@ -1924,6 +2030,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getData_Transient() {
 		return (EAttribute)dataEClass.getEStructuralFeatures().get(2);
 	}
@@ -1933,6 +2040,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getData_DatasourceId() {
 		return (EAttribute)dataEClass.getEStructuralFeatures().get(3);
 	}
@@ -1942,6 +2050,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getData_DataType() {
 		return (EReference)dataEClass.getEStructuralFeatures().get(4);
 	}
@@ -1951,6 +2060,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getData_DefaultValue() {
 		return (EReference)dataEClass.getEStructuralFeatures().get(5);
 	}
@@ -1960,6 +2070,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDataAware() {
 		return dataAwareEClass;
 	}
@@ -1969,6 +2080,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDataAware_Data() {
 		return (EReference)dataAwareEClass.getEStructuralFeatures().get(0);
 	}
@@ -1978,6 +2090,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDateType() {
 		return dateTypeEClass;
 	}
@@ -1987,6 +2100,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDataType() {
 		return dataTypeEClass;
 	}
@@ -1996,6 +2110,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDocument() {
 		return documentEClass;
 	}
@@ -2005,6 +2120,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocument_DefaultValueIdOfDocumentStore() {
 		return (EAttribute)documentEClass.getEStructuralFeatures().get(0);
 	}
@@ -2014,6 +2130,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocument_MimeType() {
 		return (EReference)documentEClass.getEStructuralFeatures().get(1);
 	}
@@ -2023,6 +2140,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocument_Url() {
 		return (EReference)documentEClass.getEStructuralFeatures().get(2);
 	}
@@ -2032,6 +2150,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocument_DocumentType() {
 		return (EAttribute)documentEClass.getEStructuralFeatures().get(3);
 	}
@@ -2041,6 +2160,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocument_InitialMultipleContent() {
 		return (EReference)documentEClass.getEStructuralFeatures().get(4);
 	}
@@ -2050,6 +2170,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocument_Multiple() {
 		return (EAttribute)documentEClass.getEStructuralFeatures().get(5);
 	}
@@ -2059,6 +2180,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocument_ContractInput() {
 		return (EReference)documentEClass.getEStructuralFeatures().get(6);
 	}
@@ -2068,6 +2190,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDoubleType() {
 		return doubleTypeEClass;
 	}
@@ -2077,6 +2200,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getElement() {
 		return elementEClass;
 	}
@@ -2086,6 +2210,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Documentation() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2095,6 +2220,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Name() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(1);
 	}
@@ -2104,6 +2230,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_TextAnnotationAttachment() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(2);
 	}
@@ -2113,6 +2240,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEvent() {
 		return eventEClass;
 	}
@@ -2122,6 +2250,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEndErrorEvent() {
 		return endErrorEventEClass;
 	}
@@ -2131,6 +2260,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEndEvent() {
 		return endEventEClass;
 	}
@@ -2140,6 +2270,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEndMessageEvent() {
 		return endMessageEventEClass;
 	}
@@ -2149,6 +2280,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEndSignalEvent() {
 		return endSignalEventEClass;
 	}
@@ -2158,6 +2290,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEndTerminatedEvent() {
 		return endTerminatedEventEClass;
 	}
@@ -2167,6 +2300,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getErrorEvent() {
 		return errorEventEClass;
 	}
@@ -2176,6 +2310,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getErrorEvent_ErrorCode() {
 		return (EAttribute)errorEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -2185,6 +2320,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEnumType() {
 		return enumTypeEClass;
 	}
@@ -2194,6 +2330,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEnumType_Literals() {
 		return (EAttribute)enumTypeEClass.getEStructuralFeatures().get(0);
 	}
@@ -2203,6 +2340,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFloatType() {
 		return floatTypeEClass;
 	}
@@ -2212,6 +2350,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFlowElement() {
 		return flowElementEClass;
 	}
@@ -2221,6 +2360,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFlowElement_DynamicLabel() {
 		return (EReference)flowElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2230,6 +2370,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFlowElement_DynamicDescription() {
 		return (EReference)flowElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -2239,6 +2380,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFlowElement_StepSummary() {
 		return (EReference)flowElementEClass.getEStructuralFeatures().get(2);
 	}
@@ -2248,6 +2390,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFormMapping() {
 		return formMappingEClass;
 	}
@@ -2257,6 +2400,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFormMapping_TargetForm() {
 		return (EReference)formMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -2266,6 +2410,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFormMapping_Type() {
 		return (EAttribute)formMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -2275,6 +2420,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFormMapping_Url() {
 		return (EAttribute)formMappingEClass.getEStructuralFeatures().get(2);
 	}
@@ -2284,6 +2430,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGateway() {
 		return gatewayEClass;
 	}
@@ -2293,6 +2440,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getGateway_GatewayType() {
 		return (EAttribute)gatewayEClass.getEStructuralFeatures().get(0);
 	}
@@ -2302,6 +2450,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInclusiveGateway() {
 		return inclusiveGatewayEClass;
 	}
@@ -2311,6 +2460,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInputMapping() {
 		return inputMappingEClass;
 	}
@@ -2320,6 +2470,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInputMapping_ProcessSource() {
 		return (EReference)inputMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -2329,6 +2480,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputMapping_SubprocessTarget() {
 		return (EAttribute)inputMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -2338,6 +2490,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInputMapping_AssignationType() {
 		return (EAttribute)inputMappingEClass.getEStructuralFeatures().get(2);
 	}
@@ -2347,6 +2500,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntegerType() {
 		return integerTypeEClass;
 	}
@@ -2356,6 +2510,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateErrorCatchEvent() {
 		return intermediateErrorCatchEventEClass;
 	}
@@ -2365,6 +2520,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateCatchSignalEvent() {
 		return intermediateCatchSignalEventEClass;
 	}
@@ -2374,6 +2530,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateThrowSignalEvent() {
 		return intermediateThrowSignalEventEClass;
 	}
@@ -2383,6 +2540,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateCatchMessageEvent() {
 		return intermediateCatchMessageEventEClass;
 	}
@@ -2392,6 +2550,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateThrowMessageEvent() {
 		return intermediateThrowMessageEventEClass;
 	}
@@ -2401,6 +2560,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntermediateCatchTimerEvent() {
 		return intermediateCatchTimerEventEClass;
 	}
@@ -2410,6 +2570,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJavaObjectData() {
 		return javaObjectDataEClass;
 	}
@@ -2419,6 +2580,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getJavaObjectData_ClassName() {
 		return (EAttribute)javaObjectDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -2428,6 +2590,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJavaType() {
 		return javaTypeEClass;
 	}
@@ -2437,6 +2600,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLane() {
 		return laneEClass;
 	}
@@ -2446,6 +2610,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLinkEvent() {
 		return linkEventEClass;
 	}
@@ -2455,6 +2620,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLongType() {
 		return longTypeEClass;
 	}
@@ -2464,6 +2630,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMainProcess() {
 		return mainProcessEClass;
 	}
@@ -2473,6 +2640,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_BonitaVersion() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(0);
 	}
@@ -2482,6 +2650,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_BonitaModelVersion() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(1);
 	}
@@ -2491,6 +2660,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_IncludedEntries() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(2);
 	}
@@ -2500,6 +2670,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMainProcess_MessageConnections() {
 		return (EReference)mainProcessEClass.getEStructuralFeatures().get(3);
 	}
@@ -2509,6 +2680,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_GeneratedLibs() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(4);
 	}
@@ -2518,6 +2690,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_EnableValidation() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(5);
 	}
@@ -2527,6 +2700,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMainProcess_ConfigId() {
 		return (EAttribute)mainProcessEClass.getEStructuralFeatures().get(6);
 	}
@@ -2536,6 +2710,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMessage() {
 		return messageEClass;
 	}
@@ -2545,6 +2720,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMessage_ThrowEvent() {
 		return (EAttribute)messageEClass.getEStructuralFeatures().get(0);
 	}
@@ -2554,6 +2730,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMessage_Ttl() {
 		return (EAttribute)messageEClass.getEStructuralFeatures().get(1);
 	}
@@ -2563,6 +2740,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessage_Correlation() {
 		return (EReference)messageEClass.getEStructuralFeatures().get(2);
 	}
@@ -2572,6 +2750,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessage_Source() {
 		return (EReference)messageEClass.getEStructuralFeatures().get(3);
 	}
@@ -2581,6 +2760,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessage_TargetProcessExpression() {
 		return (EReference)messageEClass.getEStructuralFeatures().get(4);
 	}
@@ -2590,6 +2770,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessage_TargetElementExpression() {
 		return (EReference)messageEClass.getEStructuralFeatures().get(5);
 	}
@@ -2599,6 +2780,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessage_MessageContent() {
 		return (EReference)messageEClass.getEStructuralFeatures().get(6);
 	}
@@ -2608,6 +2790,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMessageFlow() {
 		return messageFlowEClass;
 	}
@@ -2617,6 +2800,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessageFlow_Target() {
 		return (EReference)messageFlowEClass.getEStructuralFeatures().get(0);
 	}
@@ -2626,6 +2810,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMessageFlow_Source() {
 		return (EReference)messageFlowEClass.getEStructuralFeatures().get(1);
 	}
@@ -2635,6 +2820,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMessageEvent() {
 		return messageEventEClass;
 	}
@@ -2644,6 +2830,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMultiInstantiable() {
 		return multiInstantiableEClass;
 	}
@@ -2653,6 +2840,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMultiInstantiable_Type() {
 		return (EAttribute)multiInstantiableEClass.getEStructuralFeatures().get(0);
 	}
@@ -2662,6 +2850,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMultiInstantiable_TestBefore() {
 		return (EAttribute)multiInstantiableEClass.getEStructuralFeatures().get(1);
 	}
@@ -2671,6 +2860,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_LoopCondition() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(2);
 	}
@@ -2680,6 +2870,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_LoopMaximum() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(3);
 	}
@@ -2689,6 +2880,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMultiInstantiable_UseCardinality() {
 		return (EAttribute)multiInstantiableEClass.getEStructuralFeatures().get(4);
 	}
@@ -2698,6 +2890,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_CardinalityExpression() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(5);
 	}
@@ -2707,6 +2900,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_CollectionDataToMultiInstantiate() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(6);
 	}
@@ -2716,6 +2910,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_IteratorExpression() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(7);
 	}
@@ -2725,6 +2920,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_OutputData() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(8);
 	}
@@ -2734,6 +2930,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_ListDataContainingOutputResults() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(9);
 	}
@@ -2743,6 +2940,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiInstantiable_CompletionCondition() {
 		return (EReference)multiInstantiableEClass.getEStructuralFeatures().get(10);
 	}
@@ -2752,6 +2950,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMultiInstantiable_StoreOutput() {
 		return (EAttribute)multiInstantiableEClass.getEStructuralFeatures().get(11);
 	}
@@ -2761,6 +2960,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNonInterruptingBoundaryTimerEvent() {
 		return nonInterruptingBoundaryTimerEventEClass;
 	}
@@ -2770,6 +2970,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOperationContainer() {
 		return operationContainerEClass;
 	}
@@ -2779,6 +2980,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOperationContainer_Operations() {
 		return (EReference)operationContainerEClass.getEStructuralFeatures().get(0);
 	}
@@ -2788,6 +2990,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOutputMapping() {
 		return outputMappingEClass;
 	}
@@ -2797,6 +3000,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOutputMapping_SubprocessSource() {
 		return (EAttribute)outputMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -2806,6 +3010,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOutputMapping_ProcessTarget() {
 		return (EReference)outputMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -2815,6 +3020,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPageFlow() {
 		return pageFlowEClass;
 	}
@@ -2824,6 +3030,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPageFlow_FormMapping() {
 		return (EReference)pageFlowEClass.getEStructuralFeatures().get(0);
 	}
@@ -2833,6 +3040,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPool() {
 		return poolEClass;
 	}
@@ -2842,6 +3050,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPool_Documents() {
 		return (EReference)poolEClass.getEStructuralFeatures().get(0);
 	}
@@ -2851,6 +3060,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPool_SearchIndexes() {
 		return (EReference)poolEClass.getEStructuralFeatures().get(1);
 	}
@@ -2860,6 +3070,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getPool_DisplayName() {
 		return (EAttribute)poolEClass.getEStructuralFeatures().get(2);
 	}
@@ -2869,6 +3080,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRecapFlow() {
 		return recapFlowEClass;
 	}
@@ -2878,6 +3090,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRecapFlow_OverviewFormMapping() {
 		return (EReference)recapFlowEClass.getEStructuralFeatures().get(0);
 	}
@@ -2887,6 +3100,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReceiveTask() {
 		return receiveTaskEClass;
 	}
@@ -2896,6 +3110,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSequenceFlow() {
 		return sequenceFlowEClass;
 	}
@@ -2905,6 +3120,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSequenceFlow_IsDefault() {
 		return (EAttribute)sequenceFlowEClass.getEStructuralFeatures().get(0);
 	}
@@ -2914,6 +3130,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSequenceFlow_ConditionType() {
 		return (EAttribute)sequenceFlowEClass.getEStructuralFeatures().get(1);
 	}
@@ -2923,6 +3140,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSequenceFlow_DecisionTable() {
 		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(2);
 	}
@@ -2932,6 +3150,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSequenceFlow_Condition() {
 		return (EReference)sequenceFlowEClass.getEStructuralFeatures().get(3);
 	}
@@ -2941,6 +3160,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSequenceFlow_PathToken() {
 		return (EAttribute)sequenceFlowEClass.getEStructuralFeatures().get(4);
 	}
@@ -2950,6 +3170,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSignalEvent() {
 		return signalEventEClass;
 	}
@@ -2959,6 +3180,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSignalEvent_SignalCode() {
 		return (EAttribute)signalEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -2968,6 +3190,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSourceElement() {
 		return sourceElementEClass;
 	}
@@ -2977,6 +3200,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSourceElement_Outgoing() {
 		return (EReference)sourceElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2986,6 +3210,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStringType() {
 		return stringTypeEClass;
 	}
@@ -2995,6 +3220,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScriptTask() {
 		return scriptTaskEClass;
 	}
@@ -3004,6 +3230,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSearchIndex() {
 		return searchIndexEClass;
 	}
@@ -3013,6 +3240,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSearchIndex_Name() {
 		return (EReference)searchIndexEClass.getEStructuralFeatures().get(0);
 	}
@@ -3022,6 +3250,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSearchIndex_Value() {
 		return (EReference)searchIndexEClass.getEStructuralFeatures().get(1);
 	}
@@ -3031,6 +3260,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSendTask() {
 		return sendTaskEClass;
 	}
@@ -3040,6 +3270,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getServiceTask() {
 		return serviceTaskEClass;
 	}
@@ -3049,6 +3280,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStartErrorEvent() {
 		return startErrorEventEClass;
 	}
@@ -3058,6 +3290,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStartEvent() {
 		return startEventEClass;
 	}
@@ -3067,6 +3300,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStartMessageEvent() {
 		return startMessageEventEClass;
 	}
@@ -3076,6 +3310,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStartSignalEvent() {
 		return startSignalEventEClass;
 	}
@@ -3085,6 +3320,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStartTimerEvent() {
 		return startTimerEventEClass;
 	}
@@ -3094,6 +3330,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_From() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -3103,6 +3340,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_At() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(1);
 	}
@@ -3112,6 +3350,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_Month() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(2);
 	}
@@ -3121,6 +3360,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_Day() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(3);
 	}
@@ -3130,6 +3370,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_Hours() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(4);
 	}
@@ -3139,6 +3380,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_DayNumber() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(5);
 	}
@@ -3148,6 +3390,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_Minutes() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(6);
 	}
@@ -3157,6 +3400,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_Seconds() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(7);
 	}
@@ -3166,6 +3410,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStartTimerEvent_ScriptType() {
 		return (EAttribute)startTimerEventEClass.getEStructuralFeatures().get(8);
 	}
@@ -3175,6 +3420,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSubProcessEvent() {
 		return subProcessEventEClass;
 	}
@@ -3184,6 +3430,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTask() {
 		return taskEClass;
 	}
@@ -3193,6 +3440,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTask_OverrideActorsOfTheLane() {
 		return (EAttribute)taskEClass.getEStructuralFeatures().get(0);
 	}
@@ -3202,6 +3450,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTask_Priority() {
 		return (EAttribute)taskEClass.getEStructuralFeatures().get(1);
 	}
@@ -3211,6 +3460,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTask_ExpectedDuration() {
 		return (EReference)taskEClass.getEStructuralFeatures().get(2);
 	}
@@ -3220,6 +3470,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTargetElement() {
 		return targetElementEClass;
 	}
@@ -3229,6 +3480,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTargetElement_Incoming() {
 		return (EReference)targetElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3238,6 +3490,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTextAnnotation() {
 		return textAnnotationEClass;
 	}
@@ -3247,6 +3500,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTextAnnotation_Text() {
 		return (EAttribute)textAnnotationEClass.getEStructuralFeatures().get(0);
 	}
@@ -3256,6 +3510,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTextAnnotationAttachment() {
 		return textAnnotationAttachmentEClass;
 	}
@@ -3265,6 +3520,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTextAnnotationAttachment_Source() {
 		return (EReference)textAnnotationAttachmentEClass.getEStructuralFeatures().get(0);
 	}
@@ -3274,6 +3530,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTextAnnotationAttachment_Target() {
 		return (EReference)textAnnotationAttachmentEClass.getEStructuralFeatures().get(1);
 	}
@@ -3283,6 +3540,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThrowSignalEvent() {
 		return throwSignalEventEClass;
 	}
@@ -3292,6 +3550,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThrowLinkEvent() {
 		return throwLinkEventEClass;
 	}
@@ -3301,6 +3560,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getThrowLinkEvent_To() {
 		return (EReference)throwLinkEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -3310,6 +3570,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThrowMessageEvent() {
 		return throwMessageEventEClass;
 	}
@@ -3319,6 +3580,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getThrowMessageEvent_Events() {
 		return (EReference)throwMessageEventEClass.getEStructuralFeatures().get(0);
 	}
@@ -3328,6 +3590,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getThrowMessageEvent_OutgoingMessages() {
 		return (EReference)throwMessageEventEClass.getEStructuralFeatures().get(1);
 	}
@@ -3337,6 +3600,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTimerEvent() {
 		return timerEventEClass;
 	}
@@ -3346,6 +3610,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getXMLData() {
 		return xmlDataEClass;
 	}
@@ -3355,6 +3620,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getXMLData_Namespace() {
 		return (EAttribute)xmlDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -3364,6 +3630,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getXMLData_Type() {
 		return (EAttribute)xmlDataEClass.getEStructuralFeatures().get(1);
 	}
@@ -3373,6 +3640,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getXMLType() {
 		return xmlTypeEClass;
 	}
@@ -3382,6 +3650,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getXORGateway() {
 		return xorGatewayEClass;
 	}
@@ -3391,6 +3660,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getCorrelationTypeActive() {
 		return correlationTypeActiveEEnum;
 	}
@@ -3400,6 +3670,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getContractInputType() {
 		return contractInputTypeEEnum;
 	}
@@ -3409,6 +3680,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getDocumentType() {
 		return documentTypeEEnum;
 	}
@@ -3418,6 +3690,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getFormMappingType() {
 		return formMappingTypeEEnum;
 	}
@@ -3427,6 +3700,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getGatewayType() {
 		return gatewayTypeEEnum;
 	}
@@ -3436,6 +3710,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getInputMappingAssignationType() {
 		return inputMappingAssignationTypeEEnum;
 	}
@@ -3445,6 +3720,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getMultiInstanceType() {
 		return multiInstanceTypeEEnum;
 	}
@@ -3454,6 +3730,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSequenceFlowConditionType() {
 		return sequenceFlowConditionTypeEEnum;
 	}
@@ -3463,6 +3740,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getStartTimerScriptType() {
 		return startTimerScriptTypeEEnum;
 	}
@@ -3472,6 +3750,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProcessFactory getProcessFactory() {
 		return (ProcessFactory)getEFactoryInstance();
 	}

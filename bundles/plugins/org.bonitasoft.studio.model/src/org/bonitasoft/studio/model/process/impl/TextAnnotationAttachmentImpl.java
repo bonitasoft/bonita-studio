@@ -82,6 +82,7 @@ public class TextAnnotationAttachmentImpl extends EObjectImpl implements TextAnn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TextAnnotation getSource() {
 		if (source != null && source.eIsProxy()) {
 			InternalEObject oldSource = (InternalEObject)source;
@@ -108,6 +109,7 @@ public class TextAnnotationAttachmentImpl extends EObjectImpl implements TextAnn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(TextAnnotation newSource) {
 		TextAnnotation oldSource = source;
 		source = newSource;
@@ -120,6 +122,7 @@ public class TextAnnotationAttachmentImpl extends EObjectImpl implements TextAnn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getTarget() {
 		if (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET) return null;
 		return (Element)eInternalContainer();
@@ -140,6 +143,7 @@ public class TextAnnotationAttachmentImpl extends EObjectImpl implements TextAnn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTarget(Element newTarget) {
 		if (newTarget != eInternalContainer() || (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET && newTarget != null)) {
 			if (EcoreUtil.isAncestor(this, newTarget))

@@ -130,6 +130,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Contract getContract() {
 		return contract;
 	}
@@ -154,6 +155,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContract(Contract newContract) {
 		if (newContract != contract) {
 			NotificationChain msgs = null;
@@ -173,6 +175,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Document> getDocuments() {
 		if (documents == null) {
 			documents = new EObjectContainmentEList<Document>(Document.class, this, ProcessPackage.POOL__DOCUMENTS);
@@ -185,6 +188,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SearchIndex> getSearchIndexes() {
 		if (searchIndexes == null) {
 			searchIndexes = new EObjectContainmentEList<SearchIndex>(SearchIndex.class, this, ProcessPackage.POOL__SEARCH_INDEXES);
@@ -197,6 +201,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -206,6 +211,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
@@ -363,7 +369,7 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (displayName: "); //$NON-NLS-1$
 		result.append(displayName);
 		result.append(')');

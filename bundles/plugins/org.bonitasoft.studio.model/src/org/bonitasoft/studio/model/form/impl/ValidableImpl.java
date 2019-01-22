@@ -127,6 +127,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Validator> getValidators() {
 		if (validators == null) {
 			validators = new EObjectContainmentEList<Validator>(Validator.class, this, FormPackage.VALIDABLE__VALIDATORS);
@@ -139,6 +140,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getUseDefaultValidator() {
 		return useDefaultValidator;
 	}
@@ -148,6 +150,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseDefaultValidator(Boolean newUseDefaultValidator) {
 		Boolean oldUseDefaultValidator = useDefaultValidator;
 		useDefaultValidator = newUseDefaultValidator;
@@ -160,6 +163,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBelow() {
 		return below;
 	}
@@ -169,6 +173,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBelow(boolean newBelow) {
 		boolean oldBelow = below;
 		below = newBelow;
@@ -279,7 +284,7 @@ public class ValidableImpl extends EObjectImpl implements Validable {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (useDefaultValidator: "); //$NON-NLS-1$
 		result.append(useDefaultValidator);
 		result.append(", below: "); //$NON-NLS-1$

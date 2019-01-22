@@ -7,30 +7,7 @@
    <extension-point id="exporterFactory" name="exporterFactory" schema="schema/exporterFactory.exsd"/>
    <extension-point id="formsExporter" name="Forms Exporter" schema="schema/org.bonitasoft.studio.exporter.formsExporter.exsd"/>
 
-   <extension
-         point="org.eclipse.m2m.qvt.oml.runtime.qvtTransformation">
-      <transformation
-            file="transforms/Form2Xhtml.qvto"
-            id="org.bonitasoft.studio.exporter.form2xhtml">
-         <input
-               metamodel="http://www.bonitasoft.org/ns/studio/form"
-               metaclass="form/Form">
-         </input>
-         <output
-               metamodel="http://www.w3.org/1999/xhtml"
-               metaclass="xhtml/DocumentRoot">
-         </output>
-      </transformation>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.exporter.cssGenerator">
-      <formsExporterExtension
-            class="org.bonitasoft.studio.exporter.application.CssGenerator">
-         <Priority
-               name="Low">
-         </Priority>
-      </formsExporterExtension>
-   </extension>
+  
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution

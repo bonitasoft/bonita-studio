@@ -84,6 +84,7 @@ public class OperationContainerImpl extends EObjectImpl implements OperationCont
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getOperations() {
 		if (operations == null) {
 			operations = new EObjectContainmentEList<Operation>(Operation.class, this, ProcessPackage.OPERATION_CONTAINER__OPERATIONS);

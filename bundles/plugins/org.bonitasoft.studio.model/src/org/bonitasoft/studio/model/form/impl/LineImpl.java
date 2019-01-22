@@ -106,6 +106,7 @@ public class LineImpl extends EObjectImpl implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getHeight() {
 		return height;
 	}
@@ -115,6 +116,7 @@ public class LineImpl extends EObjectImpl implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHeight(String newHeight) {
 		String oldHeight = height;
 		height = newHeight;
@@ -127,6 +129,7 @@ public class LineImpl extends EObjectImpl implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getNumber() {
 		return number;
 	}
@@ -136,6 +139,7 @@ public class LineImpl extends EObjectImpl implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNumber(int newNumber) {
 		int oldNumber = number;
 		number = newNumber;
@@ -220,7 +224,7 @@ public class LineImpl extends EObjectImpl implements Line {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (height: "); //$NON-NLS-1$
 		result.append(height);
 		result.append(", number: "); //$NON-NLS-1$

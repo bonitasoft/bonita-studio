@@ -122,6 +122,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTargetForm() {
 		return targetForm;
 	}
@@ -146,6 +147,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTargetForm(Expression newTargetForm) {
 		if (newTargetForm != targetForm) {
 			NotificationChain msgs = null;
@@ -165,6 +167,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMappingType getType() {
 		return type;
 	}
@@ -174,6 +177,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(FormMappingType newType) {
 		FormMappingType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -186,6 +190,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getUrl() {
 		return url;
 	}
@@ -195,6 +200,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
@@ -303,7 +309,7 @@ public class FormMappingImpl extends EObjectImpl implements FormMapping {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: "); //$NON-NLS-1$
 		result.append(type);
 		result.append(", url: "); //$NON-NLS-1$

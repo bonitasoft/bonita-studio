@@ -64,7 +64,8 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
  org.bonitasoft.studio.contract.core.validation,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework,org.bonitasoft.studio.tests,org.bonitasoft.studio.validation"
-Import-Package: org.bonitasoft.engine.bdm,
+Import-Package: javax.annotation;version="1.2.0",
+ org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,

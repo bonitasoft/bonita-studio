@@ -205,7 +205,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     @SuppressWarnings("restriction")
     private void openClassSelectionDialog() {
-        final JavaSearchScope scope = new JavaSearchScope();
+        final JavaSearchScope scope = new JavaSearchScope(true);
         try {
             scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
         } catch (final Exception ex) {

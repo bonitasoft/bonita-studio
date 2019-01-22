@@ -56,7 +56,7 @@ public class LockStatusOperationFactoryTest {
 
     @Test
     public void should_instantitate_a_LockStatusOperation_if_configuration_element_is_found_in_registry() throws Exception {
-        doReturn(Arrays.asList(configurationElement).toArray()).when(registry).getConfigurationElements(
+        doReturn(Arrays.asList(configurationElement).toArray(new IConfigurationElement[] {})).when(registry).getConfigurationElements(
                 LockStatusOperationFactory.LOCK_STATUS_PROVIDER_EXTENSION_ID);
 
         assertThat(lockStatusOperationProvider.newLockStatusOperation()).isSameAs(lockStatusOperation);

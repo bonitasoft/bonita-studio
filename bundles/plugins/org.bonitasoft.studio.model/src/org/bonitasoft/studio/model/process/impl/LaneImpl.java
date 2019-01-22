@@ -97,6 +97,7 @@ public class LaneImpl extends ContainerImpl implements Lane {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Actor getActor() {
 		if (actor != null && actor.eIsProxy()) {
 			InternalEObject oldActor = (InternalEObject)actor;
@@ -123,6 +124,7 @@ public class LaneImpl extends ContainerImpl implements Lane {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActor(Actor newActor) {
 		Actor oldActor = actor;
 		actor = newActor;
@@ -135,6 +137,7 @@ public class LaneImpl extends ContainerImpl implements Lane {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ActorFilter> getFilters() {
 		if (filters == null) {
 			filters = new EObjectContainmentEList<ActorFilter>(ActorFilter.class, this, ProcessPackage.LANE__FILTERS);

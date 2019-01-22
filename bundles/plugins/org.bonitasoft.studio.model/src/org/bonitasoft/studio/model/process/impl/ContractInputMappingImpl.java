@@ -119,6 +119,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data getData() {
 		if (data != null && data.eIsProxy()) {
 			InternalEObject oldData = (InternalEObject)data;
@@ -145,6 +146,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setData(Data newData) {
 		Data oldData = data;
 		data = newData;
@@ -157,6 +159,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSetterName() {
 		return setterName;
 	}
@@ -166,6 +169,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSetterName(String newSetterName) {
 		String oldSetterName = setterName;
 		setterName = newSetterName;
@@ -178,6 +182,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSetterParamType() {
 		return setterParamType;
 	}
@@ -187,6 +192,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSetterParamType(String newSetterParamType) {
 		String oldSetterParamType = setterParamType;
 		setterParamType = newSetterParamType;
@@ -282,7 +288,7 @@ public class ContractInputMappingImpl extends EObjectImpl implements ContractInp
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (setterName: "); //$NON-NLS-1$
 		result.append(setterName);
 		result.append(", setterParamType: "); //$NON-NLS-1$

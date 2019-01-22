@@ -1,9 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2001, 2015 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -71,20 +74,24 @@ public class TabbedPropertyViewer extends StructuredViewer {
 		return list.getSelectionIndex();
 	}
 
+	@Override
 	protected Widget doFindInputItem(Object element) {
 		/* not implemented */
 		return null;
 	}
 
+	@Override
 	protected Widget doFindItem(Object element) {
 		/* not implemented */
 		return null;
 	}
 
+	@Override
 	protected void doUpdateItem(Widget item, Object element, boolean fullMap) {
 		/* not implemented */
 	}
 
+	@Override
 	protected List getSelectionFromWidget() {
 		int index = list.getSelectionIndex();
 		if (index == TabbedPropertyList.NONE) {
@@ -95,10 +102,12 @@ public class TabbedPropertyViewer extends StructuredViewer {
 		return result;
 	}
 
+	@Override
 	protected void internalRefresh(Object element) {
 		/* not implemented */
 	}
 
+	@Override
 	public void reveal(Object element) {
 		/* not implemented */
 	}
@@ -107,8 +116,9 @@ public class TabbedPropertyViewer extends StructuredViewer {
 	 * We do not consider multiple selections. Only the first
 	 * element will represent the selection.
 	 */
+	@Override
 	protected void setSelectionToWidget(List l, boolean reveal) {
-		if (l == null || l.size() == 0) { // clear selection
+		if (l == null || l.isEmpty()) { // clear selection
 			list.deselectAll();
 		} else {
 			Object object = l.get(0);
@@ -123,10 +133,12 @@ public class TabbedPropertyViewer extends StructuredViewer {
 		}
 	}
 
+	@Override
 	public Control getControl() {
 		return list;
 	}
 
+	@Override
 	protected void inputChanged(Object input, Object oldInput) {
 		elements.clear();
 		Object[] children = getSortedChildren(getRoot());

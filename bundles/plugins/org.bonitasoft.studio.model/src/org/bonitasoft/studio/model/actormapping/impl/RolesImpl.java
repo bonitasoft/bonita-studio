@@ -78,6 +78,7 @@ public class RolesImpl extends EObjectImpl implements Roles {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getRole() {
 		if (role == null) {
 			role = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.ROLES__ROLE);
@@ -154,7 +155,7 @@ public class RolesImpl extends EObjectImpl implements Roles {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (role: "); //$NON-NLS-1$
 		result.append(role);
 		result.append(')');

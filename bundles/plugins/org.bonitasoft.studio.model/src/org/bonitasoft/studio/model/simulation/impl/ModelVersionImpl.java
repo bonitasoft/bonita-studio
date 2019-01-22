@@ -85,6 +85,7 @@ public class ModelVersionImpl extends EObjectImpl implements ModelVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -94,6 +95,7 @@ public class ModelVersionImpl extends EObjectImpl implements ModelVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -168,7 +170,7 @@ public class ModelVersionImpl extends EObjectImpl implements ModelVersion {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (version: "); //$NON-NLS-1$
 		result.append(version);
 		result.append(')');

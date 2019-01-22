@@ -715,6 +715,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -724,6 +725,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -736,6 +738,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -745,6 +748,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -757,6 +761,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, FormPackage.GROUP__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -769,6 +774,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getHtmlAttributes() {
 		if (htmlAttributes == null) {
 			htmlAttributes = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, FormPackage.GROUP__HTML_ATTRIBUTES);
@@ -781,6 +787,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WidgetLayoutInfo getWidgetLayoutInfo() {
 		return widgetLayoutInfo;
 	}
@@ -805,6 +812,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidgetLayoutInfo(WidgetLayoutInfo newWidgetLayoutInfo) {
 		if (newWidgetLayoutInfo != widgetLayoutInfo) {
 			NotificationChain msgs = null;
@@ -824,6 +832,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getShowDisplayLabel() {
 		return showDisplayLabel;
 	}
@@ -833,6 +842,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowDisplayLabel(Boolean newShowDisplayLabel) {
 		Boolean oldShowDisplayLabel = showDisplayLabel;
 		showDisplayLabel = newShowDisplayLabel;
@@ -845,6 +855,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowHTMLForDisplayLabel() {
 		return allowHTMLForDisplayLabel;
 	}
@@ -854,6 +865,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowHTMLForDisplayLabel(boolean newAllowHTMLForDisplayLabel) {
 		boolean oldAllowHTMLForDisplayLabel = allowHTMLForDisplayLabel;
 		allowHTMLForDisplayLabel = newAllowHTMLForDisplayLabel;
@@ -866,6 +878,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getDependOn() {
 		if (dependOn == null) {
 			dependOn = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.GROUP__DEPEND_ON);
@@ -878,6 +891,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDisplayDependentWidgetOnlyOnEventTriggered() {
 		return displayDependentWidgetOnlyOnEventTriggered;
 	}
@@ -887,6 +901,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyOnEventTriggered(boolean newDisplayDependentWidgetOnlyOnEventTriggered) {
 		boolean oldDisplayDependentWidgetOnlyOnEventTriggered = displayDependentWidgetOnlyOnEventTriggered;
 		displayDependentWidgetOnlyOnEventTriggered = newDisplayDependentWidgetOnlyOnEventTriggered;
@@ -899,6 +914,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getParentOf() {
 		if (parentOf == null) {
 			parentOf = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.GROUP__PARENT_OF);
@@ -911,6 +927,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMandatory() {
 		return mandatory;
 	}
@@ -920,6 +937,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatory(boolean newMandatory) {
 		boolean oldMandatory = mandatory;
 		mandatory = newMandatory;
@@ -932,6 +950,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return readOnly;
 	}
@@ -941,6 +960,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReadOnly(boolean newReadOnly) {
 		boolean oldReadOnly = readOnly;
 		readOnly = newReadOnly;
@@ -953,6 +973,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelPosition getLabelPosition() {
 		return labelPosition;
 	}
@@ -962,6 +983,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelPosition(LabelPosition newLabelPosition) {
 		LabelPosition oldLabelPosition = labelPosition;
 		labelPosition = newLabelPosition == null ? LABEL_POSITION_EDEFAULT : newLabelPosition;
@@ -974,6 +996,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRealHtmlAttributes() {
 		return realHtmlAttributes;
 	}
@@ -983,6 +1006,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRealHtmlAttributes(String newRealHtmlAttributes) {
 		String oldRealHtmlAttributes = realHtmlAttributes;
 		realHtmlAttributes = newRealHtmlAttributes;
@@ -995,6 +1019,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isInjectWidgetCondition() {
 		return injectWidgetCondition;
 	}
@@ -1004,6 +1029,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetCondition(boolean newInjectWidgetCondition) {
 		boolean oldInjectWidgetCondition = injectWidgetCondition;
 		injectWidgetCondition = newInjectWidgetCondition;
@@ -1016,6 +1042,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -1025,6 +1052,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -1037,6 +1065,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getReturnTypeModifier() {
 		return returnTypeModifier;
 	}
@@ -1046,6 +1075,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeModifier(String newReturnTypeModifier) {
 		String oldReturnTypeModifier = returnTypeModifier;
 		returnTypeModifier = newReturnTypeModifier;
@@ -1058,6 +1088,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition() {
 		return displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition;
 	}
@@ -1082,6 +1113,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition(Expression newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 		if (newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 			NotificationChain msgs = null;
@@ -1101,6 +1133,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayAfterEventDependsOnConditionScript() {
 		return displayAfterEventDependsOnConditionScript;
 	}
@@ -1125,6 +1158,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayAfterEventDependsOnConditionScript(Expression newDisplayAfterEventDependsOnConditionScript) {
 		if (newDisplayAfterEventDependsOnConditionScript != displayAfterEventDependsOnConditionScript) {
 			NotificationChain msgs = null;
@@ -1144,6 +1178,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInputExpression() {
 		return inputExpression;
 	}
@@ -1168,6 +1203,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputExpression(Expression newInputExpression) {
 		if (newInputExpression != inputExpression) {
 			NotificationChain msgs = null;
@@ -1187,6 +1223,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getAfterEventExpression() {
 		return afterEventExpression;
 	}
@@ -1211,6 +1248,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAfterEventExpression(Expression newAfterEventExpression) {
 		if (newAfterEventExpression != afterEventExpression) {
 			NotificationChain msgs = null;
@@ -1230,6 +1268,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltip() {
 		return tooltip;
 	}
@@ -1254,6 +1293,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltip(Expression newTooltip) {
 		if (newTooltip != tooltip) {
 			NotificationChain msgs = null;
@@ -1273,6 +1313,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getHelpMessage() {
 		return helpMessage;
 	}
@@ -1297,6 +1338,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHelpMessage(Expression newHelpMessage) {
 		if (newHelpMessage != helpMessage) {
 			NotificationChain msgs = null;
@@ -1316,6 +1358,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabel() {
 		return displayLabel;
 	}
@@ -1340,6 +1383,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabel(Expression newDisplayLabel) {
 		if (newDisplayLabel != displayLabel) {
 			NotificationChain msgs = null;
@@ -1359,6 +1403,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInjectWidgetScript() {
 		return injectWidgetScript;
 	}
@@ -1383,6 +1428,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetScript(Expression newInjectWidgetScript) {
 		if (newInjectWidgetScript != injectWidgetScript) {
 			NotificationChain msgs = null;
@@ -1402,6 +1448,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Operation getAction() {
 		return action;
 	}
@@ -1426,6 +1473,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(Operation newAction) {
 		if (newAction != action) {
 			NotificationChain msgs = null;
@@ -1445,6 +1493,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDuplicate() {
 		return duplicate;
 	}
@@ -1454,6 +1503,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuplicate(boolean newDuplicate) {
 		boolean oldDuplicate = duplicate;
 		duplicate = newDuplicate;
@@ -1466,6 +1516,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitNumberOfDuplication() {
 		return limitNumberOfDuplication;
 	}
@@ -1475,6 +1526,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitNumberOfDuplication(boolean newLimitNumberOfDuplication) {
 		boolean oldLimitNumberOfDuplication = limitNumberOfDuplication;
 		limitNumberOfDuplication = newLimitNumberOfDuplication;
@@ -1487,6 +1539,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitMinNumberOfDuplication() {
 		return limitMinNumberOfDuplication;
 	}
@@ -1496,6 +1549,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitMinNumberOfDuplication(boolean newLimitMinNumberOfDuplication) {
 		boolean oldLimitMinNumberOfDuplication = limitMinNumberOfDuplication;
 		limitMinNumberOfDuplication = newLimitMinNumberOfDuplication;
@@ -1508,6 +1562,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMaxNumberOfDuplication() {
 		return maxNumberOfDuplication;
 	}
@@ -1532,6 +1587,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxNumberOfDuplication(Expression newMaxNumberOfDuplication) {
 		if (newMaxNumberOfDuplication != maxNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1551,6 +1607,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMinNumberOfDuplication() {
 		return minNumberOfDuplication;
 	}
@@ -1575,6 +1632,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinNumberOfDuplication(Expression newMinNumberOfDuplication) {
 		if (newMinNumberOfDuplication != minNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1594,6 +1652,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForAdd() {
 		return displayLabelForAdd;
 	}
@@ -1618,6 +1677,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForAdd(Expression newDisplayLabelForAdd) {
 		if (newDisplayLabelForAdd != displayLabelForAdd) {
 			NotificationChain msgs = null;
@@ -1637,6 +1697,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForAdd() {
 		return tooltipForAdd;
 	}
@@ -1661,6 +1722,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForAdd(Expression newTooltipForAdd) {
 		if (newTooltipForAdd != tooltipForAdd) {
 			NotificationChain msgs = null;
@@ -1680,6 +1742,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForRemove() {
 		return displayLabelForRemove;
 	}
@@ -1704,6 +1767,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForRemove(Expression newDisplayLabelForRemove) {
 		if (newDisplayLabelForRemove != displayLabelForRemove) {
 			NotificationChain msgs = null;
@@ -1723,6 +1787,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForRemove() {
 		return tooltipForRemove;
 	}
@@ -1747,6 +1812,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForRemove(Expression newTooltipForRemove) {
 		if (newTooltipForRemove != tooltipForRemove) {
 			NotificationChain msgs = null;
@@ -1766,6 +1832,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Widget> getWidgets() {
 		if (widgets == null) {
 			widgets = new EObjectContainmentEList<Widget>(Widget.class, this, FormPackage.GROUP__WIDGETS);
@@ -1778,6 +1845,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isShowBorder() {
 		return showBorder;
 	}
@@ -1787,6 +1855,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowBorder(boolean newShowBorder) {
 		boolean oldShowBorder = showBorder;
 		showBorder = newShowBorder;
@@ -1799,6 +1868,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Column> getColumns() {
 		if (columns == null) {
 			columns = new EObjectContainmentEList<Column>(Column.class, this, FormPackage.GROUP__COLUMNS);
@@ -1811,6 +1881,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Line> getLines() {
 		if (lines == null) {
 			lines = new EObjectContainmentEList<Line>(Line.class, this, FormPackage.GROUP__LINES);
@@ -1823,6 +1894,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseIterator() {
 		return useIterator;
 	}
@@ -1832,6 +1904,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseIterator(boolean newUseIterator) {
 		boolean oldUseIterator = useIterator;
 		useIterator = newUseIterator;
@@ -1844,6 +1917,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public GroupIterator getIterator() {
 		return iterator;
 	}
@@ -1868,6 +1942,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIterator(GroupIterator newIterator) {
 		if (newIterator != iterator) {
 			NotificationChain msgs = null;
@@ -2492,7 +2567,7 @@ public class GroupImpl extends EObjectImpl implements Group {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

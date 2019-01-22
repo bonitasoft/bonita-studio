@@ -166,6 +166,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -175,6 +176,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -187,6 +189,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -196,6 +199,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -208,6 +212,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -220,6 +225,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.CONNECTABLE_ELEMENT__DATA);
@@ -232,6 +238,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connector> getConnectors() {
 		if (connectors == null) {
 			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS);
@@ -244,6 +251,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<AbstractKPIBinding> getKpis() {
 		if (kpis == null) {
 			kpis = new EObjectContainmentEList<AbstractKPIBinding>(AbstractKPIBinding.class, this, ProcessPackage.CONNECTABLE_ELEMENT__KPIS);
@@ -440,7 +448,7 @@ public class ConnectableElementImpl extends EObjectImpl implements ConnectableEl
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

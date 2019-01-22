@@ -79,6 +79,7 @@ public class BoundaryTimerEventImpl extends BoundaryEventImpl implements Boundar
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCondition() {
 		return condition;
 	}
@@ -103,6 +104,7 @@ public class BoundaryTimerEventImpl extends BoundaryEventImpl implements Boundar
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCondition(Expression newCondition) {
 		if (newCondition != condition) {
 			NotificationChain msgs = null;

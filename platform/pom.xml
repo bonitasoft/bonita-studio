@@ -126,7 +126,7 @@
                     <plugin>
                         <groupId>org.jboss.tools.tycho-plugins</groupId>
                         <artifactId>target-platform-utils</artifactId>
-                        <version>1.1.0-SNAPSHOT</version>
+                        <version>1.3.0</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -135,8 +135,8 @@
                                 </goals>
                                 <configuration>
                                     <executionEnvironment>JavaSE-1.8</executionEnvironment>
-                                    <includeSources>true</includeSources>
-                                    <outputRepository>${project.build.directory}/mirror</outputRepository>
+<!--                                     <includeSources>true</includeSources> -->
+                                    <outputRepository>/home/romain/target-platform-4.10-mirror</outputRepository>
                                 </configuration>
                             </execution>
                         </executions>

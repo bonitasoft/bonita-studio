@@ -219,7 +219,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             if (msgs != null) {
                 msgs.dispatch();
             }
-        } else if (eNotificationRequired()) {
+        } 
+        else if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, MigrationPackage.INSTANCE__TYPE, newType, newType));
         }
     }

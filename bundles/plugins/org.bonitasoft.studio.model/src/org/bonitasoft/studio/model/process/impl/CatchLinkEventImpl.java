@@ -81,6 +81,7 @@ public class CatchLinkEventImpl extends LinkEventImpl implements CatchLinkEvent 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ThrowLinkEvent> getFrom() {
 		if (from == null) {
 			from = new EObjectWithInverseResolvingEList<ThrowLinkEvent>(ThrowLinkEvent.class, this, ProcessPackage.CATCH_LINK_EVENT__FROM, ProcessPackage.THROW_LINK_EVENT__TO);

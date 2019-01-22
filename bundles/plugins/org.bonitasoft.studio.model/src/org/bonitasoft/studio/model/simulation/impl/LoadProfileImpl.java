@@ -118,6 +118,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -127,6 +128,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -139,6 +141,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimulationCalendar getCalendar() {
 		return calendar;
 	}
@@ -163,6 +166,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCalendar(SimulationCalendar newCalendar) {
 		if (newCalendar != calendar) {
 			NotificationChain msgs = null;
@@ -182,6 +186,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<InjectionPeriod> getInjectionPeriods() {
 		if (injectionPeriods == null) {
 			injectionPeriods = new EObjectContainmentEList<InjectionPeriod>(InjectionPeriod.class, this, SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS);
@@ -326,7 +331,7 @@ public class LoadProfileImpl extends SimulationElementImpl implements LoadProfil
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (version: "); //$NON-NLS-1$
 		result.append(version);
 		result.append(')');

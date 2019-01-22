@@ -169,6 +169,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -178,6 +179,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -190,6 +192,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinitionId() {
 		return definitionId;
 	}
@@ -199,6 +202,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinitionId(String newDefinitionId) {
 		String oldDefinitionId = definitionId;
 		definitionId = newDefinitionId;
@@ -211,6 +215,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinitionVersion() {
 		return definitionVersion;
 	}
@@ -220,6 +225,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinitionVersion(String newDefinitionVersion) {
 		String oldDefinitionVersion = definitionVersion;
 		definitionVersion = newDefinitionVersion;
@@ -232,6 +238,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getImplementationId() {
 		return implementationId;
 	}
@@ -241,6 +248,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImplementationId(String newImplementationId) {
 		String oldImplementationId = implementationId;
 		implementationId = newImplementationId;
@@ -253,6 +261,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getImplementationVersion() {
 		return implementationVersion;
 	}
@@ -262,6 +271,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImplementationVersion(String newImplementationVersion) {
 		String oldImplementationVersion = implementationVersion;
 		implementationVersion = newImplementationVersion;
@@ -376,7 +386,7 @@ public class DefinitionMappingImpl extends EObjectImpl implements DefinitionMapp
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: "); //$NON-NLS-1$
 		result.append(type);
 		result.append(", definitionId: "); //$NON-NLS-1$

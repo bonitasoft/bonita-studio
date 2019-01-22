@@ -89,6 +89,7 @@ public abstract class MultipleValuatedFormFieldImpl extends FormFieldImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultExpression() {
 		return defaultExpression;
 	}
@@ -113,6 +114,7 @@ public abstract class MultipleValuatedFormFieldImpl extends FormFieldImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultExpression(Expression newDefaultExpression) {
 		if (newDefaultExpression != defaultExpression) {
 			NotificationChain msgs = null;
@@ -132,6 +134,7 @@ public abstract class MultipleValuatedFormFieldImpl extends FormFieldImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultExpressionAfterEvent() {
 		return defaultExpressionAfterEvent;
 	}
@@ -156,6 +159,7 @@ public abstract class MultipleValuatedFormFieldImpl extends FormFieldImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultExpressionAfterEvent(Expression newDefaultExpressionAfterEvent) {
 		if (newDefaultExpressionAfterEvent != defaultExpressionAfterEvent) {
 			NotificationChain msgs = null;

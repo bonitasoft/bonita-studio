@@ -97,6 +97,7 @@ public class DecisionTableImpl extends EObjectImpl implements DecisionTable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DecisionTableLine> getLines() {
 		if (lines == null) {
 			lines = new EObjectContainmentEList<DecisionTableLine>(DecisionTableLine.class, this, DecisionPackage.DECISION_TABLE__LINES);
@@ -109,6 +110,7 @@ public class DecisionTableImpl extends EObjectImpl implements DecisionTable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionTableAction getDefaultAction() {
 		return defaultAction;
 	}
@@ -133,6 +135,7 @@ public class DecisionTableImpl extends EObjectImpl implements DecisionTable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultAction(DecisionTableAction newDefaultAction) {
 		if (newDefaultAction != defaultAction) {
 			NotificationChain msgs = null;

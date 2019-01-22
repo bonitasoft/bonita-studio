@@ -83,6 +83,7 @@ public class ActorMappingsTypeImpl extends EObjectImpl implements ActorMappingsT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ActorMapping> getActorMapping() {
 		if (actorMapping == null) {
 			actorMapping = new EObjectContainmentEList<ActorMapping>(ActorMapping.class, this, ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING);

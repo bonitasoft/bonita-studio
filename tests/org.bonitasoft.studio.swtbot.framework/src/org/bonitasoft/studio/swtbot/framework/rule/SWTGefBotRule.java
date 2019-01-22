@@ -89,7 +89,11 @@ public class SWTGefBotRule implements TestRule {
             bot.captureScreenshot(String.format("screenshots/OpenedShellAfterTest%s.jpg", System.currentTimeMillis()));
             closeAllShells(bot,e);
         }
-        closeAllAndReturnToWelcomePage();
+        try {
+        	 closeAllAndReturnToWelcomePage();
+        }catch (Throwable e) {
+        	BonitaStudioLog.error("An error occured while trying to close all editors.",e);
+		}
     }
 
     private void closeAllShells(SWTWorkbenchBot bot,Exception e) {

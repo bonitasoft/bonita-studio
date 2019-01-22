@@ -77,6 +77,7 @@ public class PageFlowImpl extends ConnectableElementImpl implements PageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMapping getFormMapping() {
 		return formMapping;
 	}
@@ -101,6 +102,7 @@ public class PageFlowImpl extends ConnectableElementImpl implements PageFlow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFormMapping(FormMapping newFormMapping) {
 		if (newFormMapping != formMapping) {
 			NotificationChain msgs = null;

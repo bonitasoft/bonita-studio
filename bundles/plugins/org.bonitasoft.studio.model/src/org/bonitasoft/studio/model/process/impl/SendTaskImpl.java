@@ -97,6 +97,7 @@ public class SendTaskImpl extends ActivityImpl implements SendTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Message> getEvents() {
 		if (events == null) {
 			events = new EObjectContainmentWithInverseEList<Message>(Message.class, this, ProcessPackage.SEND_TASK__EVENTS, ProcessPackage.MESSAGE__SOURCE);
@@ -109,6 +110,7 @@ public class SendTaskImpl extends ActivityImpl implements SendTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<MessageFlow> getOutgoingMessages() {
 		if (outgoingMessages == null) {
 			outgoingMessages = new EObjectWithInverseResolvingEList<MessageFlow>(MessageFlow.class, this, ProcessPackage.SEND_TASK__OUTGOING_MESSAGES, ProcessPackage.MESSAGE_FLOW__SOURCE);

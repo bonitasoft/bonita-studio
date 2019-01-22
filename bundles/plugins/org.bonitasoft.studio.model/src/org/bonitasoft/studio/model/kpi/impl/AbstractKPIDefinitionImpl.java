@@ -163,6 +163,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -172,6 +173,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -184,6 +186,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -193,6 +196,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -205,6 +209,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, KpiPackage.ABSTRACT_KPI_DEFINITION__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -217,6 +222,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -226,6 +232,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -238,6 +245,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<KPIField> getFields() {
 		if (fields == null) {
 			fields = new EObjectContainmentEList<KPIField>(KPIField.class, this, KpiPackage.ABSTRACT_KPI_DEFINITION__FIELDS);
@@ -386,7 +394,7 @@ public abstract class AbstractKPIDefinitionImpl extends EObjectImpl implements A
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

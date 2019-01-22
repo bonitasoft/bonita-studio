@@ -127,6 +127,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getFieldName() {
 		return fieldName;
 	}
@@ -136,6 +137,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFieldName(String newFieldName) {
 		String oldFieldName = fieldName;
 		fieldName = newFieldName;
@@ -148,6 +150,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getFieldType() {
 		return fieldType;
 	}
@@ -157,6 +160,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFieldType(String newFieldType) {
 		String oldFieldType = fieldType;
 		fieldType = newFieldType;
@@ -169,6 +173,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseQuotes() {
 		return useQuotes;
 	}
@@ -178,6 +183,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseQuotes(boolean newUseQuotes) {
 		boolean oldUseQuotes = useQuotes;
 		useQuotes = newUseQuotes;
@@ -272,7 +278,7 @@ public class KPIFieldImpl extends EObjectImpl implements KPIField {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (fieldName: "); //$NON-NLS-1$
 		result.append(fieldName);
 		result.append(", fieldType: "); //$NON-NLS-1$

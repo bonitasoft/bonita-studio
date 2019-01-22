@@ -1,9 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2007, 2015 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -103,7 +106,8 @@ public final class TabContents {
 
             ISafeRunnable runnable = new SafeRunnable() {
 
-                public void run()
+                @Override
+				public void run()
                     throws Exception {
                     section.createControls(sectionComposite, page);
                 }
@@ -120,7 +124,8 @@ public final class TabContents {
         for (final ISection section : sections) {
             ISafeRunnable runnable = new SafeRunnable() {
 
-                public void run()
+                @Override
+				public void run()
                     throws Exception {
                     section.dispose();
                 }
@@ -136,7 +141,8 @@ public final class TabContents {
         for (final ISection section : sections) {
             ISafeRunnable runnable = new SafeRunnable() {
 
-                public void run()
+                @Override
+				public void run()
                     throws Exception {
                     section.aboutToBeShown();
                 }
@@ -152,7 +158,8 @@ public final class TabContents {
         for (final ISection section : sections) {
             ISafeRunnable runnable = new SafeRunnable() {
 
-                public void run()
+                @Override
+				public void run()
                     throws Exception {
                     section.aboutToBeHidden();
                 }
@@ -171,7 +178,8 @@ public final class TabContents {
         for (final ISection section : sections) {
             ISafeRunnable runnable = new SafeRunnable() {
 
-                public void run()
+                @Override
+				public void run()
                     throws Exception {
                     section.setInput(part, selection);
                 }
@@ -206,7 +214,8 @@ public final class TabContents {
             for (final ISection section : sections) {
                 ISafeRunnable runnable = new SafeRunnable() {
 
-                    public void run()
+                    @Override
+					public void run()
                         throws Exception {
                         section.refresh();
                     }

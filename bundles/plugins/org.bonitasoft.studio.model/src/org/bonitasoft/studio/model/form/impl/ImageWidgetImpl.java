@@ -669,6 +669,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -678,6 +679,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -690,6 +692,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -699,6 +702,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -711,6 +715,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, FormPackage.IMAGE_WIDGET__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -723,6 +728,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getHtmlAttributes() {
 		if (htmlAttributes == null) {
 			htmlAttributes = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, FormPackage.IMAGE_WIDGET__HTML_ATTRIBUTES);
@@ -735,6 +741,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WidgetLayoutInfo getWidgetLayoutInfo() {
 		return widgetLayoutInfo;
 	}
@@ -759,6 +766,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidgetLayoutInfo(WidgetLayoutInfo newWidgetLayoutInfo) {
 		if (newWidgetLayoutInfo != widgetLayoutInfo) {
 			NotificationChain msgs = null;
@@ -778,6 +786,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getShowDisplayLabel() {
 		return showDisplayLabel;
 	}
@@ -787,6 +796,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowDisplayLabel(Boolean newShowDisplayLabel) {
 		Boolean oldShowDisplayLabel = showDisplayLabel;
 		showDisplayLabel = newShowDisplayLabel;
@@ -799,6 +809,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowHTMLForDisplayLabel() {
 		return allowHTMLForDisplayLabel;
 	}
@@ -808,6 +819,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowHTMLForDisplayLabel(boolean newAllowHTMLForDisplayLabel) {
 		boolean oldAllowHTMLForDisplayLabel = allowHTMLForDisplayLabel;
 		allowHTMLForDisplayLabel = newAllowHTMLForDisplayLabel;
@@ -820,6 +832,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getDependOn() {
 		if (dependOn == null) {
 			dependOn = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.IMAGE_WIDGET__DEPEND_ON);
@@ -832,6 +845,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDisplayDependentWidgetOnlyOnEventTriggered() {
 		return displayDependentWidgetOnlyOnEventTriggered;
 	}
@@ -841,6 +855,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyOnEventTriggered(boolean newDisplayDependentWidgetOnlyOnEventTriggered) {
 		boolean oldDisplayDependentWidgetOnlyOnEventTriggered = displayDependentWidgetOnlyOnEventTriggered;
 		displayDependentWidgetOnlyOnEventTriggered = newDisplayDependentWidgetOnlyOnEventTriggered;
@@ -853,6 +868,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getParentOf() {
 		if (parentOf == null) {
 			parentOf = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.IMAGE_WIDGET__PARENT_OF);
@@ -865,6 +881,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMandatory() {
 		return mandatory;
 	}
@@ -874,6 +891,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatory(boolean newMandatory) {
 		boolean oldMandatory = mandatory;
 		mandatory = newMandatory;
@@ -886,6 +904,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return readOnly;
 	}
@@ -895,6 +914,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReadOnly(boolean newReadOnly) {
 		boolean oldReadOnly = readOnly;
 		readOnly = newReadOnly;
@@ -907,6 +927,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelPosition getLabelPosition() {
 		return labelPosition;
 	}
@@ -916,6 +937,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelPosition(LabelPosition newLabelPosition) {
 		LabelPosition oldLabelPosition = labelPosition;
 		labelPosition = newLabelPosition == null ? LABEL_POSITION_EDEFAULT : newLabelPosition;
@@ -928,6 +950,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRealHtmlAttributes() {
 		return realHtmlAttributes;
 	}
@@ -937,6 +960,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRealHtmlAttributes(String newRealHtmlAttributes) {
 		String oldRealHtmlAttributes = realHtmlAttributes;
 		realHtmlAttributes = newRealHtmlAttributes;
@@ -949,6 +973,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isInjectWidgetCondition() {
 		return injectWidgetCondition;
 	}
@@ -958,6 +983,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetCondition(boolean newInjectWidgetCondition) {
 		boolean oldInjectWidgetCondition = injectWidgetCondition;
 		injectWidgetCondition = newInjectWidgetCondition;
@@ -970,6 +996,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -979,6 +1006,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -991,6 +1019,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getReturnTypeModifier() {
 		return returnTypeModifier;
 	}
@@ -1000,6 +1029,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeModifier(String newReturnTypeModifier) {
 		String oldReturnTypeModifier = returnTypeModifier;
 		returnTypeModifier = newReturnTypeModifier;
@@ -1012,6 +1042,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition() {
 		return displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition;
 	}
@@ -1036,6 +1067,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition(Expression newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 		if (newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 			NotificationChain msgs = null;
@@ -1055,6 +1087,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayAfterEventDependsOnConditionScript() {
 		return displayAfterEventDependsOnConditionScript;
 	}
@@ -1079,6 +1112,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayAfterEventDependsOnConditionScript(Expression newDisplayAfterEventDependsOnConditionScript) {
 		if (newDisplayAfterEventDependsOnConditionScript != displayAfterEventDependsOnConditionScript) {
 			NotificationChain msgs = null;
@@ -1098,6 +1132,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInputExpression() {
 		return inputExpression;
 	}
@@ -1122,6 +1157,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputExpression(Expression newInputExpression) {
 		if (newInputExpression != inputExpression) {
 			NotificationChain msgs = null;
@@ -1141,6 +1177,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getAfterEventExpression() {
 		return afterEventExpression;
 	}
@@ -1165,6 +1202,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAfterEventExpression(Expression newAfterEventExpression) {
 		if (newAfterEventExpression != afterEventExpression) {
 			NotificationChain msgs = null;
@@ -1184,6 +1222,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltip() {
 		return tooltip;
 	}
@@ -1208,6 +1247,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltip(Expression newTooltip) {
 		if (newTooltip != tooltip) {
 			NotificationChain msgs = null;
@@ -1227,6 +1267,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getHelpMessage() {
 		return helpMessage;
 	}
@@ -1251,6 +1292,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHelpMessage(Expression newHelpMessage) {
 		if (newHelpMessage != helpMessage) {
 			NotificationChain msgs = null;
@@ -1270,6 +1312,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabel() {
 		return displayLabel;
 	}
@@ -1294,6 +1337,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabel(Expression newDisplayLabel) {
 		if (newDisplayLabel != displayLabel) {
 			NotificationChain msgs = null;
@@ -1313,6 +1357,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInjectWidgetScript() {
 		return injectWidgetScript;
 	}
@@ -1337,6 +1382,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetScript(Expression newInjectWidgetScript) {
 		if (newInjectWidgetScript != injectWidgetScript) {
 			NotificationChain msgs = null;
@@ -1356,6 +1402,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Operation getAction() {
 		return action;
 	}
@@ -1380,6 +1427,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(Operation newAction) {
 		if (newAction != action) {
 			NotificationChain msgs = null;
@@ -1399,6 +1447,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDuplicate() {
 		return duplicate;
 	}
@@ -1408,6 +1457,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuplicate(boolean newDuplicate) {
 		boolean oldDuplicate = duplicate;
 		duplicate = newDuplicate;
@@ -1420,6 +1470,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitNumberOfDuplication() {
 		return limitNumberOfDuplication;
 	}
@@ -1429,6 +1480,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitNumberOfDuplication(boolean newLimitNumberOfDuplication) {
 		boolean oldLimitNumberOfDuplication = limitNumberOfDuplication;
 		limitNumberOfDuplication = newLimitNumberOfDuplication;
@@ -1441,6 +1493,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitMinNumberOfDuplication() {
 		return limitMinNumberOfDuplication;
 	}
@@ -1450,6 +1503,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitMinNumberOfDuplication(boolean newLimitMinNumberOfDuplication) {
 		boolean oldLimitMinNumberOfDuplication = limitMinNumberOfDuplication;
 		limitMinNumberOfDuplication = newLimitMinNumberOfDuplication;
@@ -1462,6 +1516,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMaxNumberOfDuplication() {
 		return maxNumberOfDuplication;
 	}
@@ -1486,6 +1541,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxNumberOfDuplication(Expression newMaxNumberOfDuplication) {
 		if (newMaxNumberOfDuplication != maxNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1505,6 +1561,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMinNumberOfDuplication() {
 		return minNumberOfDuplication;
 	}
@@ -1529,6 +1586,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinNumberOfDuplication(Expression newMinNumberOfDuplication) {
 		if (newMinNumberOfDuplication != minNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1548,6 +1606,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForAdd() {
 		return displayLabelForAdd;
 	}
@@ -1572,6 +1631,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForAdd(Expression newDisplayLabelForAdd) {
 		if (newDisplayLabelForAdd != displayLabelForAdd) {
 			NotificationChain msgs = null;
@@ -1591,6 +1651,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForAdd() {
 		return tooltipForAdd;
 	}
@@ -1615,6 +1676,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForAdd(Expression newTooltipForAdd) {
 		if (newTooltipForAdd != tooltipForAdd) {
 			NotificationChain msgs = null;
@@ -1634,6 +1696,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForRemove() {
 		return displayLabelForRemove;
 	}
@@ -1658,6 +1721,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForRemove(Expression newDisplayLabelForRemove) {
 		if (newDisplayLabelForRemove != displayLabelForRemove) {
 			NotificationChain msgs = null;
@@ -1677,6 +1741,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForRemove() {
 		return tooltipForRemove;
 	}
@@ -1701,6 +1766,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForRemove(Expression newTooltipForRemove) {
 		if (newTooltipForRemove != tooltipForRemove) {
 			NotificationChain msgs = null;
@@ -1720,6 +1786,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isIsADocument() {
 		return isADocument;
 	}
@@ -1729,6 +1796,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIsADocument(boolean newIsADocument) {
 		boolean oldIsADocument = isADocument;
 		isADocument = newIsADocument;
@@ -1741,6 +1809,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Document getDocument() {
 		if (document != null && document.eIsProxy()) {
 			InternalEObject oldDocument = (InternalEObject)document;
@@ -1767,6 +1836,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocument(Document newDocument) {
 		Document oldDocument = document;
 		document = newDocument;
@@ -1779,6 +1849,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getImgPath() {
 		return imgPath;
 	}
@@ -1803,6 +1874,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImgPath(Expression newImgPath) {
 		if (newImgPath != imgPath) {
 			NotificationChain msgs = null;
@@ -2389,7 +2461,7 @@ public class ImageWidgetImpl extends EObjectImpl implements ImageWidget {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

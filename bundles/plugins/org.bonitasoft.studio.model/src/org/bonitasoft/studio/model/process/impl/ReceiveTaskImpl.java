@@ -134,6 +134,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEvent() {
 		return event;
 	}
@@ -143,6 +144,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEvent(String newEvent) {
 		String oldEvent = event;
 		event = newEvent;
@@ -155,6 +157,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MessageFlow getIncomingMessag() {
 		if (incomingMessag != null && incomingMessag.eIsProxy()) {
 			InternalEObject oldIncomingMessag = (InternalEObject)incomingMessag;
@@ -196,6 +199,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIncomingMessag(MessageFlow newIncomingMessag) {
 		if (newIncomingMessag != incomingMessag) {
 			NotificationChain msgs = null;
@@ -215,6 +219,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getCorrelation() {
 		return correlation;
 	}
@@ -239,6 +244,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelation(TableExpression newCorrelation) {
 		if (newCorrelation != correlation) {
 			NotificationChain msgs = null;
@@ -258,6 +264,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getMessageContent() {
 		if (messageContent == null) {
 			messageContent = new EObjectContainmentEList<Operation>(Operation.class, this, ProcessPackage.RECEIVE_TASK__MESSAGE_CONTENT);
@@ -467,7 +474,7 @@ public class ReceiveTaskImpl extends ActivityImpl implements ReceiveTask {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (event: "); //$NON-NLS-1$
 		result.append(event);
 		result.append(')');

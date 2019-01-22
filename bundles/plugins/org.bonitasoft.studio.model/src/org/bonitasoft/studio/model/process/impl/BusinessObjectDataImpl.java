@@ -126,6 +126,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBusinessDataRepositoryId() {
 		return businessDataRepositoryId;
 	}
@@ -135,6 +136,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBusinessDataRepositoryId(String newBusinessDataRepositoryId) {
 		String oldBusinessDataRepositoryId = businessDataRepositoryId;
 		businessDataRepositoryId = newBusinessDataRepositoryId;
@@ -147,6 +149,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isCreateNewInstance() {
 		return createNewInstance;
 	}
@@ -156,6 +159,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCreateNewInstance(boolean newCreateNewInstance) {
 		boolean oldCreateNewInstance = createNewInstance;
 		createNewInstance = newCreateNewInstance;
@@ -168,6 +172,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEClassName() {
 		return eClassName;
 	}
@@ -177,6 +182,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEClassName(String newEClassName) {
 		String oldEClassName = eClassName;
 		eClassName = newEClassName;
@@ -271,7 +277,7 @@ public class BusinessObjectDataImpl extends JavaObjectDataImpl implements Busine
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (businessDataRepositoryId: "); //$NON-NLS-1$
 		result.append(businessDataRepositoryId);
 		result.append(", createNewInstance: "); //$NON-NLS-1$

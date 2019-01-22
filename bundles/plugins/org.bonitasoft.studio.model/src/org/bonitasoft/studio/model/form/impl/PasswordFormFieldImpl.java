@@ -84,6 +84,7 @@ public class PasswordFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxLength() {
 		return maxLength;
 	}
@@ -93,6 +94,7 @@ public class PasswordFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxLength(int newMaxLength) {
 		int oldMaxLength = maxLength;
 		maxLength = newMaxLength;
@@ -167,7 +169,7 @@ public class PasswordFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (maxLength: "); //$NON-NLS-1$
 		result.append(maxLength);
 		result.append(')');

@@ -89,6 +89,7 @@ public abstract class MandatoryFieldsCustomizationImpl extends CSSCustomizableIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMandatorySymbol() {
 		return mandatorySymbol;
 	}
@@ -113,6 +114,7 @@ public abstract class MandatoryFieldsCustomizationImpl extends CSSCustomizableIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatorySymbol(Expression newMandatorySymbol) {
 		if (newMandatorySymbol != mandatorySymbol) {
 			NotificationChain msgs = null;
@@ -132,6 +134,7 @@ public abstract class MandatoryFieldsCustomizationImpl extends CSSCustomizableIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMandatoryLabel() {
 		return mandatoryLabel;
 	}
@@ -156,6 +159,7 @@ public abstract class MandatoryFieldsCustomizationImpl extends CSSCustomizableIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatoryLabel(Expression newMandatoryLabel) {
 		if (newMandatoryLabel != mandatoryLabel) {
 			NotificationChain msgs = null;

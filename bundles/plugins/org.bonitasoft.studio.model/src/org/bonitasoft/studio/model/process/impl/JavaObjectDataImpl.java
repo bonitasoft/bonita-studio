@@ -84,6 +84,7 @@ public class JavaObjectDataImpl extends DataImpl implements JavaObjectData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getClassName() {
 		return className;
 	}
@@ -93,6 +94,7 @@ public class JavaObjectDataImpl extends DataImpl implements JavaObjectData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setClassName(String newClassName) {
 		String oldClassName = className;
 		className = newClassName;
@@ -167,7 +169,7 @@ public class JavaObjectDataImpl extends DataImpl implements JavaObjectData {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (className: "); //$NON-NLS-1$
 		result.append(className);
 		result.append(')');

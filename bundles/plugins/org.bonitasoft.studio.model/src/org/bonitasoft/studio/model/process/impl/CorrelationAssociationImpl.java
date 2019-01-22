@@ -90,6 +90,7 @@ public class CorrelationAssociationImpl extends EObjectImpl implements Correlati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AbstractExpression getCorrelationExpression() {
 		return correlationExpression;
 	}
@@ -114,6 +115,7 @@ public class CorrelationAssociationImpl extends EObjectImpl implements Correlati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelationExpression(AbstractExpression newCorrelationExpression) {
 		if (newCorrelationExpression != correlationExpression) {
 			NotificationChain msgs = null;
@@ -133,6 +135,7 @@ public class CorrelationAssociationImpl extends EObjectImpl implements Correlati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AbstractExpression getCorrelationKey() {
 		return correlationKey;
 	}
@@ -157,6 +160,7 @@ public class CorrelationAssociationImpl extends EObjectImpl implements Correlati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelationKey(AbstractExpression newCorrelationKey) {
 		if (newCorrelationKey != correlationKey) {
 			NotificationChain msgs = null;

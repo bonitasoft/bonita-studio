@@ -179,6 +179,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMapping getFormMapping() {
 		return formMapping;
 	}
@@ -203,6 +204,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFormMapping(FormMapping newFormMapping) {
 		if (newFormMapping != formMapping) {
 			NotificationChain msgs = null;
@@ -222,6 +224,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Actor getActor() {
 		if (actor != null && actor.eIsProxy()) {
 			InternalEObject oldActor = (InternalEObject)actor;
@@ -248,6 +251,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActor(Actor newActor) {
 		Actor oldActor = actor;
 		actor = newActor;
@@ -260,6 +264,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ActorFilter> getFilters() {
 		if (filters == null) {
 			filters = new EObjectContainmentEList<ActorFilter>(ActorFilter.class, this, ProcessPackage.TASK__FILTERS);
@@ -272,6 +277,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Contract getContract() {
 		return contract;
 	}
@@ -296,6 +302,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContract(Contract newContract) {
 		if (newContract != contract) {
 			NotificationChain msgs = null;
@@ -315,6 +322,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isOverrideActorsOfTheLane() {
 		return overrideActorsOfTheLane;
 	}
@@ -324,6 +332,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOverrideActorsOfTheLane(boolean newOverrideActorsOfTheLane) {
 		boolean oldOverrideActorsOfTheLane = overrideActorsOfTheLane;
 		overrideActorsOfTheLane = newOverrideActorsOfTheLane;
@@ -336,6 +345,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getPriority() {
 		return priority;
 	}
@@ -345,6 +355,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPriority(int newPriority) {
 		int oldPriority = priority;
 		priority = newPriority;
@@ -357,6 +368,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpectedDuration() {
 		return expectedDuration;
 	}
@@ -381,6 +393,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpectedDuration(Expression newExpectedDuration) {
 		if (newExpectedDuration != expectedDuration) {
 			NotificationChain msgs = null;
@@ -613,7 +626,7 @@ public class TaskImpl extends ActivityImpl implements Task {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (overrideActorsOfTheLane: "); //$NON-NLS-1$
 		result.append(overrideActorsOfTheLane);
 		result.append(", priority: "); //$NON-NLS-1$

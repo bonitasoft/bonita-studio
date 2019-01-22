@@ -89,6 +89,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMapping createActorMapping() {
 		ActorMappingImpl actorMapping = new ActorMappingImpl();
 		return actorMapping;
@@ -99,6 +100,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMappingsType createActorMappingsType() {
 		ActorMappingsTypeImpl actorMappingsType = new ActorMappingsTypeImpl();
 		return actorMappingsType;
@@ -109,6 +111,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DocumentRoot createDocumentRoot() {
 		DocumentRootImpl documentRoot = new DocumentRootImpl();
 		return documentRoot;
@@ -119,6 +122,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Groups createGroups() {
 		GroupsImpl groups = new GroupsImpl();
 		return groups;
@@ -129,6 +133,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Membership createMembership() {
 		MembershipImpl membership = new MembershipImpl();
 		return membership;
@@ -139,6 +144,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MembershipType createMembershipType() {
 		MembershipTypeImpl membershipType = new MembershipTypeImpl();
 		return membershipType;
@@ -149,6 +155,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Roles createRoles() {
 		RolesImpl roles = new RolesImpl();
 		return roles;
@@ -159,6 +166,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Users createUsers() {
 		UsersImpl users = new UsersImpl();
 		return users;
@@ -169,6 +177,7 @@ public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMappingPackage getActorMappingPackage() {
 		return (ActorMappingPackage)getEPackage();
 	}

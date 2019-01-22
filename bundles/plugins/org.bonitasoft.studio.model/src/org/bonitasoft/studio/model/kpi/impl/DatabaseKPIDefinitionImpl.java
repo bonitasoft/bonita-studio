@@ -154,6 +154,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultDriverclassName() {
 		return defaultDriverclassName;
 	}
@@ -178,6 +179,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultDriverclassName(Expression newDefaultDriverclassName) {
 		if (newDefaultDriverclassName != defaultDriverclassName) {
 			NotificationChain msgs = null;
@@ -197,6 +199,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultJdbcUrl() {
 		return defaultJdbcUrl;
 	}
@@ -221,6 +224,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultJdbcUrl(Expression newDefaultJdbcUrl) {
 		if (newDefaultJdbcUrl != defaultJdbcUrl) {
 			NotificationChain msgs = null;
@@ -240,6 +244,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultUser() {
 		return defaultUser;
 	}
@@ -264,6 +269,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultUser(Expression newDefaultUser) {
 		if (newDefaultUser != defaultUser) {
 			NotificationChain msgs = null;
@@ -283,6 +289,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultPassword() {
 		return defaultPassword;
 	}
@@ -307,6 +314,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultPassword(Expression newDefaultPassword) {
 		if (newDefaultPassword != defaultPassword) {
 			NotificationChain msgs = null;
@@ -326,6 +334,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultJNDIUrl() {
 		return defaultJNDIUrl;
 	}
@@ -350,6 +359,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultJNDIUrl(Expression newDefaultJNDIUrl) {
 		if (newDefaultJNDIUrl != defaultJNDIUrl) {
 			NotificationChain msgs = null;
@@ -369,6 +379,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultDBName() {
 		return defaultDBName;
 	}
@@ -393,6 +404,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultDBName(Expression newDefaultDBName) {
 		if (newDefaultDBName != defaultDBName) {
 			NotificationChain msgs = null;
@@ -412,6 +424,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefaultTableName() {
 		return defaultTableName;
 	}
@@ -421,6 +434,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultTableName(String newDefaultTableName) {
 		String oldDefaultTableName = defaultTableName;
 		defaultTableName = newDefaultTableName;
@@ -579,7 +593,7 @@ public class DatabaseKPIDefinitionImpl extends AbstractKPIDefinitionImpl impleme
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (defaultTableName: "); //$NON-NLS-1$
 		result.append(defaultTableName);
 		result.append(')');

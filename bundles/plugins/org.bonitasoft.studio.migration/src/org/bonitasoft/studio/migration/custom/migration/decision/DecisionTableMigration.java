@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
@@ -35,10 +35,9 @@ import org.eclipse.emf.edapt.spi.migration.Model;
  * @author Florine Boudin
  *
  */
-public class DecisionTableMigration extends ReportCustomMigration {
+public class DecisionTableMigration extends CustomMigration {
 
 
-	//List<List<Instance>> newConditionList = new ArrayList<List<Instance>>();
 	Map<String , List<Instance>> map = new HashMap<String, List<Instance>>();
 
 	@Override
@@ -77,7 +76,23 @@ public class DecisionTableMigration extends ReportCustomMigration {
 			listCondition.addAll((Collection<? extends Instance>) map.get(instance.getUuid()));
 			
 		}
+	}
+	
+	public StringToExpressionConverter getConverter(final Model model,final Instance container) {
+		return new StringToExpressionConverter(model,container);
+	}
 
+	/**
+	 *
+	 * @param element
+	 * @return the parent process instance
+	 */
+	protected Instance getScope(final Instance element){
+		Instance container = element;
+		while(container != null && !container.instanceOf("process.AbstractProcess")){
+			container = container.getContainer();
+		}
+		return container;
 	}
 
 

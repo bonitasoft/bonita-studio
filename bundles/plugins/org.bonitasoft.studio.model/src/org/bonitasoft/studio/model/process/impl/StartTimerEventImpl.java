@@ -255,6 +255,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getFrom() {
 		return from;
 	}
@@ -264,6 +265,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFrom(Date newFrom) {
 		Date oldFrom = from;
 		from = newFrom;
@@ -276,6 +278,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getAt() {
 		return at;
 	}
@@ -285,6 +288,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAt(Date newAt) {
 		Date oldAt = at;
 		at = newAt;
@@ -297,6 +301,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMonth() {
 		return month;
 	}
@@ -306,6 +311,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMonth(int newMonth) {
 		int oldMonth = month;
 		month = newMonth;
@@ -318,6 +324,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDay() {
 		return day;
 	}
@@ -327,6 +334,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDay(int newDay) {
 		int oldDay = day;
 		day = newDay;
@@ -339,6 +347,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getHours() {
 		return hours;
 	}
@@ -348,6 +357,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHours(int newHours) {
 		int oldHours = hours;
 		hours = newHours;
@@ -360,6 +370,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDayNumber() {
 		return dayNumber;
 	}
@@ -369,6 +380,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDayNumber(int newDayNumber) {
 		int oldDayNumber = dayNumber;
 		dayNumber = newDayNumber;
@@ -381,6 +393,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMinutes() {
 		return minutes;
 	}
@@ -390,6 +403,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinutes(int newMinutes) {
 		int oldMinutes = minutes;
 		minutes = newMinutes;
@@ -402,6 +416,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getSeconds() {
 		return seconds;
 	}
@@ -411,6 +426,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSeconds(int newSeconds) {
 		int oldSeconds = seconds;
 		seconds = newSeconds;
@@ -423,6 +439,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartTimerScriptType getScriptType() {
 		return scriptType;
 	}
@@ -432,6 +449,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setScriptType(StartTimerScriptType newScriptType) {
 		StartTimerScriptType oldScriptType = scriptType;
 		scriptType = newScriptType == null ? SCRIPT_TYPE_EDEFAULT : newScriptType;
@@ -586,7 +604,7 @@ public class StartTimerEventImpl extends TimerEventImpl implements StartTimerEve
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (from: "); //$NON-NLS-1$
 		result.append(from);
 		result.append(", at: "); //$NON-NLS-1$

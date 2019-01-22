@@ -180,7 +180,7 @@ public class ReceiveTaskItemProvider extends ActivityItemProvider {
 			getString("_UI_ReceiveTask_type") : //$NON-NLS-1$
 			getString("_UI_ReceiveTask_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached
