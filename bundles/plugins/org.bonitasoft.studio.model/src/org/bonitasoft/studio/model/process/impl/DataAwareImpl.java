@@ -83,6 +83,7 @@ public class DataAwareImpl extends EObjectImpl implements DataAware {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.DATA_AWARE__DATA);

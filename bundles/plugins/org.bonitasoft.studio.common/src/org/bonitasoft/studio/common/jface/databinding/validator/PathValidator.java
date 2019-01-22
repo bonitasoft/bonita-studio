@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.m2m.internal.qvt.oml.NLS;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Strings;
 

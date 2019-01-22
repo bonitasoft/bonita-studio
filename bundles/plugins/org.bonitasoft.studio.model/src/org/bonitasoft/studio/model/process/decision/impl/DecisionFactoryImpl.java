@@ -83,6 +83,7 @@ public class DecisionFactoryImpl extends EFactoryImpl implements DecisionFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionTable createDecisionTable() {
 		DecisionTableImpl decisionTable = new DecisionTableImpl();
 		return decisionTable;
@@ -93,6 +94,7 @@ public class DecisionFactoryImpl extends EFactoryImpl implements DecisionFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionTableLine createDecisionTableLine() {
 		DecisionTableLineImpl decisionTableLine = new DecisionTableLineImpl();
 		return decisionTableLine;
@@ -103,6 +105,7 @@ public class DecisionFactoryImpl extends EFactoryImpl implements DecisionFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionPackage getDecisionPackage() {
 		return (DecisionPackage)getEPackage();
 	}

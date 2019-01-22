@@ -149,6 +149,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getMin() {
 		return min;
 	}
@@ -158,6 +159,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMin(long newMin) {
 		long oldMin = min;
 		min = newMin;
@@ -170,6 +172,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getMax() {
 		return max;
 	}
@@ -179,6 +182,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMax(long newMax) {
 		long oldMax = max;
 		max = newMax;
@@ -191,6 +195,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getProbability() {
 		return probability;
 	}
@@ -200,6 +205,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProbability(double newProbability) {
 		double oldProbability = probability;
 		probability = newProbability;
@@ -212,6 +218,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RepartitionType getRepartitionType() {
 		return repartitionType;
 	}
@@ -221,6 +228,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRepartitionType(RepartitionType newRepartitionType) {
 		RepartitionType oldRepartitionType = repartitionType;
 		repartitionType = newRepartitionType == null ? REPARTITION_TYPE_EDEFAULT : newRepartitionType;
@@ -325,7 +333,7 @@ public class SimulationNumberRangeImpl extends EObjectImpl implements Simulation
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (min: "); //$NON-NLS-1$
 		result.append(min);
 		result.append(", max: "); //$NON-NLS-1$

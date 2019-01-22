@@ -85,6 +85,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Configuration createConfiguration() {
 		ConfigurationImpl configuration = new ConfigurationImpl();
 		return configuration;
@@ -95,6 +96,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Fragment createFragment() {
 		FragmentImpl fragment = new FragmentImpl();
 		return fragment;
@@ -105,6 +107,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DefinitionMapping createDefinitionMapping() {
 		DefinitionMappingImpl definitionMapping = new DefinitionMappingImpl();
 		return definitionMapping;
@@ -115,6 +118,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FragmentContainer createFragmentContainer() {
 		FragmentContainerImpl fragmentContainer = new FragmentContainerImpl();
 		return fragmentContainer;
@@ -125,6 +129,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConfigurationPackage getConfigurationPackage() {
 		return (ConfigurationPackage)getEPackage();
 	}

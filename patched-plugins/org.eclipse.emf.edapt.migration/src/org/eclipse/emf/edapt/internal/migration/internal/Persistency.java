@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edapt.common.IResourceSetFactory;
+import org.eclipse.emf.edapt.common.IResourceSetProcessor;
 import org.eclipse.emf.edapt.internal.common.ResourceUtils;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.MetamodelResource;
@@ -90,24 +91,27 @@ public class Persistency {
 
 	/** Load model based on {@link URI} for model and metamodel. */
 	public static Model loadModel(URI modelURI, URI metamodelURI,
-		IResourceSetFactory resourceSetFactory) throws IOException {
+		IResourceSetFactory resourceSetFactory, IResourceSetProcessor postLoadProcessor) throws IOException {
 		final Metamodel metamodel = loadMetamodel(metamodelURI);
-		final Model model = loadModel(modelURI, metamodel, resourceSetFactory);
+		final Model model = loadModel(modelURI, metamodel, resourceSetFactory, postLoadProcessor);
 		return model;
 	}
 
 	/** Load model based on {@link URI} and metamodel. */
 	public static Model loadModel(URI modelURI, Metamodel metamodel,
-		IResourceSetFactory resourceSetFactory) throws IOException {
+		IResourceSetFactory resourceSetFactory, IResourceSetProcessor postLoadProcessor) throws IOException {
 		return loadModel(Collections.singletonList(modelURI), metamodel,
-			resourceSetFactory);
+			resourceSetFactory, postLoadProcessor);
 	}
 
 	/** Load model based on a set of {@link URI} and metamodel. */
 	public static Model loadModel(List<URI> modelURIs, Metamodel metamodel,
-		IResourceSetFactory resourceSetFactory) throws IOException {
+		IResourceSetFactory resourceSetFactory, IResourceSetProcessor postLoadProcessor) throws IOException {
 		final ResourceSet resourceSet = ResourceUtils.loadResourceSet(modelURIs,
 			metamodel.getEPackages(), resourceSetFactory);
+		if (postLoadProcessor != null) {
+			postLoadProcessor.process(resourceSet);
+		}
 		final ForwardConverter fConverter = new ForwardConverter();
 		final Model model = fConverter.convert(resourceSet);
 		model.setMetamodel(metamodel);
@@ -116,9 +120,9 @@ public class Persistency {
 
 	/** Load model based on file name and metamodel. */
 	public static Model loadModel(String fileName, Metamodel metamodel,
-		IResourceSetFactory resourceSetFactory) throws IOException {
+		IResourceSetFactory resourceSetFactory, IResourceSetProcessor postLoadProcessor) throws IOException {
 		return loadModel(URI.createFileURI(fileName), metamodel,
-			resourceSetFactory);
+			resourceSetFactory, postLoadProcessor);
 	}
 
 	/** Save model based on {@link URI}. */

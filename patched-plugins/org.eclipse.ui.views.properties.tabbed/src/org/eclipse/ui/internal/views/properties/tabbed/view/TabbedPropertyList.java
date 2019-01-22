@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -28,12 +31,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -48,7 +47,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.internal.views.properties.tabbed.l10n.TabbedPropertyMessages;
 import org.eclipse.ui.views.properties.tabbed.ITabItem;
@@ -162,14 +160,10 @@ public class TabbedPropertyList
 			selected = false;
 			this.index = index;
 
-			addPaintListener(new PaintListener() {
-
-				public void paintControl(PaintEvent e) {
-					paint(e);
-				}
-			});
+			addPaintListener(e -> paint(e));
 			addMouseListener(new MouseAdapter() {
 
+				@Override
 				public void mouseUp(MouseEvent e) {
 					if (!selected) {
 						select(getIndex(ListElement.this));
@@ -187,17 +181,15 @@ public class TabbedPropertyList
 					}
 				}
 			});
-			addMouseMoveListener(new MouseMoveListener() {
-
-				public void mouseMove(MouseEvent e) {
-					if (!hover) {
-						hover = true;
-						redraw();
-					}
+			addMouseMoveListener(e -> {
+				if (!hover) {
+					hover = true;
+					redraw();
 				}
 			});
 			addMouseTrackListener(new MouseTrackAdapter() {
 
+				@Override
 				public void mouseExit(MouseEvent e) {
 					hover = false;
 					redraw();
@@ -424,6 +416,7 @@ public class TabbedPropertyList
 			return tab;
 		}
 
+		@Override
 		public String toString() {
 			return tab.getText();
 		}
@@ -444,14 +437,10 @@ public class TabbedPropertyList
 		 */
 		public TopNavigationElement(Composite parent) {
 			super(parent, SWT.NO_FOCUS);
-			addPaintListener(new PaintListener() {
-
-				public void paintControl(PaintEvent e) {
-					paint(e);
-				}
-			});
+			addPaintListener(e -> paint(e));
 			addMouseListener(new MouseAdapter() {
 
+				@Override
 				public void mouseUp(MouseEvent e) {
 					if (isUpScrollRequired()) {
 						bottomVisibleIndex--;
@@ -531,14 +520,10 @@ public class TabbedPropertyList
 		 */
 		public BottomNavigationElement(Composite parent) {
 			super(parent, SWT.NO_FOCUS);
-			addPaintListener(new PaintListener() {
-
-				public void paintControl(PaintEvent e) {
-					paint(e);
-				}
-			});
+			addPaintListener(e -> paint(e));
 			addMouseListener(new MouseAdapter() {
 
+				@Override
 				public void mouseUp(MouseEvent e) {
 					if (isDownScrollRequired()) {
 						topVisibleIndex++;
@@ -623,6 +608,7 @@ public class TabbedPropertyList
 
 		this.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				focus = true;
 				int i = getSelectionIndex();
@@ -631,6 +617,7 @@ public class TabbedPropertyList
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				focus = false;
 				int i = getSelectionIndex();
@@ -641,29 +628,26 @@ public class TabbedPropertyList
 		});
 		this.addControlListener(new ControlAdapter() {
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				computeTopAndBottomTab();
 			}
 		});
-		this.addTraverseListener(new TraverseListener() {
-
-			public void keyTraversed(TraverseEvent e) {
-				if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS
-					|| e.detail == SWT.TRAVERSE_ARROW_NEXT) {
-					int nMax = elements.length - 1;
-					int nCurrent = getSelectionIndex();
-					if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
-						nCurrent -= 1;
-						nCurrent = Math.max(0, nCurrent);
-					} else if (e.detail == SWT.TRAVERSE_ARROW_NEXT) {
-						nCurrent += 1;
-						nCurrent = Math.min(nCurrent, nMax);
-					}
-					select(nCurrent);
-					redraw();
-				} else {
-					e.doit = true;
+		this.addTraverseListener(e -> {
+			if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS || e.detail == SWT.TRAVERSE_ARROW_NEXT) {
+				int nMax = elements.length - 1;
+				int nCurrent = getSelectionIndex();
+				if (e.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+					nCurrent -= 1;
+					nCurrent = Math.max(0, nCurrent);
+				} else if (e.detail == SWT.TRAVERSE_ARROW_NEXT) {
+					nCurrent += 1;
+					nCurrent = Math.min(nCurrent, nMax);
 				}
+				select(nCurrent);
+				redraw();
+			} else {
+				e.doit = true;
 			}
 		});
 	}
@@ -876,6 +860,7 @@ public class TabbedPropertyList
 		return element.index;
 	}
 
+	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point result = super.computeSize(hHint, wHint, changed);
 		if (widestLabelIndex == -1) {
@@ -1232,6 +1217,7 @@ public class TabbedPropertyList
 		final Accessible accessible = getAccessible();
 		accessible.addAccessibleListener(new AccessibleAdapter() {
 
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (getSelectionIndex() != NONE) {
 					e.result = elements[getSelectionIndex()].getTabItem()
@@ -1239,6 +1225,7 @@ public class TabbedPropertyList
 				}
 			}
 
+			@Override
 			public void getHelp(AccessibleEvent e) {
 				if (getSelectionIndex() != NONE) {
 					e.result = elements[getSelectionIndex()].getTabItem()
@@ -1249,12 +1236,14 @@ public class TabbedPropertyList
 
 		accessible.addAccessibleControlListener(new AccessibleControlAdapter() {
 
+			@Override
 			public void getChildAtPoint(AccessibleControlEvent e) {
 				Point pt = toControl(new Point(e.x, e.y));
 				e.childID = (getBounds().contains(pt)) ? ACC.CHILDID_SELF
 					: ACC.CHILDID_NONE;
 			}
 
+			@Override
 			public void getLocation(AccessibleControlEvent e) {
 				if (getSelectionIndex() != NONE) {
 					Rectangle location = elements[getSelectionIndex()]
@@ -1267,14 +1256,17 @@ public class TabbedPropertyList
 				}
 			}
 
+			@Override
 			public void getChildCount(AccessibleControlEvent e) {
 				e.detail = 0;
 			}
 
+			@Override
 			public void getRole(AccessibleControlEvent e) {
 				e.detail = ACC.ROLE_TABITEM;
 			}
 
+			@Override
 			public void getState(AccessibleControlEvent e) {
 				e.detail = ACC.STATE_NORMAL | ACC.STATE_SELECTABLE
 					| ACC.STATE_SELECTED | ACC.STATE_FOCUSED
@@ -1282,20 +1274,12 @@ public class TabbedPropertyList
 			}
 		});
 
-		addListener(SWT.Selection, new Listener() {
-
-			public void handleEvent(Event event) {
-				if (isFocusControl()) {
-					accessible.setFocus(ACC.CHILDID_SELF);
-				}
-			}
-		});
-
-		addListener(SWT.FocusIn, new Listener() {
-
-			public void handleEvent(Event event) {
+		addListener(SWT.Selection, event -> {
+			if (isFocusControl()) {
 				accessible.setFocus(ACC.CHILDID_SELF);
 			}
 		});
+
+		addListener(SWT.FocusIn, event -> accessible.setFocus(ACC.CHILDID_SELF));
 	}
 }

@@ -257,6 +257,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDownloadOnly() {
 		return downloadOnly;
 	}
@@ -266,6 +267,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDownloadOnly(boolean newDownloadOnly) {
 		boolean oldDownloadOnly = downloadOnly;
 		downloadOnly = newDownloadOnly;
@@ -278,6 +280,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUsePreview() {
 		return usePreview;
 	}
@@ -287,6 +290,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUsePreview(boolean newUsePreview) {
 		boolean oldUsePreview = usePreview;
 		usePreview = newUsePreview;
@@ -299,6 +303,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Document getDocument() {
 		if (document != null && document.eIsProxy()) {
 			InternalEObject oldDocument = (InternalEObject)document;
@@ -325,6 +330,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocument(Document newDocument) {
 		Document oldDocument = document;
 		document = newDocument;
@@ -337,6 +343,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getInitialResourcePath() {
 		return initialResourcePath;
 	}
@@ -346,6 +353,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInitialResourcePath(String newInitialResourcePath) {
 		String oldInitialResourcePath = initialResourcePath;
 		initialResourcePath = newInitialResourcePath;
@@ -358,6 +366,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getOutputDocumentName() {
 		return outputDocumentName;
 	}
@@ -367,6 +376,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputDocumentName(String newOutputDocumentName) {
 		String oldOutputDocumentName = outputDocumentName;
 		outputDocumentName = newOutputDocumentName;
@@ -379,6 +389,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUpdateDocument() {
 		return updateDocument;
 	}
@@ -388,6 +399,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUpdateDocument(boolean newUpdateDocument) {
 		boolean oldUpdateDocument = updateDocument;
 		updateDocument = newUpdateDocument;
@@ -400,6 +412,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getIntialResourceList() {
 		if (intialResourceList == null) {
 			intialResourceList = new EDataTypeUniqueEList<String>(String.class, this, FormPackage.FILE_WIDGET__INTIAL_RESOURCE_LIST);
@@ -412,6 +425,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileWidgetInputType getInputType() {
 		return inputType;
 	}
@@ -421,6 +435,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputType(FileWidgetInputType newInputType) {
 		FileWidgetInputType oldInputType = inputType;
 		inputType = newInputType == null ? INPUT_TYPE_EDEFAULT : newInputType;
@@ -433,6 +448,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getOutputDocumentListExpression() {
 		return outputDocumentListExpression;
 	}
@@ -457,6 +473,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputDocumentListExpression(Expression newOutputDocumentListExpression) {
 		if (newOutputDocumentListExpression != outputDocumentListExpression) {
 			NotificationChain msgs = null;
@@ -476,6 +493,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileWidgetDownloadType getDownloadType() {
 		return downloadType;
 	}
@@ -485,6 +503,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDownloadType(FileWidgetDownloadType newDownloadType) {
 		FileWidgetDownloadType oldDownloadType = downloadType;
 		downloadType = newDownloadType == null ? DOWNLOAD_TYPE_EDEFAULT : newDownloadType;
@@ -666,7 +685,7 @@ public class FileWidgetImpl extends SingleValuatedFormFieldImpl implements FileW
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (downloadOnly: "); //$NON-NLS-1$
 		result.append(downloadOnly);
 		result.append(", usePreview: "); //$NON-NLS-1$

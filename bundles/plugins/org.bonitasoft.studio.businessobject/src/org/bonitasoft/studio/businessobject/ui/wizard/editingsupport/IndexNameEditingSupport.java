@@ -19,6 +19,7 @@ import org.bonitasoft.engine.bdm.model.Index;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.IndexNameCellEditorValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.UniqueConstraintNameCellEditorValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -58,6 +59,7 @@ public class IndexNameEditingSupport extends ObservableValueEditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
         final Text textControl = (Text) textCellEditor.getControl();
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR);
         textControl.setTextLimit(UniqueConstraintNameCellEditorValidator.MAX_CONSTRAINT_NAME_LENGTH + 5);
         return textCellEditor;
     }

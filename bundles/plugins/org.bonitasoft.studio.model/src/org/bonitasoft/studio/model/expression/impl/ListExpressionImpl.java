@@ -81,6 +81,7 @@ public class ListExpressionImpl extends AbstractExpressionImpl implements ListEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Expression> getExpressions() {
 		if (expressions == null) {
 			expressions = new EObjectContainmentEList<Expression>(Expression.class, this, ExpressionPackage.LIST_EXPRESSION__EXPRESSIONS);

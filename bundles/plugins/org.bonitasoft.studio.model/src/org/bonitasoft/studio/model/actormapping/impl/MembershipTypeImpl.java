@@ -106,6 +106,7 @@ public class MembershipTypeImpl extends EObjectImpl implements MembershipType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getGroup() {
 		return group;
 	}
@@ -115,6 +116,7 @@ public class MembershipTypeImpl extends EObjectImpl implements MembershipType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGroup(String newGroup) {
 		String oldGroup = group;
 		group = newGroup;
@@ -127,6 +129,7 @@ public class MembershipTypeImpl extends EObjectImpl implements MembershipType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRole() {
 		return role;
 	}
@@ -136,6 +139,7 @@ public class MembershipTypeImpl extends EObjectImpl implements MembershipType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRole(String newRole) {
 		String oldRole = role;
 		role = newRole;
@@ -220,7 +224,7 @@ public class MembershipTypeImpl extends EObjectImpl implements MembershipType {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (group: "); //$NON-NLS-1$
 		result.append(group);
 		result.append(", role: "); //$NON-NLS-1$

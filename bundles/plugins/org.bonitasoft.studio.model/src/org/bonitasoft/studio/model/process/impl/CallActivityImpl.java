@@ -120,6 +120,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<InputMapping> getInputMappings() {
 		if (inputMappings == null) {
 			inputMappings = new EObjectContainmentEList<InputMapping>(InputMapping.class, this, ProcessPackage.CALL_ACTIVITY__INPUT_MAPPINGS);
@@ -132,6 +133,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<OutputMapping> getOutputMappings() {
 		if (outputMappings == null) {
 			outputMappings = new EObjectContainmentEList<OutputMapping>(OutputMapping.class, this, ProcessPackage.CALL_ACTIVITY__OUTPUT_MAPPINGS);
@@ -144,6 +146,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCalledActivityName() {
 		return calledActivityName;
 	}
@@ -168,6 +171,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCalledActivityName(Expression newCalledActivityName) {
 		if (newCalledActivityName != calledActivityName) {
 			NotificationChain msgs = null;
@@ -187,6 +191,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCalledActivityVersion() {
 		return calledActivityVersion;
 	}
@@ -211,6 +216,7 @@ public class CallActivityImpl extends ActivityImpl implements CallActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCalledActivityVersion(Expression newCalledActivityVersion) {
 		if (newCalledActivityVersion != calledActivityVersion) {
 			NotificationChain msgs = null;

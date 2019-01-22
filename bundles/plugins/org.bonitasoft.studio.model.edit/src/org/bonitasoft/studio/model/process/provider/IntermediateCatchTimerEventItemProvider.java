@@ -84,7 +84,7 @@ public class IntermediateCatchTimerEventItemProvider extends TimerEventItemProvi
 			getString("_UI_IntermediateCatchTimerEvent_type") : //$NON-NLS-1$
 			getString("_UI_IntermediateCatchTimerEvent_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

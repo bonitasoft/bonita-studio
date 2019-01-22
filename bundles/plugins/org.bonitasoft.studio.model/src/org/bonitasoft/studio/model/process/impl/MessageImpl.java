@@ -220,6 +220,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -229,6 +230,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -241,6 +243,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -250,6 +253,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -262,6 +266,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.MESSAGE__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -274,6 +279,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getThrowEvent() {
 		return throwEvent;
 	}
@@ -283,6 +289,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setThrowEvent(String newThrowEvent) {
 		String oldThrowEvent = throwEvent;
 		throwEvent = newThrowEvent;
@@ -295,6 +302,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTtl() {
 		return ttl;
 	}
@@ -304,6 +312,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTtl(String newTtl) {
 		String oldTtl = ttl;
 		ttl = newTtl;
@@ -316,6 +325,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Correlation getCorrelation() {
 		return correlation;
 	}
@@ -340,6 +350,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelation(Correlation newCorrelation) {
 		if (newCorrelation != correlation) {
 			NotificationChain msgs = null;
@@ -359,6 +370,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThrowMessageEvent getSource() {
 		if (eContainerFeatureID() != ProcessPackage.MESSAGE__SOURCE) return null;
 		return (ThrowMessageEvent)eInternalContainer();
@@ -379,6 +391,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(ThrowMessageEvent newSource) {
 		if (newSource != eInternalContainer() || (eContainerFeatureID() != ProcessPackage.MESSAGE__SOURCE && newSource != null)) {
 			if (EcoreUtil.isAncestor(this, newSource))
@@ -400,6 +413,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTargetProcessExpression() {
 		return targetProcessExpression;
 	}
@@ -424,6 +438,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTargetProcessExpression(Expression newTargetProcessExpression) {
 		if (newTargetProcessExpression != targetProcessExpression) {
 			NotificationChain msgs = null;
@@ -443,6 +458,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTargetElementExpression() {
 		return targetElementExpression;
 	}
@@ -467,6 +483,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTargetElementExpression(Expression newTargetElementExpression) {
 		if (newTargetElementExpression != targetElementExpression) {
 			NotificationChain msgs = null;
@@ -486,6 +503,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getMessageContent() {
 		return messageContent;
 	}
@@ -510,6 +528,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMessageContent(TableExpression newMessageContent) {
 		if (newMessageContent != messageContent) {
 			NotificationChain msgs = null;
@@ -740,7 +759,7 @@ public class MessageImpl extends EObjectImpl implements Message {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

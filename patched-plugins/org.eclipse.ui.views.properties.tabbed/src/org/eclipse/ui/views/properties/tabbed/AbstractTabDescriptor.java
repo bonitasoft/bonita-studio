@@ -1,9 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2007, 2015 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -44,6 +47,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -60,6 +64,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabDescriptor#createTab()
 	 */
+	@Override
 	public TabContents createTab() {
 		List sections = new ArrayList(getSectionDescriptors().size());
 		for (Iterator iter = getSectionDescriptors().iterator(); iter.hasNext();) {
@@ -73,9 +78,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		return tab;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
@@ -113,6 +116,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabDescriptor#getAfterTab()
 	 */
+	@Override
 	public String getAfterTab() {
 		return TOP;
 	}
@@ -120,6 +124,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#getImage()
 	 */
+	@Override
 	public Image getImage() {
 		return null;
 	}
@@ -129,6 +134,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	 *
 	 * @return the list of section descriptors for the tab.
 	 */
+	@Override
 	public List getSectionDescriptors() {
 		return sectionDescriptors;
 	}
@@ -136,13 +142,12 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#getText()
 	 */
+	@Override
 	public String getText() {
 		return getLabel();
 	}
 
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 
 		int hashCode = getCategory().hashCode();
@@ -158,6 +163,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#isIndented()
 	 */
+	@Override
 	public boolean isIndented() {
 		return false;
 	}
@@ -165,6 +171,7 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 	/*
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#isSelected()
 	 */
+	@Override
 	public boolean isSelected() {
 		return false;
 	}

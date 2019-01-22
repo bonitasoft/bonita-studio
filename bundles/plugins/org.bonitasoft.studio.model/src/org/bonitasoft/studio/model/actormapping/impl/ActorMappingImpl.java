@@ -135,6 +135,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -144,6 +145,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -156,6 +158,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Groups getGroups() {
 		return groups;
 	}
@@ -180,6 +183,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGroups(Groups newGroups) {
 		if (newGroups != groups) {
 			NotificationChain msgs = null;
@@ -199,6 +203,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Membership getMemberships() {
 		return memberships;
 	}
@@ -223,6 +228,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberships(Membership newMemberships) {
 		if (newMemberships != memberships) {
 			NotificationChain msgs = null;
@@ -242,6 +248,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Roles getRoles() {
 		return roles;
 	}
@@ -266,6 +273,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRoles(Roles newRoles) {
 		if (newRoles != roles) {
 			NotificationChain msgs = null;
@@ -285,6 +293,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Users getUsers() {
 		return users;
 	}
@@ -309,6 +318,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUsers(Users newUsers) {
 		if (newUsers != users) {
 			NotificationChain msgs = null;
@@ -450,7 +460,7 @@ public class ActorMappingImpl extends EObjectImpl implements ActorMapping {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(')');

@@ -77,6 +77,7 @@ public class ThrowLinkEventImpl extends LinkEventImpl implements ThrowLinkEvent 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CatchLinkEvent getTo() {
 		if (to != null && to.eIsProxy()) {
 			InternalEObject oldTo = (InternalEObject)to;
@@ -118,6 +119,7 @@ public class ThrowLinkEventImpl extends LinkEventImpl implements ThrowLinkEvent 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTo(CatchLinkEvent newTo) {
 		if (newTo != to) {
 			NotificationChain msgs = null;

@@ -100,6 +100,7 @@ public class KPIParameterMappingImpl extends EObjectImpl implements KPIParameter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKpiFieldName() {
 		return kpiFieldName;
 	}
@@ -109,6 +110,7 @@ public class KPIParameterMappingImpl extends EObjectImpl implements KPIParameter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKpiFieldName(String newKpiFieldName) {
 		String oldKpiFieldName = kpiFieldName;
 		kpiFieldName = newKpiFieldName;
@@ -121,6 +123,7 @@ public class KPIParameterMappingImpl extends EObjectImpl implements KPIParameter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getValue() {
 		return value;
 	}
@@ -145,6 +148,7 @@ public class KPIParameterMappingImpl extends EObjectImpl implements KPIParameter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(Expression newValue) {
 		if (newValue != value) {
 			NotificationChain msgs = null;
@@ -250,7 +254,7 @@ public class KPIParameterMappingImpl extends EObjectImpl implements KPIParameter
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (kpiFieldName: "); //$NON-NLS-1$
 		result.append(kpiFieldName);
 		result.append(')');

@@ -225,6 +225,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -234,6 +235,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -246,6 +248,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -255,6 +258,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -267,6 +271,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.INTERMEDIATE_CATCH_SIGNAL_EVENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -279,6 +284,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSignalCode() {
 		return signalCode;
 	}
@@ -288,6 +294,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSignalCode(String newSignalCode) {
 		String oldSignalCode = signalCode;
 		signalCode = newSignalCode;
@@ -300,6 +307,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connection> getOutgoing() {
 		if (outgoing == null) {
 			outgoing = new EObjectWithInverseResolvingEList<Connection>(Connection.class, this, ProcessPackage.INTERMEDIATE_CATCH_SIGNAL_EVENT__OUTGOING, ProcessPackage.CONNECTION__SOURCE);
@@ -312,6 +320,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connection> getIncoming() {
 		if (incoming == null) {
 			incoming = new EObjectWithInverseResolvingEList<Connection>(Connection.class, this, ProcessPackage.INTERMEDIATE_CATCH_SIGNAL_EVENT__INCOMING, ProcessPackage.CONNECTION__TARGET);
@@ -324,6 +333,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDynamicLabel() {
 		return dynamicLabel;
 	}
@@ -348,6 +358,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDynamicLabel(Expression newDynamicLabel) {
 		if (newDynamicLabel != dynamicLabel) {
 			NotificationChain msgs = null;
@@ -367,6 +378,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDynamicDescription() {
 		return dynamicDescription;
 	}
@@ -391,6 +403,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDynamicDescription(Expression newDynamicDescription) {
 		if (newDynamicDescription != dynamicDescription) {
 			NotificationChain msgs = null;
@@ -410,6 +423,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getStepSummary() {
 		return stepSummary;
 	}
@@ -434,6 +448,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStepSummary(Expression newStepSummary) {
 		if (newStepSummary != stepSummary) {
 			NotificationChain msgs = null;
@@ -453,6 +468,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.INTERMEDIATE_CATCH_SIGNAL_EVENT__DATA);
@@ -749,7 +765,7 @@ public class IntermediateCatchSignalEventImpl extends EObjectImpl implements Int
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

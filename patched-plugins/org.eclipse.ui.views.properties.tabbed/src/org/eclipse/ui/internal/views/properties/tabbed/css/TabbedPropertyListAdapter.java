@@ -1,8 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2017 SAP SE and others. All rights reserved. This
+ * Copyright (c) 2017 SAP SE and others.
+ *
+ * This
  * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
+ * the Eclipse Public License 2.0 which accompanies this distribution, and is
+t https://www.eclipse.org/legal/epl-2.0/
+t
+t SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.ui.internal.views.properties.tabbed.css;
@@ -19,8 +23,8 @@ public class TabbedPropertyListAdapter extends CompositeElement {
 
 	@Override
 	public void reset() {
-		super.reset();
 		getTabbedPropertyTitle().initColours();
+		super.reset();
 	}
 
 	private TabbedPropertyList getTabbedPropertyTitle() {

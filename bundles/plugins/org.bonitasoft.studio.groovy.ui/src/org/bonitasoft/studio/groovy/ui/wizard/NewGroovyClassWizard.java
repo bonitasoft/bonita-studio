@@ -17,78 +17,36 @@ package org.bonitasoft.studio.groovy.ui.wizard;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.ui.Messages;
-import org.codehaus.groovy.eclipse.ui.decorators.GroovyPluginImages;
-import org.codehaus.groovy.eclipse.wizards.NewClassWizardPage;
-import org.eclipse.core.resources.IFile;
+import org.codehaus.groovy.eclipse.wizards.NewTypeWizard;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-public class NewGroovyClassWizard extends NewElementWizard {
-
-    private NewClassWizardPage fPage;
+public class NewGroovyClassWizard extends NewTypeWizard {
 
     public NewGroovyClassWizard() {
         super();
         setWindowTitle(Messages.createNewGroovyClass);
-        setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-        setDefaultPageImageDescriptor(GroovyPluginImages.DESC_NEW_GROOVY_ELEMENT);
     }
 
     @Override
     public void addPages() {
-        super.addPages();
-        fPage = new NewClassWizardPage();
-        addPage(fPage);
-        fPage.init(getSelection());
-        IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        IFolder srcFolder = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource();
-        fPage.setPackageFragmentRoot(project.getPackageFragmentRoot(
-                srcFolder), false);
-        IStructuredSelection selection = getSelection();
-        Object firstElement = selection.getFirstElement();
-        if (firstElement instanceof IAdaptable && ((IAdaptable) firstElement).getAdapter(IPackageFragment.class) != null) {
-            fPage.setPackageFragment(((IAdaptable) firstElement).getAdapter(IPackageFragment.class), true);
-        } else {
-            fPage.setPackageFragment(srcFolder.getAdapter(IPackageFragment.class), true);
-        }
-
+    	 PageOne page = new PageOne(getSelection());
+    	 IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+         IFolder srcFolder = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource();
+         page.setPackageFragmentRoot(project.getPackageFragmentRoot(
+                 srcFolder), false);
+         IStructuredSelection selection = getSelection();
+         Object firstElement = selection.getFirstElement();
+         if (firstElement instanceof IAdaptable && ((IAdaptable) firstElement).getAdapter(IPackageFragment.class) != null) {
+        	 page.setPackageFragment(((IAdaptable) firstElement).getAdapter(IPackageFragment.class), true);
+         } else {
+        	 page.setPackageFragment(srcFolder.getAdapter(IPackageFragment.class), true);
+         }
+		addPage(page);
+    	addPage(new PageTwo());
     }
 
-    @Override
-    protected boolean canRunForked() {
-        return !fPage.isEnclosingTypeSelected();
-    }
-
-    @Override
-    protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-        fPage.createType(monitor); // use the full progress monitor
-    }
-
-    @Override
-    public boolean performFinish() {
-        warnAboutTypeCommentDeprecation();
-        boolean res = super.performFinish();
-        if (res) {
-            IResource resource = fPage.getModifiedResource();
-            if (resource != null) {
-                selectAndReveal(resource);
-                openResource((IFile) resource);
-            }
-        }
-        return res;
-    }
-
-    @Override
-    public IJavaElement getCreatedElement() {
-        return fPage.getCreatedType();
-    }
 }

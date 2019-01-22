@@ -149,7 +149,7 @@ public class SimulationLiteralItemProvider
 		SimulationLiteral simulationLiteral = (SimulationLiteral)object;
 		return getString("_UI_SimulationLiteral_type") + " " + simulationLiteral.getProbability(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

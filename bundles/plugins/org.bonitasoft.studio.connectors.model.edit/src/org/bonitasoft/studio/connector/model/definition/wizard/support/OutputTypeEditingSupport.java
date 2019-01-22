@@ -112,7 +112,7 @@ public class OutputTypeEditingSupport extends ObservableValueEditingSupport {
 
     @SuppressWarnings("restriction")
     protected void openClassSelectionDialog() {
-        JavaSearchScope scope = new JavaSearchScope();
+        JavaSearchScope scope = new JavaSearchScope(true);
         try {
             scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
         } catch (Exception ex) {

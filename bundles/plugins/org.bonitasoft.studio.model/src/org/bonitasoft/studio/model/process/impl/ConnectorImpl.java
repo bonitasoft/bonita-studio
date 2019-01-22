@@ -280,6 +280,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -289,6 +290,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -301,6 +303,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -310,6 +313,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -322,6 +326,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTOR__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -334,6 +339,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinitionId() {
 		return definitionId;
 	}
@@ -343,6 +349,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinitionId(String newDefinitionId) {
 		String oldDefinitionId = definitionId;
 		definitionId = newDefinitionId;
@@ -355,6 +362,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEvent() {
 		return event;
 	}
@@ -364,6 +372,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEvent(String newEvent) {
 		String oldEvent = event;
 		event = newEvent;
@@ -376,6 +385,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isIgnoreErrors() {
 		return ignoreErrors;
 	}
@@ -385,6 +395,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIgnoreErrors(boolean newIgnoreErrors) {
 		boolean oldIgnoreErrors = ignoreErrors;
 		ignoreErrors = newIgnoreErrors;
@@ -397,6 +408,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isThrowErrorEvent() {
 		return throwErrorEvent;
 	}
@@ -406,6 +418,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setThrowErrorEvent(boolean newThrowErrorEvent) {
 		boolean oldThrowErrorEvent = throwErrorEvent;
 		throwErrorEvent = newThrowErrorEvent;
@@ -418,6 +431,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNamedError() {
 		return namedError;
 	}
@@ -427,6 +441,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNamedError(String newNamedError) {
 		String oldNamedError = namedError;
 		namedError = newNamedError;
@@ -439,6 +454,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinitionVersion() {
 		return definitionVersion;
 	}
@@ -448,6 +464,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinitionVersion(String newDefinitionVersion) {
 		String oldDefinitionVersion = definitionVersion;
 		definitionVersion = newDefinitionVersion;
@@ -460,6 +477,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectorConfiguration getConfiguration() {
 		return configuration;
 	}
@@ -484,6 +502,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConfiguration(ConnectorConfiguration newConfiguration) {
 		if (newConfiguration != configuration) {
 			NotificationChain msgs = null;
@@ -503,6 +522,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getOutputs() {
 		if (outputs == null) {
 			outputs = new EObjectContainmentEList<Operation>(Operation.class, this, ProcessPackage.CONNECTOR__OUTPUTS);
@@ -713,7 +733,7 @@ public class ConnectorImpl extends EObjectImpl implements Connector {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

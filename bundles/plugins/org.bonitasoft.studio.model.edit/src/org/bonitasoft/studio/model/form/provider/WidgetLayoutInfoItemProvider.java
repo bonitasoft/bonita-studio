@@ -195,7 +195,7 @@ public class WidgetLayoutInfoItemProvider
 		WidgetLayoutInfo widgetLayoutInfo = (WidgetLayoutInfo)object;
 		return getString("_UI_WidgetLayoutInfo_type") + " " + widgetLayoutInfo.getLine(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

@@ -181,6 +181,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -190,6 +191,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -202,6 +204,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractInputType getType() {
 		return type;
 	}
@@ -211,6 +214,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(ContractInputType newType) {
 		ContractInputType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -223,6 +227,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -232,6 +237,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -244,6 +250,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMultiple() {
 		return multiple;
 	}
@@ -253,6 +260,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMultiple(boolean newMultiple) {
 		boolean oldMultiple = multiple;
 		multiple = newMultiple;
@@ -265,6 +273,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractInputMapping getMapping() {
 		return mapping;
 	}
@@ -289,6 +298,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMapping(ContractInputMapping newMapping) {
 		if (newMapping != mapping) {
 			NotificationChain msgs = null;
@@ -308,6 +318,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ContractInput> getInputs() {
 		if (inputs == null) {
 			inputs = new EObjectContainmentEList<ContractInput>(ContractInput.class, this, ProcessPackage.CONTRACT_INPUT__INPUTS);
@@ -320,6 +331,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getJavaType() {
 		switch(getType()){
 		case BOOLEAN:return java.lang.Boolean.class.getName();
@@ -472,7 +484,7 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", type: "); //$NON-NLS-1$

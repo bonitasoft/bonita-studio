@@ -86,6 +86,7 @@ public class TakeTransitionActionImpl extends DecisionTableActionImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isTakeTransition() {
 		return takeTransition;
 	}
@@ -95,6 +96,7 @@ public class TakeTransitionActionImpl extends DecisionTableActionImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTakeTransition(boolean newTakeTransition) {
 		boolean oldTakeTransition = takeTransition;
 		takeTransition = newTakeTransition;
@@ -169,7 +171,7 @@ public class TakeTransitionActionImpl extends DecisionTableActionImpl implements
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (takeTransition: "); //$NON-NLS-1$
 		result.append(takeTransition);
 		result.append(')');

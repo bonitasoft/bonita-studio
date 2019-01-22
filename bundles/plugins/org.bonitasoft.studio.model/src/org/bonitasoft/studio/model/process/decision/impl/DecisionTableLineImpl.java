@@ -98,6 +98,7 @@ public class DecisionTableLineImpl extends EObjectImpl implements DecisionTableL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Expression> getConditions() {
 		if (conditions == null) {
 			conditions = new EObjectContainmentEList<Expression>(Expression.class, this, DecisionPackage.DECISION_TABLE_LINE__CONDITIONS);
@@ -110,6 +111,7 @@ public class DecisionTableLineImpl extends EObjectImpl implements DecisionTableL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DecisionTableAction getAction() {
 		return action;
 	}
@@ -134,6 +136,7 @@ public class DecisionTableLineImpl extends EObjectImpl implements DecisionTableL
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(DecisionTableAction newAction) {
 		if (newAction != action) {
 			NotificationChain msgs = null;

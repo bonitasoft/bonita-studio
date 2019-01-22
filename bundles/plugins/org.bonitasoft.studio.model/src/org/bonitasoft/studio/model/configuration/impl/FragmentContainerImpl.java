@@ -120,6 +120,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FragmentContainer> getChildren() {
 		if (children == null) {
 			children = new EObjectContainmentWithInverseEList<FragmentContainer>(FragmentContainer.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT);
@@ -132,6 +133,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FragmentContainer getParent() {
 		if (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT) return null;
 		return (FragmentContainer)eInternalContainer();
@@ -152,6 +154,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setParent(FragmentContainer newParent) {
 		if (newParent != eInternalContainer() || (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT && newParent != null)) {
 			if (EcoreUtil.isAncestor(this, newParent))
@@ -173,6 +176,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Fragment> getFragments() {
 		if (fragments == null) {
 			fragments = new EObjectContainmentEList<Fragment>(Fragment.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS);
@@ -185,6 +189,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -194,6 +199,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
@@ -352,7 +358,7 @@ public class FragmentContainerImpl extends EObjectImpl implements FragmentContai
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$
 		result.append(id);
 		result.append(')');

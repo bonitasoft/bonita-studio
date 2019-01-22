@@ -78,6 +78,7 @@ public abstract class ContractContainerImpl extends EObjectImpl implements Contr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Contract getContract() {
 		return contract;
 	}
@@ -102,6 +103,7 @@ public abstract class ContractContainerImpl extends EObjectImpl implements Contr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContract(Contract newContract) {
 		if (newContract != contract) {
 			NotificationChain msgs = null;

@@ -85,6 +85,7 @@ public class CheckBoxMultipleFormFieldImpl extends MultipleValuatedFormFieldImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getItemClass() {
 		return itemClass;
 	}
@@ -94,6 +95,7 @@ public class CheckBoxMultipleFormFieldImpl extends MultipleValuatedFormFieldImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setItemClass(String newItemClass) {
 		String oldItemClass = itemClass;
 		itemClass = newItemClass;
@@ -200,7 +202,7 @@ public class CheckBoxMultipleFormFieldImpl extends MultipleValuatedFormFieldImpl
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (itemClass: "); //$NON-NLS-1$
 		result.append(itemClass);
 		result.append(')');

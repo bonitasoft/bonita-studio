@@ -174,6 +174,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValidatorClass() {
 		return validatorClass;
 	}
@@ -183,6 +184,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValidatorClass(String newValidatorClass) {
 		String oldValidatorClass = validatorClass;
 		validatorClass = newValidatorClass;
@@ -195,6 +197,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getHtmlClass() {
 		return htmlClass;
 	}
@@ -204,6 +207,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHtmlClass(String newHtmlClass) {
 		String oldHtmlClass = htmlClass;
 		htmlClass = newHtmlClass;
@@ -216,6 +220,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -225,6 +230,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -237,6 +243,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBelowField() {
 		return belowField;
 	}
@@ -246,6 +253,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBelowField(boolean newBelowField) {
 		boolean oldBelowField = belowField;
 		belowField = newBelowField;
@@ -258,6 +266,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getParameter() {
 		return parameter;
 	}
@@ -282,6 +291,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setParameter(Expression newParameter) {
 		if (newParameter != parameter) {
 			NotificationChain msgs = null;
@@ -301,6 +311,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayName() {
 		return displayName;
 	}
@@ -325,6 +336,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayName(Expression newDisplayName) {
 		if (newDisplayName != displayName) {
 			NotificationChain msgs = null;
@@ -472,7 +484,7 @@ public class ValidatorImpl extends EObjectImpl implements Validator {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (validatorClass: "); //$NON-NLS-1$
 		result.append(validatorClass);
 		result.append(", htmlClass: "); //$NON-NLS-1$

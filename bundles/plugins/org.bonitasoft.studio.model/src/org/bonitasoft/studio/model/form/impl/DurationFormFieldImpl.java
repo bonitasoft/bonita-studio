@@ -169,6 +169,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getItemClass() {
 		return itemClass;
 	}
@@ -178,6 +179,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setItemClass(String newItemClass) {
 		String oldItemClass = itemClass;
 		itemClass = newItemClass;
@@ -190,6 +192,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getDay() {
 		return day;
 	}
@@ -199,6 +202,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDay(Boolean newDay) {
 		Boolean oldDay = day;
 		day = newDay;
@@ -211,6 +215,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getHour() {
 		return hour;
 	}
@@ -220,6 +225,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHour(Boolean newHour) {
 		Boolean oldHour = hour;
 		hour = newHour;
@@ -232,6 +238,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getMin() {
 		return min;
 	}
@@ -241,6 +248,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMin(Boolean newMin) {
 		Boolean oldMin = min;
 		min = newMin;
@@ -253,6 +261,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getSec() {
 		return sec;
 	}
@@ -262,6 +271,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSec(Boolean newSec) {
 		Boolean oldSec = sec;
 		sec = newSec;
@@ -408,7 +418,7 @@ public class DurationFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (itemClass: "); //$NON-NLS-1$
 		result.append(itemClass);
 		result.append(", day: "); //$NON-NLS-1$

@@ -78,6 +78,7 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getGroup() {
 		if (group == null) {
 			group = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.GROUPS__GROUP);
@@ -154,7 +155,7 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (group: "); //$NON-NLS-1$
 		result.append(group);
 		result.append(')');

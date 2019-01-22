@@ -57,6 +57,9 @@ public enum CorrelationTypeActive implements Enumerator {
 	 * The '<em><b>PREDICATES</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Not yet implemented
+	 * <!-- end-model-doc -->
 	 * @see #PREDICATES_VALUE
 	 * @generated
 	 * @ordered
@@ -219,6 +222,7 @@ public enum CorrelationTypeActive implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -228,6 +232,7 @@ public enum CorrelationTypeActive implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -237,6 +242,7 @@ public enum CorrelationTypeActive implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

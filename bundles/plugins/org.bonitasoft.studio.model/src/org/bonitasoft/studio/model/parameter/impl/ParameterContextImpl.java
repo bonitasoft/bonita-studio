@@ -148,6 +148,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -157,6 +158,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -169,6 +171,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -178,6 +181,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -190,6 +194,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ParameterPackage.PARAMETER_CONTEXT__PARAMETERS);
@@ -202,6 +207,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDefaultContext() {
 		return defaultContext;
 	}
@@ -211,6 +217,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultContext(boolean newDefaultContext) {
 		boolean oldDefaultContext = defaultContext;
 		defaultContext = newDefaultContext;
@@ -331,7 +338,7 @@ public class ParameterContextImpl extends EObjectImpl implements ParameterContex
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", description: "); //$NON-NLS-1$

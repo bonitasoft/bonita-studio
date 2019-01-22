@@ -203,7 +203,7 @@ public class DurationFormFieldItemProvider extends SingleValuatedFormFieldItemPr
 			getString("_UI_DurationFormField_type") : //$NON-NLS-1$
 			getString("_UI_DurationFormField_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

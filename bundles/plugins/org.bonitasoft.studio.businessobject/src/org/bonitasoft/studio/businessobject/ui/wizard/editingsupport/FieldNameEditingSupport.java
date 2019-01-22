@@ -19,6 +19,7 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.FieldNameCellEditorValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -60,6 +61,7 @@ public class FieldNameEditingSupport extends ObservableValueEditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
         final Text textControl = (Text) textCellEditor.getControl();
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR);
         textControl.setTextLimit(FieldNameCellEditorValidator.MAX_COLUMN_NAME_LENGTH + 5);
         return textCellEditor;
     }

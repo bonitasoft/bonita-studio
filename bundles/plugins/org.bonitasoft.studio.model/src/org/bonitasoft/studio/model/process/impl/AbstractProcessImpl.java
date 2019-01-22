@@ -296,6 +296,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.ABSTRACT_PROCESS__DATA);
@@ -308,6 +309,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connector> getConnectors() {
 		if (connectors == null) {
 			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ProcessPackage.ABSTRACT_PROCESS__CONNECTORS);
@@ -320,6 +322,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<AbstractKPIBinding> getKpis() {
 		if (kpis == null) {
 			kpis = new EObjectContainmentEList<AbstractKPIBinding>(AbstractKPIBinding.class, this, ProcessPackage.ABSTRACT_PROCESS__KPIS);
@@ -332,6 +335,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMapping getFormMapping() {
 		return formMapping;
 	}
@@ -356,6 +360,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFormMapping(FormMapping newFormMapping) {
 		if (newFormMapping != formMapping) {
 			NotificationChain msgs = null;
@@ -375,6 +380,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMapping getOverviewFormMapping() {
 		return overviewFormMapping;
 	}
@@ -399,6 +405,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOverviewFormMapping(FormMapping newOverviewFormMapping) {
 		if (newOverviewFormMapping != overviewFormMapping) {
 			NotificationChain msgs = null;
@@ -418,6 +425,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -427,6 +435,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -439,6 +448,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAuthor() {
 		return author;
 	}
@@ -448,6 +458,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAuthor(String newAuthor) {
 		String oldAuthor = author;
 		author = newAuthor;
@@ -460,6 +471,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -469,6 +481,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
@@ -481,6 +494,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getModificationDate() {
 		return modificationDate;
 	}
@@ -490,6 +504,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
@@ -502,6 +517,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DataType> getDatatypes() {
 		if (datatypes == null) {
 			datatypes = new EObjectContainmentEList<DataType>(DataType.class, this, ProcessPackage.ABSTRACT_PROCESS__DATATYPES);
@@ -514,6 +530,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connection> getConnections() {
 		if (connections == null) {
 			connections = new EObjectContainmentEList<Connection>(Connection.class, this, ProcessPackage.ABSTRACT_PROCESS__CONNECTIONS);
@@ -526,6 +543,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getCategories() {
 		if (categories == null) {
 			categories = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.ABSTRACT_PROCESS__CATEGORIES);
@@ -538,6 +556,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Actor> getActors() {
 		if (actors == null) {
 			actors = new EObjectContainmentEList<Actor>(Actor.class, this, ProcessPackage.ABSTRACT_PROCESS__ACTORS);
@@ -550,6 +569,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Configuration> getConfigurations() {
 		if (configurations == null) {
 			configurations = new EObjectContainmentEList<Configuration>(Configuration.class, this, ProcessPackage.ABSTRACT_PROCESS__CONFIGURATIONS);
@@ -562,6 +582,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ProcessPackage.ABSTRACT_PROCESS__PARAMETERS);
@@ -898,7 +919,7 @@ public abstract class AbstractProcessImpl extends ContainerImpl implements Abstr
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (version: "); //$NON-NLS-1$
 		result.append(version);
 		result.append(", author: "); //$NON-NLS-1$

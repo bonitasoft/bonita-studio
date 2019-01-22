@@ -195,7 +195,7 @@ public class InjectionPeriodItemProvider
 		InjectionPeriod injectionPeriod = (InjectionPeriod)object;
 		return getString("_UI_InjectionPeriod_type") + " " + injectionPeriod.getBegin(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

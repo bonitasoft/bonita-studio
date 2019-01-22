@@ -206,7 +206,7 @@ public class SimulationTransitionItemProvider
 		SimulationTransition simulationTransition = (SimulationTransition)object;
 		return getString("_UI_SimulationTransition_type") + " " + simulationTransition.getProbability(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

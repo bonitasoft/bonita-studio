@@ -47,7 +47,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
 
     public DefineBdmWizardBot addBusinessObject(String name) {
         bot.buttonInGroup(Messages.add, Messages.listOfBusinessObjects).click();
-        typeText(name);
+        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR).typeText(name);
         return this;
     }
 
@@ -55,7 +55,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         getBusinessObjectTable().select(businessObject);
         bot.cTabItem(Messages.attributes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
-        typeText(attribute);
+        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).typeText(attribute);
         setType(businessObject, attribute, type);
         return this;
     }
@@ -64,7 +64,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         SWTBotTable attributeTable = getAttributeTable(businessObject);
         attributeTable.getTableItem(oldAttributeName).click();
         selectText();
-        typeText(newAttributeName);
+        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).typeText(newAttributeName);
         return this;
     }
 
@@ -126,7 +126,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         getBusinessObjectTable().select(businessObject);
         bot.cTabItem(Messages.constraints).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
-        typeText(constraintName);
+        bot.textWithId(SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR).typeText(constraintName);
         editConstraint(businessObject, constraintName, selectFields);
         return this;
     }
@@ -147,7 +147,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         getBusinessObjectTable().select(businessObject);
         bot.cTabItem(Messages.indexes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
-        typeText(indexName);
+        bot.textWithId(SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR).typeText(indexName);
         editIndex(businessObject, indexName, selectFields);
         return this;
     }
@@ -176,7 +176,7 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         SWTBotTable customQueriesTable = getCustomQueriesTable(businessObject);
         bot.buttonInGroup(Messages.add, businessObject).click();
 
-        typeText(queryName);
+        bot.textWithId(SWTBOT_ID_QUERY_NAME_TEXTEDITOR).typeText(queryName);
         customQueriesTable.click(index, 2);
 
         SWTBotShell activeShell = bot.activeShell();
@@ -196,10 +196,10 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         //add required parameters
         for (final Entry<String, String> paramEntry : queryParam.entrySet()) {
             bot.button(Messages.add).click();
-            typeText(paramEntry.getKey());
+            bot.textWithId(SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR).typeText(paramEntry.getKey());
             paramTableBot.getTableItem(paramEntry.getKey()).click(1);
             bot.ccomboBox().setSelection(paramEntry.getValue());
-            pressShortcut(Keystrokes.CR);
+            bot.ccomboBox().pressShortcut(Keystrokes.CR);
         }
 
         bot.comboBoxWithLabel(Messages.queryResultType).setSelection(returnType);

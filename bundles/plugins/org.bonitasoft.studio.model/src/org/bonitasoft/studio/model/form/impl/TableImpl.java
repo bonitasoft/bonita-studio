@@ -303,6 +303,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Validator> getValidators() {
 		if (validators == null) {
 			validators = new EObjectContainmentEList<Validator>(Validator.class, this, FormPackage.TABLE__VALIDATORS);
@@ -315,6 +316,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getUseDefaultValidator() {
 		return useDefaultValidator;
 	}
@@ -324,6 +326,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseDefaultValidator(Boolean newUseDefaultValidator) {
 		Boolean oldUseDefaultValidator = useDefaultValidator;
 		useDefaultValidator = newUseDefaultValidator;
@@ -336,6 +339,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBelow() {
 		return below;
 	}
@@ -345,6 +349,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBelow(boolean newBelow) {
 		boolean oldBelow = below;
 		below = newBelow;
@@ -357,6 +362,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -366,6 +372,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -378,6 +385,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelPosition getExampleMessagePosition() {
 		return exampleMessagePosition;
 	}
@@ -387,6 +395,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExampleMessagePosition(LabelPosition newExampleMessagePosition) {
 		LabelPosition oldExampleMessagePosition = exampleMessagePosition;
 		exampleMessagePosition = newExampleMessagePosition == null ? EXAMPLE_MESSAGE_POSITION_EDEFAULT : newExampleMessagePosition;
@@ -399,6 +408,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExampleMessage() {
 		return exampleMessage;
 	}
@@ -423,6 +433,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExampleMessage(Expression newExampleMessage) {
 		if (newExampleMessage != exampleMessage) {
 			NotificationChain msgs = null;
@@ -442,6 +453,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultExpression() {
 		return defaultExpression;
 	}
@@ -466,6 +478,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultExpression(Expression newDefaultExpression) {
 		if (newDefaultExpression != defaultExpression) {
 			NotificationChain msgs = null;
@@ -485,6 +498,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultExpressionAfterEvent() {
 		return defaultExpressionAfterEvent;
 	}
@@ -509,6 +523,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultExpressionAfterEvent(Expression newDefaultExpressionAfterEvent) {
 		if (newDefaultExpressionAfterEvent != defaultExpressionAfterEvent) {
 			NotificationChain msgs = null;
@@ -528,6 +543,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUsePagination() {
 		return usePagination;
 	}
@@ -537,6 +553,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUsePagination(boolean newUsePagination) {
 		boolean oldUsePagination = usePagination;
 		usePagination = newUsePagination;
@@ -549,6 +566,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowSelection() {
 		return allowSelection;
 	}
@@ -558,6 +576,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowSelection(boolean newAllowSelection) {
 		boolean oldAllowSelection = allowSelection;
 		allowSelection = newAllowSelection;
@@ -570,6 +589,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSelectionModeIsMultiple() {
 		return selectionModeIsMultiple;
 	}
@@ -579,6 +599,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSelectionModeIsMultiple(boolean newSelectionModeIsMultiple) {
 		boolean oldSelectionModeIsMultiple = selectionModeIsMultiple;
 		selectionModeIsMultiple = newSelectionModeIsMultiple;
@@ -591,6 +612,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMaxRowForPagination() {
 		return maxRowForPagination;
 	}
@@ -615,6 +637,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxRowForPagination(Expression newMaxRowForPagination) {
 		if (newMaxRowForPagination != maxRowForPagination) {
 			NotificationChain msgs = null;
@@ -634,6 +657,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getColumnForInitialSelectionIndex() {
 		return columnForInitialSelectionIndex;
 	}
@@ -658,6 +682,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setColumnForInitialSelectionIndex(Expression newColumnForInitialSelectionIndex) {
 		if (newColumnForInitialSelectionIndex != columnForInitialSelectionIndex) {
 			NotificationChain msgs = null;
@@ -677,6 +702,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getSelectedValues() {
 		return selectedValues;
 	}
@@ -701,6 +727,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSelectedValues(Expression newSelectedValues) {
 		if (newSelectedValues != selectedValues) {
 			NotificationChain msgs = null;
@@ -1006,7 +1033,7 @@ public class TableImpl extends AbstractTableImpl implements Table {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (useDefaultValidator: "); //$NON-NLS-1$
 		result.append(useDefaultValidator);
 		result.append(", below: "); //$NON-NLS-1$

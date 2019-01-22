@@ -18,6 +18,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
 /**
@@ -37,9 +38,9 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
     public BotDataBasedStackPanel setIteratorName(final String iteratorName) {
         waitForTable();
         iteratorEditor().click(0, 0);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_EDITOR);
-        typeText(iteratorName);
-        pressEnter();
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_EDITOR)
+	        .typeText(iteratorName)
+	        .pressShortcut(Keystrokes.CR);
         return this;
     }
 

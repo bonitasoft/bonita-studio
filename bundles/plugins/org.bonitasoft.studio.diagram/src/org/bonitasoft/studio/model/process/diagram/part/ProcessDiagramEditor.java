@@ -707,10 +707,9 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 	@Override
 	public void dispose() {
 		TransactionalEditingDomain domain = getEditingDomain();
-        if (processPref != null) {
-            processPref.removePropertyChangeListener(paletteChangeListener);
-        }
-
+		if (processPref != null) {
+			processPref.removePropertyChangeListener(paletteChangeListener);
+		}
 		IOperationHistory history = (IOperationHistory) getAdapter(IOperationHistory.class);
 		if (history != null) {
 			history.dispose(getUndoContext(), true, true, true);
@@ -856,15 +855,14 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 					getPreferenceStore().setValue(PaletteViewerPreferences.PREFERENCE_LAYOUT + preferencesKey, newVal);
 				}
 
-                @Override
-                public boolean useLargeIcons() {
-                    return false;
-                }
+				@Override
+				public boolean useLargeIcons() {
+					return false;
+				}
 			};
 		}
 
 		final CustomMainPaletteViewer constructPaletteViewer = new CustomMainPaletteViewer();
-        //constructPaletteViewer.hidePaletteEntry("standardGroup");
 		constructPaletteViewer.setPaletteViewerPreferences(processPref);
 		//add property change listener to refresh the items (the default one does not work anymore with an other key)
 		paletteChangeListener = new PropertyChangeListener() {
@@ -926,7 +924,7 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
 	 *  @generated BonitaSoft
 	 */
 	protected int getInitialPaletteSize() {
-        return 160;
+		return 160;
 	}
 
 	/**

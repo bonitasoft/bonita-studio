@@ -83,6 +83,7 @@ public class ConnectorConfigurationFactoryImpl extends EFactoryImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectorConfiguration createConnectorConfiguration() {
 		ConnectorConfigurationImpl connectorConfiguration = new ConnectorConfigurationImpl();
 		return connectorConfiguration;
@@ -93,6 +94,7 @@ public class ConnectorConfigurationFactoryImpl extends EFactoryImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectorParameter createConnectorParameter() {
 		ConnectorParameterImpl connectorParameter = new ConnectorParameterImpl();
 		return connectorParameter;
@@ -103,6 +105,7 @@ public class ConnectorConfigurationFactoryImpl extends EFactoryImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectorConfigurationPackage getConnectorConfigurationPackage() {
 		return (ConnectorConfigurationPackage)getEPackage();
 	}

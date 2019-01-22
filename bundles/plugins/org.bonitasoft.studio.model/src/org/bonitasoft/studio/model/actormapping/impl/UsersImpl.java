@@ -78,6 +78,7 @@ public class UsersImpl extends EObjectImpl implements Users {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getUser() {
 		if (user == null) {
 			user = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.USERS__USER);
@@ -154,7 +155,7 @@ public class UsersImpl extends EObjectImpl implements Users {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (user: "); //$NON-NLS-1$
 		result.append(user);
 		result.append(')');

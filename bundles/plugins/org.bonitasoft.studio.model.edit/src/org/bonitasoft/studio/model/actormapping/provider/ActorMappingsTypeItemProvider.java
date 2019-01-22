@@ -133,7 +133,7 @@ public class ActorMappingsTypeItemProvider
 	public String getText(Object object) {
 		return getString("_UI_ActorMappingsType_type"); //$NON-NLS-1$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

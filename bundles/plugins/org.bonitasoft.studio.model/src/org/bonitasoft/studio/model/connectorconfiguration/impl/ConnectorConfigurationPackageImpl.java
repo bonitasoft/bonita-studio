@@ -120,7 +120,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ConnectorConfigurationPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -134,7 +134,8 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 		if (isInited) return (ConnectorConfigurationPackage)EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ConnectorConfigurationPackageImpl());
+		Object registeredConnectorConfigurationPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = registeredConnectorConfigurationPackage instanceof ConnectorConfigurationPackageImpl ? (ConnectorConfigurationPackageImpl)registeredConnectorConfigurationPackage : new ConnectorConfigurationPackageImpl();
 
 		isInited = true;
 
@@ -142,16 +143,26 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 		XMLTypePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theConnectorConfigurationPackage.createPackageContents();
@@ -182,7 +193,6 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 		// Mark meta-data to indicate it can't be changed
 		theConnectorConfigurationPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ConnectorConfigurationPackage.eNS_URI, theConnectorConfigurationPackage);
 		return theConnectorConfigurationPackage;
@@ -193,6 +203,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnectorConfiguration() {
 		return connectorConfigurationEClass;
 	}
@@ -202,6 +213,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectorConfiguration_DefinitionId() {
 		return (EAttribute)connectorConfigurationEClass.getEStructuralFeatures().get(0);
 	}
@@ -211,6 +223,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectorConfiguration_Version() {
 		return (EAttribute)connectorConfigurationEClass.getEStructuralFeatures().get(1);
 	}
@@ -220,6 +233,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectorConfiguration_Name() {
 		return (EAttribute)connectorConfigurationEClass.getEStructuralFeatures().get(2);
 	}
@@ -229,6 +243,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectorConfiguration_Parameters() {
 		return (EReference)connectorConfigurationEClass.getEStructuralFeatures().get(3);
 	}
@@ -238,6 +253,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectorConfiguration_ModelVersion() {
 		return (EAttribute)connectorConfigurationEClass.getEStructuralFeatures().get(4);
 	}
@@ -247,6 +263,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnectorParameter() {
 		return connectorParameterEClass;
 	}
@@ -256,6 +273,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectorParameter_Key() {
 		return (EAttribute)connectorParameterEClass.getEStructuralFeatures().get(0);
 	}
@@ -265,6 +283,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectorParameter_Expression() {
 		return (EReference)connectorParameterEClass.getEStructuralFeatures().get(1);
 	}
@@ -274,6 +293,7 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectorConfigurationFactory getConnectorConfigurationFactory() {
 		return (ConnectorConfigurationFactory)getEFactoryInstance();
 	}
@@ -369,12 +389,12 @@ public class ConnectorConfigurationPackageImpl extends EPackageImpl implements C
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

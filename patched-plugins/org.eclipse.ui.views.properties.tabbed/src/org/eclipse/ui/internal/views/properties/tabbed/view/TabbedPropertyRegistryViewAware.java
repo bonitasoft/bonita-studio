@@ -12,7 +12,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.eclipse.ui.internal.views.properties.tabbed.view;
 
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class TabbedPropertyRegistryViewAware extends TabbedPropertyRegistry {
     protected ITabDescriptor[] getAllTabDescriptors(String viewId) {
         //TODO: we no more use a cached tabDescriptors, might cause issue performance
         //if (tabDescriptors == null) {
-        List<ITabDescriptor> temp = readTabDescriptors();
+        List<TabDescriptor> temp = readTabDescriptors();
         populateWithSectionDescriptors(temp, viewId);
         temp = sortTabDescriptorsByCategory(temp);
         temp = sortTabDescriptorsByAfterTab(temp);

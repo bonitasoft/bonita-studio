@@ -105,6 +105,7 @@ public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getInitialFormat() {
 		return initialFormat;
 	}
@@ -114,6 +115,7 @@ public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInitialFormat(String newInitialFormat) {
 		String oldInitialFormat = initialFormat;
 		initialFormat = newInitialFormat;
@@ -126,6 +128,7 @@ public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDisplayFormat() {
 		return displayFormat;
 	}
@@ -135,6 +138,7 @@ public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayFormat(String newDisplayFormat) {
 		String oldDisplayFormat = displayFormat;
 		displayFormat = newDisplayFormat;
@@ -219,7 +223,7 @@ public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements Da
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (initialFormat: "); //$NON-NLS-1$
 		result.append(initialFormat);
 		result.append(", displayFormat: "); //$NON-NLS-1$

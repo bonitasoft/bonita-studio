@@ -150,7 +150,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link KpiPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -164,21 +164,32 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 		if (isInited) return (KpiPackage)EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
 
 		// Obtain or create and register package
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new KpiPackageImpl());
+		Object registeredKpiPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		KpiPackageImpl theKpiPackage = registeredKpiPackage instanceof KpiPackageImpl ? (KpiPackageImpl)registeredKpiPackage : new KpiPackageImpl();
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theKpiPackage.createPackageContents();
@@ -209,7 +220,6 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 		// Mark meta-data to indicate it can't be changed
 		theKpiPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(KpiPackage.eNS_URI, theKpiPackage);
 		return theKpiPackage;
@@ -220,6 +230,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractKPIDefinition() {
 		return abstractKPIDefinitionEClass;
 	}
@@ -229,6 +240,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractKPIDefinition_Version() {
 		return (EAttribute)abstractKPIDefinitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -238,6 +250,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractKPIDefinition_Fields() {
 		return (EReference)abstractKPIDefinitionEClass.getEStructuralFeatures().get(1);
 	}
@@ -247,6 +260,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractKPIBinding() {
 		return abstractKPIBindingEClass;
 	}
@@ -256,6 +270,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractKPIBinding_KpiDefinitionName() {
 		return (EAttribute)abstractKPIBindingEClass.getEStructuralFeatures().get(0);
 	}
@@ -265,6 +280,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractKPIBinding_Event() {
 		return (EAttribute)abstractKPIBindingEClass.getEStructuralFeatures().get(1);
 	}
@@ -274,6 +290,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractKPIBinding_IgnoreError() {
 		return (EAttribute)abstractKPIBindingEClass.getEStructuralFeatures().get(2);
 	}
@@ -283,6 +300,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAbstractKPIBinding_UseGraphicalEditor() {
 		return (EAttribute)abstractKPIBindingEClass.getEStructuralFeatures().get(3);
 	}
@@ -292,6 +310,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractKPIBinding_Request() {
 		return (EReference)abstractKPIBindingEClass.getEStructuralFeatures().get(4);
 	}
@@ -301,6 +320,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractKPIBinding_Parameters() {
 		return (EReference)abstractKPIBindingEClass.getEStructuralFeatures().get(5);
 	}
@@ -310,6 +330,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getKPIParameterMapping() {
 		return kpiParameterMappingEClass;
 	}
@@ -319,6 +340,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKPIParameterMapping_KpiFieldName() {
 		return (EAttribute)kpiParameterMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -328,6 +350,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKPIParameterMapping_Value() {
 		return (EReference)kpiParameterMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -337,6 +360,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDatabaseKPIBinding() {
 		return databaseKPIBindingEClass;
 	}
@@ -346,6 +370,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIBinding_DriverclassName() {
 		return (EReference)databaseKPIBindingEClass.getEStructuralFeatures().get(0);
 	}
@@ -355,6 +380,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIBinding_JdbcUrl() {
 		return (EReference)databaseKPIBindingEClass.getEStructuralFeatures().get(1);
 	}
@@ -364,6 +390,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIBinding_User() {
 		return (EReference)databaseKPIBindingEClass.getEStructuralFeatures().get(2);
 	}
@@ -373,6 +400,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIBinding_Password() {
 		return (EReference)databaseKPIBindingEClass.getEStructuralFeatures().get(3);
 	}
@@ -382,6 +410,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIBinding_JndiUrl() {
 		return (EReference)databaseKPIBindingEClass.getEStructuralFeatures().get(4);
 	}
@@ -391,6 +420,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDatabaseKPIBinding_TableName() {
 		return (EAttribute)databaseKPIBindingEClass.getEStructuralFeatures().get(5);
 	}
@@ -400,6 +430,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDatabaseKPIDefinition() {
 		return databaseKPIDefinitionEClass;
 	}
@@ -409,6 +440,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultDriverclassName() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -418,6 +450,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultJdbcUrl() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(1);
 	}
@@ -427,6 +460,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultUser() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(2);
 	}
@@ -436,6 +470,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultPassword() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(3);
 	}
@@ -445,6 +480,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultJNDIUrl() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(4);
 	}
@@ -454,6 +490,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDatabaseKPIDefinition_DefaultDBName() {
 		return (EReference)databaseKPIDefinitionEClass.getEStructuralFeatures().get(5);
 	}
@@ -463,6 +500,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDatabaseKPIDefinition_DefaultTableName() {
 		return (EAttribute)databaseKPIDefinitionEClass.getEStructuralFeatures().get(6);
 	}
@@ -472,6 +510,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getKPIField() {
 		return kpiFieldEClass;
 	}
@@ -481,6 +520,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKPIField_FieldName() {
 		return (EAttribute)kpiFieldEClass.getEStructuralFeatures().get(0);
 	}
@@ -490,6 +530,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKPIField_FieldType() {
 		return (EAttribute)kpiFieldEClass.getEStructuralFeatures().get(1);
 	}
@@ -499,6 +540,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKPIField_UseQuotes() {
 		return (EAttribute)kpiFieldEClass.getEStructuralFeatures().get(2);
 	}
@@ -508,6 +550,7 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public KpiFactory getKpiFactory() {
 		return (KpiFactory)getEFactoryInstance();
 	}
@@ -661,12 +704,12 @@ public class KpiPackageImpl extends EPackageImpl implements KpiPackage {
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

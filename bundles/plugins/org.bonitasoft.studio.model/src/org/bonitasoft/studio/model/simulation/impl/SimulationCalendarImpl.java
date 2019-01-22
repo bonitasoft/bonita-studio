@@ -83,6 +83,7 @@ public class SimulationCalendarImpl extends EObjectImpl implements SimulationCal
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DayPeriod> getDaysOfWeek() {
 		if (daysOfWeek == null) {
 			daysOfWeek = new EObjectContainmentEList<DayPeriod>(DayPeriod.class, this, SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK);

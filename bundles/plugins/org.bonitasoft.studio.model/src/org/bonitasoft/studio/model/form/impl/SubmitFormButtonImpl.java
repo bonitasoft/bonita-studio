@@ -123,6 +123,7 @@ public class SubmitFormButtonImpl extends FormButtonImpl implements SubmitFormBu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, FormPackage.SUBMIT_FORM_BUTTON__DATA);
@@ -135,6 +136,7 @@ public class SubmitFormButtonImpl extends FormButtonImpl implements SubmitFormBu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connector> getConnectors() {
 		if (connectors == null) {
 			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, FormPackage.SUBMIT_FORM_BUTTON__CONNECTORS);
@@ -147,6 +149,7 @@ public class SubmitFormButtonImpl extends FormButtonImpl implements SubmitFormBu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<AbstractKPIBinding> getKpis() {
 		if (kpis == null) {
 			kpis = new EObjectContainmentEList<AbstractKPIBinding>(AbstractKPIBinding.class, this, FormPackage.SUBMIT_FORM_BUTTON__KPIS);
@@ -159,6 +162,7 @@ public class SubmitFormButtonImpl extends FormButtonImpl implements SubmitFormBu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getActions() {
 		if (actions == null) {
 			actions = new EObjectContainmentEList<Operation>(Operation.class, this, FormPackage.SUBMIT_FORM_BUTTON__ACTIONS);

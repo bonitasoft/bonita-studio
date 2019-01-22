@@ -42,6 +42,7 @@ import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
+import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -407,6 +408,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         disableGroovyDSL();
         initXMLandHTMLValidationPreferences();
+        //Avoid deadlock and thread timeout at startup
+        new GroovyConsoleLineTracker();
         repositoryAccessor.start(monitor);
 
         executeContributions();

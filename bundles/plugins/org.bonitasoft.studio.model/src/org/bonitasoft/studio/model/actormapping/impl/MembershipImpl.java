@@ -83,6 +83,7 @@ public class MembershipImpl extends EObjectImpl implements Membership {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<MembershipType> getMembership() {
 		if (membership == null) {
 			membership = new EObjectContainmentEList<MembershipType>(MembershipType.class, this, ActorMappingPackage.MEMBERSHIP__MEMBERSHIP);

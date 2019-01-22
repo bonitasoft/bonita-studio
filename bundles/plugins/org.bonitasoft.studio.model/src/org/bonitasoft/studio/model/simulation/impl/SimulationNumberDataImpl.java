@@ -118,6 +118,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExpressionBased() {
 		return expressionBased;
 	}
@@ -127,6 +128,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpressionBased(boolean newExpressionBased) {
 		boolean oldExpressionBased = expressionBased;
 		expressionBased = newExpressionBased;
@@ -139,6 +141,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -163,6 +166,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -182,6 +186,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SimulationNumberRange> getRanges() {
 		if (ranges == null) {
 			ranges = new EObjectContainmentEList<SimulationNumberRange>(SimulationNumberRange.class, this, SimulationPackage.SIMULATION_NUMBER_DATA__RANGES);
@@ -294,7 +299,7 @@ public class SimulationNumberDataImpl extends SimulationElementImpl implements S
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (expressionBased: "); //$NON-NLS-1$
 		result.append(expressionBased);
 		result.append(')');

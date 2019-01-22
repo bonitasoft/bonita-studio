@@ -84,6 +84,7 @@ public class AssociationImpl extends ConnectionImpl implements Association {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isIsDirected() {
 		return isDirected;
 	}
@@ -93,6 +94,7 @@ public class AssociationImpl extends ConnectionImpl implements Association {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIsDirected(boolean newIsDirected) {
 		boolean oldIsDirected = isDirected;
 		isDirected = newIsDirected;
@@ -167,7 +169,7 @@ public class AssociationImpl extends ConnectionImpl implements Association {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isDirected: "); //$NON-NLS-1$
 		result.append(isDirected);
 		result.append(')');

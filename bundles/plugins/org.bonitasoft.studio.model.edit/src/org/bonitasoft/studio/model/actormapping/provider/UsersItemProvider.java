@@ -125,7 +125,7 @@ public class UsersItemProvider
 	public String getText(Object object) {
 		return getString("_UI_Users_type"); //$NON-NLS-1$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

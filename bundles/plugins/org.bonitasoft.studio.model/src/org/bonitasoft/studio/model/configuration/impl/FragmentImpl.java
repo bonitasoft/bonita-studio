@@ -148,6 +148,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -157,6 +158,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
@@ -169,6 +171,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -178,6 +181,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -190,6 +194,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExported() {
 		return exported;
 	}
@@ -199,6 +204,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExported(boolean newExported) {
 		boolean oldExported = exported;
 		exported = newExported;
@@ -211,6 +217,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -220,6 +227,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -324,7 +332,7 @@ public class FragmentImpl extends EObjectImpl implements Fragment {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (key: "); //$NON-NLS-1$
 		result.append(key);
 		result.append(", value: "); //$NON-NLS-1$

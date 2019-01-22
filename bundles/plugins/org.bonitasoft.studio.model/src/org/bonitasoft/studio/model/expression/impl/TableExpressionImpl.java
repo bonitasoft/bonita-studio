@@ -81,6 +81,7 @@ public class TableExpressionImpl extends AbstractExpressionImpl implements Table
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ListExpression> getExpressions() {
 		if (expressions == null) {
 			expressions = new EObjectContainmentEList<ListExpression>(ListExpression.class, this, ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS);

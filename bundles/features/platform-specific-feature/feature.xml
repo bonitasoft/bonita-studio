@@ -46,7 +46,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
 
    <requires>
-      <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
+      <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -60,29 +60,9 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.filesystem.linux.x86"
-         os="linux"
-         arch="x86"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.filesystem.win32.x86_64"
          os="win32"
          arch="x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.win32.x86"
-         os="win32"
-         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"

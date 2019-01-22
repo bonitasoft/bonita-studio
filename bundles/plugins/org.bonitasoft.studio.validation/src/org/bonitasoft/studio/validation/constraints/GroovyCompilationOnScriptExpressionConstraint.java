@@ -25,13 +25,13 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
-import org.codehaus.groovy.eclipse.core.model.GroovyProjectFacade;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
+import org.eclipse.jdt.internal.core.JavaProject;
 
 /**
  * @author Romain Bioteau
@@ -74,7 +74,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
             return context.createSuccessStatus();
         }
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(javaProject));
+        final GroovySnippetCompiler compiler = new GroovySnippetCompiler((JavaProject) javaProject);
         final CompilationResult result = compiler.compileForErrors(scriptText, null);
         final CategorizedProblem[] problems = result.getErrors();
         if (problems != null && problems.length > 0) {

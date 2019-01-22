@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.core.constraint;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -48,9 +49,6 @@ public class ConstraintInputIndexerTest {
     private ConstraintInputIndexer indexer;
     private ArrayList<ContractInput> availableInputs;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         availableInputs = new ArrayList<ContractInput>();
@@ -67,11 +65,12 @@ public class ConstraintInputIndexerTest {
         when(groovyCompilationUnit.getModuleNode()).thenReturn(sourceUnit.getAST());
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
     public void tearDown() throws Exception {
+        File file = new File("unitName.class");
+        if(file.exists()) {
+            file.delete();
+        }
     }
 
     @Test

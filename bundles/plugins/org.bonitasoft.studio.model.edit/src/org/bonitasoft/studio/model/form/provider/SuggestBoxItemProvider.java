@@ -180,7 +180,7 @@ public class SuggestBoxItemProvider extends MultipleValuatedFormFieldItemProvide
 			getString("_UI_SuggestBox_type") : //$NON-NLS-1$
 			getString("_UI_SuggestBox_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

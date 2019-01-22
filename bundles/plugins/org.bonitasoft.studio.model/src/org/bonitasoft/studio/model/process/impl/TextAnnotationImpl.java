@@ -148,6 +148,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -157,6 +158,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -169,6 +171,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -178,6 +181,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -190,6 +194,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.TEXT_ANNOTATION__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -202,6 +207,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getText() {
 		return text;
 	}
@@ -211,6 +217,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setText(String newText) {
 		String oldText = text;
 		text = newText;
@@ -346,7 +353,7 @@ public class TextAnnotationImpl extends EObjectImpl implements TextAnnotation {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

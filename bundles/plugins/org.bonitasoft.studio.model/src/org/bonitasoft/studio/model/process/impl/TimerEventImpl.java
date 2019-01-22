@@ -99,6 +99,7 @@ public class TimerEventImpl extends EventImpl implements TimerEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCondition() {
 		return condition;
 	}
@@ -123,6 +124,7 @@ public class TimerEventImpl extends EventImpl implements TimerEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCondition(Expression newCondition) {
 		if (newCondition != condition) {
 			NotificationChain msgs = null;
@@ -142,6 +144,7 @@ public class TimerEventImpl extends EventImpl implements TimerEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Data> getData() {
 		if (data == null) {
 			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.TIMER_EVENT__DATA);

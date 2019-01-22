@@ -78,6 +78,8 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.SaveEditorPrompter;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 
 public class BOSWebServerManager implements IBonitaProjectListener {

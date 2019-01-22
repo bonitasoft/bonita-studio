@@ -115,7 +115,7 @@ public class TakeTransitionActionItemProvider extends DecisionTableActionItemPro
 		TakeTransitionAction takeTransitionAction = (TakeTransitionAction)object;
 		return getString("_UI_TakeTransitionAction_type") + " " + takeTransitionAction.isTakeTransition(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

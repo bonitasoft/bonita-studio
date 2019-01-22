@@ -231,7 +231,7 @@ public class ContractInputItemProvider
 			getString("_UI_ContractInput_type") : //$NON-NLS-1$
 			getString("_UI_ContractInput_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached
