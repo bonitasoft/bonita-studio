@@ -281,6 +281,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -290,6 +291,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -302,6 +304,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -311,6 +314,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -323,6 +327,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMappingsType getActorMappings() {
 		return actorMappings;
 	}
@@ -347,6 +352,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActorMappings(ActorMappingsType newActorMappings) {
 		if (newActorMappings != actorMappings) {
 			NotificationChain msgs = null;
@@ -366,6 +372,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAnonymousUserName() {
 		return anonymousUserName;
 	}
@@ -375,6 +382,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnonymousUserName(String newAnonymousUserName) {
 		String oldAnonymousUserName = anonymousUserName;
 		anonymousUserName = newAnonymousUserName;
@@ -387,6 +395,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAnonymousPassword() {
 		return anonymousPassword;
 	}
@@ -396,6 +405,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnonymousPassword(String newAnonymousPassword) {
 		String oldAnonymousPassword = anonymousPassword;
 		anonymousPassword = newAnonymousPassword;
@@ -408,6 +418,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DefinitionMapping> getDefinitionMappings() {
 		if (definitionMappings == null) {
 			definitionMappings = new EObjectContainmentEList<DefinitionMapping>(DefinitionMapping.class, this, ConfigurationPackage.CONFIGURATION__DEFINITION_MAPPINGS);
@@ -420,6 +431,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FragmentContainer> getProcessDependencies() {
 		if (processDependencies == null) {
 			processDependencies = new EObjectContainmentEList<FragmentContainer>(FragmentContainer.class, this, ConfigurationPackage.CONFIGURATION__PROCESS_DEPENDENCIES);
@@ -432,6 +444,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FragmentContainer> getApplicationDependencies() {
 		if (applicationDependencies == null) {
 			applicationDependencies = new EObjectContainmentEList<FragmentContainer>(FragmentContainer.class, this, ConfigurationPackage.CONFIGURATION__APPLICATION_DEPENDENCIES);
@@ -444,6 +457,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ConfigurationPackage.CONFIGURATION__PARAMETERS);
@@ -456,6 +470,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -465,6 +480,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -477,6 +493,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -486,6 +503,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUsername(String newUsername) {
 		String oldUsername = username;
 		username = newUsername;
@@ -498,6 +516,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -507,6 +526,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPassword(String newPassword) {
 		String oldPassword = password;
 		password = newPassword;
@@ -718,7 +738,7 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", description: "); //$NON-NLS-1$

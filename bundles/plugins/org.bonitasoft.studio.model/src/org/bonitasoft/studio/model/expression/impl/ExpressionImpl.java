@@ -286,6 +286,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -295,6 +296,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -307,6 +309,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getContent() {
 		return content;
 	}
@@ -316,6 +319,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContent(String newContent) {
 		String oldContent = content;
 		content = newContent;
@@ -328,6 +332,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getInterpreter() {
 		return interpreter;
 	}
@@ -337,6 +342,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInterpreter(String newInterpreter) {
 		String oldInterpreter = interpreter;
 		interpreter = newInterpreter;
@@ -349,6 +355,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -358,6 +365,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -370,6 +378,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getReturnType() {
 		return returnType;
 	}
@@ -379,6 +388,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnType(String newReturnType) {
 		String oldReturnType = returnType;
 		returnType = newReturnType;
@@ -391,6 +401,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<EObject> getReferencedElements() {
 		if (referencedElements == null) {
 			referencedElements = new EObjectContainmentEList<EObject>(EObject.class, this, ExpressionPackage.EXPRESSION__REFERENCED_ELEMENTS);
@@ -403,6 +414,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connector> getConnectors() {
 		if (connectors == null) {
 			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ExpressionPackage.EXPRESSION__CONNECTORS);
@@ -415,6 +427,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getPropagateVariableChange() {
 		return propagateVariableChange;
 	}
@@ -424,6 +437,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPropagateVariableChange(Boolean newPropagateVariableChange) {
 		Boolean oldPropagateVariableChange = propagateVariableChange;
 		propagateVariableChange = newPropagateVariableChange;
@@ -436,6 +450,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReturnTypeFixed() {
 		return returnTypeFixed;
 	}
@@ -445,6 +460,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeFixed(boolean newReturnTypeFixed) {
 		boolean oldReturnTypeFixed = returnTypeFixed;
 		returnTypeFixed = newReturnTypeFixed;
@@ -457,6 +473,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAutomaticDependencies() {
 		return automaticDependencies;
 	}
@@ -466,6 +483,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAutomaticDependencies(boolean newAutomaticDependencies) {
 		boolean oldAutomaticDependencies = automaticDependencies;
 		automaticDependencies = newAutomaticDependencies;
@@ -478,6 +496,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHtmlAllowed() {
 		return htmlAllowed;
 	}
@@ -487,6 +506,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHtmlAllowed(boolean newHtmlAllowed) {
 		boolean oldHtmlAllowed = htmlAllowed;
 		htmlAllowed = newHtmlAllowed;
@@ -499,6 +519,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasContent() {
 		return content != null && !content.isEmpty();
 	}
@@ -508,6 +529,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasName() {
 		return name != null && !name.isEmpty();
 	}
@@ -698,7 +720,7 @@ public class ExpressionImpl extends AbstractExpressionImpl implements Expression
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(", content: "); //$NON-NLS-1$

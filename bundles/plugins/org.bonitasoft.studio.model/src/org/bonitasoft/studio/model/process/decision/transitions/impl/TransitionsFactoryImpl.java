@@ -82,6 +82,7 @@ public class TransitionsFactoryImpl extends EFactoryImpl implements TransitionsF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TakeTransitionAction createTakeTransitionAction() {
 		TakeTransitionActionImpl takeTransitionAction = new TakeTransitionActionImpl();
 		return takeTransitionAction;
@@ -92,6 +93,7 @@ public class TransitionsFactoryImpl extends EFactoryImpl implements TransitionsF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TransitionsPackage getTransitionsPackage() {
 		return (TransitionsPackage)getEPackage();
 	}

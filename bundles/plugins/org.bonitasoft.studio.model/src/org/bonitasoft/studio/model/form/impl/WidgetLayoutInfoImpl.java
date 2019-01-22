@@ -148,6 +148,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getLine() {
 		return line;
 	}
@@ -157,6 +158,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLine(int newLine) {
 		int oldLine = line;
 		line = newLine;
@@ -169,6 +171,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getColumn() {
 		return column;
 	}
@@ -178,6 +181,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setColumn(int newColumn) {
 		int oldColumn = column;
 		column = newColumn;
@@ -190,6 +194,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVerticalSpan() {
 		return verticalSpan;
 	}
@@ -199,6 +204,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVerticalSpan(int newVerticalSpan) {
 		int oldVerticalSpan = verticalSpan;
 		verticalSpan = newVerticalSpan;
@@ -211,6 +217,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getHorizontalSpan() {
 		return horizontalSpan;
 	}
@@ -220,6 +227,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHorizontalSpan(int newHorizontalSpan) {
 		int oldHorizontalSpan = horizontalSpan;
 		horizontalSpan = newHorizontalSpan;
@@ -324,7 +332,7 @@ public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInf
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (line: "); //$NON-NLS-1$
 		result.append(line);
 		result.append(", column: "); //$NON-NLS-1$

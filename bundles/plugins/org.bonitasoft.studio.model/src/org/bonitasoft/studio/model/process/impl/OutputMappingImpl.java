@@ -98,6 +98,7 @@ public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSubprocessSource() {
 		return subprocessSource;
 	}
@@ -107,6 +108,7 @@ public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSubprocessSource(String newSubprocessSource) {
 		String oldSubprocessSource = subprocessSource;
 		subprocessSource = newSubprocessSource;
@@ -119,6 +121,7 @@ public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data getProcessTarget() {
 		if (processTarget != null && processTarget.eIsProxy()) {
 			InternalEObject oldProcessTarget = (InternalEObject)processTarget;
@@ -145,6 +148,7 @@ public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProcessTarget(Data newProcessTarget) {
 		Data oldProcessTarget = processTarget;
 		processTarget = newProcessTarget;
@@ -230,7 +234,7 @@ public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (subprocessSource: "); //$NON-NLS-1$
 		result.append(subprocessSource);
 		result.append(')');

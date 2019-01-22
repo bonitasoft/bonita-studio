@@ -101,6 +101,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getLeftOperand() {
 		return leftOperand;
 	}
@@ -125,6 +126,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLeftOperand(Expression newLeftOperand) {
 		if (newLeftOperand != leftOperand) {
 			NotificationChain msgs = null;
@@ -144,6 +146,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getRightOperand() {
 		return rightOperand;
 	}
@@ -168,6 +171,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRightOperand(Expression newRightOperand) {
 		if (newRightOperand != rightOperand) {
 			NotificationChain msgs = null;
@@ -187,6 +191,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Operator getOperator() {
 		return operator;
 	}
@@ -211,6 +216,7 @@ public class OperationImpl extends EObjectImpl implements Operation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOperator(Operator newOperator) {
 		if (newOperator != operator) {
 			NotificationChain msgs = null;

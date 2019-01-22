@@ -84,7 +84,7 @@ public class ANDGatewayItemProvider extends GatewayItemProvider {
 			getString("_UI_ANDGateway_type") : //$NON-NLS-1$
 			getString("_UI_ANDGateway_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

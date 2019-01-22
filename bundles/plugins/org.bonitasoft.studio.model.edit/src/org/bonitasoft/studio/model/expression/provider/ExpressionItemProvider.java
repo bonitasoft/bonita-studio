@@ -341,7 +341,7 @@ public class ExpressionItemProvider extends AbstractExpressionItemProvider {
 			getString("_UI_Expression_type") : //$NON-NLS-1$
 			getString("_UI_Expression_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

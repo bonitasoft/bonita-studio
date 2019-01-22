@@ -85,6 +85,7 @@ public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public KPIParameterMapping createKPIParameterMapping() {
 		KPIParameterMappingImpl kpiParameterMapping = new KPIParameterMappingImpl();
 		return kpiParameterMapping;
@@ -95,6 +96,7 @@ public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DatabaseKPIBinding createDatabaseKPIBinding() {
 		DatabaseKPIBindingImpl databaseKPIBinding = new DatabaseKPIBindingImpl();
 		return databaseKPIBinding;
@@ -105,6 +107,7 @@ public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DatabaseKPIDefinition createDatabaseKPIDefinition() {
 		DatabaseKPIDefinitionImpl databaseKPIDefinition = new DatabaseKPIDefinitionImpl();
 		return databaseKPIDefinition;
@@ -115,6 +118,7 @@ public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public KPIField createKPIField() {
 		KPIFieldImpl kpiField = new KPIFieldImpl();
 		return kpiField;
@@ -125,6 +129,7 @@ public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public KpiPackage getKpiPackage() {
 		return (KpiPackage)getEPackage();
 	}

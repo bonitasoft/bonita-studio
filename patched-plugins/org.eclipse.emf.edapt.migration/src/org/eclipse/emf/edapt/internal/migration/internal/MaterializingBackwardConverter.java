@@ -56,6 +56,8 @@ public class MaterializingBackwardConverter extends BackwardConverter {
 				.createFromString(targetEnum, value);
 		} else if (Enumerator.class.isInstance(literal)) {
 			return Enumerator.class.cast(literal);
+		} else if (literal == null) {
+			return null;
 		}
 		throw new IllegalArgumentException(MessageFormat.format(
 			"Unexpected literal {0} of type {1} cannot be converted to an Enumerator", literal, literal.getClass())); //$NON-NLS-1$

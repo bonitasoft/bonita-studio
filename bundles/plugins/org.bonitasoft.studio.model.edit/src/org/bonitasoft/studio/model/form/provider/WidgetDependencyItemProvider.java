@@ -172,7 +172,7 @@ public class WidgetDependencyItemProvider
 		WidgetDependency widgetDependency = (WidgetDependency)object;
 		return getString("_UI_WidgetDependency_type") + " " + widgetDependency.isTriggerRefreshOnModification(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

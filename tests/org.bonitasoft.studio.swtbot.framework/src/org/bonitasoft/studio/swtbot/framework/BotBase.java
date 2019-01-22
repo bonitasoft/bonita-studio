@@ -36,27 +36,11 @@ public class BotBase implements SWTBotConstants {
         keyboard = KeyboardFactory.getSWTKeyboard();
     }
 
-    protected void typeText(final String text) {
-        keyboard.typeText(text);
-    }
-
-    protected void pressShortcut(final KeyStroke... keys) {
-        keyboard.pressShortcut(keys);
-    }
-
-    public void pressEnter() {
-        pressShortcut(Keystrokes.CR);
-    }
-
-    public void pressDelete() {
-        pressShortcut(Keystrokes.DELETE);
-    }
-
     public void selectText() {
         List<KeyStroke> keystrokes = new ArrayList<>();
         keystrokes.add(Keystrokes.CTRL);
         keystrokes.addAll(Arrays.asList(Keystrokes.create('a')));
-        pressShortcut(keystrokes.toArray(new KeyStroke[0]));
+        keyboard.pressShortcut(keystrokes.toArray(new KeyStroke[0]));
     }
 
 }

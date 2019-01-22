@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.tests.bar;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
@@ -25,23 +29,29 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class TestExportProcessBar  {
 
-/**
- * @author Aurelien Pupier
- */
-public class TestExportProcessBar extends TestCase {
-
+    @Before
+    public void setUp() throws Exception{
+        BOSEngineManager.getInstance().start();
+    }
+    
+    @Test
     public void testExportProcessBarWithAttachmentAndSeveralPool() throws Exception {
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        
 
         /* Import the processus */
         URL url = getClass().getResource("TestExportProcessBarWithDocument-1.0.bos");
@@ -89,9 +99,8 @@ public class TestExportProcessBar extends TestCase {
     }
 
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
     }

@@ -149,6 +149,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getBegin() {
 		return begin;
 	}
@@ -158,6 +159,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBegin(long newBegin) {
 		long oldBegin = begin;
 		begin = newBegin;
@@ -170,6 +172,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getEnd() {
 		return end;
 	}
@@ -179,6 +182,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEnd(long newEnd) {
 		long oldEnd = end;
 		end = newEnd;
@@ -191,6 +195,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getNbInstances() {
 		return nbInstances;
 	}
@@ -200,6 +205,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNbInstances(int newNbInstances) {
 		int oldNbInstances = nbInstances;
 		nbInstances = newNbInstances;
@@ -212,6 +218,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RepartitionType getRepartition() {
 		return repartition;
 	}
@@ -221,6 +228,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRepartition(RepartitionType newRepartition) {
 		RepartitionType oldRepartition = repartition;
 		repartition = newRepartition == null ? REPARTITION_EDEFAULT : newRepartition;
@@ -325,7 +333,7 @@ public class InjectionPeriodImpl extends EObjectImpl implements InjectionPeriod 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (begin: "); //$NON-NLS-1$
 		result.append(begin);
 		result.append(", end: "); //$NON-NLS-1$

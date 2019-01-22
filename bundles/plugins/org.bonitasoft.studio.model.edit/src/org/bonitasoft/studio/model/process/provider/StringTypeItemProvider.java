@@ -84,7 +84,7 @@ public class StringTypeItemProvider extends DataTypeItemProvider {
 			getString("_UI_StringType_type") : //$NON-NLS-1$
 			getString("_UI_StringType_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

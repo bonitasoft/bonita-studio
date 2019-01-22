@@ -28,11 +28,12 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.guava;bundle-version="11.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.migration,org.bonitasoft.studio.
- migration.i18n;x-friends:="org.bonitasoft.studio.migration.tests",org
- .bonitasoft.studio.migration.migrator,org.bonitasoft.studio.migration
- .model.report,org.bonitasoft.studio.migration.preferences,org.bonitas
- oft.studio.migration.ui.wizard,org.bonitasoft.studio.migration.utils
+Export-Package: org.bonitasoft.studio.migration,
+ org.bonitasoft.studio.migration.i18n;x-friends:="org.bonitasoft.studio.migration.tests",
+ org.bonitasoft.studio.migration.model.report,
+ org.bonitasoft.studio.migration.preferences,
+ org.bonitasoft.studio.migration.ui.wizard,
+ org.bonitasoft.studio.migration.utils
 Bundle-ClassPath: .,
  lib/itextpdf-5.3.5.jar
 Import-Package: org.bonitasoft.engine.operation

@@ -106,6 +106,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getWidth() {
 		return width;
 	}
@@ -115,6 +116,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidth(String newWidth) {
 		String oldWidth = width;
 		width = newWidth;
@@ -127,6 +129,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getNumber() {
 		return number;
 	}
@@ -136,6 +139,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNumber(int newNumber) {
 		int oldNumber = number;
 		number = newNumber;
@@ -220,7 +224,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (width: "); //$NON-NLS-1$
 		result.append(width);
 		result.append(", number: "); //$NON-NLS-1$

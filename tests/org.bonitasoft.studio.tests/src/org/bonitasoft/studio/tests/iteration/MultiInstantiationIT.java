@@ -340,7 +340,16 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 multiInstantiable.getCollectionDataToMultiInstantiate());
         assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getIteratorExpression());
-        assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
+       
+        bot.waitUntil(new AssertionCondition() {
+			
+			@Override
+			protected void makeAssert() throws Exception {
+				 assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
+			}
+		});
+        
+      
         assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getOutputData());
         assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",

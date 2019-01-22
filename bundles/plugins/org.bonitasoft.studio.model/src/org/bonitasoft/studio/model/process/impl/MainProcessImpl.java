@@ -191,6 +191,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBonitaVersion() {
 		return bonitaVersion;
 	}
@@ -200,6 +201,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBonitaVersion(String newBonitaVersion) {
 		String oldBonitaVersion = bonitaVersion;
 		bonitaVersion = newBonitaVersion;
@@ -212,6 +214,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBonitaModelVersion() {
 		return bonitaModelVersion;
 	}
@@ -221,6 +224,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBonitaModelVersion(String newBonitaModelVersion) {
 		String oldBonitaModelVersion = bonitaModelVersion;
 		bonitaModelVersion = newBonitaModelVersion;
@@ -233,6 +237,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getIncludedEntries() {
 		if (includedEntries == null) {
 			includedEntries = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.MAIN_PROCESS__INCLUDED_ENTRIES);
@@ -245,6 +250,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<MessageFlow> getMessageConnections() {
 		if (messageConnections == null) {
 			messageConnections = new EObjectContainmentEList<MessageFlow>(MessageFlow.class, this, ProcessPackage.MAIN_PROCESS__MESSAGE_CONNECTIONS);
@@ -257,6 +263,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getGeneratedLibs() {
 		if (generatedLibs == null) {
 			generatedLibs = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.MAIN_PROCESS__GENERATED_LIBS);
@@ -269,6 +276,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isEnableValidation() {
 		return enableValidation;
 	}
@@ -278,6 +286,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEnableValidation(boolean newEnableValidation) {
 		boolean oldEnableValidation = enableValidation;
 		enableValidation = newEnableValidation;
@@ -290,6 +299,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object getConfigId() {
 		return configId;
 	}
@@ -299,6 +309,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConfigId(Object newConfigId) {
 		Object oldConfigId = configId;
 		configId = newConfigId;
@@ -451,7 +462,7 @@ public class MainProcessImpl extends AbstractProcessImpl implements MainProcess 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (bonitaVersion: "); //$NON-NLS-1$
 		result.append(bonitaVersion);
 		result.append(", bonitaModelVersion: "); //$NON-NLS-1$

@@ -18,6 +18,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.QueryNameCellEditorValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -57,6 +58,7 @@ public class QueryNameEditingSupport extends ObservableValueEditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
         final Text textControl = (Text) textCellEditor.getControl();
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_QUERY_NAME_TEXTEDITOR);
         textControl.setTextLimit(QueryNameCellEditorValidator.MAX_QUERY_NAME_LENGTH + 5);
         return textCellEditor;
     }

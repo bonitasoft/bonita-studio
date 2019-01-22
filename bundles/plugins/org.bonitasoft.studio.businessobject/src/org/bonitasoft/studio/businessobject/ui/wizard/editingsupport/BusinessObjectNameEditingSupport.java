@@ -21,6 +21,7 @@ import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectNameCellEditorValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -83,6 +84,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     private CellEditor createCellEditor() {
         final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
         final Text textControl = (Text) textCellEditor.getControl();
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_BO_NAME_TEXTEDITOR);
         textControl.setTextLimit(BusinessObjectNameCellEditorValidator.MAX_TABLE_NAME_LENGTH + 5);
         return textCellEditor;
     }

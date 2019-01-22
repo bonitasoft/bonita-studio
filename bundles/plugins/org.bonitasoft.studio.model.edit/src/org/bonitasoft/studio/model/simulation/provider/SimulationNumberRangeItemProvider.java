@@ -195,7 +195,7 @@ public class SimulationNumberRangeItemProvider
 		SimulationNumberRange simulationNumberRange = (SimulationNumberRange)object;
 		return getString("_UI_SimulationNumberRange_type") + " " + simulationNumberRange.getMin(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

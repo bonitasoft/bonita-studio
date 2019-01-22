@@ -197,6 +197,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDuplicate() {
 		return duplicate;
 	}
@@ -206,6 +207,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuplicate(boolean newDuplicate) {
 		boolean oldDuplicate = duplicate;
 		duplicate = newDuplicate;
@@ -218,6 +220,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitNumberOfDuplication() {
 		return limitNumberOfDuplication;
 	}
@@ -227,6 +230,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitNumberOfDuplication(boolean newLimitNumberOfDuplication) {
 		boolean oldLimitNumberOfDuplication = limitNumberOfDuplication;
 		limitNumberOfDuplication = newLimitNumberOfDuplication;
@@ -239,6 +243,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitMinNumberOfDuplication() {
 		return limitMinNumberOfDuplication;
 	}
@@ -248,6 +253,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitMinNumberOfDuplication(boolean newLimitMinNumberOfDuplication) {
 		boolean oldLimitMinNumberOfDuplication = limitMinNumberOfDuplication;
 		limitMinNumberOfDuplication = newLimitMinNumberOfDuplication;
@@ -260,6 +266,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMaxNumberOfDuplication() {
 		return maxNumberOfDuplication;
 	}
@@ -284,6 +291,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxNumberOfDuplication(Expression newMaxNumberOfDuplication) {
 		if (newMaxNumberOfDuplication != maxNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -303,6 +311,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMinNumberOfDuplication() {
 		return minNumberOfDuplication;
 	}
@@ -327,6 +336,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinNumberOfDuplication(Expression newMinNumberOfDuplication) {
 		if (newMinNumberOfDuplication != minNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -346,6 +356,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForAdd() {
 		return displayLabelForAdd;
 	}
@@ -370,6 +381,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForAdd(Expression newDisplayLabelForAdd) {
 		if (newDisplayLabelForAdd != displayLabelForAdd) {
 			NotificationChain msgs = null;
@@ -389,6 +401,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForAdd() {
 		return tooltipForAdd;
 	}
@@ -413,6 +426,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForAdd(Expression newTooltipForAdd) {
 		if (newTooltipForAdd != tooltipForAdd) {
 			NotificationChain msgs = null;
@@ -432,6 +446,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForRemove() {
 		return displayLabelForRemove;
 	}
@@ -456,6 +471,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForRemove(Expression newDisplayLabelForRemove) {
 		if (newDisplayLabelForRemove != displayLabelForRemove) {
 			NotificationChain msgs = null;
@@ -475,6 +491,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForRemove() {
 		return tooltipForRemove;
 	}
@@ -499,6 +516,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForRemove(Expression newTooltipForRemove) {
 		if (newTooltipForRemove != tooltipForRemove) {
 			NotificationChain msgs = null;
@@ -732,7 +750,7 @@ public class TextInfoImpl extends InfoImpl implements TextInfo {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (duplicate: "); //$NON-NLS-1$
 		result.append(duplicate);
 		result.append(", limitNumberOfDuplication: "); //$NON-NLS-1$

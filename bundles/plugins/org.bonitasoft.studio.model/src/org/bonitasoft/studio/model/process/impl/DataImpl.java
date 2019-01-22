@@ -236,6 +236,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -245,6 +246,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -257,6 +259,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -266,6 +269,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -278,6 +282,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.DATA__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -290,6 +295,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGenerated() {
 		return generated;
 	}
@@ -299,6 +305,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGenerated(boolean newGenerated) {
 		boolean oldGenerated = generated;
 		generated = newGenerated;
@@ -311,6 +318,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMultiple() {
 		return multiple;
 	}
@@ -320,6 +328,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMultiple(boolean newMultiple) {
 		boolean oldMultiple = multiple;
 		multiple = newMultiple;
@@ -332,6 +341,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isTransient() {
 		return transient_;
 	}
@@ -341,6 +351,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTransient(boolean newTransient) {
 		boolean oldTransient = transient_;
 		transient_ = newTransient;
@@ -353,6 +364,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDatasourceId() {
 		return datasourceId;
 	}
@@ -362,6 +374,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDatasourceId(String newDatasourceId) {
 		String oldDatasourceId = datasourceId;
 		datasourceId = newDatasourceId;
@@ -374,6 +387,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DataType getDataType() {
 		if (dataType != null && dataType.eIsProxy()) {
 			InternalEObject oldDataType = (InternalEObject)dataType;
@@ -400,6 +414,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDataType(DataType newDataType) {
 		DataType oldDataType = dataType;
 		dataType = newDataType;
@@ -412,6 +427,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDefaultValue() {
 		return defaultValue;
 	}
@@ -436,6 +452,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultValue(Expression newDefaultValue) {
 		if (newDefaultValue != defaultValue) {
 			NotificationChain msgs = null;
@@ -631,7 +648,7 @@ public class DataImpl extends EObjectImpl implements Data {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

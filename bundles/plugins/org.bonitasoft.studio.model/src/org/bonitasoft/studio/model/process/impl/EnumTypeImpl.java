@@ -76,6 +76,7 @@ public class EnumTypeImpl extends DataTypeImpl implements EnumType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getLiterals() {
 		if (literals == null) {
 			literals = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.ENUM_TYPE__LITERALS);
@@ -152,7 +153,7 @@ public class EnumTypeImpl extends DataTypeImpl implements EnumType {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (literals: "); //$NON-NLS-1$
 		result.append(literals);
 		result.append(')');

@@ -151,7 +151,7 @@ public class LineItemProvider
 			getString("_UI_Line_type") : //$NON-NLS-1$
 			getString("_UI_Line_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

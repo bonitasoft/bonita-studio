@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
@@ -52,9 +53,9 @@ public class BotContractConstraintRow extends BotBase {
     public BotContractConstraintRow setName(final String name) {
         constraintTable.setFocus();
         constraintTable.click(row, NAME_COLUMN);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR);
-        typeText(name);
-        pressEnter();
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR)
+	        .typeText(name)
+	        .pressShortcut(Keystrokes.CR);
         bot.waitUntil(textApplied(name, NAME_COLUMN));
         return this;
     }
@@ -85,9 +86,9 @@ public class BotContractConstraintRow extends BotBase {
     public BotContractConstraintRow setErrorMessages(final String errorMessage) {
         constraintTable.setFocus();
         constraintTable.click(row, ERROR_MESSAGE_COLUMN);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
-        typeText(errorMessage);
-        pressEnter();
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR) 
+	        .typeText(errorMessage)
+	        .pressShortcut(Keystrokes.CR);
         bot.waitUntil(textApplied(errorMessage, ERROR_MESSAGE_COLUMN));
         return this;
     }

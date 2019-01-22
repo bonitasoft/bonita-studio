@@ -147,6 +147,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxItems() {
 		return maxItems;
 	}
@@ -156,6 +157,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxItems(int newMaxItems) {
 		int oldMaxItems = maxItems;
 		maxItems = newMaxItems;
@@ -168,6 +170,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseMaxItems() {
 		return useMaxItems;
 	}
@@ -177,6 +180,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseMaxItems(boolean newUseMaxItems) {
 		boolean oldUseMaxItems = useMaxItems;
 		useMaxItems = newUseMaxItems;
@@ -189,6 +193,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAsynchronous() {
 		return asynchronous;
 	}
@@ -198,6 +203,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAsynchronous(boolean newAsynchronous) {
 		boolean oldAsynchronous = asynchronous;
 		asynchronous = newAsynchronous;
@@ -210,6 +216,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDelay() {
 		return delay;
 	}
@@ -219,6 +226,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelay(int newDelay) {
 		int oldDelay = delay;
 		delay = newDelay;
@@ -323,7 +331,7 @@ public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements Sug
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (maxItems: "); //$NON-NLS-1$
 		result.append(maxItems);
 		result.append(", useMaxItems: "); //$NON-NLS-1$

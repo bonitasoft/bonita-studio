@@ -127,6 +127,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -136,6 +137,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -148,6 +150,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -157,6 +160,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -169,6 +173,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.DATA_TYPE__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -294,7 +299,7 @@ public abstract class DataTypeImpl extends EObjectImpl implements DataType {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

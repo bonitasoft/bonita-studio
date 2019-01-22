@@ -57,5 +57,10 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     private boolean isEnvironmentsFolder(IFolder parentElement) {
         return Objects.equals(parentElement.getName(), "environements");
     }
+    
+    @Override
+    public Object[] getElements(Object inputElement) {
+    	return super.getElements(inputElement);
+    }
 
 }

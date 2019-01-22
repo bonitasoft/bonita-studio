@@ -116,6 +116,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isTriggerRefreshOnModification() {
 		return triggerRefreshOnModification;
 	}
@@ -125,6 +126,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTriggerRefreshOnModification(boolean newTriggerRefreshOnModification) {
 		boolean oldTriggerRefreshOnModification = triggerRefreshOnModification;
 		triggerRefreshOnModification = newTriggerRefreshOnModification;
@@ -137,6 +139,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<EventDependencyType> getEventTypes() {
 		if (eventTypes == null) {
 			eventTypes = new EDataTypeUniqueEList<EventDependencyType>(EventDependencyType.class, this, FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES);
@@ -149,6 +152,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Widget getWidget() {
 		if (widget != null && widget.eIsProxy()) {
 			InternalEObject oldWidget = (InternalEObject)widget;
@@ -175,6 +179,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidget(Widget newWidget) {
 		Widget oldWidget = widget;
 		widget = newWidget;
@@ -272,7 +277,7 @@ public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependenc
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (triggerRefreshOnModification: "); //$NON-NLS-1$
 		result.append(triggerRefreshOnModification);
 		result.append(", eventTypes: "); //$NON-NLS-1$

@@ -18,6 +18,7 @@ import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.engine.bdm.model.QueryParameter;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.QueryParameterNameCellEditorValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -60,7 +61,9 @@ public class QueryParameterNameEditingSupport extends ObservableValueEditingSupp
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        return new TextCellEditor((Composite) getViewer().getControl());
+         TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
+         textCellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR);
+         return textCellEditor;
     }
 
     @Override

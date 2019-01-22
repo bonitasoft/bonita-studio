@@ -238,6 +238,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -247,6 +248,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -259,6 +261,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -268,6 +271,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -280,6 +284,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.DOCUMENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -292,6 +297,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefaultValueIdOfDocumentStore() {
 		return defaultValueIdOfDocumentStore;
 	}
@@ -301,6 +307,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefaultValueIdOfDocumentStore(String newDefaultValueIdOfDocumentStore) {
 		String oldDefaultValueIdOfDocumentStore = defaultValueIdOfDocumentStore;
 		defaultValueIdOfDocumentStore = newDefaultValueIdOfDocumentStore;
@@ -313,6 +320,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMimeType() {
 		return mimeType;
 	}
@@ -337,6 +345,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMimeType(Expression newMimeType) {
 		if (newMimeType != mimeType) {
 			NotificationChain msgs = null;
@@ -356,6 +365,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getUrl() {
 		return url;
 	}
@@ -380,6 +390,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUrl(Expression newUrl) {
 		if (newUrl != url) {
 			NotificationChain msgs = null;
@@ -399,6 +410,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DocumentType getDocumentType() {
 		return documentType;
 	}
@@ -408,6 +420,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentType(DocumentType newDocumentType) {
 		DocumentType oldDocumentType = documentType;
 		documentType = newDocumentType == null ? DOCUMENT_TYPE_EDEFAULT : newDocumentType;
@@ -420,6 +433,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInitialMultipleContent() {
 		return initialMultipleContent;
 	}
@@ -444,6 +458,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInitialMultipleContent(Expression newInitialMultipleContent) {
 		if (newInitialMultipleContent != initialMultipleContent) {
 			NotificationChain msgs = null;
@@ -463,6 +478,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMultiple() {
 		return multiple;
 	}
@@ -472,6 +488,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMultiple(boolean newMultiple) {
 		boolean oldMultiple = multiple;
 		multiple = newMultiple;
@@ -484,6 +501,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractInput getContractInput() {
 		if (contractInput != null && contractInput.eIsProxy()) {
 			InternalEObject oldContractInput = (InternalEObject)contractInput;
@@ -510,6 +528,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContractInput(ContractInput newContractInput) {
 		ContractInput oldContractInput = contractInput;
 		contractInput = newContractInput;
@@ -712,7 +731,7 @@ public class DocumentImpl extends EObjectImpl implements Document {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

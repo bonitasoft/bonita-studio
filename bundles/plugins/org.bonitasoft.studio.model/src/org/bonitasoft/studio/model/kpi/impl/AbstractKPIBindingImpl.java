@@ -239,6 +239,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -248,6 +249,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -260,6 +262,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -269,6 +272,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -281,6 +285,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -293,6 +298,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKpiDefinitionName() {
 		return kpiDefinitionName;
 	}
@@ -302,6 +308,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKpiDefinitionName(String newKpiDefinitionName) {
 		String oldKpiDefinitionName = kpiDefinitionName;
 		kpiDefinitionName = newKpiDefinitionName;
@@ -314,6 +321,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEvent() {
 		return event;
 	}
@@ -323,6 +331,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEvent(String newEvent) {
 		String oldEvent = event;
 		event = newEvent;
@@ -335,6 +344,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isIgnoreError() {
 		return ignoreError;
 	}
@@ -344,6 +354,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIgnoreError(boolean newIgnoreError) {
 		boolean oldIgnoreError = ignoreError;
 		ignoreError = newIgnoreError;
@@ -356,6 +367,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseGraphicalEditor() {
 		return useGraphicalEditor;
 	}
@@ -365,6 +377,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseGraphicalEditor(boolean newUseGraphicalEditor) {
 		boolean oldUseGraphicalEditor = useGraphicalEditor;
 		useGraphicalEditor = newUseGraphicalEditor;
@@ -377,6 +390,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getRequest() {
 		return request;
 	}
@@ -401,6 +415,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRequest(Expression newRequest) {
 		if (newRequest != request) {
 			NotificationChain msgs = null;
@@ -420,6 +435,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<KPIParameterMapping> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<KPIParameterMapping>(KPIParameterMapping.class, this, KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS);
@@ -610,7 +626,7 @@ public abstract class AbstractKPIBindingImpl extends EObjectImpl implements Abst
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

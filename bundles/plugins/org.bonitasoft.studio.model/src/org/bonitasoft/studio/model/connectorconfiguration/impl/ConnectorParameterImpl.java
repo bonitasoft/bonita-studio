@@ -100,6 +100,7 @@ public class ConnectorParameterImpl extends EObjectImpl implements ConnectorPara
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -109,6 +110,7 @@ public class ConnectorParameterImpl extends EObjectImpl implements ConnectorPara
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
@@ -121,6 +123,7 @@ public class ConnectorParameterImpl extends EObjectImpl implements ConnectorPara
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AbstractExpression getExpression() {
 		return expression;
 	}
@@ -145,6 +148,7 @@ public class ConnectorParameterImpl extends EObjectImpl implements ConnectorPara
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(AbstractExpression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -250,7 +254,7 @@ public class ConnectorParameterImpl extends EObjectImpl implements ConnectorPara
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (key: "); //$NON-NLS-1$
 		result.append(key);
 		result.append(')');

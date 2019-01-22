@@ -806,6 +806,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -815,6 +816,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -827,6 +829,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -836,6 +839,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -848,6 +852,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, FormPackage.ABSTRACT_TABLE__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -860,6 +865,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getHtmlAttributes() {
 		if (htmlAttributes == null) {
 			htmlAttributes = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, FormPackage.ABSTRACT_TABLE__HTML_ATTRIBUTES);
@@ -872,6 +878,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WidgetLayoutInfo getWidgetLayoutInfo() {
 		return widgetLayoutInfo;
 	}
@@ -896,6 +903,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidgetLayoutInfo(WidgetLayoutInfo newWidgetLayoutInfo) {
 		if (newWidgetLayoutInfo != widgetLayoutInfo) {
 			NotificationChain msgs = null;
@@ -915,6 +923,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getShowDisplayLabel() {
 		return showDisplayLabel;
 	}
@@ -924,6 +933,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowDisplayLabel(Boolean newShowDisplayLabel) {
 		Boolean oldShowDisplayLabel = showDisplayLabel;
 		showDisplayLabel = newShowDisplayLabel;
@@ -936,6 +946,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowHTMLForDisplayLabel() {
 		return allowHTMLForDisplayLabel;
 	}
@@ -945,6 +956,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowHTMLForDisplayLabel(boolean newAllowHTMLForDisplayLabel) {
 		boolean oldAllowHTMLForDisplayLabel = allowHTMLForDisplayLabel;
 		allowHTMLForDisplayLabel = newAllowHTMLForDisplayLabel;
@@ -957,6 +969,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getDependOn() {
 		if (dependOn == null) {
 			dependOn = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.ABSTRACT_TABLE__DEPEND_ON);
@@ -969,6 +982,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDisplayDependentWidgetOnlyOnEventTriggered() {
 		return displayDependentWidgetOnlyOnEventTriggered;
 	}
@@ -978,6 +992,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyOnEventTriggered(boolean newDisplayDependentWidgetOnlyOnEventTriggered) {
 		boolean oldDisplayDependentWidgetOnlyOnEventTriggered = displayDependentWidgetOnlyOnEventTriggered;
 		displayDependentWidgetOnlyOnEventTriggered = newDisplayDependentWidgetOnlyOnEventTriggered;
@@ -990,6 +1005,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getParentOf() {
 		if (parentOf == null) {
 			parentOf = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.ABSTRACT_TABLE__PARENT_OF);
@@ -1002,6 +1018,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMandatory() {
 		return mandatory;
 	}
@@ -1011,6 +1028,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatory(boolean newMandatory) {
 		boolean oldMandatory = mandatory;
 		mandatory = newMandatory;
@@ -1023,6 +1041,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return readOnly;
 	}
@@ -1032,6 +1051,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReadOnly(boolean newReadOnly) {
 		boolean oldReadOnly = readOnly;
 		readOnly = newReadOnly;
@@ -1044,6 +1064,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelPosition getLabelPosition() {
 		return labelPosition;
 	}
@@ -1053,6 +1074,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelPosition(LabelPosition newLabelPosition) {
 		LabelPosition oldLabelPosition = labelPosition;
 		labelPosition = newLabelPosition == null ? LABEL_POSITION_EDEFAULT : newLabelPosition;
@@ -1065,6 +1087,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRealHtmlAttributes() {
 		return realHtmlAttributes;
 	}
@@ -1074,6 +1097,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRealHtmlAttributes(String newRealHtmlAttributes) {
 		String oldRealHtmlAttributes = realHtmlAttributes;
 		realHtmlAttributes = newRealHtmlAttributes;
@@ -1086,6 +1110,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isInjectWidgetCondition() {
 		return injectWidgetCondition;
 	}
@@ -1095,6 +1120,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetCondition(boolean newInjectWidgetCondition) {
 		boolean oldInjectWidgetCondition = injectWidgetCondition;
 		injectWidgetCondition = newInjectWidgetCondition;
@@ -1107,6 +1133,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -1116,6 +1143,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -1128,6 +1156,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getReturnTypeModifier() {
 		return returnTypeModifier;
 	}
@@ -1137,6 +1166,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeModifier(String newReturnTypeModifier) {
 		String oldReturnTypeModifier = returnTypeModifier;
 		returnTypeModifier = newReturnTypeModifier;
@@ -1149,6 +1179,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition() {
 		return displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition;
 	}
@@ -1173,6 +1204,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition(Expression newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 		if (newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 			NotificationChain msgs = null;
@@ -1192,6 +1224,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayAfterEventDependsOnConditionScript() {
 		return displayAfterEventDependsOnConditionScript;
 	}
@@ -1216,6 +1249,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayAfterEventDependsOnConditionScript(Expression newDisplayAfterEventDependsOnConditionScript) {
 		if (newDisplayAfterEventDependsOnConditionScript != displayAfterEventDependsOnConditionScript) {
 			NotificationChain msgs = null;
@@ -1235,6 +1269,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInputExpression() {
 		return inputExpression;
 	}
@@ -1259,6 +1294,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputExpression(Expression newInputExpression) {
 		if (newInputExpression != inputExpression) {
 			NotificationChain msgs = null;
@@ -1278,6 +1314,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getAfterEventExpression() {
 		return afterEventExpression;
 	}
@@ -1302,6 +1339,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAfterEventExpression(Expression newAfterEventExpression) {
 		if (newAfterEventExpression != afterEventExpression) {
 			NotificationChain msgs = null;
@@ -1321,6 +1359,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltip() {
 		return tooltip;
 	}
@@ -1345,6 +1384,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltip(Expression newTooltip) {
 		if (newTooltip != tooltip) {
 			NotificationChain msgs = null;
@@ -1364,6 +1404,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getHelpMessage() {
 		return helpMessage;
 	}
@@ -1388,6 +1429,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHelpMessage(Expression newHelpMessage) {
 		if (newHelpMessage != helpMessage) {
 			NotificationChain msgs = null;
@@ -1407,6 +1449,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabel() {
 		return displayLabel;
 	}
@@ -1431,6 +1474,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabel(Expression newDisplayLabel) {
 		if (newDisplayLabel != displayLabel) {
 			NotificationChain msgs = null;
@@ -1450,6 +1494,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInjectWidgetScript() {
 		return injectWidgetScript;
 	}
@@ -1474,6 +1519,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetScript(Expression newInjectWidgetScript) {
 		if (newInjectWidgetScript != injectWidgetScript) {
 			NotificationChain msgs = null;
@@ -1493,6 +1539,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Operation getAction() {
 		return action;
 	}
@@ -1517,6 +1564,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(Operation newAction) {
 		if (newAction != action) {
 			NotificationChain msgs = null;
@@ -1536,6 +1584,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDuplicate() {
 		return duplicate;
 	}
@@ -1545,6 +1594,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuplicate(boolean newDuplicate) {
 		boolean oldDuplicate = duplicate;
 		duplicate = newDuplicate;
@@ -1557,6 +1607,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitNumberOfDuplication() {
 		return limitNumberOfDuplication;
 	}
@@ -1566,6 +1617,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitNumberOfDuplication(boolean newLimitNumberOfDuplication) {
 		boolean oldLimitNumberOfDuplication = limitNumberOfDuplication;
 		limitNumberOfDuplication = newLimitNumberOfDuplication;
@@ -1578,6 +1630,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLimitMinNumberOfDuplication() {
 		return limitMinNumberOfDuplication;
 	}
@@ -1587,6 +1640,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLimitMinNumberOfDuplication(boolean newLimitMinNumberOfDuplication) {
 		boolean oldLimitMinNumberOfDuplication = limitMinNumberOfDuplication;
 		limitMinNumberOfDuplication = newLimitMinNumberOfDuplication;
@@ -1599,6 +1653,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMaxNumberOfDuplication() {
 		return maxNumberOfDuplication;
 	}
@@ -1623,6 +1678,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxNumberOfDuplication(Expression newMaxNumberOfDuplication) {
 		if (newMaxNumberOfDuplication != maxNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1642,6 +1698,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getMinNumberOfDuplication() {
 		return minNumberOfDuplication;
 	}
@@ -1666,6 +1723,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinNumberOfDuplication(Expression newMinNumberOfDuplication) {
 		if (newMinNumberOfDuplication != minNumberOfDuplication) {
 			NotificationChain msgs = null;
@@ -1685,6 +1743,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForAdd() {
 		return displayLabelForAdd;
 	}
@@ -1709,6 +1768,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForAdd(Expression newDisplayLabelForAdd) {
 		if (newDisplayLabelForAdd != displayLabelForAdd) {
 			NotificationChain msgs = null;
@@ -1728,6 +1788,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForAdd() {
 		return tooltipForAdd;
 	}
@@ -1752,6 +1813,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForAdd(Expression newTooltipForAdd) {
 		if (newTooltipForAdd != tooltipForAdd) {
 			NotificationChain msgs = null;
@@ -1771,6 +1833,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabelForRemove() {
 		return displayLabelForRemove;
 	}
@@ -1795,6 +1858,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabelForRemove(Expression newDisplayLabelForRemove) {
 		if (newDisplayLabelForRemove != displayLabelForRemove) {
 			NotificationChain msgs = null;
@@ -1814,6 +1878,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltipForRemove() {
 		return tooltipForRemove;
 	}
@@ -1838,6 +1903,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltipForRemove(Expression newTooltipForRemove) {
 		if (newTooltipForRemove != tooltipForRemove) {
 			NotificationChain msgs = null;
@@ -1857,6 +1923,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLeftColumnIsHeader() {
 		return leftColumnIsHeader;
 	}
@@ -1866,6 +1933,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLeftColumnIsHeader(boolean newLeftColumnIsHeader) {
 		boolean oldLeftColumnIsHeader = leftColumnIsHeader;
 		leftColumnIsHeader = newLeftColumnIsHeader;
@@ -1878,6 +1946,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isRightColumnIsHeader() {
 		return rightColumnIsHeader;
 	}
@@ -1887,6 +1956,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRightColumnIsHeader(boolean newRightColumnIsHeader) {
 		boolean oldRightColumnIsHeader = rightColumnIsHeader;
 		rightColumnIsHeader = newRightColumnIsHeader;
@@ -1899,6 +1969,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFirstRowIsHeader() {
 		return firstRowIsHeader;
 	}
@@ -1908,6 +1979,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFirstRowIsHeader(boolean newFirstRowIsHeader) {
 		boolean oldFirstRowIsHeader = firstRowIsHeader;
 		firstRowIsHeader = newFirstRowIsHeader;
@@ -1920,6 +1992,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isLastRowIsHeader() {
 		return lastRowIsHeader;
 	}
@@ -1929,6 +2002,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLastRowIsHeader(boolean newLastRowIsHeader) {
 		boolean oldLastRowIsHeader = lastRowIsHeader;
 		lastRowIsHeader = newLastRowIsHeader;
@@ -1941,6 +2015,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isInitializedUsingCells() {
 		return initializedUsingCells;
 	}
@@ -1950,6 +2025,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInitializedUsingCells(boolean newInitializedUsingCells) {
 		boolean oldInitializedUsingCells = initializedUsingCells;
 		initializedUsingCells = newInitializedUsingCells;
@@ -1962,6 +2038,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseHorizontalHeader() {
 		return useHorizontalHeader;
 	}
@@ -1971,6 +2048,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseHorizontalHeader(boolean newUseHorizontalHeader) {
 		boolean oldUseHorizontalHeader = useHorizontalHeader;
 		useHorizontalHeader = newUseHorizontalHeader;
@@ -1983,6 +2061,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseVerticalHeader() {
 		return useVerticalHeader;
 	}
@@ -1992,6 +2071,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseVerticalHeader(boolean newUseVerticalHeader) {
 		boolean oldUseVerticalHeader = useVerticalHeader;
 		useVerticalHeader = newUseVerticalHeader;
@@ -2004,6 +2084,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getHorizontalHeaderExpression() {
 		return horizontalHeaderExpression;
 	}
@@ -2028,6 +2109,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHorizontalHeaderExpression(Expression newHorizontalHeaderExpression) {
 		if (newHorizontalHeaderExpression != horizontalHeaderExpression) {
 			NotificationChain msgs = null;
@@ -2047,6 +2129,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getVerticalHeaderExpression() {
 		return verticalHeaderExpression;
 	}
@@ -2071,6 +2154,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVerticalHeaderExpression(Expression newVerticalHeaderExpression) {
 		if (newVerticalHeaderExpression != verticalHeaderExpression) {
 			NotificationChain msgs = null;
@@ -2090,6 +2174,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getTableExpression() {
 		return tableExpression;
 	}
@@ -2114,6 +2199,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTableExpression(TableExpression newTableExpression) {
 		if (newTableExpression != tableExpression) {
 			NotificationChain msgs = null;
@@ -2773,7 +2859,7 @@ public abstract class AbstractTableImpl extends EObjectImpl implements AbstractT
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

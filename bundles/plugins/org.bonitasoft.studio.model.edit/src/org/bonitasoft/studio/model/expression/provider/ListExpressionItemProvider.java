@@ -116,7 +116,7 @@ public class ListExpressionItemProvider extends AbstractExpressionItemProvider {
 	public String getText(Object object) {
 		return getString("_UI_ListExpression_type"); //$NON-NLS-1$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

@@ -18,11 +18,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class EditingSupportBuilder<T> {
 
@@ -31,6 +34,7 @@ public class EditingSupportBuilder<T> {
     private Function<T, CellEditor> cellEditorFunction;
     private Function<T, Object> valueProvider = Object::toString;
     private BiConsumer<T, Object> valueUpdater = (e, v) -> Function.identity();
+	private String widgetId;
 
     public EditingSupportBuilder(ColumnViewer viewer) {
         this.viewer = viewer;
@@ -56,6 +60,11 @@ public class EditingSupportBuilder<T> {
         this.canEditFunction = canEditFunction;
         return this;
     }
+    
+    public EditingSupportBuilder<T>  withId(String id) {
+		this.widgetId = id;
+		return this;
+	}
 
     public EditingSupport create() {
         return new EditingSupport(viewer) {
@@ -73,9 +82,14 @@ public class EditingSupportBuilder<T> {
 
             @Override
             protected CellEditor getCellEditor(Object element) {
-                return cellEditorFunction.apply((T) element);
+            	CellEditor editor = cellEditorFunction.apply((T) element);
+            	Control control = editor.getControl();
+            	if(control.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY) == null && widgetId != null) {
+            		control.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,widgetId);
+            	}
+            	return editor;
             }
-
+            
             @Override
             protected boolean canEdit(Object element) {
                 try {

@@ -516,6 +516,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -525,6 +526,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -537,6 +539,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -546,6 +549,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -558,6 +562,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, FormPackage.FORM_BUTTON__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -570,6 +575,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getHtmlAttributes() {
 		if (htmlAttributes == null) {
 			htmlAttributes = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, FormPackage.FORM_BUTTON__HTML_ATTRIBUTES);
@@ -582,6 +588,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WidgetLayoutInfo getWidgetLayoutInfo() {
 		return widgetLayoutInfo;
 	}
@@ -606,6 +613,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidgetLayoutInfo(WidgetLayoutInfo newWidgetLayoutInfo) {
 		if (newWidgetLayoutInfo != widgetLayoutInfo) {
 			NotificationChain msgs = null;
@@ -625,6 +633,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getShowDisplayLabel() {
 		return showDisplayLabel;
 	}
@@ -634,6 +643,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowDisplayLabel(Boolean newShowDisplayLabel) {
 		Boolean oldShowDisplayLabel = showDisplayLabel;
 		showDisplayLabel = newShowDisplayLabel;
@@ -646,6 +656,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowHTMLForDisplayLabel() {
 		return allowHTMLForDisplayLabel;
 	}
@@ -655,6 +666,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowHTMLForDisplayLabel(boolean newAllowHTMLForDisplayLabel) {
 		boolean oldAllowHTMLForDisplayLabel = allowHTMLForDisplayLabel;
 		allowHTMLForDisplayLabel = newAllowHTMLForDisplayLabel;
@@ -667,6 +679,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getDependOn() {
 		if (dependOn == null) {
 			dependOn = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.FORM_BUTTON__DEPEND_ON);
@@ -679,6 +692,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDisplayDependentWidgetOnlyOnEventTriggered() {
 		return displayDependentWidgetOnlyOnEventTriggered;
 	}
@@ -688,6 +702,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyOnEventTriggered(boolean newDisplayDependentWidgetOnlyOnEventTriggered) {
 		boolean oldDisplayDependentWidgetOnlyOnEventTriggered = displayDependentWidgetOnlyOnEventTriggered;
 		displayDependentWidgetOnlyOnEventTriggered = newDisplayDependentWidgetOnlyOnEventTriggered;
@@ -700,6 +715,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<WidgetDependency> getParentOf() {
 		if (parentOf == null) {
 			parentOf = new EObjectContainmentEList<WidgetDependency>(WidgetDependency.class, this, FormPackage.FORM_BUTTON__PARENT_OF);
@@ -712,6 +728,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMandatory() {
 		return mandatory;
 	}
@@ -721,6 +738,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMandatory(boolean newMandatory) {
 		boolean oldMandatory = mandatory;
 		mandatory = newMandatory;
@@ -733,6 +751,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return readOnly;
 	}
@@ -742,6 +761,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReadOnly(boolean newReadOnly) {
 		boolean oldReadOnly = readOnly;
 		readOnly = newReadOnly;
@@ -754,6 +774,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelPosition getLabelPosition() {
 		return labelPosition;
 	}
@@ -763,6 +784,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelPosition(LabelPosition newLabelPosition) {
 		LabelPosition oldLabelPosition = labelPosition;
 		labelPosition = newLabelPosition == null ? LABEL_POSITION_EDEFAULT : newLabelPosition;
@@ -775,6 +797,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRealHtmlAttributes() {
 		return realHtmlAttributes;
 	}
@@ -784,6 +807,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRealHtmlAttributes(String newRealHtmlAttributes) {
 		String oldRealHtmlAttributes = realHtmlAttributes;
 		realHtmlAttributes = newRealHtmlAttributes;
@@ -796,6 +820,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isInjectWidgetCondition() {
 		return injectWidgetCondition;
 	}
@@ -805,6 +830,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetCondition(boolean newInjectWidgetCondition) {
 		boolean oldInjectWidgetCondition = injectWidgetCondition;
 		injectWidgetCondition = newInjectWidgetCondition;
@@ -817,6 +843,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -826,6 +853,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -838,6 +866,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getReturnTypeModifier() {
 		return returnTypeModifier;
 	}
@@ -847,6 +876,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeModifier(String newReturnTypeModifier) {
 		String oldReturnTypeModifier = returnTypeModifier;
 		returnTypeModifier = newReturnTypeModifier;
@@ -859,6 +889,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition() {
 		return displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition;
 	}
@@ -883,6 +914,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition(Expression newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 		if (newDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition) {
 			NotificationChain msgs = null;
@@ -902,6 +934,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayAfterEventDependsOnConditionScript() {
 		return displayAfterEventDependsOnConditionScript;
 	}
@@ -926,6 +959,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayAfterEventDependsOnConditionScript(Expression newDisplayAfterEventDependsOnConditionScript) {
 		if (newDisplayAfterEventDependsOnConditionScript != displayAfterEventDependsOnConditionScript) {
 			NotificationChain msgs = null;
@@ -945,6 +979,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInputExpression() {
 		return inputExpression;
 	}
@@ -969,6 +1004,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputExpression(Expression newInputExpression) {
 		if (newInputExpression != inputExpression) {
 			NotificationChain msgs = null;
@@ -988,6 +1024,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getAfterEventExpression() {
 		return afterEventExpression;
 	}
@@ -1012,6 +1049,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAfterEventExpression(Expression newAfterEventExpression) {
 		if (newAfterEventExpression != afterEventExpression) {
 			NotificationChain msgs = null;
@@ -1031,6 +1069,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTooltip() {
 		return tooltip;
 	}
@@ -1055,6 +1094,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTooltip(Expression newTooltip) {
 		if (newTooltip != tooltip) {
 			NotificationChain msgs = null;
@@ -1074,6 +1114,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getHelpMessage() {
 		return helpMessage;
 	}
@@ -1098,6 +1139,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHelpMessage(Expression newHelpMessage) {
 		if (newHelpMessage != helpMessage) {
 			NotificationChain msgs = null;
@@ -1117,6 +1159,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDisplayLabel() {
 		return displayLabel;
 	}
@@ -1141,6 +1184,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplayLabel(Expression newDisplayLabel) {
 		if (newDisplayLabel != displayLabel) {
 			NotificationChain msgs = null;
@@ -1160,6 +1204,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInjectWidgetScript() {
 		return injectWidgetScript;
 	}
@@ -1184,6 +1229,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInjectWidgetScript(Expression newInjectWidgetScript) {
 		if (newInjectWidgetScript != injectWidgetScript) {
 			NotificationChain msgs = null;
@@ -1203,6 +1249,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Operation getAction() {
 		return action;
 	}
@@ -1227,6 +1274,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(Operation newAction) {
 		if (newAction != action) {
 			NotificationChain msgs = null;
@@ -1246,6 +1294,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getLabelBehavior() {
 		return labelBehavior;
 	}
@@ -1255,6 +1304,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelBehavior(Boolean newLabelBehavior) {
 		Boolean oldLabelBehavior = labelBehavior;
 		labelBehavior = newLabelBehavior;
@@ -1681,7 +1731,7 @@ public class FormButtonImpl extends EObjectImpl implements FormButton {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

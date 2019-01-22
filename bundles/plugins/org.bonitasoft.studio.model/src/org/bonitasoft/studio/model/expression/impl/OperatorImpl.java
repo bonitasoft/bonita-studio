@@ -123,6 +123,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -132,6 +133,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -144,6 +146,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExpression() {
 		return expression;
 	}
@@ -153,6 +156,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(String newExpression) {
 		String oldExpression = expression;
 		expression = newExpression;
@@ -165,6 +169,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getInputTypes() {
 		if (inputTypes == null) {
 			inputTypes = new EDataTypeUniqueEList<String>(String.class, this, ExpressionPackage.OPERATOR__INPUT_TYPES);
@@ -261,7 +266,7 @@ public class OperatorImpl extends EObjectImpl implements Operator {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: "); //$NON-NLS-1$
 		result.append(type);
 		result.append(", expression: "); //$NON-NLS-1$

@@ -84,6 +84,7 @@ public class ListFormFieldImpl extends MultipleValuatedFormFieldImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxHeigth() {
 		return maxHeigth;
 	}
@@ -93,6 +94,7 @@ public class ListFormFieldImpl extends MultipleValuatedFormFieldImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxHeigth(int newMaxHeigth) {
 		int oldMaxHeigth = maxHeigth;
 		maxHeigth = newMaxHeigth;
@@ -167,7 +169,7 @@ public class ListFormFieldImpl extends MultipleValuatedFormFieldImpl implements 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (maxHeigth: "); //$NON-NLS-1$
 		result.append(maxHeigth);
 		result.append(')');

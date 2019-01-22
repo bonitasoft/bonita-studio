@@ -195,7 +195,7 @@ public class ResourceUsageItemProvider
 		ResourceUsage resourceUsage = (ResourceUsage)object;
 		return getString("_UI_ResourceUsage_type") + " " + resourceUsage.getDuration(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

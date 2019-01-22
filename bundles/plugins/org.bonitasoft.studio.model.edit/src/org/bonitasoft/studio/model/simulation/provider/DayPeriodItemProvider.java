@@ -218,7 +218,7 @@ public class DayPeriodItemProvider
 		DayPeriod dayPeriod = (DayPeriod)object;
 		return getString("_UI_DayPeriod_type") + " " + dayPeriod.getStartHour(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

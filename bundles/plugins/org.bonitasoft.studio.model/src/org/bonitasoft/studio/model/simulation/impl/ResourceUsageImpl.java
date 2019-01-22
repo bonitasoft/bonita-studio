@@ -148,6 +148,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getDuration() {
 		return duration;
 	}
@@ -157,6 +158,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuration(long newDuration) {
 		long oldDuration = duration;
 		duration = newDuration;
@@ -169,6 +171,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getResourceID() {
 		return resourceID;
 	}
@@ -178,6 +181,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setResourceID(String newResourceID) {
 		String oldResourceID = resourceID;
 		resourceID = newResourceID;
@@ -190,6 +194,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getQuantity() {
 		return quantity;
 	}
@@ -199,6 +204,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setQuantity(int newQuantity) {
 		int oldQuantity = quantity;
 		quantity = newQuantity;
@@ -211,6 +217,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseActivityDuration() {
 		return useActivityDuration;
 	}
@@ -220,6 +227,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseActivityDuration(boolean newUseActivityDuration) {
 		boolean oldUseActivityDuration = useActivityDuration;
 		useActivityDuration = newUseActivityDuration;
@@ -324,7 +332,7 @@ public class ResourceUsageImpl extends EObjectImpl implements ResourceUsage {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (duration: "); //$NON-NLS-1$
 		result.append(duration);
 		result.append(", resourceID: "); //$NON-NLS-1$

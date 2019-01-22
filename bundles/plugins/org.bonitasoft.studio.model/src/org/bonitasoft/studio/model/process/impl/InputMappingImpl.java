@@ -122,6 +122,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getProcessSource() {
 		return processSource;
 	}
@@ -146,6 +147,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProcessSource(Expression newProcessSource) {
 		if (newProcessSource != processSource) {
 			NotificationChain msgs = null;
@@ -165,6 +167,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSubprocessTarget() {
 		return subprocessTarget;
 	}
@@ -174,6 +177,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSubprocessTarget(String newSubprocessTarget) {
 		String oldSubprocessTarget = subprocessTarget;
 		subprocessTarget = newSubprocessTarget;
@@ -186,6 +190,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InputMappingAssignationType getAssignationType() {
 		return assignationType;
 	}
@@ -195,6 +200,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAssignationType(InputMappingAssignationType newAssignationType) {
 		InputMappingAssignationType oldAssignationType = assignationType;
 		assignationType = newAssignationType == null ? ASSIGNATION_TYPE_EDEFAULT : newAssignationType;
@@ -303,7 +309,7 @@ public class InputMappingImpl extends EObjectImpl implements InputMapping {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (subprocessTarget: "); //$NON-NLS-1$
 		result.append(subprocessTarget);
 		result.append(", assignationType: "); //$NON-NLS-1$

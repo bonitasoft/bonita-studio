@@ -84,7 +84,7 @@ public class DoubleTypeItemProvider extends DataTypeItemProvider {
 			getString("_UI_DoubleType_type") : //$NON-NLS-1$
 			getString("_UI_DoubleType_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

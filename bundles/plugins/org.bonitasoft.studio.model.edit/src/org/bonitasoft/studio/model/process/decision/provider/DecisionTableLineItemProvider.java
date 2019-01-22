@@ -137,7 +137,7 @@ public class DecisionTableLineItemProvider
 	public String getText(Object object) {
 		return getString("_UI_DecisionTableLine_type"); //$NON-NLS-1$
 	}
-	
+
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

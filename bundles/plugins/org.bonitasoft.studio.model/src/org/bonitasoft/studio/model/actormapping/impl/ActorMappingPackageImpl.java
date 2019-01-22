@@ -168,7 +168,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ActorMappingPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -182,7 +182,8 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 		if (isInited) return (ActorMappingPackage)EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ActorMappingPackageImpl());
+		Object registeredActorMappingPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = registeredActorMappingPackage instanceof ActorMappingPackageImpl ? (ActorMappingPackageImpl)registeredActorMappingPackage : new ActorMappingPackageImpl();
 
 		isInited = true;
 
@@ -190,16 +191,26 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 		XMLTypePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theActorMappingPackage.createPackageContents();
@@ -230,7 +241,6 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 		// Mark meta-data to indicate it can't be changed
 		theActorMappingPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ActorMappingPackage.eNS_URI, theActorMappingPackage);
 		return theActorMappingPackage;
@@ -241,6 +251,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActorMapping() {
 		return actorMappingEClass;
 	}
@@ -250,6 +261,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getActorMapping_Name() {
 		return (EAttribute)actorMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -259,6 +271,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActorMapping_Groups() {
 		return (EReference)actorMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -268,6 +281,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActorMapping_Memberships() {
 		return (EReference)actorMappingEClass.getEStructuralFeatures().get(2);
 	}
@@ -277,6 +291,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActorMapping_Roles() {
 		return (EReference)actorMappingEClass.getEStructuralFeatures().get(3);
 	}
@@ -286,6 +301,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActorMapping_Users() {
 		return (EReference)actorMappingEClass.getEStructuralFeatures().get(4);
 	}
@@ -295,6 +311,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActorMappingsType() {
 		return actorMappingsTypeEClass;
 	}
@@ -304,6 +321,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getActorMappingsType_ActorMapping() {
 		return (EReference)actorMappingsTypeEClass.getEStructuralFeatures().get(0);
 	}
@@ -313,6 +331,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDocumentRoot() {
 		return documentRootEClass;
 	}
@@ -322,6 +341,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocumentRoot_Mixed() {
 		return (EAttribute)documentRootEClass.getEStructuralFeatures().get(0);
 	}
@@ -331,6 +351,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocumentRoot_XMLNSPrefixMap() {
 		return (EReference)documentRootEClass.getEStructuralFeatures().get(1);
 	}
@@ -340,6 +361,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocumentRoot_XSISchemaLocation() {
 		return (EReference)documentRootEClass.getEStructuralFeatures().get(2);
 	}
@@ -349,6 +371,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocumentRoot_ActorMappings() {
 		return (EReference)documentRootEClass.getEStructuralFeatures().get(3);
 	}
@@ -358,6 +381,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGroups() {
 		return groupsEClass;
 	}
@@ -367,6 +391,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getGroups_Group() {
 		return (EAttribute)groupsEClass.getEStructuralFeatures().get(0);
 	}
@@ -376,6 +401,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMembership() {
 		return membershipEClass;
 	}
@@ -385,6 +411,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMembership_Membership() {
 		return (EReference)membershipEClass.getEStructuralFeatures().get(0);
 	}
@@ -394,6 +421,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMembershipType() {
 		return membershipTypeEClass;
 	}
@@ -403,6 +431,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMembershipType_Group() {
 		return (EAttribute)membershipTypeEClass.getEStructuralFeatures().get(0);
 	}
@@ -412,6 +441,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMembershipType_Role() {
 		return (EAttribute)membershipTypeEClass.getEStructuralFeatures().get(1);
 	}
@@ -421,6 +451,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRoles() {
 		return rolesEClass;
 	}
@@ -430,6 +461,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRoles_Role() {
 		return (EAttribute)rolesEClass.getEStructuralFeatures().get(0);
 	}
@@ -439,6 +471,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getUsers() {
 		return usersEClass;
 	}
@@ -448,6 +481,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getUsers_User() {
 		return (EAttribute)usersEClass.getEStructuralFeatures().get(0);
 	}
@@ -457,6 +491,7 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorMappingFactory getActorMappingFactory() {
 		return (ActorMappingFactory)getEFactoryInstance();
 	}
@@ -595,12 +630,12 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 
@@ -611,175 +646,175 @@ public class ActorMappingPackageImpl extends EPackageImpl implements ActorMappin
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$	
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$
 		addAnnotation
-		  (actorMappingEClass, 
-		   source, 
+		  (actorMappingEClass,
+		   source,
 		   new String[] {
-			 "name", "actorMapping", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "actorMapping", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMapping_Name(), 
-		   source, 
+		  (getActorMapping_Name(),
+		   source,
 		   new String[] {
-			 "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "name" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "name" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMapping_Groups(), 
-		   source, 
+		  (getActorMapping_Groups(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "groups" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "groups" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMapping_Memberships(), 
-		   source, 
+		  (getActorMapping_Memberships(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "memberships" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "memberships" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMapping_Roles(), 
-		   source, 
+		  (getActorMapping_Roles(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "roles" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "roles" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMapping_Users(), 
-		   source, 
+		  (getActorMapping_Users(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "users" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "users" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (actorMappingsTypeEClass, 
-		   source, 
+		  (actorMappingsTypeEClass,
+		   source,
 		   new String[] {
-			 "name", "actorMappings_._type", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "actorMappings_._type", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getActorMappingsType_ActorMapping(), 
-		   source, 
+		  (getActorMappingsType_ActorMapping(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "actorMapping" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "actorMapping" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (documentRootEClass, 
-		   source, 
+		  (documentRootEClass,
+		   source,
 		   new String[] {
-			 "name", "", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getDocumentRoot_Mixed(), 
-		   source, 
+		  (getDocumentRoot_Mixed(),
+		   source,
 		   new String[] {
-			 "kind", "elementWildcard", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", ":mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "elementWildcard", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", ":mixed" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getDocumentRoot_XMLNSPrefixMap(), 
-		   source, 
+		  (getDocumentRoot_XMLNSPrefixMap(),
+		   source,
 		   new String[] {
-			 "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "xmlns:prefix" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "xmlns:prefix" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getDocumentRoot_XSISchemaLocation(), 
-		   source, 
+		  (getDocumentRoot_XSISchemaLocation(),
+		   source,
 		   new String[] {
-			 "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "xsi:schemaLocation" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "attribute", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "xsi:schemaLocation" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getDocumentRoot_ActorMappings(), 
-		   source, 
+		  (getDocumentRoot_ActorMappings(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "actorMappings", //$NON-NLS-1$ //$NON-NLS-2$
-			 "namespace", "##targetNamespace" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "actorMappings", //$NON-NLS-1$ //$NON-NLS-2$
+			   "namespace", "##targetNamespace" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (groupsEClass, 
-		   source, 
+		  (groupsEClass,
+		   source,
 		   new String[] {
-			 "name", "Groups", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "Groups", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getGroups_Group(), 
-		   source, 
+		  (getGroups_Group(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "group" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "group" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (membershipEClass, 
-		   source, 
+		  (membershipEClass,
+		   source,
 		   new String[] {
-			 "name", "Membership", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "Membership", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getMembership_Membership(), 
-		   source, 
+		  (getMembership_Membership(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "membership" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "membership" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (membershipTypeEClass, 
-		   source, 
+		  (membershipTypeEClass,
+		   source,
 		   new String[] {
-			 "name", "membership_._type", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "membership_._type", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getMembershipType_Group(), 
-		   source, 
+		  (getMembershipType_Group(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "group" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "group" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getMembershipType_Role(), 
-		   source, 
+		  (getMembershipType_Role(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "role" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "role" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (rolesEClass, 
-		   source, 
+		  (rolesEClass,
+		   source,
 		   new String[] {
-			 "name", "Roles", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "Roles", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getRoles_Role(), 
-		   source, 
+		  (getRoles_Role(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "role" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "role" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (usersEClass, 
-		   source, 
+		  (usersEClass,
+		   source,
 		   new String[] {
-			 "name", "Users", //$NON-NLS-1$ //$NON-NLS-2$
-			 "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+			   "name", "Users", //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "elementOnly" //$NON-NLS-1$ //$NON-NLS-2$
+		   });
 		addAnnotation
-		  (getUsers_User(), 
-		   source, 
+		  (getUsers_User(),
+		   source,
 		   new String[] {
-			 "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
-			 "name", "user" //$NON-NLS-1$ //$NON-NLS-2$
+			   "kind", "element", //$NON-NLS-1$ //$NON-NLS-2$
+			   "name", "user" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

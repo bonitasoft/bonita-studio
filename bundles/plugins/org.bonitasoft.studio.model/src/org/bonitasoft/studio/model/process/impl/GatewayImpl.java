@@ -85,6 +85,7 @@ public class GatewayImpl extends FlowElementImpl implements Gateway {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public GatewayType getGatewayType() {
 		return gatewayType;
 	}
@@ -94,6 +95,7 @@ public class GatewayImpl extends FlowElementImpl implements Gateway {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGatewayType(GatewayType newGatewayType) {
 		GatewayType oldGatewayType = gatewayType;
 		gatewayType = newGatewayType == null ? GATEWAY_TYPE_EDEFAULT : newGatewayType;
@@ -168,7 +170,7 @@ public class GatewayImpl extends FlowElementImpl implements Gateway {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (gatewayType: "); //$NON-NLS-1$
 		result.append(gatewayType);
 		result.append(')');

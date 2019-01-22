@@ -311,6 +311,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Validator> getValidators() {
 		if (validators == null) {
 			validators = new EObjectContainmentEList<Validator>(Validator.class, this, FormPackage.FORM__VALIDATORS);
@@ -323,6 +324,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getUseDefaultValidator() {
 		return useDefaultValidator;
 	}
@@ -332,6 +334,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseDefaultValidator(Boolean newUseDefaultValidator) {
 		Boolean oldUseDefaultValidator = useDefaultValidator;
 		useDefaultValidator = newUseDefaultValidator;
@@ -344,6 +347,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBelow() {
 		return below;
 	}
@@ -353,6 +357,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBelow(boolean newBelow) {
 		boolean oldBelow = below;
 		below = newBelow;
@@ -365,6 +370,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getNColumn() {
 		return nColumn;
 	}
@@ -374,6 +380,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNColumn(int newNColumn) {
 		int oldNColumn = nColumn;
 		nColumn = newNColumn;
@@ -386,6 +393,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EMap<String, String> getStringAttributes() {
 		if (stringAttributes == null) {
 			stringAttributes = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, FormPackage.FORM__STRING_ATTRIBUTES);
@@ -398,6 +406,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getNLine() {
 		return nLine;
 	}
@@ -407,6 +416,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNLine(int newNLine) {
 		int oldNLine = nLine;
 		nLine = newNLine;
@@ -419,6 +429,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getShowPageLabel() {
 		return showPageLabel;
 	}
@@ -428,6 +439,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowPageLabel(Boolean newShowPageLabel) {
 		Boolean oldShowPageLabel = showPageLabel;
 		showPageLabel = newShowPageLabel;
@@ -440,6 +452,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAllowHTMLInPageLabel() {
 		return allowHTMLInPageLabel;
 	}
@@ -449,6 +462,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAllowHTMLInPageLabel(boolean newAllowHTMLInPageLabel) {
 		boolean oldAllowHTMLInPageLabel = allowHTMLInPageLabel;
 		allowHTMLInPageLabel = newAllowHTMLInPageLabel;
@@ -461,6 +475,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -470,6 +485,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -482,6 +498,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Column> getColumns() {
 		if (columns == null) {
 			columns = new EObjectContainmentEList<Column>(Column.class, this, FormPackage.FORM__COLUMNS);
@@ -494,6 +511,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Line> getLines() {
 		if (lines == null) {
 			lines = new EObjectContainmentEList<Line>(Line.class, this, FormPackage.FORM__LINES);
@@ -506,6 +524,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Widget> getWidgets() {
 		if (widgets == null) {
 			widgets = new EObjectContainmentEList<Widget>(Widget.class, this, FormPackage.FORM__WIDGETS);
@@ -518,6 +537,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getPageLabel() {
 		return pageLabel;
 	}
@@ -542,6 +562,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPageLabel(Expression newPageLabel) {
 		if (newPageLabel != pageLabel) {
 			NotificationChain msgs = null;
@@ -561,6 +582,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getActions() {
 		if (actions == null) {
 			actions = new EObjectContainmentEList<Operation>(Operation.class, this, FormPackage.FORM__ACTIONS);
@@ -834,7 +856,7 @@ public class FormImpl extends ConnectableElementImpl implements Form {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (useDefaultValidator: "); //$NON-NLS-1$
 		result.append(useDefaultValidator);
 		result.append(", below: "); //$NON-NLS-1$

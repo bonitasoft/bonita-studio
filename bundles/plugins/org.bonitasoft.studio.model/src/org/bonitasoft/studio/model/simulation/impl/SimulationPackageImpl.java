@@ -271,7 +271,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link SimulationPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -285,21 +285,32 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 		if (isInited) return (SimulationPackage)EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
 
 		// Obtain or create and register package
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SimulationPackageImpl());
+		Object registeredSimulationPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		SimulationPackageImpl theSimulationPackage = registeredSimulationPackage instanceof SimulationPackageImpl ? (SimulationPackageImpl)registeredSimulationPackage : new SimulationPackageImpl();
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theSimulationPackage.createPackageContents();
@@ -330,7 +341,6 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 		// Mark meta-data to indicate it can't be changed
 		theSimulationPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(SimulationPackage.eNS_URI, theSimulationPackage);
 		return theSimulationPackage;
@@ -341,6 +351,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationElement() {
 		return simulationElementEClass;
 	}
@@ -350,6 +361,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationElement_Name() {
 		return (EAttribute)simulationElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -359,6 +371,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationElement_Description() {
 		return (EAttribute)simulationElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -368,6 +381,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationData() {
 		return simulationDataEClass;
 	}
@@ -377,6 +391,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationData_ExpressionBased() {
 		return (EAttribute)simulationDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -386,6 +401,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationData_Expression() {
 		return (EReference)simulationDataEClass.getEStructuralFeatures().get(1);
 	}
@@ -395,6 +411,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationTransition() {
 		return simulationTransitionEClass;
 	}
@@ -404,6 +421,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationTransition_Probability() {
 		return (EAttribute)simulationTransitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -413,6 +431,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationTransition_DataBased() {
 		return (EAttribute)simulationTransitionEClass.getEStructuralFeatures().get(1);
 	}
@@ -422,6 +441,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationTransition_UseExpression() {
 		return (EAttribute)simulationTransitionEClass.getEStructuralFeatures().get(2);
 	}
@@ -431,6 +451,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationTransition_Expression() {
 		return (EReference)simulationTransitionEClass.getEStructuralFeatures().get(3);
 	}
@@ -440,6 +461,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getResourceUsage() {
 		return resourceUsageEClass;
 	}
@@ -449,6 +471,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResourceUsage_Duration() {
 		return (EAttribute)resourceUsageEClass.getEStructuralFeatures().get(0);
 	}
@@ -458,6 +481,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResourceUsage_ResourceID() {
 		return (EAttribute)resourceUsageEClass.getEStructuralFeatures().get(1);
 	}
@@ -467,6 +491,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResourceUsage_Quantity() {
 		return (EAttribute)resourceUsageEClass.getEStructuralFeatures().get(2);
 	}
@@ -476,6 +501,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResourceUsage_UseActivityDuration() {
 		return (EAttribute)resourceUsageEClass.getEStructuralFeatures().get(3);
 	}
@@ -485,6 +511,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInjectionPeriod() {
 		return injectionPeriodEClass;
 	}
@@ -494,6 +521,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInjectionPeriod_Begin() {
 		return (EAttribute)injectionPeriodEClass.getEStructuralFeatures().get(0);
 	}
@@ -503,6 +531,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInjectionPeriod_End() {
 		return (EAttribute)injectionPeriodEClass.getEStructuralFeatures().get(1);
 	}
@@ -512,6 +541,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInjectionPeriod_NbInstances() {
 		return (EAttribute)injectionPeriodEClass.getEStructuralFeatures().get(2);
 	}
@@ -521,6 +551,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInjectionPeriod_Repartition() {
 		return (EAttribute)injectionPeriodEClass.getEStructuralFeatures().get(3);
 	}
@@ -530,6 +561,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationBoolean() {
 		return simulationBooleanEClass;
 	}
@@ -539,6 +571,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationBoolean_ProbabilityOfTrue() {
 		return (EAttribute)simulationBooleanEClass.getEStructuralFeatures().get(0);
 	}
@@ -548,6 +581,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationNumberData() {
 		return simulationNumberDataEClass;
 	}
@@ -557,6 +591,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationNumberData_Ranges() {
 		return (EReference)simulationNumberDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -566,6 +601,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationLiteralData() {
 		return simulationLiteralDataEClass;
 	}
@@ -575,6 +611,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationLiteralData_Literals() {
 		return (EReference)simulationLiteralDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -584,6 +621,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationLiteral() {
 		return simulationLiteralEClass;
 	}
@@ -593,6 +631,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationLiteral_Probability() {
 		return (EAttribute)simulationLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -602,6 +641,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationLiteral_Value() {
 		return (EAttribute)simulationLiteralEClass.getEStructuralFeatures().get(1);
 	}
@@ -611,6 +651,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationNumberRange() {
 		return simulationNumberRangeEClass;
 	}
@@ -620,6 +661,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationNumberRange_Min() {
 		return (EAttribute)simulationNumberRangeEClass.getEStructuralFeatures().get(0);
 	}
@@ -629,6 +671,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationNumberRange_Max() {
 		return (EAttribute)simulationNumberRangeEClass.getEStructuralFeatures().get(1);
 	}
@@ -638,6 +681,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationNumberRange_Probability() {
 		return (EAttribute)simulationNumberRangeEClass.getEStructuralFeatures().get(2);
 	}
@@ -647,6 +691,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationNumberRange_RepartitionType() {
 		return (EAttribute)simulationNumberRangeEClass.getEStructuralFeatures().get(3);
 	}
@@ -656,6 +701,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationDataContainer() {
 		return simulationDataContainerEClass;
 	}
@@ -665,6 +711,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationDataContainer_SimulationData() {
 		return (EReference)simulationDataContainerEClass.getEStructuralFeatures().get(0);
 	}
@@ -674,6 +721,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationAbstractProcess() {
 		return simulationAbstractProcessEClass;
 	}
@@ -683,6 +731,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationAbstractProcess_LoadProfileID() {
 		return (EAttribute)simulationAbstractProcessEClass.getEStructuralFeatures().get(0);
 	}
@@ -692,6 +741,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationAbstractProcess_MaximumTime() {
 		return (EAttribute)simulationAbstractProcessEClass.getEStructuralFeatures().get(1);
 	}
@@ -701,6 +751,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationActivity() {
 		return simulationActivityEClass;
 	}
@@ -710,6 +761,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationActivity_ResourcesUsages() {
 		return (EReference)simulationActivityEClass.getEStructuralFeatures().get(0);
 	}
@@ -719,6 +771,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationActivity_ExecutionTime() {
 		return (EAttribute)simulationActivityEClass.getEStructuralFeatures().get(1);
 	}
@@ -728,6 +781,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationActivity_EstimatedTime() {
 		return (EAttribute)simulationActivityEClass.getEStructuralFeatures().get(2);
 	}
@@ -737,6 +791,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationActivity_MaximumTime() {
 		return (EAttribute)simulationActivityEClass.getEStructuralFeatures().get(3);
 	}
@@ -746,6 +801,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationActivity_Contigous() {
 		return (EAttribute)simulationActivityEClass.getEStructuralFeatures().get(4);
 	}
@@ -755,6 +811,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimulationActivity_ExclusiveOutgoingTransition() {
 		return (EAttribute)simulationActivityEClass.getEStructuralFeatures().get(5);
 	}
@@ -764,6 +821,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationActivity_LoopTransition() {
 		return (EReference)simulationActivityEClass.getEStructuralFeatures().get(6);
 	}
@@ -773,6 +831,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationActivity_DataChange() {
 		return (EReference)simulationActivityEClass.getEStructuralFeatures().get(7);
 	}
@@ -782,6 +841,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDataChange() {
 		return dataChangeEClass;
 	}
@@ -791,6 +851,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDataChange_Data() {
 		return (EReference)dataChangeEClass.getEStructuralFeatures().get(0);
 	}
@@ -800,6 +861,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDataChange_Value() {
 		return (EReference)dataChangeEClass.getEStructuralFeatures().get(1);
 	}
@@ -809,6 +871,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimulationCalendar() {
 		return simulationCalendarEClass;
 	}
@@ -818,6 +881,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimulationCalendar_DaysOfWeek() {
 		return (EReference)simulationCalendarEClass.getEStructuralFeatures().get(0);
 	}
@@ -827,6 +891,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDayPeriod() {
 		return dayPeriodEClass;
 	}
@@ -836,6 +901,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDayPeriod_Day() {
 		return (EAttribute)dayPeriodEClass.getEStructuralFeatures().get(0);
 	}
@@ -845,6 +911,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDayPeriod_StartHour() {
 		return (EAttribute)dayPeriodEClass.getEStructuralFeatures().get(1);
 	}
@@ -854,6 +921,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDayPeriod_EndHour() {
 		return (EAttribute)dayPeriodEClass.getEStructuralFeatures().get(2);
 	}
@@ -863,6 +931,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDayPeriod_StartMinute() {
 		return (EAttribute)dayPeriodEClass.getEStructuralFeatures().get(3);
 	}
@@ -872,6 +941,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDayPeriod_EndMinute() {
 		return (EAttribute)dayPeriodEClass.getEStructuralFeatures().get(4);
 	}
@@ -881,6 +951,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getModelVersion() {
 		return modelVersionEClass;
 	}
@@ -890,6 +961,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModelVersion_Version() {
 		return (EAttribute)modelVersionEClass.getEStructuralFeatures().get(0);
 	}
@@ -899,6 +971,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLoadProfile() {
 		return loadProfileEClass;
 	}
@@ -908,6 +981,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLoadProfile_Calendar() {
 		return (EReference)loadProfileEClass.getEStructuralFeatures().get(0);
 	}
@@ -917,6 +991,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLoadProfile_InjectionPeriods() {
 		return (EReference)loadProfileEClass.getEStructuralFeatures().get(1);
 	}
@@ -926,6 +1001,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getResource() {
 		return resourceEClass;
 	}
@@ -935,6 +1011,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_Type() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(0);
 	}
@@ -944,6 +1021,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_Quantity() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(1);
 	}
@@ -953,6 +1031,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_MaximumQuantity() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(2);
 	}
@@ -962,6 +1041,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_CostUnit() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(3);
 	}
@@ -971,6 +1051,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_TimeUnit() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(4);
 	}
@@ -980,6 +1061,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_FixedCost() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(5);
 	}
@@ -989,6 +1071,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_TimeCost() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(6);
 	}
@@ -998,6 +1081,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getResource_Calendar() {
 		return (EReference)resourceEClass.getEStructuralFeatures().get(7);
 	}
@@ -1007,6 +1091,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResource_Unlimited() {
 		return (EAttribute)resourceEClass.getEStructuralFeatures().get(8);
 	}
@@ -1016,6 +1101,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getTimeUnit() {
 		return timeUnitEEnum;
 	}
@@ -1025,6 +1111,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getRepartitionType() {
 		return repartitionTypeEEnum;
 	}
@@ -1034,6 +1121,7 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimulationFactory getSimulationFactory() {
 		return (SimulationFactory)getEFactoryInstance();
 	}
@@ -1321,12 +1409,12 @@ public class SimulationPackageImpl extends EPackageImpl implements SimulationPac
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

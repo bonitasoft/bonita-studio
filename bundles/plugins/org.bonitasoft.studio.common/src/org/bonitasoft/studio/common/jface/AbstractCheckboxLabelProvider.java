@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.jface;
 
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -23,11 +22,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -70,21 +66,6 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
     protected void paint(final Event event, final Object element) {
         final Image img = getImage(element);
         if (img != null) {
-            Widget widget = event.widget;
-            int headerHeight = 0;
-            if (widget instanceof Table) {
-                Table table = (Table) widget;
-                if (table.getHeaderVisible()) {
-                    headerHeight = table.getHeaderHeight();
-                }
-            }
-            if (widget instanceof Tree) {
-                Tree tree = (Tree) widget;
-                if (tree.getHeaderVisible()) {
-                    headerHeight = tree.getHeaderHeight();
-                }
-            }
-
             final Rectangle bounds = event.item instanceof TableItem ? ((TableItem) event.item).getBounds(event.index) :
                     ((TreeItem) event.item).getBounds(event.index);
             final Rectangle imgBounds = img.getBounds();
@@ -93,11 +74,9 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
             bounds.height /= 2;
             bounds.height -= imgBounds.height / 2;
 
-            int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-            int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-            if (GTKStyleHandler.isGTK3()) {
-                y = y - headerHeight;
-            }
+            final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
             if (SWT.getPlatform().equals("carbon")) {
                 event.gc.drawImage(img, x + 2, y - 1);
             } else {

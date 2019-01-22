@@ -144,6 +144,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExpression() {
 		return expression;
 	}
@@ -153,6 +154,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(String newExpression) {
 		String oldExpression = expression;
 		expression = newExpression;
@@ -165,6 +167,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -174,6 +177,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setErrorMessage(String newErrorMessage) {
 		String oldErrorMessage = errorMessage;
 		errorMessage = newErrorMessage;
@@ -186,6 +190,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -195,6 +200,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -207,6 +213,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getInputNames() {
 		if (inputNames == null) {
 			inputNames = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES);
@@ -313,7 +320,7 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (expression: "); //$NON-NLS-1$
 		result.append(expression);
 		result.append(", errorMessage: "); //$NON-NLS-1$

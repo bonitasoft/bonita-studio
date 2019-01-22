@@ -150,7 +150,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ExpressionPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -164,21 +164,32 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		if (isInited) return (ExpressionPackage)EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ExpressionPackageImpl());
+		Object registeredExpressionPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = registeredExpressionPackage instanceof ExpressionPackageImpl ? (ExpressionPackageImpl)registeredExpressionPackage : new ExpressionPackageImpl();
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI) : ParameterPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theExpressionPackage.createPackageContents();
@@ -209,7 +220,6 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		// Mark meta-data to indicate it can't be changed
 		theExpressionPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ExpressionPackage.eNS_URI, theExpressionPackage);
 		return theExpressionPackage;
@@ -220,6 +230,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractExpression() {
 		return abstractExpressionEClass;
 	}
@@ -229,6 +240,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExpression() {
 		return expressionEClass;
 	}
@@ -238,6 +250,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_Name() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -247,6 +260,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_Content() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -256,6 +270,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_Interpreter() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -265,6 +280,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_Type() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(3);
 	}
@@ -274,6 +290,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_ReturnType() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(4);
 	}
@@ -283,6 +300,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExpression_ReferencedElements() {
 		return (EReference)expressionEClass.getEStructuralFeatures().get(5);
 	}
@@ -292,6 +310,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExpression_Connectors() {
 		return (EReference)expressionEClass.getEStructuralFeatures().get(6);
 	}
@@ -301,6 +320,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_PropagateVariableChange() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(7);
 	}
@@ -310,6 +330,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_ReturnTypeFixed() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(8);
 	}
@@ -319,6 +340,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_AutomaticDependencies() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(9);
 	}
@@ -328,6 +350,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExpression_HtmlAllowed() {
 		return (EAttribute)expressionEClass.getEStructuralFeatures().get(10);
 	}
@@ -337,6 +360,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getListExpression() {
 		return listExpressionEClass;
 	}
@@ -346,6 +370,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getListExpression_Expressions() {
 		return (EReference)listExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -355,6 +380,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTableExpression() {
 		return tableExpressionEClass;
 	}
@@ -364,6 +390,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTableExpression_Expressions() {
 		return (EReference)tableExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -373,6 +400,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOperation() {
 		return operationEClass;
 	}
@@ -382,6 +410,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOperation_LeftOperand() {
 		return (EReference)operationEClass.getEStructuralFeatures().get(0);
 	}
@@ -391,6 +420,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOperation_RightOperand() {
 		return (EReference)operationEClass.getEStructuralFeatures().get(1);
 	}
@@ -400,6 +430,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOperation_Operator() {
 		return (EReference)operationEClass.getEStructuralFeatures().get(2);
 	}
@@ -409,6 +440,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOperator() {
 		return operatorEClass;
 	}
@@ -418,6 +450,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOperator_Type() {
 		return (EAttribute)operatorEClass.getEStructuralFeatures().get(0);
 	}
@@ -427,6 +460,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOperator_Expression() {
 		return (EAttribute)operatorEClass.getEStructuralFeatures().get(1);
 	}
@@ -436,6 +470,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOperator_InputTypes() {
 		return (EAttribute)operatorEClass.getEStructuralFeatures().get(2);
 	}
@@ -445,6 +480,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExpressionFactory getExpressionFactory() {
 		return (ExpressionFactory)getEFactoryInstance();
 	}
@@ -586,12 +622,12 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

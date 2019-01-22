@@ -85,6 +85,7 @@ public class BoundarySignalEventImpl extends BoundaryEventImpl implements Bounda
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSignalCode() {
 		return signalCode;
 	}
@@ -94,6 +95,7 @@ public class BoundarySignalEventImpl extends BoundaryEventImpl implements Bounda
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSignalCode(String newSignalCode) {
 		String oldSignalCode = signalCode;
 		signalCode = newSignalCode;
@@ -200,7 +202,7 @@ public class BoundarySignalEventImpl extends BoundaryEventImpl implements Bounda
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (signalCode: "); //$NON-NLS-1$
 		result.append(signalCode);
 		result.append(')');

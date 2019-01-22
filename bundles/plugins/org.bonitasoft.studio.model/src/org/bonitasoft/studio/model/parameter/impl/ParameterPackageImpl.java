@@ -118,7 +118,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ParameterPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -132,21 +132,32 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 		if (isInited) return (ParameterPackage)EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ParameterPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ParameterPackageImpl());
+		Object registeredParameterPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ParameterPackageImpl theParameterPackage = registeredParameterPackage instanceof ParameterPackageImpl ? (ParameterPackageImpl)registeredParameterPackage : new ParameterPackageImpl();
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) instanceof ActorMappingPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI) : ActorMappingPackage.eINSTANCE);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) instanceof ConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI) : ConfigurationPackage.eINSTANCE);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) instanceof ConnectorConfigurationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI) : ConnectorConfigurationPackage.eINSTANCE);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) instanceof ExpressionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI) : ExpressionPackage.eINSTANCE);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) instanceof KpiPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI) : KpiPackage.eINSTANCE);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) instanceof ProcessPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI) : ProcessPackage.eINSTANCE);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) instanceof DecisionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI) : DecisionPackage.eINSTANCE);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) instanceof TransitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI) : TransitionsPackage.eINSTANCE);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) instanceof FormPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI) : FormPackage.eINSTANCE);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) instanceof SimulationPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI) : SimulationPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theParameterPackage.createPackageContents();
@@ -177,7 +188,6 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 		// Mark meta-data to indicate it can't be changed
 		theParameterPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ParameterPackage.eNS_URI, theParameterPackage);
 		return theParameterPackage;
@@ -188,6 +198,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameter() {
 		return parameterEClass;
 	}
@@ -197,6 +208,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameter_Name() {
 		return (EAttribute)parameterEClass.getEStructuralFeatures().get(0);
 	}
@@ -206,6 +218,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameter_Value() {
 		return (EAttribute)parameterEClass.getEStructuralFeatures().get(1);
 	}
@@ -215,6 +228,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameter_TypeClassname() {
 		return (EAttribute)parameterEClass.getEStructuralFeatures().get(2);
 	}
@@ -224,6 +238,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameter_Description() {
 		return (EAttribute)parameterEClass.getEStructuralFeatures().get(3);
 	}
@@ -233,6 +248,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterContext() {
 		return parameterContextEClass;
 	}
@@ -242,6 +258,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterContext_Name() {
 		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(0);
 	}
@@ -251,6 +268,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterContext_Description() {
 		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(1);
 	}
@@ -260,6 +278,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterContext_Parameters() {
 		return (EReference)parameterContextEClass.getEStructuralFeatures().get(2);
 	}
@@ -269,6 +288,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterContext_DefaultContext() {
 		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(3);
 	}
@@ -278,6 +298,7 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterFactory getParameterFactory() {
 		return (ParameterFactory)getEFactoryInstance();
 	}
@@ -371,12 +392,12 @@ public class ParameterPackageImpl extends EPackageImpl implements ParameterPacka
 	 * @generated
 	 */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
 		addAnnotation
-		  (this, 
-		   source, 
+		  (this,
+		   source,
 		   new String[] {
-			 "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 

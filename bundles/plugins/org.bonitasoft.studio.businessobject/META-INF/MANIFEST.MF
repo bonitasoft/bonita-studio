@@ -70,7 +70,9 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.eclipse.e4.ui.services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.engine.api,
+Import-Package: javax.activation;version="1.1.0",
+ javax.xml.bind;version="2.2.0",
+ org.bonitasoft.engine.api,
  org.bonitasoft.engine.api.result,
  org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.bdm.dao,

@@ -17,6 +17,7 @@ import org.bonitasoft.studio.swtbot.framework.exception.SemanticElementNotFoundE
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.swtbot.eclipse.finder.finders.WorkbenchContentsFinder;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -35,7 +36,19 @@ public class BotGefBaseEditor extends BotBase {
 
     public BotGefBaseEditor(final SWTGefBot bot) {
         super(bot);
-
+        WorkbenchContentsFinder workbenchContentsFinder = new WorkbenchContentsFinder();
+        bot.waitUntil(new DefaultCondition() {
+			
+			@Override
+			public boolean test() throws Exception {
+				return workbenchContentsFinder.findActiveEditor() != null;
+			}
+			
+			@Override
+			public String getFailureMessage() {
+				return "There is no active editor";
+			}
+		},10000,500);
         final SWTBotEditor botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
     }

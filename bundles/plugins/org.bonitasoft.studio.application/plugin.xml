@@ -1231,8 +1231,11 @@
       <viewerContentBinding
             viewerId="org.bonitasoft.studio.application.project.explorer">
          <includes>
-            <contentExtension
+        	 <contentExtension
                   pattern="org.bonitasoft.studio.application.navigatorContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.nested.nestedProjectContentProvider">
             </contentExtension>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.linkHelper">
@@ -1248,9 +1251,6 @@
             </contentExtension>
             <contentExtension
                   pattern="org.bonitasoft.studio.application.project.explorer.filters.*">
-            </contentExtension>
-            <contentExtension
-                  pattern="org.eclipse.ui.navigator.resources.nested.nestedProjectContentProvider">
             </contentExtension>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested">
@@ -1279,7 +1279,8 @@
             contentProvider="org.bonitasoft.studio.application.views.provider.BonitaExplorerContentProvider"
             id="org.bonitasoft.studio.application.navigatorContent"
             labelProvider="org.bonitasoft.studio.application.views.provider.BonitaExplorerLabelProvider"
-            name="Bonita Project Explorer Content">
+            name="Bonita Project Explorer Content"
+            priority="highest">
          <triggerPoints>
                 <or>
                     <adapt type="org.eclipse.core.resources.IProject" >

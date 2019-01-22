@@ -242,6 +242,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MultiInstanceType getType() {
 		return type;
 	}
@@ -251,6 +252,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(MultiInstanceType newType) {
 		MultiInstanceType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -263,6 +265,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Boolean getTestBefore() {
 		return testBefore;
 	}
@@ -272,6 +275,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTestBefore(Boolean newTestBefore) {
 		Boolean oldTestBefore = testBefore;
 		testBefore = newTestBefore;
@@ -284,6 +288,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getLoopCondition() {
 		return loopCondition;
 	}
@@ -308,6 +313,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLoopCondition(Expression newLoopCondition) {
 		if (newLoopCondition != loopCondition) {
 			NotificationChain msgs = null;
@@ -327,6 +333,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getLoopMaximum() {
 		return loopMaximum;
 	}
@@ -351,6 +358,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLoopMaximum(Expression newLoopMaximum) {
 		if (newLoopMaximum != loopMaximum) {
 			NotificationChain msgs = null;
@@ -370,6 +378,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseCardinality() {
 		return useCardinality;
 	}
@@ -379,6 +388,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseCardinality(boolean newUseCardinality) {
 		boolean oldUseCardinality = useCardinality;
 		useCardinality = newUseCardinality;
@@ -391,6 +401,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCardinalityExpression() {
 		return cardinalityExpression;
 	}
@@ -415,6 +426,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCardinalityExpression(Expression newCardinalityExpression) {
 		if (newCardinalityExpression != cardinalityExpression) {
 			NotificationChain msgs = null;
@@ -434,6 +446,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data getCollectionDataToMultiInstantiate() {
 		if (collectionDataToMultiInstantiate != null && collectionDataToMultiInstantiate.eIsProxy()) {
 			InternalEObject oldCollectionDataToMultiInstantiate = (InternalEObject)collectionDataToMultiInstantiate;
@@ -460,6 +473,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCollectionDataToMultiInstantiate(Data newCollectionDataToMultiInstantiate) {
 		Data oldCollectionDataToMultiInstantiate = collectionDataToMultiInstantiate;
 		collectionDataToMultiInstantiate = newCollectionDataToMultiInstantiate;
@@ -472,6 +486,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getIteratorExpression() {
 		return iteratorExpression;
 	}
@@ -496,6 +511,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIteratorExpression(Expression newIteratorExpression) {
 		if (newIteratorExpression != iteratorExpression) {
 			NotificationChain msgs = null;
@@ -515,6 +531,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data getOutputData() {
 		if (outputData != null && outputData.eIsProxy()) {
 			InternalEObject oldOutputData = (InternalEObject)outputData;
@@ -541,6 +558,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputData(Data newOutputData) {
 		Data oldOutputData = outputData;
 		outputData = newOutputData;
@@ -553,6 +571,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data getListDataContainingOutputResults() {
 		if (listDataContainingOutputResults != null && listDataContainingOutputResults.eIsProxy()) {
 			InternalEObject oldListDataContainingOutputResults = (InternalEObject)listDataContainingOutputResults;
@@ -579,6 +598,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setListDataContainingOutputResults(Data newListDataContainingOutputResults) {
 		Data oldListDataContainingOutputResults = listDataContainingOutputResults;
 		listDataContainingOutputResults = newListDataContainingOutputResults;
@@ -591,6 +611,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getCompletionCondition() {
 		return completionCondition;
 	}
@@ -615,6 +636,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCompletionCondition(Expression newCompletionCondition) {
 		if (newCompletionCondition != completionCondition) {
 			NotificationChain msgs = null;
@@ -634,6 +656,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStoreOutput() {
 		return storeOutput;
 	}
@@ -643,6 +666,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStoreOutput(boolean newStoreOutput) {
 		boolean oldStoreOutput = storeOutput;
 		storeOutput = newStoreOutput;
@@ -852,7 +876,7 @@ public abstract class MultiInstantiableImpl extends EObjectImpl implements Multi
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: "); //$NON-NLS-1$
 		result.append(type);
 		result.append(", testBefore: "); //$NON-NLS-1$

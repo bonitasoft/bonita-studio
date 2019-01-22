@@ -131,6 +131,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEvent() {
 		return event;
 	}
@@ -140,6 +141,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEvent(String newEvent) {
 		String oldEvent = event;
 		event = newEvent;
@@ -152,6 +154,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MessageFlow getIncomingMessag() {
 		if (incomingMessag != null && incomingMessag.eIsProxy()) {
 			InternalEObject oldIncomingMessag = (InternalEObject)incomingMessag;
@@ -193,6 +196,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIncomingMessag(MessageFlow newIncomingMessag) {
 		if (newIncomingMessag != incomingMessag) {
 			NotificationChain msgs = null;
@@ -212,6 +216,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getCorrelation() {
 		return correlation;
 	}
@@ -236,6 +241,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelation(TableExpression newCorrelation) {
 		if (newCorrelation != correlation) {
 			NotificationChain msgs = null;
@@ -255,6 +261,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Operation> getMessageContent() {
 		if (messageContent == null) {
 			messageContent = new EObjectContainmentEList<Operation>(Operation.class, this, ProcessPackage.BOUNDARY_MESSAGE_EVENT__MESSAGE_CONTENT);
@@ -434,7 +441,7 @@ public class BoundaryMessageEventImpl extends BoundaryEventImpl implements Bound
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (event: "); //$NON-NLS-1$
 		result.append(event);
 		result.append(')');

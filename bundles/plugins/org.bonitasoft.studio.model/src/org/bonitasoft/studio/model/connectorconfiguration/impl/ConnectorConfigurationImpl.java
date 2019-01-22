@@ -169,6 +169,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinitionId() {
 		return definitionId;
 	}
@@ -178,6 +179,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinitionId(String newDefinitionId) {
 		String oldDefinitionId = definitionId;
 		definitionId = newDefinitionId;
@@ -190,6 +192,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -199,6 +202,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -211,6 +215,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -220,6 +225,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -232,6 +238,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ConnectorParameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<ConnectorParameter>(ConnectorParameter.class, this, ConnectorConfigurationPackage.CONNECTOR_CONFIGURATION__PARAMETERS);
@@ -244,6 +251,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModelVersion() {
 		return modelVersion;
 	}
@@ -253,6 +261,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModelVersion(String newModelVersion) {
 		String oldModelVersion = modelVersion;
 		modelVersion = newModelVersion;
@@ -383,7 +392,7 @@ public class ConnectorConfigurationImpl extends EObjectImpl implements Connector
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (definitionId: "); //$NON-NLS-1$
 		result.append(definitionId);
 		result.append(", version: "); //$NON-NLS-1$

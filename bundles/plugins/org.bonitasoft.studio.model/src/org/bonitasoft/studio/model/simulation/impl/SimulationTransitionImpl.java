@@ -142,6 +142,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getProbability() {
 		return probability;
 	}
@@ -151,6 +152,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProbability(double newProbability) {
 		double oldProbability = probability;
 		probability = newProbability;
@@ -163,6 +165,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDataBased() {
 		return dataBased;
 	}
@@ -172,6 +175,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDataBased(boolean newDataBased) {
 		boolean oldDataBased = dataBased;
 		dataBased = newDataBased;
@@ -184,6 +188,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseExpression() {
 		return useExpression;
 	}
@@ -193,6 +198,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseExpression(boolean newUseExpression) {
 		boolean oldUseExpression = useExpression;
 		useExpression = newUseExpression;
@@ -205,6 +211,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -229,6 +236,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -354,7 +362,7 @@ public class SimulationTransitionImpl extends EObjectImpl implements SimulationT
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (probability: "); //$NON-NLS-1$
 		result.append(probability);
 		result.append(", dataBased: "); //$NON-NLS-1$

@@ -16,6 +16,8 @@ package org.bonitasoft.studio.tests.businessobject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.InputStream;
+
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.tenant.TenantResourceState;
@@ -36,12 +38,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Romain Bioteau
- */
 public class DeployBDROperationIT {
 
-    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bomRepositoryStore;
     private DependencyRepositoryStore depStore;
     private BusinessObjectModelFileStore businessObjectDefinitionFileStore;
     private APISession apiSession;
@@ -52,26 +51,26 @@ public class DeployBDROperationIT {
         if (apiSession != null) {
             managerEx.logoutDefaultTenant(apiSession);
         }
-        final BusinessObjectModelFileStore fileStore = defStore.getChild("bdm.zip");
+        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip");
         if (fileStore != null) {
             fileStore.delete();
         }
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
+    
+    @SuppressWarnings("unchecked")
     @Before
     public void setUp() throws Exception {
         PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), Repository.NULL_PROGRESS_MONITOR);
         depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        defStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = defStore.getChild("bdm.zip");
+        bomRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip");
         if (fileStore != null) {
             fileStore.delete();
         }
-        businessObjectDefinitionFileStore = (BusinessObjectModelFileStore) defStore.importInputStream("bdm.zip",
-                DeployBDROperationIT.class.getResourceAsStream("/bdm.zip"));
+        InputStream testBDMStream = DeployBDROperationIT.class.getResourceAsStream("/bdm.zip");
+        businessObjectDefinitionFileStore = (BusinessObjectModelFileStore) bomRepositoryStore.importInputStream("bdm.zip",
+                testBDMStream);
         managerEx = BOSEngineManager.getInstance();
     }
 

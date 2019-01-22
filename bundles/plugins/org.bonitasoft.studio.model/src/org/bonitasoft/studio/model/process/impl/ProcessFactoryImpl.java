@@ -229,6 +229,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Activity createActivity() {
 		ActivityImpl activity = new ActivityImpl();
 		return activity;
@@ -239,6 +240,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Actor createActor() {
 		ActorImpl actor = new ActorImpl();
 		return actor;
@@ -249,6 +251,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ActorFilter createActorFilter() {
 		ActorFilterImpl actorFilter = new ActorFilterImpl();
 		return actorFilter;
@@ -259,6 +262,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ANDGateway createANDGateway() {
 		ANDGatewayImpl andGateway = new ANDGatewayImpl();
 		return andGateway;
@@ -269,6 +273,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Association createAssociation() {
 		AssociationImpl association = new AssociationImpl();
 		return association;
@@ -279,6 +284,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BooleanType createBooleanType() {
 		BooleanTypeImpl booleanType = new BooleanTypeImpl();
 		return booleanType;
@@ -289,6 +295,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BoundaryEvent createBoundaryEvent() {
 		BoundaryEventImpl boundaryEvent = new BoundaryEventImpl();
 		return boundaryEvent;
@@ -299,6 +306,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BoundaryMessageEvent createBoundaryMessageEvent() {
 		BoundaryMessageEventImpl boundaryMessageEvent = new BoundaryMessageEventImpl();
 		return boundaryMessageEvent;
@@ -309,6 +317,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BoundarySignalEvent createBoundarySignalEvent() {
 		BoundarySignalEventImpl boundarySignalEvent = new BoundarySignalEventImpl();
 		return boundarySignalEvent;
@@ -319,6 +328,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BoundaryTimerEvent createBoundaryTimerEvent() {
 		BoundaryTimerEventImpl boundaryTimerEvent = new BoundaryTimerEventImpl();
 		return boundaryTimerEvent;
@@ -329,6 +339,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BusinessObjectData createBusinessObjectData() {
 		BusinessObjectDataImpl businessObjectData = new BusinessObjectDataImpl();
 		return businessObjectData;
@@ -339,6 +350,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BusinessObjectType createBusinessObjectType() {
 		BusinessObjectTypeImpl businessObjectType = new BusinessObjectTypeImpl();
 		return businessObjectType;
@@ -349,6 +361,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CallActivity createCallActivity() {
 		CallActivityImpl callActivity = new CallActivityImpl();
 		return callActivity;
@@ -359,6 +372,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CatchLinkEvent createCatchLinkEvent() {
 		CatchLinkEventImpl catchLinkEvent = new CatchLinkEventImpl();
 		return catchLinkEvent;
@@ -369,6 +383,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectableElement createConnectableElement() {
 		ConnectableElementImpl connectableElement = new ConnectableElementImpl();
 		return connectableElement;
@@ -379,6 +394,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Connector createConnector() {
 		ConnectorImpl connector = new ConnectorImpl();
 		return connector;
@@ -389,6 +405,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public org.bonitasoft.studio.model.process.Container createContainer() {
 		ContainerImpl container = new ContainerImpl();
 		return container;
@@ -399,6 +416,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Contract createContract() {
 		ContractImpl contract = new ContractImpl();
 		return contract;
@@ -409,6 +427,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractInputMapping createContractInputMapping() {
 		ContractInputMappingImpl contractInputMapping = new ContractInputMappingImpl();
 		return contractInputMapping;
@@ -419,6 +438,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractInput createContractInput() {
 		ContractInputImpl contractInput = new ContractInputImpl();
 		return contractInput;
@@ -429,6 +449,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContractConstraint createContractConstraint() {
 		ContractConstraintImpl contractConstraint = new ContractConstraintImpl();
 		return contractConstraint;
@@ -439,6 +460,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Connection createConnection() {
 		ConnectionImpl connection = new ConnectionImpl();
 		return connection;
@@ -449,6 +471,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Correlation createCorrelation() {
 		CorrelationImpl correlation = new CorrelationImpl();
 		return correlation;
@@ -459,6 +482,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CorrelationAssociation createCorrelationAssociation() {
 		CorrelationAssociationImpl correlationAssociation = new CorrelationAssociationImpl();
 		return correlationAssociation;
@@ -469,6 +493,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Data createData() {
 		DataImpl data = new DataImpl();
 		return data;
@@ -479,6 +504,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DataAware createDataAware() {
 		DataAwareImpl dataAware = new DataAwareImpl();
 		return dataAware;
@@ -489,6 +515,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DateType createDateType() {
 		DateTypeImpl dateType = new DateTypeImpl();
 		return dateType;
@@ -499,6 +526,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Document createDocument() {
 		DocumentImpl document = new DocumentImpl();
 		return document;
@@ -509,6 +537,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DoubleType createDoubleType() {
 		DoubleTypeImpl doubleType = new DoubleTypeImpl();
 		return doubleType;
@@ -519,6 +548,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Event createEvent() {
 		EventImpl event = new EventImpl();
 		return event;
@@ -529,6 +559,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EndErrorEvent createEndErrorEvent() {
 		EndErrorEventImpl endErrorEvent = new EndErrorEventImpl();
 		return endErrorEvent;
@@ -539,6 +570,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EndEvent createEndEvent() {
 		EndEventImpl endEvent = new EndEventImpl();
 		return endEvent;
@@ -549,6 +581,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EndMessageEvent createEndMessageEvent() {
 		EndMessageEventImpl endMessageEvent = new EndMessageEventImpl();
 		return endMessageEvent;
@@ -559,6 +592,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EndSignalEvent createEndSignalEvent() {
 		EndSignalEventImpl endSignalEvent = new EndSignalEventImpl();
 		return endSignalEvent;
@@ -569,6 +603,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EndTerminatedEvent createEndTerminatedEvent() {
 		EndTerminatedEventImpl endTerminatedEvent = new EndTerminatedEventImpl();
 		return endTerminatedEvent;
@@ -579,6 +614,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EnumType createEnumType() {
 		EnumTypeImpl enumType = new EnumTypeImpl();
 		return enumType;
@@ -589,6 +625,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FloatType createFloatType() {
 		FloatTypeImpl floatType = new FloatTypeImpl();
 		return floatType;
@@ -599,6 +636,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FlowElement createFlowElement() {
 		FlowElementImpl flowElement = new FlowElementImpl();
 		return flowElement;
@@ -609,6 +647,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormMapping createFormMapping() {
 		FormMappingImpl formMapping = new FormMappingImpl();
 		return formMapping;
@@ -619,6 +658,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Gateway createGateway() {
 		GatewayImpl gateway = new GatewayImpl();
 		return gateway;
@@ -629,6 +669,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InclusiveGateway createInclusiveGateway() {
 		InclusiveGatewayImpl inclusiveGateway = new InclusiveGatewayImpl();
 		return inclusiveGateway;
@@ -639,6 +680,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InputMapping createInputMapping() {
 		InputMappingImpl inputMapping = new InputMappingImpl();
 		return inputMapping;
@@ -649,6 +691,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntegerType createIntegerType() {
 		IntegerTypeImpl integerType = new IntegerTypeImpl();
 		return integerType;
@@ -659,6 +702,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateErrorCatchEvent createIntermediateErrorCatchEvent() {
 		IntermediateErrorCatchEventImpl intermediateErrorCatchEvent = new IntermediateErrorCatchEventImpl();
 		return intermediateErrorCatchEvent;
@@ -669,6 +713,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateCatchSignalEvent createIntermediateCatchSignalEvent() {
 		IntermediateCatchSignalEventImpl intermediateCatchSignalEvent = new IntermediateCatchSignalEventImpl();
 		return intermediateCatchSignalEvent;
@@ -679,6 +724,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateThrowSignalEvent createIntermediateThrowSignalEvent() {
 		IntermediateThrowSignalEventImpl intermediateThrowSignalEvent = new IntermediateThrowSignalEventImpl();
 		return intermediateThrowSignalEvent;
@@ -689,6 +735,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateCatchMessageEvent createIntermediateCatchMessageEvent() {
 		IntermediateCatchMessageEventImpl intermediateCatchMessageEvent = new IntermediateCatchMessageEventImpl();
 		return intermediateCatchMessageEvent;
@@ -699,6 +746,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateThrowMessageEvent createIntermediateThrowMessageEvent() {
 		IntermediateThrowMessageEventImpl intermediateThrowMessageEvent = new IntermediateThrowMessageEventImpl();
 		return intermediateThrowMessageEvent;
@@ -709,6 +757,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntermediateCatchTimerEvent createIntermediateCatchTimerEvent() {
 		IntermediateCatchTimerEventImpl intermediateCatchTimerEvent = new IntermediateCatchTimerEventImpl();
 		return intermediateCatchTimerEvent;
@@ -719,6 +768,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JavaObjectData createJavaObjectData() {
 		JavaObjectDataImpl javaObjectData = new JavaObjectDataImpl();
 		return javaObjectData;
@@ -729,6 +779,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JavaType createJavaType() {
 		JavaTypeImpl javaType = new JavaTypeImpl();
 		return javaType;
@@ -739,6 +790,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Lane createLane() {
 		LaneImpl lane = new LaneImpl();
 		return lane;
@@ -749,6 +801,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LinkEvent createLinkEvent() {
 		LinkEventImpl linkEvent = new LinkEventImpl();
 		return linkEvent;
@@ -759,6 +812,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LongType createLongType() {
 		LongTypeImpl longType = new LongTypeImpl();
 		return longType;
@@ -769,6 +823,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MainProcess createMainProcess() {
 		MainProcessImpl mainProcess = new MainProcessImpl();
 		return mainProcess;
@@ -779,6 +834,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Message createMessage() {
 		MessageImpl message = new MessageImpl();
 		return message;
@@ -789,6 +845,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MessageFlow createMessageFlow() {
 		MessageFlowImpl messageFlow = new MessageFlowImpl();
 		return messageFlow;
@@ -799,6 +856,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MessageEvent createMessageEvent() {
 		MessageEventImpl messageEvent = new MessageEventImpl();
 		return messageEvent;
@@ -809,6 +867,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NonInterruptingBoundaryTimerEvent createNonInterruptingBoundaryTimerEvent() {
 		NonInterruptingBoundaryTimerEventImpl nonInterruptingBoundaryTimerEvent = new NonInterruptingBoundaryTimerEventImpl();
 		return nonInterruptingBoundaryTimerEvent;
@@ -819,6 +878,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OperationContainer createOperationContainer() {
 		OperationContainerImpl operationContainer = new OperationContainerImpl();
 		return operationContainer;
@@ -829,6 +889,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OutputMapping createOutputMapping() {
 		OutputMappingImpl outputMapping = new OutputMappingImpl();
 		return outputMapping;
@@ -839,6 +900,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PageFlow createPageFlow() {
 		PageFlowImpl pageFlow = new PageFlowImpl();
 		return pageFlow;
@@ -849,6 +911,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Pool createPool() {
 		PoolImpl pool = new PoolImpl();
 		return pool;
@@ -859,6 +922,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReceiveTask createReceiveTask() {
 		ReceiveTaskImpl receiveTask = new ReceiveTaskImpl();
 		return receiveTask;
@@ -869,6 +933,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SequenceFlow createSequenceFlow() {
 		SequenceFlowImpl sequenceFlow = new SequenceFlowImpl();
 		return sequenceFlow;
@@ -879,6 +944,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StringType createStringType() {
 		StringTypeImpl stringType = new StringTypeImpl();
 		return stringType;
@@ -889,6 +955,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ScriptTask createScriptTask() {
 		ScriptTaskImpl scriptTask = new ScriptTaskImpl();
 		return scriptTask;
@@ -899,6 +966,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SearchIndex createSearchIndex() {
 		SearchIndexImpl searchIndex = new SearchIndexImpl();
 		return searchIndex;
@@ -909,6 +977,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SendTask createSendTask() {
 		SendTaskImpl sendTask = new SendTaskImpl();
 		return sendTask;
@@ -919,6 +988,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ServiceTask createServiceTask() {
 		ServiceTaskImpl serviceTask = new ServiceTaskImpl();
 		return serviceTask;
@@ -929,6 +999,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartErrorEvent createStartErrorEvent() {
 		StartErrorEventImpl startErrorEvent = new StartErrorEventImpl();
 		return startErrorEvent;
@@ -939,6 +1010,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartEvent createStartEvent() {
 		StartEventImpl startEvent = new StartEventImpl();
 		return startEvent;
@@ -949,6 +1021,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartMessageEvent createStartMessageEvent() {
 		StartMessageEventImpl startMessageEvent = new StartMessageEventImpl();
 		return startMessageEvent;
@@ -959,6 +1032,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartSignalEvent createStartSignalEvent() {
 		StartSignalEventImpl startSignalEvent = new StartSignalEventImpl();
 		return startSignalEvent;
@@ -969,6 +1043,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StartTimerEvent createStartTimerEvent() {
 		StartTimerEventImpl startTimerEvent = new StartTimerEventImpl();
 		return startTimerEvent;
@@ -979,6 +1054,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SubProcessEvent createSubProcessEvent() {
 		SubProcessEventImpl subProcessEvent = new SubProcessEventImpl();
 		return subProcessEvent;
@@ -989,6 +1065,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Task createTask() {
 		TaskImpl task = new TaskImpl();
 		return task;
@@ -999,6 +1076,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TextAnnotation createTextAnnotation() {
 		TextAnnotationImpl textAnnotation = new TextAnnotationImpl();
 		return textAnnotation;
@@ -1009,6 +1087,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TextAnnotationAttachment createTextAnnotationAttachment() {
 		TextAnnotationAttachmentImpl textAnnotationAttachment = new TextAnnotationAttachmentImpl();
 		return textAnnotationAttachment;
@@ -1019,6 +1098,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThrowLinkEvent createThrowLinkEvent() {
 		ThrowLinkEventImpl throwLinkEvent = new ThrowLinkEventImpl();
 		return throwLinkEvent;
@@ -1029,6 +1109,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThrowMessageEvent createThrowMessageEvent() {
 		ThrowMessageEventImpl throwMessageEvent = new ThrowMessageEventImpl();
 		return throwMessageEvent;
@@ -1039,6 +1120,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TimerEvent createTimerEvent() {
 		TimerEventImpl timerEvent = new TimerEventImpl();
 		return timerEvent;
@@ -1049,6 +1131,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public XMLData createXMLData() {
 		XMLDataImpl xmlData = new XMLDataImpl();
 		return xmlData;
@@ -1059,6 +1142,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public XMLType createXMLType() {
 		XMLTypeImpl xmlType = new XMLTypeImpl();
 		return xmlType;
@@ -1069,6 +1153,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public XORGateway createXORGateway() {
 		XORGatewayImpl xorGateway = new XORGatewayImpl();
 		return xorGateway;
@@ -1259,6 +1344,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProcessPackage getProcessPackage() {
 		return (ProcessPackage)getEPackage();
 	}

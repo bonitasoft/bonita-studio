@@ -95,6 +95,7 @@ public class ContractImpl extends EObjectImpl implements Contract {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ContractInput> getInputs() {
 		if (inputs == null) {
 			inputs = new EObjectContainmentEList<ContractInput>(ContractInput.class, this, ProcessPackage.CONTRACT__INPUTS);
@@ -107,6 +108,7 @@ public class ContractImpl extends EObjectImpl implements Contract {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ContractConstraint> getConstraints() {
 		if (constraints == null) {
 			constraints = new EObjectContainmentEList<ContractConstraint>(ContractConstraint.class, this, ProcessPackage.CONTRACT__CONSTRAINTS);

@@ -150,6 +150,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -159,6 +160,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -171,6 +173,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -180,6 +183,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -192,6 +196,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, FormPackage.GROUP_ITERATOR__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -204,6 +209,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getClassName() {
 		return className;
 	}
@@ -213,6 +219,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setClassName(String newClassName) {
 		String oldClassName = className;
 		className = newClassName;
@@ -348,7 +355,7 @@ public class GroupIteratorImpl extends EObjectImpl implements GroupIterator {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

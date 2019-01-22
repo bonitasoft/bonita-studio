@@ -106,6 +106,7 @@ public class SimulationLiteralImpl extends EObjectImpl implements SimulationLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getProbability() {
 		return probability;
 	}
@@ -115,6 +116,7 @@ public class SimulationLiteralImpl extends EObjectImpl implements SimulationLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProbability(double newProbability) {
 		double oldProbability = probability;
 		probability = newProbability;
@@ -127,6 +129,7 @@ public class SimulationLiteralImpl extends EObjectImpl implements SimulationLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -136,6 +139,7 @@ public class SimulationLiteralImpl extends EObjectImpl implements SimulationLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -220,7 +224,7 @@ public class SimulationLiteralImpl extends EObjectImpl implements SimulationLite
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (probability: "); //$NON-NLS-1$
 		result.append(probability);
 		result.append(", value: "); //$NON-NLS-1$

@@ -141,6 +141,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -150,6 +151,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		String oldDocumentation = documentation;
 		documentation = newDocumentation;
@@ -162,6 +164,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -171,6 +174,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -183,6 +187,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
 		if (textAnnotationAttachment == null) {
 			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.BOUNDARY_EVENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
@@ -195,6 +200,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connection> getOutgoing() {
 		if (outgoing == null) {
 			outgoing = new EObjectWithInverseResolvingEList<Connection>(Connection.class, this, ProcessPackage.BOUNDARY_EVENT__OUTGOING, ProcessPackage.CONNECTION__SOURCE);
@@ -367,7 +373,7 @@ public class BoundaryEventImpl extends EObjectImpl implements BoundaryEvent {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (documentation: "); //$NON-NLS-1$
 		result.append(documentation);
 		result.append(", name: "); //$NON-NLS-1$

@@ -9,11 +9,9 @@
    <launcherArgs>
       <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8
       </vmArgs>
-      <vmArgsLin>-Djava.endorsed.dirs=endorsed
-      </vmArgsLin>
-      <vmArgsMac>-XstartOnFirstThread -Djava.endorsed.dirs=./endorsed
+      <vmArgsMac>-XstartOnFirstThread
       </vmArgsMac>
-      <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
+      <vmArgsWin>-Dgreclipse.nonlocking=true
       </vmArgsWin>
    </launcherArgs>
 
@@ -41,7 +39,7 @@
    <license>
         <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
         <text>
-   Copyright (C) 2018 BonitaSoft S.A.
+   Copyright (C) 2019 BonitaSoft S.A.
 BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
 
 This program is free software: you can redistribute it and/or modify

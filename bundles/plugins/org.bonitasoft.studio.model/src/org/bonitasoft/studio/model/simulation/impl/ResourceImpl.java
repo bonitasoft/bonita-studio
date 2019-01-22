@@ -268,6 +268,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -277,6 +278,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -289,6 +291,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -298,6 +301,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -310,6 +314,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getQuantity() {
 		return quantity;
 	}
@@ -319,6 +324,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setQuantity(int newQuantity) {
 		int oldQuantity = quantity;
 		quantity = newQuantity;
@@ -331,6 +337,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaximumQuantity() {
 		return maximumQuantity;
 	}
@@ -340,6 +347,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaximumQuantity(int newMaximumQuantity) {
 		int oldMaximumQuantity = maximumQuantity;
 		maximumQuantity = newMaximumQuantity;
@@ -352,6 +360,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCostUnit() {
 		return costUnit;
 	}
@@ -361,6 +370,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCostUnit(String newCostUnit) {
 		String oldCostUnit = costUnit;
 		costUnit = newCostUnit;
@@ -373,6 +383,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TimeUnit getTimeUnit() {
 		return timeUnit;
 	}
@@ -382,6 +393,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTimeUnit(TimeUnit newTimeUnit) {
 		TimeUnit oldTimeUnit = timeUnit;
 		timeUnit = newTimeUnit == null ? TIME_UNIT_EDEFAULT : newTimeUnit;
@@ -394,6 +406,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getFixedCost() {
 		return fixedCost;
 	}
@@ -403,6 +416,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFixedCost(double newFixedCost) {
 		double oldFixedCost = fixedCost;
 		fixedCost = newFixedCost;
@@ -415,6 +429,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getTimeCost() {
 		return timeCost;
 	}
@@ -424,6 +439,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTimeCost(double newTimeCost) {
 		double oldTimeCost = timeCost;
 		timeCost = newTimeCost;
@@ -436,6 +452,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimulationCalendar getCalendar() {
 		return calendar;
 	}
@@ -460,6 +477,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCalendar(SimulationCalendar newCalendar) {
 		if (newCalendar != calendar) {
 			NotificationChain msgs = null;
@@ -479,6 +497,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUnlimited() {
 		return unlimited;
 	}
@@ -488,6 +507,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUnlimited(boolean newUnlimited) {
 		boolean oldUnlimited = unlimited;
 		unlimited = newUnlimited;
@@ -698,7 +718,7 @@ public class ResourceImpl extends SimulationElementImpl implements Resource {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (version: "); //$NON-NLS-1$
 		result.append(version);
 		result.append(", type: "); //$NON-NLS-1$

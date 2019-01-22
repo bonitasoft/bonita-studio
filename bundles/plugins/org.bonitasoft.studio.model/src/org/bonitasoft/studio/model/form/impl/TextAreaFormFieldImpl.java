@@ -105,6 +105,7 @@ public class TextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxLength() {
 		return maxLength;
 	}
@@ -114,6 +115,7 @@ public class TextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxLength(int newMaxLength) {
 		int oldMaxLength = maxLength;
 		maxLength = newMaxLength;
@@ -126,6 +128,7 @@ public class TextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxHeigth() {
 		return maxHeigth;
 	}
@@ -135,6 +138,7 @@ public class TextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxHeigth(int newMaxHeigth) {
 		int oldMaxHeigth = maxHeigth;
 		maxHeigth = newMaxHeigth;
@@ -219,7 +223,7 @@ public class TextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (maxLength: "); //$NON-NLS-1$
 		result.append(maxLength);
 		result.append(", maxHeigth: "); //$NON-NLS-1$

@@ -143,6 +143,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getDriverclassName() {
 		return driverclassName;
 	}
@@ -167,6 +168,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDriverclassName(Expression newDriverclassName) {
 		if (newDriverclassName != driverclassName) {
 			NotificationChain msgs = null;
@@ -186,6 +188,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getJdbcUrl() {
 		return jdbcUrl;
 	}
@@ -210,6 +213,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJdbcUrl(Expression newJdbcUrl) {
 		if (newJdbcUrl != jdbcUrl) {
 			NotificationChain msgs = null;
@@ -229,6 +233,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getUser() {
 		return user;
 	}
@@ -253,6 +258,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUser(Expression newUser) {
 		if (newUser != user) {
 			NotificationChain msgs = null;
@@ -272,6 +278,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getPassword() {
 		return password;
 	}
@@ -296,6 +303,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPassword(Expression newPassword) {
 		if (newPassword != password) {
 			NotificationChain msgs = null;
@@ -315,6 +323,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getJndiUrl() {
 		return jndiUrl;
 	}
@@ -339,6 +348,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJndiUrl(Expression newJndiUrl) {
 		if (newJndiUrl != jndiUrl) {
 			NotificationChain msgs = null;
@@ -358,6 +368,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTableName() {
 		return tableName;
 	}
@@ -367,6 +378,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTableName(String newTableName) {
 		String oldTableName = tableName;
 		tableName = newTableName;
@@ -513,7 +525,7 @@ public class DatabaseKPIBindingImpl extends AbstractKPIBindingImpl implements Da
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (tableName: "); //$NON-NLS-1$
 		result.append(tableName);
 		result.append(')');

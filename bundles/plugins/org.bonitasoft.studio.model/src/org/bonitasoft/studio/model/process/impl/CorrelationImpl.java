@@ -101,6 +101,7 @@ public class CorrelationImpl extends EObjectImpl implements Correlation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CorrelationTypeActive getCorrelationType() {
 		return correlationType;
 	}
@@ -110,6 +111,7 @@ public class CorrelationImpl extends EObjectImpl implements Correlation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelationType(CorrelationTypeActive newCorrelationType) {
 		CorrelationTypeActive oldCorrelationType = correlationType;
 		correlationType = newCorrelationType == null ? CORRELATION_TYPE_EDEFAULT : newCorrelationType;
@@ -122,6 +124,7 @@ public class CorrelationImpl extends EObjectImpl implements Correlation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableExpression getCorrelationAssociation() {
 		return correlationAssociation;
 	}
@@ -146,6 +149,7 @@ public class CorrelationImpl extends EObjectImpl implements Correlation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCorrelationAssociation(TableExpression newCorrelationAssociation) {
 		if (newCorrelationAssociation != correlationAssociation) {
 			NotificationChain msgs = null;
@@ -251,7 +255,7 @@ public class CorrelationImpl extends EObjectImpl implements Correlation {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (correlationType: "); //$NON-NLS-1$
 		result.append(correlationType);
 		result.append(')');

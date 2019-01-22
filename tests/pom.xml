@@ -20,8 +20,6 @@
 
 	<modules>
 		<module>org.bonitasoft.studio.swtbot.framework</module>
-		<module>org.bonitasoft.studio.jre.extension</module>
-		<module>org.bonitasoft.studio.tests.hotspot</module>
 		<module>org.bonitasoft.studio.util.tests</module>
 		<module>org.bonitasoft.studio.tests</module>
 		<module>tests-common-feature</module>

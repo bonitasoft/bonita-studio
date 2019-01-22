@@ -105,6 +105,7 @@ public class XMLDataImpl extends DataImpl implements XMLData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNamespace() {
 		return namespace;
 	}
@@ -114,6 +115,7 @@ public class XMLDataImpl extends DataImpl implements XMLData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNamespace(String newNamespace) {
 		String oldNamespace = namespace;
 		namespace = newNamespace;
@@ -126,6 +128,7 @@ public class XMLDataImpl extends DataImpl implements XMLData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -135,6 +138,7 @@ public class XMLDataImpl extends DataImpl implements XMLData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(String newType) {
 		String oldType = type;
 		type = newType;
@@ -219,7 +223,7 @@ public class XMLDataImpl extends DataImpl implements XMLData {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (namespace: "); //$NON-NLS-1$
 		result.append(namespace);
 		result.append(", type: "); //$NON-NLS-1$
