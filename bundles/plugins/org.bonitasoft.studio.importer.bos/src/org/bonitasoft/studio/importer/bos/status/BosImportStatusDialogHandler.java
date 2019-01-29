@@ -43,9 +43,8 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
     }
 
     @Override
-    protected void openError(final Shell parentShell) {
-        final ImportStatusDialog messageDialog = new ImportStatusDialog(parentShell, importStatus,
-                customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg),
+    protected void openImportStatus(final Shell parentShell, String message) {
+        final ImportStatusDialog messageDialog = new ImportStatusDialog(parentShell, importStatus, message,
                 importStatus instanceof BosArchiveImportStatus
                         && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
         final int result = messageDialog.open();
