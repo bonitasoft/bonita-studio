@@ -42,22 +42,32 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
 
     @Override
     public void open(final Shell parentShell) {
-        if (importStatus.isOK() || importStatus.getSeverity() == IStatus.INFO) {
-            MessageDialog.openInformation(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
-                    customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
-        } else if (importStatus.getSeverity() == IStatus.WARNING
+        if (importStatus.getSeverity() == IStatus.WARNING
                 && (importStatus.getChildren() == null || importStatus.getChildren().length == 0)) {
             MessageDialog.openWarning(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     importStatus.getMessage());
         } else {
-            openError(parentShell);
+            switch (importStatus.getSeverity()) {
+                case IStatus.OK:
+                    MessageDialog.openInformation(parentShell,
+                            org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
+                            customSuccessMessage
+                                    .orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
+                    break;
+                case IStatus.INFO:
+                    openImportStatus(parentShell, customSuccessMessage
+                            .orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
+                    break;
+                default:
+                    openImportStatus(parentShell,
+                            customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg));
+                    break;
+            }
         }
     }
 
-    protected void openError(final Shell parentShell) {
-        new ImportStatusDialog(parentShell, importStatus,
-                customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg),
-                false).open();
+    protected void openImportStatus(Shell parentShell, String message) {
+        new ImportStatusDialog(parentShell, importStatus, message, false).open();
     }
 
 }
