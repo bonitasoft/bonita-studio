@@ -79,5 +79,6 @@ public class Messages extends NLS {
     public static String spDiagramCannotBeImportedError;
     public static String containsLegacyFormsWarning;
     public static String projectConnectorToVCS;
+    public static String occurrences;
 
 }
