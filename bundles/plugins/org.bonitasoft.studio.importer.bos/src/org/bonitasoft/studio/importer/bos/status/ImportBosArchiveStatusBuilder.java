@@ -35,7 +35,7 @@ public class ImportBosArchiveStatusBuilder {
     }
 
     public BosArchiveImportStatus done() {
-        return status;
+        return new BonitaStatusCodeAggregator().aggregateStatus(status);
     }
 
     public ImportBosArchiveStatusBuilder addStatus(final IStatus status) {
