@@ -77,6 +77,7 @@ public class ProjectClasspathFactoryTest {
         doReturn(executionEnvironment).when(bonitaBPMProjectClasspath).javaRuntimeEnvironment();
         doReturn(javaProject).when(bonitaBPMProjectClasspath).asJavaProject(repository);
         doReturn(newArrayList(aSourceRepositoryStore(), aRepositoryStore())).when(repository).getAllStores();
+        doNothing().when(bonitaBPMProjectClasspath).updateCompilerJavaCompliance(notNull(String.class));
     }
 
     private IRepositoryStore<?> aSourceRepositoryStore() {

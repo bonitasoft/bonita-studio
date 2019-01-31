@@ -59,7 +59,7 @@ public class ProjectClasspathFactory {
         updateCompilerJavaCompliance(CompilerOptions.VERSION_1_8);
     }
 
-    private void updateCompilerJavaCompliance(String javaVersion) {
+    protected void updateCompilerJavaCompliance(String javaVersion) {
         Hashtable<String, String> options = JavaCore.getOptions();
         options.put(CompilerOptions.OPTION_TargetPlatform, javaVersion);
         options.put(CompilerOptions.OPTION_Source, javaVersion);
