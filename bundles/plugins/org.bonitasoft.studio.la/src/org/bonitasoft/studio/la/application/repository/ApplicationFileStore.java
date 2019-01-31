@@ -63,7 +63,6 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
     public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
-    private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
 
     public ApplicationFileStore(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
@@ -76,10 +75,14 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
     @Override
     public ApplicationNodeContainer getContent() throws ReadFileStoreException {
         try (InputStream inputStream = getResource().getContents()) {
-            return applicationNodeContainerConverter.unmarshallFromXML(ByteStreams.toByteArray(inputStream));
+            return getConverter().unmarshallFromXML(ByteStreams.toByteArray(inputStream));
         } catch (CoreException | JAXBException | IOException | SAXException e) {
             throw new ReadFileStoreException("Failed to load application model", e);
         }
+    }
+    
+    protected ApplicationNodeContainerConverter getConverter() {
+        return ((ApplicationRepositoryStore) getParentStore()).getConverter();
     }
 
     /*
@@ -92,7 +95,7 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
                 String.format("Only instance of %s are supported",
                         ApplicationNodeContainer.class));
         try {
-            final byte[] xmlContent = applicationNodeContainerConverter
+            final byte[] xmlContent = getConverter()
                     .marshallToXML((ApplicationNodeContainer) content);
             try (ByteArrayInputStream is = new ByteArrayInputStream(xmlContent)) {
                 final IFile resource = getResource();

@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -34,6 +36,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.wiring.BundleWiring;
 
 /**
  * @author Romain Bioteau
@@ -110,7 +115,19 @@ public class ExportBarOperation implements IRunnableWithProgress {
                 IProgressMonitor.UNKNOWN);
         try {
             final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId);
-            writeBusinessArchiveToFile(outputFile, bar);
+            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                Bundle bundle = FrameworkUtil.getBundle(JAXBContext.class);
+                if(bundle != null ) {
+                    ClassLoader bundleClassloader = bundle.adapt(BundleWiring.class).getClassLoader();
+                    //Due to some issue with tycho-surefire-plugin we need to set the proper context classloader
+                    Thread.currentThread().setContextClassLoader(bundleClassloader);
+                }
+                writeBusinessArchiveToFile(outputFile, bar);
+            } finally {
+                Thread.currentThread().setContextClassLoader(contextClassLoader);
+            }
+
             generatedBars.add(outputFile);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);

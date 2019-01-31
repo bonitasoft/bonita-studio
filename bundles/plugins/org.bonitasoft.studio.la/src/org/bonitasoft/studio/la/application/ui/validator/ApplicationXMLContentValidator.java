@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.ui.validator.XMLContentValidator;
 import org.xml.sax.SAXException;
 
@@ -30,7 +32,9 @@ public class ApplicationXMLContentValidator extends XMLContentValidator {
 
     public ApplicationXMLContentValidator(String errorMessage) {
         super(errorMessage);
-        this.applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
+        this.applicationNodeContainerConverter = RepositoryManager.getInstance()
+                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
+
     }
 
     @Override

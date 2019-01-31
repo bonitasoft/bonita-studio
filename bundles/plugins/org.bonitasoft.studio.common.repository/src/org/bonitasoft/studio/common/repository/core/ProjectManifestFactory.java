@@ -73,6 +73,7 @@ public class ProjectManifestFactory {
             symbolicName = DEFAULT_SYMBOLIC_NAME;
         }
         headers.put(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, symbolicName);
+        headers.put("Automatic-Module-Name", symbolicName);
         headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
         headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "Bonitasoft S.A.");
         headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.8");

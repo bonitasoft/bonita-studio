@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 
+import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
@@ -89,6 +90,7 @@ public class BusinessObjectModelFileStoreTest {
         employee.setQualifiedName("org.bonita.Employee");
         bdm.addBusinessObject(employee);
         fileStoreUnderTest = spy(new BusinessObjectModelFileStore("bdm.zip", store));
+        doReturn(new BusinessObjectModelConverter()).when(fileStoreUnderTest).getConverter();
         doReturn(iResource).when(fileStoreUnderTest).getResource();
         doReturn(bdm).when(fileStoreUnderTest).getContent();
     }

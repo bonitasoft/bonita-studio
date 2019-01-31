@@ -132,9 +132,9 @@ public class DefineBdmWizardBot extends BotWizardDialog {
     }
 
     public DefineBdmWizardBot editConstraint(String businessObject, String constraintName, String... selectFields) {
+        SWTBotShell activeShell = bot.activeShell();
         SWTBotTable constraintsTable = getConstraintsTable(businessObject);
         constraintsTable.getTableItem(constraintName).click(1);
-        SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.selectUniqueConstraintFieldsTitle));
         Arrays.asList(selectFields).forEach(field -> bot.table().getTableItem(field).check());

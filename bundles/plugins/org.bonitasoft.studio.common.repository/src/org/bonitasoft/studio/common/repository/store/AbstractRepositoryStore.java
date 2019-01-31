@@ -340,7 +340,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
-                BonitaStudioLog.error(e1);
+                BonitaStudioLog.warning(String.format("An error occured wihle refreshing folder %s: %s",folder.getName(),e1.getMessage()),CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
     }
