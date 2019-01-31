@@ -19,6 +19,7 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Sets.newHashSet;
 
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -36,6 +37,7 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
@@ -43,9 +45,6 @@ import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 
-/**
- * @author Romain Bioteau
- */
 public class ProjectClasspathFactory {
 
     public void create(final Repository repository, final IProgressMonitor monitor) throws CoreException {
@@ -57,6 +56,15 @@ public class ProjectClasspathFactory {
             BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
             javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, monitor);
         }
+        updateCompilerJavaCompliance(CompilerOptions.VERSION_1_8);
+    }
+
+    private void updateCompilerJavaCompliance(String javaVersion) {
+        Hashtable<String, String> options = JavaCore.getOptions();
+        options.put(CompilerOptions.OPTION_TargetPlatform, javaVersion);
+        options.put(CompilerOptions.OPTION_Source, javaVersion);
+        options.put(CompilerOptions.OPTION_Compliance, javaVersion);
+        JavaCore.setOptions(options);
     }
 
     public void refresh(final Repository repository, final IProgressMonitor monitor) throws CoreException {
