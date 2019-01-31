@@ -23,6 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.la.application.ui.validator.MenuLevelValidator;
@@ -34,7 +35,7 @@ public class MenuLevelValidatorTest {
     @Test
     public void should_add_warning_message() throws Exception {
         final IFile resource = anIFile().build();
-        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator());
+        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator(new ApplicationNodeContainerConverter()));
         doReturn(appWithDeepMenus()).when(menuLevelValidator)
                 .toApplicationContainer(resource);
         doReturn(null).when(menuLevelValidator).createMessage(resource);
@@ -47,7 +48,7 @@ public class MenuLevelValidatorTest {
     @Test
     public void should_not_add_warning_message() throws Exception {
         final IFile resource = anIFile().build();
-        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator());
+        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator(new ApplicationNodeContainerConverter()));
         doReturn(appWithSingleMenus()).when(menuLevelValidator)
                 .toApplicationContainer(resource);
         doReturn(null).when(menuLevelValidator).createMessage(resource);

@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -35,11 +36,14 @@ import org.eclipse.swt.graphics.Image;
 public class ApplicationRepositoryStore extends AbstractRepositoryStore<ApplicationFileStore> {
 
     private static final String XML_EXTENSION = "xml";
+    
+    private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new CustomApplicationNodeContainerConverter();
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
+ 
+    public ApplicationNodeContainerConverter getConverter(){
+        return applicationNodeContainerConverter;
+    }
+    
     @Override
     public String getName() {
         return "applications"; //$NON-NLS-N$

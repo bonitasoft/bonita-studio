@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-    <version>7.9.0-SNAPSHOT</version>
+	<version>7.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
@@ -18,19 +20,19 @@
 		<platform.version>${project.parent.version}</platform.version>
 		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
-      	<p2MirrorUrl>http://repositories.rd.lan/p2/4.10</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.exclusions>
-            **/org/w3/**/*,
-            **/src-gen/**/*,
-            **/xtend-gen/**/*,
-            **/org/bonitasoft/studio/actors/model/**/*,
-            **/org/bonitasoft/studio/connector/model/implementation/provider/**/*,
-            **/org/bonitasoft/studio/connector/model/definition/provider/**/*
-        </sonar.exclusions>
-        <sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
-        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-        <tycho.localArtifacts>ignore</tycho.localArtifacts>
+		<sonar.exclusions>
+			**/org/w3/**/*,
+			**/src-gen/**/*,
+			**/xtend-gen/**/*,
+			**/org/bonitasoft/studio/actors/model/**/*,
+			**/org/bonitasoft/studio/connector/model/implementation/provider/**/*,
+			**/org/bonitasoft/studio/connector/model/definition/provider/**/*
+		</sonar.exclusions>
+		<sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
+		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+		<tycho.localArtifacts>ignore</tycho.localArtifacts>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -40,19 +42,19 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.24.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.4.0.905</version>
-                </plugin>
-                <plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.24.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.4.0.905</version>
+				</plugin>
+				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
 					<artifactId>image-overlay-plugin</artifactId>
-                    <version>1.0.4</version>
+					<version>1.0.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -62,7 +64,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.0</version>
+					<version>2.22.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -114,7 +116,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
+					<version>1.8</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -147,20 +149,20 @@
 						<executionEnvironment>JavaSE-1.8</executionEnvironment>
 						<environments>
 							<environment>
-                                <os>linux</os>
-                                <ws>gtk</ws>
-                                <arch>x86_64</arch>
-                            </environment>
-                            <environment>
-                                <os>macosx</os>
-                                <ws>cocoa</ws>
-                                <arch>x86_64</arch>
-                            </environment>
-                            <environment>
-                                <os>win32</os>
-                                <ws>win32</ws>
-                                <arch>x86_64</arch>
-                            </environment>
+								<os>linux</os>
+								<ws>gtk</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>macosx</os>
+								<ws>cocoa</ws>
+								<arch>x86_64</arch>
+							</environment>
+							<environment>
+								<os>win32</os>
+								<ws>win32</ws>
+								<arch>x86_64</arch>
+							</environment>
 						</environments>
 						<target>
 							<artifact>
@@ -207,15 +209,38 @@
 		</plugins>
 	</build>
 
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>update-site</id> -->
-<!-- 			<url>${p2MirrorUrl}</url> -->
-<!-- 			<layout>p2</layout> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
-
 	<profiles>
+		<profile>
+			<id>jdk11-tests</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-toolchains-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<goals>
+									<goal>toolchain</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<toolchains>
+								<jdk>
+									<version>11</version>
+									<vendor>OpenJDK</vendor>
+								</jdk>
+							</toolchains>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>default</id>
 			<activation>
@@ -225,14 +250,14 @@
 				<module>platform</module>
 				<module>tests-dependencies</module>
 				<module>bundles</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>all-in-one</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
+			</modules>
+		</profile>
+		<profile>
+			<id>all-in-one</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
 				<module>all-in-one</module>
 			</modules>
 		</profile>

@@ -135,7 +135,7 @@
                                 </goals>
                                 <configuration>
                                     <executionEnvironment>JavaSE-1.8</executionEnvironment>
-<!--                                     <includeSources>true</includeSources> -->
+<!--                                     <includeSources>true</includeSources>  -->
                                     <outputRepository>/home/romain/target-platform-4.10-mirror</outputRepository>
                                 </configuration>
                             </execution>

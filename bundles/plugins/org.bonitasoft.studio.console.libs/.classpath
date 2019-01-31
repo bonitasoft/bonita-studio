@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/console-server.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/console-common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang3.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

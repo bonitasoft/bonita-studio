@@ -32,10 +32,6 @@
 		           <groupId>javax.xml.bind</groupId>
 	 	     	   <artifactId>jsr173_api</artifactId>
 		        </exclusion>
-		        <exclusion> 
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion> 
 		    </exclusions>
 		</dependency>
 		<dependency>
@@ -47,10 +43,6 @@
 		            <groupId>javax.xml.bind</groupId>
 	 		    	<artifactId>jsr173_api</artifactId>
 		        </exclusion>
-		        <exclusion> 
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion> 
 		    </exclusions>
 		</dependency>
 		<dependency>
@@ -279,7 +271,8 @@
 							org.bonitasoft.console.common.server.sso;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
-							org.bonitasoft.engine.*;version="0.0.0"
+							org.bonitasoft.engine.*;version="0.0.0",
+							javax.xml.bind.*;version="2.2.0"
 						</_exportcontents>
 						<_nouses>true</_nouses>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
@@ -298,6 +291,7 @@
 						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 						<Import-Package>!*</Import-Package>
 						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+						<Require-Bundle>javax.activation;bundle-version="1.1.0"</Require-Bundle>
 					</instructions>
 				</configuration>
 				<executions>
