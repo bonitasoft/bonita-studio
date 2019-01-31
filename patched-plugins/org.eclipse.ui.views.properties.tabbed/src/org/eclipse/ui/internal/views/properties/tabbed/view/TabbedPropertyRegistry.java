@@ -16,8 +16,10 @@ package org.eclipse.ui.internal.views.properties.tabbed.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -437,23 +439,52 @@ public class TabbedPropertyRegistry {
 							.equals(category)) {
 				endOfCategory++;
 			}
-			for (int j = topOfCategory; j < endOfCategory; j++) {
-				TabDescriptor tab = tabs.get(j);
-				if (tab.getAfterTab().equals(TOP)) {
-					categoryList.add(0, tabs.get(j));
-				} else {
-					categoryList.add(tabs.get(j));
-				}
-			}
-			Collections.sort(categoryList, (one, two) -> {
-				if (two.getAfterTab().equals(one.getId())) {
-					return -1;
-				} else if (one.getAfterTab().equals(two.getId())) {
-					return 1;
-				} else {
-					return 0;
-				}
-			});
+		    Map<String, List<TabDescriptor>> mapOfAfterTab = new HashMap<String, List<TabDescriptor>>();
+
+            for (int j = topOfCategory; j < endOfCategory; j++) {
+                TabDescriptor tab = (TabDescriptor) tabs.get(j);
+                String afterTab;
+                if ((afterTab = tab.getAfterTab()) == "") { //$NON-NLS-1$
+                    afterTab = "no after tab"; //$NON-NLS-1$
+                }
+                List<TabDescriptor> tempList = mapOfAfterTab.get(afterTab);
+                if (tempList == null) {
+                    tempList = new ArrayList<TabDescriptor>();
+                    mapOfAfterTab.put(afterTab, tempList);
+                }
+                tempList.add(tab);
+            }
+
+            /* Set to the beginning of the list: the afterTab top and no afterTab */
+            List<TabDescriptor> toAdd;
+            if ((toAdd = mapOfAfterTab.get(TOP)) != null) {
+                categoryList.addAll(toAdd);
+                mapOfAfterTab.remove(TOP);
+            }
+            if ((toAdd = mapOfAfterTab.get("no after tab")) != null) { //$NON-NLS-1$
+                categoryList.addAll(toAdd);
+                mapOfAfterTab.remove("no after tab"); //$NON-NLS-1$
+            }
+
+            for (int k = 0; k < endOfCategory - topOfCategory + 1; k++) {
+                if (categoryList.size() > k) {
+                    TabDescriptor current = categoryList.get(k);
+                    if ((toAdd = mapOfAfterTab.get(current.getId())) != null) {
+                        categoryList.addAll(toAdd);
+                        mapOfAfterTab.remove(current.getId());
+                    }
+                } else {
+                    //check if there is other
+                    if (mapOfAfterTab.keySet().size() != 0) {
+                        String key = mapOfAfterTab.keySet().iterator().next();
+                        categoryList.addAll(mapOfAfterTab.get(key));
+                        mapOfAfterTab.remove(key);
+                    } else {
+                        //all is already added
+                        break;
+                    }
+                }
+            }
 			for (int j = 0; j < categoryList.size(); j++) {
 				sorted.add(categoryList.get(j));
 			}

@@ -50,8 +50,6 @@ public class BonitaSuite extends Suite {
 
     private RunListener runListener;
 
-    private final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
-
     public BonitaSuite(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
         super(klass, suiteClasses);
     }
@@ -72,10 +70,6 @@ public class BonitaSuite extends Suite {
         super(builder, classes);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.junit.runners.ParentRunner#run(org.junit.runner.notification.RunNotifier)
-     */
     @Override
     public void run(RunNotifier notifier) {
         final RunListener logNotifier = getRunListener();
@@ -95,45 +89,27 @@ public class BonitaSuite extends Suite {
                 private long startTime;
                 private boolean success = true;
 
-                /*
-                 * (non-Javadoc)
-                 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
-                 */
                 @Override
                 public void testStarted(Description description) throws Exception {
                     startTime = System.currentTimeMillis();
                     success = true;
                     System.out.print(
-                            String.format("%s%s%s: %s%s%s",
-                                    ConsoleColors.BLACK_BOLD,
-                                    format.format(new Date()),
-                                    ConsoleColors.RESET,
+                            String.format("%s%s%s",
                                     ConsoleColors.BLUE_BRIGHT,
                                     description.getDisplayName(),
                                     ConsoleColors.RESET));
                 }
 
-                /*
-                 * (non-Javadoc)
-                 * @see org.junit.runner.notification.RunListener#testIgnored(org.junit.runner.Description)
-                 */
                 @Override
                 public void testIgnored(Description description) throws Exception {
                     System.out.println(
-                            String.format("%s%s%s: %s%s%s",
-                                    ConsoleColors.BLACK_BOLD,
-                                    format.format(new Date()),
-                                    ConsoleColors.RESET,
+                            String.format("%s%s%s",
                                     ConsoleColors.BLUE_BRIGHT_STRIKETHROUGH,
                                     description.getDisplayName(),
                                     ConsoleColors.RESET));
                     success = false;
                 }
 
-                /*
-                 * (non-Javadoc)
-                 * @see org.junit.runner.notification.RunListener#testFailure(org.junit.runner.notification.Failure)
-                 */
                 @Override
                 public void testFailure(Failure failure) throws Exception {
                     System.out.println(
@@ -152,10 +128,6 @@ public class BonitaSuite extends Suite {
                     success = false;
                 }
 
-                /*
-                 * (non-Javadoc)
-                 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
-                 */
                 @Override
                 public void testFinished(Description description) throws Exception {
                     if (success) {

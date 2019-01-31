@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
-import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -144,12 +144,11 @@ public class DeployApplicationAction {
                 onFinishButtons, status).open();
     }
 
-    @SuppressWarnings("unused")
     protected DeployApplicationDescriptorRunnable getDeployOperation(APISession apiSession,
             final ApplicationAPI applicationAPI, final ApplicationNodeContainer applicationDescriptor)
             throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         return new DeployApplicationDescriptorRunnable(applicationAPI, applicationDescriptor,
-                new ApplicationNodeContainerConverter());
+                RepositoryManager.getInstance() .getRepositoryStore(ApplicationRepositoryStore.class).getConverter());
     }
 
 }

@@ -66,13 +66,10 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
 
     private static final String DEFINE_BDM_COMMAND_ID = "org.bonitasoft.studio.businessobject.manage";
 
-    private final BusinessObjectModelConverter converter;
-
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);
-        converter = new BusinessObjectModelConverter();
     }
 
     @Override
@@ -87,7 +84,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             return cachedBusinessObjectModel.get(modificationStamp);
         }
         try (InputStream contents = resource.getContents()) {
-            final BusinessObjectModel bom = converter.unmarshall(ByteStreams.toByteArray(contents));
+            final BusinessObjectModel bom = getConverter().unmarshall(ByteStreams.toByteArray(contents));
             cachedBusinessObjectModel.clear();
             cachedBusinessObjectModel.put(modificationStamp, bom);
             return bom;
@@ -95,6 +92,10 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             BonitaStudioLog.error(e);
         }
         return null;
+    }
+
+    protected BusinessObjectModelConverter getConverter() {
+        return ((BusinessObjectModelRepositoryStore) getParentStore()).getConverter();
     }
 
     @Override
@@ -107,7 +108,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         Assert.isNotNull(content);
         Assert.isLegal(content instanceof BusinessObjectModel);
         try {
-            final byte[] xml = converter.marshall((BusinessObjectModel) content);
+            final byte[] xml = getConverter().marshall((BusinessObjectModel) content);
             final ByteArrayInputStream source = new ByteArrayInputStream(xml);
             final IFile resource = getResource();
             if (resource.exists()) {
@@ -198,7 +199,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     @Override
     public byte[] toByteArray() {
         try {
-            return converter.zip(getContent());
+            return getConverter().zip(getContent());
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }

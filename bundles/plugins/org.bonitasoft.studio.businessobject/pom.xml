@@ -30,7 +30,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.bonitasoft.engine.data</groupId>
+                                    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
                                     <artifactId>bonita-business-data-generator</artifactId>
                                     <version>${engine.version}</version>
                                     <classifier>studio</classifier>

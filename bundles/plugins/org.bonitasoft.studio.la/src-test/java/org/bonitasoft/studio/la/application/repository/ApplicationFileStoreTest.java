@@ -28,24 +28,27 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.bonitasoft.engine.business.application.ApplicationState;
+import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class ApplicationFileStoreTest {
 
     private InputStream resourceAsStream;
+    private ApplicationRepositoryStore store;
 
     @Before
     public void openStreams() throws Exception {
         resourceAsStream = ApplicationFileStoreTest.class.getResourceAsStream("/myApp.xml");
+        store = mock(ApplicationRepositoryStore.class);
+        Mockito.when(store.getConverter()).thenReturn(new ApplicationNodeContainerConverter());
     }
 
     @After
@@ -55,7 +58,7 @@ public class ApplicationFileStoreTest {
 
     @Test
     public void should_retrieve_model_from_application_xml_file() throws Exception {
-        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", mock(IRepositoryStore.class)));
+        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", store));
         doReturn(anIFile().withName("myApp.xml")
                 .withContent(resourceAsStream).build())
                         .when(applicationFileStore)
@@ -70,7 +73,7 @@ public class ApplicationFileStoreTest {
 
     @Test
     public void should_create_a_new_application_xml_file_from_model() throws Exception {
-        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", mock(IRepositoryStore.class)));
+        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", store));
         IFile resource = anIFile().withName("myApp.xml").build();
         doReturn(resource)
                 .when(applicationFileStore)
@@ -87,7 +90,7 @@ public class ApplicationFileStoreTest {
 
     @Test
     public void should_update_application_xml_file_from_model() throws Exception {
-        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", mock(IRepositoryStore.class)));
+        ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", store));
         IFile resource = anIFile().withName("myApp.xml").exists().build();
         doReturn(resource)
                 .when(applicationFileStore)

@@ -24,6 +24,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 
+import javax.xml.bind.JAXBContext;
+
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
@@ -42,6 +44,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.wiring.BundleWiring;
 
 /**
  * @author Romain Bioteau
@@ -74,7 +79,6 @@ public class ExportBarIT {
 
     @Test
     public void should_import_a_process_with_new_form_mapping_export_it_as_a_bar_file() throws Exception {
-
         File bosToImportFile = Paths
                 .get(toFileURL(ExportBarIT.class.getResource("/DiagramWithNewFormMapping-1.0.bos")).toURI())
                 .toFile();
@@ -110,7 +114,18 @@ public class ExportBarIT {
 
         //Given
         final File generatedBarFile = exportBarOperation.getGeneratedBars().get(0);
-        final BusinessArchive businessArchive = readBusinessArchive(generatedBarFile);
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        BusinessArchive businessArchive = null;
+        try {
+            Bundle bundle = FrameworkUtil.getBundle(JAXBContext.class);
+            ClassLoader bundleClassloader = bundle.adapt(BundleWiring.class).getClassLoader();
+            //Due to some issue with tycho-surefire-plugin we need to set the proper context classloader
+            Thread.currentThread().setContextClassLoader(bundleClassloader);
+            businessArchive = readBusinessArchive(generatedBarFile);
+        } finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
+        assertThat(businessArchive).isNotNull();
 
         //Expect
         final FormMappingModel formMappingModel = businessArchive.getFormMappingModel();

@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  lib/org.restlet.ext.html-2.2.3.jar
 Bundle-Activator: org.bonitasoft.studio.tests.Activator
-Import-Package: org.bonitasoft.engine.api,
+Import-Package: javax.xml.bind;version="2.2.0",
+ org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,

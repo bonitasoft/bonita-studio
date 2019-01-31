@@ -26,6 +26,8 @@ import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContai
 import org.bonitasoft.engine.business.application.xml.ApplicationMenuNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -42,13 +44,17 @@ import com.google.common.io.ByteStreams;
 
 public class MenuLevelValidator extends AbstractValidator {
 
-    private final ApplicationNodeContainerConverter converter = new ApplicationNodeContainerConverter();
+    private ApplicationNodeContainerConverter converter;
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.wst.validation.AbstractValidator#validate(org.eclipse.core.resources.IResource, int, org.eclipse.wst.validation.ValidationState,
-     * org.eclipse.core.runtime.IProgressMonitor)
-     */
+    MenuLevelValidator(ApplicationNodeContainerConverter converter) {
+        this.converter = converter;
+    }
+
+    public MenuLevelValidator() {
+        this.converter = RepositoryManager.getInstance()
+                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
+    }
+
     @Override
     public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
         if (resource.getType() != IResource.FILE) {

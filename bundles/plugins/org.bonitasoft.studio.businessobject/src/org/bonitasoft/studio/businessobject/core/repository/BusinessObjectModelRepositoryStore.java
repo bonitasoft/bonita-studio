@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
@@ -60,6 +61,9 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.wiring.BundleWiring;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicate;
@@ -81,52 +85,40 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
 
-    private BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
+    private BusinessObjectModelConverter converter = new CustomBusinessObjectModelConverter();
 
     static {
         extensions.add(BDM_TYPE_EXTENSION);
     }
+    
+    
+    public BusinessObjectModelConverter getConverter() {
+        return converter;
+    }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-     */
+   
     @Override
     public AbstractBDMFileStore createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
     @Override
     public String getName() {
         return STORE_NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
+    
     @Override
     public String getDisplayName() {
         return Messages.businessObjectRepositoryStoreName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
+    
     @Override
     public Image getIcon() {
         return Pics.getImage("bdm.png", BusinessObjectPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
     @Override
     public Set<String> getCompatibleExtensions() {
         return extensions;
@@ -150,7 +142,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         F fileStore = null;
         if (BusinessObjectModelFileStore.ZIP_FILENAME.equals(fileName)) {
             try {
-                final BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
+                BusinessObjectModelConverter converter = getConverter();
                 final BusinessObjectModel businessObjectModel = converter.unzip(ByteStreams.toByteArray(inputStream));
                 try (InputStream is = ByteSource.wrap(converter.marshall(businessObjectModel)).openBufferedStream()) {
                     fileStore = superDoImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, is);
@@ -186,6 +178,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             final File legacyBDM = fStore.getResource().getLocation().toFile();
             BusinessObjectModel businessObjectModel;
             try {
+                BusinessObjectModelConverter converter = getConverter();
                 businessObjectModel = converter.unzip(Files.toByteArray(legacyBDM));
                 try (InputStream is = ByteSource.wrap(converter.marshall(businessObjectModel)).openBufferedStream()) {
                     doImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, is);
@@ -195,7 +188,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             } catch (IOException | JAXBException | SAXException e1) {
                 throw new MigrationException("Failed to migrate Business data model", e1);
             }
-
             fStore.getResource().delete(true, monitor);
         }
     }
