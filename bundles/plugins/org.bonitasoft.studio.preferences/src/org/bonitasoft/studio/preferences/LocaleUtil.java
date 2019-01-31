@@ -112,6 +112,7 @@ public class LocaleUtil {
                 if (split.length == 2) {
                     language = split[1];
                 } else if (split.length == 3) {
+                    language = split[1];
                     country = split[2];
                 }
                 if (language != null) {
