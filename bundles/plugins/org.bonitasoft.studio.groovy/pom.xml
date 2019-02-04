@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
 		<artifactId>plugins</artifactId>
-        <version>7.9.0-SNAPSHOT</version>
+        <version>7.9.0.W5</version>
 	</parent>
   <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
   <artifactId>org.bonitasoft.studio.groovy</artifactId>
