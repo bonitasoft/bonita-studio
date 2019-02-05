@@ -268,7 +268,7 @@
         </createDirectory>
         <runProgram>
             <program>tar</program>
-            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
+            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9.tar.gz" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
             <progressText>Installing JRE...</progressText>
             <ruleList>
                 <platformTest>
@@ -277,8 +277,26 @@
             </ruleList>
         </runProgram>
         <runProgram>
+            <program>mkdir</program>
+            <programArguments>-p "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
             <program>mv</program>
-            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jre1.8.0_112.jre/Contents" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
+            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jdk-11.0.2+9-jre/Contents/" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+         <runProgram>
+            <program>rm</program>
+            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jdk-11.0.2+9-jre"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -287,7 +305,7 @@
         </runProgram>
         <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre-8u112-macosx-x64.tar.gz"</programArguments>
+            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9.tar.gz"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -300,10 +318,10 @@
             <type>exact</type>
             <substitutionList>
                 <substitution>
-                    <pattern>--launcher.XXMaxPermSize512m</pattern>
-                    <value>--launcher.XXMaxPermSize512m
--vm
-${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java</value>
+                    <pattern>-startup</pattern>
+                    <value>-vm
+${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
+-startup</value>
                 </substitution>
             </substitutionList>
             <ruleList>
