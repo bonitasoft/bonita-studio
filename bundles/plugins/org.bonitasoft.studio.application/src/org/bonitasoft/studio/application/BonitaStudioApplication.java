@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -35,6 +36,7 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -43,6 +45,9 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMInstallType;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -57,7 +62,9 @@ import org.osgi.framework.Version;
  */
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
-    private static final String INVALID_JAVA_VERSION_PREFIX = "1.9";
+    private static final String HOTSPOT_JRE_11 = "OpenJDK Hotspot JRE 11";
+    private static final String JAVA_8 = "1.8";
+    private static final String JAVA_11 = "11";
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
     public static final String WS_ROOT = "wsRootDir";
@@ -73,10 +80,6 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         this.display = display;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
-     */
     @Override
     public Object start(final IApplicationContext context) {
         START_TIME = System.currentTimeMillis();
@@ -168,7 +171,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
 
     protected boolean isJavaVersionSupported(final Display display) {
         final String javaVersion = getJavaVersion();
-        if (javaVersion.startsWith(INVALID_JAVA_VERSION_PREFIX)) {
+        if (!(javaVersion.startsWith(JAVA_8) || javaVersion.startsWith(JAVA_11))) {
             openErrorDialog(display, javaVersion);
             return false;
         }
@@ -179,12 +182,14 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         final Shell shell = new Shell(display);
         try {
             final Version version = Version.parseVersion(ProductVersion.CURRENT_VERSION);
-            final String uriWithProductVersion = ONLINE_DOC_REQUIREMENTS + version.getMajor() + "." + version.getMinor();
+            final String uriWithProductVersion = ONLINE_DOC_REQUIREMENTS + version.getMajor() + "."
+                    + version.getMinor();
             final URI uri = new URI(uriWithProductVersion);
             final MessageDialogWithLink messageDialog = new MessageDialogWithLink(shell,
-                    Messages.incompatibleJavaVersionTitle, null, Messages.bind(
+                    Messages.incompatibleJavaVersionTitle, null, String.format(
                             Messages.incompatibleJavaVersionMessage,
-                            org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion),
+                            org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion,
+                            "Java 1.8 and Java 11."),
                     MessageDialog.ERROR,
                     new String[] { IDialogConstants.OK_LABEL },
                     0,
@@ -235,12 +240,31 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
                 }
             }
         }
+        File installLocation = new File(Platform.getInstallLocation().getURL().getPath());
+        File jre11Location = new File(installLocation,"jre");
+        IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
+        if (!Objects.equals(Platform.getOS(), Platform.OS_MACOSX) && jre11Location.exists()) {
+            if (defaultVMInstall.getName() != null
+                    && !Objects.equals(defaultVMInstall.getName(), HOTSPOT_JRE_11)
+                    && Objects.equals(defaultVMInstall.getInstallLocation(),installLocation)) { //Remove invalid JRE 
+                defaultVMInstall.getVMInstallType().disposeVMInstall(defaultVMInstall.getId());
+            }
+            IVMInstallType type = JavaRuntime
+                    .getVMInstallType("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType");
+            IVMInstall jre11Install = type.findVMInstall(HOTSPOT_JRE_11);
+            if(jre11Install == null) {
+                jre11Install = type.createVMInstall(HOTSPOT_JRE_11);
+                jre11Install.setName(HOTSPOT_JRE_11);
+                jre11Install.setInstallLocation(jre11Location);
+                try {
+                    JavaRuntime.setDefaultVMInstall(jre11Install, new NullProgressMonitor(), true);
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#stop()
-     */
     @Override
     public void stop() {
         final IWorkbench workbench = PlatformUI.getWorkbench();

@@ -52,9 +52,6 @@ public class BonitaStudioApplicationTest {
     @Rule
     public RealmWithDisplay realm = new RealmWithDisplay();
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         application = spy(new BonitaStudioApplication(realm.getShell().getDisplay()));
@@ -64,9 +61,6 @@ public class BonitaStudioApplicationTest {
         doReturn(IApplication.EXIT_OK).when(application).createAndRunWorkbench(any(Display.class));
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
     public void tearDown() throws Exception {
         Job.getJobManager().removeJobChangeListener(application);
@@ -74,7 +68,7 @@ public class BonitaStudioApplicationTest {
 
     @Test
     public void shoul_start_run_workbench_if_java_version_is_valid() throws Exception {
-        doReturn("1.7").when(application).getJavaVersion();
+        doReturn("1.8").when(application).getJavaVersion();
 
         final Object result = application.start(null);
 
@@ -84,18 +78,18 @@ public class BonitaStudioApplicationTest {
 
     @Test
     public void shoul_start_exit_if_java_version_is_not_valid() throws Exception {
-        doReturn("1.9").when(application).getJavaVersion();
+        doReturn("9").when(application).getJavaVersion();
 
         application.start(null);
 
-        verify(application).openErrorDialog(realm.getShell().getDisplay(), "1.9");
+        verify(application).openErrorDialog(realm.getShell().getDisplay(), "9");
         verify(application, never()).createAndRunWorkbench(realm.getShell().getDisplay());
     }
 
     @Test
     public void should_start_add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready()
             throws Exception {
-        doReturn("1.7").when(application).getJavaVersion();
+        doReturn("1.8").when(application).getJavaVersion();
 
         application.start(null);
 
