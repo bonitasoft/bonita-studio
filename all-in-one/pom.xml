@@ -298,9 +298,9 @@
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
 				<jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
-				<jre.winx86.x64.url>jre-8u112-windows-x64</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>jre-8u112-linux-x64</jre.linuxx86.x64.url>
-				<jre.osx.url>jre-8u112-macosx-x64</jre.osx.url>
+				<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.2_9</jre.winx86.x64.url>
+				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.2_9</jre.linuxx86.x64.url>
+				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9</jre.osx.url>
 			</properties>
 			<build>
 				<plugins>
@@ -448,11 +448,10 @@
 												<isset property="jre.present" />
 											</not>
 											<then>
-												<get src="${jre.url}/${jre.winx86.x64.url}.tar.gz"
+												<get src="${jre.url}/${jre.winx86.x64.url}.zip"
 													dest="${user.home}" verbose="true" />
-												<gunzip
-													src="${user.home}/${jre.winx86.x64.url}.tar.gz" />
-												<untar src="${user.home}/${jre.winx86.x64.url}.tar"
+												<unzip
+													src="${user.home}/${jre.winx86.x64.url}.zip"
 													dest="${user.home}/${jre.winx86.x64.url}" />
 												<delete file="${user.home}/${jre.winx86.x64.url}.tar" />
 												<delete
@@ -462,7 +461,7 @@
 										<copy
 											todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
 											<fileset
-												dir="${user.home}/${jre.winx86.x64.url}/jre1.8.0_112" />
+												dir="${user.home}/${jre.winx86.x64.url}/jdk-11.0.2+9-jre" />
 										</copy>
 									</target>
 								</configuration>
@@ -499,7 +498,7 @@
 										<copy
 											todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
 											<fileset
-												dir="${user.home}/${jre.linuxx86.x64.url}/jre1.8.0_112" />
+												dir="${user.home}/${jre.linuxx86.x64.url}/jdk-11.0.2+9-jre" />
 										</copy>
 									</target>
 								</configuration>
