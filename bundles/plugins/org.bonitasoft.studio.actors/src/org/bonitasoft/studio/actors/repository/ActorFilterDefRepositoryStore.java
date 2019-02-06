@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
 /**
@@ -120,7 +121,9 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
-        getResourceProvider().loadDefinitionsCategories(null);
+        if(PlatformUI.isWorkbenchRunning()) {
+            getResourceProvider().loadDefinitionsCategories(null);
+        }
     }
 
 }

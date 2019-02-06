@@ -722,11 +722,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
         monitor.beginTask(String.format(Messages.migratingRepository, getName()), IProgressMonitor.UNKNOWN);
-        IFolder settings = project.getFolder(".settings");
-        if (settings.exists()) {
-            settings.delete(true, null);
-        }
-
+       
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.createRepositoryStore(this);
             store.migrate(monitor);

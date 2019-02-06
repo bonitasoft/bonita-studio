@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -39,6 +41,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -80,7 +83,8 @@ public class ImportWorkspaceApplication implements IApplication {
                     .map(repositoryAccessor::getRepository)
                     .forEach(repository -> {
                         System.out.println(
-                                String.format("$SCAN_PROGRESS_%s:%s:%s:%s", repository.getName(), repository.getVersion(),
+                                String.format("$SCAN_PROGRESS_%s:%s:%s:%s", repository.getName(),
+                                        repository.getVersion(),
                                         findEdition(repository), connected(repository)));
                         export
                                 .map(value -> value.split("=")[1])
@@ -143,9 +147,10 @@ public class ImportWorkspaceApplication implements IApplication {
                 .addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory
                 .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-         AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,
+        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,
                 new BasicCommandStack(), new HashMap<Resource, Boolean>());
         URI fileURI = URI.createFileURI(file.getAbsolutePath());
+        editingDomain.getResourceSet().getLoadOptions().put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         Resource resource = editingDomain.getResourceSet().getResource(fileURI, true);
         MainProcess process = (MainProcess) resource.getContents().get(0);
         return process.getConfigId().toString().contains("sp");
