@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Main UI plugin
 Bundle-SymbolicName: org.bonitasoft.studio.application;singleton:=true
-Bundle-Version: 7.8.2.qualifier
+Bundle-Version: 7.8.2
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.application.ApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
