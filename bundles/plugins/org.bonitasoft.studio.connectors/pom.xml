@@ -141,16 +141,9 @@
                                 <!--TWITTER CONNECTORS -->
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-twitter-direct-impl</artifactId>
-                                    <version>1.1.0</version>
-                                    <classifier>connector</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.bonitasoft.connectors</groupId>
-                                    <artifactId>bonita-connector-twitter-update-impl</artifactId>
-                                    <version>1.1.0</version>
-                                    <classifier>connector</classifier>
+                                    <artifactId>bonita-connector-twitter</artifactId>
+                                    <version>1.2.0</version>
+                                    <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
                                 <!--WEBSERVICE CONNECTORS -->
