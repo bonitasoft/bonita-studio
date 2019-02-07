@@ -33,6 +33,9 @@ public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore>
 
         final List<T> result = new ArrayList<>();
         final IFolder folder = getResource();
+        if(!folder.exists() || !folder.isAccessible()) {
+            return result;
+        }
         try {
             for (final IResource r : folder.members()) {
                 if (!r.isHidden() && !r.getName().startsWith(".") && r instanceof IFolder) {
