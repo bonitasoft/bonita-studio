@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.NewDiagramFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -61,7 +62,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         final NewDiagramFactory diagramFactory = new NewDiagramFactory(
                 RepositoryManager.getInstance().getCurrentRepository(),
                 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
-        diagramFactory.setDefaultPoolWidth(getDefaultWidth());
+        diagramFactory.setDefaultPoolWidth(CustomPoolEditPart.getDefaultWidth());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, new IRunnableWithProgress() {
@@ -79,14 +80,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         }
         final DiagramFileStore diagramFileStore = diagramFactory.getNewDiagramFileStore();
         return diagramFileStore;
-    }
-
-    private int getDefaultWidth() {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - 600;
-        }
-        return 800;
     }
 
     /*
