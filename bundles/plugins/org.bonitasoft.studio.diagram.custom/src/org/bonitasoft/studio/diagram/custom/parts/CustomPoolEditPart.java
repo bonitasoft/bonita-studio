@@ -35,6 +35,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
+import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Color;
@@ -71,8 +73,10 @@ public class CustomPoolEditPart extends PoolEditPart {
      * @return the defaultWidth
      */
     public int getDefaultWidth() {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - CONSTANT_RIGHT_MARGIN;
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
+            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width
+                    - CONSTANT_RIGHT_MARGIN;
         } else {
             return MIN_POOL_WIDTH;
         }
@@ -188,6 +192,13 @@ public class CustomPoolEditPart extends PoolEditPart {
         figure.setUseLocalCoordinates(true);
         return primaryShape = figure;
     }
+    
+    @Override
+    protected NodeFigure createNodePlate() {
+         NodeFigure nodeFigure = new DefaultSizeNodeFigure(new Dimension(-1, 100));
+         nodeFigure.setMinimumSize(new Dimension(-1, 100));
+        return nodeFigure;
+    }
 
     public class CustomPoolFigure extends PoolFigure {
 
@@ -205,7 +216,6 @@ public class CustomPoolEditPart extends PoolEditPart {
          * @generated
          */
         public CustomPoolFigure() {
-
             final GridLayout layoutThis = new GridLayout();
             layoutThis.numColumns = 2;
             layoutThis.makeColumnsEqualWidth = false;
@@ -222,12 +232,12 @@ public class CustomPoolEditPart extends PoolEditPart {
                     getMapMode().DPtoLP(getDefaultHeight()));
             this.setSize(defaultSize);
             this.setPreferredSize(defaultSize);
-            setMinimumSize(new Dimension(getMapMode().DPtoLP(MIN_POOL_WIDTH), getMapMode().DPtoLP(100)));
+            setMinimumSize(new Dimension(MIN_POOL_WIDTH, getMapMode().DPtoLP(100)));
             currentSize = new Dimension(defaultSize);
             setLocation(new Point(20, 20));
             createContents();
         }
-
+        
         @Override
         public void validate() {
             super.validate();
@@ -422,7 +432,8 @@ public class CustomPoolEditPart extends PoolEditPart {
         super.setFont(fontData);
         if (fontData != null && ((Element) resolveSemanticElement()).getName() != null) {
             final Font font = new Font(Display.getCurrent(), fontData);
-            final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(), font).height;
+            final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(),
+                    font).height;
             font.dispose();
             ((CustomPoolFigure) getContentPane()).getLabelGridData().widthHint = height + 2;
         }
