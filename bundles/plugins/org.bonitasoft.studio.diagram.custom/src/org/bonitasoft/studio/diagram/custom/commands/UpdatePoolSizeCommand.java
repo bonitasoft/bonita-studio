@@ -94,7 +94,6 @@ public class UpdatePoolSizeCommand extends AbstractTransactionalCommand {
 		setRequest1.setResizeDirection(PositionConstants.NORTH);
 		setRequest1.setSizeDelta(new Dimension(0,-150));
 		gep.getDiagramEditDomain().getDiagramCommandStack().execute(gep.getCommand(setRequest1));
-		
 		for(Object o : gep.getChildren()){
 			if(o instanceof CustomPoolCompartmentEditPart){
 				for(CustomLaneEditPart lane : ((CustomPoolCompartmentEditPart)o).getPoolLanes()){
@@ -114,7 +113,6 @@ public class UpdatePoolSizeCommand extends AbstractTransactionalCommand {
 		setRequest1.setResizeDirection(PositionConstants.SOUTH);
 		setRequest1.setSizeDelta(new Dimension(0,150));
 		gep.getDiagramEditDomain().getDiagramCommandStack().execute(gep.getCommand(setRequest1));
-		
 		for(Object o : gep.getChildren()){
 			if(o instanceof CustomPoolCompartmentEditPart){
 				for(CustomLaneEditPart lane : ((CustomPoolCompartmentEditPart)o).getPoolLanes()){
@@ -135,13 +133,11 @@ public class UpdatePoolSizeCommand extends AbstractTransactionalCommand {
 					epToMove.add(lane);
 				}
 			}
-			
 		}
 		setRequest1.setEditParts(epToMove);
 		setRequest1.setResizeDirection(PositionConstants.EAST);
 		setRequest1.setSizeDelta(new Dimension(-150,0));
-		if(gep.getFigure().getSize().width > gep.getFigure().getMinimumSize().width ){
-				
+		if(gep.getFigure().getSize().width - 150 > gep.getFigure().getMinimumSize().width ){
 			gep.getDiagramEditDomain().getDiagramCommandStack().execute(gep.getCommand(setRequest1));	
 			for(Object o : gep.getChildren()){
 				if(o instanceof CustomPoolCompartmentEditPart){
