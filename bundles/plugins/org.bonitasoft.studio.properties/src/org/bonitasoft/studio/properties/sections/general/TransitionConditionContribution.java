@@ -283,9 +283,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
         if (eObject instanceof SequenceFlow) {
             final SourceElement source = ((SequenceFlow) eObject).getSource();
             final boolean sourceIdAndGateway = source instanceof ANDGateway;
-            final TargetElement target = ((SequenceFlow) eObject).getTarget();
-            final boolean targetIsAndGateway = target instanceof ANDGateway && !(source instanceof XORGateway);
-            return !(source instanceof BoundaryEvent) && !sourceIdAndGateway && !targetIsAndGateway;
+            return !(source instanceof BoundaryEvent) && !sourceIdAndGateway;
 
         }
         return false;
