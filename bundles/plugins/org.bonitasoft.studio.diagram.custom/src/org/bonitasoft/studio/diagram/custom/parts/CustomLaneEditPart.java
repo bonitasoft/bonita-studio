@@ -81,9 +81,7 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     @Override
     protected NodeFigure createNodePlate() {
-        final NodeFigure figure = new DefaultSizeNodeFigure(getMapMode().DPtoLP(975), getMapMode().DPtoLP(100));
-        figure.setMinimumSize(new Dimension(975, 100));
-        return figure;
+        return new DefaultSizeNodeFigure(getMapMode().DPtoLP(975), getMapMode().DPtoLP(100));
     }
 
     @Override
@@ -202,7 +200,7 @@ public class CustomLaneEditPart extends LaneEditPart {
                 }
                 final CustomPoolEditPart parent = (CustomPoolEditPart) getParent().getParent();
 
-                int width = parent.getFigure().getSize().width;
+                int width = parent.getCurrentSize().width;
                 int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
 
                 if (height == -1) {
@@ -345,7 +343,7 @@ public class CustomLaneEditPart extends LaneEditPart {
             setBackgroundColor(THIS_BACK);
             this.setPreferredSize(new Dimension(getMapMode().DPtoLP(975),
                     getMapMode().DPtoLP(100)));
-            setMinimumSize(new Dimension(getMapMode().DPtoLP(975),
+            setMinimumSize(new Dimension(-1,
                     getMapMode().DPtoLP(100)));
             createContents();
         }
