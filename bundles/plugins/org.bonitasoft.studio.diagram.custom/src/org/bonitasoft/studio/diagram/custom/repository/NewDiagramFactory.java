@@ -202,9 +202,6 @@ public class NewDiagramFactory {
         return mapping;
     }
 
-    /**
-     * @return the artifact
-     */
     public DiagramFileStore getNewDiagramFileStore() {
         return fileStore;
     }
