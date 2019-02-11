@@ -16,6 +16,7 @@ package org.bonitasoft.studio.diagram.custom.providers;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowLabelEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
@@ -62,7 +63,7 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
         final Size layoutConstraint = (Size) node.getLayoutConstraint();
         if (layoutConstraint.getWidth() <= 0) {
             layoutConstraint.setWidth(((IPreferenceStore) preferencesHint.getPreferenceStore()).getDefaultInt("poolDefaultWidth"));
-            layoutConstraint.setHeight(250);
+            layoutConstraint.setHeight(CustomPoolEditPart.CONSTANT_DEFAULT_HEIGHT);
         }
         return node;
     }

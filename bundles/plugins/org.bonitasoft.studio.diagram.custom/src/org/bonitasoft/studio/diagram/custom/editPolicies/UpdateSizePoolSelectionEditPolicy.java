@@ -168,12 +168,6 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
 
         hideSelection();
         layer = getLayer(LayerConstants.HANDLE_LAYER);
-        /*
-         * need to flush in order to have the new correct size of the host
-         * figure
-         */
-        //		poolEditPart.getViewer().flush();
-        //FIXME
         Rectangle ref = sourceFigure.getBounds();
 
         if (ref.x == 0 && ref.y == 0 && ref.height == 0 && ref.width == 0) {
@@ -205,7 +199,6 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
             result = ((AbstractConnectionEditPart) host).getSource();
         }
 
-        EditPart tempEditPart = result;
         /*first search for a CustomLaneEditPart*/
         while(!(result instanceof CustomPoolEditPart) && result != null){
             result = result.getParent() ;
@@ -231,7 +224,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         Rectangle ref = sourceFigure.getBounds();
         IFigure f = new ImageFigure(Pics.getImage(PicsConstants.plusBlack));
         f.setSize(20, 20);
-        f.setLocation(ref.getRight().translate(10, -20));
+        f.setLocation(ref.getRight().getCopy().translate(10, -20));
         f.getBounds().performScale(zoom) ;
         f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT));
         layer.add(f);
@@ -253,7 +246,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         Rectangle ref = sourceFigure.getBounds();
         IFigure f = new ImageFigure(Pics.getImage(PicsConstants.plusBlack));
         f.setSize(20, 20);
-        f.setLocation(ref.getBottom().translate(20, 0));
+        f.setLocation(ref.getBottom().getCopy().translate(20, 0));
         f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.ADD_BOTTOM));
         f.getBounds().performScale(zoom);
         layer.add(f);
@@ -274,7 +267,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         Rectangle ref = sourceFigure.getBounds();
         IFigure f = new ImageFigure(Pics.getImage(PicsConstants.minusBlack));
         f.setSize(20, 20);
-        f.setLocation(ref.getBottom().translate(20, -20));
+        f.setLocation(ref.getBottom().getCopy().translate(20, -20));
         f.getBounds().performScale(zoom);
         f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.REMOVE_BOTTOM));
         layer.add(f);
@@ -298,7 +291,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         Rectangle ref = sourceFigure.getBounds();
         IFigure f = new ImageFigure(Pics.getImage(PicsConstants.minusBlack));
         f.setSize(20, 20);
-        f.setLocation(ref.getLeft().translate(-25, -10));
+        f.setLocation(ref.getLeft().getCopy().translate(-25, -10));
 
         f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.REMOVE_RIGHT));
         f.getBounds().performScale(zoom);
