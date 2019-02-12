@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.dialog;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -24,40 +23,25 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     private Link startMessage;
     private Label title;
-    public static int IMPORT_BUTTON_ID = 38;
 
     public StartupMessageDialog(Shell parentShell) {
         super(parentShell,
@@ -141,10 +125,8 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        Button importButton = createButton(parent, IMPORT_BUTTON_ID, Messages.importWorkspace, false);
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.OK_ID).setText(Messages.letsStart);
-        importButton.addListener(SWT.Selection, e -> Display.getDefault().asyncExec(this::openImportWorkspaceDialog));
     }
 
     private void createDetailsSection(Composite parent) {
@@ -173,37 +155,4 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
         });
     }
 
-    private void openImportWorkspaceDialog() {
-        IEclipseContext context = ((WorkbenchWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow()).getModel()
-                .getContext();
-        ECommandService commandService = context.get(ECommandService.class);
-        Command importWorksapceCommand = commandService.getCommand("org.bonitasoft.studio.importer.workspace.command");
-        try {
-            close();
-            importWorksapceCommand
-                    .executeWithChecks(new ExecutionEvent(importWorksapceCommand, new HashMap<>(), null, context));
-        } catch (ExecutionException | NotHandledException | NotDefinedException | NotEnabledException e1) {
-            throw new RuntimeException("Failed to execute import workspace command", e1);
-        }
-    }
-
-    private String getAccessibleMessageFor(Image image) {
-        if (image.equals(getErrorImage())) {
-            return JFaceResources.getString("error");//$NON-NLS-1$
-        }
-
-        if (image.equals(getWarningImage())) {
-            return JFaceResources.getString("warning");//$NON-NLS-1$
-        }
-
-        if (image.equals(getInfoImage())) {
-            return JFaceResources.getString("info");//$NON-NLS-1$
-        }
-
-        if (image.equals(getQuestionImage())) {
-            return JFaceResources.getString("question"); //$NON-NLS-1$
-        }
-
-        return null;
-    }
 }
