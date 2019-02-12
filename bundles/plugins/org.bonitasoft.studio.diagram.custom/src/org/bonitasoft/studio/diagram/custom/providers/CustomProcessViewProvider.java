@@ -62,7 +62,7 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
         node.getStyles().add(NotationFactory.eINSTANCE.createFillStyle());
         final Size layoutConstraint = (Size) node.getLayoutConstraint();
         if (layoutConstraint.getWidth() <= 0) {
-            layoutConstraint.setWidth(CustomPoolEditPart.getDefaultWidth());
+            layoutConstraint.setWidth(((IPreferenceStore) preferencesHint.getPreferenceStore()).getDefaultInt("poolDefaultWidth"));
             layoutConstraint.setHeight(CustomPoolEditPart.CONSTANT_DEFAULT_HEIGHT);
         }
         return node;

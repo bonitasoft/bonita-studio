@@ -71,7 +71,7 @@ public class CustomPoolEditPart extends PoolEditPart {
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() != null) {
             return ((DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor()).getDiagramGraphicalViewer().getControl().getBounds().width;
+                    .getActiveEditor()).getDiagramGraphicalViewer().getControl().getBounds().width - 100;
         } else {
             return MIN_POOL_WIDTH;
         }
