@@ -32,6 +32,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
@@ -57,26 +58,20 @@ public class CustomPoolEditPart extends PoolEditPart {
         super(view);
     }
 
-    /**
-     * @return the currentSize
-     */
     public Dimension getCurrentSize() {
         return currentSize;
     }
 
     private static int CONSTANT_LEFT_MARGIN = 20;
-    private static int CONSTANT_RIGHT_MARGIN = 240;
-    private static int CONSTANT_DEFAULT_HEIGHT = 250;
+    public static final int CONSTANT_DEFAULT_HEIGHT = 250;
     public static final int MIN_POOL_WIDTH = 800;
 
-    /**
-     * @return the defaultWidth
-     */
-    public int getDefaultWidth() {
+    public static int getDefaultWidth() {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width
-                    - CONSTANT_RIGHT_MARGIN;
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() != null) {
+            return ((DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor()).getDiagramGraphicalViewer().getControl().getBounds().width;
         } else {
             return MIN_POOL_WIDTH;
         }
