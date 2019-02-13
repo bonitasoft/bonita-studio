@@ -150,7 +150,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-webservice</artifactId>
-                                    <version>1.2.1</version>
+                                    <version>1.2.2</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
