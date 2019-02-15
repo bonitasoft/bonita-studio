@@ -50,119 +50,119 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ActorMappingsTypeImpl extends EObjectImpl implements ActorMappingsType {
 	/**
-	 * The cached value of the '{@link #getActorMapping() <em>Actor Mapping</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getActorMapping() <em>Actor Mapping</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getActorMapping()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getActorMapping()
+     * @generated
+     * @ordered
+     */
 	protected EList<ActorMapping> actorMapping;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ActorMappingsTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE;
-	}
+        return ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<ActorMapping> getActorMapping() {
-		if (actorMapping == null) {
-			actorMapping = new EObjectContainmentEList<ActorMapping>(ActorMapping.class, this, ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING);
-		}
-		return actorMapping;
-	}
+        if (actorMapping == null) {
+            actorMapping = new EObjectContainmentEList<ActorMapping>(ActorMapping.class, this, ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING);
+        }
+        return actorMapping;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
-				return ((InternalEList<?>)getActorMapping()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
+                return ((InternalEList<?>)getActorMapping()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
-				return getActorMapping();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
+                return getActorMapping();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
-				getActorMapping().clear();
-				getActorMapping().addAll((Collection<? extends ActorMapping>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
+                getActorMapping().clear();
+                getActorMapping().addAll((Collection<? extends ActorMapping>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
-				getActorMapping().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
+                getActorMapping().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
-				return actorMapping != null && !actorMapping.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING:
+                return actorMapping != null && !actorMapping.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //ActorMappingsTypeImpl

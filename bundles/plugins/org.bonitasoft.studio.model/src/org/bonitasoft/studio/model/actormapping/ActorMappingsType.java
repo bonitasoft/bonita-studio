@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ActorMappingsType extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Actor Mapping</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.actormapping.ActorMapping}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Actor Mapping</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.actormapping.ActorMapping}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Actor Mapping</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Actor Mapping</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getActorMappingsType_ActorMapping()
-	 * @model containment="true" required="true"
-	 *        extendedMetaData="kind='element' name='actorMapping'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Actor Mapping</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getActorMappingsType_ActorMapping()
+     * @model containment="true" required="true"
+     *        extendedMetaData="kind='element' name='actorMapping'"
+     * @generated
+     */
 	EList<ActorMapping> getActorMapping();
 
 } // ActorMappingsType

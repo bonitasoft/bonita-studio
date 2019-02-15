@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class ComboFormFieldImpl extends MultipleValuatedFormFieldImpl implements ComboFormField {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ComboFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.COMBO_FORM_FIELD;
-	}
+        return FormPackage.Literals.COMBO_FORM_FIELD;
+    }
 
 } //ComboFormFieldImpl

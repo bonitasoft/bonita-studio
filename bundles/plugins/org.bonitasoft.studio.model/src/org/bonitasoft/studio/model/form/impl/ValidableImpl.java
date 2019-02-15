@@ -54,243 +54,243 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ValidableImpl extends EObjectImpl implements Validable {
 	/**
-	 * The cached value of the '{@link #getValidators() <em>Validators</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValidators() <em>Validators</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValidators()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValidators()
+     * @generated
+     * @ordered
+     */
 	protected EList<Validator> validators;
 
 	/**
-	 * The default value of the '{@link #getUseDefaultValidator() <em>Use Default Validator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getUseDefaultValidator() <em>Use Default Validator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getUseDefaultValidator()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUseDefaultValidator()
+     * @generated
+     * @ordered
+     */
 	protected static final Boolean USE_DEFAULT_VALIDATOR_EDEFAULT = Boolean.TRUE;
 
 	/**
-	 * The cached value of the '{@link #getUseDefaultValidator() <em>Use Default Validator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getUseDefaultValidator() <em>Use Default Validator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getUseDefaultValidator()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUseDefaultValidator()
+     * @generated
+     * @ordered
+     */
 	protected Boolean useDefaultValidator = USE_DEFAULT_VALIDATOR_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isBelow() <em>Below</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isBelow() <em>Below</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isBelow()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isBelow()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean BELOW_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isBelow() <em>Below</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isBelow() <em>Below</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isBelow()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isBelow()
+     * @generated
+     * @ordered
+     */
 	protected boolean below = BELOW_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ValidableImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.VALIDABLE;
-	}
+        return FormPackage.Literals.VALIDABLE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Validator> getValidators() {
-		if (validators == null) {
-			validators = new EObjectContainmentEList<Validator>(Validator.class, this, FormPackage.VALIDABLE__VALIDATORS);
-		}
-		return validators;
-	}
+        if (validators == null) {
+            validators = new EObjectContainmentEList<Validator>(Validator.class, this, FormPackage.VALIDABLE__VALIDATORS);
+        }
+        return validators;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Boolean getUseDefaultValidator() {
-		return useDefaultValidator;
-	}
+        return useDefaultValidator;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setUseDefaultValidator(Boolean newUseDefaultValidator) {
-		Boolean oldUseDefaultValidator = useDefaultValidator;
-		useDefaultValidator = newUseDefaultValidator;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR, oldUseDefaultValidator, useDefaultValidator));
-	}
+        Boolean oldUseDefaultValidator = useDefaultValidator;
+        useDefaultValidator = newUseDefaultValidator;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR, oldUseDefaultValidator, useDefaultValidator));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isBelow() {
-		return below;
-	}
+        return below;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setBelow(boolean newBelow) {
-		boolean oldBelow = below;
-		below = newBelow;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.VALIDABLE__BELOW, oldBelow, below));
-	}
+        boolean oldBelow = below;
+        below = newBelow;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.VALIDABLE__BELOW, oldBelow, below));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case FormPackage.VALIDABLE__VALIDATORS:
-				return ((InternalEList<?>)getValidators()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case FormPackage.VALIDABLE__VALIDATORS:
+                return ((InternalEList<?>)getValidators()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.VALIDABLE__VALIDATORS:
-				return getValidators();
-			case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
-				return getUseDefaultValidator();
-			case FormPackage.VALIDABLE__BELOW:
-				return isBelow();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.VALIDABLE__VALIDATORS:
+                return getValidators();
+            case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
+                return getUseDefaultValidator();
+            case FormPackage.VALIDABLE__BELOW:
+                return isBelow();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.VALIDABLE__VALIDATORS:
-				getValidators().clear();
-				getValidators().addAll((Collection<? extends Validator>)newValue);
-				return;
-			case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
-				setUseDefaultValidator((Boolean)newValue);
-				return;
-			case FormPackage.VALIDABLE__BELOW:
-				setBelow((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.VALIDABLE__VALIDATORS:
+                getValidators().clear();
+                getValidators().addAll((Collection<? extends Validator>)newValue);
+                return;
+            case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
+                setUseDefaultValidator((Boolean)newValue);
+                return;
+            case FormPackage.VALIDABLE__BELOW:
+                setBelow((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.VALIDABLE__VALIDATORS:
-				getValidators().clear();
-				return;
-			case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
-				setUseDefaultValidator(USE_DEFAULT_VALIDATOR_EDEFAULT);
-				return;
-			case FormPackage.VALIDABLE__BELOW:
-				setBelow(BELOW_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.VALIDABLE__VALIDATORS:
+                getValidators().clear();
+                return;
+            case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
+                setUseDefaultValidator(USE_DEFAULT_VALIDATOR_EDEFAULT);
+                return;
+            case FormPackage.VALIDABLE__BELOW:
+                setBelow(BELOW_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.VALIDABLE__VALIDATORS:
-				return validators != null && !validators.isEmpty();
-			case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
-				return USE_DEFAULT_VALIDATOR_EDEFAULT == null ? useDefaultValidator != null : !USE_DEFAULT_VALIDATOR_EDEFAULT.equals(useDefaultValidator);
-			case FormPackage.VALIDABLE__BELOW:
-				return below != BELOW_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.VALIDABLE__VALIDATORS:
+                return validators != null && !validators.isEmpty();
+            case FormPackage.VALIDABLE__USE_DEFAULT_VALIDATOR:
+                return USE_DEFAULT_VALIDATOR_EDEFAULT == null ? useDefaultValidator != null : !USE_DEFAULT_VALIDATOR_EDEFAULT.equals(useDefaultValidator);
+            case FormPackage.VALIDABLE__BELOW:
+                return below != BELOW_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (useDefaultValidator: "); //$NON-NLS-1$
-		result.append(useDefaultValidator);
-		result.append(", below: "); //$NON-NLS-1$
-		result.append(below);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (useDefaultValidator: "); //$NON-NLS-1$
+        result.append(useDefaultValidator);
+        result.append(", below: "); //$NON-NLS-1$
+        result.append(below);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ValidableImpl

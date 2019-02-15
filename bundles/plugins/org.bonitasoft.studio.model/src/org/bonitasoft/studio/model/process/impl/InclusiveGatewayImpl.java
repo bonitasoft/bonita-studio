@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class InclusiveGatewayImpl extends GatewayImpl implements InclusiveGateway {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected InclusiveGatewayImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.INCLUSIVE_GATEWAY;
-	}
+        return ProcessPackage.Literals.INCLUSIVE_GATEWAY;
+    }
 
 } //InclusiveGatewayImpl

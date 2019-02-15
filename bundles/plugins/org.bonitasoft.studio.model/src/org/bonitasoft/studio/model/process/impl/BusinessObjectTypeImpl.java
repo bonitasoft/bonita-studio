@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class BusinessObjectTypeImpl extends DataTypeImpl implements BusinessObjectType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected BusinessObjectTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.BUSINESS_OBJECT_TYPE;
-	}
+        return ProcessPackage.Literals.BUSINESS_OBJECT_TYPE;
+    }
 
 } //BusinessObjectTypeImpl

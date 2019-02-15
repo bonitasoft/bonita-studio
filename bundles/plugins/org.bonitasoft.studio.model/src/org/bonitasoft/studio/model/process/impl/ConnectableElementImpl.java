@@ -63,398 +63,398 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ConnectableElementImpl extends EObjectImpl implements ConnectableElement {
 	/**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected static final String DOCUMENTATION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected String documentation = DOCUMENTATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTextAnnotationAttachment()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTextAnnotationAttachment()
+     * @generated
+     * @ordered
+     */
 	protected EList<TextAnnotationAttachment> textAnnotationAttachment;
 
 	/**
-	 * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getData()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getData()
+     * @generated
+     * @ordered
+     */
 	protected EList<Data> data;
 
 	/**
-	 * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConnectors()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getConnectors()
+     * @generated
+     * @ordered
+     */
 	protected EList<Connector> connectors;
 
 	/**
-	 * The cached value of the '{@link #getKpis() <em>Kpis</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getKpis() <em>Kpis</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getKpis()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getKpis()
+     * @generated
+     * @ordered
+     */
 	protected EList<AbstractKPIBinding> kpis;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ConnectableElementImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CONNECTABLE_ELEMENT;
-	}
+        return ProcessPackage.Literals.CONNECTABLE_ELEMENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTABLE_ELEMENT__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTABLE_ELEMENT__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
-		if (textAnnotationAttachment == null) {
-			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
-		}
-		return textAnnotationAttachment;
-	}
+        if (textAnnotationAttachment == null) {
+            textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
+        }
+        return textAnnotationAttachment;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Data> getData() {
-		if (data == null) {
-			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.CONNECTABLE_ELEMENT__DATA);
-		}
-		return data;
-	}
+        if (data == null) {
+            data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.CONNECTABLE_ELEMENT__DATA);
+        }
+        return data;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Connector> getConnectors() {
-		if (connectors == null) {
-			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS);
-		}
-		return connectors;
-	}
+        if (connectors == null) {
+            connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS);
+        }
+        return connectors;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<AbstractKPIBinding> getKpis() {
-		if (kpis == null) {
-			kpis = new EObjectContainmentEList<AbstractKPIBinding>(AbstractKPIBinding.class, this, ProcessPackage.CONNECTABLE_ELEMENT__KPIS);
-		}
-		return kpis;
-	}
+        if (kpis == null) {
+            kpis = new EObjectContainmentEList<AbstractKPIBinding>(AbstractKPIBinding.class, this, ProcessPackage.CONNECTABLE_ELEMENT__KPIS);
+        }
+        return kpis;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
-			case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
-				return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
-			case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
-				return ((InternalEList<?>)getConnectors()).basicRemove(otherEnd, msgs);
-			case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
-				return ((InternalEList<?>)getKpis()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
+                return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
+                return ((InternalEList<?>)getConnectors()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
+                return ((InternalEList<?>)getKpis()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
-				return getDocumentation();
-			case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
-				return getName();
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				return getTextAnnotationAttachment();
-			case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
-				return getData();
-			case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
-				return getConnectors();
-			case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
-				return getKpis();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
+                return getDocumentation();
+            case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
+                return getName();
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                return getTextAnnotationAttachment();
+            case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
+                return getData();
+            case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
+                return getConnectors();
+            case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
+                return getKpis();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
-				setName((String)newValue);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
-				getData().clear();
-				getData().addAll((Collection<? extends Data>)newValue);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
-				getConnectors().clear();
-				getConnectors().addAll((Collection<? extends Connector>)newValue);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
-				getKpis().clear();
-				getKpis().addAll((Collection<? extends AbstractKPIBinding>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
+                setName((String)newValue);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
+                getData().clear();
+                getData().addAll((Collection<? extends Data>)newValue);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
+                getConnectors().clear();
+                getConnectors().addAll((Collection<? extends Connector>)newValue);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
+                getKpis().clear();
+                getKpis().addAll((Collection<? extends AbstractKPIBinding>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
-				getData().clear();
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
-				getConnectors().clear();
-				return;
-			case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
-				getKpis().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
+                getData().clear();
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
+                getConnectors().clear();
+                return;
+            case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
+                getKpis().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
-				return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
-			case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
-				return data != null && !data.isEmpty();
-			case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
-				return connectors != null && !connectors.isEmpty();
-			case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
-				return kpis != null && !kpis.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTABLE_ELEMENT__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case ProcessPackage.CONNECTABLE_ELEMENT__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ProcessPackage.CONNECTABLE_ELEMENT__TEXT_ANNOTATION_ATTACHMENT:
+                return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
+            case ProcessPackage.CONNECTABLE_ELEMENT__DATA:
+                return data != null && !data.isEmpty();
+            case ProcessPackage.CONNECTABLE_ELEMENT__CONNECTORS:
+                return connectors != null && !connectors.isEmpty();
+            case ProcessPackage.CONNECTABLE_ELEMENT__KPIS:
+                return kpis != null && !kpis.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == DataAware.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.CONNECTABLE_ELEMENT__DATA: return ProcessPackage.DATA_AWARE__DATA;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == DataAware.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.CONNECTABLE_ELEMENT__DATA: return ProcessPackage.DATA_AWARE__DATA;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == DataAware.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.DATA_AWARE__DATA: return ProcessPackage.CONNECTABLE_ELEMENT__DATA;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == DataAware.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.DATA_AWARE__DATA: return ProcessPackage.CONNECTABLE_ELEMENT__DATA;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (documentation: "); //$NON-NLS-1$
-		result.append(documentation);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (documentation: "); //$NON-NLS-1$
+        result.append(documentation);
+        result.append(", name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ConnectableElementImpl

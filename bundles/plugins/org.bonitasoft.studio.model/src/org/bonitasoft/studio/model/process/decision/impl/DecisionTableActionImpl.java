@@ -33,22 +33,22 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public abstract class DecisionTableActionImpl extends EObjectImpl implements DecisionTableAction {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DecisionTableActionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return DecisionPackage.Literals.DECISION_TABLE_ACTION;
-	}
+        return DecisionPackage.Literals.DECISION_TABLE_ACTION;
+    }
 
 } //DecisionTableActionImpl

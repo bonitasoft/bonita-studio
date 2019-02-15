@@ -42,97 +42,97 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ContractConstraint extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expression</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Expression</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression</em>' attribute.
-	 * @see #setExpression(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_Expression()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Expression</em>' attribute.
+     * @see #setExpression(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_Expression()
+     * @model
+     * @generated
+     */
 	String getExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getExpression <em>Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getExpression <em>Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression</em>' attribute.
-	 * @see #getExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Expression</em>' attribute.
+     * @see #getExpression()
+     * @generated
+     */
 	void setExpression(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Error Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Error Message</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Error Message</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Error Message</em>' attribute.
-	 * @see #setErrorMessage(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_ErrorMessage()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Error Message</em>' attribute.
+     * @see #setErrorMessage(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_ErrorMessage()
+     * @model
+     * @generated
+     */
 	String getErrorMessage();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getErrorMessage <em>Error Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getErrorMessage <em>Error Message</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Error Message</em>' attribute.
-	 * @see #getErrorMessage()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Error Message</em>' attribute.
+     * @see #getErrorMessage()
+     * @generated
+     */
 	void setErrorMessage(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_Name()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Name</em>' attribute.
+     * @see #setName(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_Name()
+     * @model
+     * @generated
+     */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getName <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Name</em>' attribute.
+     * @see #getName()
+     * @generated
+     */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Input Names</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Input Names</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Input Names</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Input Names</em>' attribute list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_InputNames()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Input Names</em>' attribute list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_InputNames()
+     * @model
+     * @generated
+     */
 	EList<String> getInputNames();
 
 } // ContractConstraint

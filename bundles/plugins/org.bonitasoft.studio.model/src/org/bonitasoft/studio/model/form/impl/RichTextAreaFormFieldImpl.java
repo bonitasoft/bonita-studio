@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class RichTextAreaFormFieldImpl extends SingleValuatedFormFieldImpl implements RichTextAreaFormField {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected RichTextAreaFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD;
-	}
+        return FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD;
+    }
 
 } //RichTextAreaFormFieldImpl

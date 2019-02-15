@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class ScriptTaskImpl extends ActivityImpl implements ScriptTask {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ScriptTaskImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.SCRIPT_TASK;
-	}
+        return ProcessPackage.Literals.SCRIPT_TASK;
+    }
 
 } //ScriptTaskImpl

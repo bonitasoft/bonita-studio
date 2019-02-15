@@ -38,208 +38,208 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class KpiAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached model package.
-	 * <!-- begin-user-doc -->
+     * The cached model package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected static KpiPackage modelPackage;
 
 	/**
-	 * Creates an instance of the adapter factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the adapter factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public KpiAdapterFactory() {
-		if (modelPackage == null) {
-			modelPackage = KpiPackage.eINSTANCE;
-		}
-	}
+        if (modelPackage == null) {
+            modelPackage = KpiPackage.eINSTANCE;
+        }
+    }
 
 	/**
-	 * Returns whether this factory is applicable for the type of the object.
-	 * <!-- begin-user-doc -->
+     * Returns whether this factory is applicable for the type of the object.
+     * <!-- begin-user-doc -->
 	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
 	 * <!-- end-user-doc -->
-	 * @return whether this factory is applicable for the type of the object.
-	 * @generated
-	 */
+     * @return whether this factory is applicable for the type of the object.
+     * @generated
+     */
 	@Override
 	public boolean isFactoryForType(Object object) {
-		if (object == modelPackage) {
-			return true;
-		}
-		if (object instanceof EObject) {
-			return ((EObject)object).eClass().getEPackage() == modelPackage;
-		}
-		return false;
-	}
+        if (object == modelPackage) {
+            return true;
+        }
+        if (object instanceof EObject) {
+            return ((EObject)object).eClass().getEPackage() == modelPackage;
+        }
+        return false;
+    }
 
 	/**
-	 * The switch that delegates to the <code>createXXX</code> methods.
-	 * <!-- begin-user-doc -->
+     * The switch that delegates to the <code>createXXX</code> methods.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected KpiSwitch<Adapter> modelSwitch =
 		new KpiSwitch<Adapter>() {
-			@Override
-			public Adapter caseAbstractKPIDefinition(AbstractKPIDefinition object) {
-				return createAbstractKPIDefinitionAdapter();
-			}
-			@Override
-			public Adapter caseAbstractKPIBinding(AbstractKPIBinding object) {
-				return createAbstractKPIBindingAdapter();
-			}
-			@Override
-			public Adapter caseKPIParameterMapping(KPIParameterMapping object) {
-				return createKPIParameterMappingAdapter();
-			}
-			@Override
-			public Adapter caseDatabaseKPIBinding(DatabaseKPIBinding object) {
-				return createDatabaseKPIBindingAdapter();
-			}
-			@Override
-			public Adapter caseDatabaseKPIDefinition(DatabaseKPIDefinition object) {
-				return createDatabaseKPIDefinitionAdapter();
-			}
-			@Override
-			public Adapter caseKPIField(KPIField object) {
-				return createKPIFieldAdapter();
-			}
-			@Override
-			public Adapter caseElement(Element object) {
-				return createElementAdapter();
-			}
-			@Override
-			public Adapter defaultCase(EObject object) {
-				return createEObjectAdapter();
-			}
-		};
+            @Override
+            public Adapter caseAbstractKPIDefinition(AbstractKPIDefinition object) {
+                return createAbstractKPIDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseAbstractKPIBinding(AbstractKPIBinding object) {
+                return createAbstractKPIBindingAdapter();
+            }
+            @Override
+            public Adapter caseKPIParameterMapping(KPIParameterMapping object) {
+                return createKPIParameterMappingAdapter();
+            }
+            @Override
+            public Adapter caseDatabaseKPIBinding(DatabaseKPIBinding object) {
+                return createDatabaseKPIBindingAdapter();
+            }
+            @Override
+            public Adapter caseDatabaseKPIDefinition(DatabaseKPIDefinition object) {
+                return createDatabaseKPIDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseKPIField(KPIField object) {
+                return createKPIFieldAdapter();
+            }
+            @Override
+            public Adapter caseElement(Element object) {
+                return createElementAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
 	/**
-	 * Creates an adapter for the <code>target</code>.
-	 * <!-- begin-user-doc -->
+     * Creates an adapter for the <code>target</code>.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param target the object to adapt.
-	 * @return the adapter for the <code>target</code>.
-	 * @generated
-	 */
+     * @param target the object to adapt.
+     * @return the adapter for the <code>target</code>.
+     * @generated
+     */
 	@Override
 	public Adapter createAdapter(Notifier target) {
-		return modelSwitch.doSwitch((EObject)target);
-	}
+        return modelSwitch.doSwitch((EObject)target);
+    }
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.AbstractKPIDefinition <em>Abstract KPI Definition</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.AbstractKPIDefinition <em>Abstract KPI Definition</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.AbstractKPIDefinition
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.AbstractKPIDefinition
+     * @generated
+     */
 	public Adapter createAbstractKPIDefinitionAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.AbstractKPIBinding <em>Abstract KPI Binding</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.AbstractKPIBinding <em>Abstract KPI Binding</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.AbstractKPIBinding
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.AbstractKPIBinding
+     * @generated
+     */
 	public Adapter createAbstractKPIBindingAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.KPIParameterMapping <em>KPI Parameter Mapping</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.KPIParameterMapping <em>KPI Parameter Mapping</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.KPIParameterMapping
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.KPIParameterMapping
+     * @generated
+     */
 	public Adapter createKPIParameterMappingAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.DatabaseKPIBinding <em>Database KPI Binding</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.DatabaseKPIBinding <em>Database KPI Binding</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.DatabaseKPIBinding
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.DatabaseKPIBinding
+     * @generated
+     */
 	public Adapter createDatabaseKPIBindingAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.DatabaseKPIDefinition <em>Database KPI Definition</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.DatabaseKPIDefinition <em>Database KPI Definition</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.DatabaseKPIDefinition
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.DatabaseKPIDefinition
+     * @generated
+     */
 	public Adapter createDatabaseKPIDefinitionAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.KPIField <em>KPI Field</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.kpi.KPIField <em>KPI Field</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.kpi.KPIField
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.kpi.KPIField
+     * @generated
+     */
 	public Adapter createKPIFieldAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.Element <em>Element</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.Element <em>Element</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.bonitasoft.studio.model.process.Element
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.process.Element
+     * @generated
+     */
 	public Adapter createElementAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Creates a new adapter for the default case.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for the default case.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @generated
+     */
 	public Adapter createEObjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 } //KpiAdapterFactory

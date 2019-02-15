@@ -47,273 +47,273 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class SimulationBooleanImpl extends SimulationElementImpl implements SimulationBoolean {
 	/**
-	 * The default value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isExpressionBased()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isExpressionBased()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean EXPRESSION_BASED_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isExpressionBased()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isExpressionBased()
+     * @generated
+     * @ordered
+     */
 	protected boolean expressionBased = EXPRESSION_BASED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getExpression()
+     * @generated
+     * @ordered
+     */
 	protected Expression expression;
 
 	/**
-	 * The default value of the '{@link #getProbabilityOfTrue() <em>Probability Of True</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getProbabilityOfTrue() <em>Probability Of True</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProbabilityOfTrue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getProbabilityOfTrue()
+     * @generated
+     * @ordered
+     */
 	protected static final double PROBABILITY_OF_TRUE_EDEFAULT = 1.0;
 
 	/**
-	 * The cached value of the '{@link #getProbabilityOfTrue() <em>Probability Of True</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getProbabilityOfTrue() <em>Probability Of True</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProbabilityOfTrue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getProbabilityOfTrue()
+     * @generated
+     * @ordered
+     */
 	protected double probabilityOfTrue = PROBABILITY_OF_TRUE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SimulationBooleanImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.SIMULATION_BOOLEAN;
-	}
+        return SimulationPackage.Literals.SIMULATION_BOOLEAN;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isExpressionBased() {
-		return expressionBased;
-	}
+        return expressionBased;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setExpressionBased(boolean newExpressionBased) {
-		boolean oldExpressionBased = expressionBased;
-		expressionBased = newExpressionBased;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED, oldExpressionBased, expressionBased));
-	}
+        boolean oldExpressionBased = expressionBased;
+        expressionBased = newExpressionBased;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED, oldExpressionBased, expressionBased));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getExpression() {
-		return expression;
-	}
+        return expression;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetExpression(Expression newExpression, NotificationChain msgs) {
-		Expression oldExpression = expression;
-		expression = newExpression;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, oldExpression, newExpression);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldExpression = expression;
+        expression = newExpression;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, oldExpression, newExpression);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setExpression(Expression newExpression) {
-		if (newExpression != expression) {
-			NotificationChain msgs = null;
-			if (expression != null)
-				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, null, msgs);
-			if (newExpression != null)
-				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, null, msgs);
-			msgs = basicSetExpression(newExpression, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, newExpression, newExpression));
-	}
+        if (newExpression != expression) {
+            NotificationChain msgs = null;
+            if (expression != null)
+                msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, null, msgs);
+            if (newExpression != null)
+                msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, null, msgs);
+            msgs = basicSetExpression(newExpression, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION, newExpression, newExpression));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public double getProbabilityOfTrue() {
-		return probabilityOfTrue;
-	}
+        return probabilityOfTrue;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setProbabilityOfTrue(double newProbabilityOfTrue) {
-		double oldProbabilityOfTrue = probabilityOfTrue;
-		probabilityOfTrue = newProbabilityOfTrue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE, oldProbabilityOfTrue, probabilityOfTrue));
-	}
+        double oldProbabilityOfTrue = probabilityOfTrue;
+        probabilityOfTrue = newProbabilityOfTrue;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE, oldProbabilityOfTrue, probabilityOfTrue));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
-				return basicSetExpression(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
+                return basicSetExpression(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
-				return isExpressionBased();
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
-				return getExpression();
-			case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
-				return getProbabilityOfTrue();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
+                return isExpressionBased();
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
+                return getExpression();
+            case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
+                return getProbabilityOfTrue();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
-				setExpressionBased((Boolean)newValue);
-				return;
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
-				setExpression((Expression)newValue);
-				return;
-			case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
-				setProbabilityOfTrue((Double)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
+                setExpressionBased((Boolean)newValue);
+                return;
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
+                setExpression((Expression)newValue);
+                return;
+            case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
+                setProbabilityOfTrue((Double)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
-				setExpressionBased(EXPRESSION_BASED_EDEFAULT);
-				return;
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
-				setExpression((Expression)null);
-				return;
-			case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
-				setProbabilityOfTrue(PROBABILITY_OF_TRUE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
+                setExpressionBased(EXPRESSION_BASED_EDEFAULT);
+                return;
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
+                setExpression((Expression)null);
+                return;
+            case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
+                setProbabilityOfTrue(PROBABILITY_OF_TRUE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
-				return expressionBased != EXPRESSION_BASED_EDEFAULT;
-			case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
-				return expression != null;
-			case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
-				return probabilityOfTrue != PROBABILITY_OF_TRUE_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION_BASED:
+                return expressionBased != EXPRESSION_BASED_EDEFAULT;
+            case SimulationPackage.SIMULATION_BOOLEAN__EXPRESSION:
+                return expression != null;
+            case SimulationPackage.SIMULATION_BOOLEAN__PROBABILITY_OF_TRUE:
+                return probabilityOfTrue != PROBABILITY_OF_TRUE_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (expressionBased: "); //$NON-NLS-1$
-		result.append(expressionBased);
-		result.append(", probabilityOfTrue: "); //$NON-NLS-1$
-		result.append(probabilityOfTrue);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (expressionBased: "); //$NON-NLS-1$
+        result.append(expressionBased);
+        result.append(", probabilityOfTrue: "); //$NON-NLS-1$
+        result.append(probabilityOfTrue);
+        result.append(')');
+        return result.toString();
+    }
 
 } //SimulationBooleanImpl

@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class EndMessageEventImpl extends ThrowMessageEventImpl implements EndMessageEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected EndMessageEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.END_MESSAGE_EVENT;
-	}
+        return ProcessPackage.Literals.END_MESSAGE_EVENT;
+    }
 
 } //EndMessageEventImpl

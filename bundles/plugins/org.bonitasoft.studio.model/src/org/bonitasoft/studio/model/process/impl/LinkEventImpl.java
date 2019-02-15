@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class LinkEventImpl extends EventImpl implements LinkEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected LinkEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.LINK_EVENT;
-	}
+        return ProcessPackage.Literals.LINK_EVENT;
+    }
 
 } //LinkEventImpl

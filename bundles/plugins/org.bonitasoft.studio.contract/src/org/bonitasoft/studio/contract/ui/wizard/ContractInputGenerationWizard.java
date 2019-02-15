@@ -262,6 +262,7 @@ public class ContractInputGenerationWizard extends Wizard {
                 input.setType(ContractInputType.FILE);
                 input.setMultiple(document.isMultiple());
                 input.setName(selectBusinessDataWizardPage.getRootName());
+                input.setDataReference(document.getName());
                 final CompoundCommand cc = new CompoundCommand();
                 cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
                         ProcessPackage.Literals.CONTRACT__INPUTS,

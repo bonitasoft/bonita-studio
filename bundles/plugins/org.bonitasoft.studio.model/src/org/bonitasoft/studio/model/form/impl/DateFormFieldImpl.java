@@ -42,194 +42,194 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class DateFormFieldImpl extends SingleValuatedFormFieldImpl implements DateFormField {
 	/**
-	 * The default value of the '{@link #getInitialFormat() <em>Initial Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getInitialFormat() <em>Initial Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getInitialFormat()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getInitialFormat()
+     * @generated
+     * @ordered
+     */
 	protected static final String INITIAL_FORMAT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getInitialFormat() <em>Initial Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getInitialFormat() <em>Initial Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getInitialFormat()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getInitialFormat()
+     * @generated
+     * @ordered
+     */
 	protected String initialFormat = INITIAL_FORMAT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDisplayFormat() <em>Display Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDisplayFormat() <em>Display Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDisplayFormat()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDisplayFormat()
+     * @generated
+     * @ordered
+     */
 	protected static final String DISPLAY_FORMAT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDisplayFormat() <em>Display Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDisplayFormat() <em>Display Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDisplayFormat()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDisplayFormat()
+     * @generated
+     * @ordered
+     */
 	protected String displayFormat = DISPLAY_FORMAT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DateFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.DATE_FORM_FIELD;
-	}
+        return FormPackage.Literals.DATE_FORM_FIELD;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getInitialFormat() {
-		return initialFormat;
-	}
+        return initialFormat;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setInitialFormat(String newInitialFormat) {
-		String oldInitialFormat = initialFormat;
-		initialFormat = newInitialFormat;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT, oldInitialFormat, initialFormat));
-	}
+        String oldInitialFormat = initialFormat;
+        initialFormat = newInitialFormat;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT, oldInitialFormat, initialFormat));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDisplayFormat() {
-		return displayFormat;
-	}
+        return displayFormat;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDisplayFormat(String newDisplayFormat) {
-		String oldDisplayFormat = displayFormat;
-		displayFormat = newDisplayFormat;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT, oldDisplayFormat, displayFormat));
-	}
+        String oldDisplayFormat = displayFormat;
+        displayFormat = newDisplayFormat;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT, oldDisplayFormat, displayFormat));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
-				return getInitialFormat();
-			case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
-				return getDisplayFormat();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
+                return getInitialFormat();
+            case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
+                return getDisplayFormat();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
-				setInitialFormat((String)newValue);
-				return;
-			case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
-				setDisplayFormat((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
+                setInitialFormat((String)newValue);
+                return;
+            case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
+                setDisplayFormat((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
-				setInitialFormat(INITIAL_FORMAT_EDEFAULT);
-				return;
-			case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
-				setDisplayFormat(DISPLAY_FORMAT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
+                setInitialFormat(INITIAL_FORMAT_EDEFAULT);
+                return;
+            case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
+                setDisplayFormat(DISPLAY_FORMAT_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
-				return INITIAL_FORMAT_EDEFAULT == null ? initialFormat != null : !INITIAL_FORMAT_EDEFAULT.equals(initialFormat);
-			case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
-				return DISPLAY_FORMAT_EDEFAULT == null ? displayFormat != null : !DISPLAY_FORMAT_EDEFAULT.equals(displayFormat);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.DATE_FORM_FIELD__INITIAL_FORMAT:
+                return INITIAL_FORMAT_EDEFAULT == null ? initialFormat != null : !INITIAL_FORMAT_EDEFAULT.equals(initialFormat);
+            case FormPackage.DATE_FORM_FIELD__DISPLAY_FORMAT:
+                return DISPLAY_FORMAT_EDEFAULT == null ? displayFormat != null : !DISPLAY_FORMAT_EDEFAULT.equals(displayFormat);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (initialFormat: "); //$NON-NLS-1$
-		result.append(initialFormat);
-		result.append(", displayFormat: "); //$NON-NLS-1$
-		result.append(displayFormat);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (initialFormat: "); //$NON-NLS-1$
+        result.append(initialFormat);
+        result.append(", displayFormat: "); //$NON-NLS-1$
+        result.append(displayFormat);
+        result.append(')');
+        return result.toString();
+    }
 
 } //DateFormFieldImpl

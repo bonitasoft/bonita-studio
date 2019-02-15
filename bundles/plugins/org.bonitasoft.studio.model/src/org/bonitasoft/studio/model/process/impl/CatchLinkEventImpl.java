@@ -48,134 +48,134 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class CatchLinkEventImpl extends LinkEventImpl implements CatchLinkEvent {
 	/**
-	 * The cached value of the '{@link #getFrom() <em>From</em>}' reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getFrom() <em>From</em>}' reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFrom()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getFrom()
+     * @generated
+     * @ordered
+     */
 	protected EList<ThrowLinkEvent> from;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected CatchLinkEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CATCH_LINK_EVENT;
-	}
+        return ProcessPackage.Literals.CATCH_LINK_EVENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<ThrowLinkEvent> getFrom() {
-		if (from == null) {
-			from = new EObjectWithInverseResolvingEList<ThrowLinkEvent>(ThrowLinkEvent.class, this, ProcessPackage.CATCH_LINK_EVENT__FROM, ProcessPackage.THROW_LINK_EVENT__TO);
-		}
-		return from;
-	}
+        if (from == null) {
+            from = new EObjectWithInverseResolvingEList<ThrowLinkEvent>(ThrowLinkEvent.class, this, ProcessPackage.CATCH_LINK_EVENT__FROM, ProcessPackage.THROW_LINK_EVENT__TO);
+        }
+        return from;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getFrom()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getFrom()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				return ((InternalEList<?>)getFrom()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                return ((InternalEList<?>)getFrom()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				return getFrom();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                return getFrom();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				getFrom().clear();
-				getFrom().addAll((Collection<? extends ThrowLinkEvent>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                getFrom().clear();
+                getFrom().addAll((Collection<? extends ThrowLinkEvent>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				getFrom().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                getFrom().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CATCH_LINK_EVENT__FROM:
-				return from != null && !from.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CATCH_LINK_EVENT__FROM:
+                return from != null && !from.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //CatchLinkEventImpl

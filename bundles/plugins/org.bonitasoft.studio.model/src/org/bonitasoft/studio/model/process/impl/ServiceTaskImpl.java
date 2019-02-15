@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class ServiceTaskImpl extends ActivityImpl implements ServiceTask {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ServiceTaskImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.SERVICE_TASK;
-	}
+        return ProcessPackage.Literals.SERVICE_TASK;
+    }
 
 } //ServiceTaskImpl

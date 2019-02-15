@@ -67,6 +67,11 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
+    
+    
+    protected RepositoryAccessor getRepositoryAccessor() {
+        return repositoryAccessor;
+    }
 
     protected String doPost(URL url, Representation entity) throws InvocationTargetException {
         try {

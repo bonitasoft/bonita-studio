@@ -45,149 +45,149 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public abstract class ContractContainerImpl extends EObjectImpl implements ContractContainer {
 	/**
-	 * The cached value of the '{@link #getContract() <em>Contract</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getContract() <em>Contract</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getContract()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getContract()
+     * @generated
+     * @ordered
+     */
 	protected Contract contract;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ContractContainerImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CONTRACT_CONTAINER;
-	}
+        return ProcessPackage.Literals.CONTRACT_CONTAINER;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Contract getContract() {
-		return contract;
-	}
+        return contract;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetContract(Contract newContract, NotificationChain msgs) {
-		Contract oldContract = contract;
-		contract = newContract;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONTAINER__CONTRACT, oldContract, newContract);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Contract oldContract = contract;
+        contract = newContract;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONTAINER__CONTRACT, oldContract, newContract);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setContract(Contract newContract) {
-		if (newContract != contract) {
-			NotificationChain msgs = null;
-			if (contract != null)
-				msgs = ((InternalEObject)contract).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CONTRACT_CONTAINER__CONTRACT, null, msgs);
-			if (newContract != null)
-				msgs = ((InternalEObject)newContract).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CONTRACT_CONTAINER__CONTRACT, null, msgs);
-			msgs = basicSetContract(newContract, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONTAINER__CONTRACT, newContract, newContract));
-	}
+        if (newContract != contract) {
+            NotificationChain msgs = null;
+            if (contract != null)
+                msgs = ((InternalEObject)contract).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CONTRACT_CONTAINER__CONTRACT, null, msgs);
+            if (newContract != null)
+                msgs = ((InternalEObject)newContract).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CONTRACT_CONTAINER__CONTRACT, null, msgs);
+            msgs = basicSetContract(newContract, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONTAINER__CONTRACT, newContract, newContract));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
-				return basicSetContract(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
+                return basicSetContract(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
-				return getContract();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
+                return getContract();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
-				setContract((Contract)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
+                setContract((Contract)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
-				setContract((Contract)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
+                setContract((Contract)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
-				return contract != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONTAINER__CONTRACT:
+                return contract != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //ContractContainerImpl

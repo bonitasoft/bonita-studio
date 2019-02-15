@@ -45,200 +45,200 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class OutputMappingImpl extends EObjectImpl implements OutputMapping {
 	/**
-	 * The default value of the '{@link #getSubprocessSource() <em>Subprocess Source</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getSubprocessSource() <em>Subprocess Source</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSubprocessSource()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSubprocessSource()
+     * @generated
+     * @ordered
+     */
 	protected static final String SUBPROCESS_SOURCE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSubprocessSource() <em>Subprocess Source</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSubprocessSource() <em>Subprocess Source</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSubprocessSource()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSubprocessSource()
+     * @generated
+     * @ordered
+     */
 	protected String subprocessSource = SUBPROCESS_SOURCE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getProcessTarget() <em>Process Target</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getProcessTarget() <em>Process Target</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProcessTarget()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getProcessTarget()
+     * @generated
+     * @ordered
+     */
 	protected Data processTarget;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected OutputMappingImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.OUTPUT_MAPPING;
-	}
+        return ProcessPackage.Literals.OUTPUT_MAPPING;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getSubprocessSource() {
-		return subprocessSource;
-	}
+        return subprocessSource;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setSubprocessSource(String newSubprocessSource) {
-		String oldSubprocessSource = subprocessSource;
-		subprocessSource = newSubprocessSource;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE, oldSubprocessSource, subprocessSource));
-	}
+        String oldSubprocessSource = subprocessSource;
+        subprocessSource = newSubprocessSource;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE, oldSubprocessSource, subprocessSource));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Data getProcessTarget() {
-		if (processTarget != null && processTarget.eIsProxy()) {
-			InternalEObject oldProcessTarget = (InternalEObject)processTarget;
-			processTarget = (Data)eResolveProxy(oldProcessTarget);
-			if (processTarget != oldProcessTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET, oldProcessTarget, processTarget));
-			}
-		}
-		return processTarget;
-	}
+        if (processTarget != null && processTarget.eIsProxy()) {
+            InternalEObject oldProcessTarget = (InternalEObject)processTarget;
+            processTarget = (Data)eResolveProxy(oldProcessTarget);
+            if (processTarget != oldProcessTarget) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET, oldProcessTarget, processTarget));
+            }
+        }
+        return processTarget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Data basicGetProcessTarget() {
-		return processTarget;
-	}
+        return processTarget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setProcessTarget(Data newProcessTarget) {
-		Data oldProcessTarget = processTarget;
-		processTarget = newProcessTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET, oldProcessTarget, processTarget));
-	}
+        Data oldProcessTarget = processTarget;
+        processTarget = newProcessTarget;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET, oldProcessTarget, processTarget));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
-				return getSubprocessSource();
-			case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
-				if (resolve) return getProcessTarget();
-				return basicGetProcessTarget();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
+                return getSubprocessSource();
+            case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
+                if (resolve) return getProcessTarget();
+                return basicGetProcessTarget();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
-				setSubprocessSource((String)newValue);
-				return;
-			case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
-				setProcessTarget((Data)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
+                setSubprocessSource((String)newValue);
+                return;
+            case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
+                setProcessTarget((Data)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
-				setSubprocessSource(SUBPROCESS_SOURCE_EDEFAULT);
-				return;
-			case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
-				setProcessTarget((Data)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
+                setSubprocessSource(SUBPROCESS_SOURCE_EDEFAULT);
+                return;
+            case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
+                setProcessTarget((Data)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
-				return SUBPROCESS_SOURCE_EDEFAULT == null ? subprocessSource != null : !SUBPROCESS_SOURCE_EDEFAULT.equals(subprocessSource);
-			case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
-				return processTarget != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.OUTPUT_MAPPING__SUBPROCESS_SOURCE:
+                return SUBPROCESS_SOURCE_EDEFAULT == null ? subprocessSource != null : !SUBPROCESS_SOURCE_EDEFAULT.equals(subprocessSource);
+            case ProcessPackage.OUTPUT_MAPPING__PROCESS_TARGET:
+                return processTarget != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (subprocessSource: "); //$NON-NLS-1$
-		result.append(subprocessSource);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (subprocessSource: "); //$NON-NLS-1$
+        result.append(subprocessSource);
+        result.append(')');
+        return result.toString();
+    }
 
 } //OutputMappingImpl

@@ -41,139 +41,139 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class AssociationImpl extends ConnectionImpl implements Association {
 	/**
-	 * The default value of the '{@link #isIsDirected() <em>Is Directed</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isIsDirected() <em>Is Directed</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIsDirected()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIsDirected()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean IS_DIRECTED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsDirected() <em>Is Directed</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isIsDirected() <em>Is Directed</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIsDirected()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIsDirected()
+     * @generated
+     * @ordered
+     */
 	protected boolean isDirected = IS_DIRECTED_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected AssociationImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.ASSOCIATION;
-	}
+        return ProcessPackage.Literals.ASSOCIATION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isIsDirected() {
-		return isDirected;
-	}
+        return isDirected;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setIsDirected(boolean newIsDirected) {
-		boolean oldIsDirected = isDirected;
-		isDirected = newIsDirected;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ASSOCIATION__IS_DIRECTED, oldIsDirected, isDirected));
-	}
+        boolean oldIsDirected = isDirected;
+        isDirected = newIsDirected;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ASSOCIATION__IS_DIRECTED, oldIsDirected, isDirected));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.ASSOCIATION__IS_DIRECTED:
-				return isIsDirected();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.ASSOCIATION__IS_DIRECTED:
+                return isIsDirected();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.ASSOCIATION__IS_DIRECTED:
-				setIsDirected((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.ASSOCIATION__IS_DIRECTED:
+                setIsDirected((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.ASSOCIATION__IS_DIRECTED:
-				setIsDirected(IS_DIRECTED_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.ASSOCIATION__IS_DIRECTED:
+                setIsDirected(IS_DIRECTED_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.ASSOCIATION__IS_DIRECTED:
-				return isDirected != IS_DIRECTED_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.ASSOCIATION__IS_DIRECTED:
+                return isDirected != IS_DIRECTED_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (isDirected: "); //$NON-NLS-1$
-		result.append(isDirected);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (isDirected: "); //$NON-NLS-1$
+        result.append(isDirected);
+        result.append(')');
+        return result.toString();
+    }
 
 } //AssociationImpl

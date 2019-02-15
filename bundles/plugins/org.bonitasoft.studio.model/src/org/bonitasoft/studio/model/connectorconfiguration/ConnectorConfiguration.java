@@ -43,124 +43,124 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ConnectorConfiguration extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Definition Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Definition Id</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Definition Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Definition Id</em>' attribute.
-	 * @see #setDefinitionId(String)
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_DefinitionId()
-	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Definition Id</em>' attribute.
+     * @see #setDefinitionId(String)
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_DefinitionId()
+     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     * @generated
+     */
 	String getDefinitionId();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId <em>Definition Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId <em>Definition Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Definition Id</em>' attribute.
-	 * @see #getDefinitionId()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Definition Id</em>' attribute.
+     * @see #getDefinitionId()
+     * @generated
+     */
 	void setDefinitionId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Version</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Version</em>' attribute.
-	 * @see #setVersion(String)
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Version()
-	 * @model required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Version</em>' attribute.
+     * @see #setVersion(String)
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Version()
+     * @model required="true"
+     * @generated
+     */
 	String getVersion();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Version</em>' attribute.
-	 * @see #getVersion()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Version</em>' attribute.
+     * @see #getVersion()
+     * @generated
+     */
 	void setVersion(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Name()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Name</em>' attribute.
+     * @see #setName(String)
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Name()
+     * @model
+     * @generated
+     */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Name</em>' attribute.
+     * @see #getName()
+     * @generated
+     */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Parameters()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Parameters</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_Parameters()
+     * @model containment="true"
+     * @generated
+     */
 	EList<ConnectorParameter> getParameters();
 
 	/**
-	 * Returns the value of the '<em><b>Model Version</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Model Version</b></em>' attribute.
+     * The default value is <code>""</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Model Version</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Model Version</em>' attribute.
-	 * @see #setModelVersion(String)
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_ModelVersion()
-	 * @model default=""
-	 * @generated
-	 */
+     * @return the value of the '<em>Model Version</em>' attribute.
+     * @see #setModelVersion(String)
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage#getConnectorConfiguration_ModelVersion()
+     * @model default=""
+     * @generated
+     */
 	String getModelVersion();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion <em>Model Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion <em>Model Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Model Version</em>' attribute.
-	 * @see #getModelVersion()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Model Version</em>' attribute.
+     * @see #getModelVersion()
+     * @generated
+     */
 	void setModelVersion(String value);
 
 } // ConnectorConfiguration

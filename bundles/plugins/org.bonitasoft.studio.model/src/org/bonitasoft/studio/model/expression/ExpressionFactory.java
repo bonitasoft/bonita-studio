@@ -29,65 +29,65 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface ExpressionFactory extends EFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	ExpressionFactory eINSTANCE = org.bonitasoft.studio.model.expression.impl.ExpressionFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Expression</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Expression</em>'.
+     * @generated
+     */
 	Expression createExpression();
 
 	/**
-	 * Returns a new object of class '<em>List Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>List Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>List Expression</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>List Expression</em>'.
+     * @generated
+     */
 	ListExpression createListExpression();
 
 	/**
-	 * Returns a new object of class '<em>Table Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Table Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Table Expression</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Table Expression</em>'.
+     * @generated
+     */
 	TableExpression createTableExpression();
 
 	/**
-	 * Returns a new object of class '<em>Operation</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Operation</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operation</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Operation</em>'.
+     * @generated
+     */
 	Operation createOperation();
 
 	/**
-	 * Returns a new object of class '<em>Operator</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Operator</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operator</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Operator</em>'.
+     * @generated
+     */
 	Operator createOperator();
 
 	/**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
 	ExpressionPackage getExpressionPackage();
 
 } //ExpressionFactory

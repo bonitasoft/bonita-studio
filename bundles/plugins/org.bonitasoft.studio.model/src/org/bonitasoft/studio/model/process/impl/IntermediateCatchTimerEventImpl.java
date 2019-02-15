@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class IntermediateCatchTimerEventImpl extends TimerEventImpl implements IntermediateCatchTimerEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IntermediateCatchTimerEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.INTERMEDIATE_CATCH_TIMER_EVENT;
-	}
+        return ProcessPackage.Literals.INTERMEDIATE_CATCH_TIMER_EVENT;
+    }
 
 } //IntermediateCatchTimerEventImpl

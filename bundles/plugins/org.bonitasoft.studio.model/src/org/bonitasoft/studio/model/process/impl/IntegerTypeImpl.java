@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class IntegerTypeImpl extends DataTypeImpl implements IntegerType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IntegerTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.INTEGER_TYPE;
-	}
+        return ProcessPackage.Literals.INTEGER_TYPE;
+    }
 
 } //IntegerTypeImpl

@@ -40,109 +40,109 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ResourceUsage extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Duration</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Duration</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Duration</em>' attribute.
-	 * @see #setDuration(long)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_Duration()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Duration</em>' attribute.
+     * @see #setDuration(long)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_Duration()
+     * @model
+     * @generated
+     */
 	long getDuration();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getDuration <em>Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getDuration <em>Duration</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duration</em>' attribute.
-	 * @see #getDuration()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Duration</em>' attribute.
+     * @see #getDuration()
+     * @generated
+     */
 	void setDuration(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Resource ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Resource ID</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Resource ID</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Resource ID</em>' attribute.
-	 * @see #setResourceID(String)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_ResourceID()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Resource ID</em>' attribute.
+     * @see #setResourceID(String)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_ResourceID()
+     * @model
+     * @generated
+     */
 	String getResourceID();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getResourceID <em>Resource ID</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getResourceID <em>Resource ID</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Resource ID</em>' attribute.
-	 * @see #getResourceID()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Resource ID</em>' attribute.
+     * @see #getResourceID()
+     * @generated
+     */
 	void setResourceID(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Quantity</b></em>' attribute.
-	 * The default value is <code>"1"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Quantity</b></em>' attribute.
+     * The default value is <code>"1"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Quantity</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Quantity</em>' attribute.
-	 * @see #setQuantity(int)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_Quantity()
-	 * @model default="1" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Quantity</em>' attribute.
+     * @see #setQuantity(int)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_Quantity()
+     * @model default="1" required="true"
+     * @generated
+     */
 	int getQuantity();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getQuantity <em>Quantity</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#getQuantity <em>Quantity</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Quantity</em>' attribute.
-	 * @see #getQuantity()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Quantity</em>' attribute.
+     * @see #getQuantity()
+     * @generated
+     */
 	void setQuantity(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Activity Duration</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Activity Duration</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Activity Duration</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Activity Duration</em>' attribute.
-	 * @see #setUseActivityDuration(boolean)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_UseActivityDuration()
-	 * @model default="true" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Activity Duration</em>' attribute.
+     * @see #setUseActivityDuration(boolean)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getResourceUsage_UseActivityDuration()
+     * @model default="true" required="true"
+     * @generated
+     */
 	boolean isUseActivityDuration();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#isUseActivityDuration <em>Use Activity Duration</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.ResourceUsage#isUseActivityDuration <em>Use Activity Duration</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Activity Duration</em>' attribute.
-	 * @see #isUseActivityDuration()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Activity Duration</em>' attribute.
+     * @see #isUseActivityDuration()
+     * @generated
+     */
 	void setUseActivityDuration(boolean value);
 
 } // ResourceUsage

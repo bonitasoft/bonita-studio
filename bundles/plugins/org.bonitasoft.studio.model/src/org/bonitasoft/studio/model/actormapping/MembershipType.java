@@ -38,57 +38,57 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface MembershipType extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Group</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Group</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group</em>' attribute.
-	 * @see #setGroup(String)
-	 * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getMembershipType_Group()
-	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 *        extendedMetaData="kind='element' name='group'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Group</em>' attribute.
+     * @see #setGroup(String)
+     * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getMembershipType_Group()
+     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='group'"
+     * @generated
+     */
 	String getGroup();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.actormapping.MembershipType#getGroup <em>Group</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.actormapping.MembershipType#getGroup <em>Group</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Group</em>' attribute.
-	 * @see #getGroup()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Group</em>' attribute.
+     * @see #getGroup()
+     * @generated
+     */
 	void setGroup(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Role</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Role</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Role</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Role</em>' attribute.
-	 * @see #setRole(String)
-	 * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getMembershipType_Role()
-	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 *        extendedMetaData="kind='element' name='role'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Role</em>' attribute.
+     * @see #setRole(String)
+     * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getMembershipType_Role()
+     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='role'"
+     * @generated
+     */
 	String getRole();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.actormapping.MembershipType#getRole <em>Role</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.actormapping.MembershipType#getRole <em>Role</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Role</em>' attribute.
-	 * @see #getRole()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Role</em>' attribute.
+     * @see #getRole()
+     * @generated
+     */
 	void setRole(String value);
 
 } // MembershipType

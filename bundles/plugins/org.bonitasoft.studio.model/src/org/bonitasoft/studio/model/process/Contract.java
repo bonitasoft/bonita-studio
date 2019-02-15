@@ -40,35 +40,35 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Contract extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Inputs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.ContractInput}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Inputs</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.ContractInput}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Inputs</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Inputs</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContract_Inputs()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Inputs</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContract_Inputs()
+     * @model containment="true"
+     * @generated
+     */
 	EList<ContractInput> getInputs();
 
 	/**
-	 * Returns the value of the '<em><b>Constraints</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.ContractConstraint}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Constraints</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.ContractConstraint}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Constraints</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Constraints</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContract_Constraints()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Constraints</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContract_Constraints()
+     * @model containment="true"
+     * @generated
+     */
 	EList<ContractConstraint> getConstraints();
 
 } // Contract

@@ -37,29 +37,29 @@ import org.bonitasoft.studio.model.expression.Expression;
  */
 public interface AbstractTimerEvent extends Element {
 	/**
-	 * Returns the value of the '<em><b>Condition</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Condition</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Condition</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Condition</em>' containment reference.
-	 * @see #setCondition(Expression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAbstractTimerEvent_Condition()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Condition</em>' containment reference.
+     * @see #setCondition(Expression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getAbstractTimerEvent_Condition()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getCondition();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.AbstractTimerEvent#getCondition <em>Condition</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.AbstractTimerEvent#getCondition <em>Condition</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Condition</em>' containment reference.
-	 * @see #getCondition()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Condition</em>' containment reference.
+     * @see #getCondition()
+     * @generated
+     */
 	void setCondition(Expression value);
 
 } // AbstractTimerEvent

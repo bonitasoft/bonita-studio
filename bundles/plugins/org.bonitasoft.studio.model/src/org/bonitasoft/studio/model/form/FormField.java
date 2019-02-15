@@ -39,85 +39,85 @@ import org.bonitasoft.studio.model.expression.Expression;
  */
 public interface FormField extends Widget, Validable, Duplicable {
 	/**
-	 * Returns the value of the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Description</em>' attribute.
-	 * @see #setDescription(String)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_Description()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Description</em>' attribute.
+     * @see #setDescription(String)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_Description()
+     * @model
+     * @generated
+     */
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getDescription <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getDescription <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Description</em>' attribute.
-	 * @see #getDescription()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Description</em>' attribute.
+     * @see #getDescription()
+     * @generated
+     */
 	void setDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Example Message Position</b></em>' attribute.
-	 * The default value is <code>"Down"</code>.
-	 * The literals are from the enumeration {@link org.bonitasoft.studio.model.form.LabelPosition}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Example Message Position</b></em>' attribute.
+     * The default value is <code>"Down"</code>.
+     * The literals are from the enumeration {@link org.bonitasoft.studio.model.form.LabelPosition}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Example Message Position</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Example Message Position</em>' attribute.
-	 * @see org.bonitasoft.studio.model.form.LabelPosition
-	 * @see #setExampleMessagePosition(LabelPosition)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_ExampleMessagePosition()
-	 * @model default="Down"
-	 * @generated
-	 */
+     * @return the value of the '<em>Example Message Position</em>' attribute.
+     * @see org.bonitasoft.studio.model.form.LabelPosition
+     * @see #setExampleMessagePosition(LabelPosition)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_ExampleMessagePosition()
+     * @model default="Down"
+     * @generated
+     */
 	LabelPosition getExampleMessagePosition();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getExampleMessagePosition <em>Example Message Position</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getExampleMessagePosition <em>Example Message Position</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Example Message Position</em>' attribute.
-	 * @see org.bonitasoft.studio.model.form.LabelPosition
-	 * @see #getExampleMessagePosition()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Example Message Position</em>' attribute.
+     * @see org.bonitasoft.studio.model.form.LabelPosition
+     * @see #getExampleMessagePosition()
+     * @generated
+     */
 	void setExampleMessagePosition(LabelPosition value);
 
 	/**
-	 * Returns the value of the '<em><b>Example Message</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Example Message</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Example Message</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Example Message</em>' containment reference.
-	 * @see #setExampleMessage(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_ExampleMessage()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Example Message</em>' containment reference.
+     * @see #setExampleMessage(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getFormField_ExampleMessage()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getExampleMessage();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getExampleMessage <em>Example Message</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormField#getExampleMessage <em>Example Message</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Example Message</em>' containment reference.
-	 * @see #getExampleMessage()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Example Message</em>' containment reference.
+     * @see #getExampleMessage()
+     * @generated
+     */
 	void setExampleMessage(Expression value);
 
 } // FormField

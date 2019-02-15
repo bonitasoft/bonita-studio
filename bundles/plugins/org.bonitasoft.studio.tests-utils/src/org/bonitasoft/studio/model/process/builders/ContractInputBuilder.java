@@ -59,6 +59,11 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
         contractInput.setMultiple(false);
         return this;
     }
+    
+    public ContractInputBuilder withDataReference(String dataReference) {
+        contractInput.setDataReference(dataReference);
+        return this;
+    }
 
     public ContractInputBuilder havingMapping(final ContractInputMapping mapping) {
         contractInput.setMapping(mapping);

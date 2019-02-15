@@ -45,260 +45,260 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  */
 public class TaskItemProvider extends ActivityItemProvider {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public TaskItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addActorPropertyDescriptor(object);
-			addContractPropertyDescriptor(object);
-			addOverrideActorsOfTheLanePropertyDescriptor(object);
-			addPriorityPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addActorPropertyDescriptor(object);
+            addContractPropertyDescriptor(object);
+            addOverrideActorsOfTheLanePropertyDescriptor(object);
+            addPriorityPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Actor feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Actor feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addActorPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Assignable_actor_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Assignable_actor_feature", "_UI_Assignable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ASSIGNABLE__ACTOR,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Assignable_actor_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Assignable_actor_feature", "_UI_Assignable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ASSIGNABLE__ACTOR,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Contract feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Contract feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addContractPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ContractContainer_contract_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ContractContainer_contract_feature", "_UI_ContractContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractContainer_contract_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractContainer_contract_feature", "_UI_ContractContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Override Actors Of The Lane feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Override Actors Of The Lane feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addOverrideActorsOfTheLanePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Task_overrideActorsOfTheLane_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Task_overrideActorsOfTheLane_feature", "_UI_Task_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Task_overrideActorsOfTheLane_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Task_overrideActorsOfTheLane_feature", "_UI_Task_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Priority feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Priority feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addPriorityPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Task_priority_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Task_priority_feature", "_UI_Task_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.TASK__PRIORITY,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Task_priority_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Task_priority_feature", "_UI_Task_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.TASK__PRIORITY,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-	 * <!-- begin-user-doc -->
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
-			childrenFeatures.add(ProcessPackage.Literals.ASSIGNABLE__FILTERS);
-			childrenFeatures.add(ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
-			childrenFeatures.add(ProcessPackage.Literals.TASK__EXPECTED_DURATION);
-		}
-		return childrenFeatures;
-	}
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+            childrenFeatures.add(ProcessPackage.Literals.ASSIGNABLE__FILTERS);
+            childrenFeatures.add(ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
+            childrenFeatures.add(ProcessPackage.Literals.TASK__EXPECTED_DURATION);
+        }
+        return childrenFeatures;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
 
-		return super.getChildFeature(object, child);
-	}
+        return super.getChildFeature(object, child);
+    }
 
 	/**
-	 * This returns Task.gif.
-	 * <!-- begin-user-doc -->
+     * This returns Task.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Task")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Task")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((Task)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Task_type") : //$NON-NLS-1$
-			getString("_UI_Task_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((Task)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_Task_type") : //$NON-NLS-1$
+            getString("_UI_Task_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(Task.class)) {
-			case ProcessPackage.TASK__OVERRIDE_ACTORS_OF_THE_LANE:
-			case ProcessPackage.TASK__PRIORITY:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case ProcessPackage.TASK__FORM_MAPPING:
-			case ProcessPackage.TASK__FILTERS:
-			case ProcessPackage.TASK__EXPECTED_DURATION:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(Task.class)) {
+            case ProcessPackage.TASK__OVERRIDE_ACTORS_OF_THE_LANE:
+            case ProcessPackage.TASK__PRIORITY:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+            case ProcessPackage.TASK__FORM_MAPPING:
+            case ProcessPackage.TASK__FILTERS:
+            case ProcessPackage.TASK__EXPECTED_DURATION:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
+        super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING,
-				 ProcessFactory.eINSTANCE.createFormMapping()));
+        newChildDescriptors.add
+            (createChildParameter
+                (ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING,
+                 ProcessFactory.eINSTANCE.createFormMapping()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.ASSIGNABLE__FILTERS,
-				 ProcessFactory.eINSTANCE.createActorFilter()));
+        newChildDescriptors.add
+            (createChildParameter
+                (ProcessPackage.Literals.ASSIGNABLE__FILTERS,
+                 ProcessFactory.eINSTANCE.createActorFilter()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(ProcessPackage.Literals.TASK__EXPECTED_DURATION,
-				 ExpressionFactory.eINSTANCE.createExpression()));
-	}
+        newChildDescriptors.add
+            (createChildParameter
+                (ProcessPackage.Literals.TASK__EXPECTED_DURATION,
+                 ExpressionFactory.eINSTANCE.createExpression()));
+    }
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-		Object childFeature = feature;
-		Object childObject = child;
+        Object childFeature = feature;
+        Object childObject = child;
 
-		boolean qualify =
-			childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS ||
-			childFeature == ProcessPackage.Literals.ASSIGNABLE__FILTERS ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION ||
-			childFeature == ProcessPackage.Literals.TASK__EXPECTED_DURATION;
+        boolean qualify =
+            childFeature == ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS ||
+            childFeature == ProcessPackage.Literals.ASSIGNABLE__FILTERS ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION ||
+            childFeature == ProcessPackage.Literals.TASK__EXPECTED_DURATION;
 
-		if (qualify) {
-			return getString
-				("_UI_CreateChild_text2", //$NON-NLS-1$
-				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-		}
-		return super.getCreateChildText(owner, feature, child, selection);
-	}
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2", //$NON-NLS-1$
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
+    }
 
 }

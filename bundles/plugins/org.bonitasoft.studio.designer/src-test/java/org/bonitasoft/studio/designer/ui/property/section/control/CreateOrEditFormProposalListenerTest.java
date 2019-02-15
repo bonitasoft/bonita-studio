@@ -18,18 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
+import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.process.Contract;
@@ -38,11 +33,9 @@ import org.eclipse.ui.progress.IProgressService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author aurelie
- */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateOrEditFormProposalListenerTest {
 
@@ -53,24 +46,34 @@ public class CreateOrEditFormProposalListenerTest {
     @Mock
     private RepositoryAccessor repositoryAccessor;
     @Mock
-    private CreateFormFromContractOperation operation;
+    private CreateUIDArtifactOperation operation;
     @Mock
     private WebPageRepositoryStore pageStore;
     @Mock
     private WebPageFileStore fileStore;
+    @Mock
+    private NewFormOperationFactoryDelegate operationFactory;
 
     @Test
     public void should_execute_create_form_operation_if_new_form() throws Exception {
-        final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
-        doReturn(operation).when(listener).doCreateFormOperation(eq(pageDesignerURLFactory), anyString(), any(Contract.class), any(FormScope.class));
+        final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(
+                pageDesignerURLFactory, progressService, repositoryAccessor, operationFactory));
         when(operation.getNewArtifactId()).thenReturn("page-id");
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         when(pageStore.getChild("page-id")).thenReturn(fileStore);
         when(fileStore.getUUID()).thenReturn("page-id");
 
+        doReturn(operation).when(operationFactory).newCreateFormFromContractOperation(any(PageDesignerURLFactory.class),
+                anyString(),
+                any(Contract.class),
+                any(FormScope.class),
+                any(RepositoryAccessor.class));
+        
         final String newPageId = listener.handleEvent(
-                TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression())).havingContract(aContract()).build()
-                        .getFormMapping(), null);
+                TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression()))
+                        .havingContract(aContract()).build()
+                        .getFormMapping(),
+                null);
 
         assertThat(newPageId).isEqualTo("page-id");
         verify(progressService).busyCursorWhile(operation);
@@ -79,14 +82,18 @@ public class CreateOrEditFormProposalListenerTest {
 
     @Test
     public void should_open_filStore_if_form_exists() throws Exception {
-        final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
+        final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(
+                pageDesignerURLFactory, progressService, repositoryAccessor, operationFactory));
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         when(pageStore.getChild("page-id")).thenReturn(fileStore);
 
         final String newPageId = listener.handleEvent(
-                TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("page-id"))).havingContract(aContract())
+                TaskBuilder.aTask()
+                        .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("page-id")))
+                        .havingContract(aContract())
                         .build()
-                        .getFormMapping(), null);
+                        .getFormMapping(),
+                null);
 
         assertThat(newPageId).isNull();
         verify(fileStore).open();

@@ -39,19 +39,19 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface SimulationCalendar extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Days Of Week</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.simulation.DayPeriod}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Days Of Week</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.simulation.DayPeriod}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Days Of Week</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Days Of Week</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationCalendar_DaysOfWeek()
-	 * @model containment="true" upper="7"
-	 * @generated
-	 */
+     * @return the value of the '<em>Days Of Week</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationCalendar_DaysOfWeek()
+     * @model containment="true" upper="7"
+     * @generated
+     */
 	EList<DayPeriod> getDaysOfWeek();
 
 } // SimulationCalendar

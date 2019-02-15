@@ -75,204 +75,204 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  */
 public class TransitionsPackageImpl extends EPackageImpl implements TransitionsPackage {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private EClass takeTransitionActionEClass = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with
+     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+     * package URI value.
+     * <p>Note: the correct way to create the package is via the static
+     * factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package,
+     * if one already exists.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.bonitasoft.studio.model.process.decision.transitions.TransitionsPackage#eNS_URI
-	 * @see #init()
-	 * @generated
-	 */
+     * @see org.eclipse.emf.ecore.EPackage.Registry
+     * @see org.bonitasoft.studio.model.process.decision.transitions.TransitionsPackage#eNS_URI
+     * @see #init()
+     * @generated
+     */
 	private TransitionsPackageImpl() {
-		super(eNS_URI, TransitionsFactory.eINSTANCE);
-	}
+        super(eNS_URI, TransitionsFactory.eINSTANCE);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 *
-	 * <p>This method is used to initialize {@link TransitionsPackage#eINSTANCE} when that field is accessed.
-	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+     *
+     * <p>This method is used to initialize {@link TransitionsPackage#eINSTANCE} when that field is accessed.
+     * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #eNS_URI
-	 * @see #createPackageContents()
-	 * @see #initializePackageContents()
-	 * @generated
-	 */
+     * @see #eNS_URI
+     * @see #createPackageContents()
+     * @see #initializePackageContents()
+     * @generated
+     */
 	public static TransitionsPackage init() {
-		if (isInited) return (TransitionsPackage)EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+        if (isInited) return (TransitionsPackage)EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
 
-		// Obtain or create and register package
-		Object registeredTransitionsPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
-		TransitionsPackageImpl theTransitionsPackage = registeredTransitionsPackage instanceof TransitionsPackageImpl ? (TransitionsPackageImpl)registeredTransitionsPackage : new TransitionsPackageImpl();
+        // Obtain or create and register package
+        Object registeredTransitionsPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+        TransitionsPackageImpl theTransitionsPackage = registeredTransitionsPackage instanceof TransitionsPackageImpl ? (TransitionsPackageImpl)registeredTransitionsPackage : new TransitionsPackageImpl();
 
-		isInited = true;
+        isInited = true;
 
-		// Obtain or create and register interdependencies
-		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
-		ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
+        // Obtain or create and register interdependencies
+        Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+        ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+        ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+        ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+        ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+        KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+        ParameterPackageImpl theParameterPackage = (ParameterPackageImpl)(registeredPackage instanceof ParameterPackageImpl ? registeredPackage : ParameterPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+        ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+        DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+        FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+        SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
-		// Create package meta-data objects
-		theTransitionsPackage.createPackageContents();
-		theActorMappingPackage.createPackageContents();
-		theConfigurationPackage.createPackageContents();
-		theConnectorConfigurationPackage.createPackageContents();
-		theExpressionPackage.createPackageContents();
-		theKpiPackage.createPackageContents();
-		theParameterPackage.createPackageContents();
-		theProcessPackage.createPackageContents();
-		theDecisionPackage.createPackageContents();
-		theFormPackage.createPackageContents();
-		theSimulationPackage.createPackageContents();
+        // Create package meta-data objects
+        theTransitionsPackage.createPackageContents();
+        theActorMappingPackage.createPackageContents();
+        theConfigurationPackage.createPackageContents();
+        theConnectorConfigurationPackage.createPackageContents();
+        theExpressionPackage.createPackageContents();
+        theKpiPackage.createPackageContents();
+        theParameterPackage.createPackageContents();
+        theProcessPackage.createPackageContents();
+        theDecisionPackage.createPackageContents();
+        theFormPackage.createPackageContents();
+        theSimulationPackage.createPackageContents();
 
-		// Initialize created meta-data
-		theTransitionsPackage.initializePackageContents();
-		theActorMappingPackage.initializePackageContents();
-		theConfigurationPackage.initializePackageContents();
-		theConnectorConfigurationPackage.initializePackageContents();
-		theExpressionPackage.initializePackageContents();
-		theKpiPackage.initializePackageContents();
-		theParameterPackage.initializePackageContents();
-		theProcessPackage.initializePackageContents();
-		theDecisionPackage.initializePackageContents();
-		theFormPackage.initializePackageContents();
-		theSimulationPackage.initializePackageContents();
+        // Initialize created meta-data
+        theTransitionsPackage.initializePackageContents();
+        theActorMappingPackage.initializePackageContents();
+        theConfigurationPackage.initializePackageContents();
+        theConnectorConfigurationPackage.initializePackageContents();
+        theExpressionPackage.initializePackageContents();
+        theKpiPackage.initializePackageContents();
+        theParameterPackage.initializePackageContents();
+        theProcessPackage.initializePackageContents();
+        theDecisionPackage.initializePackageContents();
+        theFormPackage.initializePackageContents();
+        theSimulationPackage.initializePackageContents();
 
-		// Mark meta-data to indicate it can't be changed
-		theTransitionsPackage.freeze();
+        // Mark meta-data to indicate it can't be changed
+        theTransitionsPackage.freeze();
 
-		// Update the registry and return the package
-		EPackage.Registry.INSTANCE.put(TransitionsPackage.eNS_URI, theTransitionsPackage);
-		return theTransitionsPackage;
-	}
+        // Update the registry and return the package
+        EPackage.Registry.INSTANCE.put(TransitionsPackage.eNS_URI, theTransitionsPackage);
+        return theTransitionsPackage;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EClass getTakeTransitionAction() {
-		return takeTransitionActionEClass;
-	}
+        return takeTransitionActionEClass;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getTakeTransitionAction_TakeTransition() {
-		return (EAttribute)takeTransitionActionEClass.getEStructuralFeatures().get(0);
-	}
+        return (EAttribute)takeTransitionActionEClass.getEStructuralFeatures().get(0);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TransitionsFactory getTransitionsFactory() {
-		return (TransitionsFactory)getEFactoryInstance();
-	}
+        return (TransitionsFactory)getEFactoryInstance();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package.  This method is
-	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
+     * Creates the meta-model objects for the package.  This method is
+     * guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void createPackageContents() {
-		if (isCreated) return;
-		isCreated = true;
+        if (isCreated) return;
+        isCreated = true;
 
-		// Create classes and their features
-		takeTransitionActionEClass = createEClass(TAKE_TRANSITION_ACTION);
-		createEAttribute(takeTransitionActionEClass, TAKE_TRANSITION_ACTION__TAKE_TRANSITION);
-	}
+        // Create classes and their features
+        takeTransitionActionEClass = createEClass(TAKE_TRANSITION_ACTION);
+        createEAttribute(takeTransitionActionEClass, TAKE_TRANSITION_ACTION__TAKE_TRANSITION);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model.  This
-	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
+     * Complete the initialization of the package and its meta-model.  This
+     * method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void initializePackageContents() {
-		if (isInitialized) return;
-		isInitialized = true;
+        if (isInitialized) return;
+        isInitialized = true;
 
-		// Initialize package
-		setName(eNAME);
-		setNsPrefix(eNS_PREFIX);
-		setNsURI(eNS_URI);
+        // Initialize package
+        setName(eNAME);
+        setNsPrefix(eNS_PREFIX);
+        setNsURI(eNS_URI);
 
-		// Obtain other dependent packages
-		DecisionPackage theDecisionPackage = (DecisionPackage)EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+        // Obtain other dependent packages
+        DecisionPackage theDecisionPackage = (DecisionPackage)EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
 
-		// Create type parameters
+        // Create type parameters
 
-		// Set bounds for type parameters
+        // Set bounds for type parameters
 
-		// Add supertypes to classes
-		takeTransitionActionEClass.getESuperTypes().add(theDecisionPackage.getDecisionTableAction());
+        // Add supertypes to classes
+        takeTransitionActionEClass.getESuperTypes().add(theDecisionPackage.getDecisionTableAction());
 
-		// Initialize classes and features; add operations and parameters
-		initEClass(takeTransitionActionEClass, TakeTransitionAction.class, "TakeTransitionAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getTakeTransitionAction_TakeTransition(), ecorePackage.getEBoolean(), "takeTransition", null, 0, 1, TakeTransitionAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-	}
+        // Initialize classes and features; add operations and parameters
+        initEClass(takeTransitionActionEClass, TakeTransitionAction.class, "TakeTransitionAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getTakeTransitionAction_TakeTransition(), ecorePackage.getEBoolean(), "takeTransition", null, 0, 1, TakeTransitionAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+    }
 
 } //TransitionsPackageImpl

@@ -56,230 +56,230 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class TimerEventImpl extends EventImpl implements TimerEvent {
 	/**
-	 * The cached value of the '{@link #getCondition() <em>Condition</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCondition() <em>Condition</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCondition()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCondition()
+     * @generated
+     * @ordered
+     */
 	protected Expression condition;
 
 	/**
-	 * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getData()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getData()
+     * @generated
+     * @ordered
+     */
 	protected EList<Data> data;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TimerEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.TIMER_EVENT;
-	}
+        return ProcessPackage.Literals.TIMER_EVENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getCondition() {
-		return condition;
-	}
+        return condition;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetCondition(Expression newCondition, NotificationChain msgs) {
-		Expression oldCondition = condition;
-		condition = newCondition;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.TIMER_EVENT__CONDITION, oldCondition, newCondition);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldCondition = condition;
+        condition = newCondition;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.TIMER_EVENT__CONDITION, oldCondition, newCondition);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setCondition(Expression newCondition) {
-		if (newCondition != condition) {
-			NotificationChain msgs = null;
-			if (condition != null)
-				msgs = ((InternalEObject)condition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.TIMER_EVENT__CONDITION, null, msgs);
-			if (newCondition != null)
-				msgs = ((InternalEObject)newCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.TIMER_EVENT__CONDITION, null, msgs);
-			msgs = basicSetCondition(newCondition, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TIMER_EVENT__CONDITION, newCondition, newCondition));
-	}
+        if (newCondition != condition) {
+            NotificationChain msgs = null;
+            if (condition != null)
+                msgs = ((InternalEObject)condition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.TIMER_EVENT__CONDITION, null, msgs);
+            if (newCondition != null)
+                msgs = ((InternalEObject)newCondition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.TIMER_EVENT__CONDITION, null, msgs);
+            msgs = basicSetCondition(newCondition, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TIMER_EVENT__CONDITION, newCondition, newCondition));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Data> getData() {
-		if (data == null) {
-			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.TIMER_EVENT__DATA);
-		}
-		return data;
-	}
+        if (data == null) {
+            data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.TIMER_EVENT__DATA);
+        }
+        return data;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.TIMER_EVENT__CONDITION:
-				return basicSetCondition(null, msgs);
-			case ProcessPackage.TIMER_EVENT__DATA:
-				return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.TIMER_EVENT__CONDITION:
+                return basicSetCondition(null, msgs);
+            case ProcessPackage.TIMER_EVENT__DATA:
+                return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.TIMER_EVENT__CONDITION:
-				return getCondition();
-			case ProcessPackage.TIMER_EVENT__DATA:
-				return getData();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.TIMER_EVENT__CONDITION:
+                return getCondition();
+            case ProcessPackage.TIMER_EVENT__DATA:
+                return getData();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.TIMER_EVENT__CONDITION:
-				setCondition((Expression)newValue);
-				return;
-			case ProcessPackage.TIMER_EVENT__DATA:
-				getData().clear();
-				getData().addAll((Collection<? extends Data>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.TIMER_EVENT__CONDITION:
+                setCondition((Expression)newValue);
+                return;
+            case ProcessPackage.TIMER_EVENT__DATA:
+                getData().clear();
+                getData().addAll((Collection<? extends Data>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.TIMER_EVENT__CONDITION:
-				setCondition((Expression)null);
-				return;
-			case ProcessPackage.TIMER_EVENT__DATA:
-				getData().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.TIMER_EVENT__CONDITION:
+                setCondition((Expression)null);
+                return;
+            case ProcessPackage.TIMER_EVENT__DATA:
+                getData().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.TIMER_EVENT__CONDITION:
-				return condition != null;
-			case ProcessPackage.TIMER_EVENT__DATA:
-				return data != null && !data.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.TIMER_EVENT__CONDITION:
+                return condition != null;
+            case ProcessPackage.TIMER_EVENT__DATA:
+                return data != null && !data.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == AbstractTimerEvent.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.TIMER_EVENT__CONDITION: return ProcessPackage.ABSTRACT_TIMER_EVENT__CONDITION;
-				default: return -1;
-			}
-		}
-		if (baseClass == DataAware.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.TIMER_EVENT__DATA: return ProcessPackage.DATA_AWARE__DATA;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == AbstractTimerEvent.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.TIMER_EVENT__CONDITION: return ProcessPackage.ABSTRACT_TIMER_EVENT__CONDITION;
+                default: return -1;
+            }
+        }
+        if (baseClass == DataAware.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.TIMER_EVENT__DATA: return ProcessPackage.DATA_AWARE__DATA;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == AbstractTimerEvent.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.ABSTRACT_TIMER_EVENT__CONDITION: return ProcessPackage.TIMER_EVENT__CONDITION;
-				default: return -1;
-			}
-		}
-		if (baseClass == DataAware.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.DATA_AWARE__DATA: return ProcessPackage.TIMER_EVENT__DATA;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == AbstractTimerEvent.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.ABSTRACT_TIMER_EVENT__CONDITION: return ProcessPackage.TIMER_EVENT__CONDITION;
+                default: return -1;
+            }
+        }
+        if (baseClass == DataAware.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.DATA_AWARE__DATA: return ProcessPackage.TIMER_EVENT__DATA;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 } //TimerEventImpl

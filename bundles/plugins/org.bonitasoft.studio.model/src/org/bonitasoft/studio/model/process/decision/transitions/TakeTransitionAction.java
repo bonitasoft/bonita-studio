@@ -37,29 +37,29 @@ import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
  */
 public interface TakeTransitionAction extends DecisionTableAction {
 	/**
-	 * Returns the value of the '<em><b>Take Transition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Take Transition</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Take Transition</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Take Transition</em>' attribute.
-	 * @see #setTakeTransition(boolean)
-	 * @see org.bonitasoft.studio.model.process.decision.transitions.TransitionsPackage#getTakeTransitionAction_TakeTransition()
-	 * @model id="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Take Transition</em>' attribute.
+     * @see #setTakeTransition(boolean)
+     * @see org.bonitasoft.studio.model.process.decision.transitions.TransitionsPackage#getTakeTransitionAction_TakeTransition()
+     * @model id="true"
+     * @generated
+     */
 	boolean isTakeTransition();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction#isTakeTransition <em>Take Transition</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction#isTakeTransition <em>Take Transition</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Take Transition</em>' attribute.
-	 * @see #isTakeTransition()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Take Transition</em>' attribute.
+     * @see #isTakeTransition()
+     * @generated
+     */
 	void setTakeTransition(boolean value);
 
 } // TakeTransitionAction

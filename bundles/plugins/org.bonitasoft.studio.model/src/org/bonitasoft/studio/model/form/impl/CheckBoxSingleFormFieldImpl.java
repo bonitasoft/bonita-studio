@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class CheckBoxSingleFormFieldImpl extends SingleValuatedFormFieldImpl implements CheckBoxSingleFormField {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected CheckBoxSingleFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD;
-	}
+        return FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD;
+    }
 
 } //CheckBoxSingleFormFieldImpl

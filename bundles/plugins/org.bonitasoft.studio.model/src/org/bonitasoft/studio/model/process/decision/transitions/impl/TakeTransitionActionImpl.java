@@ -43,139 +43,139 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class TakeTransitionActionImpl extends DecisionTableActionImpl implements TakeTransitionAction {
 	/**
-	 * The default value of the '{@link #isTakeTransition() <em>Take Transition</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isTakeTransition() <em>Take Transition</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isTakeTransition()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isTakeTransition()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean TAKE_TRANSITION_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isTakeTransition() <em>Take Transition</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isTakeTransition() <em>Take Transition</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isTakeTransition()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isTakeTransition()
+     * @generated
+     * @ordered
+     */
 	protected boolean takeTransition = TAKE_TRANSITION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TakeTransitionActionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return TransitionsPackage.Literals.TAKE_TRANSITION_ACTION;
-	}
+        return TransitionsPackage.Literals.TAKE_TRANSITION_ACTION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isTakeTransition() {
-		return takeTransition;
-	}
+        return takeTransition;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setTakeTransition(boolean newTakeTransition) {
-		boolean oldTakeTransition = takeTransition;
-		takeTransition = newTakeTransition;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION, oldTakeTransition, takeTransition));
-	}
+        boolean oldTakeTransition = takeTransition;
+        takeTransition = newTakeTransition;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION, oldTakeTransition, takeTransition));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
-				return isTakeTransition();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
+                return isTakeTransition();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
-				setTakeTransition((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
+                setTakeTransition((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
-				setTakeTransition(TAKE_TRANSITION_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
+                setTakeTransition(TAKE_TRANSITION_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
-				return takeTransition != TAKE_TRANSITION_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case TransitionsPackage.TAKE_TRANSITION_ACTION__TAKE_TRANSITION:
+                return takeTransition != TAKE_TRANSITION_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (takeTransition: "); //$NON-NLS-1$
-		result.append(takeTransition);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (takeTransition: "); //$NON-NLS-1$
+        result.append(takeTransition);
+        result.append(')');
+        return result.toString();
+    }
 
 } //TakeTransitionActionImpl

@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Users extends EObject {
 	/**
-	 * Returns the value of the '<em><b>User</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>User</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>User</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>User</em>' attribute list.
-	 * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getUsers_User()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="kind='element' name='user'"
-	 * @generated
-	 */
+     * @return the value of the '<em>User</em>' attribute list.
+     * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getUsers_User()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='element' name='user'"
+     * @generated
+     */
 	EList<String> getUser();
 
 } // Users

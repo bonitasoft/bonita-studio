@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public abstract class SingleValuatedFormFieldImpl extends FormFieldImpl implements SingleValuatedFormField {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SingleValuatedFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.SINGLE_VALUATED_FORM_FIELD;
-	}
+        return FormPackage.Literals.SINGLE_VALUATED_FORM_FIELD;
+    }
 
 } //SingleValuatedFormFieldImpl

@@ -55,313 +55,313 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ActorImpl extends EObjectImpl implements Actor {
 	/**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected static final String DOCUMENTATION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected String documentation = DOCUMENTATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTextAnnotationAttachment()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTextAnnotationAttachment()
+     * @generated
+     * @ordered
+     */
 	protected EList<TextAnnotationAttachment> textAnnotationAttachment;
 
 	/**
-	 * The default value of the '{@link #isInitiator() <em>Initiator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isInitiator() <em>Initiator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInitiator()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isInitiator()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean INITIATOR_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isInitiator() <em>Initiator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isInitiator() <em>Initiator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInitiator()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isInitiator()
+     * @generated
+     * @ordered
+     */
 	protected boolean initiator = INITIATOR_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ActorImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.ACTOR;
-	}
+        return ProcessPackage.Literals.ACTOR;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
-		if (textAnnotationAttachment == null) {
-			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
-		}
-		return textAnnotationAttachment;
-	}
+        if (textAnnotationAttachment == null) {
+            textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
+        }
+        return textAnnotationAttachment;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isInitiator() {
-		return initiator;
-	}
+        return initiator;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setInitiator(boolean newInitiator) {
-		boolean oldInitiator = initiator;
-		initiator = newInitiator;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__INITIATOR, oldInitiator, initiator));
-	}
+        boolean oldInitiator = initiator;
+        initiator = newInitiator;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.ACTOR__INITIATOR, oldInitiator, initiator));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__DOCUMENTATION:
-				return getDocumentation();
-			case ProcessPackage.ACTOR__NAME:
-				return getName();
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				return getTextAnnotationAttachment();
-			case ProcessPackage.ACTOR__INITIATOR:
-				return isInitiator();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__DOCUMENTATION:
+                return getDocumentation();
+            case ProcessPackage.ACTOR__NAME:
+                return getName();
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                return getTextAnnotationAttachment();
+            case ProcessPackage.ACTOR__INITIATOR:
+                return isInitiator();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case ProcessPackage.ACTOR__NAME:
-				setName((String)newValue);
-				return;
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
-				return;
-			case ProcessPackage.ACTOR__INITIATOR:
-				setInitiator((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case ProcessPackage.ACTOR__NAME:
+                setName((String)newValue);
+                return;
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
+                return;
+            case ProcessPackage.ACTOR__INITIATOR:
+                setInitiator((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case ProcessPackage.ACTOR__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				return;
-			case ProcessPackage.ACTOR__INITIATOR:
-				setInitiator(INITIATOR_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case ProcessPackage.ACTOR__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                return;
+            case ProcessPackage.ACTOR__INITIATOR:
+                setInitiator(INITIATOR_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.ACTOR__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case ProcessPackage.ACTOR__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
-				return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
-			case ProcessPackage.ACTOR__INITIATOR:
-				return initiator != INITIATOR_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.ACTOR__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case ProcessPackage.ACTOR__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ProcessPackage.ACTOR__TEXT_ANNOTATION_ATTACHMENT:
+                return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
+            case ProcessPackage.ACTOR__INITIATOR:
+                return initiator != INITIATOR_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (documentation: "); //$NON-NLS-1$
-		result.append(documentation);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(", initiator: "); //$NON-NLS-1$
-		result.append(initiator);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (documentation: "); //$NON-NLS-1$
+        result.append(documentation);
+        result.append(", name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(", initiator: "); //$NON-NLS-1$
+        result.append(initiator);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ActorImpl
