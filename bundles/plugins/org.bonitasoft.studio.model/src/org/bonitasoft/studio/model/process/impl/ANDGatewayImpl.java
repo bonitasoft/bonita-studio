@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class ANDGatewayImpl extends GatewayImpl implements ANDGateway {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ANDGatewayImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.AND_GATEWAY;
-	}
+        return ProcessPackage.Literals.AND_GATEWAY;
+    }
 
 } //ANDGatewayImpl

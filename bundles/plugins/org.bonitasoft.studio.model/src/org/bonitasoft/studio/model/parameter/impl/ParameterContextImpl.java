@@ -55,298 +55,298 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ParameterContextImpl extends EObjectImpl implements ParameterContext {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getParameters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getParameters()
+     * @generated
+     * @ordered
+     */
 	protected EList<Parameter> parameters;
 
 	/**
-	 * The default value of the '{@link #isDefaultContext() <em>Default Context</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isDefaultContext() <em>Default Context</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isDefaultContext()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isDefaultContext()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean DEFAULT_CONTEXT_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDefaultContext() <em>Default Context</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isDefaultContext() <em>Default Context</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isDefaultContext()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isDefaultContext()
+     * @generated
+     * @ordered
+     */
 	protected boolean defaultContext = DEFAULT_CONTEXT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ParameterContextImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ParameterPackage.Literals.PARAMETER_CONTEXT;
-	}
+        return ParameterPackage.Literals.PARAMETER_CONTEXT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION, oldDescription, description));
-	}
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION, oldDescription, description));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Parameter> getParameters() {
-		if (parameters == null) {
-			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ParameterPackage.PARAMETER_CONTEXT__PARAMETERS);
-		}
-		return parameters;
-	}
+        if (parameters == null) {
+            parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ParameterPackage.PARAMETER_CONTEXT__PARAMETERS);
+        }
+        return parameters;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isDefaultContext() {
-		return defaultContext;
-	}
+        return defaultContext;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDefaultContext(boolean newDefaultContext) {
-		boolean oldDefaultContext = defaultContext;
-		defaultContext = newDefaultContext;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT, oldDefaultContext, defaultContext));
-	}
+        boolean oldDefaultContext = defaultContext;
+        defaultContext = newDefaultContext;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT, oldDefaultContext, defaultContext));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
-				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
+                return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER_CONTEXT__NAME:
-				return getName();
-			case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
-				return getDescription();
-			case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
-				return getParameters();
-			case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
-				return isDefaultContext();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER_CONTEXT__NAME:
+                return getName();
+            case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
+                return getDescription();
+            case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
+                return getParameters();
+            case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
+                return isDefaultContext();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER_CONTEXT__NAME:
-				setName((String)newValue);
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
-				setDescription((String)newValue);
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
-				getParameters().clear();
-				getParameters().addAll((Collection<? extends Parameter>)newValue);
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
-				setDefaultContext((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER_CONTEXT__NAME:
+                setName((String)newValue);
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
+                setDescription((String)newValue);
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
+                getParameters().clear();
+                getParameters().addAll((Collection<? extends Parameter>)newValue);
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
+                setDefaultContext((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER_CONTEXT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
-				setDescription(DESCRIPTION_EDEFAULT);
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
-				getParameters().clear();
-				return;
-			case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
-				setDefaultContext(DEFAULT_CONTEXT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER_CONTEXT__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
+                getParameters().clear();
+                return;
+            case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
+                setDefaultContext(DEFAULT_CONTEXT_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER_CONTEXT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
-				return parameters != null && !parameters.isEmpty();
-			case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
-				return defaultContext != DEFAULT_CONTEXT_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER_CONTEXT__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ParameterPackage.PARAMETER_CONTEXT__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+            case ParameterPackage.PARAMETER_CONTEXT__PARAMETERS:
+                return parameters != null && !parameters.isEmpty();
+            case ParameterPackage.PARAMETER_CONTEXT__DEFAULT_CONTEXT:
+                return defaultContext != DEFAULT_CONTEXT_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(", description: "); //$NON-NLS-1$
-		result.append(description);
-		result.append(", defaultContext: "); //$NON-NLS-1$
-		result.append(defaultContext);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(", description: "); //$NON-NLS-1$
+        result.append(description);
+        result.append(", defaultContext: "); //$NON-NLS-1$
+        result.append(defaultContext);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ParameterContextImpl

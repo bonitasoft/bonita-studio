@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class ViewFormImpl extends FormImpl implements ViewForm {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ViewFormImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.VIEW_FORM;
-	}
+        return FormPackage.Literals.VIEW_FORM;
+    }
 
 } //ViewFormImpl

@@ -47,265 +47,265 @@ import org.bonitasoft.studio.model.expression.TableExpression;
  */
 public interface AbstractTable extends Widget, Duplicable {
 	/**
-	 * Returns the value of the '<em><b>Left Column Is Header</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Left Column Is Header</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Column Is Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Column Is Header</em>' attribute.
-	 * @see #setLeftColumnIsHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_LeftColumnIsHeader()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Left Column Is Header</em>' attribute.
+     * @see #setLeftColumnIsHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_LeftColumnIsHeader()
+     * @model
+     * @generated
+     */
 	boolean isLeftColumnIsHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isLeftColumnIsHeader <em>Left Column Is Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isLeftColumnIsHeader <em>Left Column Is Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Column Is Header</em>' attribute.
-	 * @see #isLeftColumnIsHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Left Column Is Header</em>' attribute.
+     * @see #isLeftColumnIsHeader()
+     * @generated
+     */
 	void setLeftColumnIsHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Right Column Is Header</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Right Column Is Header</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Column Is Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Column Is Header</em>' attribute.
-	 * @see #setRightColumnIsHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_RightColumnIsHeader()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Right Column Is Header</em>' attribute.
+     * @see #setRightColumnIsHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_RightColumnIsHeader()
+     * @model
+     * @generated
+     */
 	boolean isRightColumnIsHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isRightColumnIsHeader <em>Right Column Is Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isRightColumnIsHeader <em>Right Column Is Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Column Is Header</em>' attribute.
-	 * @see #isRightColumnIsHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Right Column Is Header</em>' attribute.
+     * @see #isRightColumnIsHeader()
+     * @generated
+     */
 	void setRightColumnIsHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>First Row Is Header</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>First Row Is Header</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>First Row Is Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>First Row Is Header</em>' attribute.
-	 * @see #setFirstRowIsHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_FirstRowIsHeader()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>First Row Is Header</em>' attribute.
+     * @see #setFirstRowIsHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_FirstRowIsHeader()
+     * @model
+     * @generated
+     */
 	boolean isFirstRowIsHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isFirstRowIsHeader <em>First Row Is Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isFirstRowIsHeader <em>First Row Is Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>First Row Is Header</em>' attribute.
-	 * @see #isFirstRowIsHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>First Row Is Header</em>' attribute.
+     * @see #isFirstRowIsHeader()
+     * @generated
+     */
 	void setFirstRowIsHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Last Row Is Header</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Last Row Is Header</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Last Row Is Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Last Row Is Header</em>' attribute.
-	 * @see #setLastRowIsHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_LastRowIsHeader()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Last Row Is Header</em>' attribute.
+     * @see #setLastRowIsHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_LastRowIsHeader()
+     * @model
+     * @generated
+     */
 	boolean isLastRowIsHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isLastRowIsHeader <em>Last Row Is Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isLastRowIsHeader <em>Last Row Is Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Last Row Is Header</em>' attribute.
-	 * @see #isLastRowIsHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Last Row Is Header</em>' attribute.
+     * @see #isLastRowIsHeader()
+     * @generated
+     */
 	void setLastRowIsHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Initialized Using Cells</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Initialized Using Cells</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Initialized Using Cells</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Initialized Using Cells</em>' attribute.
-	 * @see #setInitializedUsingCells(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_InitializedUsingCells()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Initialized Using Cells</em>' attribute.
+     * @see #setInitializedUsingCells(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_InitializedUsingCells()
+     * @model
+     * @generated
+     */
 	boolean isInitializedUsingCells();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isInitializedUsingCells <em>Initialized Using Cells</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isInitializedUsingCells <em>Initialized Using Cells</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Initialized Using Cells</em>' attribute.
-	 * @see #isInitializedUsingCells()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Initialized Using Cells</em>' attribute.
+     * @see #isInitializedUsingCells()
+     * @generated
+     */
 	void setInitializedUsingCells(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Horizontal Header</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Horizontal Header</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Horizontal Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Horizontal Header</em>' attribute.
-	 * @see #setUseHorizontalHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_UseHorizontalHeader()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Horizontal Header</em>' attribute.
+     * @see #setUseHorizontalHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_UseHorizontalHeader()
+     * @model default="false"
+     * @generated
+     */
 	boolean isUseHorizontalHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isUseHorizontalHeader <em>Use Horizontal Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isUseHorizontalHeader <em>Use Horizontal Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Horizontal Header</em>' attribute.
-	 * @see #isUseHorizontalHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Horizontal Header</em>' attribute.
+     * @see #isUseHorizontalHeader()
+     * @generated
+     */
 	void setUseHorizontalHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Vertical Header</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Vertical Header</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Vertical Header</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Vertical Header</em>' attribute.
-	 * @see #setUseVerticalHeader(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_UseVerticalHeader()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Vertical Header</em>' attribute.
+     * @see #setUseVerticalHeader(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_UseVerticalHeader()
+     * @model default="false"
+     * @generated
+     */
 	boolean isUseVerticalHeader();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isUseVerticalHeader <em>Use Vertical Header</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#isUseVerticalHeader <em>Use Vertical Header</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Vertical Header</em>' attribute.
-	 * @see #isUseVerticalHeader()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Vertical Header</em>' attribute.
+     * @see #isUseVerticalHeader()
+     * @generated
+     */
 	void setUseVerticalHeader(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Horizontal Header Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Horizontal Header Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Horizontal Header Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Horizontal Header Expression</em>' containment reference.
-	 * @see #setHorizontalHeaderExpression(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_HorizontalHeaderExpression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Horizontal Header Expression</em>' containment reference.
+     * @see #setHorizontalHeaderExpression(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_HorizontalHeaderExpression()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getHorizontalHeaderExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getHorizontalHeaderExpression <em>Horizontal Header Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getHorizontalHeaderExpression <em>Horizontal Header Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Horizontal Header Expression</em>' containment reference.
-	 * @see #getHorizontalHeaderExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Horizontal Header Expression</em>' containment reference.
+     * @see #getHorizontalHeaderExpression()
+     * @generated
+     */
 	void setHorizontalHeaderExpression(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Vertical Header Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Vertical Header Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Vertical Header Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Vertical Header Expression</em>' containment reference.
-	 * @see #setVerticalHeaderExpression(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_VerticalHeaderExpression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Vertical Header Expression</em>' containment reference.
+     * @see #setVerticalHeaderExpression(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_VerticalHeaderExpression()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getVerticalHeaderExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getVerticalHeaderExpression <em>Vertical Header Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getVerticalHeaderExpression <em>Vertical Header Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Vertical Header Expression</em>' containment reference.
-	 * @see #getVerticalHeaderExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Vertical Header Expression</em>' containment reference.
+     * @see #getVerticalHeaderExpression()
+     * @generated
+     */
 	void setVerticalHeaderExpression(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Table Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Table Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Table Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Table Expression</em>' containment reference.
-	 * @see #setTableExpression(TableExpression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_TableExpression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Table Expression</em>' containment reference.
+     * @see #setTableExpression(TableExpression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getAbstractTable_TableExpression()
+     * @model containment="true"
+     * @generated
+     */
 	TableExpression getTableExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getTableExpression <em>Table Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.AbstractTable#getTableExpression <em>Table Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Table Expression</em>' containment reference.
-	 * @see #getTableExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Table Expression</em>' containment reference.
+     * @see #getTableExpression()
+     * @generated
+     */
 	void setTableExpression(TableExpression value);
 
 } // AbstractTable

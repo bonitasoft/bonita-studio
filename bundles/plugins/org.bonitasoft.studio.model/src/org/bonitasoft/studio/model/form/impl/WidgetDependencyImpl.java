@@ -53,237 +53,237 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  */
 public class WidgetDependencyImpl extends EObjectImpl implements WidgetDependency {
 	/**
-	 * The default value of the '{@link #isTriggerRefreshOnModification() <em>Trigger Refresh On Modification</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isTriggerRefreshOnModification() <em>Trigger Refresh On Modification</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isTriggerRefreshOnModification()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isTriggerRefreshOnModification()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isTriggerRefreshOnModification() <em>Trigger Refresh On Modification</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isTriggerRefreshOnModification() <em>Trigger Refresh On Modification</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isTriggerRefreshOnModification()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isTriggerRefreshOnModification()
+     * @generated
+     * @ordered
+     */
 	protected boolean triggerRefreshOnModification = TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEventTypes() <em>Event Types</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEventTypes() <em>Event Types</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEventTypes()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEventTypes()
+     * @generated
+     * @ordered
+     */
 	protected EList<EventDependencyType> eventTypes;
 
 	/**
-	 * The cached value of the '{@link #getWidget() <em>Widget</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getWidget() <em>Widget</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getWidget()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getWidget()
+     * @generated
+     * @ordered
+     */
 	protected Widget widget;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected WidgetDependencyImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.WIDGET_DEPENDENCY;
-	}
+        return FormPackage.Literals.WIDGET_DEPENDENCY;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isTriggerRefreshOnModification() {
-		return triggerRefreshOnModification;
-	}
+        return triggerRefreshOnModification;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setTriggerRefreshOnModification(boolean newTriggerRefreshOnModification) {
-		boolean oldTriggerRefreshOnModification = triggerRefreshOnModification;
-		triggerRefreshOnModification = newTriggerRefreshOnModification;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION, oldTriggerRefreshOnModification, triggerRefreshOnModification));
-	}
+        boolean oldTriggerRefreshOnModification = triggerRefreshOnModification;
+        triggerRefreshOnModification = newTriggerRefreshOnModification;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION, oldTriggerRefreshOnModification, triggerRefreshOnModification));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<EventDependencyType> getEventTypes() {
-		if (eventTypes == null) {
-			eventTypes = new EDataTypeUniqueEList<EventDependencyType>(EventDependencyType.class, this, FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES);
-		}
-		return eventTypes;
-	}
+        if (eventTypes == null) {
+            eventTypes = new EDataTypeUniqueEList<EventDependencyType>(EventDependencyType.class, this, FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES);
+        }
+        return eventTypes;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Widget getWidget() {
-		if (widget != null && widget.eIsProxy()) {
-			InternalEObject oldWidget = (InternalEObject)widget;
-			widget = (Widget)eResolveProxy(oldWidget);
-			if (widget != oldWidget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, FormPackage.WIDGET_DEPENDENCY__WIDGET, oldWidget, widget));
-			}
-		}
-		return widget;
-	}
+        if (widget != null && widget.eIsProxy()) {
+            InternalEObject oldWidget = (InternalEObject)widget;
+            widget = (Widget)eResolveProxy(oldWidget);
+            if (widget != oldWidget) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, FormPackage.WIDGET_DEPENDENCY__WIDGET, oldWidget, widget));
+            }
+        }
+        return widget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Widget basicGetWidget() {
-		return widget;
-	}
+        return widget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setWidget(Widget newWidget) {
-		Widget oldWidget = widget;
-		widget = newWidget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_DEPENDENCY__WIDGET, oldWidget, widget));
-	}
+        Widget oldWidget = widget;
+        widget = newWidget;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_DEPENDENCY__WIDGET, oldWidget, widget));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
-				return isTriggerRefreshOnModification();
-			case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
-				return getEventTypes();
-			case FormPackage.WIDGET_DEPENDENCY__WIDGET:
-				if (resolve) return getWidget();
-				return basicGetWidget();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
+                return isTriggerRefreshOnModification();
+            case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
+                return getEventTypes();
+            case FormPackage.WIDGET_DEPENDENCY__WIDGET:
+                if (resolve) return getWidget();
+                return basicGetWidget();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
-				setTriggerRefreshOnModification((Boolean)newValue);
-				return;
-			case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
-				getEventTypes().clear();
-				getEventTypes().addAll((Collection<? extends EventDependencyType>)newValue);
-				return;
-			case FormPackage.WIDGET_DEPENDENCY__WIDGET:
-				setWidget((Widget)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
+                setTriggerRefreshOnModification((Boolean)newValue);
+                return;
+            case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
+                getEventTypes().clear();
+                getEventTypes().addAll((Collection<? extends EventDependencyType>)newValue);
+                return;
+            case FormPackage.WIDGET_DEPENDENCY__WIDGET:
+                setWidget((Widget)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
-				setTriggerRefreshOnModification(TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT);
-				return;
-			case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
-				getEventTypes().clear();
-				return;
-			case FormPackage.WIDGET_DEPENDENCY__WIDGET:
-				setWidget((Widget)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
+                setTriggerRefreshOnModification(TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT);
+                return;
+            case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
+                getEventTypes().clear();
+                return;
+            case FormPackage.WIDGET_DEPENDENCY__WIDGET:
+                setWidget((Widget)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
-				return triggerRefreshOnModification != TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT;
-			case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
-				return eventTypes != null && !eventTypes.isEmpty();
-			case FormPackage.WIDGET_DEPENDENCY__WIDGET:
-				return widget != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
+                return triggerRefreshOnModification != TRIGGER_REFRESH_ON_MODIFICATION_EDEFAULT;
+            case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
+                return eventTypes != null && !eventTypes.isEmpty();
+            case FormPackage.WIDGET_DEPENDENCY__WIDGET:
+                return widget != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (triggerRefreshOnModification: "); //$NON-NLS-1$
-		result.append(triggerRefreshOnModification);
-		result.append(", eventTypes: "); //$NON-NLS-1$
-		result.append(eventTypes);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (triggerRefreshOnModification: "); //$NON-NLS-1$
+        result.append(triggerRefreshOnModification);
+        result.append(", eventTypes: "); //$NON-NLS-1$
+        result.append(eventTypes);
+        result.append(')');
+        return result.toString();
+    }
 
 } //WidgetDependencyImpl

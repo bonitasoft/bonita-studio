@@ -35,114 +35,114 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class KpiFactoryImpl extends EFactoryImpl implements KpiFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static KpiFactory init() {
-		try {
-			KpiFactory theKpiFactory = (KpiFactory)EPackage.Registry.INSTANCE.getEFactory(KpiPackage.eNS_URI);
-			if (theKpiFactory != null) {
-				return theKpiFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new KpiFactoryImpl();
-	}
+        try {
+            KpiFactory theKpiFactory = (KpiFactory)EPackage.Registry.INSTANCE.getEFactory(KpiPackage.eNS_URI);
+            if (theKpiFactory != null) {
+                return theKpiFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new KpiFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public KpiFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case KpiPackage.KPI_PARAMETER_MAPPING: return createKPIParameterMapping();
-			case KpiPackage.DATABASE_KPI_BINDING: return createDatabaseKPIBinding();
-			case KpiPackage.DATABASE_KPI_DEFINITION: return createDatabaseKPIDefinition();
-			case KpiPackage.KPI_FIELD: return createKPIField();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case KpiPackage.KPI_PARAMETER_MAPPING: return createKPIParameterMapping();
+            case KpiPackage.DATABASE_KPI_BINDING: return createDatabaseKPIBinding();
+            case KpiPackage.DATABASE_KPI_DEFINITION: return createDatabaseKPIDefinition();
+            case KpiPackage.KPI_FIELD: return createKPIField();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public KPIParameterMapping createKPIParameterMapping() {
-		KPIParameterMappingImpl kpiParameterMapping = new KPIParameterMappingImpl();
-		return kpiParameterMapping;
-	}
+        KPIParameterMappingImpl kpiParameterMapping = new KPIParameterMappingImpl();
+        return kpiParameterMapping;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DatabaseKPIBinding createDatabaseKPIBinding() {
-		DatabaseKPIBindingImpl databaseKPIBinding = new DatabaseKPIBindingImpl();
-		return databaseKPIBinding;
-	}
+        DatabaseKPIBindingImpl databaseKPIBinding = new DatabaseKPIBindingImpl();
+        return databaseKPIBinding;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DatabaseKPIDefinition createDatabaseKPIDefinition() {
-		DatabaseKPIDefinitionImpl databaseKPIDefinition = new DatabaseKPIDefinitionImpl();
-		return databaseKPIDefinition;
-	}
+        DatabaseKPIDefinitionImpl databaseKPIDefinition = new DatabaseKPIDefinitionImpl();
+        return databaseKPIDefinition;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public KPIField createKPIField() {
-		KPIFieldImpl kpiField = new KPIFieldImpl();
-		return kpiField;
-	}
+        KPIFieldImpl kpiField = new KPIFieldImpl();
+        return kpiField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public KpiPackage getKpiPackage() {
-		return (KpiPackage)getEPackage();
-	}
+        return (KpiPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static KpiPackage getPackage() {
-		return KpiPackage.eINSTANCE;
-	}
+        return KpiPackage.eINSTANCE;
+    }
 
 } //KpiFactoryImpl

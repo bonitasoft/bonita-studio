@@ -45,304 +45,304 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class WidgetLayoutInfoImpl extends EObjectImpl implements WidgetLayoutInfo {
 	/**
-	 * The default value of the '{@link #getLine() <em>Line</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getLine() <em>Line</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLine()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getLine()
+     * @generated
+     * @ordered
+     */
 	protected static final int LINE_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getLine() <em>Line</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getLine() <em>Line</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLine()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getLine()
+     * @generated
+     * @ordered
+     */
 	protected int line = LINE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getColumn() <em>Column</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getColumn() <em>Column</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getColumn()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getColumn()
+     * @generated
+     * @ordered
+     */
 	protected static final int COLUMN_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getColumn() <em>Column</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getColumn() <em>Column</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getColumn()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getColumn()
+     * @generated
+     * @ordered
+     */
 	protected int column = COLUMN_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getVerticalSpan() <em>Vertical Span</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getVerticalSpan() <em>Vertical Span</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVerticalSpan()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVerticalSpan()
+     * @generated
+     * @ordered
+     */
 	protected static final int VERTICAL_SPAN_EDEFAULT = 1;
 
 	/**
-	 * The cached value of the '{@link #getVerticalSpan() <em>Vertical Span</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getVerticalSpan() <em>Vertical Span</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVerticalSpan()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVerticalSpan()
+     * @generated
+     * @ordered
+     */
 	protected int verticalSpan = VERTICAL_SPAN_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getHorizontalSpan() <em>Horizontal Span</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getHorizontalSpan() <em>Horizontal Span</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHorizontalSpan()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getHorizontalSpan()
+     * @generated
+     * @ordered
+     */
 	protected static final int HORIZONTAL_SPAN_EDEFAULT = 1;
 
 	/**
-	 * The cached value of the '{@link #getHorizontalSpan() <em>Horizontal Span</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getHorizontalSpan() <em>Horizontal Span</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHorizontalSpan()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getHorizontalSpan()
+     * @generated
+     * @ordered
+     */
 	protected int horizontalSpan = HORIZONTAL_SPAN_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected WidgetLayoutInfoImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.WIDGET_LAYOUT_INFO;
-	}
+        return FormPackage.Literals.WIDGET_LAYOUT_INFO;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getLine() {
-		return line;
-	}
+        return line;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setLine(int newLine) {
-		int oldLine = line;
-		line = newLine;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__LINE, oldLine, line));
-	}
+        int oldLine = line;
+        line = newLine;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__LINE, oldLine, line));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getColumn() {
-		return column;
-	}
+        return column;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setColumn(int newColumn) {
-		int oldColumn = column;
-		column = newColumn;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__COLUMN, oldColumn, column));
-	}
+        int oldColumn = column;
+        column = newColumn;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__COLUMN, oldColumn, column));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getVerticalSpan() {
-		return verticalSpan;
-	}
+        return verticalSpan;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setVerticalSpan(int newVerticalSpan) {
-		int oldVerticalSpan = verticalSpan;
-		verticalSpan = newVerticalSpan;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN, oldVerticalSpan, verticalSpan));
-	}
+        int oldVerticalSpan = verticalSpan;
+        verticalSpan = newVerticalSpan;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN, oldVerticalSpan, verticalSpan));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getHorizontalSpan() {
-		return horizontalSpan;
-	}
+        return horizontalSpan;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setHorizontalSpan(int newHorizontalSpan) {
-		int oldHorizontalSpan = horizontalSpan;
-		horizontalSpan = newHorizontalSpan;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN, oldHorizontalSpan, horizontalSpan));
-	}
+        int oldHorizontalSpan = horizontalSpan;
+        horizontalSpan = newHorizontalSpan;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN, oldHorizontalSpan, horizontalSpan));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.WIDGET_LAYOUT_INFO__LINE:
-				return getLine();
-			case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
-				return getColumn();
-			case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
-				return getVerticalSpan();
-			case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
-				return getHorizontalSpan();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_LAYOUT_INFO__LINE:
+                return getLine();
+            case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
+                return getColumn();
+            case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
+                return getVerticalSpan();
+            case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
+                return getHorizontalSpan();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.WIDGET_LAYOUT_INFO__LINE:
-				setLine((Integer)newValue);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
-				setColumn((Integer)newValue);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
-				setVerticalSpan((Integer)newValue);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
-				setHorizontalSpan((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_LAYOUT_INFO__LINE:
+                setLine((Integer)newValue);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
+                setColumn((Integer)newValue);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
+                setVerticalSpan((Integer)newValue);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
+                setHorizontalSpan((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.WIDGET_LAYOUT_INFO__LINE:
-				setLine(LINE_EDEFAULT);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
-				setColumn(COLUMN_EDEFAULT);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
-				setVerticalSpan(VERTICAL_SPAN_EDEFAULT);
-				return;
-			case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
-				setHorizontalSpan(HORIZONTAL_SPAN_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_LAYOUT_INFO__LINE:
+                setLine(LINE_EDEFAULT);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
+                setColumn(COLUMN_EDEFAULT);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
+                setVerticalSpan(VERTICAL_SPAN_EDEFAULT);
+                return;
+            case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
+                setHorizontalSpan(HORIZONTAL_SPAN_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.WIDGET_LAYOUT_INFO__LINE:
-				return line != LINE_EDEFAULT;
-			case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
-				return column != COLUMN_EDEFAULT;
-			case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
-				return verticalSpan != VERTICAL_SPAN_EDEFAULT;
-			case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
-				return horizontalSpan != HORIZONTAL_SPAN_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.WIDGET_LAYOUT_INFO__LINE:
+                return line != LINE_EDEFAULT;
+            case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
+                return column != COLUMN_EDEFAULT;
+            case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
+                return verticalSpan != VERTICAL_SPAN_EDEFAULT;
+            case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
+                return horizontalSpan != HORIZONTAL_SPAN_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (line: "); //$NON-NLS-1$
-		result.append(line);
-		result.append(", column: "); //$NON-NLS-1$
-		result.append(column);
-		result.append(", verticalSpan: "); //$NON-NLS-1$
-		result.append(verticalSpan);
-		result.append(", horizontalSpan: "); //$NON-NLS-1$
-		result.append(horizontalSpan);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (line: "); //$NON-NLS-1$
+        result.append(line);
+        result.append(", column: "); //$NON-NLS-1$
+        result.append(column);
+        result.append(", verticalSpan: "); //$NON-NLS-1$
+        result.append(verticalSpan);
+        result.append(", horizontalSpan: "); //$NON-NLS-1$
+        result.append(horizontalSpan);
+        result.append(')');
+        return result.toString();
+    }
 
 } //WidgetLayoutInfoImpl

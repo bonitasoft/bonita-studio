@@ -64,6 +64,11 @@
                  class="org.bonitasoft.studio.contract.core.TaskContractEngineDefinitionBuilder">
            </EngineDefinitionBuilder>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.designer.formOperationFactory">
+      <factory
+            class="org.bonitasoft.studio.contract.core.operation.NewFormFromContractOperationFactory"></factory>
+   </extension>
   
 
 </plugin>

@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class DoubleTypeImpl extends DataTypeImpl implements DoubleType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DoubleTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.DOUBLE_TYPE;
-	}
+        return ProcessPackage.Literals.DOUBLE_TYPE;
+    }
 
 } //DoubleTypeImpl

@@ -38,55 +38,55 @@ import org.bonitasoft.studio.model.expression.Expression;
  */
 public interface MultipleValuatedFormField extends FormField {
 	/**
-	 * Returns the value of the '<em><b>Default Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Default Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Default Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Default Expression</em>' containment reference.
-	 * @see #setDefaultExpression(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getMultipleValuatedFormField_DefaultExpression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Default Expression</em>' containment reference.
+     * @see #setDefaultExpression(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getMultipleValuatedFormField_DefaultExpression()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getDefaultExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.MultipleValuatedFormField#getDefaultExpression <em>Default Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.MultipleValuatedFormField#getDefaultExpression <em>Default Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Expression</em>' containment reference.
-	 * @see #getDefaultExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Default Expression</em>' containment reference.
+     * @see #getDefaultExpression()
+     * @generated
+     */
 	void setDefaultExpression(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Default Expression After Event</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Default Expression After Event</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Default Expression After Event</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Default Expression After Event</em>' containment reference.
-	 * @see #setDefaultExpressionAfterEvent(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getMultipleValuatedFormField_DefaultExpressionAfterEvent()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Default Expression After Event</em>' containment reference.
+     * @see #setDefaultExpressionAfterEvent(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getMultipleValuatedFormField_DefaultExpressionAfterEvent()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getDefaultExpressionAfterEvent();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.MultipleValuatedFormField#getDefaultExpressionAfterEvent <em>Default Expression After Event</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.MultipleValuatedFormField#getDefaultExpressionAfterEvent <em>Default Expression After Event</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Expression After Event</em>' containment reference.
-	 * @see #getDefaultExpressionAfterEvent()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Default Expression After Event</em>' containment reference.
+     * @see #getDefaultExpressionAfterEvent()
+     * @generated
+     */
 	void setDefaultExpressionAfterEvent(Expression value);
 
 } // MultipleValuatedFormField

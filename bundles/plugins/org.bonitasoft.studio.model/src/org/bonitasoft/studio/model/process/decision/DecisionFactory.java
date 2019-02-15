@@ -29,38 +29,38 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface DecisionFactory extends EFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	DecisionFactory eINSTANCE = org.bonitasoft.studio.model.process.decision.impl.DecisionFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Table</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Table</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Table</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Table</em>'.
+     * @generated
+     */
 	DecisionTable createDecisionTable();
 
 	/**
-	 * Returns a new object of class '<em>Table Line</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Table Line</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Table Line</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Table Line</em>'.
+     * @generated
+     */
 	DecisionTableLine createDecisionTableLine();
 
 	/**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
 	DecisionPackage getDecisionPackage();
 
 } //DecisionFactory

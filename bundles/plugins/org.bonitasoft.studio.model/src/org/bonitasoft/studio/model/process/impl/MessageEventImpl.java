@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class MessageEventImpl extends EventImpl implements MessageEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected MessageEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.MESSAGE_EVENT;
-	}
+        return ProcessPackage.Literals.MESSAGE_EVENT;
+    }
 
 } //MessageEventImpl

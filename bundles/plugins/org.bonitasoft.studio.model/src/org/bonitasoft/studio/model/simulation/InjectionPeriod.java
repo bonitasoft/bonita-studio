@@ -40,114 +40,114 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface InjectionPeriod extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Begin</b></em>' attribute.
-	 * The default value is <code>"0"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Begin</b></em>' attribute.
+     * The default value is <code>"0"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Begin</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Begin</em>' attribute.
-	 * @see #setBegin(long)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_Begin()
-	 * @model default="0" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Begin</em>' attribute.
+     * @see #setBegin(long)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_Begin()
+     * @model default="0" required="true"
+     * @generated
+     */
 	long getBegin();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getBegin <em>Begin</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getBegin <em>Begin</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Begin</em>' attribute.
-	 * @see #getBegin()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Begin</em>' attribute.
+     * @see #getBegin()
+     * @generated
+     */
 	void setBegin(long value);
 
 	/**
-	 * Returns the value of the '<em><b>End</b></em>' attribute.
-	 * The default value is <code>"0"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>End</b></em>' attribute.
+     * The default value is <code>"0"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>End</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>End</em>' attribute.
-	 * @see #setEnd(long)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_End()
-	 * @model default="0" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>End</em>' attribute.
+     * @see #setEnd(long)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_End()
+     * @model default="0" required="true"
+     * @generated
+     */
 	long getEnd();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getEnd <em>End</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getEnd <em>End</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>End</em>' attribute.
-	 * @see #getEnd()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>End</em>' attribute.
+     * @see #getEnd()
+     * @generated
+     */
 	void setEnd(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Nb Instances</b></em>' attribute.
-	 * The default value is <code>"1"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Nb Instances</b></em>' attribute.
+     * The default value is <code>"1"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Nb Instances</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Nb Instances</em>' attribute.
-	 * @see #setNbInstances(int)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_NbInstances()
-	 * @model default="1" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Nb Instances</em>' attribute.
+     * @see #setNbInstances(int)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_NbInstances()
+     * @model default="1" required="true"
+     * @generated
+     */
 	int getNbInstances();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getNbInstances <em>Nb Instances</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getNbInstances <em>Nb Instances</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Nb Instances</em>' attribute.
-	 * @see #getNbInstances()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Nb Instances</em>' attribute.
+     * @see #getNbInstances()
+     * @generated
+     */
 	void setNbInstances(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Repartition</b></em>' attribute.
-	 * The default value is <code>"CONSTANT"</code>.
-	 * The literals are from the enumeration {@link org.bonitasoft.studio.model.simulation.RepartitionType}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Repartition</b></em>' attribute.
+     * The default value is <code>"CONSTANT"</code>.
+     * The literals are from the enumeration {@link org.bonitasoft.studio.model.simulation.RepartitionType}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Repartition</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Repartition</em>' attribute.
-	 * @see org.bonitasoft.studio.model.simulation.RepartitionType
-	 * @see #setRepartition(RepartitionType)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_Repartition()
-	 * @model default="CONSTANT" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Repartition</em>' attribute.
+     * @see org.bonitasoft.studio.model.simulation.RepartitionType
+     * @see #setRepartition(RepartitionType)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getInjectionPeriod_Repartition()
+     * @model default="CONSTANT" required="true"
+     * @generated
+     */
 	RepartitionType getRepartition();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getRepartition <em>Repartition</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.InjectionPeriod#getRepartition <em>Repartition</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Repartition</em>' attribute.
-	 * @see org.bonitasoft.studio.model.simulation.RepartitionType
-	 * @see #getRepartition()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Repartition</em>' attribute.
+     * @see org.bonitasoft.studio.model.simulation.RepartitionType
+     * @see #getRepartition()
+     * @generated
+     */
 	void setRepartition(RepartitionType value);
 
 } // InjectionPeriod

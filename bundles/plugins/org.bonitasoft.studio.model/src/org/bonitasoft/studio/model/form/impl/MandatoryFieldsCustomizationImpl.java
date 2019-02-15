@@ -46,216 +46,216 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public abstract class MandatoryFieldsCustomizationImpl extends CSSCustomizableImpl implements MandatoryFieldsCustomization {
 	/**
-	 * The cached value of the '{@link #getMandatorySymbol() <em>Mandatory Symbol</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getMandatorySymbol() <em>Mandatory Symbol</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMandatorySymbol()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMandatorySymbol()
+     * @generated
+     * @ordered
+     */
 	protected Expression mandatorySymbol;
 
 	/**
-	 * The cached value of the '{@link #getMandatoryLabel() <em>Mandatory Label</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getMandatoryLabel() <em>Mandatory Label</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMandatoryLabel()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMandatoryLabel()
+     * @generated
+     * @ordered
+     */
 	protected Expression mandatoryLabel;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected MandatoryFieldsCustomizationImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION;
-	}
+        return FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getMandatorySymbol() {
-		return mandatorySymbol;
-	}
+        return mandatorySymbol;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetMandatorySymbol(Expression newMandatorySymbol, NotificationChain msgs) {
-		Expression oldMandatorySymbol = mandatorySymbol;
-		mandatorySymbol = newMandatorySymbol;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, oldMandatorySymbol, newMandatorySymbol);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldMandatorySymbol = mandatorySymbol;
+        mandatorySymbol = newMandatorySymbol;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, oldMandatorySymbol, newMandatorySymbol);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setMandatorySymbol(Expression newMandatorySymbol) {
-		if (newMandatorySymbol != mandatorySymbol) {
-			NotificationChain msgs = null;
-			if (mandatorySymbol != null)
-				msgs = ((InternalEObject)mandatorySymbol).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, null, msgs);
-			if (newMandatorySymbol != null)
-				msgs = ((InternalEObject)newMandatorySymbol).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, null, msgs);
-			msgs = basicSetMandatorySymbol(newMandatorySymbol, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, newMandatorySymbol, newMandatorySymbol));
-	}
+        if (newMandatorySymbol != mandatorySymbol) {
+            NotificationChain msgs = null;
+            if (mandatorySymbol != null)
+                msgs = ((InternalEObject)mandatorySymbol).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, null, msgs);
+            if (newMandatorySymbol != null)
+                msgs = ((InternalEObject)newMandatorySymbol).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, null, msgs);
+            msgs = basicSetMandatorySymbol(newMandatorySymbol, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL, newMandatorySymbol, newMandatorySymbol));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getMandatoryLabel() {
-		return mandatoryLabel;
-	}
+        return mandatoryLabel;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetMandatoryLabel(Expression newMandatoryLabel, NotificationChain msgs) {
-		Expression oldMandatoryLabel = mandatoryLabel;
-		mandatoryLabel = newMandatoryLabel;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, oldMandatoryLabel, newMandatoryLabel);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldMandatoryLabel = mandatoryLabel;
+        mandatoryLabel = newMandatoryLabel;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, oldMandatoryLabel, newMandatoryLabel);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setMandatoryLabel(Expression newMandatoryLabel) {
-		if (newMandatoryLabel != mandatoryLabel) {
-			NotificationChain msgs = null;
-			if (mandatoryLabel != null)
-				msgs = ((InternalEObject)mandatoryLabel).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, null, msgs);
-			if (newMandatoryLabel != null)
-				msgs = ((InternalEObject)newMandatoryLabel).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, null, msgs);
-			msgs = basicSetMandatoryLabel(newMandatoryLabel, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, newMandatoryLabel, newMandatoryLabel));
-	}
+        if (newMandatoryLabel != mandatoryLabel) {
+            NotificationChain msgs = null;
+            if (mandatoryLabel != null)
+                msgs = ((InternalEObject)mandatoryLabel).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, null, msgs);
+            if (newMandatoryLabel != null)
+                msgs = ((InternalEObject)newMandatoryLabel).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, null, msgs);
+            msgs = basicSetMandatoryLabel(newMandatoryLabel, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL, newMandatoryLabel, newMandatoryLabel));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
-				return basicSetMandatorySymbol(null, msgs);
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				return basicSetMandatoryLabel(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
+                return basicSetMandatorySymbol(null, msgs);
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
+                return basicSetMandatoryLabel(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
-				return getMandatorySymbol();
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				return getMandatoryLabel();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
+                return getMandatorySymbol();
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
+                return getMandatoryLabel();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
-				setMandatorySymbol((Expression)newValue);
-				return;
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				setMandatoryLabel((Expression)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
+                setMandatorySymbol((Expression)newValue);
+                return;
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
+                setMandatoryLabel((Expression)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
-				setMandatorySymbol((Expression)null);
-				return;
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				setMandatoryLabel((Expression)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
+                setMandatorySymbol((Expression)null);
+                return;
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
+                setMandatoryLabel((Expression)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
-				return mandatorySymbol != null;
-			case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
-				return mandatoryLabel != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_SYMBOL:
+                return mandatorySymbol != null;
+            case FormPackage.MANDATORY_FIELDS_CUSTOMIZATION__MANDATORY_LABEL:
+                return mandatoryLabel != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //MandatoryFieldsCustomizationImpl

@@ -58,7 +58,18 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.bonitasoft.studio.businessobject,
  org.bonitasoft.studio.document,
  org.bonitasoft.studio.ui;bundle-version="7.6.0",
- org.eclipse.core.databinding.property;bundle-version="1.6.100"
+ org.eclipse.core.databinding.property;bundle-version="1.6.100",
+ org.restlet.ext.jackson;bundle-version="2.2.3",
+ com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.4.4",
+ com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4",
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-csv;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-smile;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-xml;bundle-version="2.4.4",
+ com.fasterxml.jackson.dataformat.jackson-dataformat-yaml;bundle-version="2.4.4",
+ com.fasterxml.jackson.module.jackson-module-jaxb-annotations;bundle-version="2.4.4",
+ org.restlet;bundle-version="2.3.0",
+ org.json;bundle-version="1.0.0"
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,

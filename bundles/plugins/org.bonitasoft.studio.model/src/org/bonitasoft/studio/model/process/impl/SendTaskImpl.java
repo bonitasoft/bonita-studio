@@ -54,226 +54,226 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class SendTaskImpl extends ActivityImpl implements SendTask {
 	/**
-	 * The cached value of the '{@link #getEvents() <em>Events</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEvents() <em>Events</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEvents()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEvents()
+     * @generated
+     * @ordered
+     */
 	protected EList<Message> events;
 
 	/**
-	 * The cached value of the '{@link #getOutgoingMessages() <em>Outgoing Messages</em>}' reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getOutgoingMessages() <em>Outgoing Messages</em>}' reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutgoingMessages()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getOutgoingMessages()
+     * @generated
+     * @ordered
+     */
 	protected EList<MessageFlow> outgoingMessages;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SendTaskImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.SEND_TASK;
-	}
+        return ProcessPackage.Literals.SEND_TASK;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Message> getEvents() {
-		if (events == null) {
-			events = new EObjectContainmentWithInverseEList<Message>(Message.class, this, ProcessPackage.SEND_TASK__EVENTS, ProcessPackage.MESSAGE__SOURCE);
-		}
-		return events;
-	}
+        if (events == null) {
+            events = new EObjectContainmentWithInverseEList<Message>(Message.class, this, ProcessPackage.SEND_TASK__EVENTS, ProcessPackage.MESSAGE__SOURCE);
+        }
+        return events;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<MessageFlow> getOutgoingMessages() {
-		if (outgoingMessages == null) {
-			outgoingMessages = new EObjectWithInverseResolvingEList<MessageFlow>(MessageFlow.class, this, ProcessPackage.SEND_TASK__OUTGOING_MESSAGES, ProcessPackage.MESSAGE_FLOW__SOURCE);
-		}
-		return outgoingMessages;
-	}
+        if (outgoingMessages == null) {
+            outgoingMessages = new EObjectWithInverseResolvingEList<MessageFlow>(MessageFlow.class, this, ProcessPackage.SEND_TASK__OUTGOING_MESSAGES, ProcessPackage.MESSAGE_FLOW__SOURCE);
+        }
+        return outgoingMessages;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getEvents()).basicAdd(otherEnd, msgs);
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingMessages()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getEvents()).basicAdd(otherEnd, msgs);
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingMessages()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				return ((InternalEList<?>)getEvents()).basicRemove(otherEnd, msgs);
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				return ((InternalEList<?>)getOutgoingMessages()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                return ((InternalEList<?>)getEvents()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                return ((InternalEList<?>)getOutgoingMessages()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				return getEvents();
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				return getOutgoingMessages();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                return getEvents();
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                return getOutgoingMessages();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				getEvents().clear();
-				getEvents().addAll((Collection<? extends Message>)newValue);
-				return;
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				getOutgoingMessages().clear();
-				getOutgoingMessages().addAll((Collection<? extends MessageFlow>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                getEvents().clear();
+                getEvents().addAll((Collection<? extends Message>)newValue);
+                return;
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                getOutgoingMessages().clear();
+                getOutgoingMessages().addAll((Collection<? extends MessageFlow>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				getEvents().clear();
-				return;
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				getOutgoingMessages().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                getEvents().clear();
+                return;
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                getOutgoingMessages().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.SEND_TASK__EVENTS:
-				return events != null && !events.isEmpty();
-			case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
-				return outgoingMessages != null && !outgoingMessages.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.SEND_TASK__EVENTS:
+                return events != null && !events.isEmpty();
+            case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES:
+                return outgoingMessages != null && !outgoingMessages.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == Event.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == MessageEvent.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == ThrowMessageEvent.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.SEND_TASK__EVENTS: return ProcessPackage.THROW_MESSAGE_EVENT__EVENTS;
-				case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES: return ProcessPackage.THROW_MESSAGE_EVENT__OUTGOING_MESSAGES;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == Event.class) {
+            switch (derivedFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == MessageEvent.class) {
+            switch (derivedFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == ThrowMessageEvent.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.SEND_TASK__EVENTS: return ProcessPackage.THROW_MESSAGE_EVENT__EVENTS;
+                case ProcessPackage.SEND_TASK__OUTGOING_MESSAGES: return ProcessPackage.THROW_MESSAGE_EVENT__OUTGOING_MESSAGES;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == Event.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == MessageEvent.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == ThrowMessageEvent.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.THROW_MESSAGE_EVENT__EVENTS: return ProcessPackage.SEND_TASK__EVENTS;
-				case ProcessPackage.THROW_MESSAGE_EVENT__OUTGOING_MESSAGES: return ProcessPackage.SEND_TASK__OUTGOING_MESSAGES;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == Event.class) {
+            switch (baseFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == MessageEvent.class) {
+            switch (baseFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == ThrowMessageEvent.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.THROW_MESSAGE_EVENT__EVENTS: return ProcessPackage.SEND_TASK__EVENTS;
+                case ProcessPackage.THROW_MESSAGE_EVENT__OUTGOING_MESSAGES: return ProcessPackage.SEND_TASK__OUTGOING_MESSAGES;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 } //SendTaskImpl

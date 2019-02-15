@@ -40,29 +40,29 @@ package org.bonitasoft.studio.model.form;
  */
 public interface ListFormField extends MultipleValuatedFormField {
 	/**
-	 * Returns the value of the '<em><b>Max Heigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Max Heigth</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Max Heigth</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Max Heigth</em>' attribute.
-	 * @see #setMaxHeigth(int)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getListFormField_MaxHeigth()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Max Heigth</em>' attribute.
+     * @see #setMaxHeigth(int)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getListFormField_MaxHeigth()
+     * @model
+     * @generated
+     */
 	int getMaxHeigth();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.ListFormField#getMaxHeigth <em>Max Heigth</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.ListFormField#getMaxHeigth <em>Max Heigth</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Max Heigth</em>' attribute.
-	 * @see #getMaxHeigth()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Max Heigth</em>' attribute.
+     * @see #getMaxHeigth()
+     * @generated
+     */
 	void setMaxHeigth(int value);
 
 } // ListFormField

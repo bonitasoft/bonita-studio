@@ -39,81 +39,81 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ContractInputMapping extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Data</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Data</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Data</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Data</em>' reference.
-	 * @see #setData(Data)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_Data()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Data</em>' reference.
+     * @see #setData(Data)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_Data()
+     * @model
+     * @generated
+     */
 	Data getData();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getData <em>Data</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getData <em>Data</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Data</em>' reference.
-	 * @see #getData()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Data</em>' reference.
+     * @see #getData()
+     * @generated
+     */
 	void setData(Data value);
 
 	/**
-	 * Returns the value of the '<em><b>Setter Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Setter Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Setter Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Setter Name</em>' attribute.
-	 * @see #setSetterName(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_SetterName()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Setter Name</em>' attribute.
+     * @see #setSetterName(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_SetterName()
+     * @model
+     * @generated
+     */
 	String getSetterName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getSetterName <em>Setter Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getSetterName <em>Setter Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Setter Name</em>' attribute.
-	 * @see #getSetterName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Setter Name</em>' attribute.
+     * @see #getSetterName()
+     * @generated
+     */
 	void setSetterName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Setter Param Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Setter Param Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Setter Param Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Setter Param Type</em>' attribute.
-	 * @see #setSetterParamType(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_SetterParamType()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Setter Param Type</em>' attribute.
+     * @see #setSetterParamType(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInputMapping_SetterParamType()
+     * @model
+     * @generated
+     */
 	String getSetterParamType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getSetterParamType <em>Setter Param Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInputMapping#getSetterParamType <em>Setter Param Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Setter Param Type</em>' attribute.
-	 * @see #getSetterParamType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Setter Param Type</em>' attribute.
+     * @see #getSetterParamType()
+     * @generated
+     */
 	void setSetterParamType(String value);
 
 } // ContractInputMapping

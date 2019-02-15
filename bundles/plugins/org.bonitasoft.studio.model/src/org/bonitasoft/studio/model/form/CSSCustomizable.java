@@ -39,19 +39,19 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CSSCustomizable extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Html Attributes</b></em>' map.
-	 * The key is of type {@link java.lang.String},
-	 * and the value is of type {@link java.lang.String},
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Html Attributes</b></em>' map.
+     * The key is of type {@link java.lang.String},
+     * and the value is of type {@link java.lang.String},
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * historic name, but in fact it is style attribute.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Html Attributes</em>' map.
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getCSSCustomizable_HtmlAttributes()
-	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * historic name, but in fact it is style attribute.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Html Attributes</em>' map.
+     * @see org.bonitasoft.studio.model.form.FormPackage#getCSSCustomizable_HtmlAttributes()
+     * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
+     * @generated
+     */
 	EMap<String, String> getHtmlAttributes();
 
 } // CSSCustomizable

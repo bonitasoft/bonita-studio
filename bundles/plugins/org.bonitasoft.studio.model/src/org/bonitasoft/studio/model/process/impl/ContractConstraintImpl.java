@@ -51,286 +51,286 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  */
 public class ContractConstraintImpl extends EObjectImpl implements ContractConstraint {
 	/**
-	 * The default value of the '{@link #getExpression() <em>Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getExpression() <em>Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getExpression()
+     * @generated
+     * @ordered
+     */
 	protected static final String EXPRESSION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getExpression() <em>Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getExpression()
+     * @generated
+     * @ordered
+     */
 	protected String expression = EXPRESSION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getErrorMessage() <em>Error Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getErrorMessage() <em>Error Message</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getErrorMessage()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getErrorMessage()
+     * @generated
+     * @ordered
+     */
 	protected static final String ERROR_MESSAGE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getErrorMessage() <em>Error Message</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getErrorMessage() <em>Error Message</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getErrorMessage()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getErrorMessage()
+     * @generated
+     * @ordered
+     */
 	protected String errorMessage = ERROR_MESSAGE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getInputNames() <em>Input Names</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getInputNames() <em>Input Names</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getInputNames()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getInputNames()
+     * @generated
+     * @ordered
+     */
 	protected EList<String> inputNames;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ContractConstraintImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CONTRACT_CONSTRAINT;
-	}
+        return ProcessPackage.Literals.CONTRACT_CONSTRAINT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getExpression() {
-		return expression;
-	}
+        return expression;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setExpression(String newExpression) {
-		String oldExpression = expression;
-		expression = newExpression;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION, oldExpression, expression));
-	}
+        String oldExpression = expression;
+        expression = newExpression;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION, oldExpression, expression));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getErrorMessage() {
-		return errorMessage;
-	}
+        return errorMessage;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setErrorMessage(String newErrorMessage) {
-		String oldErrorMessage = errorMessage;
-		errorMessage = newErrorMessage;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE, oldErrorMessage, errorMessage));
-	}
+        String oldErrorMessage = errorMessage;
+        errorMessage = newErrorMessage;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE, oldErrorMessage, errorMessage));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<String> getInputNames() {
-		if (inputNames == null) {
-			inputNames = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES);
-		}
-		return inputNames;
-	}
+        if (inputNames == null) {
+            inputNames = new EDataTypeUniqueEList<String>(String.class, this, ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES);
+        }
+        return inputNames;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
-				return getExpression();
-			case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
-				return getErrorMessage();
-			case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
-				return getName();
-			case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
-				return getInputNames();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
+                return getExpression();
+            case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
+                return getErrorMessage();
+            case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
+                return getName();
+            case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
+                return getInputNames();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
-				setExpression((String)newValue);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
-				setErrorMessage((String)newValue);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
-				setName((String)newValue);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
-				getInputNames().clear();
-				getInputNames().addAll((Collection<? extends String>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
+                setExpression((String)newValue);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
+                setErrorMessage((String)newValue);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
+                setName((String)newValue);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
+                getInputNames().clear();
+                getInputNames().addAll((Collection<? extends String>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
-				setExpression(EXPRESSION_EDEFAULT);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
-				setErrorMessage(ERROR_MESSAGE_EDEFAULT);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
-				getInputNames().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
+                setExpression(EXPRESSION_EDEFAULT);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
+                setErrorMessage(ERROR_MESSAGE_EDEFAULT);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
+                getInputNames().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
-				return EXPRESSION_EDEFAULT == null ? expression != null : !EXPRESSION_EDEFAULT.equals(expression);
-			case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
-				return ERROR_MESSAGE_EDEFAULT == null ? errorMessage != null : !ERROR_MESSAGE_EDEFAULT.equals(errorMessage);
-			case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
-				return inputNames != null && !inputNames.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONTRACT_CONSTRAINT__EXPRESSION:
+                return EXPRESSION_EDEFAULT == null ? expression != null : !EXPRESSION_EDEFAULT.equals(expression);
+            case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
+                return ERROR_MESSAGE_EDEFAULT == null ? errorMessage != null : !ERROR_MESSAGE_EDEFAULT.equals(errorMessage);
+            case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
+                return inputNames != null && !inputNames.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (expression: "); //$NON-NLS-1$
-		result.append(expression);
-		result.append(", errorMessage: "); //$NON-NLS-1$
-		result.append(errorMessage);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(", inputNames: "); //$NON-NLS-1$
-		result.append(inputNames);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (expression: "); //$NON-NLS-1$
+        result.append(expression);
+        result.append(", errorMessage: "); //$NON-NLS-1$
+        result.append(errorMessage);
+        result.append(", name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(", inputNames: "); //$NON-NLS-1$
+        result.append(inputNames);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ContractConstraintImpl

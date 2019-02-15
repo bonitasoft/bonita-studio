@@ -31,7 +31,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
+import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
@@ -64,7 +65,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     private RepositoryAccessor repositoryAccessor;
 
     @Mock
-    private CreateFormFromContractOperation createFormOperation;
+    private CreateUIDArtifactOperation createFormOperation;
 
     @Mock
     private WebPageRepositoryStore formRepository;
@@ -75,6 +76,8 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     private PageDesignerURLFactory pageDesignerURLFactory;
 
     private CreateNewFormProposalListener createNewFormProposal;
+    @Mock
+    private NewFormOperationFactoryDelegate operationFactory;
 
     /**
      * @throws java.lang.Exception
@@ -87,7 +90,8 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         doReturn(formFileStore).when(formRepository).getChild("page-id");
 
         createNewFormProposal = spy(
-                new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor));
+                new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor,
+                        operationFactory));
 
         when(createFormOperation.getNewArtifactId()).thenReturn("page-id");
         when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
@@ -104,20 +108,21 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         final String pageId = createNewFormProposal.handleEvent(context, null);
 
         assertThat(pageId).isEqualTo("page-id");
-        verify(progressService).busyCursorWhile(any(CreateFormFromContractOperation.class));
         verify(formFileStore).open();
     }
 
     @Test
     public void should_force_page_name_to_newForm() throws Exception {
         //Given
-        final Task task = aTask().withName("Step1").havingFormMapping(aFormMapping()).havingContract(aContract()).build();
+        final Task task = aTask().withName("Step1").havingFormMapping(aFormMapping()).havingContract(aContract())
+                .build();
 
         //When
         createNewFormProposal.handleEvent(task.getFormMapping(), null);
 
         //Then
-        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"), any(Contract.class),
+        verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory), eq("newForm"),
+                any(Contract.class),
                 any(FormScope.class));
     }
 

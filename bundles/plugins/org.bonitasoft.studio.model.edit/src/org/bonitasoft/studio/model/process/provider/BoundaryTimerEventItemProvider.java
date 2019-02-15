@@ -39,108 +39,108 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  */
 public class BoundaryTimerEventItemProvider extends BoundaryEventItemProvider {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public BoundaryTimerEventItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addConditionPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addConditionPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Condition feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Condition feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addConditionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractTimerEvent_condition_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractTimerEvent_condition_feature", "_UI_AbstractTimerEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AbstractTimerEvent_condition_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractTimerEvent_condition_feature", "_UI_AbstractTimerEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION,
+                 true,
+                 false,
+                 false,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns BoundaryTimerEvent.gif.
-	 * <!-- begin-user-doc -->
+     * This returns BoundaryTimerEvent.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/BoundaryTimerEvent")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/BoundaryTimerEvent")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((BoundaryTimerEvent)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_BoundaryTimerEvent_type") : //$NON-NLS-1$
-			getString("_UI_BoundaryTimerEvent_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((BoundaryTimerEvent)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_BoundaryTimerEvent_type") : //$NON-NLS-1$
+            getString("_UI_BoundaryTimerEvent_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(BoundaryTimerEvent.class)) {
-			case ProcessPackage.BOUNDARY_TIMER_EVENT__CONDITION:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(BoundaryTimerEvent.class)) {
+            case ProcessPackage.BOUNDARY_TIMER_EVENT__CONDITION:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 }

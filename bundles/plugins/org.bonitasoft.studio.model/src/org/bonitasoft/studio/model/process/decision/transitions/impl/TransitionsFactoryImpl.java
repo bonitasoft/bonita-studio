@@ -35,78 +35,78 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class TransitionsFactoryImpl extends EFactoryImpl implements TransitionsFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static TransitionsFactory init() {
-		try {
-			TransitionsFactory theTransitionsFactory = (TransitionsFactory)EPackage.Registry.INSTANCE.getEFactory(TransitionsPackage.eNS_URI);
-			if (theTransitionsFactory != null) {
-				return theTransitionsFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new TransitionsFactoryImpl();
-	}
+        try {
+            TransitionsFactory theTransitionsFactory = (TransitionsFactory)EPackage.Registry.INSTANCE.getEFactory(TransitionsPackage.eNS_URI);
+            if (theTransitionsFactory != null) {
+                return theTransitionsFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new TransitionsFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public TransitionsFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case TransitionsPackage.TAKE_TRANSITION_ACTION: return createTakeTransitionAction();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case TransitionsPackage.TAKE_TRANSITION_ACTION: return createTakeTransitionAction();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TakeTransitionAction createTakeTransitionAction() {
-		TakeTransitionActionImpl takeTransitionAction = new TakeTransitionActionImpl();
-		return takeTransitionAction;
-	}
+        TakeTransitionActionImpl takeTransitionAction = new TakeTransitionActionImpl();
+        return takeTransitionAction;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TransitionsPackage getTransitionsPackage() {
-		return (TransitionsPackage)getEPackage();
-	}
+        return (TransitionsPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static TransitionsPackage getPackage() {
-		return TransitionsPackage.eINSTANCE;
-	}
+        return TransitionsPackage.eINSTANCE;
+    }
 
 } //TransitionsFactoryImpl

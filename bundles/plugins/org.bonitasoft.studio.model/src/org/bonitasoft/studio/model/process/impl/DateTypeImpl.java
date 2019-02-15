@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class DateTypeImpl extends StringTypeImpl implements DateType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DateTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.DATE_TYPE;
-	}
+        return ProcessPackage.Literals.DATE_TYPE;
+    }
 
 } //DateTypeImpl

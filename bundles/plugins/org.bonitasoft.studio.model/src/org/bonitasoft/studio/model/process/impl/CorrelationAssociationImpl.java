@@ -47,216 +47,216 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class CorrelationAssociationImpl extends EObjectImpl implements CorrelationAssociation {
 	/**
-	 * The cached value of the '{@link #getCorrelationExpression() <em>Correlation Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCorrelationExpression() <em>Correlation Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCorrelationExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCorrelationExpression()
+     * @generated
+     * @ordered
+     */
 	protected AbstractExpression correlationExpression;
 
 	/**
-	 * The cached value of the '{@link #getCorrelationKey() <em>Correlation Key</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCorrelationKey() <em>Correlation Key</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCorrelationKey()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCorrelationKey()
+     * @generated
+     * @ordered
+     */
 	protected AbstractExpression correlationKey;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected CorrelationAssociationImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CORRELATION_ASSOCIATION;
-	}
+        return ProcessPackage.Literals.CORRELATION_ASSOCIATION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public AbstractExpression getCorrelationExpression() {
-		return correlationExpression;
-	}
+        return correlationExpression;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetCorrelationExpression(AbstractExpression newCorrelationExpression, NotificationChain msgs) {
-		AbstractExpression oldCorrelationExpression = correlationExpression;
-		correlationExpression = newCorrelationExpression;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, oldCorrelationExpression, newCorrelationExpression);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        AbstractExpression oldCorrelationExpression = correlationExpression;
+        correlationExpression = newCorrelationExpression;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, oldCorrelationExpression, newCorrelationExpression);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setCorrelationExpression(AbstractExpression newCorrelationExpression) {
-		if (newCorrelationExpression != correlationExpression) {
-			NotificationChain msgs = null;
-			if (correlationExpression != null)
-				msgs = ((InternalEObject)correlationExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, null, msgs);
-			if (newCorrelationExpression != null)
-				msgs = ((InternalEObject)newCorrelationExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, null, msgs);
-			msgs = basicSetCorrelationExpression(newCorrelationExpression, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, newCorrelationExpression, newCorrelationExpression));
-	}
+        if (newCorrelationExpression != correlationExpression) {
+            NotificationChain msgs = null;
+            if (correlationExpression != null)
+                msgs = ((InternalEObject)correlationExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, null, msgs);
+            if (newCorrelationExpression != null)
+                msgs = ((InternalEObject)newCorrelationExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, null, msgs);
+            msgs = basicSetCorrelationExpression(newCorrelationExpression, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION, newCorrelationExpression, newCorrelationExpression));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public AbstractExpression getCorrelationKey() {
-		return correlationKey;
-	}
+        return correlationKey;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetCorrelationKey(AbstractExpression newCorrelationKey, NotificationChain msgs) {
-		AbstractExpression oldCorrelationKey = correlationKey;
-		correlationKey = newCorrelationKey;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, oldCorrelationKey, newCorrelationKey);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        AbstractExpression oldCorrelationKey = correlationKey;
+        correlationKey = newCorrelationKey;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, oldCorrelationKey, newCorrelationKey);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setCorrelationKey(AbstractExpression newCorrelationKey) {
-		if (newCorrelationKey != correlationKey) {
-			NotificationChain msgs = null;
-			if (correlationKey != null)
-				msgs = ((InternalEObject)correlationKey).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, null, msgs);
-			if (newCorrelationKey != null)
-				msgs = ((InternalEObject)newCorrelationKey).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, null, msgs);
-			msgs = basicSetCorrelationKey(newCorrelationKey, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, newCorrelationKey, newCorrelationKey));
-	}
+        if (newCorrelationKey != correlationKey) {
+            NotificationChain msgs = null;
+            if (correlationKey != null)
+                msgs = ((InternalEObject)correlationKey).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, null, msgs);
+            if (newCorrelationKey != null)
+                msgs = ((InternalEObject)newCorrelationKey).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, null, msgs);
+            msgs = basicSetCorrelationKey(newCorrelationKey, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY, newCorrelationKey, newCorrelationKey));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
-				return basicSetCorrelationExpression(null, msgs);
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
-				return basicSetCorrelationKey(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
+                return basicSetCorrelationExpression(null, msgs);
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
+                return basicSetCorrelationKey(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
-				return getCorrelationExpression();
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
-				return getCorrelationKey();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
+                return getCorrelationExpression();
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
+                return getCorrelationKey();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
-				setCorrelationExpression((AbstractExpression)newValue);
-				return;
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
-				setCorrelationKey((AbstractExpression)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
+                setCorrelationExpression((AbstractExpression)newValue);
+                return;
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
+                setCorrelationKey((AbstractExpression)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
-				setCorrelationExpression((AbstractExpression)null);
-				return;
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
-				setCorrelationKey((AbstractExpression)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
+                setCorrelationExpression((AbstractExpression)null);
+                return;
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
+                setCorrelationKey((AbstractExpression)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
-				return correlationExpression != null;
-			case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
-				return correlationKey != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_EXPRESSION:
+                return correlationExpression != null;
+            case ProcessPackage.CORRELATION_ASSOCIATION__CORRELATION_KEY:
+                return correlationKey != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //CorrelationAssociationImpl

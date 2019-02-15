@@ -37,55 +37,55 @@ package org.bonitasoft.studio.model.process;
  */
 public interface XMLData extends Data {
 	/**
-	 * Returns the value of the '<em><b>Namespace</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Namespace</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Namespace</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Namespace</em>' attribute.
-	 * @see #setNamespace(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getXMLData_Namespace()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Namespace</em>' attribute.
+     * @see #setNamespace(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getXMLData_Namespace()
+     * @model
+     * @generated
+     */
 	String getNamespace();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.XMLData#getNamespace <em>Namespace</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.XMLData#getNamespace <em>Namespace</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Namespace</em>' attribute.
-	 * @see #getNamespace()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Namespace</em>' attribute.
+     * @see #getNamespace()
+     * @generated
+     */
 	void setNamespace(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see #setType(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getXMLData_Type()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Type</em>' attribute.
+     * @see #setType(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getXMLData_Type()
+     * @model
+     * @generated
+     */
 	String getType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.XMLData#getType <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.XMLData#getType <em>Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type</em>' attribute.
-	 * @see #getType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Type</em>' attribute.
+     * @see #getType()
+     * @generated
+     */
 	void setType(String value);
 
 } // XMLData

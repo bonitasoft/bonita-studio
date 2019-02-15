@@ -55,287 +55,287 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class LoadProfileImpl extends SimulationElementImpl implements LoadProfile {
 	/**
-	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
 	protected static final String VERSION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
 	protected String version = VERSION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getCalendar() <em>Calendar</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCalendar() <em>Calendar</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCalendar()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCalendar()
+     * @generated
+     * @ordered
+     */
 	protected SimulationCalendar calendar;
 
 	/**
-	 * The cached value of the '{@link #getInjectionPeriods() <em>Injection Periods</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getInjectionPeriods() <em>Injection Periods</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getInjectionPeriods()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getInjectionPeriods()
+     * @generated
+     * @ordered
+     */
 	protected EList<InjectionPeriod> injectionPeriods;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected LoadProfileImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.LOAD_PROFILE;
-	}
+        return SimulationPackage.Literals.LOAD_PROFILE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getVersion() {
-		return version;
-	}
+        return version;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setVersion(String newVersion) {
-		String oldVersion = version;
-		version = newVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__VERSION, oldVersion, version));
-	}
+        String oldVersion = version;
+        version = newVersion;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__VERSION, oldVersion, version));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationCalendar getCalendar() {
-		return calendar;
-	}
+        return calendar;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetCalendar(SimulationCalendar newCalendar, NotificationChain msgs) {
-		SimulationCalendar oldCalendar = calendar;
-		calendar = newCalendar;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__CALENDAR, oldCalendar, newCalendar);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        SimulationCalendar oldCalendar = calendar;
+        calendar = newCalendar;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__CALENDAR, oldCalendar, newCalendar);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setCalendar(SimulationCalendar newCalendar) {
-		if (newCalendar != calendar) {
-			NotificationChain msgs = null;
-			if (calendar != null)
-				msgs = ((InternalEObject)calendar).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.LOAD_PROFILE__CALENDAR, null, msgs);
-			if (newCalendar != null)
-				msgs = ((InternalEObject)newCalendar).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.LOAD_PROFILE__CALENDAR, null, msgs);
-			msgs = basicSetCalendar(newCalendar, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__CALENDAR, newCalendar, newCalendar));
-	}
+        if (newCalendar != calendar) {
+            NotificationChain msgs = null;
+            if (calendar != null)
+                msgs = ((InternalEObject)calendar).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.LOAD_PROFILE__CALENDAR, null, msgs);
+            if (newCalendar != null)
+                msgs = ((InternalEObject)newCalendar).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.LOAD_PROFILE__CALENDAR, null, msgs);
+            msgs = basicSetCalendar(newCalendar, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.LOAD_PROFILE__CALENDAR, newCalendar, newCalendar));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<InjectionPeriod> getInjectionPeriods() {
-		if (injectionPeriods == null) {
-			injectionPeriods = new EObjectContainmentEList<InjectionPeriod>(InjectionPeriod.class, this, SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS);
-		}
-		return injectionPeriods;
-	}
+        if (injectionPeriods == null) {
+            injectionPeriods = new EObjectContainmentEList<InjectionPeriod>(InjectionPeriod.class, this, SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS);
+        }
+        return injectionPeriods;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case SimulationPackage.LOAD_PROFILE__CALENDAR:
-				return basicSetCalendar(null, msgs);
-			case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
-				return ((InternalEList<?>)getInjectionPeriods()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case SimulationPackage.LOAD_PROFILE__CALENDAR:
+                return basicSetCalendar(null, msgs);
+            case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
+                return ((InternalEList<?>)getInjectionPeriods()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.LOAD_PROFILE__VERSION:
-				return getVersion();
-			case SimulationPackage.LOAD_PROFILE__CALENDAR:
-				return getCalendar();
-			case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
-				return getInjectionPeriods();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.LOAD_PROFILE__VERSION:
+                return getVersion();
+            case SimulationPackage.LOAD_PROFILE__CALENDAR:
+                return getCalendar();
+            case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
+                return getInjectionPeriods();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.LOAD_PROFILE__VERSION:
-				setVersion((String)newValue);
-				return;
-			case SimulationPackage.LOAD_PROFILE__CALENDAR:
-				setCalendar((SimulationCalendar)newValue);
-				return;
-			case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
-				getInjectionPeriods().clear();
-				getInjectionPeriods().addAll((Collection<? extends InjectionPeriod>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.LOAD_PROFILE__VERSION:
+                setVersion((String)newValue);
+                return;
+            case SimulationPackage.LOAD_PROFILE__CALENDAR:
+                setCalendar((SimulationCalendar)newValue);
+                return;
+            case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
+                getInjectionPeriods().clear();
+                getInjectionPeriods().addAll((Collection<? extends InjectionPeriod>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.LOAD_PROFILE__VERSION:
-				setVersion(VERSION_EDEFAULT);
-				return;
-			case SimulationPackage.LOAD_PROFILE__CALENDAR:
-				setCalendar((SimulationCalendar)null);
-				return;
-			case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
-				getInjectionPeriods().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.LOAD_PROFILE__VERSION:
+                setVersion(VERSION_EDEFAULT);
+                return;
+            case SimulationPackage.LOAD_PROFILE__CALENDAR:
+                setCalendar((SimulationCalendar)null);
+                return;
+            case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
+                getInjectionPeriods().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.LOAD_PROFILE__VERSION:
-				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
-			case SimulationPackage.LOAD_PROFILE__CALENDAR:
-				return calendar != null;
-			case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
-				return injectionPeriods != null && !injectionPeriods.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.LOAD_PROFILE__VERSION:
+                return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
+            case SimulationPackage.LOAD_PROFILE__CALENDAR:
+                return calendar != null;
+            case SimulationPackage.LOAD_PROFILE__INJECTION_PERIODS:
+                return injectionPeriods != null && !injectionPeriods.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == ModelVersion.class) {
-			switch (derivedFeatureID) {
-				case SimulationPackage.LOAD_PROFILE__VERSION: return SimulationPackage.MODEL_VERSION__VERSION;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == ModelVersion.class) {
+            switch (derivedFeatureID) {
+                case SimulationPackage.LOAD_PROFILE__VERSION: return SimulationPackage.MODEL_VERSION__VERSION;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == ModelVersion.class) {
-			switch (baseFeatureID) {
-				case SimulationPackage.MODEL_VERSION__VERSION: return SimulationPackage.LOAD_PROFILE__VERSION;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == ModelVersion.class) {
+            switch (baseFeatureID) {
+                case SimulationPackage.MODEL_VERSION__VERSION: return SimulationPackage.LOAD_PROFILE__VERSION;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (version: "); //$NON-NLS-1$
-		result.append(version);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (version: "); //$NON-NLS-1$
+        result.append(version);
+        result.append(')');
+        return result.toString();
+    }
 
 } //LoadProfileImpl

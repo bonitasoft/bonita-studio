@@ -66,581 +66,581 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public abstract class AbstractKPIBindingImpl extends EObjectImpl implements AbstractKPIBinding {
 	/**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected static final String DOCUMENTATION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected String documentation = DOCUMENTATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTextAnnotationAttachment()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTextAnnotationAttachment()
+     * @generated
+     * @ordered
+     */
 	protected EList<TextAnnotationAttachment> textAnnotationAttachment;
 
 	/**
-	 * The default value of the '{@link #getKpiDefinitionName() <em>Kpi Definition Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getKpiDefinitionName() <em>Kpi Definition Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getKpiDefinitionName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getKpiDefinitionName()
+     * @generated
+     * @ordered
+     */
 	protected static final String KPI_DEFINITION_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getKpiDefinitionName() <em>Kpi Definition Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getKpiDefinitionName() <em>Kpi Definition Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getKpiDefinitionName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getKpiDefinitionName()
+     * @generated
+     * @ordered
+     */
 	protected String kpiDefinitionName = KPI_DEFINITION_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEvent() <em>Event</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getEvent() <em>Event</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEvent()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEvent()
+     * @generated
+     * @ordered
+     */
 	protected static final String EVENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEvent() <em>Event</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEvent() <em>Event</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEvent()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEvent()
+     * @generated
+     * @ordered
+     */
 	protected String event = EVENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isIgnoreError() <em>Ignore Error</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isIgnoreError() <em>Ignore Error</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIgnoreError()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIgnoreError()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean IGNORE_ERROR_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIgnoreError() <em>Ignore Error</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isIgnoreError() <em>Ignore Error</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIgnoreError()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIgnoreError()
+     * @generated
+     * @ordered
+     */
 	protected boolean ignoreError = IGNORE_ERROR_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isUseGraphicalEditor() <em>Use Graphical Editor</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isUseGraphicalEditor() <em>Use Graphical Editor</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isUseGraphicalEditor()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseGraphicalEditor()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean USE_GRAPHICAL_EDITOR_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isUseGraphicalEditor() <em>Use Graphical Editor</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isUseGraphicalEditor() <em>Use Graphical Editor</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isUseGraphicalEditor()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseGraphicalEditor()
+     * @generated
+     * @ordered
+     */
 	protected boolean useGraphicalEditor = USE_GRAPHICAL_EDITOR_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getRequest() <em>Request</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getRequest() <em>Request</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getRequest()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getRequest()
+     * @generated
+     * @ordered
+     */
 	protected Expression request;
 
 	/**
-	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getParameters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getParameters()
+     * @generated
+     * @ordered
+     */
 	protected EList<KPIParameterMapping> parameters;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected AbstractKPIBindingImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return KpiPackage.Literals.ABSTRACT_KPI_BINDING;
-	}
+        return KpiPackage.Literals.ABSTRACT_KPI_BINDING;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
-		if (textAnnotationAttachment == null) {
-			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
-		}
-		return textAnnotationAttachment;
-	}
+        if (textAnnotationAttachment == null) {
+            textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
+        }
+        return textAnnotationAttachment;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getKpiDefinitionName() {
-		return kpiDefinitionName;
-	}
+        return kpiDefinitionName;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setKpiDefinitionName(String newKpiDefinitionName) {
-		String oldKpiDefinitionName = kpiDefinitionName;
-		kpiDefinitionName = newKpiDefinitionName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME, oldKpiDefinitionName, kpiDefinitionName));
-	}
+        String oldKpiDefinitionName = kpiDefinitionName;
+        kpiDefinitionName = newKpiDefinitionName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME, oldKpiDefinitionName, kpiDefinitionName));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getEvent() {
-		return event;
-	}
+        return event;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setEvent(String newEvent) {
-		String oldEvent = event;
-		event = newEvent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__EVENT, oldEvent, event));
-	}
+        String oldEvent = event;
+        event = newEvent;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__EVENT, oldEvent, event));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isIgnoreError() {
-		return ignoreError;
-	}
+        return ignoreError;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setIgnoreError(boolean newIgnoreError) {
-		boolean oldIgnoreError = ignoreError;
-		ignoreError = newIgnoreError;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR, oldIgnoreError, ignoreError));
-	}
+        boolean oldIgnoreError = ignoreError;
+        ignoreError = newIgnoreError;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR, oldIgnoreError, ignoreError));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isUseGraphicalEditor() {
-		return useGraphicalEditor;
-	}
+        return useGraphicalEditor;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setUseGraphicalEditor(boolean newUseGraphicalEditor) {
-		boolean oldUseGraphicalEditor = useGraphicalEditor;
-		useGraphicalEditor = newUseGraphicalEditor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR, oldUseGraphicalEditor, useGraphicalEditor));
-	}
+        boolean oldUseGraphicalEditor = useGraphicalEditor;
+        useGraphicalEditor = newUseGraphicalEditor;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR, oldUseGraphicalEditor, useGraphicalEditor));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getRequest() {
-		return request;
-	}
+        return request;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetRequest(Expression newRequest, NotificationChain msgs) {
-		Expression oldRequest = request;
-		request = newRequest;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, oldRequest, newRequest);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldRequest = request;
+        request = newRequest;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, oldRequest, newRequest);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setRequest(Expression newRequest) {
-		if (newRequest != request) {
-			NotificationChain msgs = null;
-			if (request != null)
-				msgs = ((InternalEObject)request).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, null, msgs);
-			if (newRequest != null)
-				msgs = ((InternalEObject)newRequest).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, null, msgs);
-			msgs = basicSetRequest(newRequest, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, newRequest, newRequest));
-	}
+        if (newRequest != request) {
+            NotificationChain msgs = null;
+            if (request != null)
+                msgs = ((InternalEObject)request).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, null, msgs);
+            if (newRequest != null)
+                msgs = ((InternalEObject)newRequest).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, null, msgs);
+            msgs = basicSetRequest(newRequest, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, KpiPackage.ABSTRACT_KPI_BINDING__REQUEST, newRequest, newRequest));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<KPIParameterMapping> getParameters() {
-		if (parameters == null) {
-			parameters = new EObjectContainmentEList<KPIParameterMapping>(KPIParameterMapping.class, this, KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS);
-		}
-		return parameters;
-	}
+        if (parameters == null) {
+            parameters = new EObjectContainmentEList<KPIParameterMapping>(KPIParameterMapping.class, this, KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS);
+        }
+        return parameters;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
-			case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
-				return basicSetRequest(null, msgs);
-			case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
-				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
+            case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
+                return basicSetRequest(null, msgs);
+            case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
+                return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
-				return getDocumentation();
-			case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
-				return getName();
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				return getTextAnnotationAttachment();
-			case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
-				return getKpiDefinitionName();
-			case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
-				return getEvent();
-			case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
-				return isIgnoreError();
-			case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
-				return isUseGraphicalEditor();
-			case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
-				return getRequest();
-			case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
-				return getParameters();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
+                return getDocumentation();
+            case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
+                return getName();
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                return getTextAnnotationAttachment();
+            case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
+                return getKpiDefinitionName();
+            case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
+                return getEvent();
+            case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
+                return isIgnoreError();
+            case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
+                return isUseGraphicalEditor();
+            case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
+                return getRequest();
+            case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
+                return getParameters();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
-				setName((String)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
-				setKpiDefinitionName((String)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
-				setEvent((String)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
-				setIgnoreError((Boolean)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
-				setUseGraphicalEditor((Boolean)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
-				setRequest((Expression)newValue);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
-				getParameters().clear();
-				getParameters().addAll((Collection<? extends KPIParameterMapping>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
+                setName((String)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
+                setKpiDefinitionName((String)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
+                setEvent((String)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
+                setIgnoreError((Boolean)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
+                setUseGraphicalEditor((Boolean)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
+                setRequest((Expression)newValue);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
+                getParameters().clear();
+                getParameters().addAll((Collection<? extends KPIParameterMapping>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
-				setKpiDefinitionName(KPI_DEFINITION_NAME_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
-				setEvent(EVENT_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
-				setIgnoreError(IGNORE_ERROR_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
-				setUseGraphicalEditor(USE_GRAPHICAL_EDITOR_EDEFAULT);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
-				setRequest((Expression)null);
-				return;
-			case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
-				getParameters().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
+                setKpiDefinitionName(KPI_DEFINITION_NAME_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
+                setEvent(EVENT_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
+                setIgnoreError(IGNORE_ERROR_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
+                setUseGraphicalEditor(USE_GRAPHICAL_EDITOR_EDEFAULT);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
+                setRequest((Expression)null);
+                return;
+            case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
+                getParameters().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
-				return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
-			case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
-				return KPI_DEFINITION_NAME_EDEFAULT == null ? kpiDefinitionName != null : !KPI_DEFINITION_NAME_EDEFAULT.equals(kpiDefinitionName);
-			case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
-				return EVENT_EDEFAULT == null ? event != null : !EVENT_EDEFAULT.equals(event);
-			case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
-				return ignoreError != IGNORE_ERROR_EDEFAULT;
-			case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
-				return useGraphicalEditor != USE_GRAPHICAL_EDITOR_EDEFAULT;
-			case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
-				return request != null;
-			case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
-				return parameters != null && !parameters.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case KpiPackage.ABSTRACT_KPI_BINDING__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case KpiPackage.ABSTRACT_KPI_BINDING__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case KpiPackage.ABSTRACT_KPI_BINDING__TEXT_ANNOTATION_ATTACHMENT:
+                return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
+            case KpiPackage.ABSTRACT_KPI_BINDING__KPI_DEFINITION_NAME:
+                return KPI_DEFINITION_NAME_EDEFAULT == null ? kpiDefinitionName != null : !KPI_DEFINITION_NAME_EDEFAULT.equals(kpiDefinitionName);
+            case KpiPackage.ABSTRACT_KPI_BINDING__EVENT:
+                return EVENT_EDEFAULT == null ? event != null : !EVENT_EDEFAULT.equals(event);
+            case KpiPackage.ABSTRACT_KPI_BINDING__IGNORE_ERROR:
+                return ignoreError != IGNORE_ERROR_EDEFAULT;
+            case KpiPackage.ABSTRACT_KPI_BINDING__USE_GRAPHICAL_EDITOR:
+                return useGraphicalEditor != USE_GRAPHICAL_EDITOR_EDEFAULT;
+            case KpiPackage.ABSTRACT_KPI_BINDING__REQUEST:
+                return request != null;
+            case KpiPackage.ABSTRACT_KPI_BINDING__PARAMETERS:
+                return parameters != null && !parameters.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (documentation: "); //$NON-NLS-1$
-		result.append(documentation);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(", kpiDefinitionName: "); //$NON-NLS-1$
-		result.append(kpiDefinitionName);
-		result.append(", event: "); //$NON-NLS-1$
-		result.append(event);
-		result.append(", ignoreError: "); //$NON-NLS-1$
-		result.append(ignoreError);
-		result.append(", useGraphicalEditor: "); //$NON-NLS-1$
-		result.append(useGraphicalEditor);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (documentation: "); //$NON-NLS-1$
+        result.append(documentation);
+        result.append(", name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(", kpiDefinitionName: "); //$NON-NLS-1$
+        result.append(kpiDefinitionName);
+        result.append(", event: "); //$NON-NLS-1$
+        result.append(event);
+        result.append(", ignoreError: "); //$NON-NLS-1$
+        result.append(ignoreError);
+        result.append(", useGraphicalEditor: "); //$NON-NLS-1$
+        result.append(useGraphicalEditor);
+        result.append(')');
+        return result.toString();
+    }
 
 } //AbstractKPIBindingImpl

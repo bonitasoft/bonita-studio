@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class HtmlWidgetImpl extends InfoImpl implements HtmlWidget {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected HtmlWidgetImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.HTML_WIDGET;
-	}
+        return FormPackage.Literals.HTML_WIDGET;
+    }
 
 } //HtmlWidgetImpl

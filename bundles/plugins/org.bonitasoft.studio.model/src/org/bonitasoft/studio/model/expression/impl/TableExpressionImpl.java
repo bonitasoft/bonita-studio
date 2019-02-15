@@ -48,119 +48,119 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class TableExpressionImpl extends AbstractExpressionImpl implements TableExpression {
 	/**
-	 * The cached value of the '{@link #getExpressions() <em>Expressions</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getExpressions() <em>Expressions</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpressions()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getExpressions()
+     * @generated
+     * @ordered
+     */
 	protected EList<ListExpression> expressions;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TableExpressionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ExpressionPackage.Literals.TABLE_EXPRESSION;
-	}
+        return ExpressionPackage.Literals.TABLE_EXPRESSION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<ListExpression> getExpressions() {
-		if (expressions == null) {
-			expressions = new EObjectContainmentEList<ListExpression>(ListExpression.class, this, ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS);
-		}
-		return expressions;
-	}
+        if (expressions == null) {
+            expressions = new EObjectContainmentEList<ListExpression>(ListExpression.class, this, ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS);
+        }
+        return expressions;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
-				return ((InternalEList<?>)getExpressions()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
+                return ((InternalEList<?>)getExpressions()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
-				return getExpressions();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
+                return getExpressions();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
-				getExpressions().clear();
-				getExpressions().addAll((Collection<? extends ListExpression>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
+                getExpressions().clear();
+                getExpressions().addAll((Collection<? extends ListExpression>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
-				getExpressions().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
+                getExpressions().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
-				return expressions != null && !expressions.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ExpressionPackage.TABLE_EXPRESSION__EXPRESSIONS:
+                return expressions != null && !expressions.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //TableExpressionImpl

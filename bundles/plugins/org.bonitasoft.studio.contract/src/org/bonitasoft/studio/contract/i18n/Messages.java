@@ -125,4 +125,5 @@ public class Messages extends NLS {
     public static String saving;
     public static String taskBdmTips;
     public static String poolBdmTips;
+    public static String creatingNewForm;
 }

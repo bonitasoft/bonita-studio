@@ -37,19 +37,19 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface SimulationNumberData extends SimulationData {
 	/**
-	 * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.simulation.SimulationNumberRange}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.simulation.SimulationNumberRange}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Ranges</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Ranges</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationNumberData_Ranges()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Ranges</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationNumberData_Ranges()
+     * @model containment="true"
+     * @generated
+     */
 	EList<SimulationNumberRange> getRanges();
 
 } // SimulationNumberData

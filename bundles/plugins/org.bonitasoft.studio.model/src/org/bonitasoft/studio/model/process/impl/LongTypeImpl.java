@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class LongTypeImpl extends DataTypeImpl implements LongType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected LongTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.LONG_TYPE;
-	}
+        return ProcessPackage.Literals.LONG_TYPE;
+    }
 
 } //LongTypeImpl

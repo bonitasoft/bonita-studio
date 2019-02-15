@@ -42,109 +42,109 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface SimulationTransition extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Probability</b></em>' attribute.
-	 * The default value is <code>"1"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Probability</b></em>' attribute.
+     * The default value is <code>"1"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Probability</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Probability</em>' attribute.
-	 * @see #setProbability(double)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_Probability()
-	 * @model default="1" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Probability</em>' attribute.
+     * @see #setProbability(double)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_Probability()
+     * @model default="1" required="true"
+     * @generated
+     */
 	double getProbability();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#getProbability <em>Probability</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#getProbability <em>Probability</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Probability</em>' attribute.
-	 * @see #getProbability()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Probability</em>' attribute.
+     * @see #getProbability()
+     * @generated
+     */
 	void setProbability(double value);
 
 	/**
-	 * Returns the value of the '<em><b>Data Based</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Data Based</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Data Based</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Data Based</em>' attribute.
-	 * @see #setDataBased(boolean)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_DataBased()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Data Based</em>' attribute.
+     * @see #setDataBased(boolean)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_DataBased()
+     * @model
+     * @generated
+     */
 	boolean isDataBased();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#isDataBased <em>Data Based</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#isDataBased <em>Data Based</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Data Based</em>' attribute.
-	 * @see #isDataBased()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Data Based</em>' attribute.
+     * @see #isDataBased()
+     * @generated
+     */
 	void setDataBased(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Expression</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Expression</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Expression</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Expression</em>' attribute.
-	 * @see #setUseExpression(boolean)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_UseExpression()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Expression</em>' attribute.
+     * @see #setUseExpression(boolean)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_UseExpression()
+     * @model default="false"
+     * @generated
+     */
 	boolean isUseExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#isUseExpression <em>Use Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#isUseExpression <em>Use Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Expression</em>' attribute.
-	 * @see #isUseExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Expression</em>' attribute.
+     * @see #isUseExpression()
+     * @generated
+     */
 	void setUseExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression</em>' containment reference.
-	 * @see #setExpression(Expression)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_Expression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Expression</em>' containment reference.
+     * @see #setExpression(Expression)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationTransition_Expression()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#getExpression <em>Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationTransition#getExpression <em>Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression</em>' containment reference.
-	 * @see #getExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Expression</em>' containment reference.
+     * @see #getExpression()
+     * @generated
+     */
 	void setExpression(Expression value);
 
 } // SimulationTransition

@@ -29,56 +29,56 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface KpiFactory extends EFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	KpiFactory eINSTANCE = org.bonitasoft.studio.model.kpi.impl.KpiFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>KPI Parameter Mapping</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>KPI Parameter Mapping</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>KPI Parameter Mapping</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>KPI Parameter Mapping</em>'.
+     * @generated
+     */
 	KPIParameterMapping createKPIParameterMapping();
 
 	/**
-	 * Returns a new object of class '<em>Database KPI Binding</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Database KPI Binding</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Database KPI Binding</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Database KPI Binding</em>'.
+     * @generated
+     */
 	DatabaseKPIBinding createDatabaseKPIBinding();
 
 	/**
-	 * Returns a new object of class '<em>Database KPI Definition</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Database KPI Definition</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Database KPI Definition</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Database KPI Definition</em>'.
+     * @generated
+     */
 	DatabaseKPIDefinition createDatabaseKPIDefinition();
 
 	/**
-	 * Returns a new object of class '<em>KPI Field</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>KPI Field</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>KPI Field</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>KPI Field</em>'.
+     * @generated
+     */
 	KPIField createKPIField();
 
 	/**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
 	KpiPackage getKpiPackage();
 
 } //KpiFactory

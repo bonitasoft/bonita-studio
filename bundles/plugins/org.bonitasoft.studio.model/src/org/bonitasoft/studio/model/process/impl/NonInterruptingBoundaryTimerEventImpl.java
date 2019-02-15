@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class NonInterruptingBoundaryTimerEventImpl extends BoundaryTimerEventImpl implements NonInterruptingBoundaryTimerEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected NonInterruptingBoundaryTimerEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT;
-	}
+        return ProcessPackage.Literals.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT;
+    }
 
 } //NonInterruptingBoundaryTimerEventImpl

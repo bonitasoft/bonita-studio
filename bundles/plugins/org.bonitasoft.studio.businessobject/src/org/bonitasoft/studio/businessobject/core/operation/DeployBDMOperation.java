@@ -176,7 +176,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     }
 
     protected IEventBroker eventBroker() {
-        return (IEventBroker) PlatformUI.getWorkbench().getService(IEventBroker.class);
+        return PlatformUI.getWorkbench().getService(IEventBroker.class);
     }
 
     protected void removeDependency() {

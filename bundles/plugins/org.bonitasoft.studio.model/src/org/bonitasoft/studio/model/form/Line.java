@@ -38,55 +38,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Line extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Height</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Height</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Height</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Height</em>' attribute.
-	 * @see #setHeight(String)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getLine_Height()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Height</em>' attribute.
+     * @see #setHeight(String)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getLine_Height()
+     * @model
+     * @generated
+     */
 	String getHeight();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Line#getHeight <em>Height</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Line#getHeight <em>Height</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Height</em>' attribute.
-	 * @see #getHeight()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Height</em>' attribute.
+     * @see #getHeight()
+     * @generated
+     */
 	void setHeight(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Number</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Number</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Number</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Number</em>' attribute.
-	 * @see #setNumber(int)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getLine_Number()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Number</em>' attribute.
+     * @see #setNumber(int)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getLine_Number()
+     * @model
+     * @generated
+     */
 	int getNumber();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Line#getNumber <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Line#getNumber <em>Number</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Number</em>' attribute.
-	 * @see #getNumber()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Number</em>' attribute.
+     * @see #getNumber()
+     * @generated
+     */
 	void setNumber(int value);
 
 } // Line

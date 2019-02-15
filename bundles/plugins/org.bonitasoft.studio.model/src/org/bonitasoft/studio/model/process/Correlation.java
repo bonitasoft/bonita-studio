@@ -40,58 +40,58 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Correlation extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Correlation Type</b></em>' attribute.
-	 * The default value is <code>"INACTIVE"</code>.
-	 * The literals are from the enumeration {@link org.bonitasoft.studio.model.process.CorrelationTypeActive}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Correlation Type</b></em>' attribute.
+     * The default value is <code>"INACTIVE"</code>.
+     * The literals are from the enumeration {@link org.bonitasoft.studio.model.process.CorrelationTypeActive}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Correlation Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Correlation Type</em>' attribute.
-	 * @see org.bonitasoft.studio.model.process.CorrelationTypeActive
-	 * @see #setCorrelationType(CorrelationTypeActive)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelation_CorrelationType()
-	 * @model default="INACTIVE" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Correlation Type</em>' attribute.
+     * @see org.bonitasoft.studio.model.process.CorrelationTypeActive
+     * @see #setCorrelationType(CorrelationTypeActive)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelation_CorrelationType()
+     * @model default="INACTIVE" required="true"
+     * @generated
+     */
 	CorrelationTypeActive getCorrelationType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Correlation#getCorrelationType <em>Correlation Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Correlation#getCorrelationType <em>Correlation Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Correlation Type</em>' attribute.
-	 * @see org.bonitasoft.studio.model.process.CorrelationTypeActive
-	 * @see #getCorrelationType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Correlation Type</em>' attribute.
+     * @see org.bonitasoft.studio.model.process.CorrelationTypeActive
+     * @see #getCorrelationType()
+     * @generated
+     */
 	void setCorrelationType(CorrelationTypeActive value);
 
 	/**
-	 * Returns the value of the '<em><b>Correlation Association</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Correlation Association</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * key is the CorrelationKey
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Correlation Association</em>' containment reference.
-	 * @see #setCorrelationAssociation(TableExpression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelation_CorrelationAssociation()
-	 * @model containment="true" required="true"
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * key is the CorrelationKey
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Correlation Association</em>' containment reference.
+     * @see #setCorrelationAssociation(TableExpression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelation_CorrelationAssociation()
+     * @model containment="true" required="true"
+     * @generated
+     */
 	TableExpression getCorrelationAssociation();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Correlation#getCorrelationAssociation <em>Correlation Association</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Correlation#getCorrelationAssociation <em>Correlation Association</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Correlation Association</em>' containment reference.
-	 * @see #getCorrelationAssociation()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Correlation Association</em>' containment reference.
+     * @see #getCorrelationAssociation()
+     * @generated
+     */
 	void setCorrelationAssociation(TableExpression value);
 
 } // Correlation

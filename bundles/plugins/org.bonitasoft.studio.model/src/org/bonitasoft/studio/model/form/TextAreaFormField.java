@@ -37,55 +37,55 @@ package org.bonitasoft.studio.model.form;
  */
 public interface TextAreaFormField extends SingleValuatedFormField {
 	/**
-	 * Returns the value of the '<em><b>Max Length</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Max Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Max Length</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Max Length</em>' attribute.
-	 * @see #setMaxLength(int)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getTextAreaFormField_MaxLength()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Max Length</em>' attribute.
+     * @see #setMaxLength(int)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getTextAreaFormField_MaxLength()
+     * @model
+     * @generated
+     */
 	int getMaxLength();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.TextAreaFormField#getMaxLength <em>Max Length</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.TextAreaFormField#getMaxLength <em>Max Length</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Max Length</em>' attribute.
-	 * @see #getMaxLength()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Max Length</em>' attribute.
+     * @see #getMaxLength()
+     * @generated
+     */
 	void setMaxLength(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Max Heigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Max Heigth</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Max Heigth</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Max Heigth</em>' attribute.
-	 * @see #setMaxHeigth(int)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getTextAreaFormField_MaxHeigth()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Max Heigth</em>' attribute.
+     * @see #setMaxHeigth(int)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getTextAreaFormField_MaxHeigth()
+     * @model
+     * @generated
+     */
 	int getMaxHeigth();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.TextAreaFormField#getMaxHeigth <em>Max Heigth</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.TextAreaFormField#getMaxHeigth <em>Max Heigth</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Max Heigth</em>' attribute.
-	 * @see #getMaxHeigth()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Max Heigth</em>' attribute.
+     * @see #getMaxHeigth()
+     * @generated
+     */
 	void setMaxHeigth(int value);
 
 } // TextAreaFormField

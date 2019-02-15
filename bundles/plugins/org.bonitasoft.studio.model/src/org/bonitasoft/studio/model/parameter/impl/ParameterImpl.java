@@ -45,304 +45,304 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class ParameterImpl extends EObjectImpl implements Parameter {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
 	protected static final String VALUE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
 	protected String value = VALUE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTypeClassname() <em>Type Classname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getTypeClassname() <em>Type Classname</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeClassname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTypeClassname()
+     * @generated
+     * @ordered
+     */
 	protected static final String TYPE_CLASSNAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTypeClassname() <em>Type Classname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTypeClassname() <em>Type Classname</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeClassname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTypeClassname()
+     * @generated
+     * @ordered
+     */
 	protected String typeClassname = TYPE_CLASSNAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ParameterImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ParameterPackage.Literals.PARAMETER;
-	}
+        return ParameterPackage.Literals.PARAMETER;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getValue() {
-		return value;
-	}
+        return value;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__VALUE, oldValue, value));
-	}
+        String oldValue = value;
+        value = newValue;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__VALUE, oldValue, value));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getTypeClassname() {
-		return typeClassname;
-	}
+        return typeClassname;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setTypeClassname(String newTypeClassname) {
-		String oldTypeClassname = typeClassname;
-		typeClassname = newTypeClassname;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__TYPE_CLASSNAME, oldTypeClassname, typeClassname));
-	}
+        String oldTypeClassname = typeClassname;
+        typeClassname = newTypeClassname;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__TYPE_CLASSNAME, oldTypeClassname, typeClassname));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__DESCRIPTION, oldDescription, description));
-	}
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ParameterPackage.PARAMETER__DESCRIPTION, oldDescription, description));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER__NAME:
-				return getName();
-			case ParameterPackage.PARAMETER__VALUE:
-				return getValue();
-			case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
-				return getTypeClassname();
-			case ParameterPackage.PARAMETER__DESCRIPTION:
-				return getDescription();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER__NAME:
+                return getName();
+            case ParameterPackage.PARAMETER__VALUE:
+                return getValue();
+            case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
+                return getTypeClassname();
+            case ParameterPackage.PARAMETER__DESCRIPTION:
+                return getDescription();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER__NAME:
-				setName((String)newValue);
-				return;
-			case ParameterPackage.PARAMETER__VALUE:
-				setValue((String)newValue);
-				return;
-			case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
-				setTypeClassname((String)newValue);
-				return;
-			case ParameterPackage.PARAMETER__DESCRIPTION:
-				setDescription((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER__NAME:
+                setName((String)newValue);
+                return;
+            case ParameterPackage.PARAMETER__VALUE:
+                setValue((String)newValue);
+                return;
+            case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
+                setTypeClassname((String)newValue);
+                return;
+            case ParameterPackage.PARAMETER__DESCRIPTION:
+                setDescription((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ParameterPackage.PARAMETER__VALUE:
-				setValue(VALUE_EDEFAULT);
-				return;
-			case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
-				setTypeClassname(TYPE_CLASSNAME_EDEFAULT);
-				return;
-			case ParameterPackage.PARAMETER__DESCRIPTION:
-				setDescription(DESCRIPTION_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ParameterPackage.PARAMETER__VALUE:
+                setValue(VALUE_EDEFAULT);
+                return;
+            case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
+                setTypeClassname(TYPE_CLASSNAME_EDEFAULT);
+                return;
+            case ParameterPackage.PARAMETER__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ParameterPackage.PARAMETER__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ParameterPackage.PARAMETER__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
-			case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
-				return TYPE_CLASSNAME_EDEFAULT == null ? typeClassname != null : !TYPE_CLASSNAME_EDEFAULT.equals(typeClassname);
-			case ParameterPackage.PARAMETER__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ParameterPackage.PARAMETER__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ParameterPackage.PARAMETER__VALUE:
+                return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+            case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
+                return TYPE_CLASSNAME_EDEFAULT == null ? typeClassname != null : !TYPE_CLASSNAME_EDEFAULT.equals(typeClassname);
+            case ParameterPackage.PARAMETER__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(", value: "); //$NON-NLS-1$
-		result.append(value);
-		result.append(", typeClassname: "); //$NON-NLS-1$
-		result.append(typeClassname);
-		result.append(", description: "); //$NON-NLS-1$
-		result.append(description);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(", value: "); //$NON-NLS-1$
+        result.append(value);
+        result.append(", typeClassname: "); //$NON-NLS-1$
+        result.append(typeClassname);
+        result.append(", description: "); //$NON-NLS-1$
+        result.append(description);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ParameterImpl

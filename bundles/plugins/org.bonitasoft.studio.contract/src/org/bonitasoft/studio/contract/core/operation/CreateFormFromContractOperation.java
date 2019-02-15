@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.designer.core.operation;
+package org.bonitasoft.studio.contract.core.operation;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -20,13 +20,19 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.resolver.ContractToBusinessDataResolver;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.converter.ToWebContract;
-import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
@@ -54,7 +60,15 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         try {
             URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
-            Representation body = new JacksonRepresentation<>(new ToWebContract().apply(contract));
+            TreeResult treeResult = new TreeResult();
+            if (formScope == FormScope.TASK) {
+                Pool parentPool = new ModelSearch(Collections::emptyList).getDirectParentOfType(contract, Pool.class);
+                ContractToBusinessDataResolver contractToBusinessDataResolver = new ContractToBusinessDataResolver(
+                        new BusinessDataStore(parentPool, getRepositoryAccessor()));
+                treeResult = contractToBusinessDataResolver.resolve(contract);
+            }
+
+            Representation body = new JacksonRepresentation<>(new ToWebContract(treeResult).apply(contract));
             responseObject = createArtifact(url, body);
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");

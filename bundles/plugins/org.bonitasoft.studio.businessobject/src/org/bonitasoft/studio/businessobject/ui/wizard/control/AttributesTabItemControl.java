@@ -347,7 +347,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
         final Composite lazyRadioComposite = new Composite(composite, SWT.NONE);
         lazyRadioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        lazyRadioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(25, 0).create());
+        lazyRadioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
         final Button lazyRadio = new Button(lazyRadioComposite, SWT.RADIO);
         lazyRadio.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
@@ -356,7 +356,6 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         final ControlDecoration lazyDecorator = new ControlDecoration(lazyRadio, SWT.RIGHT);
         lazyDecorator.setImage(Pics.getImage(PicsConstants.hint));
         lazyDecorator.setDescriptionText(Messages.loadOnDemandHint);
-        lazyDecorator.setMarginWidth(-5);
 
         final Button eagerRadio = new Button(lazyRadioComposite, SWT.RADIO);
         eagerRadio.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
@@ -364,7 +363,6 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
         final ControlDecoration eagerDecorator = new ControlDecoration(eagerRadio, SWT.RIGHT);
         eagerDecorator.setImage(Pics.getImage(PicsConstants.hint));
-        eagerDecorator.setMarginWidth(-5);
         viewerObservableValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override

@@ -42,131 +42,131 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Group extends Widget, Duplicable {
 	/**
-	 * Returns the value of the '<em><b>Widgets</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.form.Widget}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Widgets</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.form.Widget}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Widgets</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Widgets</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Widgets()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Widgets</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Widgets()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Widget> getWidgets();
 
 	/**
-	 * Returns the value of the '<em><b>Show Border</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Show Border</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Show Border</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Show Border</em>' attribute.
-	 * @see #setShowBorder(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_ShowBorder()
-	 * @model default="false" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Show Border</em>' attribute.
+     * @see #setShowBorder(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_ShowBorder()
+     * @model default="false" required="true"
+     * @generated
+     */
 	boolean isShowBorder();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#isShowBorder <em>Show Border</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#isShowBorder <em>Show Border</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Show Border</em>' attribute.
-	 * @see #isShowBorder()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Show Border</em>' attribute.
+     * @see #isShowBorder()
+     * @generated
+     */
 	void setShowBorder(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Columns</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.form.Column}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Columns</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.form.Column}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Columns</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Columns</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Columns()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Columns</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Columns()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Column> getColumns();
 
 	/**
-	 * Returns the value of the '<em><b>Lines</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.form.Line}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Lines</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.form.Line}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Lines</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Lines</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Lines()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Lines</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Lines()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Line> getLines();
 
 	/**
-	 * Returns the value of the '<em><b>Use Iterator</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Iterator</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Iterator</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Iterator</em>' attribute.
-	 * @see #setUseIterator(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_UseIterator()
-	 * @model default="false" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Iterator</em>' attribute.
+     * @see #setUseIterator(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_UseIterator()
+     * @model default="false" required="true"
+     * @generated
+     */
 	boolean isUseIterator();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#isUseIterator <em>Use Iterator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#isUseIterator <em>Use Iterator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Iterator</em>' attribute.
-	 * @see #isUseIterator()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Iterator</em>' attribute.
+     * @see #isUseIterator()
+     * @generated
+     */
 	void setUseIterator(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Iterator</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Iterator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Iterator</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Iterator</em>' containment reference.
-	 * @see #setIterator(GroupIterator)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Iterator()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Iterator</em>' containment reference.
+     * @see #setIterator(GroupIterator)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getGroup_Iterator()
+     * @model containment="true"
+     * @generated
+     */
 	GroupIterator getIterator();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#getIterator <em>Iterator</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Group#getIterator <em>Iterator</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Iterator</em>' containment reference.
-	 * @see #getIterator()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Iterator</em>' containment reference.
+     * @see #getIterator()
+     * @generated
+     */
 	void setIterator(GroupIterator value);
 
 } // Group

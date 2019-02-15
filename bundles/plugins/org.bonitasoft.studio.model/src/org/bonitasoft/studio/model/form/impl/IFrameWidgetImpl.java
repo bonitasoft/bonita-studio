@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class IFrameWidgetImpl extends InfoImpl implements IFrameWidget {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IFrameWidgetImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.IFRAME_WIDGET;
-	}
+        return FormPackage.Literals.IFRAME_WIDGET;
+    }
 
 } //IFrameWidgetImpl

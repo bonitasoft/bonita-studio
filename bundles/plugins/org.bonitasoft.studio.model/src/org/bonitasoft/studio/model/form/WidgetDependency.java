@@ -41,74 +41,74 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface WidgetDependency extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Trigger Refresh On Modification</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Trigger Refresh On Modification</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Trigger Refresh On Modification</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Trigger Refresh On Modification</em>' attribute.
-	 * @see #setTriggerRefreshOnModification(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_TriggerRefreshOnModification()
-	 * @model default="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Trigger Refresh On Modification</em>' attribute.
+     * @see #setTriggerRefreshOnModification(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_TriggerRefreshOnModification()
+     * @model default="true"
+     * @generated
+     */
 	boolean isTriggerRefreshOnModification();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.WidgetDependency#isTriggerRefreshOnModification <em>Trigger Refresh On Modification</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.WidgetDependency#isTriggerRefreshOnModification <em>Trigger Refresh On Modification</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Trigger Refresh On Modification</em>' attribute.
-	 * @see #isTriggerRefreshOnModification()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Trigger Refresh On Modification</em>' attribute.
+     * @see #isTriggerRefreshOnModification()
+     * @generated
+     */
 	void setTriggerRefreshOnModification(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Event Types</b></em>' attribute list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.form.EventDependencyType}.
-	 * The literals are from the enumeration {@link org.bonitasoft.studio.model.form.EventDependencyType}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Event Types</b></em>' attribute list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.form.EventDependencyType}.
+     * The literals are from the enumeration {@link org.bonitasoft.studio.model.form.EventDependencyType}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Event Types</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Event Types</em>' attribute list.
-	 * @see org.bonitasoft.studio.model.form.EventDependencyType
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_EventTypes()
-	 * @model default="onChange" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Event Types</em>' attribute list.
+     * @see org.bonitasoft.studio.model.form.EventDependencyType
+     * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_EventTypes()
+     * @model default="onChange" required="true"
+     * @generated
+     */
 	EList<EventDependencyType> getEventTypes();
 
 	/**
-	 * Returns the value of the '<em><b>Widget</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Widget</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Widget</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Widget</em>' reference.
-	 * @see #setWidget(Widget)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_Widget()
-	 * @model required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Widget</em>' reference.
+     * @see #setWidget(Widget)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getWidgetDependency_Widget()
+     * @model required="true"
+     * @generated
+     */
 	Widget getWidget();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.WidgetDependency#getWidget <em>Widget</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.WidgetDependency#getWidget <em>Widget</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Widget</em>' reference.
-	 * @see #getWidget()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Widget</em>' reference.
+     * @see #getWidget()
+     * @generated
+     */
 	void setWidget(Widget value);
 
 } // WidgetDependency

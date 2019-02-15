@@ -58,436 +58,436 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ConnectionImpl extends EObjectImpl implements Connection {
 	/**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected static final String DOCUMENTATION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
 	protected String documentation = DOCUMENTATION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected static final String NAME_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTextAnnotationAttachment() <em>Text Annotation Attachment</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTextAnnotationAttachment()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTextAnnotationAttachment()
+     * @generated
+     * @ordered
+     */
 	protected EList<TextAnnotationAttachment> textAnnotationAttachment;
 
 	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTarget()
+     * @generated
+     * @ordered
+     */
 	protected TargetElement target;
 
 	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSource()
+     * @generated
+     * @ordered
+     */
 	protected SourceElement source;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ConnectionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.CONNECTION;
-	}
+        return ProcessPackage.Literals.CONNECTION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__NAME, oldName, name));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<TextAnnotationAttachment> getTextAnnotationAttachment() {
-		if (textAnnotationAttachment == null) {
-			textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
-		}
-		return textAnnotationAttachment;
-	}
+        if (textAnnotationAttachment == null) {
+            textAnnotationAttachment = new EObjectContainmentWithInverseEList<TextAnnotationAttachment>(TextAnnotationAttachment.class, this, ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET);
+        }
+        return textAnnotationAttachment;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TargetElement getTarget() {
-		if (target != null && target.eIsProxy()) {
-			InternalEObject oldTarget = (InternalEObject)target;
-			target = (TargetElement)eResolveProxy(oldTarget);
-			if (target != oldTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.CONNECTION__TARGET, oldTarget, target));
-			}
-		}
-		return target;
-	}
+        if (target != null && target.eIsProxy()) {
+            InternalEObject oldTarget = (InternalEObject)target;
+            target = (TargetElement)eResolveProxy(oldTarget);
+            if (target != oldTarget) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.CONNECTION__TARGET, oldTarget, target));
+            }
+        }
+        return target;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public TargetElement basicGetTarget() {
-		return target;
-	}
+        return target;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetTarget(TargetElement newTarget, NotificationChain msgs) {
-		TargetElement oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        TargetElement oldTarget = target;
+        target = newTarget;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__TARGET, oldTarget, newTarget);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setTarget(TargetElement newTarget) {
-		if (newTarget != target) {
-			NotificationChain msgs = null;
-			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__TARGET, newTarget, newTarget));
-	}
+        if (newTarget != target) {
+            NotificationChain msgs = null;
+            if (target != null)
+                msgs = ((InternalEObject)target).eInverseRemove(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
+            if (newTarget != null)
+                msgs = ((InternalEObject)newTarget).eInverseAdd(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
+            msgs = basicSetTarget(newTarget, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__TARGET, newTarget, newTarget));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SourceElement getSource() {
-		if (source != null && source.eIsProxy()) {
-			InternalEObject oldSource = (InternalEObject)source;
-			source = (SourceElement)eResolveProxy(oldSource);
-			if (source != oldSource) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.CONNECTION__SOURCE, oldSource, source));
-			}
-		}
-		return source;
-	}
+        if (source != null && source.eIsProxy()) {
+            InternalEObject oldSource = (InternalEObject)source;
+            source = (SourceElement)eResolveProxy(oldSource);
+            if (source != oldSource) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.CONNECTION__SOURCE, oldSource, source));
+            }
+        }
+        return source;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public SourceElement basicGetSource() {
-		return source;
-	}
+        return source;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetSource(SourceElement newSource, NotificationChain msgs) {
-		SourceElement oldSource = source;
-		source = newSource;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__SOURCE, oldSource, newSource);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        SourceElement oldSource = source;
+        source = newSource;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__SOURCE, oldSource, newSource);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setSource(SourceElement newSource) {
-		if (newSource != source) {
-			NotificationChain msgs = null;
-			if (source != null)
-				msgs = ((InternalEObject)source).eInverseRemove(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
-			if (newSource != null)
-				msgs = ((InternalEObject)newSource).eInverseAdd(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
-			msgs = basicSetSource(newSource, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__SOURCE, newSource, newSource));
-	}
+        if (newSource != source) {
+            NotificationChain msgs = null;
+            if (source != null)
+                msgs = ((InternalEObject)source).eInverseRemove(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
+            if (newSource != null)
+                msgs = ((InternalEObject)newSource).eInverseAdd(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
+            msgs = basicSetSource(newSource, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONNECTION__SOURCE, newSource, newSource));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
-			case ProcessPackage.CONNECTION__TARGET:
-				if (target != null)
-					msgs = ((InternalEObject)target).eInverseRemove(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
-				return basicSetTarget((TargetElement)otherEnd, msgs);
-			case ProcessPackage.CONNECTION__SOURCE:
-				if (source != null)
-					msgs = ((InternalEObject)source).eInverseRemove(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
-				return basicSetSource((SourceElement)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getTextAnnotationAttachment()).basicAdd(otherEnd, msgs);
+            case ProcessPackage.CONNECTION__TARGET:
+                if (target != null)
+                    msgs = ((InternalEObject)target).eInverseRemove(this, ProcessPackage.TARGET_ELEMENT__INCOMING, TargetElement.class, msgs);
+                return basicSetTarget((TargetElement)otherEnd, msgs);
+            case ProcessPackage.CONNECTION__SOURCE:
+                if (source != null)
+                    msgs = ((InternalEObject)source).eInverseRemove(this, ProcessPackage.SOURCE_ELEMENT__OUTGOING, SourceElement.class, msgs);
+                return basicSetSource((SourceElement)otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
-			case ProcessPackage.CONNECTION__TARGET:
-				return basicSetTarget(null, msgs);
-			case ProcessPackage.CONNECTION__SOURCE:
-				return basicSetSource(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                return ((InternalEList<?>)getTextAnnotationAttachment()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.CONNECTION__TARGET:
+                return basicSetTarget(null, msgs);
+            case ProcessPackage.CONNECTION__SOURCE:
+                return basicSetSource(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__DOCUMENTATION:
-				return getDocumentation();
-			case ProcessPackage.CONNECTION__NAME:
-				return getName();
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				return getTextAnnotationAttachment();
-			case ProcessPackage.CONNECTION__TARGET:
-				if (resolve) return getTarget();
-				return basicGetTarget();
-			case ProcessPackage.CONNECTION__SOURCE:
-				if (resolve) return getSource();
-				return basicGetSource();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__DOCUMENTATION:
+                return getDocumentation();
+            case ProcessPackage.CONNECTION__NAME:
+                return getName();
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                return getTextAnnotationAttachment();
+            case ProcessPackage.CONNECTION__TARGET:
+                if (resolve) return getTarget();
+                return basicGetTarget();
+            case ProcessPackage.CONNECTION__SOURCE:
+                if (resolve) return getSource();
+                return basicGetSource();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case ProcessPackage.CONNECTION__NAME:
-				setName((String)newValue);
-				return;
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
-				return;
-			case ProcessPackage.CONNECTION__TARGET:
-				setTarget((TargetElement)newValue);
-				return;
-			case ProcessPackage.CONNECTION__SOURCE:
-				setSource((SourceElement)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case ProcessPackage.CONNECTION__NAME:
+                setName((String)newValue);
+                return;
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                getTextAnnotationAttachment().addAll((Collection<? extends TextAnnotationAttachment>)newValue);
+                return;
+            case ProcessPackage.CONNECTION__TARGET:
+                setTarget((TargetElement)newValue);
+                return;
+            case ProcessPackage.CONNECTION__SOURCE:
+                setSource((SourceElement)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case ProcessPackage.CONNECTION__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				getTextAnnotationAttachment().clear();
-				return;
-			case ProcessPackage.CONNECTION__TARGET:
-				setTarget((TargetElement)null);
-				return;
-			case ProcessPackage.CONNECTION__SOURCE:
-				setSource((SourceElement)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case ProcessPackage.CONNECTION__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                getTextAnnotationAttachment().clear();
+                return;
+            case ProcessPackage.CONNECTION__TARGET:
+                setTarget((TargetElement)null);
+                return;
+            case ProcessPackage.CONNECTION__SOURCE:
+                setSource((SourceElement)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.CONNECTION__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case ProcessPackage.CONNECTION__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
-				return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
-			case ProcessPackage.CONNECTION__TARGET:
-				return target != null;
-			case ProcessPackage.CONNECTION__SOURCE:
-				return source != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.CONNECTION__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case ProcessPackage.CONNECTION__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case ProcessPackage.CONNECTION__TEXT_ANNOTATION_ATTACHMENT:
+                return textAnnotationAttachment != null && !textAnnotationAttachment.isEmpty();
+            case ProcessPackage.CONNECTION__TARGET:
+                return target != null;
+            case ProcessPackage.CONNECTION__SOURCE:
+                return source != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (documentation: "); //$NON-NLS-1$
-		result.append(documentation);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (documentation: "); //$NON-NLS-1$
+        result.append(documentation);
+        result.append(", name: "); //$NON-NLS-1$
+        result.append(name);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ConnectionImpl

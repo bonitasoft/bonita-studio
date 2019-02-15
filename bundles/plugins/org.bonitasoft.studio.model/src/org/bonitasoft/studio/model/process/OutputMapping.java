@@ -38,55 +38,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface OutputMapping extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Subprocess Source</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Subprocess Source</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Subprocess Source</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Subprocess Source</em>' attribute.
-	 * @see #setSubprocessSource(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getOutputMapping_SubprocessSource()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Subprocess Source</em>' attribute.
+     * @see #setSubprocessSource(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getOutputMapping_SubprocessSource()
+     * @model
+     * @generated
+     */
 	String getSubprocessSource();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.OutputMapping#getSubprocessSource <em>Subprocess Source</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.OutputMapping#getSubprocessSource <em>Subprocess Source</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Subprocess Source</em>' attribute.
-	 * @see #getSubprocessSource()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Subprocess Source</em>' attribute.
+     * @see #getSubprocessSource()
+     * @generated
+     */
 	void setSubprocessSource(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Process Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Process Target</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Process Target</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Process Target</em>' reference.
-	 * @see #setProcessTarget(Data)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getOutputMapping_ProcessTarget()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Process Target</em>' reference.
+     * @see #setProcessTarget(Data)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getOutputMapping_ProcessTarget()
+     * @model
+     * @generated
+     */
 	Data getProcessTarget();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.OutputMapping#getProcessTarget <em>Process Target</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.OutputMapping#getProcessTarget <em>Process Target</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Process Target</em>' reference.
-	 * @see #getProcessTarget()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Process Target</em>' reference.
+     * @see #getProcessTarget()
+     * @generated
+     */
 	void setProcessTarget(Data value);
 
 } // OutputMapping

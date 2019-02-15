@@ -55,186 +55,186 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class DecisionTableLineImpl extends EObjectImpl implements DecisionTableLine {
 	/**
-	 * The cached value of the '{@link #getConditions() <em>Conditions</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getConditions() <em>Conditions</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConditions()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getConditions()
+     * @generated
+     * @ordered
+     */
 	protected EList<Expression> conditions;
 
 	/**
-	 * The cached value of the '{@link #getAction() <em>Action</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getAction() <em>Action</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAction()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getAction()
+     * @generated
+     * @ordered
+     */
 	protected DecisionTableAction action;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DecisionTableLineImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return DecisionPackage.Literals.DECISION_TABLE_LINE;
-	}
+        return DecisionPackage.Literals.DECISION_TABLE_LINE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Expression> getConditions() {
-		if (conditions == null) {
-			conditions = new EObjectContainmentEList<Expression>(Expression.class, this, DecisionPackage.DECISION_TABLE_LINE__CONDITIONS);
-		}
-		return conditions;
-	}
+        if (conditions == null) {
+            conditions = new EObjectContainmentEList<Expression>(Expression.class, this, DecisionPackage.DECISION_TABLE_LINE__CONDITIONS);
+        }
+        return conditions;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DecisionTableAction getAction() {
-		return action;
-	}
+        return action;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetAction(DecisionTableAction newAction, NotificationChain msgs) {
-		DecisionTableAction oldAction = action;
-		action = newAction;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DecisionPackage.DECISION_TABLE_LINE__ACTION, oldAction, newAction);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        DecisionTableAction oldAction = action;
+        action = newAction;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DecisionPackage.DECISION_TABLE_LINE__ACTION, oldAction, newAction);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setAction(DecisionTableAction newAction) {
-		if (newAction != action) {
-			NotificationChain msgs = null;
-			if (action != null)
-				msgs = ((InternalEObject)action).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DecisionPackage.DECISION_TABLE_LINE__ACTION, null, msgs);
-			if (newAction != null)
-				msgs = ((InternalEObject)newAction).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DecisionPackage.DECISION_TABLE_LINE__ACTION, null, msgs);
-			msgs = basicSetAction(newAction, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecisionPackage.DECISION_TABLE_LINE__ACTION, newAction, newAction));
-	}
+        if (newAction != action) {
+            NotificationChain msgs = null;
+            if (action != null)
+                msgs = ((InternalEObject)action).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DecisionPackage.DECISION_TABLE_LINE__ACTION, null, msgs);
+            if (newAction != null)
+                msgs = ((InternalEObject)newAction).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DecisionPackage.DECISION_TABLE_LINE__ACTION, null, msgs);
+            msgs = basicSetAction(newAction, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, DecisionPackage.DECISION_TABLE_LINE__ACTION, newAction, newAction));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
-				return ((InternalEList<?>)getConditions()).basicRemove(otherEnd, msgs);
-			case DecisionPackage.DECISION_TABLE_LINE__ACTION:
-				return basicSetAction(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
+                return ((InternalEList<?>)getConditions()).basicRemove(otherEnd, msgs);
+            case DecisionPackage.DECISION_TABLE_LINE__ACTION:
+                return basicSetAction(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
-				return getConditions();
-			case DecisionPackage.DECISION_TABLE_LINE__ACTION:
-				return getAction();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
+                return getConditions();
+            case DecisionPackage.DECISION_TABLE_LINE__ACTION:
+                return getAction();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
-				getConditions().clear();
-				getConditions().addAll((Collection<? extends Expression>)newValue);
-				return;
-			case DecisionPackage.DECISION_TABLE_LINE__ACTION:
-				setAction((DecisionTableAction)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
+                getConditions().clear();
+                getConditions().addAll((Collection<? extends Expression>)newValue);
+                return;
+            case DecisionPackage.DECISION_TABLE_LINE__ACTION:
+                setAction((DecisionTableAction)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
-				getConditions().clear();
-				return;
-			case DecisionPackage.DECISION_TABLE_LINE__ACTION:
-				setAction((DecisionTableAction)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
+                getConditions().clear();
+                return;
+            case DecisionPackage.DECISION_TABLE_LINE__ACTION:
+                setAction((DecisionTableAction)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
-				return conditions != null && !conditions.isEmpty();
-			case DecisionPackage.DECISION_TABLE_LINE__ACTION:
-				return action != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case DecisionPackage.DECISION_TABLE_LINE__CONDITIONS:
+                return conditions != null && !conditions.isEmpty();
+            case DecisionPackage.DECISION_TABLE_LINE__ACTION:
+                return action != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //DecisionTableLineImpl

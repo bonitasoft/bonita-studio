@@ -57,167 +57,167 @@ public class KPIFieldItemProvider
 		IItemLabelProvider,
 		IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public KPIFieldItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addFieldNamePropertyDescriptor(object);
-			addFieldTypePropertyDescriptor(object);
-			addUseQuotesPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addFieldNamePropertyDescriptor(object);
+            addFieldTypePropertyDescriptor(object);
+            addUseQuotesPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Field Name feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Field Name feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addFieldNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_KPIField_fieldName_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_fieldName_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 KpiPackage.Literals.KPI_FIELD__FIELD_NAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_KPIField_fieldName_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_fieldName_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 KpiPackage.Literals.KPI_FIELD__FIELD_NAME,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Field Type feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Field Type feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addFieldTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_KPIField_fieldType_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_fieldType_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 KpiPackage.Literals.KPI_FIELD__FIELD_TYPE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_KPIField_fieldType_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_fieldType_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 KpiPackage.Literals.KPI_FIELD__FIELD_TYPE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Use Quotes feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Use Quotes feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addUseQuotesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_KPIField_useQuotes_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_useQuotes_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 KpiPackage.Literals.KPI_FIELD__USE_QUOTES,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_KPIField_useQuotes_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_KPIField_useQuotes_feature", "_UI_KPIField_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 KpiPackage.Literals.KPI_FIELD__USE_QUOTES,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns KPIField.gif.
-	 * <!-- begin-user-doc -->
+     * This returns KPIField.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/KPIField")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/KPIField")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((KPIField)object).getFieldName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_KPIField_type") : //$NON-NLS-1$
-			getString("_UI_KPIField_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((KPIField)object).getFieldName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_KPIField_type") : //$NON-NLS-1$
+            getString("_UI_KPIField_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(KPIField.class)) {
-			case KpiPackage.KPI_FIELD__FIELD_NAME:
-			case KpiPackage.KPI_FIELD__FIELD_TYPE:
-			case KpiPackage.KPI_FIELD__USE_QUOTES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(KPIField.class)) {
+            case KpiPackage.KPI_FIELD__FIELD_NAME:
+            case KpiPackage.KPI_FIELD__FIELD_TYPE:
+            case KpiPackage.KPI_FIELD__USE_QUOTES:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

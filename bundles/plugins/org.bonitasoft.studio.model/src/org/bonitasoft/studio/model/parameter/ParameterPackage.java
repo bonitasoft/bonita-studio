@@ -40,267 +40,267 @@ import org.eclipse.emf.ecore.EReference;
  */
 public interface ParameterPackage extends EPackage {
 	/**
-	 * The package name.
-	 * <!-- begin-user-doc -->
+     * The package name.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNAME = "parameter"; //$NON-NLS-1$
 
 	/**
-	 * The package namespace URI.
-	 * <!-- begin-user-doc -->
+     * The package namespace URI.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNS_URI = "http://www.bonitasoft.org/ns/studio/parameter"; //$NON-NLS-1$
 
 	/**
-	 * The package namespace name.
-	 * <!-- begin-user-doc -->
+     * The package namespace name.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNS_PREFIX = "parameter"; //$NON-NLS-1$
 
 	/**
-	 * The singleton instance of the package.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	ParameterPackage eINSTANCE = org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterImpl <em>Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
+     * The meta object id for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterImpl <em>Parameter</em>}' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.parameter.impl.ParameterImpl
-	 * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameter()
-	 * @generated
-	 */
+     * @see org.bonitasoft.studio.model.parameter.impl.ParameterImpl
+     * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameter()
+     * @generated
+     */
 	int PARAMETER = 0;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER__NAME = 0;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER__VALUE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Type Classname</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Type Classname</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER__TYPE_CLASSNAME = 2;
 
 	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER__DESCRIPTION = 3;
 
 	/**
-	 * The number of structural features of the '<em>Parameter</em>' class.
-	 * <!-- begin-user-doc -->
+     * The number of structural features of the '<em>Parameter</em>' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl <em>Context</em>}' class.
-	 * <!-- begin-user-doc -->
+     * The meta object id for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl <em>Context</em>}' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl
-	 * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameterContext()
-	 * @generated
-	 */
+     * @see org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl
+     * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameterContext()
+     * @generated
+     */
 	int PARAMETER_CONTEXT = 1;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_CONTEXT__NAME = 0;
 
 	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_CONTEXT__DESCRIPTION = 1;
 
 	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_CONTEXT__PARAMETERS = 2;
 
 	/**
-	 * The feature id for the '<em><b>Default Context</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Default Context</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_CONTEXT__DEFAULT_CONTEXT = 3;
 
 	/**
-	 * The number of structural features of the '<em>Context</em>' class.
-	 * <!-- begin-user-doc -->
+     * The number of structural features of the '<em>Context</em>' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int PARAMETER_CONTEXT_FEATURE_COUNT = 4;
 
 
 	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.parameter.Parameter <em>Parameter</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.parameter.Parameter <em>Parameter</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Parameter</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.Parameter
-	 * @generated
-	 */
+     * @return the meta object for class '<em>Parameter</em>'.
+     * @see org.bonitasoft.studio.model.parameter.Parameter
+     * @generated
+     */
 	EClass getParameter();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.Parameter#getName()
-	 * @see #getParameter()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.bonitasoft.studio.model.parameter.Parameter#getName()
+     * @see #getParameter()
+     * @generated
+     */
 	EAttribute getParameter_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getValue <em>Value</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getValue <em>Value</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.Parameter#getValue()
-	 * @see #getParameter()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Value</em>'.
+     * @see org.bonitasoft.studio.model.parameter.Parameter#getValue()
+     * @see #getParameter()
+     * @generated
+     */
 	EAttribute getParameter_Value();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getTypeClassname <em>Type Classname</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getTypeClassname <em>Type Classname</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type Classname</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.Parameter#getTypeClassname()
-	 * @see #getParameter()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Type Classname</em>'.
+     * @see org.bonitasoft.studio.model.parameter.Parameter#getTypeClassname()
+     * @see #getParameter()
+     * @generated
+     */
 	EAttribute getParameter_TypeClassname();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getDescription <em>Description</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.Parameter#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.Parameter#getDescription()
-	 * @see #getParameter()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.model.parameter.Parameter#getDescription()
+     * @see #getParameter()
+     * @generated
+     */
 	EAttribute getParameter_Description();
 
 	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.parameter.ParameterContext <em>Context</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.parameter.ParameterContext <em>Context</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Context</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.ParameterContext
-	 * @generated
-	 */
+     * @return the meta object for class '<em>Context</em>'.
+     * @see org.bonitasoft.studio.model.parameter.ParameterContext
+     * @generated
+     */
 	EClass getParameterContext();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.ParameterContext#getName()
-	 * @see #getParameterContext()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.bonitasoft.studio.model.parameter.ParameterContext#getName()
+     * @see #getParameterContext()
+     * @generated
+     */
 	EAttribute getParameterContext_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getDescription <em>Description</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.ParameterContext#getDescription()
-	 * @see #getParameterContext()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.model.parameter.ParameterContext#getDescription()
+     * @see #getParameterContext()
+     * @generated
+     */
 	EAttribute getParameterContext_Description();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getParameters <em>Parameters</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.parameter.ParameterContext#getParameters <em>Parameters</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.ParameterContext#getParameters()
-	 * @see #getParameterContext()
-	 * @generated
-	 */
+     * @return the meta object for the containment reference list '<em>Parameters</em>'.
+     * @see org.bonitasoft.studio.model.parameter.ParameterContext#getParameters()
+     * @see #getParameterContext()
+     * @generated
+     */
 	EReference getParameterContext_Parameters();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#isDefaultContext <em>Default Context</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.parameter.ParameterContext#isDefaultContext <em>Default Context</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Default Context</em>'.
-	 * @see org.bonitasoft.studio.model.parameter.ParameterContext#isDefaultContext()
-	 * @see #getParameterContext()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Default Context</em>'.
+     * @see org.bonitasoft.studio.model.parameter.ParameterContext#isDefaultContext()
+     * @see #getParameterContext()
+     * @generated
+     */
 	EAttribute getParameterContext_DefaultContext();
 
 	/**
-	 * Returns the factory that creates the instances of the model.
-	 * <!-- begin-user-doc -->
+     * Returns the factory that creates the instances of the model.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the factory that creates the instances of the model.
-	 * @generated
-	 */
+     * @return the factory that creates the instances of the model.
+     * @generated
+     */
 	ParameterFactory getParameterFactory();
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * Defines literals for the meta objects that represent
 	 * <ul>
 	 *   <li>each class,</li>
@@ -309,91 +309,91 @@ public interface ParameterPackage extends EPackage {
 	 *   <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterImpl <em>Parameter</em>}' class.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterImpl <em>Parameter</em>}' class.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.parameter.impl.ParameterImpl
-		 * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameter()
-		 * @generated
-		 */
+         * @see org.bonitasoft.studio.model.parameter.impl.ParameterImpl
+         * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameter()
+         * @generated
+         */
 		EClass PARAMETER = eINSTANCE.getParameter();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER__NAME = eINSTANCE.getParameter_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER__VALUE = eINSTANCE.getParameter_Value();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Classname</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Type Classname</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER__TYPE_CLASSNAME = eINSTANCE.getParameter_TypeClassname();
 
 		/**
-		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER__DESCRIPTION = eINSTANCE.getParameter_Description();
 
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl <em>Context</em>}' class.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl <em>Context</em>}' class.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl
-		 * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameterContext()
-		 * @generated
-		 */
+         * @see org.bonitasoft.studio.model.parameter.impl.ParameterContextImpl
+         * @see org.bonitasoft.studio.model.parameter.impl.ParameterPackageImpl#getParameterContext()
+         * @generated
+         */
 		EClass PARAMETER_CONTEXT = eINSTANCE.getParameterContext();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER_CONTEXT__NAME = eINSTANCE.getParameterContext_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER_CONTEXT__DESCRIPTION = eINSTANCE.getParameterContext_Description();
 
 		/**
-		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EReference PARAMETER_CONTEXT__PARAMETERS = eINSTANCE.getParameterContext_Parameters();
 
 		/**
-		 * The meta object literal for the '<em><b>Default Context</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Default Context</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute PARAMETER_CONTEXT__DEFAULT_CONTEXT = eINSTANCE.getParameterContext_DefaultContext();
 
 	}

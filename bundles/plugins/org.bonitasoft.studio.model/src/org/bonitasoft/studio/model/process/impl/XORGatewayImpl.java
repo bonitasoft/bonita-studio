@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class XORGatewayImpl extends GatewayImpl implements XORGateway {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected XORGatewayImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.XOR_GATEWAY;
-	}
+        return ProcessPackage.Literals.XOR_GATEWAY;
+    }
 
 } //XORGatewayImpl

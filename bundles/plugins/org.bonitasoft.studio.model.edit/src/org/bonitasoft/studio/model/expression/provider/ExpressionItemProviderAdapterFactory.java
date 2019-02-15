@@ -48,253 +48,253 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  */
 public class ExpressionItemProviderAdapterFactory extends ExpressionAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
 	/**
-	 * This keeps track of the root adapter factory that delegates to this adapter factory.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the root adapter factory that delegates to this adapter factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ComposedAdapterFactory parentAdapterFactory;
 
 	/**
-	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-	 * <!-- begin-user-doc -->
+     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
-	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-	 * <!-- begin-user-doc -->
+     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
 	/**
-	 * This constructs an instance.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ExpressionItemProviderAdapterFactory() {
-		supportedTypes.add(IEditingDomainItemProvider.class);
-		supportedTypes.add(IStructuredItemContentProvider.class);
-		supportedTypes.add(ITreeItemContentProvider.class);
-		supportedTypes.add(IItemLabelProvider.class);
-		supportedTypes.add(IItemPropertySource.class);
-	}
+        supportedTypes.add(IEditingDomainItemProvider.class);
+        supportedTypes.add(IStructuredItemContentProvider.class);
+        supportedTypes.add(ITreeItemContentProvider.class);
+        supportedTypes.add(IItemLabelProvider.class);
+        supportedTypes.add(IItemPropertySource.class);
+    }
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Expression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Expression} instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ExpressionItemProvider expressionItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Expression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Expression}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter createExpressionAdapter() {
-		if (expressionItemProvider == null) {
-			expressionItemProvider = new ExpressionItemProvider(this);
-		}
+        if (expressionItemProvider == null) {
+            expressionItemProvider = new ExpressionItemProvider(this);
+        }
 
-		return expressionItemProvider;
-	}
+        return expressionItemProvider;
+    }
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.ListExpression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.ListExpression} instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ListExpressionItemProvider listExpressionItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.ListExpression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.ListExpression}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter createListExpressionAdapter() {
-		if (listExpressionItemProvider == null) {
-			listExpressionItemProvider = new ListExpressionItemProvider(this);
-		}
+        if (listExpressionItemProvider == null) {
+            listExpressionItemProvider = new ListExpressionItemProvider(this);
+        }
 
-		return listExpressionItemProvider;
-	}
+        return listExpressionItemProvider;
+    }
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.TableExpression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.TableExpression} instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TableExpressionItemProvider tableExpressionItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.TableExpression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.TableExpression}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter createTableExpressionAdapter() {
-		if (tableExpressionItemProvider == null) {
-			tableExpressionItemProvider = new TableExpressionItemProvider(this);
-		}
+        if (tableExpressionItemProvider == null) {
+            tableExpressionItemProvider = new TableExpressionItemProvider(this);
+        }
 
-		return tableExpressionItemProvider;
-	}
+        return tableExpressionItemProvider;
+    }
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Operation} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Operation} instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected OperationItemProvider operationItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Operation}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Operation}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter createOperationAdapter() {
-		if (operationItemProvider == null) {
-			operationItemProvider = new OperationItemProvider(this);
-		}
+        if (operationItemProvider == null) {
+            operationItemProvider = new OperationItemProvider(this);
+        }
 
-		return operationItemProvider;
-	}
+        return operationItemProvider;
+    }
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Operator} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.expression.Operator} instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected OperatorItemProvider operatorItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Operator}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.expression.Operator}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter createOperatorAdapter() {
-		if (operatorItemProvider == null) {
-			operatorItemProvider = new OperatorItemProvider(this);
-		}
+        if (operatorItemProvider == null) {
+            operatorItemProvider = new OperatorItemProvider(this);
+        }
 
-		return operatorItemProvider;
-	}
+        return operatorItemProvider;
+    }
 
 	/**
-	 * This returns the root adapter factory that contains this factory.
-	 * <!-- begin-user-doc -->
+     * This returns the root adapter factory that contains this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-	}
+        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+    }
 
 	/**
-	 * This sets the composed adapter factory that contains this factory.
-	 * <!-- begin-user-doc -->
+     * This sets the composed adapter factory that contains this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-		this.parentAdapterFactory = parentAdapterFactory;
-	}
+        this.parentAdapterFactory = parentAdapterFactory;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isFactoryForType(Object type) {
-		return supportedTypes.contains(type) || super.isFactoryForType(type);
-	}
+        return supportedTypes.contains(type) || super.isFactoryForType(type);
+    }
 
 	/**
-	 * This implementation substitutes the factory itself as the key for the adapter.
-	 * <!-- begin-user-doc -->
+     * This implementation substitutes the factory itself as the key for the adapter.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Adapter adapt(Notifier notifier, Object type) {
-		return super.adapt(notifier, this);
-	}
+        return super.adapt(notifier, this);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object adapt(Object object, Object type) {
-		if (isFactoryForType(type)) {
-			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
-				return adapter;
-			}
-		}
+        if (isFactoryForType(type)) {
+            Object adapter = super.adapt(object, type);
+            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
+                return adapter;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * This adds a listener.
-	 * <!-- begin-user-doc -->
+     * This adds a listener.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void addListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.addListener(notifyChangedListener);
-	}
+        changeNotifier.addListener(notifyChangedListener);
+    }
 
 	/**
-	 * This removes a listener.
-	 * <!-- begin-user-doc -->
+     * This removes a listener.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void removeListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.removeListener(notifyChangedListener);
-	}
+        changeNotifier.removeListener(notifyChangedListener);
+    }
 
 	/**
-	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-	 * <!-- begin-user-doc -->
+     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void fireNotifyChanged(Notification notification) {
-		changeNotifier.fireNotifyChanged(notification);
+        changeNotifier.fireNotifyChanged(notification);
 
-		if (parentAdapterFactory != null) {
-			parentAdapterFactory.fireNotifyChanged(notification);
-		}
-	}
+        if (parentAdapterFactory != null) {
+            parentAdapterFactory.fireNotifyChanged(notification);
+        }
+    }
 
 }

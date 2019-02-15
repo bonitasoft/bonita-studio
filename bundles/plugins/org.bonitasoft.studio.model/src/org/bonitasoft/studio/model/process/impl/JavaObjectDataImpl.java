@@ -41,139 +41,139 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class JavaObjectDataImpl extends DataImpl implements JavaObjectData {
 	/**
-	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getClassName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getClassName()
+     * @generated
+     * @ordered
+     */
 	protected static final String CLASS_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getClassName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getClassName()
+     * @generated
+     * @ordered
+     */
 	protected String className = CLASS_NAME_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected JavaObjectDataImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.JAVA_OBJECT_DATA;
-	}
+        return ProcessPackage.Literals.JAVA_OBJECT_DATA;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getClassName() {
-		return className;
-	}
+        return className;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setClassName(String newClassName) {
-		String oldClassName = className;
-		className = newClassName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME, oldClassName, className));
-	}
+        String oldClassName = className;
+        className = newClassName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME, oldClassName, className));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
-				return getClassName();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
+                return getClassName();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
-				setClassName((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
+                setClassName((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
-				setClassName(CLASS_NAME_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
+                setClassName(CLASS_NAME_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
-				return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.JAVA_OBJECT_DATA__CLASS_NAME:
+                return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (className: "); //$NON-NLS-1$
-		result.append(className);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (className: "); //$NON-NLS-1$
+        result.append(className);
+        result.append(')');
+        return result.toString();
+    }
 
 } //JavaObjectDataImpl

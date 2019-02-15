@@ -74,6 +74,7 @@ public class RootContractInputGenerator {
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
         contractInput.setMultiple(data.isMultiple());
+        contractInput.setDataReference(data.getName());
         monitor.beginTask("", children.size());
         for (final FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {

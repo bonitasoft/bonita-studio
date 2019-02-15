@@ -42,171 +42,171 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class IntermediateErrorCatchEventImpl extends BoundaryEventImpl implements IntermediateErrorCatchEvent {
 	/**
-	 * The default value of the '{@link #getErrorCode() <em>Error Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getErrorCode() <em>Error Code</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getErrorCode()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getErrorCode()
+     * @generated
+     * @ordered
+     */
 	protected static final String ERROR_CODE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getErrorCode() <em>Error Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getErrorCode() <em>Error Code</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getErrorCode()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getErrorCode()
+     * @generated
+     * @ordered
+     */
 	protected String errorCode = ERROR_CODE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IntermediateErrorCatchEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.INTERMEDIATE_ERROR_CATCH_EVENT;
-	}
+        return ProcessPackage.Literals.INTERMEDIATE_ERROR_CATCH_EVENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getErrorCode() {
-		return errorCode;
-	}
+        return errorCode;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setErrorCode(String newErrorCode) {
-		String oldErrorCode = errorCode;
-		errorCode = newErrorCode;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE, oldErrorCode, errorCode));
-	}
+        String oldErrorCode = errorCode;
+        errorCode = newErrorCode;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE, oldErrorCode, errorCode));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
-				return getErrorCode();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
+                return getErrorCode();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
-				setErrorCode((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
+                setErrorCode((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
-				setErrorCode(ERROR_CODE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
+                setErrorCode(ERROR_CODE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
-				return ERROR_CODE_EDEFAULT == null ? errorCode != null : !ERROR_CODE_EDEFAULT.equals(errorCode);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE:
+                return ERROR_CODE_EDEFAULT == null ? errorCode != null : !ERROR_CODE_EDEFAULT.equals(errorCode);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == ErrorEvent.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE: return ProcessPackage.ERROR_EVENT__ERROR_CODE;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == ErrorEvent.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE: return ProcessPackage.ERROR_EVENT__ERROR_CODE;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == ErrorEvent.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.ERROR_EVENT__ERROR_CODE: return ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == ErrorEvent.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.ERROR_EVENT__ERROR_CODE: return ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT__ERROR_CODE;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (errorCode: "); //$NON-NLS-1$
-		result.append(errorCode);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (errorCode: "); //$NON-NLS-1$
+        result.append(errorCode);
+        result.append(')');
+        return result.toString();
+    }
 
 } //IntermediateErrorCatchEventImpl

@@ -37,29 +37,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ContractContainer extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Contract</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Contract</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Contract</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Contract</em>' containment reference.
-	 * @see #setContract(Contract)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractContainer_Contract()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Contract</em>' containment reference.
+     * @see #setContract(Contract)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractContainer_Contract()
+     * @model containment="true"
+     * @generated
+     */
 	Contract getContract();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractContainer#getContract <em>Contract</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractContainer#getContract <em>Contract</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Contract</em>' containment reference.
-	 * @see #getContract()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Contract</em>' containment reference.
+     * @see #getContract()
+     * @generated
+     */
 	void setContract(Contract value);
 
 } // ContractContainer

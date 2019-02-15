@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class HiddenWidgetImpl extends SingleValuatedFormFieldImpl implements HiddenWidget {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected HiddenWidgetImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.HIDDEN_WIDGET;
-	}
+        return FormPackage.Literals.HIDDEN_WIDGET;
+    }
 
 } //HiddenWidgetImpl

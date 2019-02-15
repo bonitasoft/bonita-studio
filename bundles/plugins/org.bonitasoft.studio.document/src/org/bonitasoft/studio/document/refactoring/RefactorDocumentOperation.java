@@ -14,17 +14,23 @@
  */
 package org.bonitasoft.studio.document.refactoring;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
+import org.bonitasoft.studio.refactoring.core.DataRefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -65,6 +71,7 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(pairToRefactor.getOldValue());
         updater.editWorkingCopy(pairToRefactor.getNewValue());
         compoundCommand.append(updater.createUpdateCommand(getEditingDomain()));
+        updateContractInputDataReference(compoundCommand, pairToRefactor, pairToRefactor.getNewValueName());
     }
 
     private void doExecuteDeleteDocumentOperation(final CompoundCommand compoundCommand,
@@ -72,6 +79,7 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
             final DocumentRefactorPair pairToRefactor) {
         removeAllDocumentReferences(compoundCommand, pairToRefactor);
         deleteCommands.append(DeleteCommand.create(getEditingDomain(), pairToRefactor.getOldValue()));
+        updateContractInputDataReference(deleteCommands, pairToRefactor, null);
     }
 
     protected void updateDocumentInDocumentExpressions(final CompoundCommand compoundCommand,
@@ -178,6 +186,16 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     @Override
     protected Pool getContainer(final Document oldValue) {
         return (Pool) ModelHelper.getParentProcess(oldValue);
+    }
+    
+    private void updateContractInputDataReference(final CompoundCommand cc,
+            final DocumentRefactorPair pairToRefactor,String newName) {
+        ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
+        modelSearch.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()), ContractInput.class).stream()
+                .filter(input -> Objects.equals(pairToRefactor.getOldValue().getName(),
+                        input.getDataReference()))
+                .forEach(input -> cc.append(SetCommand.create(getEditingDomain(), input,
+                        ProcessPackage.Literals.CONTRACT_INPUT__DATA_REFERENCE, newName)));
     }
 
 }

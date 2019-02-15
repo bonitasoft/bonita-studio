@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class IntermediateThrowMessageEventImpl extends ThrowMessageEventImpl implements IntermediateThrowMessageEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected IntermediateThrowMessageEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.INTERMEDIATE_THROW_MESSAGE_EVENT;
-	}
+        return ProcessPackage.Literals.INTERMEDIATE_THROW_MESSAGE_EVENT;
+    }
 
 } //IntermediateThrowMessageEventImpl

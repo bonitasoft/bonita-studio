@@ -35,90 +35,90 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class ParameterFactoryImpl extends EFactoryImpl implements ParameterFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static ParameterFactory init() {
-		try {
-			ParameterFactory theParameterFactory = (ParameterFactory)EPackage.Registry.INSTANCE.getEFactory(ParameterPackage.eNS_URI);
-			if (theParameterFactory != null) {
-				return theParameterFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new ParameterFactoryImpl();
-	}
+        try {
+            ParameterFactory theParameterFactory = (ParameterFactory)EPackage.Registry.INSTANCE.getEFactory(ParameterPackage.eNS_URI);
+            if (theParameterFactory != null) {
+                return theParameterFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new ParameterFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ParameterFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case ParameterPackage.PARAMETER: return createParameter();
-			case ParameterPackage.PARAMETER_CONTEXT: return createParameterContext();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case ParameterPackage.PARAMETER: return createParameter();
+            case ParameterPackage.PARAMETER_CONTEXT: return createParameterContext();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Parameter createParameter() {
-		ParameterImpl parameter = new ParameterImpl();
-		return parameter;
-	}
+        ParameterImpl parameter = new ParameterImpl();
+        return parameter;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ParameterContext createParameterContext() {
-		ParameterContextImpl parameterContext = new ParameterContextImpl();
-		return parameterContext;
-	}
+        ParameterContextImpl parameterContext = new ParameterContextImpl();
+        return parameterContext;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ParameterPackage getParameterPackage() {
-		return (ParameterPackage)getEPackage();
-	}
+        return (ParameterPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static ParameterPackage getPackage() {
-		return ParameterPackage.eINSTANCE;
-	}
+        return ParameterPackage.eINSTANCE;
+    }
 
 } //ParameterFactoryImpl

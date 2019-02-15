@@ -29,38 +29,38 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface ConnectorConfigurationFactory extends EFactory {
 	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	ConnectorConfigurationFactory eINSTANCE = org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Connector Configuration</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Connector Configuration</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Connector Configuration</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Connector Configuration</em>'.
+     * @generated
+     */
 	ConnectorConfiguration createConnectorConfiguration();
 
 	/**
-	 * Returns a new object of class '<em>Connector Parameter</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Connector Parameter</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Connector Parameter</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Connector Parameter</em>'.
+     * @generated
+     */
 	ConnectorParameter createConnectorParameter();
 
 	/**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
 	ConnectorConfigurationPackage getConnectorConfigurationPackage();
 
 } //ConnectorConfigurationFactory

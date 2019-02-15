@@ -55,255 +55,255 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class SimulationLiteralDataImpl extends SimulationElementImpl implements SimulationLiteralData {
 	/**
-	 * The default value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isExpressionBased()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isExpressionBased()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean EXPRESSION_BASED_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isExpressionBased() <em>Expression Based</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isExpressionBased()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isExpressionBased()
+     * @generated
+     * @ordered
+     */
 	protected boolean expressionBased = EXPRESSION_BASED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getExpression()
+     * @generated
+     * @ordered
+     */
 	protected Expression expression;
 
 	/**
-	 * The cached value of the '{@link #getLiterals() <em>Literals</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getLiterals() <em>Literals</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLiterals()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getLiterals()
+     * @generated
+     * @ordered
+     */
 	protected EList<SimulationLiteral> literals;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SimulationLiteralDataImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.SIMULATION_LITERAL_DATA;
-	}
+        return SimulationPackage.Literals.SIMULATION_LITERAL_DATA;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isExpressionBased() {
-		return expressionBased;
-	}
+        return expressionBased;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setExpressionBased(boolean newExpressionBased) {
-		boolean oldExpressionBased = expressionBased;
-		expressionBased = newExpressionBased;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED, oldExpressionBased, expressionBased));
-	}
+        boolean oldExpressionBased = expressionBased;
+        expressionBased = newExpressionBased;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED, oldExpressionBased, expressionBased));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Expression getExpression() {
-		return expression;
-	}
+        return expression;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetExpression(Expression newExpression, NotificationChain msgs) {
-		Expression oldExpression = expression;
-		expression = newExpression;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, oldExpression, newExpression);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Expression oldExpression = expression;
+        expression = newExpression;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, oldExpression, newExpression);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setExpression(Expression newExpression) {
-		if (newExpression != expression) {
-			NotificationChain msgs = null;
-			if (expression != null)
-				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, null, msgs);
-			if (newExpression != null)
-				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, null, msgs);
-			msgs = basicSetExpression(newExpression, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, newExpression, newExpression));
-	}
+        if (newExpression != expression) {
+            NotificationChain msgs = null;
+            if (expression != null)
+                msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, null, msgs);
+            if (newExpression != null)
+                msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, null, msgs);
+            msgs = basicSetExpression(newExpression, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION, newExpression, newExpression));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<SimulationLiteral> getLiterals() {
-		if (literals == null) {
-			literals = new EObjectContainmentEList<SimulationLiteral>(SimulationLiteral.class, this, SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS);
-		}
-		return literals;
-	}
+        if (literals == null) {
+            literals = new EObjectContainmentEList<SimulationLiteral>(SimulationLiteral.class, this, SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS);
+        }
+        return literals;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
-				return basicSetExpression(null, msgs);
-			case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
-				return ((InternalEList<?>)getLiterals()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
+                return basicSetExpression(null, msgs);
+            case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
+                return ((InternalEList<?>)getLiterals()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
-				return isExpressionBased();
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
-				return getExpression();
-			case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
-				return getLiterals();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
+                return isExpressionBased();
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
+                return getExpression();
+            case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
+                return getLiterals();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
-				setExpressionBased((Boolean)newValue);
-				return;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
-				setExpression((Expression)newValue);
-				return;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
-				getLiterals().clear();
-				getLiterals().addAll((Collection<? extends SimulationLiteral>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
+                setExpressionBased((Boolean)newValue);
+                return;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
+                setExpression((Expression)newValue);
+                return;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
+                getLiterals().clear();
+                getLiterals().addAll((Collection<? extends SimulationLiteral>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
-				setExpressionBased(EXPRESSION_BASED_EDEFAULT);
-				return;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
-				setExpression((Expression)null);
-				return;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
-				getLiterals().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
+                setExpressionBased(EXPRESSION_BASED_EDEFAULT);
+                return;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
+                setExpression((Expression)null);
+                return;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
+                getLiterals().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
-				return expressionBased != EXPRESSION_BASED_EDEFAULT;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
-				return expression != null;
-			case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
-				return literals != null && !literals.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION_BASED:
+                return expressionBased != EXPRESSION_BASED_EDEFAULT;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__EXPRESSION:
+                return expression != null;
+            case SimulationPackage.SIMULATION_LITERAL_DATA__LITERALS:
+                return literals != null && !literals.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (expressionBased: "); //$NON-NLS-1$
-		result.append(expressionBased);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (expressionBased: "); //$NON-NLS-1$
+        result.append(expressionBased);
+        result.append(')');
+        return result.toString();
+    }
 
 } //SimulationLiteralDataImpl

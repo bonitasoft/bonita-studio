@@ -41,82 +41,82 @@ import org.bonitasoft.studio.model.process.Document;
  */
 public interface ImageWidget extends Widget, Duplicable {
 	/**
-	 * Returns the value of the '<em><b>Is ADocument</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Is ADocument</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Is ADocument</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Is ADocument</em>' attribute.
-	 * @see #setIsADocument(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_IsADocument()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Is ADocument</em>' attribute.
+     * @see #setIsADocument(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_IsADocument()
+     * @model default="false"
+     * @generated
+     */
 	boolean isIsADocument();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#isIsADocument <em>Is ADocument</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#isIsADocument <em>Is ADocument</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Is ADocument</em>' attribute.
-	 * @see #isIsADocument()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Is ADocument</em>' attribute.
+     * @see #isIsADocument()
+     * @generated
+     */
 	void setIsADocument(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Document</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Document</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Document</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Document</em>' reference.
-	 * @see #setDocument(Document)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_Document()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Document</em>' reference.
+     * @see #setDocument(Document)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_Document()
+     * @model
+     * @generated
+     */
 	Document getDocument();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#getDocument <em>Document</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#getDocument <em>Document</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Document</em>' reference.
-	 * @see #getDocument()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Document</em>' reference.
+     * @see #getDocument()
+     * @generated
+     */
 	void setDocument(Document value);
 
 	/**
-	 * Returns the value of the '<em><b>Img Path</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Img Path</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Img Path</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Img Path</em>' containment reference.
-	 * @see #setImgPath(Expression)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_ImgPath()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Img Path</em>' containment reference.
+     * @see #setImgPath(Expression)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getImageWidget_ImgPath()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getImgPath();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#getImgPath <em>Img Path</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.ImageWidget#getImgPath <em>Img Path</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Img Path</em>' containment reference.
-	 * @see #getImgPath()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Img Path</em>' containment reference.
+     * @see #getImgPath()
+     * @generated
+     */
 	void setImgPath(Expression value);
 
 } // ImageWidget

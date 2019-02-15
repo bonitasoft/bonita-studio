@@ -39,195 +39,195 @@ import org.eclipse.emf.ecore.util.Switch;
  */
 public class ExpressionSwitch<T> extends Switch<T> {
 	/**
-	 * The cached model package
-	 * <!-- begin-user-doc -->
+     * The cached model package
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected static ExpressionPackage modelPackage;
 
 	/**
-	 * Creates an instance of the switch.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the switch.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ExpressionSwitch() {
-		if (modelPackage == null) {
-			modelPackage = ExpressionPackage.eINSTANCE;
-		}
-	}
+        if (modelPackage == null) {
+            modelPackage = ExpressionPackage.eINSTANCE;
+        }
+    }
 
 	/**
-	 * Checks whether this is a switch for the given package.
-	 * <!-- begin-user-doc -->
+     * Checks whether this is a switch for the given package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param ePackage the package in question.
-	 * @return whether this is a switch for the given package.
-	 * @generated
-	 */
+     * @param ePackage the package in question.
+     * @return whether this is a switch for the given package.
+     * @generated
+     */
 	@Override
 	protected boolean isSwitchFor(EPackage ePackage) {
-		return ePackage == modelPackage;
-	}
+        return ePackage == modelPackage;
+    }
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
+     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the first non-null result returned by a <code>caseXXX</code> call.
-	 * @generated
-	 */
+     * @return the first non-null result returned by a <code>caseXXX</code> call.
+     * @generated
+     */
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
-		switch (classifierID) {
-			case ExpressionPackage.ABSTRACT_EXPRESSION: {
-				AbstractExpression abstractExpression = (AbstractExpression)theEObject;
-				T result = caseAbstractExpression(abstractExpression);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ExpressionPackage.EXPRESSION: {
-				Expression expression = (Expression)theEObject;
-				T result = caseExpression(expression);
-				if (result == null) result = caseAbstractExpression(expression);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ExpressionPackage.LIST_EXPRESSION: {
-				ListExpression listExpression = (ListExpression)theEObject;
-				T result = caseListExpression(listExpression);
-				if (result == null) result = caseAbstractExpression(listExpression);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ExpressionPackage.TABLE_EXPRESSION: {
-				TableExpression tableExpression = (TableExpression)theEObject;
-				T result = caseTableExpression(tableExpression);
-				if (result == null) result = caseAbstractExpression(tableExpression);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ExpressionPackage.OPERATION: {
-				Operation operation = (Operation)theEObject;
-				T result = caseOperation(operation);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ExpressionPackage.OPERATOR: {
-				Operator operator = (Operator)theEObject;
-				T result = caseOperator(operator);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			default: return defaultCase(theEObject);
-		}
-	}
+        switch (classifierID) {
+            case ExpressionPackage.ABSTRACT_EXPRESSION: {
+                AbstractExpression abstractExpression = (AbstractExpression)theEObject;
+                T result = caseAbstractExpression(abstractExpression);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ExpressionPackage.EXPRESSION: {
+                Expression expression = (Expression)theEObject;
+                T result = caseExpression(expression);
+                if (result == null) result = caseAbstractExpression(expression);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ExpressionPackage.LIST_EXPRESSION: {
+                ListExpression listExpression = (ListExpression)theEObject;
+                T result = caseListExpression(listExpression);
+                if (result == null) result = caseAbstractExpression(listExpression);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ExpressionPackage.TABLE_EXPRESSION: {
+                TableExpression tableExpression = (TableExpression)theEObject;
+                T result = caseTableExpression(tableExpression);
+                if (result == null) result = caseAbstractExpression(tableExpression);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ExpressionPackage.OPERATION: {
+                Operation operation = (Operation)theEObject;
+                T result = caseOperation(operation);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ExpressionPackage.OPERATOR: {
+                Operator operator = (Operator)theEObject;
+                T result = caseOperator(operator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            default: return defaultCase(theEObject);
+        }
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Abstract Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>Abstract Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Abstract Expression</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Abstract Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseAbstractExpression(AbstractExpression object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseExpression(Expression object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>List Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>List Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>List Expression</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>List Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseListExpression(ListExpression object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Table Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>Table Expression</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Table Expression</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Table Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseTableExpression(TableExpression object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Operation</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>Operation</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Operation</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Operation</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseOperation(Operation object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Operator</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>Operator</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Operator</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Operator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
 	public T caseOperator(Operator object) {
-		return null;
-	}
+        return null;
+    }
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
+     * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch, but this is the last case anyway.
 	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
-	 * @generated
-	 */
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject)
+     * @generated
+     */
 	@Override
 	public T defaultCase(EObject object) {
-		return null;
-	}
+        return null;
+    }
 
 } //ExpressionSwitch

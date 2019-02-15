@@ -57,312 +57,312 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class FragmentContainerImpl extends EObjectImpl implements FragmentContainer {
 	/**
-	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getChildren()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getChildren()
+     * @generated
+     * @ordered
+     */
 	protected EList<FragmentContainer> children;
 
 	/**
-	 * The cached value of the '{@link #getFragments() <em>Fragments</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getFragments() <em>Fragments</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFragments()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getFragments()
+     * @generated
+     * @ordered
+     */
 	protected EList<Fragment> fragments;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getId()
+     * @generated
+     * @ordered
+     */
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getId()
+     * @generated
+     * @ordered
+     */
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected FragmentContainerImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ConfigurationPackage.Literals.FRAGMENT_CONTAINER;
-	}
+        return ConfigurationPackage.Literals.FRAGMENT_CONTAINER;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<FragmentContainer> getChildren() {
-		if (children == null) {
-			children = new EObjectContainmentWithInverseEList<FragmentContainer>(FragmentContainer.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT);
-		}
-		return children;
-	}
+        if (children == null) {
+            children = new EObjectContainmentWithInverseEList<FragmentContainer>(FragmentContainer.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT);
+        }
+        return children;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public FragmentContainer getParent() {
-		if (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT) return null;
-		return (FragmentContainer)eInternalContainer();
-	}
+        if (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT) return null;
+        return (FragmentContainer)eInternalContainer();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetParent(FragmentContainer newParent, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newParent, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT, msgs);
-		return msgs;
-	}
+        msgs = eBasicSetContainer((InternalEObject)newParent, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT, msgs);
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setParent(FragmentContainer newParent) {
-		if (newParent != eInternalContainer() || (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT && newParent != null)) {
-			if (EcoreUtil.isAncestor(this, newParent))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newParent != null)
-				msgs = ((InternalEObject)newParent).eInverseAdd(this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, FragmentContainer.class, msgs);
-			msgs = basicSetParent(newParent, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT, newParent, newParent));
-	}
+        if (newParent != eInternalContainer() || (eContainerFeatureID() != ConfigurationPackage.FRAGMENT_CONTAINER__PARENT && newParent != null)) {
+            if (EcoreUtil.isAncestor(this, newParent))
+                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            NotificationChain msgs = null;
+            if (eInternalContainer() != null)
+                msgs = eBasicRemoveFromContainer(msgs);
+            if (newParent != null)
+                msgs = ((InternalEObject)newParent).eInverseAdd(this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, FragmentContainer.class, msgs);
+            msgs = basicSetParent(newParent, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ConfigurationPackage.FRAGMENT_CONTAINER__PARENT, newParent, newParent));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Fragment> getFragments() {
-		if (fragments == null) {
-			fragments = new EObjectContainmentEList<Fragment>(Fragment.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS);
-		}
-		return fragments;
-	}
+        if (fragments == null) {
+            fragments = new EObjectContainmentEList<Fragment>(Fragment.class, this, ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS);
+        }
+        return fragments;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getId() {
-		return id;
-	}
+        return id;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setId(String newId) {
-		String oldId = id;
-		id = newId;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigurationPackage.FRAGMENT_CONTAINER__ID, oldId, id));
-	}
+        String oldId = id;
+        id = newId;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ConfigurationPackage.FRAGMENT_CONTAINER__ID, oldId, id));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetParent((FragmentContainer)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetParent((FragmentContainer)otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				return basicSetParent(null, msgs);
-			case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
-				return ((InternalEList<?>)getFragments()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                return basicSetParent(null, msgs);
+            case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
+                return ((InternalEList<?>)getFragments()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				return eInternalContainer().eInverseRemove(this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, FragmentContainer.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
-	}
+        switch (eContainerFeatureID()) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                return eInternalContainer().eInverseRemove(this, ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN, FragmentContainer.class, msgs);
+        }
+        return super.eBasicRemoveFromContainerFeature(msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				return getChildren();
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				return getParent();
-			case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
-				return getFragments();
-			case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
-				return getId();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                return getChildren();
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                return getParent();
+            case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
+                return getFragments();
+            case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
+                return getId();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				getChildren().clear();
-				getChildren().addAll((Collection<? extends FragmentContainer>)newValue);
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				setParent((FragmentContainer)newValue);
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
-				getFragments().clear();
-				getFragments().addAll((Collection<? extends Fragment>)newValue);
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
-				setId((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                getChildren().clear();
+                getChildren().addAll((Collection<? extends FragmentContainer>)newValue);
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                setParent((FragmentContainer)newValue);
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
+                getFragments().clear();
+                getFragments().addAll((Collection<? extends Fragment>)newValue);
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
+                setId((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				getChildren().clear();
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				setParent((FragmentContainer)null);
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
-				getFragments().clear();
-				return;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
-				setId(ID_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                getChildren().clear();
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                setParent((FragmentContainer)null);
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
+                getFragments().clear();
+                return;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
+                setId(ID_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
-				return children != null && !children.isEmpty();
-			case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
-				return getParent() != null;
-			case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
-				return fragments != null && !fragments.isEmpty();
-			case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ConfigurationPackage.FRAGMENT_CONTAINER__CHILDREN:
+                return children != null && !children.isEmpty();
+            case ConfigurationPackage.FRAGMENT_CONTAINER__PARENT:
+                return getParent() != null;
+            case ConfigurationPackage.FRAGMENT_CONTAINER__FRAGMENTS:
+                return fragments != null && !fragments.isEmpty();
+            case ConfigurationPackage.FRAGMENT_CONTAINER__ID:
+                return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (id: "); //$NON-NLS-1$
-		result.append(id);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (id: "); //$NON-NLS-1$
+        result.append(id);
+        result.append(')');
+        return result.toString();
+    }
 
 } //FragmentContainerImpl

@@ -45,121 +45,121 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class RolesImpl extends EObjectImpl implements Roles {
 	/**
-	 * The cached value of the '{@link #getRole() <em>Role</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getRole() <em>Role</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getRole()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getRole()
+     * @generated
+     * @ordered
+     */
 	protected EList<String> role;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected RolesImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ActorMappingPackage.Literals.ROLES;
-	}
+        return ActorMappingPackage.Literals.ROLES;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<String> getRole() {
-		if (role == null) {
-			role = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.ROLES__ROLE);
-		}
-		return role;
-	}
+        if (role == null) {
+            role = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.ROLES__ROLE);
+        }
+        return role;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ActorMappingPackage.ROLES__ROLE:
-				return getRole();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ROLES__ROLE:
+                return getRole();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ActorMappingPackage.ROLES__ROLE:
-				getRole().clear();
-				getRole().addAll((Collection<? extends String>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ROLES__ROLE:
+                getRole().clear();
+                getRole().addAll((Collection<? extends String>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.ROLES__ROLE:
-				getRole().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ROLES__ROLE:
+                getRole().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.ROLES__ROLE:
-				return role != null && !role.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.ROLES__ROLE:
+                return role != null && !role.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (role: "); //$NON-NLS-1$
-		result.append(role);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (role: "); //$NON-NLS-1$
+        result.append(role);
+        result.append(')');
+        return result.toString();
+    }
 
 } //RolesImpl

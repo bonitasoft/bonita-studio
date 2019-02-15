@@ -38,57 +38,57 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface TextAnnotationAttachment extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Source</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Source</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Source</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source</em>' reference.
-	 * @see #setSource(TextAnnotation)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTextAnnotationAttachment_Source()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Source</em>' reference.
+     * @see #setSource(TextAnnotation)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTextAnnotationAttachment_Source()
+     * @model
+     * @generated
+     */
 	TextAnnotation getSource();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getSource <em>Source</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getSource <em>Source</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source</em>' reference.
-	 * @see #getSource()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Source</em>' reference.
+     * @see #getSource()
+     * @generated
+     */
 	void setSource(TextAnnotation value);
 
 	/**
-	 * Returns the value of the '<em><b>Target</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Element#getTextAnnotationAttachment <em>Text Annotation Attachment</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Target</b></em>' container reference.
+     * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Element#getTextAnnotationAttachment <em>Text Annotation Attachment</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Target</em>' container reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target</em>' container reference.
-	 * @see #setTarget(Element)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTextAnnotationAttachment_Target()
-	 * @see org.bonitasoft.studio.model.process.Element#getTextAnnotationAttachment
-	 * @model opposite="textAnnotationAttachment" transient="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Target</em>' container reference.
+     * @see #setTarget(Element)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTextAnnotationAttachment_Target()
+     * @see org.bonitasoft.studio.model.process.Element#getTextAnnotationAttachment
+     * @model opposite="textAnnotationAttachment" transient="false"
+     * @generated
+     */
 	Element getTarget();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget <em>Target</em>}' container reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget <em>Target</em>}' container reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target</em>' container reference.
-	 * @see #getTarget()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Target</em>' container reference.
+     * @see #getTarget()
+     * @generated
+     */
 	void setTarget(Element value);
 
 } // TextAnnotationAttachment

@@ -36,30 +36,30 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 public class DecisionXMLProcessor extends XMLProcessor {
 
 	/**
-	 * Public constructor to instantiate the helper.
-	 * <!-- begin-user-doc -->
+     * Public constructor to instantiate the helper.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public DecisionXMLProcessor() {
-		super((EPackage.Registry.INSTANCE));
-		DecisionPackage.eINSTANCE.eClass();
-	}
+        super((EPackage.Registry.INSTANCE));
+        DecisionPackage.eINSTANCE.eClass();
+    }
 	
 	/**
-	 * Register for "*" and "xml" file extensions the DecisionResourceFactoryImpl factory.
-	 * <!-- begin-user-doc -->
+     * Register for "*" and "xml" file extensions the DecisionResourceFactoryImpl factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected Map<String, Resource.Factory> getRegistrations() {
-		if (registrations == null) {
-			super.getRegistrations();
-			registrations.put(XML_EXTENSION, new DecisionResourceFactoryImpl());
-			registrations.put(STAR_EXTENSION, new DecisionResourceFactoryImpl());
-		}
-		return registrations;
-	}
+        if (registrations == null) {
+            super.getRegistrations();
+            registrations.put(XML_EXTENSION, new DecisionResourceFactoryImpl());
+            registrations.put(STAR_EXTENSION, new DecisionResourceFactoryImpl());
+        }
+        return registrations;
+    }
 
 } //DecisionXMLProcessor

@@ -26,7 +26,9 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
+import org.bonitasoft.studio.designer.core.operation.INewFormOperationFactory;
+import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IProposalAdapter;
@@ -45,9 +47,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.base.Objects;
 
-/**
- * @author Romain Bioteau
- */
+
 @Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
@@ -57,13 +57,17 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
 
     protected final RepositoryAccessor repositoryAccessor;
 
+    private INewFormOperationFactory operationFactory;
+
     @Inject
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory,
             final IProgressService progressService,
-            final RepositoryAccessor repositoryAccessor) {
+            final RepositoryAccessor repositoryAccessor,
+            NewFormOperationFactoryDelegate  operationFactory) {
         this.progressService = progressService;
         this.pageDesignerURLFactory = pageDesignerURLFactory;
         this.repositoryAccessor = repositoryAccessor;
+        this.operationFactory = operationFactory;
     }
 
     /*
@@ -75,7 +79,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
-        final CreateFormFromContractOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm",
+        final CreateUIDArtifactOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm",
                 contractFor(context), formScopeFor(context));
 
         try {
@@ -128,10 +132,10 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
                         ((Expression) ((IStructuredSelection) selection).getFirstElement()).getType());
     }
 
-    protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder,
+    protected CreateUIDArtifactOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder,
             final String formName,
             final Contract contract, final FormScope formScope) {
-        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope,
+        return operationFactory.newCreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope,
                 repositoryAccessor);
     }
 

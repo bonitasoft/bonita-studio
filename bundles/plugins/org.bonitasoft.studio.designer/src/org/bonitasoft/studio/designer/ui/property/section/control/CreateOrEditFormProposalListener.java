@@ -17,15 +17,14 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
-import org.bonitasoft.studio.designer.core.operation.CreateFormFromContractOperation;
+import org.bonitasoft.studio.designer.core.operation.INewFormOperationFactory;
+import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
@@ -33,22 +32,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.IProgressService;
 
-/**
- * @author aurelie
- */
 @Creatable
 public class CreateOrEditFormProposalListener extends CreateNewFormProposalListener {
 
     @Inject
-    public CreateOrEditFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, final IProgressService progressService,
-            final RepositoryAccessor repositoryAccessor) {
-        super(pageDesignerURLFactory, progressService, repositoryAccessor);
+    public CreateOrEditFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, 
+            final IProgressService progressService,
+            final RepositoryAccessor repositoryAccessor,
+            NewFormOperationFactoryDelegate  operationFactory) {
+        super(pageDesignerURLFactory, progressService, repositoryAccessor,operationFactory);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener#handleEvent(org.eclipse.emf.ecore.EObject, java.lang.String)
-     */
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final FormMapping mapping = (FormMapping) context;
@@ -65,18 +59,6 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
         } else {
             return super.handleEvent(context, fixedReturnType);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener#doCreateFormOperation(org.bonitasoft.studio.designer.core.PageDesignerURLFactory
-     * , java.lang.String, org.bonitasoft.studio.model.process.Contract)
-     */
-    @Override
-    protected CreateFormFromContractOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder, final String formName,
-            final Contract contract, final FormScope scope) {
-        return super.doCreateFormOperation(pageDesignerURLBuilder, formName, contract, scope);
     }
 
 }

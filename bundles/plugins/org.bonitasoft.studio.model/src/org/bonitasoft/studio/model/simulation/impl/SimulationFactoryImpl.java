@@ -36,320 +36,320 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class SimulationFactoryImpl extends EFactoryImpl implements SimulationFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static SimulationFactory init() {
-		try {
-			SimulationFactory theSimulationFactory = (SimulationFactory)EPackage.Registry.INSTANCE.getEFactory(SimulationPackage.eNS_URI);
-			if (theSimulationFactory != null) {
-				return theSimulationFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new SimulationFactoryImpl();
-	}
+        try {
+            SimulationFactory theSimulationFactory = (SimulationFactory)EPackage.Registry.INSTANCE.getEFactory(SimulationPackage.eNS_URI);
+            if (theSimulationFactory != null) {
+                return theSimulationFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new SimulationFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public SimulationFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case SimulationPackage.SIMULATION_ELEMENT: return createSimulationElement();
-			case SimulationPackage.SIMULATION_TRANSITION: return createSimulationTransition();
-			case SimulationPackage.RESOURCE_USAGE: return createResourceUsage();
-			case SimulationPackage.INJECTION_PERIOD: return createInjectionPeriod();
-			case SimulationPackage.SIMULATION_BOOLEAN: return createSimulationBoolean();
-			case SimulationPackage.SIMULATION_NUMBER_DATA: return createSimulationNumberData();
-			case SimulationPackage.SIMULATION_LITERAL_DATA: return createSimulationLiteralData();
-			case SimulationPackage.SIMULATION_LITERAL: return createSimulationLiteral();
-			case SimulationPackage.SIMULATION_NUMBER_RANGE: return createSimulationNumberRange();
-			case SimulationPackage.DATA_CHANGE: return createDataChange();
-			case SimulationPackage.SIMULATION_CALENDAR: return createSimulationCalendar();
-			case SimulationPackage.DAY_PERIOD: return createDayPeriod();
-			case SimulationPackage.MODEL_VERSION: return createModelVersion();
-			case SimulationPackage.LOAD_PROFILE: return createLoadProfile();
-			case SimulationPackage.RESOURCE: return createResource();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case SimulationPackage.SIMULATION_ELEMENT: return createSimulationElement();
+            case SimulationPackage.SIMULATION_TRANSITION: return createSimulationTransition();
+            case SimulationPackage.RESOURCE_USAGE: return createResourceUsage();
+            case SimulationPackage.INJECTION_PERIOD: return createInjectionPeriod();
+            case SimulationPackage.SIMULATION_BOOLEAN: return createSimulationBoolean();
+            case SimulationPackage.SIMULATION_NUMBER_DATA: return createSimulationNumberData();
+            case SimulationPackage.SIMULATION_LITERAL_DATA: return createSimulationLiteralData();
+            case SimulationPackage.SIMULATION_LITERAL: return createSimulationLiteral();
+            case SimulationPackage.SIMULATION_NUMBER_RANGE: return createSimulationNumberRange();
+            case SimulationPackage.DATA_CHANGE: return createDataChange();
+            case SimulationPackage.SIMULATION_CALENDAR: return createSimulationCalendar();
+            case SimulationPackage.DAY_PERIOD: return createDayPeriod();
+            case SimulationPackage.MODEL_VERSION: return createModelVersion();
+            case SimulationPackage.LOAD_PROFILE: return createLoadProfile();
+            case SimulationPackage.RESOURCE: return createResource();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case SimulationPackage.TIME_UNIT:
-				return createTimeUnitFromString(eDataType, initialValue);
-			case SimulationPackage.REPARTITION_TYPE:
-				return createRepartitionTypeFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case SimulationPackage.TIME_UNIT:
+                return createTimeUnitFromString(eDataType, initialValue);
+            case SimulationPackage.REPARTITION_TYPE:
+                return createRepartitionTypeFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case SimulationPackage.TIME_UNIT:
-				return convertTimeUnitToString(eDataType, instanceValue);
-			case SimulationPackage.REPARTITION_TYPE:
-				return convertRepartitionTypeToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case SimulationPackage.TIME_UNIT:
+                return convertTimeUnitToString(eDataType, instanceValue);
+            case SimulationPackage.REPARTITION_TYPE:
+                return convertRepartitionTypeToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationElement createSimulationElement() {
-		SimulationElementImpl simulationElement = new SimulationElementImpl();
-		return simulationElement;
-	}
+        SimulationElementImpl simulationElement = new SimulationElementImpl();
+        return simulationElement;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationTransition createSimulationTransition() {
-		SimulationTransitionImpl simulationTransition = new SimulationTransitionImpl();
-		return simulationTransition;
-	}
+        SimulationTransitionImpl simulationTransition = new SimulationTransitionImpl();
+        return simulationTransition;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceUsage createResourceUsage() {
-		ResourceUsageImpl resourceUsage = new ResourceUsageImpl();
-		return resourceUsage;
-	}
+        ResourceUsageImpl resourceUsage = new ResourceUsageImpl();
+        return resourceUsage;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public InjectionPeriod createInjectionPeriod() {
-		InjectionPeriodImpl injectionPeriod = new InjectionPeriodImpl();
-		return injectionPeriod;
-	}
+        InjectionPeriodImpl injectionPeriod = new InjectionPeriodImpl();
+        return injectionPeriod;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationBoolean createSimulationBoolean() {
-		SimulationBooleanImpl simulationBoolean = new SimulationBooleanImpl();
-		return simulationBoolean;
-	}
+        SimulationBooleanImpl simulationBoolean = new SimulationBooleanImpl();
+        return simulationBoolean;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationNumberData createSimulationNumberData() {
-		SimulationNumberDataImpl simulationNumberData = new SimulationNumberDataImpl();
-		return simulationNumberData;
-	}
+        SimulationNumberDataImpl simulationNumberData = new SimulationNumberDataImpl();
+        return simulationNumberData;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationLiteralData createSimulationLiteralData() {
-		SimulationLiteralDataImpl simulationLiteralData = new SimulationLiteralDataImpl();
-		return simulationLiteralData;
-	}
+        SimulationLiteralDataImpl simulationLiteralData = new SimulationLiteralDataImpl();
+        return simulationLiteralData;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationLiteral createSimulationLiteral() {
-		SimulationLiteralImpl simulationLiteral = new SimulationLiteralImpl();
-		return simulationLiteral;
-	}
+        SimulationLiteralImpl simulationLiteral = new SimulationLiteralImpl();
+        return simulationLiteral;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationNumberRange createSimulationNumberRange() {
-		SimulationNumberRangeImpl simulationNumberRange = new SimulationNumberRangeImpl();
-		return simulationNumberRange;
-	}
+        SimulationNumberRangeImpl simulationNumberRange = new SimulationNumberRangeImpl();
+        return simulationNumberRange;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DataChange createDataChange() {
-		DataChangeImpl dataChange = new DataChangeImpl();
-		return dataChange;
-	}
+        DataChangeImpl dataChange = new DataChangeImpl();
+        return dataChange;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationCalendar createSimulationCalendar() {
-		SimulationCalendarImpl simulationCalendar = new SimulationCalendarImpl();
-		return simulationCalendar;
-	}
+        SimulationCalendarImpl simulationCalendar = new SimulationCalendarImpl();
+        return simulationCalendar;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DayPeriod createDayPeriod() {
-		DayPeriodImpl dayPeriod = new DayPeriodImpl();
-		return dayPeriod;
-	}
+        DayPeriodImpl dayPeriod = new DayPeriodImpl();
+        return dayPeriod;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ModelVersion createModelVersion() {
-		ModelVersionImpl modelVersion = new ModelVersionImpl();
-		return modelVersion;
-	}
+        ModelVersionImpl modelVersion = new ModelVersionImpl();
+        return modelVersion;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public LoadProfile createLoadProfile() {
-		LoadProfileImpl loadProfile = new LoadProfileImpl();
-		return loadProfile;
-	}
+        LoadProfileImpl loadProfile = new LoadProfileImpl();
+        return loadProfile;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Resource createResource() {
-		ResourceImpl resource = new ResourceImpl();
-		return resource;
-	}
+        ResourceImpl resource = new ResourceImpl();
+        return resource;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public TimeUnit createTimeUnitFromString(EDataType eDataType, String initialValue) {
-		TimeUnit result = TimeUnit.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        TimeUnit result = TimeUnit.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertTimeUnitToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public RepartitionType createRepartitionTypeFromString(EDataType eDataType, String initialValue) {
-		RepartitionType result = RepartitionType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        RepartitionType result = RepartitionType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertRepartitionTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SimulationPackage getSimulationPackage() {
-		return (SimulationPackage)getEPackage();
-	}
+        return (SimulationPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static SimulationPackage getPackage() {
-		return SimulationPackage.eINSTANCE;
-	}
+        return SimulationPackage.eINSTANCE;
+    }
 
 } //SimulationFactoryImpl

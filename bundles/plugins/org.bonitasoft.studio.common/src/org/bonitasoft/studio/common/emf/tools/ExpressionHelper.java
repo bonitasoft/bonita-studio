@@ -147,16 +147,17 @@ public class ExpressionHelper {
             return createSearchIndexDependency(dependency);
         }
         if (dependency instanceof ContractInput) {
-            return createContractInputependency(dependency);
+            return createContractInputDependency(dependency);
         }
         return EcoreUtil.copy(dependency);
     }
 
-    private static EObject createContractInputependency(EObject dependency) {
+    private static EObject createContractInputDependency(EObject dependency) {
         final ContractInput contractInputDependency = (ContractInput) EcoreUtil.copy(dependency);
         if (contractInputDependency.getType() == ContractInputType.COMPLEX) {
             contractInputDependency.getInputs().clear();
         }
+        contractInputDependency.setDataReference(null);
         return contractInputDependency;
     }
 
