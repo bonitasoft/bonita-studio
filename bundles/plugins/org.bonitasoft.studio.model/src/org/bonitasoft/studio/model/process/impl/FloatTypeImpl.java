@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class FloatTypeImpl extends DataTypeImpl implements FloatType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected FloatTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.FLOAT_TYPE;
-	}
+        return ProcessPackage.Literals.FLOAT_TYPE;
+    }
 
 } //FloatTypeImpl

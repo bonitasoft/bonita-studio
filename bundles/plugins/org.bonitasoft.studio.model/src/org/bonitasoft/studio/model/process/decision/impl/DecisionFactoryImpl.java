@@ -35,90 +35,90 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class DecisionFactoryImpl extends EFactoryImpl implements DecisionFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static DecisionFactory init() {
-		try {
-			DecisionFactory theDecisionFactory = (DecisionFactory)EPackage.Registry.INSTANCE.getEFactory(DecisionPackage.eNS_URI);
-			if (theDecisionFactory != null) {
-				return theDecisionFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new DecisionFactoryImpl();
-	}
+        try {
+            DecisionFactory theDecisionFactory = (DecisionFactory)EPackage.Registry.INSTANCE.getEFactory(DecisionPackage.eNS_URI);
+            if (theDecisionFactory != null) {
+                return theDecisionFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new DecisionFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public DecisionFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case DecisionPackage.DECISION_TABLE: return createDecisionTable();
-			case DecisionPackage.DECISION_TABLE_LINE: return createDecisionTableLine();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case DecisionPackage.DECISION_TABLE: return createDecisionTable();
+            case DecisionPackage.DECISION_TABLE_LINE: return createDecisionTableLine();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DecisionTable createDecisionTable() {
-		DecisionTableImpl decisionTable = new DecisionTableImpl();
-		return decisionTable;
-	}
+        DecisionTableImpl decisionTable = new DecisionTableImpl();
+        return decisionTable;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DecisionTableLine createDecisionTableLine() {
-		DecisionTableLineImpl decisionTableLine = new DecisionTableLineImpl();
-		return decisionTableLine;
-	}
+        DecisionTableLineImpl decisionTableLine = new DecisionTableLineImpl();
+        return decisionTableLine;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DecisionPackage getDecisionPackage() {
-		return (DecisionPackage)getEPackage();
-	}
+        return (DecisionPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static DecisionPackage getPackage() {
-		return DecisionPackage.eINSTANCE;
-	}
+        return DecisionPackage.eINSTANCE;
+    }
 
 } //DecisionFactoryImpl

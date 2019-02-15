@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class EndEventImpl extends EventImpl implements EndEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected EndEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.END_EVENT;
-	}
+        return ProcessPackage.Literals.END_EVENT;
+    }
 
 } //EndEventImpl

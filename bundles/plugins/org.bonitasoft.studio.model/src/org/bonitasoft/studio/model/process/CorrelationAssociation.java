@@ -40,55 +40,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CorrelationAssociation extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Correlation Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Correlation Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Correlation Expression</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Correlation Expression</em>' containment reference.
-	 * @see #setCorrelationExpression(AbstractExpression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelationAssociation_CorrelationExpression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Correlation Expression</em>' containment reference.
+     * @see #setCorrelationExpression(AbstractExpression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelationAssociation_CorrelationExpression()
+     * @model containment="true"
+     * @generated
+     */
 	AbstractExpression getCorrelationExpression();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.CorrelationAssociation#getCorrelationExpression <em>Correlation Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.CorrelationAssociation#getCorrelationExpression <em>Correlation Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Correlation Expression</em>' containment reference.
-	 * @see #getCorrelationExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Correlation Expression</em>' containment reference.
+     * @see #getCorrelationExpression()
+     * @generated
+     */
 	void setCorrelationExpression(AbstractExpression value);
 
 	/**
-	 * Returns the value of the '<em><b>Correlation Key</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Correlation Key</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Correlation Key</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Correlation Key</em>' containment reference.
-	 * @see #setCorrelationKey(AbstractExpression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelationAssociation_CorrelationKey()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Correlation Key</em>' containment reference.
+     * @see #setCorrelationKey(AbstractExpression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getCorrelationAssociation_CorrelationKey()
+     * @model containment="true"
+     * @generated
+     */
 	AbstractExpression getCorrelationKey();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.CorrelationAssociation#getCorrelationKey <em>Correlation Key</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.CorrelationAssociation#getCorrelationKey <em>Correlation Key</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Correlation Key</em>' containment reference.
-	 * @see #getCorrelationKey()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Correlation Key</em>' containment reference.
+     * @see #getCorrelationKey()
+     * @generated
+     */
 	void setCorrelationKey(AbstractExpression value);
 
 } // CorrelationAssociation

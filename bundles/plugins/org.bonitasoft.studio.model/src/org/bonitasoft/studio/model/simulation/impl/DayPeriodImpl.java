@@ -52,341 +52,341 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  */
 public class DayPeriodImpl extends EObjectImpl implements DayPeriod {
 	/**
-	 * The cached value of the '{@link #getDay() <em>Day</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDay() <em>Day</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDay()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDay()
+     * @generated
+     * @ordered
+     */
 	protected EList<Integer> day;
 
 	/**
-	 * The default value of the '{@link #getStartHour() <em>Start Hour</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getStartHour() <em>Start Hour</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStartHour()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getStartHour()
+     * @generated
+     * @ordered
+     */
 	protected static final int START_HOUR_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getStartHour() <em>Start Hour</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getStartHour() <em>Start Hour</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStartHour()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getStartHour()
+     * @generated
+     * @ordered
+     */
 	protected int startHour = START_HOUR_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEndHour() <em>End Hour</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getEndHour() <em>End Hour</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEndHour()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEndHour()
+     * @generated
+     * @ordered
+     */
 	protected static final int END_HOUR_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getEndHour() <em>End Hour</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEndHour() <em>End Hour</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEndHour()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEndHour()
+     * @generated
+     * @ordered
+     */
 	protected int endHour = END_HOUR_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStartMinute() <em>Start Minute</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getStartMinute() <em>Start Minute</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStartMinute()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getStartMinute()
+     * @generated
+     * @ordered
+     */
 	protected static final int START_MINUTE_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getStartMinute() <em>Start Minute</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getStartMinute() <em>Start Minute</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStartMinute()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getStartMinute()
+     * @generated
+     * @ordered
+     */
 	protected int startMinute = START_MINUTE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEndMinute() <em>End Minute</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getEndMinute() <em>End Minute</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEndMinute()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEndMinute()
+     * @generated
+     * @ordered
+     */
 	protected static final int END_MINUTE_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getEndMinute() <em>End Minute</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEndMinute() <em>End Minute</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEndMinute()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEndMinute()
+     * @generated
+     * @ordered
+     */
 	protected int endMinute = END_MINUTE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DayPeriodImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.DAY_PERIOD;
-	}
+        return SimulationPackage.Literals.DAY_PERIOD;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Integer> getDay() {
-		if (day == null) {
-			day = new EDataTypeUniqueEList<Integer>(Integer.class, this, SimulationPackage.DAY_PERIOD__DAY);
-		}
-		return day;
-	}
+        if (day == null) {
+            day = new EDataTypeUniqueEList<Integer>(Integer.class, this, SimulationPackage.DAY_PERIOD__DAY);
+        }
+        return day;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getStartHour() {
-		return startHour;
-	}
+        return startHour;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setStartHour(int newStartHour) {
-		int oldStartHour = startHour;
-		startHour = newStartHour;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__START_HOUR, oldStartHour, startHour));
-	}
+        int oldStartHour = startHour;
+        startHour = newStartHour;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__START_HOUR, oldStartHour, startHour));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getEndHour() {
-		return endHour;
-	}
+        return endHour;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setEndHour(int newEndHour) {
-		int oldEndHour = endHour;
-		endHour = newEndHour;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__END_HOUR, oldEndHour, endHour));
-	}
+        int oldEndHour = endHour;
+        endHour = newEndHour;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__END_HOUR, oldEndHour, endHour));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getStartMinute() {
-		return startMinute;
-	}
+        return startMinute;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setStartMinute(int newStartMinute) {
-		int oldStartMinute = startMinute;
-		startMinute = newStartMinute;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__START_MINUTE, oldStartMinute, startMinute));
-	}
+        int oldStartMinute = startMinute;
+        startMinute = newStartMinute;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__START_MINUTE, oldStartMinute, startMinute));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getEndMinute() {
-		return endMinute;
-	}
+        return endMinute;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setEndMinute(int newEndMinute) {
-		int oldEndMinute = endMinute;
-		endMinute = newEndMinute;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__END_MINUTE, oldEndMinute, endMinute));
-	}
+        int oldEndMinute = endMinute;
+        endMinute = newEndMinute;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.DAY_PERIOD__END_MINUTE, oldEndMinute, endMinute));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.DAY_PERIOD__DAY:
-				return getDay();
-			case SimulationPackage.DAY_PERIOD__START_HOUR:
-				return getStartHour();
-			case SimulationPackage.DAY_PERIOD__END_HOUR:
-				return getEndHour();
-			case SimulationPackage.DAY_PERIOD__START_MINUTE:
-				return getStartMinute();
-			case SimulationPackage.DAY_PERIOD__END_MINUTE:
-				return getEndMinute();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.DAY_PERIOD__DAY:
+                return getDay();
+            case SimulationPackage.DAY_PERIOD__START_HOUR:
+                return getStartHour();
+            case SimulationPackage.DAY_PERIOD__END_HOUR:
+                return getEndHour();
+            case SimulationPackage.DAY_PERIOD__START_MINUTE:
+                return getStartMinute();
+            case SimulationPackage.DAY_PERIOD__END_MINUTE:
+                return getEndMinute();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.DAY_PERIOD__DAY:
-				getDay().clear();
-				getDay().addAll((Collection<? extends Integer>)newValue);
-				return;
-			case SimulationPackage.DAY_PERIOD__START_HOUR:
-				setStartHour((Integer)newValue);
-				return;
-			case SimulationPackage.DAY_PERIOD__END_HOUR:
-				setEndHour((Integer)newValue);
-				return;
-			case SimulationPackage.DAY_PERIOD__START_MINUTE:
-				setStartMinute((Integer)newValue);
-				return;
-			case SimulationPackage.DAY_PERIOD__END_MINUTE:
-				setEndMinute((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.DAY_PERIOD__DAY:
+                getDay().clear();
+                getDay().addAll((Collection<? extends Integer>)newValue);
+                return;
+            case SimulationPackage.DAY_PERIOD__START_HOUR:
+                setStartHour((Integer)newValue);
+                return;
+            case SimulationPackage.DAY_PERIOD__END_HOUR:
+                setEndHour((Integer)newValue);
+                return;
+            case SimulationPackage.DAY_PERIOD__START_MINUTE:
+                setStartMinute((Integer)newValue);
+                return;
+            case SimulationPackage.DAY_PERIOD__END_MINUTE:
+                setEndMinute((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.DAY_PERIOD__DAY:
-				getDay().clear();
-				return;
-			case SimulationPackage.DAY_PERIOD__START_HOUR:
-				setStartHour(START_HOUR_EDEFAULT);
-				return;
-			case SimulationPackage.DAY_PERIOD__END_HOUR:
-				setEndHour(END_HOUR_EDEFAULT);
-				return;
-			case SimulationPackage.DAY_PERIOD__START_MINUTE:
-				setStartMinute(START_MINUTE_EDEFAULT);
-				return;
-			case SimulationPackage.DAY_PERIOD__END_MINUTE:
-				setEndMinute(END_MINUTE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.DAY_PERIOD__DAY:
+                getDay().clear();
+                return;
+            case SimulationPackage.DAY_PERIOD__START_HOUR:
+                setStartHour(START_HOUR_EDEFAULT);
+                return;
+            case SimulationPackage.DAY_PERIOD__END_HOUR:
+                setEndHour(END_HOUR_EDEFAULT);
+                return;
+            case SimulationPackage.DAY_PERIOD__START_MINUTE:
+                setStartMinute(START_MINUTE_EDEFAULT);
+                return;
+            case SimulationPackage.DAY_PERIOD__END_MINUTE:
+                setEndMinute(END_MINUTE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.DAY_PERIOD__DAY:
-				return day != null && !day.isEmpty();
-			case SimulationPackage.DAY_PERIOD__START_HOUR:
-				return startHour != START_HOUR_EDEFAULT;
-			case SimulationPackage.DAY_PERIOD__END_HOUR:
-				return endHour != END_HOUR_EDEFAULT;
-			case SimulationPackage.DAY_PERIOD__START_MINUTE:
-				return startMinute != START_MINUTE_EDEFAULT;
-			case SimulationPackage.DAY_PERIOD__END_MINUTE:
-				return endMinute != END_MINUTE_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.DAY_PERIOD__DAY:
+                return day != null && !day.isEmpty();
+            case SimulationPackage.DAY_PERIOD__START_HOUR:
+                return startHour != START_HOUR_EDEFAULT;
+            case SimulationPackage.DAY_PERIOD__END_HOUR:
+                return endHour != END_HOUR_EDEFAULT;
+            case SimulationPackage.DAY_PERIOD__START_MINUTE:
+                return startMinute != START_MINUTE_EDEFAULT;
+            case SimulationPackage.DAY_PERIOD__END_MINUTE:
+                return endMinute != END_MINUTE_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (day: "); //$NON-NLS-1$
-		result.append(day);
-		result.append(", startHour: "); //$NON-NLS-1$
-		result.append(startHour);
-		result.append(", endHour: "); //$NON-NLS-1$
-		result.append(endHour);
-		result.append(", startMinute: "); //$NON-NLS-1$
-		result.append(startMinute);
-		result.append(", endMinute: "); //$NON-NLS-1$
-		result.append(endMinute);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (day: "); //$NON-NLS-1$
+        result.append(day);
+        result.append(", startHour: "); //$NON-NLS-1$
+        result.append(startHour);
+        result.append(", endHour: "); //$NON-NLS-1$
+        result.append(endHour);
+        result.append(", startMinute: "); //$NON-NLS-1$
+        result.append(startMinute);
+        result.append(", endMinute: "); //$NON-NLS-1$
+        result.append(endMinute);
+        result.append(')');
+        return result.toString();
+    }
 
 } //DayPeriodImpl

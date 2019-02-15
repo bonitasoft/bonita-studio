@@ -57,189 +57,189 @@ public class WidgetLayoutInfoItemProvider
 		IItemLabelProvider,
 		IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public WidgetLayoutInfoItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addLinePropertyDescriptor(object);
-			addColumnPropertyDescriptor(object);
-			addVerticalSpanPropertyDescriptor(object);
-			addHorizontalSpanPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addLinePropertyDescriptor(object);
+            addColumnPropertyDescriptor(object);
+            addVerticalSpanPropertyDescriptor(object);
+            addHorizontalSpanPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Line feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Line feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addLinePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetLayoutInfo_line_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_line_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_LAYOUT_INFO__LINE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetLayoutInfo_line_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_line_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_LAYOUT_INFO__LINE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Column feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Column feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addColumnPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetLayoutInfo_column_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_column_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_LAYOUT_INFO__COLUMN,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetLayoutInfo_column_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_column_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_LAYOUT_INFO__COLUMN,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Vertical Span feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Vertical Span feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addVerticalSpanPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetLayoutInfo_verticalSpan_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_verticalSpan_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_LAYOUT_INFO__VERTICAL_SPAN,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetLayoutInfo_verticalSpan_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_verticalSpan_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_LAYOUT_INFO__VERTICAL_SPAN,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Horizontal Span feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Horizontal Span feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addHorizontalSpanPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetLayoutInfo_horizontalSpan_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_horizontalSpan_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetLayoutInfo_horizontalSpan_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetLayoutInfo_horizontalSpan_feature", "_UI_WidgetLayoutInfo_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns WidgetLayoutInfo.gif.
-	 * <!-- begin-user-doc -->
+     * This returns WidgetLayoutInfo.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/WidgetLayoutInfo")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/WidgetLayoutInfo")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		WidgetLayoutInfo widgetLayoutInfo = (WidgetLayoutInfo)object;
-		return getString("_UI_WidgetLayoutInfo_type") + " " + widgetLayoutInfo.getLine(); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        WidgetLayoutInfo widgetLayoutInfo = (WidgetLayoutInfo)object;
+        return getString("_UI_WidgetLayoutInfo_type") + " " + widgetLayoutInfo.getLine(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(WidgetLayoutInfo.class)) {
-			case FormPackage.WIDGET_LAYOUT_INFO__LINE:
-			case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
-			case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
-			case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(WidgetLayoutInfo.class)) {
+            case FormPackage.WIDGET_LAYOUT_INFO__LINE:
+            case FormPackage.WIDGET_LAYOUT_INFO__COLUMN:
+            case FormPackage.WIDGET_LAYOUT_INFO__VERTICAL_SPAN:
+            case FormPackage.WIDGET_LAYOUT_INFO__HORIZONTAL_SPAN:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

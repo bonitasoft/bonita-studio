@@ -42,139 +42,139 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class GatewayImpl extends FlowElementImpl implements Gateway {
 	/**
-	 * The default value of the '{@link #getGatewayType() <em>Gateway Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getGatewayType() <em>Gateway Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getGatewayType()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getGatewayType()
+     * @generated
+     * @ordered
+     */
 	protected static final GatewayType GATEWAY_TYPE_EDEFAULT = GatewayType.XOR;
 
 	/**
-	 * The cached value of the '{@link #getGatewayType() <em>Gateway Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getGatewayType() <em>Gateway Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getGatewayType()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getGatewayType()
+     * @generated
+     * @ordered
+     */
 	protected GatewayType gatewayType = GATEWAY_TYPE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected GatewayImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.GATEWAY;
-	}
+        return ProcessPackage.Literals.GATEWAY;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public GatewayType getGatewayType() {
-		return gatewayType;
-	}
+        return gatewayType;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setGatewayType(GatewayType newGatewayType) {
-		GatewayType oldGatewayType = gatewayType;
-		gatewayType = newGatewayType == null ? GATEWAY_TYPE_EDEFAULT : newGatewayType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.GATEWAY__GATEWAY_TYPE, oldGatewayType, gatewayType));
-	}
+        GatewayType oldGatewayType = gatewayType;
+        gatewayType = newGatewayType == null ? GATEWAY_TYPE_EDEFAULT : newGatewayType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.GATEWAY__GATEWAY_TYPE, oldGatewayType, gatewayType));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.GATEWAY__GATEWAY_TYPE:
-				return getGatewayType();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.GATEWAY__GATEWAY_TYPE:
+                return getGatewayType();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.GATEWAY__GATEWAY_TYPE:
-				setGatewayType((GatewayType)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.GATEWAY__GATEWAY_TYPE:
+                setGatewayType((GatewayType)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.GATEWAY__GATEWAY_TYPE:
-				setGatewayType(GATEWAY_TYPE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.GATEWAY__GATEWAY_TYPE:
+                setGatewayType(GATEWAY_TYPE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.GATEWAY__GATEWAY_TYPE:
-				return gatewayType != GATEWAY_TYPE_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.GATEWAY__GATEWAY_TYPE:
+                return gatewayType != GATEWAY_TYPE_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (gatewayType: "); //$NON-NLS-1$
-		result.append(gatewayType);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (gatewayType: "); //$NON-NLS-1$
+        result.append(gatewayType);
+        result.append(')');
+        return result.toString();
+    }
 
 } //GatewayImpl

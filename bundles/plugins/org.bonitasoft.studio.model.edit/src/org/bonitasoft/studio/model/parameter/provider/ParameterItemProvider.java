@@ -57,191 +57,191 @@ public class ParameterItemProvider
 		IItemLabelProvider,
 		IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ParameterItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addNamePropertyDescriptor(object);
-			addValuePropertyDescriptor(object);
-			addTypeClassnamePropertyDescriptor(object);
-			addDescriptionPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addNamePropertyDescriptor(object);
+            addValuePropertyDescriptor(object);
+            addTypeClassnamePropertyDescriptor(object);
+            addDescriptionPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Name feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Name feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Parameter_name_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_name_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ParameterPackage.Literals.PARAMETER__NAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Parameter_name_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_name_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ParameterPackage.Literals.PARAMETER__NAME,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Value feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Value feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addValuePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Parameter_value_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_value_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ParameterPackage.Literals.PARAMETER__VALUE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Parameter_value_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_value_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ParameterPackage.Literals.PARAMETER__VALUE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Type Classname feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Type Classname feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addTypeClassnamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Parameter_typeClassname_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_typeClassname_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Parameter_typeClassname_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_typeClassname_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Description feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Description feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Parameter_description_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_description_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ParameterPackage.Literals.PARAMETER__DESCRIPTION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Parameter_description_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Parameter_description_feature", "_UI_Parameter_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ParameterPackage.Literals.PARAMETER__DESCRIPTION,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns Parameter.gif.
-	 * <!-- begin-user-doc -->
+     * This returns Parameter.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Parameter")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Parameter")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((Parameter)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Parameter_type") : //$NON-NLS-1$
-			getString("_UI_Parameter_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((Parameter)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_Parameter_type") : //$NON-NLS-1$
+            getString("_UI_Parameter_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(Parameter.class)) {
-			case ParameterPackage.PARAMETER__NAME:
-			case ParameterPackage.PARAMETER__VALUE:
-			case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
-			case ParameterPackage.PARAMETER__DESCRIPTION:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(Parameter.class)) {
+            case ParameterPackage.PARAMETER__NAME:
+            case ParameterPackage.PARAMETER__VALUE:
+            case ParameterPackage.PARAMETER__TYPE_CLASSNAME:
+            case ParameterPackage.PARAMETER__DESCRIPTION:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

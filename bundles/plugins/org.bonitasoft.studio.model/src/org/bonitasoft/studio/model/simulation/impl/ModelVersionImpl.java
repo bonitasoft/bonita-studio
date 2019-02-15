@@ -42,139 +42,139 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class ModelVersionImpl extends EObjectImpl implements ModelVersion {
 	/**
-	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
 	protected static final String VERSION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
 	protected String version = VERSION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ModelVersionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.MODEL_VERSION;
-	}
+        return SimulationPackage.Literals.MODEL_VERSION;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getVersion() {
-		return version;
-	}
+        return version;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setVersion(String newVersion) {
-		String oldVersion = version;
-		version = newVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.MODEL_VERSION__VERSION, oldVersion, version));
-	}
+        String oldVersion = version;
+        version = newVersion;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SimulationPackage.MODEL_VERSION__VERSION, oldVersion, version));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.MODEL_VERSION__VERSION:
-				return getVersion();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.MODEL_VERSION__VERSION:
+                return getVersion();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.MODEL_VERSION__VERSION:
-				setVersion((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.MODEL_VERSION__VERSION:
+                setVersion((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.MODEL_VERSION__VERSION:
-				setVersion(VERSION_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.MODEL_VERSION__VERSION:
+                setVersion(VERSION_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.MODEL_VERSION__VERSION:
-				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.MODEL_VERSION__VERSION:
+                return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (version: "); //$NON-NLS-1$
-		result.append(version);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (version: "); //$NON-NLS-1$
+        result.append(version);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ModelVersionImpl

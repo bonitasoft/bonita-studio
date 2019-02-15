@@ -41,75 +41,75 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Element extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Documentation</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Documentation</b></em>' attribute.
+     * The default value is <code>""</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Documentation</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Documentation</em>' attribute.
-	 * @see #setDocumentation(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_Documentation()
-	 * @model default=""
-	 * @generated
-	 */
+     * @return the value of the '<em>Documentation</em>' attribute.
+     * @see #setDocumentation(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_Documentation()
+     * @model default=""
+     * @generated
+     */
 	String getDocumentation();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Element#getDocumentation <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Element#getDocumentation <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Documentation</em>' attribute.
-	 * @see #getDocumentation()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Documentation</em>' attribute.
+     * @see #getDocumentation()
+     * @generated
+     */
 	void setDocumentation(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute.
+     * The default value is <code>""</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_Name()
-	 * @model default="" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Name</em>' attribute.
+     * @see #setName(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_Name()
+     * @model default="" required="true"
+     * @generated
+     */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Element#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Element#getName <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Name</em>' attribute.
+     * @see #getName()
+     * @generated
+     */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Text Annotation Attachment</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.TextAnnotationAttachment}.
-	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget <em>Target</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Text Annotation Attachment</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.TextAnnotationAttachment}.
+     * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget <em>Target</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Text Annotation Attachment</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Text Annotation Attachment</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_TextAnnotationAttachment()
-	 * @see org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget
-	 * @model opposite="target" containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Text Annotation Attachment</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getElement_TextAnnotationAttachment()
+     * @see org.bonitasoft.studio.model.process.TextAnnotationAttachment#getTarget
+     * @model opposite="target" containment="true"
+     * @generated
+     */
 	EList<TextAnnotationAttachment> getTextAnnotationAttachment();
 
 } // Element

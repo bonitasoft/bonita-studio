@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class JavaTypeImpl extends DataTypeImpl implements JavaType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected JavaTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.JAVA_TYPE;
-	}
+        return ProcessPackage.Literals.JAVA_TYPE;
+    }
 
 } //JavaTypeImpl

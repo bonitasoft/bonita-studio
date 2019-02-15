@@ -43,194 +43,194 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class LineImpl extends EObjectImpl implements Line {
 	/**
-	 * The default value of the '{@link #getHeight() <em>Height</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getHeight() <em>Height</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHeight()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getHeight()
+     * @generated
+     * @ordered
+     */
 	protected static final String HEIGHT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getHeight() <em>Height</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getHeight() <em>Height</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHeight()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getHeight()
+     * @generated
+     * @ordered
+     */
 	protected String height = HEIGHT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getNumber() <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getNumber() <em>Number</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNumber()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNumber()
+     * @generated
+     * @ordered
+     */
 	protected static final int NUMBER_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getNumber() <em>Number</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getNumber() <em>Number</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNumber()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNumber()
+     * @generated
+     * @ordered
+     */
 	protected int number = NUMBER_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected LineImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.LINE;
-	}
+        return FormPackage.Literals.LINE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getHeight() {
-		return height;
-	}
+        return height;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setHeight(String newHeight) {
-		String oldHeight = height;
-		height = newHeight;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.LINE__HEIGHT, oldHeight, height));
-	}
+        String oldHeight = height;
+        height = newHeight;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.LINE__HEIGHT, oldHeight, height));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getNumber() {
-		return number;
-	}
+        return number;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setNumber(int newNumber) {
-		int oldNumber = number;
-		number = newNumber;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.LINE__NUMBER, oldNumber, number));
-	}
+        int oldNumber = number;
+        number = newNumber;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.LINE__NUMBER, oldNumber, number));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.LINE__HEIGHT:
-				return getHeight();
-			case FormPackage.LINE__NUMBER:
-				return getNumber();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.LINE__HEIGHT:
+                return getHeight();
+            case FormPackage.LINE__NUMBER:
+                return getNumber();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.LINE__HEIGHT:
-				setHeight((String)newValue);
-				return;
-			case FormPackage.LINE__NUMBER:
-				setNumber((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.LINE__HEIGHT:
+                setHeight((String)newValue);
+                return;
+            case FormPackage.LINE__NUMBER:
+                setNumber((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.LINE__HEIGHT:
-				setHeight(HEIGHT_EDEFAULT);
-				return;
-			case FormPackage.LINE__NUMBER:
-				setNumber(NUMBER_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.LINE__HEIGHT:
+                setHeight(HEIGHT_EDEFAULT);
+                return;
+            case FormPackage.LINE__NUMBER:
+                setNumber(NUMBER_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.LINE__HEIGHT:
-				return HEIGHT_EDEFAULT == null ? height != null : !HEIGHT_EDEFAULT.equals(height);
-			case FormPackage.LINE__NUMBER:
-				return number != NUMBER_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.LINE__HEIGHT:
+                return HEIGHT_EDEFAULT == null ? height != null : !HEIGHT_EDEFAULT.equals(height);
+            case FormPackage.LINE__NUMBER:
+                return number != NUMBER_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (height: "); //$NON-NLS-1$
-		result.append(height);
-		result.append(", number: "); //$NON-NLS-1$
-		result.append(number);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (height: "); //$NON-NLS-1$
+        result.append(height);
+        result.append(", number: "); //$NON-NLS-1$
+        result.append(number);
+        result.append(')');
+        return result.toString();
+    }
 
 } //LineImpl

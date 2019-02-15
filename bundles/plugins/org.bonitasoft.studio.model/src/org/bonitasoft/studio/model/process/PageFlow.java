@@ -36,29 +36,29 @@ package org.bonitasoft.studio.model.process;
  */
 public interface PageFlow extends ConnectableElement, AbstractPageFlow {
 	/**
-	 * Returns the value of the '<em><b>Form Mapping</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Form Mapping</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Form Mapping</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Form Mapping</em>' containment reference.
-	 * @see #setFormMapping(FormMapping)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getPageFlow_FormMapping()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Form Mapping</em>' containment reference.
+     * @see #setFormMapping(FormMapping)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getPageFlow_FormMapping()
+     * @model containment="true"
+     * @generated
+     */
 	FormMapping getFormMapping();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.PageFlow#getFormMapping <em>Form Mapping</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.PageFlow#getFormMapping <em>Form Mapping</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Form Mapping</em>' containment reference.
-	 * @see #getFormMapping()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Form Mapping</em>' containment reference.
+     * @see #getFormMapping()
+     * @generated
+     */
 	void setFormMapping(FormMapping value);
 
 } // PageFlow

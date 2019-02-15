@@ -37,55 +37,55 @@ package org.bonitasoft.studio.model.simulation;
  */
 public interface SimulationAbstractProcess extends SimulationDataContainer {
 	/**
-	 * Returns the value of the '<em><b>Load Profile ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Load Profile ID</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Load Profile ID</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Load Profile ID</em>' attribute.
-	 * @see #setLoadProfileID(String)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationAbstractProcess_LoadProfileID()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Load Profile ID</em>' attribute.
+     * @see #setLoadProfileID(String)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationAbstractProcess_LoadProfileID()
+     * @model
+     * @generated
+     */
 	String getLoadProfileID();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationAbstractProcess#getLoadProfileID <em>Load Profile ID</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationAbstractProcess#getLoadProfileID <em>Load Profile ID</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Load Profile ID</em>' attribute.
-	 * @see #getLoadProfileID()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Load Profile ID</em>' attribute.
+     * @see #getLoadProfileID()
+     * @generated
+     */
 	void setLoadProfileID(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Maximum Time</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Maximum Time</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Maximum Time</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Maximum Time</em>' attribute.
-	 * @see #setMaximumTime(long)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationAbstractProcess_MaximumTime()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Maximum Time</em>' attribute.
+     * @see #setMaximumTime(long)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationAbstractProcess_MaximumTime()
+     * @model
+     * @generated
+     */
 	long getMaximumTime();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationAbstractProcess#getMaximumTime <em>Maximum Time</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationAbstractProcess#getMaximumTime <em>Maximum Time</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Maximum Time</em>' attribute.
-	 * @see #getMaximumTime()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Maximum Time</em>' attribute.
+     * @see #getMaximumTime()
+     * @generated
+     */
 	void setMaximumTime(long value);
 
 } // SimulationAbstractProcess

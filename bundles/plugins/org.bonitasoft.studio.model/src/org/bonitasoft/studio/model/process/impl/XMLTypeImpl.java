@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class XMLTypeImpl extends DataTypeImpl implements XMLType {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected XMLTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.XML_TYPE;
-	}
+        return ProcessPackage.Literals.XML_TYPE;
+    }
 
 } //XMLTypeImpl

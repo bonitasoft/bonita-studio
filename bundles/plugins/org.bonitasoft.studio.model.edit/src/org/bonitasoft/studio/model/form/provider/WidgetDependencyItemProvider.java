@@ -57,164 +57,164 @@ public class WidgetDependencyItemProvider
 		IItemLabelProvider,
 		IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public WidgetDependencyItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addTriggerRefreshOnModificationPropertyDescriptor(object);
-			addEventTypesPropertyDescriptor(object);
-			addWidgetPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addTriggerRefreshOnModificationPropertyDescriptor(object);
+            addEventTypesPropertyDescriptor(object);
+            addWidgetPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Trigger Refresh On Modification feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Trigger Refresh On Modification feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addTriggerRefreshOnModificationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetDependency_triggerRefreshOnModification_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_triggerRefreshOnModification_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetDependency_triggerRefreshOnModification_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_triggerRefreshOnModification_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Event Types feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Event Types feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addEventTypesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetDependency_eventTypes_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_eventTypes_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_DEPENDENCY__EVENT_TYPES,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetDependency_eventTypes_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_eventTypes_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_DEPENDENCY__EVENT_TYPES,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Widget feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Widget feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addWidgetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_WidgetDependency_widget_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_widget_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 FormPackage.Literals.WIDGET_DEPENDENCY__WIDGET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_WidgetDependency_widget_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_WidgetDependency_widget_feature", "_UI_WidgetDependency_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 FormPackage.Literals.WIDGET_DEPENDENCY__WIDGET,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns WidgetDependency.gif.
-	 * <!-- begin-user-doc -->
+     * This returns WidgetDependency.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/WidgetDependency")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/WidgetDependency")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		WidgetDependency widgetDependency = (WidgetDependency)object;
-		return getString("_UI_WidgetDependency_type") + " " + widgetDependency.isTriggerRefreshOnModification(); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        WidgetDependency widgetDependency = (WidgetDependency)object;
+        return getString("_UI_WidgetDependency_type") + " " + widgetDependency.isTriggerRefreshOnModification(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(WidgetDependency.class)) {
-			case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
-			case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(WidgetDependency.class)) {
+            case FormPackage.WIDGET_DEPENDENCY__TRIGGER_REFRESH_ON_MODIFICATION:
+            case FormPackage.WIDGET_DEPENDENCY__EVENT_TYPES:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

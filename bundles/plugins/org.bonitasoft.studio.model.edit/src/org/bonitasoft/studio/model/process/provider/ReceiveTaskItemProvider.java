@@ -40,203 +40,203 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  */
 public class ReceiveTaskItemProvider extends ActivityItemProvider {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ReceiveTaskItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addEventPropertyDescriptor(object);
-			addIncomingMessagPropertyDescriptor(object);
-			addCorrelationPropertyDescriptor(object);
-			addMessageContentPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addEventPropertyDescriptor(object);
+            addIncomingMessagPropertyDescriptor(object);
+            addCorrelationPropertyDescriptor(object);
+            addMessageContentPropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Event feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Event feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addEventPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractCatchMessageEvent_event_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_event_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AbstractCatchMessageEvent_event_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_event_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Incoming Messag feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Incoming Messag feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addIncomingMessagPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractCatchMessageEvent_incomingMessag_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_incomingMessag_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__INCOMING_MESSAG,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AbstractCatchMessageEvent_incomingMessag_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_incomingMessag_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__INCOMING_MESSAG,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Correlation feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Correlation feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addCorrelationPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractCatchMessageEvent_correlation_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_correlation_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__CORRELATION,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AbstractCatchMessageEvent_correlation_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_correlation_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__CORRELATION,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Message Content feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Message Content feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addMessageContentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AbstractCatchMessageEvent_messageContent_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_messageContent_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AbstractCatchMessageEvent_messageContent_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractCatchMessageEvent_messageContent_feature", "_UI_AbstractCatchMessageEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns ReceiveTask.gif.
-	 * <!-- begin-user-doc -->
+     * This returns ReceiveTask.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReceiveTask")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/ReceiveTask")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((ReceiveTask)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ReceiveTask_type") : //$NON-NLS-1$
-			getString("_UI_ReceiveTask_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((ReceiveTask)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_ReceiveTask_type") : //$NON-NLS-1$
+            getString("_UI_ReceiveTask_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(ReceiveTask.class)) {
-			case ProcessPackage.RECEIVE_TASK__EVENT:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(ReceiveTask.class)) {
+            case ProcessPackage.RECEIVE_TASK__EVENT:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-		Object childFeature = feature;
-		Object childObject = child;
+        Object childFeature = feature;
+        Object childObject = child;
 
-		boolean qualify =
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION ||
-			childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION;
+        boolean qualify =
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION ||
+            childFeature == ProcessPackage.Literals.MULTI_INSTANTIABLE__COMPLETION_CONDITION;
 
-		if (qualify) {
-			return getString
-				("_UI_CreateChild_text2", //$NON-NLS-1$
-				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-		}
-		return super.getCreateChildText(owner, feature, child, selection);
-	}
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2", //$NON-NLS-1$
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
+    }
 
 }

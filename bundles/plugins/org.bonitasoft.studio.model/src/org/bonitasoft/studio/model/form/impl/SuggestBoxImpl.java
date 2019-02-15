@@ -44,304 +44,304 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class SuggestBoxImpl extends MultipleValuatedFormFieldImpl implements SuggestBox {
 	/**
-	 * The default value of the '{@link #getMaxItems() <em>Max Items</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getMaxItems() <em>Max Items</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMaxItems()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMaxItems()
+     * @generated
+     * @ordered
+     */
 	protected static final int MAX_ITEMS_EDEFAULT = -1;
 
 	/**
-	 * The cached value of the '{@link #getMaxItems() <em>Max Items</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getMaxItems() <em>Max Items</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMaxItems()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMaxItems()
+     * @generated
+     * @ordered
+     */
 	protected int maxItems = MAX_ITEMS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isUseMaxItems() <em>Use Max Items</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isUseMaxItems() <em>Use Max Items</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isUseMaxItems()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseMaxItems()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean USE_MAX_ITEMS_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isUseMaxItems() <em>Use Max Items</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isUseMaxItems() <em>Use Max Items</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isUseMaxItems()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseMaxItems()
+     * @generated
+     * @ordered
+     */
 	protected boolean useMaxItems = USE_MAX_ITEMS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isAsynchronous() <em>Asynchronous</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isAsynchronous() <em>Asynchronous</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isAsynchronous()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isAsynchronous()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean ASYNCHRONOUS_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isAsynchronous() <em>Asynchronous</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isAsynchronous() <em>Asynchronous</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isAsynchronous()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isAsynchronous()
+     * @generated
+     * @ordered
+     */
 	protected boolean asynchronous = ASYNCHRONOUS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDelay() <em>Delay</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDelay() <em>Delay</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDelay()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDelay()
+     * @generated
+     * @ordered
+     */
 	protected static final int DELAY_EDEFAULT = 1000;
 
 	/**
-	 * The cached value of the '{@link #getDelay() <em>Delay</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDelay() <em>Delay</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDelay()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDelay()
+     * @generated
+     * @ordered
+     */
 	protected int delay = DELAY_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SuggestBoxImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.SUGGEST_BOX;
-	}
+        return FormPackage.Literals.SUGGEST_BOX;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getMaxItems() {
-		return maxItems;
-	}
+        return maxItems;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setMaxItems(int newMaxItems) {
-		int oldMaxItems = maxItems;
-		maxItems = newMaxItems;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__MAX_ITEMS, oldMaxItems, maxItems));
-	}
+        int oldMaxItems = maxItems;
+        maxItems = newMaxItems;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__MAX_ITEMS, oldMaxItems, maxItems));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isUseMaxItems() {
-		return useMaxItems;
-	}
+        return useMaxItems;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setUseMaxItems(boolean newUseMaxItems) {
-		boolean oldUseMaxItems = useMaxItems;
-		useMaxItems = newUseMaxItems;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__USE_MAX_ITEMS, oldUseMaxItems, useMaxItems));
-	}
+        boolean oldUseMaxItems = useMaxItems;
+        useMaxItems = newUseMaxItems;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__USE_MAX_ITEMS, oldUseMaxItems, useMaxItems));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isAsynchronous() {
-		return asynchronous;
-	}
+        return asynchronous;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setAsynchronous(boolean newAsynchronous) {
-		boolean oldAsynchronous = asynchronous;
-		asynchronous = newAsynchronous;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__ASYNCHRONOUS, oldAsynchronous, asynchronous));
-	}
+        boolean oldAsynchronous = asynchronous;
+        asynchronous = newAsynchronous;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__ASYNCHRONOUS, oldAsynchronous, asynchronous));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int getDelay() {
-		return delay;
-	}
+        return delay;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setDelay(int newDelay) {
-		int oldDelay = delay;
-		delay = newDelay;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__DELAY, oldDelay, delay));
-	}
+        int oldDelay = delay;
+        delay = newDelay;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.SUGGEST_BOX__DELAY, oldDelay, delay));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.SUGGEST_BOX__MAX_ITEMS:
-				return getMaxItems();
-			case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
-				return isUseMaxItems();
-			case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
-				return isAsynchronous();
-			case FormPackage.SUGGEST_BOX__DELAY:
-				return getDelay();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.SUGGEST_BOX__MAX_ITEMS:
+                return getMaxItems();
+            case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
+                return isUseMaxItems();
+            case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
+                return isAsynchronous();
+            case FormPackage.SUGGEST_BOX__DELAY:
+                return getDelay();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.SUGGEST_BOX__MAX_ITEMS:
-				setMaxItems((Integer)newValue);
-				return;
-			case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
-				setUseMaxItems((Boolean)newValue);
-				return;
-			case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
-				setAsynchronous((Boolean)newValue);
-				return;
-			case FormPackage.SUGGEST_BOX__DELAY:
-				setDelay((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.SUGGEST_BOX__MAX_ITEMS:
+                setMaxItems((Integer)newValue);
+                return;
+            case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
+                setUseMaxItems((Boolean)newValue);
+                return;
+            case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
+                setAsynchronous((Boolean)newValue);
+                return;
+            case FormPackage.SUGGEST_BOX__DELAY:
+                setDelay((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.SUGGEST_BOX__MAX_ITEMS:
-				setMaxItems(MAX_ITEMS_EDEFAULT);
-				return;
-			case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
-				setUseMaxItems(USE_MAX_ITEMS_EDEFAULT);
-				return;
-			case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
-				setAsynchronous(ASYNCHRONOUS_EDEFAULT);
-				return;
-			case FormPackage.SUGGEST_BOX__DELAY:
-				setDelay(DELAY_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.SUGGEST_BOX__MAX_ITEMS:
+                setMaxItems(MAX_ITEMS_EDEFAULT);
+                return;
+            case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
+                setUseMaxItems(USE_MAX_ITEMS_EDEFAULT);
+                return;
+            case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
+                setAsynchronous(ASYNCHRONOUS_EDEFAULT);
+                return;
+            case FormPackage.SUGGEST_BOX__DELAY:
+                setDelay(DELAY_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.SUGGEST_BOX__MAX_ITEMS:
-				return maxItems != MAX_ITEMS_EDEFAULT;
-			case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
-				return useMaxItems != USE_MAX_ITEMS_EDEFAULT;
-			case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
-				return asynchronous != ASYNCHRONOUS_EDEFAULT;
-			case FormPackage.SUGGEST_BOX__DELAY:
-				return delay != DELAY_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.SUGGEST_BOX__MAX_ITEMS:
+                return maxItems != MAX_ITEMS_EDEFAULT;
+            case FormPackage.SUGGEST_BOX__USE_MAX_ITEMS:
+                return useMaxItems != USE_MAX_ITEMS_EDEFAULT;
+            case FormPackage.SUGGEST_BOX__ASYNCHRONOUS:
+                return asynchronous != ASYNCHRONOUS_EDEFAULT;
+            case FormPackage.SUGGEST_BOX__DELAY:
+                return delay != DELAY_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (maxItems: "); //$NON-NLS-1$
-		result.append(maxItems);
-		result.append(", useMaxItems: "); //$NON-NLS-1$
-		result.append(useMaxItems);
-		result.append(", asynchronous: "); //$NON-NLS-1$
-		result.append(asynchronous);
-		result.append(", delay: "); //$NON-NLS-1$
-		result.append(delay);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (maxItems: "); //$NON-NLS-1$
+        result.append(maxItems);
+        result.append(", useMaxItems: "); //$NON-NLS-1$
+        result.append(useMaxItems);
+        result.append(", asynchronous: "); //$NON-NLS-1$
+        result.append(asynchronous);
+        result.append(", delay: "); //$NON-NLS-1$
+        result.append(delay);
+        result.append(')');
+        return result.toString();
+    }
 
 } //SuggestBoxImpl

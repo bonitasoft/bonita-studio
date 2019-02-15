@@ -36,30 +36,30 @@ package org.bonitasoft.studio.model.simulation;
  */
 public interface SimulationBoolean extends SimulationData {
 	/**
-	 * Returns the value of the '<em><b>Probability Of True</b></em>' attribute.
-	 * The default value is <code>"1"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Probability Of True</b></em>' attribute.
+     * The default value is <code>"1"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Probability Of True</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Probability Of True</em>' attribute.
-	 * @see #setProbabilityOfTrue(double)
-	 * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationBoolean_ProbabilityOfTrue()
-	 * @model default="1" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Probability Of True</em>' attribute.
+     * @see #setProbabilityOfTrue(double)
+     * @see org.bonitasoft.studio.model.simulation.SimulationPackage#getSimulationBoolean_ProbabilityOfTrue()
+     * @model default="1" required="true"
+     * @generated
+     */
 	double getProbabilityOfTrue();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationBoolean#getProbabilityOfTrue <em>Probability Of True</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.simulation.SimulationBoolean#getProbabilityOfTrue <em>Probability Of True</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Probability Of True</em>' attribute.
-	 * @see #getProbabilityOfTrue()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Probability Of True</em>' attribute.
+     * @see #getProbabilityOfTrue()
+     * @generated
+     */
 	void setProbabilityOfTrue(double value);
 
 } // SimulationBoolean

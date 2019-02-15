@@ -43,249 +43,249 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class BusinessObjectDataImpl extends JavaObjectDataImpl implements BusinessObjectData {
 	/**
-	 * The default value of the '{@link #getBusinessDataRepositoryId() <em>Business Data Repository Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getBusinessDataRepositoryId() <em>Business Data Repository Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getBusinessDataRepositoryId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getBusinessDataRepositoryId()
+     * @generated
+     * @ordered
+     */
 	protected static final String BUSINESS_DATA_REPOSITORY_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getBusinessDataRepositoryId() <em>Business Data Repository Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getBusinessDataRepositoryId() <em>Business Data Repository Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getBusinessDataRepositoryId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getBusinessDataRepositoryId()
+     * @generated
+     * @ordered
+     */
 	protected String businessDataRepositoryId = BUSINESS_DATA_REPOSITORY_ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isCreateNewInstance() <em>Create New Instance</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isCreateNewInstance() <em>Create New Instance</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isCreateNewInstance()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isCreateNewInstance()
+     * @generated
+     * @ordered
+     */
 	protected static final boolean CREATE_NEW_INSTANCE_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isCreateNewInstance() <em>Create New Instance</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isCreateNewInstance() <em>Create New Instance</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isCreateNewInstance()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isCreateNewInstance()
+     * @generated
+     * @ordered
+     */
 	protected boolean createNewInstance = CREATE_NEW_INSTANCE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getEClassName() <em>EClass Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getEClassName() <em>EClass Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEClassName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEClassName()
+     * @generated
+     * @ordered
+     */
 	protected static final String ECLASS_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEClassName() <em>EClass Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEClassName() <em>EClass Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEClassName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEClassName()
+     * @generated
+     * @ordered
+     */
 	protected String eClassName = ECLASS_NAME_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected BusinessObjectDataImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.BUSINESS_OBJECT_DATA;
-	}
+        return ProcessPackage.Literals.BUSINESS_OBJECT_DATA;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getBusinessDataRepositoryId() {
-		return businessDataRepositoryId;
-	}
+        return businessDataRepositoryId;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setBusinessDataRepositoryId(String newBusinessDataRepositoryId) {
-		String oldBusinessDataRepositoryId = businessDataRepositoryId;
-		businessDataRepositoryId = newBusinessDataRepositoryId;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID, oldBusinessDataRepositoryId, businessDataRepositoryId));
-	}
+        String oldBusinessDataRepositoryId = businessDataRepositoryId;
+        businessDataRepositoryId = newBusinessDataRepositoryId;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID, oldBusinessDataRepositoryId, businessDataRepositoryId));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean isCreateNewInstance() {
-		return createNewInstance;
-	}
+        return createNewInstance;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setCreateNewInstance(boolean newCreateNewInstance) {
-		boolean oldCreateNewInstance = createNewInstance;
-		createNewInstance = newCreateNewInstance;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE, oldCreateNewInstance, createNewInstance));
-	}
+        boolean oldCreateNewInstance = createNewInstance;
+        createNewInstance = newCreateNewInstance;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE, oldCreateNewInstance, createNewInstance));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getEClassName() {
-		return eClassName;
-	}
+        return eClassName;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setEClassName(String newEClassName) {
-		String oldEClassName = eClassName;
-		eClassName = newEClassName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME, oldEClassName, eClassName));
-	}
+        String oldEClassName = eClassName;
+        eClassName = newEClassName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME, oldEClassName, eClassName));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
-				return getBusinessDataRepositoryId();
-			case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
-				return isCreateNewInstance();
-			case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
-				return getEClassName();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
+                return getBusinessDataRepositoryId();
+            case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
+                return isCreateNewInstance();
+            case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
+                return getEClassName();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
-				setBusinessDataRepositoryId((String)newValue);
-				return;
-			case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
-				setCreateNewInstance((Boolean)newValue);
-				return;
-			case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
-				setEClassName((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
+                setBusinessDataRepositoryId((String)newValue);
+                return;
+            case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
+                setCreateNewInstance((Boolean)newValue);
+                return;
+            case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
+                setEClassName((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
-				setBusinessDataRepositoryId(BUSINESS_DATA_REPOSITORY_ID_EDEFAULT);
-				return;
-			case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
-				setCreateNewInstance(CREATE_NEW_INSTANCE_EDEFAULT);
-				return;
-			case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
-				setEClassName(ECLASS_NAME_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
+                setBusinessDataRepositoryId(BUSINESS_DATA_REPOSITORY_ID_EDEFAULT);
+                return;
+            case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
+                setCreateNewInstance(CREATE_NEW_INSTANCE_EDEFAULT);
+                return;
+            case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
+                setEClassName(ECLASS_NAME_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
-				return BUSINESS_DATA_REPOSITORY_ID_EDEFAULT == null ? businessDataRepositoryId != null : !BUSINESS_DATA_REPOSITORY_ID_EDEFAULT.equals(businessDataRepositoryId);
-			case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
-				return createNewInstance != CREATE_NEW_INSTANCE_EDEFAULT;
-			case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
-				return ECLASS_NAME_EDEFAULT == null ? eClassName != null : !ECLASS_NAME_EDEFAULT.equals(eClassName);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.BUSINESS_OBJECT_DATA__BUSINESS_DATA_REPOSITORY_ID:
+                return BUSINESS_DATA_REPOSITORY_ID_EDEFAULT == null ? businessDataRepositoryId != null : !BUSINESS_DATA_REPOSITORY_ID_EDEFAULT.equals(businessDataRepositoryId);
+            case ProcessPackage.BUSINESS_OBJECT_DATA__CREATE_NEW_INSTANCE:
+                return createNewInstance != CREATE_NEW_INSTANCE_EDEFAULT;
+            case ProcessPackage.BUSINESS_OBJECT_DATA__ECLASS_NAME:
+                return ECLASS_NAME_EDEFAULT == null ? eClassName != null : !ECLASS_NAME_EDEFAULT.equals(eClassName);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (businessDataRepositoryId: "); //$NON-NLS-1$
-		result.append(businessDataRepositoryId);
-		result.append(", createNewInstance: "); //$NON-NLS-1$
-		result.append(createNewInstance);
-		result.append(", eClassName: "); //$NON-NLS-1$
-		result.append(eClassName);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (businessDataRepositoryId: "); //$NON-NLS-1$
+        result.append(businessDataRepositoryId);
+        result.append(", createNewInstance: "); //$NON-NLS-1$
+        result.append(createNewInstance);
+        result.append(", eClassName: "); //$NON-NLS-1$
+        result.append(eClassName);
+        result.append(')');
+        return result.toString();
+    }
 
 } //BusinessObjectDataImpl

@@ -39,61 +39,61 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Pool extends AbstractProcess, ContractContainer {
 	/**
-	 * Returns the value of the '<em><b>Documents</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.Document}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Documents</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.Document}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Documents</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Documents</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_Documents()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Documents</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_Documents()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Document> getDocuments();
 
 	/**
-	 * Returns the value of the '<em><b>Search Indexes</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.SearchIndex}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Search Indexes</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.SearchIndex}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Search Indexes</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Search Indexes</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_SearchIndexes()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Search Indexes</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_SearchIndexes()
+     * @model containment="true"
+     * @generated
+     */
 	EList<SearchIndex> getSearchIndexes();
 
 	/**
-	 * Returns the value of the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Display Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Display Name</em>' attribute.
-	 * @see #setDisplayName(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_DisplayName()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Display Name</em>' attribute.
+     * @see #setDisplayName(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_DisplayName()
+     * @model
+     * @generated
+     */
 	String getDisplayName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Pool#getDisplayName <em>Display Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Pool#getDisplayName <em>Display Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Name</em>' attribute.
-	 * @see #getDisplayName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Display Name</em>' attribute.
+     * @see #getDisplayName()
+     * @generated
+     */
 	void setDisplayName(String value);
 
 } // Pool

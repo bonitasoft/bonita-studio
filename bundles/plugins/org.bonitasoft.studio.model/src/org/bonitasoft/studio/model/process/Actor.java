@@ -36,30 +36,30 @@ package org.bonitasoft.studio.model.process;
  */
 public interface Actor extends Element {
 	/**
-	 * Returns the value of the '<em><b>Initiator</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Initiator</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Initiator</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Initiator</em>' attribute.
-	 * @see #setInitiator(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getActor_Initiator()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Initiator</em>' attribute.
+     * @see #setInitiator(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getActor_Initiator()
+     * @model default="false"
+     * @generated
+     */
 	boolean isInitiator();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Actor#isInitiator <em>Initiator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Actor#isInitiator <em>Initiator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Initiator</em>' attribute.
-	 * @see #isInitiator()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Initiator</em>' attribute.
+     * @see #isInitiator()
+     * @generated
+     */
 	void setInitiator(boolean value);
 
 } // Actor

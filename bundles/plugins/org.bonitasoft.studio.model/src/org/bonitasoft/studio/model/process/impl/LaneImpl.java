@@ -54,214 +54,214 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class LaneImpl extends ContainerImpl implements Lane {
 	/**
-	 * The cached value of the '{@link #getActor() <em>Actor</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getActor() <em>Actor</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getActor()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getActor()
+     * @generated
+     * @ordered
+     */
 	protected Actor actor;
 
 	/**
-	 * The cached value of the '{@link #getFilters() <em>Filters</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getFilters() <em>Filters</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFilters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getFilters()
+     * @generated
+     * @ordered
+     */
 	protected EList<ActorFilter> filters;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected LaneImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.LANE;
-	}
+        return ProcessPackage.Literals.LANE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Actor getActor() {
-		if (actor != null && actor.eIsProxy()) {
-			InternalEObject oldActor = (InternalEObject)actor;
-			actor = (Actor)eResolveProxy(oldActor);
-			if (actor != oldActor) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.LANE__ACTOR, oldActor, actor));
-			}
-		}
-		return actor;
-	}
+        if (actor != null && actor.eIsProxy()) {
+            InternalEObject oldActor = (InternalEObject)actor;
+            actor = (Actor)eResolveProxy(oldActor);
+            if (actor != oldActor) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.LANE__ACTOR, oldActor, actor));
+            }
+        }
+        return actor;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Actor basicGetActor() {
-		return actor;
-	}
+        return actor;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setActor(Actor newActor) {
-		Actor oldActor = actor;
-		actor = newActor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.LANE__ACTOR, oldActor, actor));
-	}
+        Actor oldActor = actor;
+        actor = newActor;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.LANE__ACTOR, oldActor, actor));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<ActorFilter> getFilters() {
-		if (filters == null) {
-			filters = new EObjectContainmentEList<ActorFilter>(ActorFilter.class, this, ProcessPackage.LANE__FILTERS);
-		}
-		return filters;
-	}
+        if (filters == null) {
+            filters = new EObjectContainmentEList<ActorFilter>(ActorFilter.class, this, ProcessPackage.LANE__FILTERS);
+        }
+        return filters;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.LANE__FILTERS:
-				return ((InternalEList<?>)getFilters()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.LANE__FILTERS:
+                return ((InternalEList<?>)getFilters()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.LANE__ACTOR:
-				if (resolve) return getActor();
-				return basicGetActor();
-			case ProcessPackage.LANE__FILTERS:
-				return getFilters();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.LANE__ACTOR:
+                if (resolve) return getActor();
+                return basicGetActor();
+            case ProcessPackage.LANE__FILTERS:
+                return getFilters();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.LANE__ACTOR:
-				setActor((Actor)newValue);
-				return;
-			case ProcessPackage.LANE__FILTERS:
-				getFilters().clear();
-				getFilters().addAll((Collection<? extends ActorFilter>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.LANE__ACTOR:
+                setActor((Actor)newValue);
+                return;
+            case ProcessPackage.LANE__FILTERS:
+                getFilters().clear();
+                getFilters().addAll((Collection<? extends ActorFilter>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.LANE__ACTOR:
-				setActor((Actor)null);
-				return;
-			case ProcessPackage.LANE__FILTERS:
-				getFilters().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.LANE__ACTOR:
+                setActor((Actor)null);
+                return;
+            case ProcessPackage.LANE__FILTERS:
+                getFilters().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.LANE__ACTOR:
-				return actor != null;
-			case ProcessPackage.LANE__FILTERS:
-				return filters != null && !filters.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.LANE__ACTOR:
+                return actor != null;
+            case ProcessPackage.LANE__FILTERS:
+                return filters != null && !filters.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == Assignable.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.LANE__ACTOR: return ProcessPackage.ASSIGNABLE__ACTOR;
-				case ProcessPackage.LANE__FILTERS: return ProcessPackage.ASSIGNABLE__FILTERS;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == Assignable.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.LANE__ACTOR: return ProcessPackage.ASSIGNABLE__ACTOR;
+                case ProcessPackage.LANE__FILTERS: return ProcessPackage.ASSIGNABLE__FILTERS;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == Assignable.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.ASSIGNABLE__ACTOR: return ProcessPackage.LANE__ACTOR;
-				case ProcessPackage.ASSIGNABLE__FILTERS: return ProcessPackage.LANE__FILTERS;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == Assignable.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.ASSIGNABLE__ACTOR: return ProcessPackage.LANE__ACTOR;
+                case ProcessPackage.ASSIGNABLE__FILTERS: return ProcessPackage.LANE__FILTERS;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 } //LaneImpl

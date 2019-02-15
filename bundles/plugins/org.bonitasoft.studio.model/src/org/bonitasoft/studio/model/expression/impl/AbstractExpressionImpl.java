@@ -33,22 +33,22 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public abstract class AbstractExpressionImpl extends EObjectImpl implements AbstractExpression {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected AbstractExpressionImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ExpressionPackage.Literals.ABSTRACT_EXPRESSION;
-	}
+        return ExpressionPackage.Literals.ABSTRACT_EXPRESSION;
+    }
 
 } //AbstractExpressionImpl

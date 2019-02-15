@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class StartEventImpl extends EventImpl implements StartEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected StartEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.START_EVENT;
-	}
+        return ProcessPackage.Literals.START_EVENT;
+    }
 
 } //StartEventImpl

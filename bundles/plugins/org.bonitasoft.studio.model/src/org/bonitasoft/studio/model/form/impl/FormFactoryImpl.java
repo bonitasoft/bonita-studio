@@ -36,632 +36,632 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class FormFactoryImpl extends EFactoryImpl implements FormFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static FormFactory init() {
-		try {
-			FormFactory theFormFactory = (FormFactory)EPackage.Registry.INSTANCE.getEFactory(FormPackage.eNS_URI);
-			if (theFormFactory != null) {
-				return theFormFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new FormFactoryImpl();
-	}
+        try {
+            FormFactory theFormFactory = (FormFactory)EPackage.Registry.INSTANCE.getEFactory(FormPackage.eNS_URI);
+            if (theFormFactory != null) {
+                return theFormFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new FormFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public FormFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case FormPackage.WIDGET_DEPENDENCY: return createWidgetDependency();
-			case FormPackage.VALIDATOR: return createValidator();
-			case FormPackage.VALIDABLE: return createValidable();
-			case FormPackage.FORM: return createForm();
-			case FormPackage.WIDGET_LAYOUT_INFO: return createWidgetLayoutInfo();
-			case FormPackage.COLUMN: return createColumn();
-			case FormPackage.LINE: return createLine();
-			case FormPackage.VIEW_FORM: return createViewForm();
-			case FormPackage.GROUP: return createGroup();
-			case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD: return createCheckBoxMultipleFormField();
-			case FormPackage.COMBO_FORM_FIELD: return createComboFormField();
-			case FormPackage.DATE_FORM_FIELD: return createDateFormField();
-			case FormPackage.LIST_FORM_FIELD: return createListFormField();
-			case FormPackage.PASSWORD_FORM_FIELD: return createPasswordFormField();
-			case FormPackage.RADIO_FORM_FIELD: return createRadioFormField();
-			case FormPackage.SELECT_FORM_FIELD: return createSelectFormField();
-			case FormPackage.TEXT_FORM_FIELD: return createTextFormField();
-			case FormPackage.TEXT_AREA_FORM_FIELD: return createTextAreaFormField();
-			case FormPackage.RICH_TEXT_AREA_FORM_FIELD: return createRichTextAreaFormField();
-			case FormPackage.FORM_BUTTON: return createFormButton();
-			case FormPackage.SUBMIT_FORM_BUTTON: return createSubmitFormButton();
-			case FormPackage.PREVIOUS_FORM_BUTTON: return createPreviousFormButton();
-			case FormPackage.NEXT_FORM_BUTTON: return createNextFormButton();
-			case FormPackage.INFO: return createInfo();
-			case FormPackage.TEXT_INFO: return createTextInfo();
-			case FormPackage.MESSAGE_INFO: return createMessageInfo();
-			case FormPackage.CHECK_BOX_SINGLE_FORM_FIELD: return createCheckBoxSingleFormField();
-			case FormPackage.FILE_WIDGET: return createFileWidget();
-			case FormPackage.IMAGE_WIDGET: return createImageWidget();
-			case FormPackage.HIDDEN_WIDGET: return createHiddenWidget();
-			case FormPackage.DURATION_FORM_FIELD: return createDurationFormField();
-			case FormPackage.TABLE: return createTable();
-			case FormPackage.DYNAMIC_TABLE: return createDynamicTable();
-			case FormPackage.IFRAME_WIDGET: return createIFrameWidget();
-			case FormPackage.HTML_WIDGET: return createHtmlWidget();
-			case FormPackage.SUGGEST_BOX: return createSuggestBox();
-			case FormPackage.GROUP_ITERATOR: return createGroupIterator();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case FormPackage.WIDGET_DEPENDENCY: return createWidgetDependency();
+            case FormPackage.VALIDATOR: return createValidator();
+            case FormPackage.VALIDABLE: return createValidable();
+            case FormPackage.FORM: return createForm();
+            case FormPackage.WIDGET_LAYOUT_INFO: return createWidgetLayoutInfo();
+            case FormPackage.COLUMN: return createColumn();
+            case FormPackage.LINE: return createLine();
+            case FormPackage.VIEW_FORM: return createViewForm();
+            case FormPackage.GROUP: return createGroup();
+            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD: return createCheckBoxMultipleFormField();
+            case FormPackage.COMBO_FORM_FIELD: return createComboFormField();
+            case FormPackage.DATE_FORM_FIELD: return createDateFormField();
+            case FormPackage.LIST_FORM_FIELD: return createListFormField();
+            case FormPackage.PASSWORD_FORM_FIELD: return createPasswordFormField();
+            case FormPackage.RADIO_FORM_FIELD: return createRadioFormField();
+            case FormPackage.SELECT_FORM_FIELD: return createSelectFormField();
+            case FormPackage.TEXT_FORM_FIELD: return createTextFormField();
+            case FormPackage.TEXT_AREA_FORM_FIELD: return createTextAreaFormField();
+            case FormPackage.RICH_TEXT_AREA_FORM_FIELD: return createRichTextAreaFormField();
+            case FormPackage.FORM_BUTTON: return createFormButton();
+            case FormPackage.SUBMIT_FORM_BUTTON: return createSubmitFormButton();
+            case FormPackage.PREVIOUS_FORM_BUTTON: return createPreviousFormButton();
+            case FormPackage.NEXT_FORM_BUTTON: return createNextFormButton();
+            case FormPackage.INFO: return createInfo();
+            case FormPackage.TEXT_INFO: return createTextInfo();
+            case FormPackage.MESSAGE_INFO: return createMessageInfo();
+            case FormPackage.CHECK_BOX_SINGLE_FORM_FIELD: return createCheckBoxSingleFormField();
+            case FormPackage.FILE_WIDGET: return createFileWidget();
+            case FormPackage.IMAGE_WIDGET: return createImageWidget();
+            case FormPackage.HIDDEN_WIDGET: return createHiddenWidget();
+            case FormPackage.DURATION_FORM_FIELD: return createDurationFormField();
+            case FormPackage.TABLE: return createTable();
+            case FormPackage.DYNAMIC_TABLE: return createDynamicTable();
+            case FormPackage.IFRAME_WIDGET: return createIFrameWidget();
+            case FormPackage.HTML_WIDGET: return createHtmlWidget();
+            case FormPackage.SUGGEST_BOX: return createSuggestBox();
+            case FormPackage.GROUP_ITERATOR: return createGroupIterator();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case FormPackage.EVENT_DEPENDENCY_TYPE:
-				return createEventDependencyTypeFromString(eDataType, initialValue);
-			case FormPackage.LABEL_POSITION:
-				return createLabelPositionFromString(eDataType, initialValue);
-			case FormPackage.FILE_WIDGET_INPUT_TYPE:
-				return createFileWidgetInputTypeFromString(eDataType, initialValue);
-			case FormPackage.FILE_WIDGET_DOWNLOAD_TYPE:
-				return createFileWidgetDownloadTypeFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case FormPackage.EVENT_DEPENDENCY_TYPE:
+                return createEventDependencyTypeFromString(eDataType, initialValue);
+            case FormPackage.LABEL_POSITION:
+                return createLabelPositionFromString(eDataType, initialValue);
+            case FormPackage.FILE_WIDGET_INPUT_TYPE:
+                return createFileWidgetInputTypeFromString(eDataType, initialValue);
+            case FormPackage.FILE_WIDGET_DOWNLOAD_TYPE:
+                return createFileWidgetDownloadTypeFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case FormPackage.EVENT_DEPENDENCY_TYPE:
-				return convertEventDependencyTypeToString(eDataType, instanceValue);
-			case FormPackage.LABEL_POSITION:
-				return convertLabelPositionToString(eDataType, instanceValue);
-			case FormPackage.FILE_WIDGET_INPUT_TYPE:
-				return convertFileWidgetInputTypeToString(eDataType, instanceValue);
-			case FormPackage.FILE_WIDGET_DOWNLOAD_TYPE:
-				return convertFileWidgetDownloadTypeToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case FormPackage.EVENT_DEPENDENCY_TYPE:
+                return convertEventDependencyTypeToString(eDataType, instanceValue);
+            case FormPackage.LABEL_POSITION:
+                return convertLabelPositionToString(eDataType, instanceValue);
+            case FormPackage.FILE_WIDGET_INPUT_TYPE:
+                return convertFileWidgetInputTypeToString(eDataType, instanceValue);
+            case FormPackage.FILE_WIDGET_DOWNLOAD_TYPE:
+                return convertFileWidgetDownloadTypeToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public WidgetDependency createWidgetDependency() {
-		WidgetDependencyImpl widgetDependency = new WidgetDependencyImpl();
-		return widgetDependency;
-	}
+        WidgetDependencyImpl widgetDependency = new WidgetDependencyImpl();
+        return widgetDependency;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Validator createValidator() {
-		ValidatorImpl validator = new ValidatorImpl();
-		return validator;
-	}
+        ValidatorImpl validator = new ValidatorImpl();
+        return validator;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Validable createValidable() {
-		ValidableImpl validable = new ValidableImpl();
-		return validable;
-	}
+        ValidableImpl validable = new ValidableImpl();
+        return validable;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Form createForm() {
-		FormImpl form = new FormImpl();
-		return form;
-	}
+        FormImpl form = new FormImpl();
+        return form;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public WidgetLayoutInfo createWidgetLayoutInfo() {
-		WidgetLayoutInfoImpl widgetLayoutInfo = new WidgetLayoutInfoImpl();
-		return widgetLayoutInfo;
-	}
+        WidgetLayoutInfoImpl widgetLayoutInfo = new WidgetLayoutInfoImpl();
+        return widgetLayoutInfo;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Column createColumn() {
-		ColumnImpl column = new ColumnImpl();
-		return column;
-	}
+        ColumnImpl column = new ColumnImpl();
+        return column;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Line createLine() {
-		LineImpl line = new LineImpl();
-		return line;
-	}
+        LineImpl line = new LineImpl();
+        return line;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ViewForm createViewForm() {
-		ViewFormImpl viewForm = new ViewFormImpl();
-		return viewForm;
-	}
+        ViewFormImpl viewForm = new ViewFormImpl();
+        return viewForm;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Group createGroup() {
-		GroupImpl group = new GroupImpl();
-		return group;
-	}
+        GroupImpl group = new GroupImpl();
+        return group;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public CheckBoxMultipleFormField createCheckBoxMultipleFormField() {
-		CheckBoxMultipleFormFieldImpl checkBoxMultipleFormField = new CheckBoxMultipleFormFieldImpl();
-		return checkBoxMultipleFormField;
-	}
+        CheckBoxMultipleFormFieldImpl checkBoxMultipleFormField = new CheckBoxMultipleFormFieldImpl();
+        return checkBoxMultipleFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ComboFormField createComboFormField() {
-		ComboFormFieldImpl comboFormField = new ComboFormFieldImpl();
-		return comboFormField;
-	}
+        ComboFormFieldImpl comboFormField = new ComboFormFieldImpl();
+        return comboFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DateFormField createDateFormField() {
-		DateFormFieldImpl dateFormField = new DateFormFieldImpl();
-		return dateFormField;
-	}
+        DateFormFieldImpl dateFormField = new DateFormFieldImpl();
+        return dateFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ListFormField createListFormField() {
-		ListFormFieldImpl listFormField = new ListFormFieldImpl();
-		return listFormField;
-	}
+        ListFormFieldImpl listFormField = new ListFormFieldImpl();
+        return listFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public PasswordFormField createPasswordFormField() {
-		PasswordFormFieldImpl passwordFormField = new PasswordFormFieldImpl();
-		return passwordFormField;
-	}
+        PasswordFormFieldImpl passwordFormField = new PasswordFormFieldImpl();
+        return passwordFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public RadioFormField createRadioFormField() {
-		RadioFormFieldImpl radioFormField = new RadioFormFieldImpl();
-		return radioFormField;
-	}
+        RadioFormFieldImpl radioFormField = new RadioFormFieldImpl();
+        return radioFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SelectFormField createSelectFormField() {
-		SelectFormFieldImpl selectFormField = new SelectFormFieldImpl();
-		return selectFormField;
-	}
+        SelectFormFieldImpl selectFormField = new SelectFormFieldImpl();
+        return selectFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TextFormField createTextFormField() {
-		TextFormFieldImpl textFormField = new TextFormFieldImpl();
-		return textFormField;
-	}
+        TextFormFieldImpl textFormField = new TextFormFieldImpl();
+        return textFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TextAreaFormField createTextAreaFormField() {
-		TextAreaFormFieldImpl textAreaFormField = new TextAreaFormFieldImpl();
-		return textAreaFormField;
-	}
+        TextAreaFormFieldImpl textAreaFormField = new TextAreaFormFieldImpl();
+        return textAreaFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public RichTextAreaFormField createRichTextAreaFormField() {
-		RichTextAreaFormFieldImpl richTextAreaFormField = new RichTextAreaFormFieldImpl();
-		return richTextAreaFormField;
-	}
+        RichTextAreaFormFieldImpl richTextAreaFormField = new RichTextAreaFormFieldImpl();
+        return richTextAreaFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public FormButton createFormButton() {
-		FormButtonImpl formButton = new FormButtonImpl();
-		return formButton;
-	}
+        FormButtonImpl formButton = new FormButtonImpl();
+        return formButton;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SubmitFormButton createSubmitFormButton() {
-		SubmitFormButtonImpl submitFormButton = new SubmitFormButtonImpl();
-		return submitFormButton;
-	}
+        SubmitFormButtonImpl submitFormButton = new SubmitFormButtonImpl();
+        return submitFormButton;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public PreviousFormButton createPreviousFormButton() {
-		PreviousFormButtonImpl previousFormButton = new PreviousFormButtonImpl();
-		return previousFormButton;
-	}
+        PreviousFormButtonImpl previousFormButton = new PreviousFormButtonImpl();
+        return previousFormButton;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NextFormButton createNextFormButton() {
-		NextFormButtonImpl nextFormButton = new NextFormButtonImpl();
-		return nextFormButton;
-	}
+        NextFormButtonImpl nextFormButton = new NextFormButtonImpl();
+        return nextFormButton;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Info createInfo() {
-		InfoImpl info = new InfoImpl();
-		return info;
-	}
+        InfoImpl info = new InfoImpl();
+        return info;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TextInfo createTextInfo() {
-		TextInfoImpl textInfo = new TextInfoImpl();
-		return textInfo;
-	}
+        TextInfoImpl textInfo = new TextInfoImpl();
+        return textInfo;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public MessageInfo createMessageInfo() {
-		MessageInfoImpl messageInfo = new MessageInfoImpl();
-		return messageInfo;
-	}
+        MessageInfoImpl messageInfo = new MessageInfoImpl();
+        return messageInfo;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public CheckBoxSingleFormField createCheckBoxSingleFormField() {
-		CheckBoxSingleFormFieldImpl checkBoxSingleFormField = new CheckBoxSingleFormFieldImpl();
-		return checkBoxSingleFormField;
-	}
+        CheckBoxSingleFormFieldImpl checkBoxSingleFormField = new CheckBoxSingleFormFieldImpl();
+        return checkBoxSingleFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public FileWidget createFileWidget() {
-		FileWidgetImpl fileWidget = new FileWidgetImpl();
-		return fileWidget;
-	}
+        FileWidgetImpl fileWidget = new FileWidgetImpl();
+        return fileWidget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ImageWidget createImageWidget() {
-		ImageWidgetImpl imageWidget = new ImageWidgetImpl();
-		return imageWidget;
-	}
+        ImageWidgetImpl imageWidget = new ImageWidgetImpl();
+        return imageWidget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public HiddenWidget createHiddenWidget() {
-		HiddenWidgetImpl hiddenWidget = new HiddenWidgetImpl();
-		return hiddenWidget;
-	}
+        HiddenWidgetImpl hiddenWidget = new HiddenWidgetImpl();
+        return hiddenWidget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DurationFormField createDurationFormField() {
-		DurationFormFieldImpl durationFormField = new DurationFormFieldImpl();
-		return durationFormField;
-	}
+        DurationFormFieldImpl durationFormField = new DurationFormFieldImpl();
+        return durationFormField;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Table createTable() {
-		TableImpl table = new TableImpl();
-		return table;
-	}
+        TableImpl table = new TableImpl();
+        return table;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DynamicTable createDynamicTable() {
-		DynamicTableImpl dynamicTable = new DynamicTableImpl();
-		return dynamicTable;
-	}
+        DynamicTableImpl dynamicTable = new DynamicTableImpl();
+        return dynamicTable;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public IFrameWidget createIFrameWidget() {
-		IFrameWidgetImpl iFrameWidget = new IFrameWidgetImpl();
-		return iFrameWidget;
-	}
+        IFrameWidgetImpl iFrameWidget = new IFrameWidgetImpl();
+        return iFrameWidget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public HtmlWidget createHtmlWidget() {
-		HtmlWidgetImpl htmlWidget = new HtmlWidgetImpl();
-		return htmlWidget;
-	}
+        HtmlWidgetImpl htmlWidget = new HtmlWidgetImpl();
+        return htmlWidget;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public SuggestBox createSuggestBox() {
-		SuggestBoxImpl suggestBox = new SuggestBoxImpl();
-		return suggestBox;
-	}
+        SuggestBoxImpl suggestBox = new SuggestBoxImpl();
+        return suggestBox;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public GroupIterator createGroupIterator() {
-		GroupIteratorImpl groupIterator = new GroupIteratorImpl();
-		return groupIterator;
-	}
+        GroupIteratorImpl groupIterator = new GroupIteratorImpl();
+        return groupIterator;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public EventDependencyType createEventDependencyTypeFromString(EDataType eDataType, String initialValue) {
-		EventDependencyType result = EventDependencyType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        EventDependencyType result = EventDependencyType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertEventDependencyTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public LabelPosition createLabelPositionFromString(EDataType eDataType, String initialValue) {
-		LabelPosition result = LabelPosition.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        LabelPosition result = LabelPosition.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertLabelPositionToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public FileWidgetInputType createFileWidgetInputTypeFromString(EDataType eDataType, String initialValue) {
-		FileWidgetInputType result = FileWidgetInputType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        FileWidgetInputType result = FileWidgetInputType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertFileWidgetInputTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public FileWidgetDownloadType createFileWidgetDownloadTypeFromString(EDataType eDataType, String initialValue) {
-		FileWidgetDownloadType result = FileWidgetDownloadType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
+        FileWidgetDownloadType result = FileWidgetDownloadType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return result;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String convertFileWidgetDownloadTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public FormPackage getFormPackage() {
-		return (FormPackage)getEPackage();
-	}
+        return (FormPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static FormPackage getPackage() {
-		return FormPackage.eINSTANCE;
-	}
+        return FormPackage.eINSTANCE;
+    }
 
 } //FormFactoryImpl

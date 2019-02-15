@@ -37,29 +37,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ErrorEvent extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Error Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Error Code</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Error Code</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Error Code</em>' attribute.
-	 * @see #setErrorCode(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getErrorEvent_ErrorCode()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Error Code</em>' attribute.
+     * @see #setErrorCode(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getErrorEvent_ErrorCode()
+     * @model
+     * @generated
+     */
 	String getErrorCode();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.ErrorEvent#getErrorCode <em>Error Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ErrorEvent#getErrorCode <em>Error Code</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Error Code</em>' attribute.
-	 * @see #getErrorCode()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Error Code</em>' attribute.
+     * @see #getErrorCode()
+     * @generated
+     */
 	void setErrorCode(String value);
 
 } // ErrorEvent

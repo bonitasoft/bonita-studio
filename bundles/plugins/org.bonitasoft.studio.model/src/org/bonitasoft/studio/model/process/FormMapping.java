@@ -41,85 +41,85 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface FormMapping extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Target Form</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Target Form</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Target Form</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target Form</em>' containment reference.
-	 * @see #setTargetForm(Expression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_TargetForm()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Target Form</em>' containment reference.
+     * @see #setTargetForm(Expression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_TargetForm()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getTargetForm();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getTargetForm <em>Target Form</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getTargetForm <em>Target Form</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target Form</em>' containment reference.
-	 * @see #getTargetForm()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Target Form</em>' containment reference.
+     * @see #getTargetForm()
+     * @generated
+     */
 	void setTargetForm(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Type</b></em>' attribute.
-	 * The default value is <code>"INTERNAL"</code>.
-	 * The literals are from the enumeration {@link org.bonitasoft.studio.model.process.FormMappingType}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Type</b></em>' attribute.
+     * The default value is <code>"INTERNAL"</code>.
+     * The literals are from the enumeration {@link org.bonitasoft.studio.model.process.FormMappingType}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see org.bonitasoft.studio.model.process.FormMappingType
-	 * @see #setType(FormMappingType)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_Type()
-	 * @model default="INTERNAL"
-	 * @generated
-	 */
+     * @return the value of the '<em>Type</em>' attribute.
+     * @see org.bonitasoft.studio.model.process.FormMappingType
+     * @see #setType(FormMappingType)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_Type()
+     * @model default="INTERNAL"
+     * @generated
+     */
 	FormMappingType getType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getType <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getType <em>Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type</em>' attribute.
-	 * @see org.bonitasoft.studio.model.process.FormMappingType
-	 * @see #getType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Type</em>' attribute.
+     * @see org.bonitasoft.studio.model.process.FormMappingType
+     * @see #getType()
+     * @generated
+     */
 	void setType(FormMappingType value);
 
 	/**
-	 * Returns the value of the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Url</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Url</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Url</em>' attribute.
-	 * @see #setUrl(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_Url()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Url</em>' attribute.
+     * @see #setUrl(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getFormMapping_Url()
+     * @model
+     * @generated
+     */
 	String getUrl();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getUrl <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.FormMapping#getUrl <em>Url</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Url</em>' attribute.
-	 * @see #getUrl()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Url</em>' attribute.
+     * @see #getUrl()
+     * @generated
+     */
 	void setUrl(String value);
 
 } // FormMapping

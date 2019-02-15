@@ -40,247 +40,247 @@ import org.eclipse.emf.ecore.EReference;
  */
 public interface ConnectorConfigurationPackage extends EPackage {
 	/**
-	 * The package name.
-	 * <!-- begin-user-doc -->
+     * The package name.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNAME = "connectorconfiguration"; //$NON-NLS-1$
 
 	/**
-	 * The package namespace URI.
-	 * <!-- begin-user-doc -->
+     * The package namespace URI.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNS_URI = "http://wwww.bonitasoft.org/model/connector/configuration"; //$NON-NLS-1$
 
 	/**
-	 * The package namespace name.
-	 * <!-- begin-user-doc -->
+     * The package namespace name.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	String eNS_PREFIX = "connectorconfiguration"; //$NON-NLS-1$
 
 	/**
-	 * The singleton instance of the package.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	ConnectorConfigurationPackage eINSTANCE = org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl <em>Connector Configuration</em>}' class.
-	 * <!-- begin-user-doc -->
+     * The meta object id for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl <em>Connector Configuration</em>}' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorConfiguration()
-	 * @generated
-	 */
+     * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl
+     * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorConfiguration()
+     * @generated
+     */
 	int CONNECTOR_CONFIGURATION = 0;
 
 	/**
-	 * The feature id for the '<em><b>Definition Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Definition Id</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION__DEFINITION_ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION__VERSION = 1;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION__NAME = 2;
 
 	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION__PARAMETERS = 3;
 
 	/**
-	 * The feature id for the '<em><b>Model Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Model Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION__MODEL_VERSION = 4;
 
 	/**
-	 * The number of structural features of the '<em>Connector Configuration</em>' class.
-	 * <!-- begin-user-doc -->
+     * The number of structural features of the '<em>Connector Configuration</em>' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_CONFIGURATION_FEATURE_COUNT = 5;
 
 	/**
-	 * The meta object id for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl <em>Connector Parameter</em>}' class.
-	 * <!-- begin-user-doc -->
+     * The meta object id for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl <em>Connector Parameter</em>}' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorParameter()
-	 * @generated
-	 */
+     * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl
+     * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorParameter()
+     * @generated
+     */
 	int CONNECTOR_PARAMETER = 1;
 
 	/**
-	 * The feature id for the '<em><b>Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Key</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_PARAMETER__KEY = 0;
 
 	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_PARAMETER__EXPRESSION = 1;
 
 	/**
-	 * The number of structural features of the '<em>Connector Parameter</em>' class.
-	 * <!-- begin-user-doc -->
+     * The number of structural features of the '<em>Connector Parameter</em>' class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
 	int CONNECTOR_PARAMETER_FEATURE_COUNT = 2;
 
 
 	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration <em>Connector Configuration</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration <em>Connector Configuration</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Connector Configuration</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
-	 * @generated
-	 */
+     * @return the meta object for class '<em>Connector Configuration</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
+     * @generated
+     */
 	EClass getConnectorConfiguration();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId <em>Definition Id</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId <em>Definition Id</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Definition Id</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId()
-	 * @see #getConnectorConfiguration()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Definition Id</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getDefinitionId()
+     * @see #getConnectorConfiguration()
+     * @generated
+     */
 	EAttribute getConnectorConfiguration_DefinitionId();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion <em>Version</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion <em>Version</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Version</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion()
-	 * @see #getConnectorConfiguration()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Version</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getVersion()
+     * @see #getConnectorConfiguration()
+     * @generated
+     */
 	EAttribute getConnectorConfiguration_Version();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName()
-	 * @see #getConnectorConfiguration()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getName()
+     * @see #getConnectorConfiguration()
+     * @generated
+     */
 	EAttribute getConnectorConfiguration_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getParameters <em>Parameters</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getParameters <em>Parameters</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getParameters()
-	 * @see #getConnectorConfiguration()
-	 * @generated
-	 */
+     * @return the meta object for the containment reference list '<em>Parameters</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getParameters()
+     * @see #getConnectorConfiguration()
+     * @generated
+     */
 	EReference getConnectorConfiguration_Parameters();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion <em>Model Version</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion <em>Model Version</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Model Version</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion()
-	 * @see #getConnectorConfiguration()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Model Version</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration#getModelVersion()
+     * @see #getConnectorConfiguration()
+     * @generated
+     */
 	EAttribute getConnectorConfiguration_ModelVersion();
 
 	/**
-	 * Returns the meta object for class '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter <em>Connector Parameter</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter <em>Connector Parameter</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Connector Parameter</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter
-	 * @generated
-	 */
+     * @return the meta object for class '<em>Connector Parameter</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter
+     * @generated
+     */
 	EClass getConnectorParameter();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getKey <em>Key</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getKey <em>Key</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Key</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getKey()
-	 * @see #getConnectorParameter()
-	 * @generated
-	 */
+     * @return the meta object for the attribute '<em>Key</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getKey()
+     * @see #getConnectorParameter()
+     * @generated
+     */
 	EAttribute getConnectorParameter_Key();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getExpression <em>Expression</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getExpression <em>Expression</em>}'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getExpression()
-	 * @see #getConnectorParameter()
-	 * @generated
-	 */
+     * @return the meta object for the containment reference '<em>Expression</em>'.
+     * @see org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter#getExpression()
+     * @see #getConnectorParameter()
+     * @generated
+     */
 	EReference getConnectorParameter_Expression();
 
 	/**
-	 * Returns the factory that creates the instances of the model.
-	 * <!-- begin-user-doc -->
+     * Returns the factory that creates the instances of the model.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the factory that creates the instances of the model.
-	 * @generated
-	 */
+     * @return the factory that creates the instances of the model.
+     * @generated
+     */
 	ConnectorConfigurationFactory getConnectorConfigurationFactory();
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * Defines literals for the meta objects that represent
 	 * <ul>
 	 *   <li>each class,</li>
@@ -289,83 +289,83 @@ public interface ConnectorConfigurationPackage extends EPackage {
 	 *   <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl <em>Connector Configuration</em>}' class.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl <em>Connector Configuration</em>}' class.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl
-		 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorConfiguration()
-		 * @generated
-		 */
+         * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationImpl
+         * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorConfiguration()
+         * @generated
+         */
 		EClass CONNECTOR_CONFIGURATION = eINSTANCE.getConnectorConfiguration();
 
 		/**
-		 * The meta object literal for the '<em><b>Definition Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Definition Id</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute CONNECTOR_CONFIGURATION__DEFINITION_ID = eINSTANCE.getConnectorConfiguration_DefinitionId();
 
 		/**
-		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute CONNECTOR_CONFIGURATION__VERSION = eINSTANCE.getConnectorConfiguration_Version();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute CONNECTOR_CONFIGURATION__NAME = eINSTANCE.getConnectorConfiguration_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EReference CONNECTOR_CONFIGURATION__PARAMETERS = eINSTANCE.getConnectorConfiguration_Parameters();
 
 		/**
-		 * The meta object literal for the '<em><b>Model Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Model Version</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute CONNECTOR_CONFIGURATION__MODEL_VERSION = eINSTANCE.getConnectorConfiguration_ModelVersion();
 
 		/**
-		 * The meta object literal for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl <em>Connector Parameter</em>}' class.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl <em>Connector Parameter</em>}' class.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl
-		 * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorParameter()
-		 * @generated
-		 */
+         * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorParameterImpl
+         * @see org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl#getConnectorParameter()
+         * @generated
+         */
 		EClass CONNECTOR_PARAMETER = eINSTANCE.getConnectorParameter();
 
 		/**
-		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EAttribute CONNECTOR_PARAMETER__KEY = eINSTANCE.getConnectorParameter_Key();
 
 		/**
-		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
+         * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @generated
-		 */
+         * @generated
+         */
 		EReference CONNECTOR_PARAMETER__EXPRESSION = eINSTANCE.getConnectorParameter_Expression();
 
 	}

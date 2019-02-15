@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Groups extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Group</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group</em>' attribute list.
-	 * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getGroups_Group()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="kind='element' name='group'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Group</em>' attribute list.
+     * @see org.bonitasoft.studio.model.actormapping.ActorMappingPackage#getGroups_Group()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='element' name='group'"
+     * @generated
+     */
 	EList<String> getGroup();
 
 } // Groups

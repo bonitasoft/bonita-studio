@@ -35,162 +35,162 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class ActorMappingFactoryImpl extends EFactoryImpl implements ActorMappingFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public static ActorMappingFactory init() {
-		try {
-			ActorMappingFactory theActorMappingFactory = (ActorMappingFactory)EPackage.Registry.INSTANCE.getEFactory(ActorMappingPackage.eNS_URI);
-			if (theActorMappingFactory != null) {
-				return theActorMappingFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new ActorMappingFactoryImpl();
-	}
+        try {
+            ActorMappingFactory theActorMappingFactory = (ActorMappingFactory)EPackage.Registry.INSTANCE.getEFactory(ActorMappingPackage.eNS_URI);
+            if (theActorMappingFactory != null) {
+                return theActorMappingFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new ActorMappingFactoryImpl();
+    }
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ActorMappingFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case ActorMappingPackage.ACTOR_MAPPING: return createActorMapping();
-			case ActorMappingPackage.ACTOR_MAPPINGS_TYPE: return createActorMappingsType();
-			case ActorMappingPackage.DOCUMENT_ROOT: return createDocumentRoot();
-			case ActorMappingPackage.GROUPS: return createGroups();
-			case ActorMappingPackage.MEMBERSHIP: return createMembership();
-			case ActorMappingPackage.MEMBERSHIP_TYPE: return createMembershipType();
-			case ActorMappingPackage.ROLES: return createRoles();
-			case ActorMappingPackage.USERS: return createUsers();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case ActorMappingPackage.ACTOR_MAPPING: return createActorMapping();
+            case ActorMappingPackage.ACTOR_MAPPINGS_TYPE: return createActorMappingsType();
+            case ActorMappingPackage.DOCUMENT_ROOT: return createDocumentRoot();
+            case ActorMappingPackage.GROUPS: return createGroups();
+            case ActorMappingPackage.MEMBERSHIP: return createMembership();
+            case ActorMappingPackage.MEMBERSHIP_TYPE: return createMembershipType();
+            case ActorMappingPackage.ROLES: return createRoles();
+            case ActorMappingPackage.USERS: return createUsers();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ActorMapping createActorMapping() {
-		ActorMappingImpl actorMapping = new ActorMappingImpl();
-		return actorMapping;
-	}
+        ActorMappingImpl actorMapping = new ActorMappingImpl();
+        return actorMapping;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ActorMappingsType createActorMappingsType() {
-		ActorMappingsTypeImpl actorMappingsType = new ActorMappingsTypeImpl();
-		return actorMappingsType;
-	}
+        ActorMappingsTypeImpl actorMappingsType = new ActorMappingsTypeImpl();
+        return actorMappingsType;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public DocumentRoot createDocumentRoot() {
-		DocumentRootImpl documentRoot = new DocumentRootImpl();
-		return documentRoot;
-	}
+        DocumentRootImpl documentRoot = new DocumentRootImpl();
+        return documentRoot;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Groups createGroups() {
-		GroupsImpl groups = new GroupsImpl();
-		return groups;
-	}
+        GroupsImpl groups = new GroupsImpl();
+        return groups;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Membership createMembership() {
-		MembershipImpl membership = new MembershipImpl();
-		return membership;
-	}
+        MembershipImpl membership = new MembershipImpl();
+        return membership;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public MembershipType createMembershipType() {
-		MembershipTypeImpl membershipType = new MembershipTypeImpl();
-		return membershipType;
-	}
+        MembershipTypeImpl membershipType = new MembershipTypeImpl();
+        return membershipType;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Roles createRoles() {
-		RolesImpl roles = new RolesImpl();
-		return roles;
-	}
+        RolesImpl roles = new RolesImpl();
+        return roles;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Users createUsers() {
-		UsersImpl users = new UsersImpl();
-		return users;
-	}
+        UsersImpl users = new UsersImpl();
+        return users;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ActorMappingPackage getActorMappingPackage() {
-		return (ActorMappingPackage)getEPackage();
-	}
+        return (ActorMappingPackage)getEPackage();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
 	@Deprecated
 	public static ActorMappingPackage getPackage() {
-		return ActorMappingPackage.eINSTANCE;
-	}
+        return ActorMappingPackage.eINSTANCE;
+    }
 
 } //ActorMappingFactoryImpl

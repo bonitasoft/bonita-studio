@@ -77,328 +77,328 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  */
 public class ParameterPackageImpl extends EPackageImpl implements ParameterPackage {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private EClass parameterEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private EClass parameterContextEClass = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with
+     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+     * package URI value.
+     * <p>Note: the correct way to create the package is via the static
+     * factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package,
+     * if one already exists.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.bonitasoft.studio.model.parameter.ParameterPackage#eNS_URI
-	 * @see #init()
-	 * @generated
-	 */
+     * @see org.eclipse.emf.ecore.EPackage.Registry
+     * @see org.bonitasoft.studio.model.parameter.ParameterPackage#eNS_URI
+     * @see #init()
+     * @generated
+     */
 	private ParameterPackageImpl() {
-		super(eNS_URI, ParameterFactory.eINSTANCE);
-	}
+        super(eNS_URI, ParameterFactory.eINSTANCE);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 *
-	 * <p>This method is used to initialize {@link ParameterPackage#eINSTANCE} when that field is accessed.
-	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+     *
+     * <p>This method is used to initialize {@link ParameterPackage#eINSTANCE} when that field is accessed.
+     * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #eNS_URI
-	 * @see #createPackageContents()
-	 * @see #initializePackageContents()
-	 * @generated
-	 */
+     * @see #eNS_URI
+     * @see #createPackageContents()
+     * @see #initializePackageContents()
+     * @generated
+     */
 	public static ParameterPackage init() {
-		if (isInited) return (ParameterPackage)EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
+        if (isInited) return (ParameterPackage)EPackage.Registry.INSTANCE.getEPackage(ParameterPackage.eNS_URI);
 
-		// Obtain or create and register package
-		Object registeredParameterPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
-		ParameterPackageImpl theParameterPackage = registeredParameterPackage instanceof ParameterPackageImpl ? (ParameterPackageImpl)registeredParameterPackage : new ParameterPackageImpl();
+        // Obtain or create and register package
+        Object registeredParameterPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+        ParameterPackageImpl theParameterPackage = registeredParameterPackage instanceof ParameterPackageImpl ? (ParameterPackageImpl)registeredParameterPackage : new ParameterPackageImpl();
 
-		isInited = true;
+        isInited = true;
 
-		// Obtain or create and register interdependencies
-		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
-		ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
-		ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
-		ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
-		ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
-		KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
-		ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
-		DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
-		TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
-		FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
-		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
-		SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
+        // Obtain or create and register interdependencies
+        Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ActorMappingPackage.eNS_URI);
+        ActorMappingPackageImpl theActorMappingPackage = (ActorMappingPackageImpl)(registeredPackage instanceof ActorMappingPackageImpl ? registeredPackage : ActorMappingPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConfigurationPackage.eNS_URI);
+        ConfigurationPackageImpl theConfigurationPackage = (ConfigurationPackageImpl)(registeredPackage instanceof ConfigurationPackageImpl ? registeredPackage : ConfigurationPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ConnectorConfigurationPackage.eNS_URI);
+        ConnectorConfigurationPackageImpl theConnectorConfigurationPackage = (ConnectorConfigurationPackageImpl)(registeredPackage instanceof ConnectorConfigurationPackageImpl ? registeredPackage : ConnectorConfigurationPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ExpressionPackage.eNS_URI);
+        ExpressionPackageImpl theExpressionPackage = (ExpressionPackageImpl)(registeredPackage instanceof ExpressionPackageImpl ? registeredPackage : ExpressionPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpiPackage.eNS_URI);
+        KpiPackageImpl theKpiPackage = (KpiPackageImpl)(registeredPackage instanceof KpiPackageImpl ? registeredPackage : KpiPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ProcessPackage.eNS_URI);
+        ProcessPackageImpl theProcessPackage = (ProcessPackageImpl)(registeredPackage instanceof ProcessPackageImpl ? registeredPackage : ProcessPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DecisionPackage.eNS_URI);
+        DecisionPackageImpl theDecisionPackage = (DecisionPackageImpl)(registeredPackage instanceof DecisionPackageImpl ? registeredPackage : DecisionPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TransitionsPackage.eNS_URI);
+        TransitionsPackageImpl theTransitionsPackage = (TransitionsPackageImpl)(registeredPackage instanceof TransitionsPackageImpl ? registeredPackage : TransitionsPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FormPackage.eNS_URI);
+        FormPackageImpl theFormPackage = (FormPackageImpl)(registeredPackage instanceof FormPackageImpl ? registeredPackage : FormPackage.eINSTANCE);
+        registeredPackage = EPackage.Registry.INSTANCE.getEPackage(SimulationPackage.eNS_URI);
+        SimulationPackageImpl theSimulationPackage = (SimulationPackageImpl)(registeredPackage instanceof SimulationPackageImpl ? registeredPackage : SimulationPackage.eINSTANCE);
 
-		// Create package meta-data objects
-		theParameterPackage.createPackageContents();
-		theActorMappingPackage.createPackageContents();
-		theConfigurationPackage.createPackageContents();
-		theConnectorConfigurationPackage.createPackageContents();
-		theExpressionPackage.createPackageContents();
-		theKpiPackage.createPackageContents();
-		theProcessPackage.createPackageContents();
-		theDecisionPackage.createPackageContents();
-		theTransitionsPackage.createPackageContents();
-		theFormPackage.createPackageContents();
-		theSimulationPackage.createPackageContents();
+        // Create package meta-data objects
+        theParameterPackage.createPackageContents();
+        theActorMappingPackage.createPackageContents();
+        theConfigurationPackage.createPackageContents();
+        theConnectorConfigurationPackage.createPackageContents();
+        theExpressionPackage.createPackageContents();
+        theKpiPackage.createPackageContents();
+        theProcessPackage.createPackageContents();
+        theDecisionPackage.createPackageContents();
+        theTransitionsPackage.createPackageContents();
+        theFormPackage.createPackageContents();
+        theSimulationPackage.createPackageContents();
 
-		// Initialize created meta-data
-		theParameterPackage.initializePackageContents();
-		theActorMappingPackage.initializePackageContents();
-		theConfigurationPackage.initializePackageContents();
-		theConnectorConfigurationPackage.initializePackageContents();
-		theExpressionPackage.initializePackageContents();
-		theKpiPackage.initializePackageContents();
-		theProcessPackage.initializePackageContents();
-		theDecisionPackage.initializePackageContents();
-		theTransitionsPackage.initializePackageContents();
-		theFormPackage.initializePackageContents();
-		theSimulationPackage.initializePackageContents();
+        // Initialize created meta-data
+        theParameterPackage.initializePackageContents();
+        theActorMappingPackage.initializePackageContents();
+        theConfigurationPackage.initializePackageContents();
+        theConnectorConfigurationPackage.initializePackageContents();
+        theExpressionPackage.initializePackageContents();
+        theKpiPackage.initializePackageContents();
+        theProcessPackage.initializePackageContents();
+        theDecisionPackage.initializePackageContents();
+        theTransitionsPackage.initializePackageContents();
+        theFormPackage.initializePackageContents();
+        theSimulationPackage.initializePackageContents();
 
-		// Mark meta-data to indicate it can't be changed
-		theParameterPackage.freeze();
+        // Mark meta-data to indicate it can't be changed
+        theParameterPackage.freeze();
 
-		// Update the registry and return the package
-		EPackage.Registry.INSTANCE.put(ParameterPackage.eNS_URI, theParameterPackage);
-		return theParameterPackage;
-	}
+        // Update the registry and return the package
+        EPackage.Registry.INSTANCE.put(ParameterPackage.eNS_URI, theParameterPackage);
+        return theParameterPackage;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EClass getParameter() {
-		return parameterEClass;
-	}
+        return parameterEClass;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameter_Name() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(0);
-	}
+        return (EAttribute)parameterEClass.getEStructuralFeatures().get(0);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameter_Value() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(1);
-	}
+        return (EAttribute)parameterEClass.getEStructuralFeatures().get(1);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameter_TypeClassname() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(2);
-	}
+        return (EAttribute)parameterEClass.getEStructuralFeatures().get(2);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameter_Description() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(3);
-	}
+        return (EAttribute)parameterEClass.getEStructuralFeatures().get(3);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EClass getParameterContext() {
-		return parameterContextEClass;
-	}
+        return parameterContextEClass;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameterContext_Name() {
-		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(0);
-	}
+        return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(0);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameterContext_Description() {
-		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(1);
-	}
+        return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(1);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EReference getParameterContext_Parameters() {
-		return (EReference)parameterContextEClass.getEStructuralFeatures().get(2);
-	}
+        return (EReference)parameterContextEClass.getEStructuralFeatures().get(2);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EAttribute getParameterContext_DefaultContext() {
-		return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(3);
-	}
+        return (EAttribute)parameterContextEClass.getEStructuralFeatures().get(3);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ParameterFactory getParameterFactory() {
-		return (ParameterFactory)getEFactoryInstance();
-	}
+        return (ParameterFactory)getEFactoryInstance();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package.  This method is
-	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
+     * Creates the meta-model objects for the package.  This method is
+     * guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void createPackageContents() {
-		if (isCreated) return;
-		isCreated = true;
+        if (isCreated) return;
+        isCreated = true;
 
-		// Create classes and their features
-		parameterEClass = createEClass(PARAMETER);
-		createEAttribute(parameterEClass, PARAMETER__NAME);
-		createEAttribute(parameterEClass, PARAMETER__VALUE);
-		createEAttribute(parameterEClass, PARAMETER__TYPE_CLASSNAME);
-		createEAttribute(parameterEClass, PARAMETER__DESCRIPTION);
+        // Create classes and their features
+        parameterEClass = createEClass(PARAMETER);
+        createEAttribute(parameterEClass, PARAMETER__NAME);
+        createEAttribute(parameterEClass, PARAMETER__VALUE);
+        createEAttribute(parameterEClass, PARAMETER__TYPE_CLASSNAME);
+        createEAttribute(parameterEClass, PARAMETER__DESCRIPTION);
 
-		parameterContextEClass = createEClass(PARAMETER_CONTEXT);
-		createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__NAME);
-		createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__DESCRIPTION);
-		createEReference(parameterContextEClass, PARAMETER_CONTEXT__PARAMETERS);
-		createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__DEFAULT_CONTEXT);
-	}
+        parameterContextEClass = createEClass(PARAMETER_CONTEXT);
+        createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__NAME);
+        createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__DESCRIPTION);
+        createEReference(parameterContextEClass, PARAMETER_CONTEXT__PARAMETERS);
+        createEAttribute(parameterContextEClass, PARAMETER_CONTEXT__DEFAULT_CONTEXT);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model.  This
-	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
+     * Complete the initialization of the package and its meta-model.  This
+     * method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void initializePackageContents() {
-		if (isInitialized) return;
-		isInitialized = true;
+        if (isInitialized) return;
+        isInitialized = true;
 
-		// Initialize package
-		setName(eNAME);
-		setNsPrefix(eNS_PREFIX);
-		setNsURI(eNS_URI);
+        // Initialize package
+        setName(eNAME);
+        setNsPrefix(eNS_PREFIX);
+        setNsURI(eNS_URI);
 
-		// Create type parameters
+        // Create type parameters
 
-		// Set bounds for type parameters
+        // Set bounds for type parameters
 
-		// Add supertypes to classes
+        // Add supertypes to classes
 
-		// Initialize classes and features; add operations and parameters
-		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getParameter_Value(), ecorePackage.getEString(), "value", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getParameter_TypeClassname(), ecorePackage.getEString(), "typeClassname", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getParameter_Description(), ecorePackage.getEString(), "description", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        // Initialize classes and features; add operations and parameters
+        initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getParameter_Value(), ecorePackage.getEString(), "value", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getParameter_TypeClassname(), ecorePackage.getEString(), "typeClassname", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getParameter_Description(), ecorePackage.getEString(), "description", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(parameterContextEClass, ParameterContext.class, "ParameterContext", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getParameterContext_Name(), ecorePackage.getEString(), "name", null, 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getParameterContext_Description(), ecorePackage.getEString(), "description", null, 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getParameterContext_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getParameterContext_DefaultContext(), ecorePackage.getEBoolean(), "defaultContext", "false", 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEClass(parameterContextEClass, ParameterContext.class, "ParameterContext", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getParameterContext_Name(), ecorePackage.getEString(), "name", null, 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getParameterContext_Description(), ecorePackage.getEString(), "description", null, 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getParameterContext_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getParameterContext_DefaultContext(), ecorePackage.getEBoolean(), "defaultContext", "false", 0, 1, ParameterContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-		// Create resource
-		createResource(eNS_URI);
+        // Create resource
+        createResource(eNS_URI);
 
-		// Create annotations
-		// http://www.eclipse.org/edapt
-		createEdaptAnnotations();
-	}
+        // Create annotations
+        // http://www.eclipse.org/edapt
+        createEdaptAnnotations();
+    }
 
 	/**
-	 * Initializes the annotations for <b>http://www.eclipse.org/edapt</b>.
-	 * <!-- begin-user-doc -->
+     * Initializes the annotations for <b>http://www.eclipse.org/edapt</b>.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void createEdaptAnnotations() {
-		String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
-		addAnnotation
-		  (this,
-		   source,
-		   new String[] {
-			   "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
-		   });
-	}
+        String source = "http://www.eclipse.org/edapt"; //$NON-NLS-1$
+        addAnnotation
+          (this,
+           source,
+           new String[] {
+               "historyURI", "process.history" //$NON-NLS-1$ //$NON-NLS-2$
+           });
+    }
 
 } //ParameterPackageImpl

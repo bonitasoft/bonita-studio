@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class PreviousFormButtonImpl extends FormButtonImpl implements PreviousFormButton {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected PreviousFormButtonImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.PREVIOUS_FORM_BUTTON;
-	}
+        return FormPackage.Literals.PREVIOUS_FORM_BUTTON;
+    }
 
 } //PreviousFormButtonImpl

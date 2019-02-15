@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class NextFormButtonImpl extends FormButtonImpl implements NextFormButton {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected NextFormButtonImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.NEXT_FORM_BUTTON;
-	}
+        return FormPackage.Literals.NEXT_FORM_BUTTON;
+    }
 
 } //NextFormButtonImpl

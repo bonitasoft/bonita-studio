@@ -50,119 +50,119 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class DataAwareImpl extends EObjectImpl implements DataAware {
 	/**
-	 * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getData() <em>Data</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getData()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getData()
+     * @generated
+     * @ordered
+     */
 	protected EList<Data> data;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DataAwareImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.DATA_AWARE;
-	}
+        return ProcessPackage.Literals.DATA_AWARE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<Data> getData() {
-		if (data == null) {
-			data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.DATA_AWARE__DATA);
-		}
-		return data;
-	}
+        if (data == null) {
+            data = new EObjectContainmentEList<Data>(Data.class, this, ProcessPackage.DATA_AWARE__DATA);
+        }
+        return data;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.DATA_AWARE__DATA:
-				return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.DATA_AWARE__DATA:
+                return ((InternalEList<?>)getData()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.DATA_AWARE__DATA:
-				return getData();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.DATA_AWARE__DATA:
+                return getData();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.DATA_AWARE__DATA:
-				getData().clear();
-				getData().addAll((Collection<? extends Data>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.DATA_AWARE__DATA:
+                getData().clear();
+                getData().addAll((Collection<? extends Data>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.DATA_AWARE__DATA:
-				getData().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.DATA_AWARE__DATA:
+                getData().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.DATA_AWARE__DATA:
-				return data != null && !data.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.DATA_AWARE__DATA:
+                return data != null && !data.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //DataAwareImpl

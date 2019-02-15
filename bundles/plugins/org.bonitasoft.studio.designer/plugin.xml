@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
+   <extension-point id="formOperationFactory" name="Form Operation Factory" schema="schema/formOperationFactory.exsd"/>
+
 
 <extension
          point="org.eclipse.ui.menus">

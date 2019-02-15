@@ -50,119 +50,119 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class SimulationCalendarImpl extends EObjectImpl implements SimulationCalendar {
 	/**
-	 * The cached value of the '{@link #getDaysOfWeek() <em>Days Of Week</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDaysOfWeek() <em>Days Of Week</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDaysOfWeek()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDaysOfWeek()
+     * @generated
+     * @ordered
+     */
 	protected EList<DayPeriod> daysOfWeek;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SimulationCalendarImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return SimulationPackage.Literals.SIMULATION_CALENDAR;
-	}
+        return SimulationPackage.Literals.SIMULATION_CALENDAR;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<DayPeriod> getDaysOfWeek() {
-		if (daysOfWeek == null) {
-			daysOfWeek = new EObjectContainmentEList<DayPeriod>(DayPeriod.class, this, SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK);
-		}
-		return daysOfWeek;
-	}
+        if (daysOfWeek == null) {
+            daysOfWeek = new EObjectContainmentEList<DayPeriod>(DayPeriod.class, this, SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK);
+        }
+        return daysOfWeek;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
-				return ((InternalEList<?>)getDaysOfWeek()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
+                return ((InternalEList<?>)getDaysOfWeek()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
-				return getDaysOfWeek();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
+                return getDaysOfWeek();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
-				getDaysOfWeek().clear();
-				getDaysOfWeek().addAll((Collection<? extends DayPeriod>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
+                getDaysOfWeek().clear();
+                getDaysOfWeek().addAll((Collection<? extends DayPeriod>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
-				getDaysOfWeek().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
+                getDaysOfWeek().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
-				return daysOfWeek != null && !daysOfWeek.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SimulationPackage.SIMULATION_CALENDAR__DAYS_OF_WEEK:
+                return daysOfWeek != null && !daysOfWeek.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //SimulationCalendarImpl

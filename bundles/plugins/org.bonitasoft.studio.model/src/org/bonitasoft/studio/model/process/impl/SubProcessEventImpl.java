@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class SubProcessEventImpl extends ContainerImpl implements SubProcessEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SubProcessEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.SUB_PROCESS_EVENT;
-	}
+        return ProcessPackage.Literals.SUB_PROCESS_EVENT;
+    }
 
 } //SubProcessEventImpl

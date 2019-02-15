@@ -37,55 +37,55 @@ package org.bonitasoft.studio.model.form;
  */
 public interface DateFormField extends SingleValuatedFormField {
 	/**
-	 * Returns the value of the '<em><b>Initial Format</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Initial Format</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Initial Format</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Initial Format</em>' attribute.
-	 * @see #setInitialFormat(String)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getDateFormField_InitialFormat()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Initial Format</em>' attribute.
+     * @see #setInitialFormat(String)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getDateFormField_InitialFormat()
+     * @model
+     * @generated
+     */
 	String getInitialFormat();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.DateFormField#getInitialFormat <em>Initial Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.DateFormField#getInitialFormat <em>Initial Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Initial Format</em>' attribute.
-	 * @see #getInitialFormat()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Initial Format</em>' attribute.
+     * @see #getInitialFormat()
+     * @generated
+     */
 	void setInitialFormat(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Display Format</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Display Format</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Display Format</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Display Format</em>' attribute.
-	 * @see #setDisplayFormat(String)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getDateFormField_DisplayFormat()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Display Format</em>' attribute.
+     * @see #setDisplayFormat(String)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getDateFormField_DisplayFormat()
+     * @model
+     * @generated
+     */
 	String getDisplayFormat();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.DateFormField#getDisplayFormat <em>Display Format</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.DateFormField#getDisplayFormat <em>Display Format</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Display Format</em>' attribute.
-	 * @see #getDisplayFormat()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Display Format</em>' attribute.
+     * @see #getDisplayFormat()
+     * @generated
+     */
 	void setDisplayFormat(String value);
 
 } // DateFormField

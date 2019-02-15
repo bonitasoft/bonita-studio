@@ -36,30 +36,30 @@ package org.bonitasoft.studio.model.form;
  */
 public interface FormButton extends Widget {
 	/**
-	 * Returns the value of the '<em><b>Label Behavior</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Label Behavior</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Label Behavior</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Label Behavior</em>' attribute.
-	 * @see #setLabelBehavior(Boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getFormButton_LabelBehavior()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Label Behavior</em>' attribute.
+     * @see #setLabelBehavior(Boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getFormButton_LabelBehavior()
+     * @model default="false"
+     * @generated
+     */
 	Boolean getLabelBehavior();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormButton#getLabelBehavior <em>Label Behavior</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.FormButton#getLabelBehavior <em>Label Behavior</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Label Behavior</em>' attribute.
-	 * @see #getLabelBehavior()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Label Behavior</em>' attribute.
+     * @see #getLabelBehavior()
+     * @generated
+     */
 	void setLabelBehavior(Boolean value);
 
 } // FormButton

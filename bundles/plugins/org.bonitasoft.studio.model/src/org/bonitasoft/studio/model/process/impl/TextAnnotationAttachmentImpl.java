@@ -49,228 +49,228 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class TextAnnotationAttachmentImpl extends EObjectImpl implements TextAnnotationAttachment {
 	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSource()
+     * @generated
+     * @ordered
+     */
 	protected TextAnnotation source;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TextAnnotationAttachmentImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.TEXT_ANNOTATION_ATTACHMENT;
-	}
+        return ProcessPackage.Literals.TEXT_ANNOTATION_ATTACHMENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public TextAnnotation getSource() {
-		if (source != null && source.eIsProxy()) {
-			InternalEObject oldSource = (InternalEObject)source;
-			source = (TextAnnotation)eResolveProxy(oldSource);
-			if (source != oldSource) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE, oldSource, source));
-			}
-		}
-		return source;
-	}
+        if (source != null && source.eIsProxy()) {
+            InternalEObject oldSource = (InternalEObject)source;
+            source = (TextAnnotation)eResolveProxy(oldSource);
+            if (source != oldSource) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE, oldSource, source));
+            }
+        }
+        return source;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public TextAnnotation basicGetSource() {
-		return source;
-	}
+        return source;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setSource(TextAnnotation newSource) {
-		TextAnnotation oldSource = source;
-		source = newSource;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE, oldSource, source));
-	}
+        TextAnnotation oldSource = source;
+        source = newSource;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE, oldSource, source));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Element getTarget() {
-		if (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET) return null;
-		return (Element)eInternalContainer();
-	}
+        if (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET) return null;
+        return (Element)eInternalContainer();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain basicSetTarget(Element newTarget, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newTarget, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET, msgs);
-		return msgs;
-	}
+        msgs = eBasicSetContainer((InternalEObject)newTarget, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET, msgs);
+        return msgs;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setTarget(Element newTarget) {
-		if (newTarget != eInternalContainer() || (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET && newTarget != null)) {
-			if (EcoreUtil.isAncestor(this, newTarget))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, ProcessPackage.ELEMENT__TEXT_ANNOTATION_ATTACHMENT, Element.class, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET, newTarget, newTarget));
-	}
+        if (newTarget != eInternalContainer() || (eContainerFeatureID() != ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET && newTarget != null)) {
+            if (EcoreUtil.isAncestor(this, newTarget))
+                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            NotificationChain msgs = null;
+            if (eInternalContainer() != null)
+                msgs = eBasicRemoveFromContainer(msgs);
+            if (newTarget != null)
+                msgs = ((InternalEObject)newTarget).eInverseAdd(this, ProcessPackage.ELEMENT__TEXT_ANNOTATION_ATTACHMENT, Element.class, msgs);
+            msgs = basicSetTarget(newTarget, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET, newTarget, newTarget));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetTarget((Element)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetTarget((Element)otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				return basicSetTarget(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                return basicSetTarget(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				return eInternalContainer().eInverseRemove(this, ProcessPackage.ELEMENT__TEXT_ANNOTATION_ATTACHMENT, Element.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
-	}
+        switch (eContainerFeatureID()) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                return eInternalContainer().eInverseRemove(this, ProcessPackage.ELEMENT__TEXT_ANNOTATION_ATTACHMENT, Element.class, msgs);
+        }
+        return super.eBasicRemoveFromContainerFeature(msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
-				if (resolve) return getSource();
-				return basicGetSource();
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				return getTarget();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
+                if (resolve) return getSource();
+                return basicGetSource();
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                return getTarget();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
-				setSource((TextAnnotation)newValue);
-				return;
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				setTarget((Element)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
+                setSource((TextAnnotation)newValue);
+                return;
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                setTarget((Element)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
-				setSource((TextAnnotation)null);
-				return;
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				setTarget((Element)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
+                setSource((TextAnnotation)null);
+                return;
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                setTarget((Element)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
-				return source != null;
-			case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
-				return getTarget() != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__SOURCE:
+                return source != null;
+            case ProcessPackage.TEXT_ANNOTATION_ATTACHMENT__TARGET:
+                return getTarget() != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //TextAnnotationAttachmentImpl

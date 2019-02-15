@@ -38,82 +38,82 @@ package org.bonitasoft.studio.model.process;
  */
 public interface BusinessObjectData extends JavaObjectData {
 	/**
-	 * Returns the value of the '<em><b>Business Data Repository Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Business Data Repository Id</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Business Data Repository Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Business Data Repository Id</em>' attribute.
-	 * @see #setBusinessDataRepositoryId(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_BusinessDataRepositoryId()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Business Data Repository Id</em>' attribute.
+     * @see #setBusinessDataRepositoryId(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_BusinessDataRepositoryId()
+     * @model
+     * @generated
+     */
 	String getBusinessDataRepositoryId();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#getBusinessDataRepositoryId <em>Business Data Repository Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#getBusinessDataRepositoryId <em>Business Data Repository Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Business Data Repository Id</em>' attribute.
-	 * @see #getBusinessDataRepositoryId()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Business Data Repository Id</em>' attribute.
+     * @see #getBusinessDataRepositoryId()
+     * @generated
+     */
 	void setBusinessDataRepositoryId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Create New Instance</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Create New Instance</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Create New Instance</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Create New Instance</em>' attribute.
-	 * @see #setCreateNewInstance(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_CreateNewInstance()
-	 * @model default="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Create New Instance</em>' attribute.
+     * @see #setCreateNewInstance(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_CreateNewInstance()
+     * @model default="true"
+     * @generated
+     */
 	boolean isCreateNewInstance();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#isCreateNewInstance <em>Create New Instance</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#isCreateNewInstance <em>Create New Instance</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Create New Instance</em>' attribute.
-	 * @see #isCreateNewInstance()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Create New Instance</em>' attribute.
+     * @see #isCreateNewInstance()
+     * @generated
+     */
 	void setCreateNewInstance(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>EClass Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>EClass Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>EClass Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>EClass Name</em>' attribute.
-	 * @see #setEClassName(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_EClassName()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>EClass Name</em>' attribute.
+     * @see #setEClassName(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getBusinessObjectData_EClassName()
+     * @model
+     * @generated
+     */
 	String getEClassName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#getEClassName <em>EClass Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.BusinessObjectData#getEClassName <em>EClass Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>EClass Name</em>' attribute.
-	 * @see #getEClassName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>EClass Name</em>' attribute.
+     * @see #getEClassName()
+     * @generated
+     */
 	void setEClassName(String value);
 
 } // BusinessObjectData

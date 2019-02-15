@@ -42,171 +42,171 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class CheckBoxMultipleFormFieldImpl extends MultipleValuatedFormFieldImpl implements CheckBoxMultipleFormField {
 	/**
-	 * The default value of the '{@link #getItemClass() <em>Item Class</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getItemClass() <em>Item Class</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getItemClass()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getItemClass()
+     * @generated
+     * @ordered
+     */
 	protected static final String ITEM_CLASS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getItemClass() <em>Item Class</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getItemClass() <em>Item Class</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getItemClass()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getItemClass()
+     * @generated
+     * @ordered
+     */
 	protected String itemClass = ITEM_CLASS_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected CheckBoxMultipleFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD;
-	}
+        return FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getItemClass() {
-		return itemClass;
-	}
+        return itemClass;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setItemClass(String newItemClass) {
-		String oldItemClass = itemClass;
-		itemClass = newItemClass;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS, oldItemClass, itemClass));
-	}
+        String oldItemClass = itemClass;
+        itemClass = newItemClass;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS, oldItemClass, itemClass));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
-				return getItemClass();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
+                return getItemClass();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
-				setItemClass((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
+                setItemClass((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
-				setItemClass(ITEM_CLASS_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
+                setItemClass(ITEM_CLASS_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
-				return ITEM_CLASS_EDEFAULT == null ? itemClass != null : !ITEM_CLASS_EDEFAULT.equals(itemClass);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS:
+                return ITEM_CLASS_EDEFAULT == null ? itemClass != null : !ITEM_CLASS_EDEFAULT.equals(itemClass);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == ItemContainer.class) {
-			switch (derivedFeatureID) {
-				case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS: return FormPackage.ITEM_CONTAINER__ITEM_CLASS;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == ItemContainer.class) {
+            switch (derivedFeatureID) {
+                case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS: return FormPackage.ITEM_CONTAINER__ITEM_CLASS;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == ItemContainer.class) {
-			switch (baseFeatureID) {
-				case FormPackage.ITEM_CONTAINER__ITEM_CLASS: return FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == ItemContainer.class) {
+            switch (baseFeatureID) {
+                case FormPackage.ITEM_CONTAINER__ITEM_CLASS: return FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD__ITEM_CLASS;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (itemClass: "); //$NON-NLS-1$
-		result.append(itemClass);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (itemClass: "); //$NON-NLS-1$
+        result.append(itemClass);
+        result.append(')');
+        return result.toString();
+    }
 
 } //CheckBoxMultipleFormFieldImpl

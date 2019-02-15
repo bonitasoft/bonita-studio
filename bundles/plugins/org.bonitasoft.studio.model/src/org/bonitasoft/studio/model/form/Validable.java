@@ -41,73 +41,73 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Validable extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Validators</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.form.Validator}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Validators</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.form.Validator}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Validators</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Validators</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_Validators()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Validators</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_Validators()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Validator> getValidators();
 
 	/**
-	 * Returns the value of the '<em><b>Use Default Validator</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Default Validator</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Default Validator</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Default Validator</em>' attribute.
-	 * @see #setUseDefaultValidator(Boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_UseDefaultValidator()
-	 * @model default="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Default Validator</em>' attribute.
+     * @see #setUseDefaultValidator(Boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_UseDefaultValidator()
+     * @model default="true"
+     * @generated
+     */
 	Boolean getUseDefaultValidator();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Validable#getUseDefaultValidator <em>Use Default Validator</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Validable#getUseDefaultValidator <em>Use Default Validator</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Default Validator</em>' attribute.
-	 * @see #getUseDefaultValidator()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Default Validator</em>' attribute.
+     * @see #getUseDefaultValidator()
+     * @generated
+     */
 	void setUseDefaultValidator(Boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Below</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Below</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Below</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Below</em>' attribute.
-	 * @see #setBelow(boolean)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_Below()
-	 * @model default="true" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Below</em>' attribute.
+     * @see #setBelow(boolean)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getValidable_Below()
+     * @model default="true" required="true"
+     * @generated
+     */
 	boolean isBelow();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.Validable#isBelow <em>Below</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.Validable#isBelow <em>Below</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Below</em>' attribute.
-	 * @see #isBelow()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Below</em>' attribute.
+     * @see #isBelow()
+     * @generated
+     */
 	void setBelow(boolean value);
 
 } // Validable

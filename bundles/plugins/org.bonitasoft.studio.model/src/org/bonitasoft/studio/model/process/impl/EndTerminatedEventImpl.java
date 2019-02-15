@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class EndTerminatedEventImpl extends EventImpl implements EndTerminatedEvent {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected EndTerminatedEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.END_TERMINATED_EVENT;
-	}
+        return ProcessPackage.Literals.END_TERMINATED_EVENT;
+    }
 
 } //EndTerminatedEventImpl

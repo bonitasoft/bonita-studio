@@ -37,21 +37,21 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface TargetElement extends Element {
 	/**
-	 * Returns the value of the '<em><b>Incoming</b></em>' reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.Connection}.
-	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Connection#getTarget <em>Target</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Incoming</b></em>' reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.Connection}.
+     * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Connection#getTarget <em>Target</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Incoming</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Incoming</em>' reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTargetElement_Incoming()
-	 * @see org.bonitasoft.studio.model.process.Connection#getTarget
-	 * @model opposite="target"
-	 * @generated
-	 */
+     * @return the value of the '<em>Incoming</em>' reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTargetElement_Incoming()
+     * @see org.bonitasoft.studio.model.process.Connection#getTarget
+     * @model opposite="target"
+     * @generated
+     */
 	EList<Connection> getIncoming();
 
 } // TargetElement

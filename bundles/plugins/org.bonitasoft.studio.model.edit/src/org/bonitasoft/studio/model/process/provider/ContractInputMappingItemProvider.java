@@ -57,166 +57,166 @@ public class ContractInputMappingItemProvider
 		IItemLabelProvider,
 		IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ContractInputMappingItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addDataPropertyDescriptor(object);
-			addSetterNamePropertyDescriptor(object);
-			addSetterParamTypePropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addDataPropertyDescriptor(object);
+            addSetterNamePropertyDescriptor(object);
+            addSetterParamTypePropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Data feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Data feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addDataPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ContractInputMapping_data_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_data_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractInputMapping_data_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_data_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Setter Name feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Setter Name feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addSetterNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ContractInputMapping_setterName_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_setterName_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractInputMapping_setterName_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_setterName_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This adds a property descriptor for the Setter Param Type feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Setter Param Type feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addSetterParamTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ContractInputMapping_setterParamType_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_setterParamType_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractInputMapping_setterParamType_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractInputMapping_setterParamType_feature", "_UI_ContractInputMapping_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns ContractInputMapping.gif.
-	 * <!-- begin-user-doc -->
+     * This returns ContractInputMapping.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ContractInputMapping")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/ContractInputMapping")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((ContractInputMapping)object).getSetterName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ContractInputMapping_type") : //$NON-NLS-1$
-			getString("_UI_ContractInputMapping_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((ContractInputMapping)object).getSetterName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_ContractInputMapping_type") : //$NON-NLS-1$
+            getString("_UI_ContractInputMapping_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(ContractInputMapping.class)) {
-			case ProcessPackage.CONTRACT_INPUT_MAPPING__SETTER_NAME:
-			case ProcessPackage.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(ContractInputMapping.class)) {
+            case ProcessPackage.CONTRACT_INPUT_MAPPING__SETTER_NAME:
+            case ProcessPackage.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProcessEditPlugin.INSTANCE;
-	}
+        return ProcessEditPlugin.INSTANCE;
+    }
 
 }

@@ -37,29 +37,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ItemContainer extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Item Class</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Item Class</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Item Class</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Item Class</em>' attribute.
-	 * @see #setItemClass(String)
-	 * @see org.bonitasoft.studio.model.form.FormPackage#getItemContainer_ItemClass()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Item Class</em>' attribute.
+     * @see #setItemClass(String)
+     * @see org.bonitasoft.studio.model.form.FormPackage#getItemContainer_ItemClass()
+     * @model
+     * @generated
+     */
 	String getItemClass();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.form.ItemContainer#getItemClass <em>Item Class</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.form.ItemContainer#getItemClass <em>Item Class</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Item Class</em>' attribute.
-	 * @see #getItemClass()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Item Class</em>' attribute.
+     * @see #getItemClass()
+     * @generated
+     */
 	void setItemClass(String value);
 
 } // ItemContainer

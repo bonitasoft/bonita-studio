@@ -39,81 +39,81 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface KPIField extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Field Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Field Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Field Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Field Name</em>' attribute.
-	 * @see #setFieldName(String)
-	 * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_FieldName()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Field Name</em>' attribute.
+     * @see #setFieldName(String)
+     * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_FieldName()
+     * @model
+     * @generated
+     */
 	String getFieldName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#getFieldName <em>Field Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#getFieldName <em>Field Name</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Field Name</em>' attribute.
-	 * @see #getFieldName()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Field Name</em>' attribute.
+     * @see #getFieldName()
+     * @generated
+     */
 	void setFieldName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Field Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Field Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Field Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Field Type</em>' attribute.
-	 * @see #setFieldType(String)
-	 * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_FieldType()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Field Type</em>' attribute.
+     * @see #setFieldType(String)
+     * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_FieldType()
+     * @model
+     * @generated
+     */
 	String getFieldType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#getFieldType <em>Field Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#getFieldType <em>Field Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Field Type</em>' attribute.
-	 * @see #getFieldType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Field Type</em>' attribute.
+     * @see #getFieldType()
+     * @generated
+     */
 	void setFieldType(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Quotes</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Use Quotes</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Quotes</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Quotes</em>' attribute.
-	 * @see #setUseQuotes(boolean)
-	 * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_UseQuotes()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Use Quotes</em>' attribute.
+     * @see #setUseQuotes(boolean)
+     * @see org.bonitasoft.studio.model.kpi.KpiPackage#getKPIField_UseQuotes()
+     * @model
+     * @generated
+     */
 	boolean isUseQuotes();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#isUseQuotes <em>Use Quotes</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.kpi.KPIField#isUseQuotes <em>Use Quotes</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Quotes</em>' attribute.
-	 * @see #isUseQuotes()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Use Quotes</em>' attribute.
+     * @see #isUseQuotes()
+     * @generated
+     */
 	void setUseQuotes(boolean value);
 
 } // KPIField

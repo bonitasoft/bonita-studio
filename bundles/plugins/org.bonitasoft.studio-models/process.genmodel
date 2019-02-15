@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2015 BonitaSoft S.A.&#xD;&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify&#xD;&#xA;it under the terms of the GNU General Public License as published by&#xD;&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xD;&#xA;(at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful,&#xD;&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xD;&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xD;&#xA;GNU General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License&#xD;&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2019 BonitaSoft S.A.&#xD;&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify&#xD;&#xA;it under the terms of the GNU General Public License as published by&#xD;&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xD;&#xA;(at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful,&#xD;&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xD;&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xD;&#xA;GNU General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License&#xD;&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
     modelDirectory="/org.bonitasoft.studio.model/src" editDirectory="/org.bonitasoft.studio.model.edit/src"
     modelPluginID="org.bonitasoft.studio.model" templateDirectory="org.bonitasoft.studio-models/EMFTemplates/"
     dynamicTemplates="true" redirection="" forceOverwrite="true" modelName="Process"
@@ -115,8 +115,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/returnTypeFixed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/automaticDependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/htmlAllowed"/>
-      <genOperations ecoreOperation="expression.ecore#//Expression/hasContent"/>
-      <genOperations ecoreOperation="expression.ecore#//Expression/hasName"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasContent" body="return content != null &amp;&amp; !content.isEmpty();"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasName" body="return name != null &amp;&amp; !name.isEmpty();"/>
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//ListExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//ListExpression/expressions"/>
@@ -348,7 +348,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
-      <genOperations ecoreOperation="process.ecore#//ContractInput/getJavaType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/dataReference"/>
+      <genOperations ecoreOperation="process.ecore#//ContractInput/getJavaType" body="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case LOCALDATE: return java.time.LocalDate.class.getName();&#xD;&#xA;case LOCALDATETIME: return java.time.LocalDateTime.class.getName();&#xD;&#xA;case OFFSETDATETIME: return java.time.OffsetDateTime.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xA;case LONG: return java.lang.Long.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>

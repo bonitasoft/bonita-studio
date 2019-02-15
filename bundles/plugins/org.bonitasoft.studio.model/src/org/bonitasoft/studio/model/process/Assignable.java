@@ -40,45 +40,45 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Assignable extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Actor</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Actor</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Actor</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Actor</em>' reference.
-	 * @see #setActor(Actor)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssignable_Actor()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Actor</em>' reference.
+     * @see #setActor(Actor)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssignable_Actor()
+     * @model
+     * @generated
+     */
 	Actor getActor();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Assignable#getActor <em>Actor</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Assignable#getActor <em>Actor</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Actor</em>' reference.
-	 * @see #getActor()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Actor</em>' reference.
+     * @see #getActor()
+     * @generated
+     */
 	void setActor(Actor value);
 
 	/**
-	 * Returns the value of the '<em><b>Filters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.ActorFilter}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Filters</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.ActorFilter}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Filters</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Filters</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssignable_Filters()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Filters</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssignable_Filters()
+     * @model containment="true"
+     * @generated
+     */
 	EList<ActorFilter> getFilters();
 
 } // Assignable

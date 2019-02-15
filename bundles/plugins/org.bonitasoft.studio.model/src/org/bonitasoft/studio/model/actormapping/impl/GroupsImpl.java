@@ -45,121 +45,121 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class GroupsImpl extends EObjectImpl implements Groups {
 	/**
-	 * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getGroup()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getGroup()
+     * @generated
+     * @ordered
+     */
 	protected EList<String> group;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected GroupsImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ActorMappingPackage.Literals.GROUPS;
-	}
+        return ActorMappingPackage.Literals.GROUPS;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<String> getGroup() {
-		if (group == null) {
-			group = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.GROUPS__GROUP);
-		}
-		return group;
-	}
+        if (group == null) {
+            group = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.GROUPS__GROUP);
+        }
+        return group;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ActorMappingPackage.GROUPS__GROUP:
-				return getGroup();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.GROUPS__GROUP:
+                return getGroup();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ActorMappingPackage.GROUPS__GROUP:
-				getGroup().clear();
-				getGroup().addAll((Collection<? extends String>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.GROUPS__GROUP:
+                getGroup().clear();
+                getGroup().addAll((Collection<? extends String>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.GROUPS__GROUP:
-				getGroup().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.GROUPS__GROUP:
+                getGroup().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.GROUPS__GROUP:
-				return group != null && !group.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.GROUPS__GROUP:
+                return group != null && !group.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (group: "); //$NON-NLS-1$
-		result.append(group);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (group: "); //$NON-NLS-1$
+        result.append(group);
+        result.append(')');
+        return result.toString();
+    }
 
 } //GroupsImpl

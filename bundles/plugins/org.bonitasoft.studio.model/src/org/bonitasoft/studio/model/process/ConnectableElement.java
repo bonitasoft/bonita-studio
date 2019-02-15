@@ -40,35 +40,35 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface ConnectableElement extends Element, DataAware {
 	/**
-	 * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.Connector}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.Connector}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Connectors</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Connectors</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getConnectableElement_Connectors()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Connectors</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getConnectableElement_Connectors()
+     * @model containment="true"
+     * @generated
+     */
 	EList<Connector> getConnectors();
 
 	/**
-	 * Returns the value of the '<em><b>Kpis</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.kpi.AbstractKPIBinding}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Kpis</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.kpi.AbstractKPIBinding}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Kpis</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Kpis</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getConnectableElement_Kpis()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Kpis</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getConnectableElement_Kpis()
+     * @model containment="true"
+     * @generated
+     */
 	EList<AbstractKPIBinding> getKpis();
 
 } // ConnectableElement

@@ -31,22 +31,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class SelectFormFieldImpl extends MultipleValuatedFormFieldImpl implements SelectFormField {
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected SelectFormFieldImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return FormPackage.Literals.SELECT_FORM_FIELD;
-	}
+        return FormPackage.Literals.SELECT_FORM_FIELD;
+    }
 
 } //SelectFormFieldImpl

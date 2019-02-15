@@ -40,108 +40,108 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  */
 public class BoundarySignalEventItemProvider extends BoundaryEventItemProvider {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance from a factory and a notifier.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public BoundarySignalEventItemProvider(AdapterFactory adapterFactory) {
-		super(adapterFactory);
-	}
+        super(adapterFactory);
+    }
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the property descriptors for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
 
-			addSignalCodePropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
+            addSignalCodePropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
 
 	/**
-	 * This adds a property descriptor for the Signal Code feature.
-	 * <!-- begin-user-doc -->
+     * This adds a property descriptor for the Signal Code feature.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected void addSignalCodePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_SignalEvent_signalCode_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_SignalEvent_signalCode_feature", "_UI_SignalEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 ProcessPackage.Literals.SIGNAL_EVENT__SIGNAL_CODE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_SignalEvent_signalCode_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_SignalEvent_signalCode_feature", "_UI_SignalEvent_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.SIGNAL_EVENT__SIGNAL_CODE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
 
 	/**
-	 * This returns BoundarySignalEvent.gif.
-	 * <!-- begin-user-doc -->
+     * This returns BoundarySignalEvent.gif.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/BoundarySignalEvent")); //$NON-NLS-1$
-	}
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/BoundarySignalEvent")); //$NON-NLS-1$
+    }
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
+     * This returns the label text for the adapted class.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getText(Object object) {
-		String label = ((BoundarySignalEvent)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_BoundarySignalEvent_type") : //$NON-NLS-1$
-			getString("_UI_BoundarySignalEvent_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        String label = ((BoundarySignalEvent)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_BoundarySignalEvent_type") : //$NON-NLS-1$
+            getString("_UI_BoundarySignalEvent_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached
+     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
+        updateChildren(notification);
 
-		switch (notification.getFeatureID(BoundarySignalEvent.class)) {
-			case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
-		super.notifyChanged(notification);
-	}
+        switch (notification.getFeatureID(BoundarySignalEvent.class)) {
+            case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
+        super.notifyChanged(notification);
+    }
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
-		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
 
 }

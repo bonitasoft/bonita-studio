@@ -36,30 +36,30 @@ package org.bonitasoft.studio.model.process;
  */
 public interface Association extends Connection {
 	/**
-	 * Returns the value of the '<em><b>Is Directed</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Is Directed</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Is Directed</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Is Directed</em>' attribute.
-	 * @see #setIsDirected(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssociation_IsDirected()
-	 * @model default="false"
-	 * @generated
-	 */
+     * @return the value of the '<em>Is Directed</em>' attribute.
+     * @see #setIsDirected(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getAssociation_IsDirected()
+     * @model default="false"
+     * @generated
+     */
 	boolean isIsDirected();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Association#isIsDirected <em>Is Directed</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Association#isIsDirected <em>Is Directed</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Is Directed</em>' attribute.
-	 * @see #isIsDirected()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Is Directed</em>' attribute.
+     * @see #isIsDirected()
+     * @generated
+     */
 	void setIsDirected(boolean value);
 
 } // Association

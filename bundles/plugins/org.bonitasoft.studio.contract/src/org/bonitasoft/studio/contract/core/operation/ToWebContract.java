@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.designer.core.converter;
+package org.bonitasoft.studio.contract.core.operation;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;
@@ -31,6 +32,16 @@ import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 import com.google.common.base.Function;
 
 public class ToWebContract implements Function<Contract, org.bonitasoft.web.designer.model.contract.Contract> {
+
+    private TreeResult treeResult;
+
+    public ToWebContract(TreeResult treeResult) {
+        this.treeResult = treeResult;
+    }
+    
+    public ToWebContract() {
+        this(new TreeResult());
+    }
 
     @Override
     public org.bonitasoft.web.designer.model.contract.Contract apply(final Contract fromContract) {
@@ -83,6 +94,9 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
             final org.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
         contractInput.setMultiple(input.isMultiple());
         contractInput.setDescription(input.getDescription());
+        if(contractInput instanceof NodeContractInput) {
+            ((NodeContractInput) contractInput).setDataReference(treeResult.getDataReference(input));
+        }
         return contractInput;
     }
 

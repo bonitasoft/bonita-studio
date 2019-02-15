@@ -38,39 +38,39 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface ThrowMessageEvent extends MessageEvent {
 	/**
-	 * Returns the value of the '<em><b>Events</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.Message}.
-	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Message#getSource <em>Source</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Events</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.Message}.
+     * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.Message#getSource <em>Source</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Events</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Events</em>' containment reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getThrowMessageEvent_Events()
-	 * @see org.bonitasoft.studio.model.process.Message#getSource
-	 * @model opposite="source" containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Events</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getThrowMessageEvent_Events()
+     * @see org.bonitasoft.studio.model.process.Message#getSource
+     * @model opposite="source" containment="true"
+     * @generated
+     */
 	EList<Message> getEvents();
 
 	/**
-	 * Returns the value of the '<em><b>Outgoing Messages</b></em>' reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.model.process.MessageFlow}.
-	 * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.MessageFlow#getSource <em>Source</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Outgoing Messages</b></em>' reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.MessageFlow}.
+     * It is bidirectional and its opposite is '{@link org.bonitasoft.studio.model.process.MessageFlow#getSource <em>Source</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Outgoing Messages</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Outgoing Messages</em>' reference list.
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getThrowMessageEvent_OutgoingMessages()
-	 * @see org.bonitasoft.studio.model.process.MessageFlow#getSource
-	 * @model opposite="source"
-	 * @generated
-	 */
+     * @return the value of the '<em>Outgoing Messages</em>' reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getThrowMessageEvent_OutgoingMessages()
+     * @see org.bonitasoft.studio.model.process.MessageFlow#getSource
+     * @model opposite="source"
+     * @generated
+     */
 	EList<MessageFlow> getOutgoingMessages();
 
 } // ThrowMessageEvent

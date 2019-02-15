@@ -39,81 +39,81 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Operation extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Left Operand</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Left Operand</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Operand</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Operand</em>' containment reference.
-	 * @see #setLeftOperand(Expression)
-	 * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_LeftOperand()
-	 * @model containment="true" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Left Operand</em>' containment reference.
+     * @see #setLeftOperand(Expression)
+     * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_LeftOperand()
+     * @model containment="true" required="true"
+     * @generated
+     */
 	Expression getLeftOperand();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getLeftOperand <em>Left Operand</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getLeftOperand <em>Left Operand</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Operand</em>' containment reference.
-	 * @see #getLeftOperand()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Left Operand</em>' containment reference.
+     * @see #getLeftOperand()
+     * @generated
+     */
 	void setLeftOperand(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Right Operand</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Right Operand</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Operand</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Operand</em>' containment reference.
-	 * @see #setRightOperand(Expression)
-	 * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_RightOperand()
-	 * @model containment="true" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Right Operand</em>' containment reference.
+     * @see #setRightOperand(Expression)
+     * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_RightOperand()
+     * @model containment="true" required="true"
+     * @generated
+     */
 	Expression getRightOperand();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getRightOperand <em>Right Operand</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getRightOperand <em>Right Operand</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Operand</em>' containment reference.
-	 * @see #getRightOperand()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Right Operand</em>' containment reference.
+     * @see #getRightOperand()
+     * @generated
+     */
 	void setRightOperand(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Operator</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Operator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Operator</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Operator</em>' containment reference.
-	 * @see #setOperator(Operator)
-	 * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_Operator()
-	 * @model containment="true" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Operator</em>' containment reference.
+     * @see #setOperator(Operator)
+     * @see org.bonitasoft.studio.model.expression.ExpressionPackage#getOperation_Operator()
+     * @model containment="true" required="true"
+     * @generated
+     */
 	Operator getOperator();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getOperator <em>Operator</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.expression.Operation#getOperator <em>Operator</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Operator</em>' containment reference.
-	 * @see #getOperator()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Operator</em>' containment reference.
+     * @see #getOperator()
+     * @generated
+     */
 	void setOperator(Operator value);
 
 } // Operation

@@ -45,121 +45,121 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class UsersImpl extends EObjectImpl implements Users {
 	/**
-	 * The cached value of the '{@link #getUser() <em>User</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getUser() <em>User</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getUser()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUser()
+     * @generated
+     * @ordered
+     */
 	protected EList<String> user;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected UsersImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ActorMappingPackage.Literals.USERS;
-	}
+        return ActorMappingPackage.Literals.USERS;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public EList<String> getUser() {
-		if (user == null) {
-			user = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.USERS__USER);
-		}
-		return user;
-	}
+        if (user == null) {
+            user = new EDataTypeEList<String>(String.class, this, ActorMappingPackage.USERS__USER);
+        }
+        return user;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ActorMappingPackage.USERS__USER:
-				return getUser();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.USERS__USER:
+                return getUser();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ActorMappingPackage.USERS__USER:
-				getUser().clear();
-				getUser().addAll((Collection<? extends String>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.USERS__USER:
+                getUser().clear();
+                getUser().addAll((Collection<? extends String>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.USERS__USER:
-				getUser().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.USERS__USER:
+                getUser().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ActorMappingPackage.USERS__USER:
-				return user != null && !user.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ActorMappingPackage.USERS__USER:
+                return user != null && !user.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (user: "); //$NON-NLS-1$
-		result.append(user);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (user: "); //$NON-NLS-1$
+        result.append(user);
+        result.append(')');
+        return result.toString();
+    }
 
 } //UsersImpl

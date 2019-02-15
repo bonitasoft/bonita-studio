@@ -39,83 +39,83 @@ import org.bonitasoft.studio.model.expression.Expression;
  */
 public interface Task extends Activity, PageFlow, Assignable, ContractContainer {
 	/**
-	 * Returns the value of the '<em><b>Override Actors Of The Lane</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Override Actors Of The Lane</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Override Actors Of The Lane</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Override Actors Of The Lane</em>' attribute.
-	 * @see #setOverrideActorsOfTheLane(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_OverrideActorsOfTheLane()
-	 * @model default="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Override Actors Of The Lane</em>' attribute.
+     * @see #setOverrideActorsOfTheLane(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_OverrideActorsOfTheLane()
+     * @model default="true"
+     * @generated
+     */
 	boolean isOverrideActorsOfTheLane();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#isOverrideActorsOfTheLane <em>Override Actors Of The Lane</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#isOverrideActorsOfTheLane <em>Override Actors Of The Lane</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Override Actors Of The Lane</em>' attribute.
-	 * @see #isOverrideActorsOfTheLane()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Override Actors Of The Lane</em>' attribute.
+     * @see #isOverrideActorsOfTheLane()
+     * @generated
+     */
 	void setOverrideActorsOfTheLane(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Priority</b></em>' attribute.
-	 * The default value is <code>"2"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Priority</b></em>' attribute.
+     * The default value is <code>"2"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Priority</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Priority</em>' attribute.
-	 * @see #setPriority(int)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_Priority()
-	 * @model default="2"
-	 * @generated
-	 */
+     * @return the value of the '<em>Priority</em>' attribute.
+     * @see #setPriority(int)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_Priority()
+     * @model default="2"
+     * @generated
+     */
 	int getPriority();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#getPriority <em>Priority</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#getPriority <em>Priority</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Priority</em>' attribute.
-	 * @see #getPriority()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Priority</em>' attribute.
+     * @see #getPriority()
+     * @generated
+     */
 	void setPriority(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Expected Duration</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expected Duration</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Expected Duration</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expected Duration</em>' containment reference.
-	 * @see #setExpectedDuration(Expression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_ExpectedDuration()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Expected Duration</em>' containment reference.
+     * @see #setExpectedDuration(Expression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getTask_ExpectedDuration()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getExpectedDuration();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#getExpectedDuration <em>Expected Duration</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Task#getExpectedDuration <em>Expected Duration</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expected Duration</em>' containment reference.
-	 * @see #getExpectedDuration()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Expected Duration</em>' containment reference.
+     * @see #getExpectedDuration()
+     * @generated
+     */
 	void setExpectedDuration(Expression value);
 
 } // Task

@@ -42,171 +42,171 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class BoundarySignalEventImpl extends BoundaryEventImpl implements BoundarySignalEvent {
 	/**
-	 * The default value of the '{@link #getSignalCode() <em>Signal Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getSignalCode() <em>Signal Code</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSignalCode()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSignalCode()
+     * @generated
+     * @ordered
+     */
 	protected static final String SIGNAL_CODE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSignalCode() <em>Signal Code</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSignalCode() <em>Signal Code</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSignalCode()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSignalCode()
+     * @generated
+     * @ordered
+     */
 	protected String signalCode = SIGNAL_CODE_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected BoundarySignalEventImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return ProcessPackage.Literals.BOUNDARY_SIGNAL_EVENT;
-	}
+        return ProcessPackage.Literals.BOUNDARY_SIGNAL_EVENT;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String getSignalCode() {
-		return signalCode;
-	}
+        return signalCode;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void setSignalCode(String newSignalCode) {
-		String oldSignalCode = signalCode;
-		signalCode = newSignalCode;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE, oldSignalCode, signalCode));
-	}
+        String oldSignalCode = signalCode;
+        signalCode = newSignalCode;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE, oldSignalCode, signalCode));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
-				return getSignalCode();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
+                return getSignalCode();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
-				setSignalCode((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
+                setSignalCode((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
-				setSignalCode(SIGNAL_CODE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
+                setSignalCode(SIGNAL_CODE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
-				return SIGNAL_CODE_EDEFAULT == null ? signalCode != null : !SIGNAL_CODE_EDEFAULT.equals(signalCode);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE:
+                return SIGNAL_CODE_EDEFAULT == null ? signalCode != null : !SIGNAL_CODE_EDEFAULT.equals(signalCode);
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == SignalEvent.class) {
-			switch (derivedFeatureID) {
-				case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE: return ProcessPackage.SIGNAL_EVENT__SIGNAL_CODE;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == SignalEvent.class) {
+            switch (derivedFeatureID) {
+                case ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE: return ProcessPackage.SIGNAL_EVENT__SIGNAL_CODE;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == SignalEvent.class) {
-			switch (baseFeatureID) {
-				case ProcessPackage.SIGNAL_EVENT__SIGNAL_CODE: return ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == SignalEvent.class) {
+            switch (baseFeatureID) {
+                case ProcessPackage.SIGNAL_EVENT__SIGNAL_CODE: return ProcessPackage.BOUNDARY_SIGNAL_EVENT__SIGNAL_CODE;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (signalCode: "); //$NON-NLS-1$
-		result.append(signalCode);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuilder result = new StringBuilder(super.toString());
+        result.append(" (signalCode: "); //$NON-NLS-1$
+        result.append(signalCode);
+        result.append(')');
+        return result.toString();
+    }
 
 } //BoundarySignalEventImpl

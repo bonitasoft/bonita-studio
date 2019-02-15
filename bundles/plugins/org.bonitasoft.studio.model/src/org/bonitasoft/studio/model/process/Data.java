@@ -42,161 +42,161 @@ import org.bonitasoft.studio.model.expression.Expression;
  */
 public interface Data extends Element {
 	/**
-	 * Returns the value of the '<em><b>Generated</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Generated</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Generated</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Generated</em>' attribute.
-	 * @see #setGenerated(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Generated()
-	 * @model default="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Generated</em>' attribute.
+     * @see #setGenerated(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Generated()
+     * @model default="true"
+     * @generated
+     */
 	boolean isGenerated();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isGenerated <em>Generated</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isGenerated <em>Generated</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Generated</em>' attribute.
-	 * @see #isGenerated()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Generated</em>' attribute.
+     * @see #isGenerated()
+     * @generated
+     */
 	void setGenerated(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Multiple</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Multiple</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Multiple</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Multiple</em>' attribute.
-	 * @see #setMultiple(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Multiple()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Multiple</em>' attribute.
+     * @see #setMultiple(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Multiple()
+     * @model
+     * @generated
+     */
 	boolean isMultiple();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isMultiple <em>Multiple</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isMultiple <em>Multiple</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Multiple</em>' attribute.
-	 * @see #isMultiple()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Multiple</em>' attribute.
+     * @see #isMultiple()
+     * @generated
+     */
 	void setMultiple(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Transient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Transient</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Transient</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Transient</em>' attribute.
-	 * @see #setTransient(boolean)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Transient()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Transient</em>' attribute.
+     * @see #setTransient(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_Transient()
+     * @model
+     * @generated
+     */
 	boolean isTransient();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isTransient <em>Transient</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#isTransient <em>Transient</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Transient</em>' attribute.
-	 * @see #isTransient()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Transient</em>' attribute.
+     * @see #isTransient()
+     * @generated
+     */
 	void setTransient(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Datasource Id</b></em>' attribute.
-	 * The default value is <code>"BOS"</code>.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Datasource Id</b></em>' attribute.
+     * The default value is <code>"BOS"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Datasource Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Datasource Id</em>' attribute.
-	 * @see #setDatasourceId(String)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DatasourceId()
-	 * @model default="BOS" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Datasource Id</em>' attribute.
+     * @see #setDatasourceId(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DatasourceId()
+     * @model default="BOS" required="true"
+     * @generated
+     */
 	String getDatasourceId();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDatasourceId <em>Datasource Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDatasourceId <em>Datasource Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Datasource Id</em>' attribute.
-	 * @see #getDatasourceId()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Datasource Id</em>' attribute.
+     * @see #getDatasourceId()
+     * @generated
+     */
 	void setDatasourceId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Data Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Data Type</b></em>' reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Data Type</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Data Type</em>' reference.
-	 * @see #setDataType(DataType)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DataType()
-	 * @model required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Data Type</em>' reference.
+     * @see #setDataType(DataType)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DataType()
+     * @model required="true"
+     * @generated
+     */
 	DataType getDataType();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDataType <em>Data Type</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDataType <em>Data Type</em>}' reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Data Type</em>' reference.
-	 * @see #getDataType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Data Type</em>' reference.
+     * @see #getDataType()
+     * @generated
+     */
 	void setDataType(DataType value);
 
 	/**
-	 * Returns the value of the '<em><b>Default Value</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Default Value</b></em>' containment reference.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Default Value</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Default Value</em>' containment reference.
-	 * @see #setDefaultValue(Expression)
-	 * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DefaultValue()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Default Value</em>' containment reference.
+     * @see #setDefaultValue(Expression)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getData_DefaultValue()
+     * @model containment="true"
+     * @generated
+     */
 	Expression getDefaultValue();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDefaultValue <em>Default Value</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.Data#getDefaultValue <em>Default Value</em>}' containment reference.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Value</em>' containment reference.
-	 * @see #getDefaultValue()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Default Value</em>' containment reference.
+     * @see #getDefaultValue()
+     * @generated
+     */
 	void setDefaultValue(Expression value);
 
 } // Data

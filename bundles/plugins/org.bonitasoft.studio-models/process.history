@@ -14689,5 +14689,50 @@
   <releases xmi:id="_z5RnUKwvEeiFZ5S8g2gj5Q" date="2018-08-30T11:43:27.494+0200" label="7.8.0-002">
     <changes xsi:type="history:MigrationChange" xmi:id="_z5RnUawvEeiFZ5S8g2gj5Q" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateRestConnectorVersionTo106"/>
   </releases>
+  <releases xmi:id="_lGPssDBZEemIIINmMdyzoA" date="2019-02-14T10:43:27.494+0100" label="7.9.0-001">
+    <changes xsi:type="history:OperationChange" xmi:id="_p10aMDBZEemIIINmMdyzoA">
+      <changes xsi:type="history:Create" xmi:id="_p10aMTBZEemIIINmMdyzoA" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//ContractInput"/>
+        <element href="process.ecore#//ContractInput/dataReference"/>
+        <changes xsi:type="history:Set" xmi:id="_p10aMjBZEemIIINmMdyzoA" featureName="name" dataValue="dataReference">
+          <element href="process.ecore#//ContractInput/dataReference"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_p10aMzBZEemIIINmMdyzoA" featureName="eType">
+          <element href="process.ecore#//ContractInput/dataReference"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_p10aNDBZEemIIINmMdyzoA" name="newAttribute">
+        <parameters xmi:id="_p10aNTBZEemIIINmMdyzoA" name="eClass">
+          <referenceValue xmi:id="_p10aNjBZEemIIINmMdyzoA">
+            <element href="process.ecore#//ContractInput"/>
+          </referenceValue>
+          <referenceValue xmi:id="_p10aNzBZEemIIINmMdyzoA">
+            <element href="process.ecore#//ContractInput"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_p10aODBZEemIIINmMdyzoA" name="name">
+          <dataValue>dataReference</dataValue>
+        </parameters>
+        <parameters xmi:id="_p10aOTBZEemIIINmMdyzoA" name="type">
+          <referenceValue xmi:id="_p10aOjBZEemIIINmMdyzoA">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_p10aOzBZEemIIINmMdyzoA">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_p10aPDBZEemIIINmMdyzoA" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_p10aPTBZEemIIINmMdyzoA" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_p10aPjBZEemIIINmMdyzoA" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
