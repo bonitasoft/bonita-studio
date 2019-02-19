@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,6 +17,7 @@ package org.bonitasoft.studio.contract.core.operation;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.all;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 
@@ -150,9 +149,11 @@ public class ToWebContractTest {
         final ToWebContract contractConverter = new ToWebContract();
 
         final Contract contract = contractConverter.apply(aContract()
-                .havingInput(aContractInput().withType(ContractInputType.FILE)).build());
+                .havingInput(aContractInput().withType(ContractInputType.FILE).withDataReference("myDocument")).build());
 
         assertThat(contract.getInput()).extracting("type").containsExactly(File.class.getName());
+        assertThat(contract.getInput()).extracting("dataReference.name", "dataReference.type")
+                .containsExactly(tuple("myDocument", File.class.getName()));
     }
 
     @Test
@@ -189,4 +190,3 @@ public class ToWebContractTest {
         assertThat(contract.getInput()).extracting("type").containsExactly(Long.class.getName());
     }
 }
-

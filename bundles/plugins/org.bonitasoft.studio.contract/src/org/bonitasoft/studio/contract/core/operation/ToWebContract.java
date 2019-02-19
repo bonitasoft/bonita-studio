@@ -26,10 +26,12 @@ import java.util.Date;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.web.designer.model.contract.DataReference;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;
 import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 
 public class ToWebContract implements Function<Contract, org.bonitasoft.web.designer.model.contract.Contract> {
 
@@ -38,7 +40,7 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
     public ToWebContract(TreeResult treeResult) {
         this.treeResult = treeResult;
     }
-    
+
     public ToWebContract() {
         this(new TreeResult());
     }
@@ -75,7 +77,7 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
                     case BOOLEAN:
                         return createLeafContractInput(input, Boolean.class);
                     case FILE:
-                        return createLeafContractInput(input, File.class);
+                        return createDocumentLeafContractInput(input);
                     case COMPLEX:
                         return createNodeContractInput(input);
                     default:
@@ -90,11 +92,22 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
         return copyInputProperties(input, new LeafContractInput(input.getName(), type));
     }
 
+    private org.bonitasoft.web.designer.model.contract.ContractInput createDocumentLeafContractInput(
+            final ContractInput input) {
+        org.bonitasoft.web.designer.model.contract.ContractInput leafContractInput = createLeafContractInput(input,
+                File.class);
+        if (!Strings.isNullOrEmpty(input.getDataReference())) {
+            ((LeafContractInput) leafContractInput)
+                    .setDataReference(new DataReference(input.getDataReference(), File.class.getName()));
+        }
+        return leafContractInput;
+    }
+
     private org.bonitasoft.web.designer.model.contract.ContractInput copyInputProperties(final ContractInput input,
             final org.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
         contractInput.setMultiple(input.isMultiple());
         contractInput.setDescription(input.getDescription());
-        if(contractInput instanceof NodeContractInput) {
+        if (contractInput instanceof NodeContractInput) {
             ((NodeContractInput) contractInput).setDataReference(treeResult.getDataReference(input));
         }
         return contractInput;

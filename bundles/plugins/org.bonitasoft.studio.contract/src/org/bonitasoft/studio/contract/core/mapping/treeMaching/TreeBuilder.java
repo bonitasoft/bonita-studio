@@ -21,9 +21,9 @@ import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMap
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.web.designer.model.contract.DataReference;
-import org.bonitasoft.web.designer.model.contract.DataReference.LoadingType;
-import org.bonitasoft.web.designer.model.contract.DataReference.RelationType;
+import org.bonitasoft.web.designer.model.contract.BusinessDataReference;
+import org.bonitasoft.web.designer.model.contract.BusinessDataReference.LoadingType;
+import org.bonitasoft.web.designer.model.contract.BusinessDataReference.RelationType;
 
 public class TreeBuilder {
 
@@ -39,7 +39,7 @@ public class TreeBuilder {
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("No Business Object found with type %s", data.getClassName())));
         TreeNode node = new TreeNode(input,
-                new DataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER));
+                new BusinessDataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER));
         buildTree(bo, input, node);
         return node;
     }
@@ -62,7 +62,7 @@ public class TreeBuilder {
                 .ifPresent(field -> {
                     RelationField relationField = (RelationField) field;
                     BusinessObject businessObject = relationField.getReference();
-                    TreeNode newNode = node.addNode(childInput, new DataReference(relationField.getName(),
+                    TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
                             businessObject.getQualifiedName(),
                             toRelationType(relationField),
                             toLoadingType(relationField)));
