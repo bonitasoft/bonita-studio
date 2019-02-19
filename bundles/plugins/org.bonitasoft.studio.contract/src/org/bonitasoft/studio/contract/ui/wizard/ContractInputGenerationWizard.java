@@ -252,33 +252,36 @@ public class ContractInputGenerationWizard extends Wizard {
         return true;
     }
 
-    private IRunnableWithProgress buildContractOperationFromDocument(final Document document) {
-        return new IRunnableWithProgress() {
-
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("", IProgressMonitor.UNKNOWN);
-                final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-                input.setType(ContractInputType.FILE);
-                input.setMultiple(document.isMultiple());
-                input.setName(selectBusinessDataWizardPage.getRootName());
-                input.setDataReference(document.getName());
-                final CompoundCommand cc = new CompoundCommand();
-                cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
-                        ProcessPackage.Literals.CONTRACT__INPUTS,
-                        input));
-                if (contractContainer instanceof Task) {
-                    createDocumentUpdateOperation(document, input, cc);
-                } else {
-                    cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE,
-                            DocumentType.CONTRACT));
-                    cc.append(
-                            SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT,
-                                    input));
-                }
-                editingDomain.getCommandStack().execute(cc);
+    private IRunnableWithProgress buildContractOperationFromDocument(Document document) {
+        return monitor -> {
+            monitor.beginTask("", IProgressMonitor.UNKNOWN);
+            ContractInput input = createDocumentContractInput(document);
+            CompoundCommand cc = new CompoundCommand();
+            cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
+                    ProcessPackage.Literals.CONTRACT__INPUTS,
+                    input));
+            if (contractContainer instanceof Task) {
+                createDocumentUpdateOperation(document, input, cc);
+            } else {
+                cc.append(SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE,
+                        DocumentType.CONTRACT));
+                cc.append(
+                        SetCommand.create(editingDomain, document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT,
+                                input));
             }
+            editingDomain.getCommandStack().execute(cc);
         };
+    }
+
+    protected ContractInput createDocumentContractInput(Document document) {
+        ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setType(ContractInputType.FILE);
+        input.setMultiple(document.isMultiple());
+        input.setName(selectBusinessDataWizardPage.getRootName());
+        if (contractContainer instanceof Task) {
+            input.setDataReference(document.getName());
+        }
+        return input;
     }
 
     private void createDocumentUpdateOperation(final Document document, final ContractInput input,
