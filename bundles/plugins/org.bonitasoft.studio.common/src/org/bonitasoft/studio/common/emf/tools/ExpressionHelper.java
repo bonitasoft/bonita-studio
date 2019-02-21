@@ -90,9 +90,14 @@ public class ExpressionHelper {
         return generatedExp;
     }
 
-    public static Expression createGroovyScriptExpression(final String expressionContent, final String returnType) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setName("ExpressionForEvaluation");
+    public static Expression createGroovyScriptExpression(String expressionContent, String returnType) {
+        return createGroovyScriptExpression(expressionContent, returnType, "ExpressionForEvaluation");
+    }
+
+    public static Expression createGroovyScriptExpression(String expressionContent, String returnType,
+            String scriptName) {
+        Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setName(scriptName);
         exp.setInterpreter(ExpressionConstants.GROOVY);
         exp.setType(ExpressionConstants.SCRIPT_TYPE);
         exp.setContent(expressionContent);
@@ -108,7 +113,6 @@ public class ExpressionHelper {
         exp.setReturnType(String.class.getName());
         return exp;
     }
-
 
     public static Expression createConstantExpression(final String content, final String returnClassName) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -184,7 +188,6 @@ public class ExpressionHelper {
         dataDependency.setDefaultValue(null);
         return dataDependency;
     }
-
 
     public static void clearExpression(final Expression expr) {
         Assert.isLegal(expr != null, "Expression cannot be null.");
@@ -268,7 +271,6 @@ public class ExpressionHelper {
         }
         return returnType;
     }
-
 
     public static Expression createDocumentReferenceExpression(final Document d) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
