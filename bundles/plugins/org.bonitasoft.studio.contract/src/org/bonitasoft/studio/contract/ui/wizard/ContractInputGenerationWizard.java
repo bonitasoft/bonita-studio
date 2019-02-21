@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -33,14 +31,12 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
+import org.bonitasoft.studio.contract.core.mapping.operation.DocumentUpdateOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractContainer;
@@ -284,20 +280,9 @@ public class ContractInputGenerationWizard extends Wizard {
         return input;
     }
 
-    private void createDocumentUpdateOperation(final Document document, final ContractInput input,
-            final CompoundCommand cc) {
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Expression rightOperand = ExpressionHelper.createExpressionFromEObject(input);
-        final Expression leftOperand = ExpressionHelper.createDocumentReferenceExpression(document);
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        if (document.isMultiple()) {
-            operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        } else {
-            operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-        }
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
-        operation.setOperator(operator);
+    private void createDocumentUpdateOperation(Document document, ContractInput input,
+            CompoundCommand cc) {
+        Operation operation = new DocumentUpdateOperationBuilder(input, document).toOperation();
         cc.append(AddCommand.create(editingDomain, contractContainer,
                 ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS, operation));
         infoDialogFactory.openUpdateDocumentOperationWarning(document.getName(), getShell());

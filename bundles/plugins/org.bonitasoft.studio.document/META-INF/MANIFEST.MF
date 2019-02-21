@@ -32,7 +32,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.model.edit;bundle-version="6.4.0",
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.jdt.groovy.core;bundle-version="2.9.1",
- org.bonitasoft.studio.engine
+ org.bonitasoft.studio.engine,
+ org.bonitasoft.studio.groovy
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.contract,
@@ -41,6 +42,7 @@ Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.expression,
  org.bonitasoft.studio.common
 Export-Package: org.bonitasoft.studio.document,
+ org.bonitasoft.studio.document.core.export,
  org.bonitasoft.studio.document.core.expression,
  org.bonitasoft.studio.document.core.repository,
  org.bonitasoft.studio.document.i18n,
