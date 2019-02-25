@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.decision.core;
+package org.bonitasoft.studio.engine.export;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -33,13 +32,8 @@ import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.emf.ecore.EObject;
 
-/**
- * @author Mickael Istria
- *
- */
 public class DecisionTableUtil {
 
-    public static final String DECISION_TABLE = Messages.editDecisionTable;
     private static final String CONDITION_SEPARATOR = " && ";
 
     /**
