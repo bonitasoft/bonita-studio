@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.tests.conditions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.decision.core.DecisionTableUtil;
+import org.bonitasoft.studio.engine.export.DecisionTableUtil;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;
