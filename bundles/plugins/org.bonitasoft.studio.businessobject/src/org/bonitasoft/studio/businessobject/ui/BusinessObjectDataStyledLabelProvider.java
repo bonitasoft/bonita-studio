@@ -65,7 +65,8 @@ public class BusinessObjectDataStyledLabelProvider extends DataStyledTreeLabelPr
     }
 
     protected boolean businessObjectDefinitionExists(final BusinessObjectData data) {
-        return store.getChildByQualifiedName(data.getClassName()).isPresent();
+        String className = data.getClassName();
+        return className != null && store != null && store.getChildByQualifiedName(className).isPresent();
     }
 
 }
