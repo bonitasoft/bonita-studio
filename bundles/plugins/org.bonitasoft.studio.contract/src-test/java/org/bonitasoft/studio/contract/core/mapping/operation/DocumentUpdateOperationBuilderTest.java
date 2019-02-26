@@ -111,9 +111,6 @@ public class DocumentUpdateOperationBuilderTest {
         assertThat(rightOperand.getReferencedElements())
                 .filteredOn(ContractInput.class::isInstance)
                 .extracting("name").containsExactly(CONTRACT_INPUT_NAME);
-        assertThat(rightOperand.getReferencedElements())
-                .filteredOn(Expression.class::isInstance)
-                .extracting("name").containsExactly("apiAccessor");
 
         String script = rightOperand.getContent();
         assertThat(script).contains(DOCUMENT_NAME);
