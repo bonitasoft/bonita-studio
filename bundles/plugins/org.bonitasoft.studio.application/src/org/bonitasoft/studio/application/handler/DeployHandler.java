@@ -49,12 +49,12 @@ public class DeployHandler extends AbstractHandler {
             IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
             if (resource != null) {
                 Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                boolean resourceMatch = selectionFinder.findElementToDeploy(resource.getName(), currentRepository)
+                boolean resourceMatch = selectionFinder.findElementToDeploy(resource, currentRepository)
                         .isPresent();
                 if (!resourceMatch) {
                     IProject project = resource.getProject();
                     if (project != null) {
-                        resourceMatch = selectionFinder.findElementToDeploy(project.getName(), currentRepository)
+                        resourceMatch = selectionFinder.findElementToDeploy(project, currentRepository)
                                 .isPresent();
                     }
                 }

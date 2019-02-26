@@ -51,15 +51,16 @@ public class FileStoreFinderTest {
         when(file.getName()).thenReturn(ORGA_NAME);
         IStructuredSelection selection = new StructuredSelection(file);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
-        Repository repository = initRepository();
-
+        Repository repository = mock(Repository.class);
+        when(repository.getFileStore(file)).thenReturn(new FileStoreWithInterface(ORGA_NAME, mock(IRepositoryStore.class)));
         Optional<IRenamable> elementToRename = finder.findElementToRename(repository);
         assertThat(elementToRename).isPresent();
         FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToRename.get();
         assertThat(fileStore.getName()).isEqualTo(ORGA_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
-
+        when(repository.getFileStore(file))
+                .thenReturn(new FileStoreWithoutInterface(DOCUMENT_NAME, mock(IRepositoryStore.class)));
         elementToRename = finder.findElementToRename(repository);
         assertThat(elementToRename).isEmpty();
     }
@@ -74,26 +75,21 @@ public class FileStoreFinderTest {
         when(adaptable.getAdapter(IResource.class)).thenReturn(file);
         IStructuredSelection selection = new StructuredSelection(adaptable);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
-        Repository repository = initRepository();
+        Repository repository = mock(Repository.class);
 
+        when(repository.getFileStore(file)).thenReturn(new FileStoreWithInterface(ORGA_NAME, mock(IRepositoryStore.class)));
         Optional<IDeployable> elementToDeploy = finder.findElementToDeploy(repository);
         assertThat(elementToDeploy).isPresent();
         FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToDeploy.get();
         assertThat(fileStore.getName()).isEqualTo(ORGA_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
-
+        when(repository.getFileStore(file))
+                .thenReturn(new FileStoreWithoutInterface(DOCUMENT_NAME, mock(IRepositoryStore.class)));
         elementToDeploy = finder.findElementToDeploy(repository);
         assertThat(elementToDeploy).isEmpty();
     }
 
-    private Repository initRepository() {
-        Repository repository = mock(Repository.class);
-        IRepositoryStore<? extends IRepositoryFileStore> storeWithInterfaces = initStoreWithInterfaces();
-        IRepositoryStore<? extends IRepositoryFileStore> storeWithoutInterface = initStoreWithoutInterface();
-        when(repository.getAllStores()).thenReturn(Arrays.asList(storeWithInterfaces, storeWithoutInterface));
-        return repository;
-    }
 
     private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithInterfaces() {
         IRepositoryStore<FileStoreWithInterface> repositoryStore = mock(IRepositoryStore.class);
