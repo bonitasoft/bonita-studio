@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
@@ -82,7 +81,6 @@ public class DocumentGroovyScriptExpressionFactory {
         Expression expression = ExpressionHelper.createGroovyScriptExpression(script, List.class.getName(), scriptName);
         expression.getReferencedElements().add(EcoreUtil.copy(input));
         expression.getReferencedElements().add(EcoreUtil.copy(document));
-        expression.getReferencedElements().add(EcoreUtil.copy(GroovyUtil.getEngineConstantExpression("apiAccessor")));
         return expression;
     }
 
@@ -97,23 +95,18 @@ public class DocumentGroovyScriptExpressionFactory {
     }
 
     private void appendImport(StringBuilder scriptBuilder) {
-        appendLine(scriptBuilder, "import org.bonitasoft.engine.api.ProcessAPI");
         appendLine(scriptBuilder, "import org.bonitasoft.engine.bpm.document.DocumentValue");
         appendLine(scriptBuilder, "");
     }
 
     private void initVariables(StringBuilder scriptBuilder) {
         appendLine(scriptBuilder, "def filesOutput = []");
-        appendLine(scriptBuilder, "def pAPI = apiAccessor.getProcessAPI()");
         appendLine(scriptBuilder, "");
     }
 
     private void addExistingDocuments(StringBuilder scriptBuilder, ContractInput input) {
         appendLine(scriptBuilder, String.format("if (%s) {", input.getDataReference()));
-        appendLine(scriptBuilder, String.format("  %s", input.getDataReference()));
-        appendLine(scriptBuilder,
-                "      .collect { doc ->  new DocumentValue(pAPI.getDocumentContent(doc.getContentStorageId()),doc.getContentMimeType(), doc.getContentFileName()) }");
-        appendLine(scriptBuilder, "      .each (filesOutput.&add)");
+        appendLine(scriptBuilder, String.format("  %s.each (filesOutput.&add)", input.getDataReference()));
         appendLine(scriptBuilder, "}");
         appendLine(scriptBuilder, "");
     }
