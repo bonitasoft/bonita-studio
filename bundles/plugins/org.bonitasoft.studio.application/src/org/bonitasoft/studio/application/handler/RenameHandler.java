@@ -24,6 +24,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 public class RenameHandler extends AbstractHandler {
@@ -43,11 +45,12 @@ public class RenameHandler extends AbstractHandler {
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
         if (selection.isPresent() && selection.get().toList().size() == 1) {
-            if (selection.get().getFirstElement() instanceof IProject) {
-                IProject project = (IProject) selection.get().getFirstElement();
-                return Objects.equals(project, currentRepository.getProject());
+            IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
+            if (resource.getAdapter(IProject.class) != null) {
+                return Objects.equals(resource.getAdapter(IProject.class), currentRepository.getProject());
             }
-            return selectionFinder.findElementToRename(RepositoryManager.getInstance().getCurrentRepository()).isPresent();
+            return selectionFinder.findElementToRename(resource, RepositoryManager.getInstance().getCurrentRepository())
+                    .isPresent();
         }
         return false;
     }
