@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.Repository;
@@ -23,7 +21,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -52,7 +49,7 @@ public class FileStoreFinder {
     }
 
     public Optional<IRenamable> findElementToRename(IResource resource, Repository currentRepository) {
-        return findFileStore(resource.getName(), currentRepository)
+        return findFileStore(resource, currentRepository)
                 .filter(IRenamable.class::isInstance)
                 .map(IRenamable.class::cast)
                 .filter(IRenamable::canBeRenamed);
@@ -65,11 +62,11 @@ public class FileStoreFinder {
                     if (element instanceof IAdaptable) {
                         IResource resource = ((IAdaptable) element).getAdapter(IResource.class);
                         if (resource != null) {
-                            Optional<IDeployable> toDeploy = findElementToDeploy(resource.getName(), currentRepository);
+                            Optional<IDeployable> toDeploy = findElementToDeploy(resource, currentRepository);
                             if (!toDeploy.isPresent()) {
                                 IProject project = (resource).getProject();
                                 if (project != null) {
-                                    toDeploy = findElementToDeploy(project.getName(), currentRepository);
+                                    toDeploy = findElementToDeploy(project, currentRepository);
                                 }
                             }
                             return toDeploy.orElse(null);
@@ -79,8 +76,8 @@ public class FileStoreFinder {
                 });
     }
 
-    public Optional<IDeployable> findElementToDeploy(String resourceName, Repository currentRepository) {
-        return findFileStore(resourceName, currentRepository)
+    public Optional<IDeployable> findElementToDeploy(IResource resource, Repository currentRepository) {
+        return findFileStore(resource, currentRepository)
                 .filter(IDeployable.class::isInstance)
                 .map(IDeployable.class::cast);
     }
@@ -90,7 +87,7 @@ public class FileStoreFinder {
                 .map(selection -> {
                     Object element = selection.getFirstElement();
                     if (element instanceof IResource) {
-                        return findFileStore(((IResource) element).getName(), currentRepository).orElse(null);
+                        return findFileStore(((IResource) element), currentRepository).orElse(null);
                     }
                     return null;
                 });
@@ -108,12 +105,8 @@ public class FileStoreFinder {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(BONITA_PROJECT_EXPLORER_ID));
     }
 
-    private Optional<? extends IRepositoryFileStore> findFileStore(String resourceName, Repository currentRepository) {
-        return currentRepository.getAllStores().stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(fileStore -> Objects.equals(fileStore.getName(), resourceName))
-                .findFirst();
+    public Optional<? extends IRepositoryFileStore> findFileStore(IResource resource, Repository currentRepository) {
+        return Optional.ofNullable(currentRepository.getFileStore(resource));
     }
 
     public ISelection getSelectionInExplorer() {
