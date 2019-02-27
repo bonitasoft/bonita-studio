@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -65,6 +66,8 @@ public class RepositoryTest {
     private ProjectClasspathFactory bonitaBPMProjectClasspath;
     @Mock
     private DatabaseHandler bonitaHomeHandler;
+    @Mock
+    private IWorkspaceRoot root;
 
     @Test
     public void should_open_trigger_project_manifest_factory() throws Exception {
@@ -110,6 +113,8 @@ public class RepositoryTest {
         IResource resource2 = mock(IResource.class);
         when(resource1.getName()).thenReturn("name.xml");
         when(resource2.getName()).thenReturn("name.xml");
+        when(workspace.getRoot()).thenReturn(root);
+        when(resource2.getWorkspace()).thenReturn(workspace);
 
         IRepositoryStore<IRepositoryFileStore> repositoryStore1 = mock(IRepositoryStore.class);
         IRepositoryStore<IRepositoryFileStore> repositoryStore2 = mock(IRepositoryStore.class);
