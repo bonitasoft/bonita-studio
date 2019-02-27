@@ -14689,5 +14689,8 @@
   <releases xmi:id="_z5RnUKwvEeiFZ5S8g2gj5Q" date="2018-08-30T11:43:27.494+0200" label="7.8.0-002">
     <changes xsi:type="history:MigrationChange" xmi:id="_z5RnUawvEeiFZ5S8g2gj5Q" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateRestConnectorVersionTo106"/>
   </releases>
+  <releases xmi:id="_7NF0QDj6Eem-ZO25_WoPnQ" date="2019-02-25T10:43:27.494+0100" label="7.8.3-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_7NF0QTj6Eem-ZO25_WoPnQ" migration="org.bonitasoft.studio.migration.custom.migration.UpdateConfigurationId"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
