@@ -23,6 +23,7 @@ import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
@@ -74,7 +75,6 @@ public class TestDecisionTable {
         changeCondition(2, "myBoolean");
         testUpdateLineButtonEnabled();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_ERASEBUTTON, 0).click();
-        bot.sleep(1000);
         testUpdateLineButtonNotEnabled();
 
         changeCondition(0, "myText==\"\"");
@@ -101,17 +101,27 @@ public class TestDecisionTable {
 
     private void changeCondition(final int idx, final String condition) {
         bot.text(idx).setText(condition);
-        bot.sleep(1000);
     }
 
     private void testUpdateLineButtonEnabled() {
-        Assert.assertTrue("Update Line Button should  be enabled", bot.button(Messages.updateLine).isEnabled());
+        bot.waitUntil(new AssertionCondition() {
 
+            @Override
+            protected void makeAssert() throws Exception {
+                Assert.assertTrue("Update Line Button should  be enabled", bot.button(Messages.updateLine).isEnabled());
+            }
+        });
     }
 
     private void testUpdateLineButtonNotEnabled() {
-        Assert.assertTrue("Update Line Button should not be enabled", !bot.button(Messages.updateLine).isEnabled());
+        bot.waitUntil(new AssertionCondition() {
 
+            @Override
+            protected void makeAssert() throws Exception {
+                Assert.assertTrue("Update Line Button should not be enabled",
+                        !bot.button(Messages.updateLine).isEnabled());
+            }
+        });
     }
 
 }
