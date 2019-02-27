@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.Repository;
@@ -23,7 +21,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -109,16 +106,7 @@ public class FileStoreFinder {
     }
 
     public Optional<? extends IRepositoryFileStore> findFileStore(IResource resource, Repository currentRepository) {
-        return currentRepository.getAllStores().stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(fileStore -> Objects.equals(fileStore.getName(), resource.getName()))
-                .filter(fileStore -> {
-                    return resource instanceof IProject
-                            ? true
-                            : Objects.equals(fileStore.getParentStore().getName(), resource.getParent().getName());
-                })
-                .findFirst();
+        return Optional.ofNullable(currentRepository.getFileStore(resource));
     }
 
     public ISelection getSelectionInExplorer() {

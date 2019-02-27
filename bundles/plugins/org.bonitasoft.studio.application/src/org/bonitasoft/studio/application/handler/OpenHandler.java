@@ -55,10 +55,6 @@ public class OpenHandler extends AbstractHandler {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
         ISelection selection = fileStoreFinder.getSelectionInExplorer();
@@ -72,9 +68,8 @@ public class OpenHandler extends AbstractHandler {
                             .getFileStore(adapter);
                     if (fileStore != null) {
                         return !fileStore.getName().endsWith(".jar");
-                    } else {
-                        return true;
                     }
+                    return true;
                 }
             }
         }

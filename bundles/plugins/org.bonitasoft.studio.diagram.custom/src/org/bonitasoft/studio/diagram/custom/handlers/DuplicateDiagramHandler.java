@@ -15,11 +15,9 @@
 package org.bonitasoft.studio.diagram.custom.handlers;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.diagram.custom.actions.DuplicateDiagramAction;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class DuplicateDiagramHandler {
@@ -38,14 +36,6 @@ public class DuplicateDiagramHandler {
                 .map(DiagramFileStore.class::cast)
                 .orElseThrow(() -> new IllegalArgumentException("The selected element should be a diagram"));
         new DuplicateDiagramAction(repositoryAccessor).duplicate(fileStore.getContent());
-    }
-
-    @CanExecute
-    public boolean canExecute(RepositoryAccessor repositoryAccessor) {
-        return RepositoryManager.getInstance().hasActiveRepository() && fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
-                .filter(DiagramFileStore.class::isInstance)
-                .isPresent();
     }
 
 }
