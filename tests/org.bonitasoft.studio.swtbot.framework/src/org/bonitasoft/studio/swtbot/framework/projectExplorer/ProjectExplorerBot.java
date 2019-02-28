@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.allOf;
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withId;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,6 +29,9 @@ import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizar
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -157,6 +164,7 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     protected SWTBotTree getProjectExplorerTree() {
+        bot.waitUntil(Conditions.waitForWidget(allOf(widgetOfType(Tree.class), withId("org.bonitasoft.studio.application.projectExplorerTree"))), 120000);
         return bot.treeWithId("org.bonitasoft.studio.application.projectExplorerTree");
     }
 

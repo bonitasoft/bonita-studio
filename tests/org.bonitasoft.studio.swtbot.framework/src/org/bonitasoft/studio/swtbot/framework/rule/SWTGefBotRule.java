@@ -101,7 +101,11 @@ public class SWTGefBotRule implements TestRule {
         for (final SWTBotShell shell : shells) {
             if (shell.isOpen() && !isEclipseShell(shell)) {
 				System.out.println(String.format("Trying to close shell '%s' after test failure %s",shell.getText(),e));
-                shell.close();
+				try {
+				    shell.close();
+				}catch(TimeoutException e1) {
+				    System.out.println(String.format("Failed to close shell %s: %s",shell.getText(),e1));
+				}
             }
         }
     }
