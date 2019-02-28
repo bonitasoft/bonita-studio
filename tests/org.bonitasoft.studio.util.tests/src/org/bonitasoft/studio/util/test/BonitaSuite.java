@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.util.test;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,12 @@ import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.internal.preferences.MavenPreferenceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.runner.Description;
@@ -202,6 +209,14 @@ public class BonitaSuite extends Suite {
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
+        IEclipsePreferences store = DefaultScope.INSTANCE.getNode(IMavenConstants.PLUGIN_ID);
+        try {
+            File defaultSettings = new File(
+                    FileLocator.toFileURL(BonitaSuite.class.getResource("default_settings.xml")).getFile());
+            store.put(MavenPreferenceConstants.P_USER_SETTINGS_FILE, defaultSettings.getAbsolutePath()); //$NON-NLS-1$
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
         FileActionDialog.setDisablePopup(true);
     }
 

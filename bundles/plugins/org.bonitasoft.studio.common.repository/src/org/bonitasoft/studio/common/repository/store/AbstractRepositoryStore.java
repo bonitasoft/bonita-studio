@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -122,29 +123,21 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         } catch (final MigrationException e) {
             BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.migrationFailedTitle,
-                                Messages.migrationFailedMessage, e).open();
-                    }
-                });
+                Display.getDefault()
+                        .syncExec(() -> new BonitaErrorDialog(Display.getDefault().getActiveShell(),
+                                Messages.migrationFailedTitle,
+                                Messages.migrationFailedMessage, e).open());
             }
             return null;
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importedFileIsInvalidTitle,
+                Display.getDefault()
+                        .syncExec(() -> new BonitaErrorDialog(Display.getDefault().getActiveShell(),
+                                Messages.importedFileIsInvalidTitle,
                                 Messages.bind(
                                         Messages.importedFileIsInvalid, fileName),
-                                e).open();
-                    }
-                });
+                                e).open());
             }
             return null;
         }
@@ -320,13 +313,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     }
 
     private Function<IResource, T> toFileStore() {
-        return new Function<IResource, T>() {
-
-            @Override
-            public T apply(final IResource resource) {
-                return createRepositoryFileStore(resource.getName());
-            }
-        };
+        return resource -> createRepositoryFileStore(resource.getName());
     }
 
     @Override
@@ -353,7 +340,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
-                BonitaStudioLog.error(e1);
+                BonitaStudioLog.warning(String.format("An error occured wihle refreshing folder %s: %s",folder.getName(),e1.getMessage()),CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
     }
@@ -378,28 +365,26 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        for (final IRepositoryFileStore fs : getChildren()) {
-            if (!fs.isReadOnly() && fs.canBeShared()) {
-                final IResource r = fs.getResource();
-                if (r instanceof IFile && r.exists()) {
-                    monitor.subTask(r.getName());
-                    final IFile iFile = (IFile) r;
-                    InputStream newIs;
-                    try (final InputStream is = iFile.getContents()) {
-                        newIs = handlePreImport(r.getName(), is);
-                        if (!is.equals(newIs)) {
-                            iFile.setContents(newIs, IResource.FORCE, monitor);
-                            iFile.refreshLocal(IResource.DEPTH_ONE, monitor);
-                        }
-                    } catch (final IOException e) {
-                        throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a valid file)", e);
-                    }
+        List<IFile> filesToMigrate = getChildren().stream()
+                .filter(fs -> !fs.isReadOnly())
+                .filter(IRepositoryFileStore::canBeShared)
+                .map(IRepositoryFileStore::getResource)
+                .filter(IFile.class::isInstance)
+                .map(IFile.class::cast)
+                .filter(IFile::exists)
+                .collect(Collectors.toList());
 
-                } else {
-                    throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a file)",
-                            new IOException("Not an existing file :"
-                                    + r.getLocation()));
+        for (IFile file : filesToMigrate) {
+            monitor.subTask(file.getName());
+            InputStream newIs;
+            try (final InputStream is = file.getContents()) {
+                newIs = handlePreImport(file.getName(), is);
+                if (!is.equals(newIs)) {
+                    file.setContents(newIs, IResource.FORCE, monitor);
+                    file.refreshLocal(IResource.DEPTH_ONE, monitor);
                 }
+            } catch (final IOException e) {
+                throw new MigrationException("Cannot migrate resource " + file.getName() + " (not a valid file)", e);
             }
         }
     }

@@ -45,18 +45,12 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     }
 
     protected void refresh(final IFolder folder) {
-        try {
-            folder.getWorkspace().run(new IWorkspaceRunnable() {
-
-                @Override
-                public void run(IProgressMonitor monitor) throws CoreException {
-                    if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
-                        folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                    }
-                }
-            }, Repository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
+        if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
+            try {
+                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                 BonitaStudioLog.error(e);
+            }
         }
     }
 
