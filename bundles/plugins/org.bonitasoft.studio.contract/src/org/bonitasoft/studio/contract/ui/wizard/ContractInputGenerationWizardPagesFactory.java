@@ -23,6 +23,7 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -33,29 +34,37 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
  */
 public class ContractInputGenerationWizardPagesFactory {
 
-    public CreateContractInputFromBusinessObjectWizardPage createCreateContratInputFromBusinessObjectWizardPage(final Contract contract,
-            final GenerationOptions generationOptions,
-            final WritableValue selectedDataObservable, final WritableValue rootNameObservable,
-            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
-            final WritableList fieldToContractInputMappingsObservable,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
-        return new CreateContractInputFromBusinessObjectWizardPage(contract, generationOptions, selectedDataObservable,
-                fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable, businessObjectStore);
+    public CreateContractInputFromBusinessObjectWizardPage createCreateContratInputFromBusinessObjectWizardPage(
+            ContractContainer contractContainer,
+            GenerationOptions generationOptions,
+            WritableValue selectedDataObservable,
+            WritableValue rootNameObservable,
+            FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
+            WritableList fieldToContractInputMappingsObservable,
+            BusinessObjectModelRepositoryStore businessObjectStore) {
+        return new CreateContractInputFromBusinessObjectWizardPage(contractContainer, generationOptions,
+                selectedDataObservable, fieldToContractInputMappingFactory, fieldToContractInputMappingsObservable,
+                businessObjectStore);
     }
 
-    public SelectDataWizardPage createSelectBusinessDataWizardPage(final Contract contract, final List<Data> availableBusinessData,
-            final List<Document> availableDocuments,
-            final WritableValue selectedDataObservable,
-            final WritableValue rootNameObservable,
-            final BusinessObjectModelRepositoryStore businessObjectStore) {
-        return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable, rootNameObservable, businessObjectStore);
+    public SelectDataWizardPage createSelectBusinessDataWizardPage(Contract contract,
+            List<Data> availableBusinessData,
+            List<Document> availableDocuments,
+            WritableValue selectedDataObservable,
+            WritableValue rootNameObservable,
+            BusinessObjectModelRepositoryStore businessObjectStore) {
+        return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
+                rootNameObservable, businessObjectStore);
     }
 
-    public GeneratedScriptPreviewPage createGeneratedScriptPreviewPage(final WritableValue rootNameObservable,
-            final WritableList fieldToContactInputMappingsObservable, final WritableValue selectedDataObservable, final RepositoryAccessor repositoryAccessor,
-            final FieldToContractInputMappingOperationBuilder operationBuilder, final FieldToContractInputMappingExpressionBuilder expressionBuilder,
-            final GroovySourceViewerFactory sourceViewerFactory) {
-        return new GeneratedScriptPreviewPage(rootNameObservable, fieldToContactInputMappingsObservable, selectedDataObservable, repositoryAccessor,
+    public GeneratedScriptPreviewPage createGeneratedScriptPreviewPage(WritableValue rootNameObservable,
+            WritableList fieldToContactInputMappingsObservable, WritableValue selectedDataObservable,
+            RepositoryAccessor repositoryAccessor,
+            FieldToContractInputMappingOperationBuilder operationBuilder,
+            FieldToContractInputMappingExpressionBuilder expressionBuilder,
+            GroovySourceViewerFactory sourceViewerFactory) {
+        return new GeneratedScriptPreviewPage(rootNameObservable, fieldToContactInputMappingsObservable,
+                selectedDataObservable, repositoryAccessor,
                 operationBuilder, expressionBuilder, sourceViewerFactory);
     }
 }

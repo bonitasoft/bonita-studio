@@ -22,11 +22,12 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 
 import com.google.common.base.Joiner;
 
-public class MultipleCompositionReferencePropertyInitializer extends NewBusinessObjectListInitializer implements IPropertyInitializer {
+public class MultipleCompositionReferencePropertyInitializer extends NewBusinessObjectListInitializer {
 
     private final BusinessObject parentBusinessObject;
 
-    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject, final InitializerContext context) {
+    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject,
+            final InitializerContext context) {
         super(context);
         this.parentBusinessObject = parentBusinessObject;
     }
@@ -43,21 +44,18 @@ public class MultipleCompositionReferencePropertyInitializer extends NewBusiness
     }
 
     @Override
-    protected boolean canAppendExistingObjects() {
-        return parentBusinessObject == null && !context.isOnPool();
-    }
-
-    @Override
     protected String inputListToIterate() {
         return shouldUseParentIterator() ? buildListAccessorWithIteratorName() : super.inputListToIterate();
     }
 
     private String buildListAccessorWithIteratorName() {
-        return iteratorName(parentBusinessObject) + "." + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+        return iteratorName(parentBusinessObject) + "."
+                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
     }
 
     private boolean shouldUseParentIterator() {
-        return contractInput.eContainer() != null && parentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput);
+        return contractInput.eContainer() != null && parentBusinessObject != null
+                && withComplexMultipleInHierarchy().apply(contractInput);
     }
 
 }

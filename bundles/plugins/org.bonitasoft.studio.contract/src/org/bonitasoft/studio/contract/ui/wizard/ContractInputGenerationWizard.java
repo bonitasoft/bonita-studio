@@ -75,7 +75,7 @@ public class ContractInputGenerationWizard extends Wizard {
     private CreateContractInputFromBusinessObjectWizardPage contractInputFromBusinessObjectWizardPage;
     private List<Data> availableBusinessData;
     private WritableValue selectedDataObservable;
-    private WritableValue rootNameObservable;
+    private WritableValue<String> rootNameObservable;
     private WritableList fieldToContractInputMappingsObservable;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private final RepositoryAccessor repositoryAccessor;
@@ -107,7 +107,8 @@ public class ContractInputGenerationWizard extends Wizard {
         generationOptions = new GenerationOptions();
         this.editingDomain = editingDomain;
         this.repositoryAccessor = repositoryAccessor;
-        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory();
+        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory(
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
@@ -142,7 +143,7 @@ public class ContractInputGenerationWizard extends Wizard {
         addPage(selectBusinessDataWizardPage);
         contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory
                 .createCreateContratInputFromBusinessObjectWizardPage(
-                        contractContainer.getContract(), generationOptions, selectedDataObservable, rootNameObservable,
+                        contractContainer, generationOptions, selectedDataObservable, rootNameObservable,
                         fieldToContractInputMappingFactory,
                         fieldToContractInputMappingsObservable,
                         repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
@@ -214,22 +215,18 @@ public class ContractInputGenerationWizard extends Wizard {
         return false;
     }
 
-    private IRunnableWithProgress buildContractOperationFromData(final BusinessObjectData data,
-            final RootContractInputGenerator contractInputGenerator) {
-        return new IRunnableWithProgress() {
-
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                try {
-                    if (contractContainer instanceof Pool) {
-                        contractInputGenerator.buildForInstanciation(data, monitor);
-                    } else {
-                        contractInputGenerator.build(data, monitor);
-                    }
-                    editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
-                } catch (final OperationCreationException e) {
-                    throw new InvocationTargetException(e);
+    private IRunnableWithProgress buildContractOperationFromData(BusinessObjectData data,
+            RootContractInputGenerator contractInputGenerator) {
+        return monitor -> {
+            try {
+                if (contractContainer instanceof Pool) {
+                    contractInputGenerator.buildForInstanciation(data, monitor);
+                } else {
+                    contractInputGenerator.build(data, monitor);
                 }
+                editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
+            } catch (final OperationCreationException e) {
+                throw new InvocationTargetException(e);
             }
         };
     }
@@ -293,7 +290,7 @@ public class ContractInputGenerationWizard extends Wizard {
         if (generatedScriptPreviewPage != null && generatedScriptPreviewPage.getRootContractInputGenerator() != null) {
             contractInputGenerator = generatedScriptPreviewPage.getRootContractInputGenerator();
         } else {
-            contractInputGenerator = new RootContractInputGenerator((String) rootNameObservable.getValue(),
+            contractInputGenerator = new RootContractInputGenerator(rootNameObservable.getValue(),
                     contractInputFromBusinessObjectWizardPage.getMappings(), repositoryAccessor, operationBuilder,
                     expressionBuilder);
         }

@@ -24,7 +24,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -50,10 +52,10 @@ public class RootContractInputGeneratorTest {
 
     @Test
     public void should_create_a_complex_contract_input_with_root_input_name() throws Exception {
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 Collections.<FieldToContractInputMapping> emptyList(), repositoryAccessor,
                 mock(FieldToContractInputMappingOperationBuilder.class),
                 mock(FieldToContractInputMappingExpressionBuilder.class));
@@ -66,16 +68,17 @@ public class RootContractInputGeneratorTest {
 
     @Test
     public void should_create_a_complex_contract_input_with_generated_child_input_from_mapping() throws Exception {
-        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
-                SimpleFieldBuilder.aStringField(
-                        "input2").build());
+        SimpleFieldToContractInputMapping generatedMapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("input1").build());
+        SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("input2").build());
         notGeneratedMapping.setGenerated(false);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
-                newArrayList(notGeneratedMapping, new SimpleFieldToContractInputMapping(SimpleFieldBuilder
-                        .aStringField("input1").build())),
+        List<FieldToContractInputMapping> children = Arrays.asList(notGeneratedMapping, generatedMapping);
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+                children,
                 repositoryAccessor, mock(FieldToContractInputMappingOperationBuilder.class),
                 mock(FieldToContractInputMappingExpressionBuilder.class));
 
@@ -86,20 +89,20 @@ public class RootContractInputGeneratorTest {
 
     @Test
     public void should_create_operation_for_given_business_data_and_generated_contract_input() throws Exception {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aStringField(
                         "firstName").build());
 
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(mapping),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
-        final IProgressMonitor monitor = new NullProgressMonitor();
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        IProgressMonitor monitor = new NullProgressMonitor();
         rootContractInputGenerator.build(businessObjectData, monitor);
 
         verify(operationBuilder).toOperation(businessObjectData, mapping, monitor);
@@ -107,69 +110,69 @@ public class RootContractInputGeneratorTest {
 
     @Test
     public void should_allAttributesGenerated_setToFalse_whenNotAllMappingAreGenerated() throws OperationCreationException {
-        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aStringField(
                         "input1").build());
         notGeneratedMapping.setGenerated(false);
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
         rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
         assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isFalse();
     }
 
     @Test
     public void should_allAttributesGenerated_setTotrue_whenAllMappingAreGenerated() throws OperationCreationException {
-        final SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping notGeneratedMapping = new SimpleFieldToContractInputMapping(
                 SimpleFieldBuilder.aStringField(
                         "input2").build());
         notGeneratedMapping.setGenerated(true);
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(notGeneratedMapping,
                         new SimpleFieldToContractInputMapping(SimpleFieldBuilder
                                 .aStringField("input1").build())),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
         rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
         assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isTrue();
     }
 
     @Test
     public void should_create_operation_for_given_multiple_business_data_and_generated_contract_input() throws Exception {
-        final SimpleField firstNameField = SimpleFieldBuilder.aStringField("firstName").build();
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(firstNameField);
+        SimpleField firstNameField = SimpleFieldBuilder.aStringField("firstName").build();
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(firstNameField);
 
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore = getBusinessObjectModelRepositoryStore();
-        final BusinessObject bo = aBO("org.test.Employee").withField(firstNameField).build();
+        BusinessObject bo = aBO("org.test.Employee").withField(firstNameField).build();
         when(businessObjectStore.getBusinessObjectByQualifiedName("org.test.Employee")).thenReturn(Optional.of(bo));
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
                 .thenReturn(businessObjectStore);
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("employeesInput",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("employeesInput",
                 newArrayList(mapping),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employees")
+        BusinessObjectData businessObjectData = aBusinessData().withName("employees")
                 .withClassname("org.test.Employee").multiple().build();
-        final NullProgressMonitor monitor = new NullProgressMonitor();
+        NullProgressMonitor monitor = new NullProgressMonitor();
         rootContractInputGenerator.build(businessObjectData, monitor);
 
-        final ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
+        ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
                 .forClass(FieldToContractInputMapping.class);
         verify(operationBuilder).toOperation(eq(businessObjectData), argumentCaptor.capture(), eq(monitor));
-        final Field field = argumentCaptor.getValue().getField();
+        Field field = argumentCaptor.getValue().getField();
         assertThat(field).isInstanceOf(RelationField.class);
         assertThat(field.getName()).isEqualTo("employeesInput");
         assertThat(field.isCollection()).isTrue();
@@ -180,27 +183,26 @@ public class RootContractInputGeneratorTest {
     @Test
     public void should_create_initilal_value_expression_for_given_business_data_and_generated_contract_input()
             throws Exception {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
-                SimpleFieldBuilder.aStringField(
-                        "firstName").build());
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("firstName").build());
 
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
                 FieldToContractInputMappingExpressionBuilder.class);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(mapping),
                 repositoryAccessor, operationBuilder, expressionBuilder);
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
-        rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
+        rootContractInputGenerator.buildForInstanciation(businessObjectData, new NullProgressMonitor());
 
-        final ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
+        ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
                 .forClass(FieldToContractInputMapping.class);
-        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(false));
-        final FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
+        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(true));
+        FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
         assertThat(fieldToContractInputMapping.getField().getName()).isEqualTo("rootInputName");
         assertThat(fieldToContractInputMapping.getField().isCollection()).isFalse();
         assertThat(fieldToContractInputMapping.getChildren()).hasSize(1);
@@ -209,27 +211,26 @@ public class RootContractInputGeneratorTest {
     @Test
     public void should_create_initilal_value_expression_for_given_multiple_business_data_and_generated_contract_input()
             throws Exception {
-        final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
-                SimpleFieldBuilder.aStringField(
-                        "firstName").build());
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("firstName").build());
 
-        final FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
                 FieldToContractInputMappingOperationBuilder.class);
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
                 FieldToContractInputMappingExpressionBuilder.class);
-        final RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
                 newArrayList(mapping),
                 repositoryAccessor, operationBuilder, expressionBuilder);
-        final BusinessObjectData businessObjectData = aBusinessData().withName("employee").multiple().build();
-        rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").multiple().build();
+        rootContractInputGenerator.buildForInstanciation(businessObjectData, new NullProgressMonitor());
 
-        final ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
+        ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
                 .forClass(FieldToContractInputMapping.class);
-        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(false));
-        final FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
+        verify(expressionBuilder).toExpression(eq(businessObjectData), argumentCaptor.capture(), eq(true));
+        FieldToContractInputMapping fieldToContractInputMapping = argumentCaptor.getValue();
         assertThat(fieldToContractInputMapping.getField().getName()).isEqualTo("rootInputName");
         assertThat(fieldToContractInputMapping.getField().isCollection()).isTrue();
         assertThat(fieldToContractInputMapping.getChildren()).hasSize(1);

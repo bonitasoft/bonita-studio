@@ -198,9 +198,8 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 mapping, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
-                .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
-                .hasInputTypes(Collection.class.getName())
-                .hasExpression("addAll");
+                .hasType(ExpressionConstants.ASSIGNMENT_OPERATOR)
+                .hasInputTypes(Collection.class.getName());
     }
 
     private FieldToContractInputMappingOperationBuilder createFixture() {

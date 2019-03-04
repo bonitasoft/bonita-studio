@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -36,10 +34,13 @@ import org.bonitasoft.studio.contract.ui.wizard.labelProvider.InputTypeColumnLab
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.MandatoryColumnLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -76,13 +77,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * @author aurelie
- */
 public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage {
 
     private static final int DEFAULT_BUTTON_WIDTH_HINT = 200;
-    private final WritableValue selectedDataObservable;
+    private final WritableValue<BusinessObjectData> selectedDataObservable;
     private CheckboxTreeViewer treeViewer;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
     private List<FieldToContractInputMapping> mappings;
@@ -91,23 +89,25 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final GenerationOptions generationOptions;
     private SelectObservableValue actionObservable;
-    private final WritableList fieldToContractInputMappingsObservable;
+    private final WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable;
     private Button deselectAll;
     private Button selectMandatories;
     private Button selectAll;
     private EmptySelectionMultivalidator multiValidator;
+    private ContractContainer contractContainer;
 
-    protected CreateContractInputFromBusinessObjectWizardPage(final Contract contract,
-            final GenerationOptions generationOptions,
-            final WritableValue selectedDataObservable,
-            final FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
-            final WritableList fieldToContractInputMappingsObservable,
-            final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
+    protected CreateContractInputFromBusinessObjectWizardPage(ContractContainer contractContainer,
+            GenerationOptions generationOptions,
+            WritableValue<BusinessObjectData> selectedDataObservable,
+            FieldToContractInputMappingFactory fieldToContractInputMappingFactory,
+            WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable,
+            BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
         super(CreateContractInputFromBusinessObjectWizardPage.class.getName());
         setDescription(Messages.selectFieldToGenerateDescription);
         this.selectedDataObservable = selectedDataObservable;
         this.fieldToContractInputMappingFactory = fieldToContractInputMappingFactory;
-        this.contract = contract;
+        this.contractContainer = contractContainer;
+        this.contract = contractContainer.getContract();
         this.generationOptions = generationOptions;
         this.businessObjectStore = businessObjectStore;
         this.fieldToContractInputMappingsObservable = fieldToContractInputMappingsObservable;
@@ -174,7 +174,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         actionObservable.setValue(false);
     }
 
-    private void createProcessDataMappingTreeViewer(final Composite composite, final EMFDataBindingContext dbc) {
+    private void createProcessDataMappingTreeViewer(Composite composite, EMFDataBindingContext dbc) {
         final Composite viewerComposite = new Composite(composite, SWT.NONE);
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
@@ -215,11 +215,12 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer,
                 FieldToContractInputMapping.class);
 
-        final IObservableValue observeInput = ViewersObservables.observeInput(treeViewer);
+        final IObservableValue<FieldToContractInputMapping> observeInput = ViewersObservables.observeInput(treeViewer);
         dbc.bindValue(observeInput,
                 selectedDataObservable,
                 null,
-                updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
+                UpdateStrategyFactory.updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
+
         createButtonListeners(checkedElements);
         final WritableValue checkedObservableValue = new WritableValue();
         checkedObservableValue.setValue(checkedElements);
@@ -371,40 +372,34 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     }
 
     private IConverter selectedDataToFieldMappings() {
-        return new Converter(BusinessObjectData.class, List.class) {
-
-            @Override
-            public Object convert(final Object selectedData) {
-                if (selectedData == null || !(selectedData instanceof BusinessObjectData)) {
-                    return Collections.emptyList();
-                }
-                mappings = fieldToContractInputMappingFactory
-                        .createMappingForBusinessObjectType(
-                                toBusinessObject((BusinessObjectData) selectedData).orElse(null));
-                fieldToContractInputMappingsObservable.clear();
-                fieldToContractInputMappingsObservable.addAll(mappings);
-                if (multiValidator != null) {
-                    multiValidator.setMappings(mappings);
-                }
-                return mappings;
-            }
-        };
+        return ConverterBuilder.<BusinessObjectData, List> newConverter()
+                .fromType(BusinessObjectData.class)
+                .toType(List.class)
+                .withConvertFunction(data -> {
+                    if (data == null) {
+                        return Collections.emptyList();
+                    }
+                    createMapping(data);
+                    return mappings;
+                })
+                .create();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-     */
+    private void createMapping(BusinessObjectData data) {
+        mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(contractContainer, data);
+        fieldToContractInputMappingsObservable.clear();
+        fieldToContractInputMappingsObservable.addAll(mappings);
+        if (multiValidator != null) {
+            multiValidator.setMappings(mappings);
+        }
+    }
+
     @Override
     public boolean canFlipToNextPage() {
         if (contract.eContainer() instanceof Pool) {
             return generationOptions.isAutogeneratedScript() && super.canFlipToNextPage();
         }
         return super.canFlipToNextPage();
-    }
-
-    private Optional<BusinessObject> toBusinessObject(final BusinessObjectData selectedData) {
-        return businessObjectStore.getBusinessObjectByQualifiedName(selectedData.getClassName());
     }
 
     public List<FieldToContractInputMapping> getMappings() {

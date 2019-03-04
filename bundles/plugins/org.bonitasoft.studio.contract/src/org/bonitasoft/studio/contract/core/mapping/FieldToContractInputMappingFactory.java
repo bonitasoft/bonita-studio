@@ -16,56 +16,88 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractContainer;
+import org.bonitasoft.studio.model.process.Task;
 
-/**
- * @author aurelie
- */
 public class FieldToContractInputMappingFactory {
 
     private static final int MAX_DEPTH = 5;
 
-    public List<FieldToContractInputMapping> createMappingForBusinessObjectType(final BusinessObject businessObject) {
-        final List<FieldToContractInputMapping> mappings = new ArrayList<FieldToContractInputMapping>();
-        for (final Field field : businessObject.getFields()) {
-            mappings.add(createFieldToContractInputMapping(field, MAX_DEPTH));
+    public static final String PERSISTENCE_ID_STRING_FIELD_NAME = "persistenceId_string";
+
+    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectRepositoryStore;
+
+    public FieldToContractInputMappingFactory(BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store) {
+        this.businessObjectRepositoryStore = store;
+    }
+
+    public List<FieldToContractInputMapping> createMappingForBusinessObjectType(ContractContainer contractContainer,
+            BusinessObjectData data) {
+        List<FieldToContractInputMapping> mappings = new ArrayList<>();
+        toBusinessObject(data).ifPresent(businessObject -> businessObject.getFields().stream()
+                .map(field -> createFieldToContractInputMapping(contractContainer, field, MAX_DEPTH))
+                .forEach(mappings::add));
+        if (data.isMultiple() && contractContainer instanceof Task) {
+            mappings.add(createPersistenceIdContractInputMapping());
         }
         return mappings;
     }
 
-    private FieldToContractInputMapping createFieldToContractInputMapping(final Field field, final int depth) {
+    private FieldToContractInputMapping createFieldToContractInputMapping(ContractContainer contractContainer,
+            final Field field, final int depth) {
         if (field instanceof SimpleField) {
             return new SimpleFieldToContractInputMapping((SimpleField) field);
         } else if (field instanceof RelationField) {
-            return createRelationFieldToContractInputMapping((RelationField) field, depth);
+            return createRelationFieldToContractInputMapping(contractContainer, (RelationField) field, depth);
         }
         throw new IllegalStateException("Unkwown Field type");
     }
 
-    private FieldToContractInputMapping createRelationFieldToContractInputMapping(final RelationField field, int depth) {
-        final RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
-        if (RelationField.Type.AGGREGATION.equals(((RelationField) relationFieldMapping.getField()).getType())) {
-            addPersistenceIdMapping(relationFieldMapping);
+    private FieldToContractInputMapping createRelationFieldToContractInputMapping(ContractContainer contractContainer,
+            RelationField field, int depth) {
+        RelationFieldToContractInputMapping relationFieldMapping = new RelationFieldToContractInputMapping(field);
+        if (shouldAddPersistenceIdContractInputMapping(contractContainer, relationFieldMapping, field.isCollection())) {
+            relationFieldMapping.addChild(createPersistenceIdContractInputMapping());
         }
         if (depth > 0) {
             depth--;
-            for (final Field child : field.getReference().getFields()) {
-                relationFieldMapping.addChild(createFieldToContractInputMapping(child, depth));
+            for (Field child : field.getReference().getFields()) {
+                relationFieldMapping.addChild(createFieldToContractInputMapping(contractContainer, child, depth));
             }
         }
         return relationFieldMapping;
     }
 
-    private void addPersistenceIdMapping(final RelationFieldToContractInputMapping relationFieldMapping) {
-        final SimpleField persistenceId = new SimpleField();
-        persistenceId.setName(Field.PERSISTENCE_ID);
-        persistenceId.setType(FieldType.LONG);
-        relationFieldMapping.addChild(new SimpleFieldToContractInputMapping(persistenceId));
+    public boolean shouldAddPersistenceIdContractInputMapping(ContractContainer contractContainer,
+            RelationFieldToContractInputMapping relationFieldMapping, boolean isCollection) {
+        return isAggregation(relationFieldMapping) || (contractContainer instanceof Task && isCollection);
+    }
+
+    private boolean isAggregation(RelationFieldToContractInputMapping relationFieldMapping) {
+        return Objects.equals(((RelationField) relationFieldMapping.getField()).getType(),
+                RelationField.Type.AGGREGATION);
+    }
+
+    private FieldToContractInputMapping createPersistenceIdContractInputMapping() {
+        SimpleField persistenceId = new SimpleField();
+        persistenceId.setName(PERSISTENCE_ID_STRING_FIELD_NAME);
+        persistenceId.setType(FieldType.STRING);
+        return new SimpleFieldToContractInputMapping(persistenceId);
+    }
+
+    private Optional<BusinessObject> toBusinessObject(BusinessObjectData data) {
+        return businessObjectRepositoryStore.getBusinessObjectByQualifiedName(data.getClassName());
     }
 
 }

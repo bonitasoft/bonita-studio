@@ -22,19 +22,21 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IProper
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.SimpleFieldPropertyInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 
-public class PropertyInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
+public class PropertyInitializerFactory extends AbsractInitializerFactory {
 
-    private final RelationPropertyInitializerFactory relationPropertyInitializerFactory;
+    private RelationPropertyInitializerFactory relationPropertyInitializerFactory;
 
-    public PropertyInitializerFactory(final RelationPropertyInitializerFactory relationPropertyInitializerFactory) {
+    public PropertyInitializerFactory(RelationPropertyInitializerFactory relationPropertyInitializerFactory) {
         this.relationPropertyInitializerFactory = relationPropertyInitializerFactory;
     }
 
     @Override
-    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
-        final Field field = mapping.getField();
+    public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping,
+            BusinessObjectData data, boolean isOnPool) {
+        Field field = mapping.getField();
         if (field instanceof SimpleField) {
-            return new SimpleFieldPropertyInitializer(firstMultipleParentBusinessObject(mapping), (SimpleField) field, mapping.getContractInput());
+            return new SimpleFieldPropertyInitializer(firstMultipleParentBusinessObject(mapping), (SimpleField) field,
+                    mapping.getContractInput());
         } else if (field instanceof RelationField) {
             return relationPropertyInitializerFactory.newPropertyInitializer(mapping, data, isOnPool);
         }

@@ -39,22 +39,21 @@ public class FieldToContractInputMappingOperationBuilder {
     private final FieldToContractInputMappingExpressionBuilder expressionBuilder;
 
     @Inject
-    public FieldToContractInputMappingOperationBuilder(final FieldToContractInputMappingExpressionBuilder expressionBuilder,
-            final ExpressionReturnTypeFilter expressionReturnTypeFilter) {
+    public FieldToContractInputMappingOperationBuilder(FieldToContractInputMappingExpressionBuilder expressionBuilder,
+            ExpressionReturnTypeFilter expressionReturnTypeFilter) {
         this.expressionReturnTypeFilter = expressionReturnTypeFilter;
         this.expressionBuilder = expressionBuilder;
     }
 
-    public Operation toOperation(final BusinessObjectData data, final FieldToContractInputMapping mapping,
-            IProgressMonitor monitor)
+    public Operation toOperation(BusinessObjectData data, FieldToContractInputMapping mapping, IProgressMonitor monitor)
             throws OperationCreationException {
         monitor.setTaskName(String.format(Messages.creatingMappingOperation, mapping.getField().getName()));
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(ExpressionHelper.createVariableExpression(data));
         operation.setOperator(operator(mapping, data));
         try {
             operation.setRightOperand(expressionBuilder.toExpression(data, mapping, false));
-        } catch (final BusinessObjectInstantiationException | JavaModelException e) {
+        } catch (BusinessObjectInstantiationException | JavaModelException e) {
             throw new OperationCreationException("Failed to create right operand expression", e);
         }
         if (!typesMatches(operation)) {
@@ -66,17 +65,23 @@ public class FieldToContractInputMappingOperationBuilder {
         return operation;
     }
 
-    private boolean typesMatches(final Operation operation) {
+    private boolean typesMatches(Operation operation) {
         final String expectedType = operation.getOperator().getInputTypes().get(0);
         final String returnType = operation.getRightOperand().getReturnType();
         return expressionReturnTypeFilter.compatibleReturnTypes(expectedType, returnType);
     }
 
-    private Operator operator(final FieldToContractInputMapping mapping, final BusinessObjectData data) {
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
-        operator.getInputTypes().add(data.isMultiple() ? Collection.class.getName() : mapping.getFieldType());
-        operator.setExpression(data.isMultiple() ? "addAll" : mapping.getSetterName());
+    private Operator operator(FieldToContractInputMapping mapping, BusinessObjectData data) {
+        Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        if (data.isMultiple()) {
+            operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+            operator.getInputTypes().add(Collection.class.getName());
+            operator.setExpression("addAll"); // required by the engine..
+        } else {
+            operator.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
+            operator.getInputTypes().add(mapping.getFieldType());
+            operator.setExpression(mapping.getSetterName());
+        }
         return operator;
     }
 

@@ -20,10 +20,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.business.application.Application;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -34,12 +34,14 @@ import org.bonitasoft.studio.la.application.core.ImportApplicationAction;
 import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.LivingApplicationProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -102,9 +104,21 @@ public class ProjectExplorerLivingApplicationIT {
         try {
             session = engineManager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             ApplicationAPI applicationAPI = engineManager.getApplicationAPI(session);
-            Stream<Application> deployedAppsStream = applicationAPI
-                    .searchApplications(new SearchOptionsBuilder(0, 20).done()).getResult().stream();
-            assertThat(deployedAppsStream).extracting(Application::getToken).contains("testExplorerApplication");
+            ICondition applicationDeployedCondition = new ConditionBuilder()
+                    .withTest(() -> {
+                        try {
+                            return applicationAPI.searchApplications(new SearchOptionsBuilder(0, 20).done()).getResult()
+                                    .stream()
+                                    .map(Application::getToken)
+                                    .anyMatch("testExplorerApplication"::equals);
+                        } catch (SearchException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    })
+                    .withFailureMessage(() -> "The application testExplorerApplication has not been deployed")
+                    .create();
+            bot.waitUntil(applicationDeployedCondition, 60000);
         } finally {
             engineManager.logoutDefaultTenant(session);
         }
