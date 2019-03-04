@@ -126,7 +126,8 @@ public class BonitaSuite extends Suite {
 
                 /*
                  * (non-Javadoc)
-                 * @see org.junit.runner.notification.RunListener#testAssumptionFailure(org.junit.runner.notification.Failure)
+                 * @see
+                 * org.junit.runner.notification.RunListener#testAssumptionFailure(org.junit.runner.notification.Failure)
                  */
                 @Override
                 public void testAssumptionFailure(Failure failure) {
@@ -159,7 +160,6 @@ public class BonitaSuite extends Suite {
         return runListener;
     }
 
-
     public static void configurePreferencesForTests() {
         ConnectorEditPlugin.getPlugin().getPreferenceStore()
                 .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
@@ -185,7 +185,7 @@ public class BonitaSuite extends Suite {
         try {
             File defaultSettings = new File(
                     FileLocator.toFileURL(BonitaSuite.class.getResource("default_settings.xml")).getFile());
-            store.put(MavenPreferenceConstants.P_USER_SETTINGS_FILE, defaultSettings.getAbsolutePath()); //$NON-NLS-1$
+            store.put(MavenPreferenceConstants.P_USER_SETTINGS_FILE, defaultSettings.getAbsolutePath());
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }

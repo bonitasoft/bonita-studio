@@ -21,8 +21,11 @@ import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
@@ -56,35 +59,37 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
 
     @Test
     public void should_setAllFieldToInputContractMappingsGenerated_toTrue_whenSelectingAllFields() {
-        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
-        final Contract contract = aContract().build();
-        final Pool process = aPool().havingContract(aContract()).build();
+        BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
+        Contract contract = aContract().build();
+        Pool process = aPool().havingContract(contract).build();
         process.getData().add(data);
-        final GenerationOptions options = new GenerationOptions();
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        final WritableValue selectedDataObservable = new WritableValue();
+        GenerationOptions options = new GenerationOptions();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        WritableValue<BusinessObjectData> selectedDataObservable = new WritableValue<>();
         selectedDataObservable.setValue(data);
-        final WritableValue rootNameObservable = new WritableValue();
+        WritableValue<String> rootNameObservable = new WritableValue<>();
         rootNameObservable.setValue("employeeInput");
-        final WritableList fieldToContractInputMappingsObservable = new WritableList();
-        final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
-                contract, options,
-                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable,
+        WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable = new WritableList<>();
+        CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
+                process, options,
+                selectedDataObservable, new FieldToContractInputMappingFactory(store),
+                fieldToContractInputMappingsObservable,
                 store);
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
         rootMapping1.addChild(childMapping1);
         rootMapping1.addChild(childMapping2);
-        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
         page.setMappings(Lists.newArrayList(rootMapping1, rootMapping2));
-        final WritableSet checkedElements = new WritableSet();
-        checkedElements.addAll(Lists.newArrayList(rootMapping1, childMapping2));
-        final SelectionAdapter listener = page.createSelectAllListener(checkedElements);
+        WritableSet<FieldToContractInputMapping> checkedElements = new WritableSet<>();
+        checkedElements.addAll(Arrays.asList(rootMapping1, childMapping2));
+        SelectionAdapter listener = page.createSelectAllListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
         assertThat(rootMapping1.isGenerated()).isTrue();
         assertThat(childMapping1.isGenerated()).isTrue();
@@ -94,35 +99,37 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
 
     @Test
     public void should_setAllFieldToInputContractMappingsGenerated_toFalse_whenDeselectingAllFields() {
-        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
-        final Contract contract = aContract().build();
-        final Pool process = aPool().havingContract(aContract()).build();
+        BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
+        Contract contract = aContract().build();
+        Pool process = aPool().havingContract(contract).build();
         process.getData().add(data);
-        final GenerationOptions options = new GenerationOptions();
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        final WritableValue selectedDataObservable = new WritableValue();
+        GenerationOptions options = new GenerationOptions();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        WritableValue<BusinessObjectData> selectedDataObservable = new WritableValue<>();
         selectedDataObservable.setValue(data);
-        final WritableValue rootNameObservable = new WritableValue();
+        WritableValue<String> rootNameObservable = new WritableValue<>();
         rootNameObservable.setValue("employeeInput");
-        final WritableList fieldToContractInputMappingsObservable = new WritableList();
-        final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
-                contract, options,
-                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable,
+        WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable = new WritableList<>();
+        CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
+                process, options,
+                selectedDataObservable, new FieldToContractInputMappingFactory(store),
+                fieldToContractInputMappingsObservable,
                 store);
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
         rootMapping1.addChild(childMapping1);
         rootMapping1.addChild(childMapping2);
-        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
         page.setMappings(Lists.newArrayList(rootMapping1, rootMapping2));
-        final WritableSet checkedElements = new WritableSet();
-        checkedElements.addAll(Lists.newArrayList(rootMapping1, childMapping2));
-        final SelectionAdapter listener = page.createDeselectAllListener(checkedElements);
+        WritableSet<FieldToContractInputMapping> checkedElements = new WritableSet<>();
+        checkedElements.addAll(Arrays.asList(rootMapping1, childMapping2));
+        SelectionAdapter listener = page.createDeselectAllListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
         assertThat(rootMapping1.isGenerated()).isFalse();
         assertThat(childMapping1.isGenerated()).isFalse();
@@ -132,35 +139,37 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
 
     @Test
     public void should_CheckedElementsList_Contains_AllFieldToInputContractMappingsGenerated_whenSelectingAllFields() {
-        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
-        final Contract contract = aContract().build();
-        final Pool process = aPool().havingContract(aContract()).build();
+        BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
+        Contract contract = aContract().build();
+        Pool process = aPool().havingContract(contract).build();
         process.getData().add(data);
-        final GenerationOptions options = new GenerationOptions();
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        final WritableValue selectedDataObservable = new WritableValue();
+        GenerationOptions options = new GenerationOptions();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        WritableValue<BusinessObjectData> selectedDataObservable = new WritableValue<>();
         selectedDataObservable.setValue(data);
-        final WritableValue rootNameObservable = new WritableValue();
+        WritableValue<String> rootNameObservable = new WritableValue<>();
         rootNameObservable.setValue("employeeInput");
-        final WritableList fieldToContractInputMappingsObservable = new WritableList();
-        final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
-                contract, options,
-                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable,
+        WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable = new WritableList<>();
+        CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
+                process, options,
+                selectedDataObservable, new FieldToContractInputMappingFactory(store),
+                fieldToContractInputMappingsObservable,
                 store);
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
                 Mockito.mock(SimpleField.class));
         rootMapping1.addChild(childMapping1);
         rootMapping1.addChild(childMapping2);
-        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
                 Mockito.mock(RelationField.class));
-        final WritableSet checkedElements = new WritableSet();
-        checkedElements.addAll(Lists.newArrayList(rootMapping1, childMapping2));
+        WritableSet<FieldToContractInputMapping> checkedElements = new WritableSet<>();
+        checkedElements.addAll(Arrays.asList(rootMapping1, childMapping2));
         page.setMappings(Lists.newArrayList(rootMapping1, rootMapping2));
-        final SelectionAdapter listener = page.createSelectAllListener(checkedElements);
+        SelectionAdapter listener = page.createSelectAllListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
         assertThat(checkedElements.size()).isEqualTo(4);
         assertThat(checkedElements)
@@ -169,46 +178,48 @@ public class CreateContractInputFromBusinessObjectWizardPageTest {
 
     @Test
     public void should_selectAllMandatoryAttributes_whenClickingOnMandatoryAttributes() {
-        final BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
-        final Contract contract = aContract().build();
-        final Pool process = aPool().havingContract(aContract()).build();
+        BusinessObjectData data = aBusinessData().withName("employee").withClassname("org.company.Employee").build();
+        Contract contract = aContract().build();
+        Pool process = aPool().havingContract(contract).build();
         process.getData().add(data);
-        final GenerationOptions options = new GenerationOptions();
-        final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        final WritableValue selectedDataObservable = new WritableValue();
+        GenerationOptions options = new GenerationOptions();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
+                BusinessObjectModelRepositoryStore.class);
+        WritableValue<BusinessObjectData> selectedDataObservable = new WritableValue<>();
         selectedDataObservable.setValue(data);
-        final WritableValue rootNameObservable = new WritableValue();
+        WritableValue<String> rootNameObservable = new WritableValue<>();
         rootNameObservable.setValue("employeeInput");
-        final WritableList fieldToContractInputMappingsObservable = new WritableList();
-        final CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
-                contract, options,
-                selectedDataObservable, new FieldToContractInputMappingFactory(), fieldToContractInputMappingsObservable,
+        WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable = new WritableList<>();
+        CreateContractInputFromBusinessObjectWizardPage page = new CreateContractInputFromBusinessObjectWizardPage(
+                process, options,
+                selectedDataObservable, new FieldToContractInputMappingFactory(store),
+                fieldToContractInputMappingsObservable,
                 store);
-        final RelationField rootMandatoryField = Mockito.mock(RelationField.class);
-        final RelationField rootOptionalField = Mockito.mock(RelationField.class);
-        final SimpleField childOptionalField = Mockito.mock(SimpleField.class);
-        final SimpleField childMandatoryField = Mockito.mock(SimpleField.class);
+        RelationField rootMandatoryField = Mockito.mock(RelationField.class);
+        RelationField rootOptionalField = Mockito.mock(RelationField.class);
+        SimpleField childOptionalField = Mockito.mock(SimpleField.class);
+        SimpleField childMandatoryField = Mockito.mock(SimpleField.class);
         when(rootMandatoryField.isNullable()).thenReturn(false);
         when(rootOptionalField.isNullable()).thenReturn(true);
         when(childOptionalField.isNullable()).thenReturn(true);
         when(childMandatoryField.isNullable()).thenReturn(false);
-        final FieldToContractInputMapping rootMappingMandatoryField = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMappingMandatoryField = new RelationFieldToContractInputMapping(
                 rootMandatoryField);
-        final SimpleFieldToContractInputMapping childMappingOptional = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMappingOptional = new SimpleFieldToContractInputMapping(
                 childOptionalField);
-        final SimpleFieldToContractInputMapping childMappingMandatory = new SimpleFieldToContractInputMapping(
+        SimpleFieldToContractInputMapping childMappingMandatory = new SimpleFieldToContractInputMapping(
                 childMandatoryField);
         rootMappingMandatoryField.addChild(childMappingOptional);
         rootMappingMandatoryField.addChild(childMappingMandatory);
         rootMappingMandatoryField.setGenerated(false);
-        final FieldToContractInputMapping rootMappingOptionalField = new RelationFieldToContractInputMapping(
+        FieldToContractInputMapping rootMappingOptionalField = new RelationFieldToContractInputMapping(
                 rootOptionalField);
         rootMappingOptionalField.setGenerated(false);
         childMappingOptional.setGenerated(false);
         childMappingMandatory.setGenerated(false);
         page.setMappings(Lists.newArrayList(rootMappingMandatoryField, rootMappingOptionalField));
-        final WritableSet checkedElements = new WritableSet();
-        final SelectionAdapter listener = page.createMandatoryAttributesSelectionListener(checkedElements);
+        WritableSet<FieldToContractInputMapping> checkedElements = new WritableSet<>();
+        SelectionAdapter listener = page.createMandatoryAttributesSelectionListener(checkedElements);
         listener.widgetSelected(mock(SelectionEvent.class));
         assertThat(checkedElements.size()).isEqualTo(2);
         assertThat(checkedElements.contains(rootMappingMandatoryField)).isTrue();

@@ -25,18 +25,20 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 
-public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectListInitializer implements IPropertyInitializer {
+public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusinessObjectListInitializer {
 
-    private final ContractInput persistenceIdInput;
-    private final BusinessObject businessObject;
+    protected ContractInput persistenceIdInput;
+    protected BusinessObject businessObject;
 
-    public MultipleBusinessObjectQueryInitializer(final BusinessObject businessObject, final InitializerContext context) {
+    public MultipleAggregationBusinessObjectQueryInitializer(final BusinessObject businessObject,
+            final InitializerContext context) {
         super(context);
         persistenceIdInput = persistenceIdInput(context.getContractInput());
         this.businessObject = businessObject;
@@ -48,7 +50,8 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     }
 
     @Override
-    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer, final String varName)
+    protected void initializeProperty(final StringBuilder scriptBuilder, final IPropertyInitializer propertyInitializer,
+            final String varName)
             throws BusinessObjectInstantiationException {
         if (!isPersistenceIdInitializer(propertyInitializer)) {
             super.initializeProperty(scriptBuilder, propertyInitializer, varName);
@@ -56,7 +59,8 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     }
 
     private boolean isPersistenceIdInitializer(final IPropertyInitializer propertyInitializer) {
-        return propertyInitializer instanceof SimpleFieldPropertyInitializer && Objects.equals(propertyInitializer.getPropertyName(), Field.PERSISTENCE_ID);
+        return propertyInitializer instanceof SimpleFieldPropertyInitializer
+                && Objects.equals(propertyInitializer.getPropertyName(), Field.PERSISTENCE_ID);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
     @Override
     protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         addCommentLine(scriptBuilder,
-                String.format("Add aggregated %s instance", BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+                String.format("Add %s instance", businessObject.getSimpleName()));
     }
 
     protected void daoQuery(final StringBuilder scriptBuilder, final BusinessObject bo) {
@@ -80,20 +84,34 @@ public class MultipleBusinessObjectQueryInitializer extends NewBusinessObjectLis
         scriptBuilder.append(".findByPersistenceId(");
         scriptBuilder.append(persistenceIdInitializer.getInitialValue());
         scriptBuilder.append(")");
+        validateQueryResult(scriptBuilder, persistenceIdInitializer);
     }
 
-    private String daoName(final BusinessObject bo) {
+    private void validateQueryResult(StringBuilder scriptBuilder, SimpleFieldPropertyInitializer persistenceIdInitializer) {
+        String localVariableName = context.getLocalVariableName();
+        scriptBuilder.append(System.lineSeparator());
+        scriptBuilder.append(String.format("if(!%s) {\n", localVariableName));
+        scriptBuilder.append(String.format(
+                "throw new IllegalArgumentException(\"The aggregated reference of type `%s`  with the persistence id \" + %s + \" has not been found.\")\n",
+                context.getField().getReference().getSimpleName(), persistenceIdInitializer.getInitialValue()));
+        scriptBuilder.append("}");
+    }
+
+    protected String daoName(BusinessObject bo) {
         return uncapitalizeFirst(BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName())) + "DAO";
     }
 
     protected ContractInput persistenceIdInput(final ContractInput contractInput) {
-        if (withContractInputName(Field.PERSISTENCE_ID).apply(contractInput)) {
+        if (withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME)
+                .apply(contractInput)) {
             return contractInput;
         }
-        final Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(), withContractInputName(Field.PERSISTENCE_ID));
+        final Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(),
+                withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME));
         if (persistenceIdInput.isPresent()) {
             return persistenceIdInput.get();
         }
-        throw new IllegalStateException(String.format("persistenceId input not found in %s", contractInput.getName()));
+        throw new IllegalStateException(
+                String.format("persistenceId_string input not found in %s", contractInput.getName()));
     }
 }

@@ -37,8 +37,6 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -101,21 +99,11 @@ public class GeneratedScriptPreviewPage extends WizardPage {
             EMFObservables
                     .observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME)
                     .addValueChangeListener(
-                            new IValueChangeListener() {
-
-                                @Override
-                                public void handleValueChange(final ValueChangeEvent event) {
-                                    setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription,
-                                            event.diff.getNewValue()));
-                                }
-                            });
+                            e -> setDescription(Messages.bind(Messages.setGeneratedScriptPreviewPageDescription,
+                                    e.diff.getNewValue())));
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
@@ -165,10 +153,6 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         document.set(generatedExpression.getContent());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
     @Override
     public void setVisible(final boolean visible) {
         super.setVisible(visible);
@@ -199,10 +183,9 @@ public class GeneratedScriptPreviewPage extends WizardPage {
         rootContractInputGenerator = createRootContractInputGenerator();
         if (!fieldToContractInputMappingsObservable.isEmpty()) {
             try {
-                rootContractInputGenerator.buildForInstanciation(data,
-                        monitor);
+                rootContractInputGenerator.buildForInstanciation(data, monitor);
                 generatedExpression = rootContractInputGenerator.getInitialValueExpression();
-            } catch (final OperationCreationException e) {
+            } catch (OperationCreationException e) {
                 throw new InvocationTargetException(e);
             }
         }

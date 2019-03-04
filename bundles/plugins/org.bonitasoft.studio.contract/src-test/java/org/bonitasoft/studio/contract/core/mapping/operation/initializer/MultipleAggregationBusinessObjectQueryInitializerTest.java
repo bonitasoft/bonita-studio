@@ -32,7 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class MultipleBusinessObjectQueryInitializerTest {
+public class MultipleAggregationBusinessObjectQueryInitializerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -55,22 +55,34 @@ public class MultipleBusinessObjectQueryInitializerTest {
         context.setData(aBusinessData().withName("myData").build());
         context.setContractInput(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()
                 .havingInput(aContractInput()
-                        .withName("persistenceId")).build());
+                        .withName("persistenceId_string"))
+                .build());
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
 
-        final MultipleBusinessObjectQueryInitializer initializer = new MultipleBusinessObjectQueryInitializer(employeeBo, context);
-        initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(employeeBo, nameField, aContractInput().withName("name")
-                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple()).build()));
+        final MultipleAggregationBusinessObjectQueryInitializer initializer = new MultipleAggregationBusinessObjectQueryInitializer(
+                employeeBo,
+                context);
+        initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(employeeBo, nameField,
+                aContractInput().withName("name")
+                        .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
+                        .build()));
 
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("def employeeList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employeeInput.each{" + System.lineSeparator()
-                + "//Add aggregated Employee instance" + System.lineSeparator()
+                + "//Add Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
-                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string.toLong())"
+                + System.lineSeparator()
+                + "if(!employeeVar) {"
+                + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee`  with the persistence id \" + currentEmployeeInput.persistenceId_string.toLong() + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "employeeVar.name = currentEmployeeInput.name" + System.lineSeparator()
                 + "return employeeVar" + System.lineSeparator()
                 + "}(it))" + System.lineSeparator()
@@ -90,6 +102,6 @@ public class MultipleBusinessObjectQueryInitializerTest {
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
 
-        new MultipleBusinessObjectQueryInitializer(null, context);
+        new MultipleAggregationBusinessObjectQueryInitializer(null, context);
     }
 }

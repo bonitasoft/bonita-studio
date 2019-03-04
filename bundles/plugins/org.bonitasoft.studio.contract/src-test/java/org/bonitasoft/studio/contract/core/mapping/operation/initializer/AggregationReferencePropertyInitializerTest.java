@@ -27,17 +27,26 @@ public class AggregationReferencePropertyInitializerTest {
     @Test
     public void should_call_query_in_a_closure() throws Exception {
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
-                aBO("country").build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                anAggregationField("country",
+                        aBO("country").build()));
         context.setMapping(mapping);
-        context.setContractInput(aContractInput().withName("persistenceId").in(aContractInput().withName("country")).build());
+        context.setContractInput(
+                aContractInput().withName("persistenceId_string").in(aContractInput().withName("country")).build());
         context.setLocalVariableName("countryVar");
 
         final String initialValue = new AggregationReferencePropertyInitializer(null, context).getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "//Retrieve aggregated country using its DAO and persistenceId" + System.lineSeparator()
-                + "def countryVar = countryDAO.findByPersistenceId(country.persistenceId.toLong())" + System.lineSeparator()
+                + "def countryVar = countryDAO.findByPersistenceId(country.persistenceId_string.toLong())"
+                + System.lineSeparator()
+                + "if(!countryVar) {"
+                + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country.persistenceId_string.toLong() + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "return countryVar}()");
     }
 }

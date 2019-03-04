@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.PropertySetter;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -91,7 +90,7 @@ public abstract class FieldToContractInputMapping {
         return contractInput;
     }
 
-    public MappingOperationScriptBuilder getScriptBuilder(final BusinessObjectData data) throws BusinessObjectInstantiationException {
+    public MappingOperationScriptBuilder getScriptBuilder(BusinessObjectData data) {
         return new MappingOperationScriptBuilder(data, this);
     }
 

@@ -21,10 +21,12 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 
 import com.google.common.base.Function;
@@ -32,7 +34,7 @@ import com.google.common.base.Predicate;
 
 public abstract class AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
-    protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<IPropertyInitializer>();
+    protected final List<IPropertyInitializer> propertyInitializers = new ArrayList<>();
     protected InitializerContext context;
     private AbstractBusinessObjectInitializer parent;
 
@@ -73,15 +75,20 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         delcareVariable(scriptBuilder, localVariableName);
         scriptBuilder.append(" = ");
         constructor(scriptBuilder, businessObject);
-
         scriptBuilder.append(System.lineSeparator());
-
-        for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
-            initializeProperty(scriptBuilder, propertyInitializer, localVariableName);
-        }
-
+        initializeProperties(scriptBuilder, localVariableName);
         returnVar(scriptBuilder, localVariableName);
         return scriptBuilder.toString();
+    }
+
+    protected void initializeProperties(final StringBuilder scriptBuilder, final String localVariableName)
+            throws BusinessObjectInstantiationException {
+        for (IPropertyInitializer propertyInitializer : propertyInitializers) {
+            if (!Objects.equals(propertyInitializer.getPropertyName(),
+                    FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME)) {
+                initializeProperty(scriptBuilder, propertyInitializer, localVariableName);
+            }
+        }
     }
 
     protected void addCommentBeforeConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
@@ -91,7 +98,8 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
     protected abstract boolean checkExistence();
 
     protected void checkNotNullableFields(final BusinessObject businessObject) throws BusinessObjectInstantiationException {
-        final Set<String> uninitializedNonNullableFields = notNullableFieldNotInitialized(propertyInitializers, businessObject);
+        final Set<String> uninitializedNonNullableFields = notNullableFieldNotInitialized(propertyInitializers,
+                businessObject);
         if (!uninitializedNonNullableFields.isEmpty()) {
             throw new BusinessObjectInstantiationException(toArray(uninitializedNonNullableFields, String.class));
         }
@@ -108,7 +116,8 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         scriptBuilder.append(System.lineSeparator());
     }
 
-    private Set<String> notNullableFieldNotInitialized(final List<IPropertyInitializer> propertyInitializers, final BusinessObject bo) {
+    private Set<String> notNullableFieldNotInitialized(final List<IPropertyInitializer> propertyInitializers,
+            final BusinessObject bo) {
         final Set<String> notNullableFields = newHashSet(transform(filter(bo.getFields(), notNullable()), toFieldName()));
         final Set<String> initializedFields = newHashSet(transform(propertyInitializers, initializerToFieldName()));
         notNullableFields.removeAll(initializedFields);

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Multipl
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionReferencePropertyInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 
-public class RelationPropertyInitializerFactory extends AbsractInitializerFactory implements InitializerFactory {
+public class RelationPropertyInitializerFactory extends AbsractInitializerFactory {
 
     private final VariableNameResolver variableNameResolver;
 
@@ -34,23 +34,28 @@ public class RelationPropertyInitializerFactory extends AbsractInitializerFactor
     }
 
     @Override
-    public IPropertyInitializer newPropertyInitializer(final FieldToContractInputMapping mapping, final BusinessObjectData data, final boolean isOnPool) {
-        final InitializerContext context = createContext(data, variableNameResolver, mapping, false, isOnPool);
-        return context.getField().getType() == Type.AGGREGATION ? newAggregatedReferenceInitializer(context)
+    public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping,
+            BusinessObjectData data, boolean isOnPool) {
+        InitializerContext context = createContext(data, variableNameResolver, mapping, false, isOnPool);
+        return context.getField().getType() == Type.AGGREGATION
+                ? newAggregatedReferenceInitializer(context)
                 : newComposedReferenceInitializer(context);
     }
 
-    private IPropertyInitializer newAggregatedReferenceInitializer(final InitializerContext context) {
-        return context.getField().isCollection() ?
-                new MultipleAggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(context.getMapping()),
+    private IPropertyInitializer newAggregatedReferenceInitializer(InitializerContext context) {
+        return context.getField().isCollection()
+                ? new MultipleAggregationReferencePropertyInitializer(
+                        firstMultipleParentBusinessObject(context.getMapping()),
                         businessObject(context.getMapping()),
                         context)
-                : new AggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(context.getMapping()), context);
+                : new AggregationReferencePropertyInitializer(firstMultipleParentBusinessObject(context.getMapping()),
+                        context);
     }
 
-    private IPropertyInitializer newComposedReferenceInitializer(final InitializerContext context) {
-        return context.getField().isCollection() ?
-                new MultipleCompositionReferencePropertyInitializer(firstMultipleParentBusinessObject(context.getMapping()), context)
+    private IPropertyInitializer newComposedReferenceInitializer(InitializerContext context) {
+        return context.getField().isCollection()
+                ? new MultipleCompositionReferencePropertyInitializer(
+                        firstMultipleParentBusinessObject(context.getMapping()), context)
                 : new CompositionReferencePropertyInitializer(context);
     }
 
