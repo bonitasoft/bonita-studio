@@ -48,24 +48,30 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("emp").build());
-        context.setContractInput(aContractInput().withName("persistenceId")
+        context.setContractInput(aContractInput().withName("persistenceId_string")
                 .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build());
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo, context);
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(
+                null, employeeBo, context);
 
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "def employeeList = []" + System.lineSeparator()
-                + "//Uncomment line below to append existing employees" + System.lineSeparator()
-                + "//employeeList.addAll(emp.employees)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employees.each{" + System.lineSeparator()
-                + "//Add aggregated Employee instance" + System.lineSeparator()
+                + "//Add Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
-                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string.toLong())"
+                + System.lineSeparator()
+                + "if(!employeeVar) {"
+                + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee`  with the persistence id \" + currentEmployeeInput.persistenceId_string.toLong() + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "return employeeVar" + System.lineSeparator()
                 + "}(it))" + System.lineSeparator()
                 + "}" + System.lineSeparator()
@@ -88,22 +94,30 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(employeesField);
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("emp").build());
-        context.setContractInput(aContractInput().withName("persistenceId")
+        context.setContractInput(aContractInput().withName("persistenceId_string")
                 .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build());
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
         context.setOnPool(true);
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(null, employeeBo, context);
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(
+                null, employeeBo, context);
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
                 + "def employeeList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employees.each{" + System.lineSeparator()
-                + "//Add aggregated Employee instance" + System.lineSeparator()
+                + "//Add Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
-                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string.toLong())"
+                + System.lineSeparator()
+                + "if(!employeeVar) {"
+                + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee`  with the persistence id \" + currentEmployeeInput.persistenceId_string.toLong() + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "return employeeVar" + System.lineSeparator()
                 + "}(it))" + System.lineSeparator()
                 + "}" + System.lineSeparator()
@@ -129,12 +143,13 @@ public class MultipleAggregationReferencePropertyInitializerTest {
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("emp").build());
         context.setContractInput(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()
-                .havingInput(aContractInput().withName("persistenceId"))
+                .havingInput(aContractInput().withName("persistenceId_string"))
                 .in(aContractInput().withName("direcotries").withType(ContractInputType.COMPLEX).multiple()).build());
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
 
-        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(directoryBo, employeeBo,
+        final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(
+                directoryBo, employeeBo,
                 context);
         final String initialValue = initializer.getInitialValue();
 
@@ -142,9 +157,16 @@ public class MultipleAggregationReferencePropertyInitializerTest {
                 + "def employeeList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "currentDirectoryInput.employees.each{" + System.lineSeparator()
-                + "//Add aggregated Employee instance" + System.lineSeparator()
+                + "//Add Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
-                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId.toLong())" + System.lineSeparator()
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string.toLong())"
+                + System.lineSeparator()
+                + "if(!employeeVar) {"
+                + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee`  with the persistence id \" + currentEmployeeInput.persistenceId_string.toLong() + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "return employeeVar" + System.lineSeparator()
                 + "}(it))" + System.lineSeparator()
                 + "}" + System.lineSeparator()

@@ -22,20 +22,28 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositi
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.BusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
-import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleBusinessObjectQueryInitializer;
+import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleAggregationBusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
 import org.junit.Test;
 
 public class BusinessObjectInitializerFactoryTest {
@@ -47,7 +55,8 @@ public class BusinessObjectInitializerFactoryTest {
         final RelationField aCompositionField = aCompositionField("employee", aBO("Employee").build());
         final FieldToContractInputMapping mapping = aRelationMapping(aCompositionField)
                 .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build(), false);
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping,
+                aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(NewBusinessObjectInitializer.class);
     }
@@ -60,34 +69,53 @@ public class BusinessObjectInitializerFactoryTest {
         aCompositionField.setCollection(true);
         final FieldToContractInputMapping mapping = FieldToContractInputMappingBuilder
                 .aRelationMapping(aCompositionField)
-                .addChild(aSimpleMapping(aStringField("name").build())).build();
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping, aBusinessData().withName("employee").build(), false);
+                .addChild(aSimpleMapping(aStringField("name").build()))
+                .addChild(aSimpleMapping(aStringField("persistenceId_string").build())).build();
+        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mapping,
+                aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(NewBusinessObjectListInitializer.class);
     }
 
     @Test
     public void should_create_a_BusinessObjectQueryInitializer() throws Exception {
-        final BusinessObjectInitializerFactory factory = newFactory();
+        BusinessObjectInitializerFactory factory = newFactory();
 
-        final BusinessObject businessObject = aBO("Employee").withField(anAggregationField("country", aBO("Country").build())).build();
-        final List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory().createMappingForBusinessObjectType(businessObject);
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData().withName("employee").build(), false);
+        BusinessObject businessObject = aBO("Employee").withField(anAggregationField("country", aBO("Country").build()))
+                .build();
+        BusinessObjectData businessObjectData = new BusinessObjectDataBuilder()
+                .withClassname(businessObject.getQualifiedName()).build();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(repositoryStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.of(businessObject));
+
+        List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory(repositoryStore)
+                .createMappingForBusinessObjectType(aPool().build(), businessObjectData);
+        IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0),
+                aBusinessData().withName("employee").build(), false);
 
         assertThat(propertyInitializer).isInstanceOf(BusinessObjectQueryInitializer.class);
     }
 
     @Test
     public void should_create_a_MultipleBusinessObjectQueryInitializer() throws Exception {
-        final BusinessObjectInitializerFactory factory = newFactory();
-        final RelationField anAggregationField = anAggregationField("countries", aBO("Country").build());
+        BusinessObjectInitializerFactory factory = newFactory();
+        RelationField anAggregationField = anAggregationField("countries", aBO("Country").build());
         anAggregationField.setCollection(true);
-        final BusinessObject businessObject = aBO("Employee").withField(anAggregationField).build();
-        final List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory().createMappingForBusinessObjectType(businessObject);
-        final IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData()
+        BusinessObject businessObject = aBO("Employee").withField(anAggregationField).build();
+        BusinessObjectData businessObjectData = new BusinessObjectDataBuilder()
+                .withClassname(businessObject.getQualifiedName()).build();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(repositoryStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.of(businessObject));
+        List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory(repositoryStore)
+                .createMappingForBusinessObjectType(aPool().build(), businessObjectData);
+        IPropertyInitializer propertyInitializer = factory.newPropertyInitializer(mappings.get(0), aBusinessData()
                 .withName("employee").build(), false);
 
-        assertThat(propertyInitializer).isInstanceOf(MultipleBusinessObjectQueryInitializer.class);
+        assertThat(propertyInitializer).isInstanceOf(MultipleAggregationBusinessObjectQueryInitializer.class);
     }
 
     private BusinessObjectInitializerFactory newFactory() {

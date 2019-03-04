@@ -259,8 +259,7 @@ public class ContractInputGenerationWizardTest {
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
-                any(IProgressMonitor.class))).thenReturn(
-                        anOperation().build());
+                any(IProgressMonitor.class))).thenReturn(anOperation().build());
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,

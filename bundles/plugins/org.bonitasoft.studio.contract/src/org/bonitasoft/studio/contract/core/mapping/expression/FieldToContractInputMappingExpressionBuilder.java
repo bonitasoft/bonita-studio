@@ -47,46 +47,49 @@ import com.google.common.base.Joiner;
 @Creatable
 public class FieldToContractInputMappingExpressionBuilder {
 
-    private final ExpressionProviderService expressionEditorService;
-    private final RepositoryAccessor repositoryAccessor;
+    private ExpressionProviderService expressionEditorService;
+    private RepositoryAccessor repositoryAccessor;
 
     @Inject
-    public FieldToContractInputMappingExpressionBuilder(final RepositoryAccessor repositoryAccessor, final ExpressionProviderService expressionEditorService) {
+    public FieldToContractInputMappingExpressionBuilder(RepositoryAccessor repositoryAccessor,
+            ExpressionProviderService expressionEditorService) {
         this.repositoryAccessor = repositoryAccessor;
         this.expressionEditorService = expressionEditorService;
     }
 
-    public Expression toExpression(final BusinessObjectData data, final FieldToContractInputMapping mapping, final boolean isOnPool)
+    public Expression toExpression(BusinessObjectData data, FieldToContractInputMapping mapping, boolean isOnPool)
             throws BusinessObjectInstantiationException, JavaModelException {
-        final ContractInput contractInput = mapping.getContractInput();
-        final MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
-        final String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
-        final Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
+        ContractInput contractInput = mapping.getContractInput();
+        MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
+        String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
+        Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
         addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, isOnPool);
         setGroovyScriptName(scriptExpression, data, contractInput, isOnPool);
         return scriptExpression;
     }
 
-    protected String getScriptText(final boolean isOnPool, final MappingOperationScriptBuilder mappingOperationScriptBuilder)
+    protected String getScriptText(boolean isOnPool, MappingOperationScriptBuilder mappingOperationScriptBuilder)
             throws BusinessObjectInstantiationException {
         if (isOnPool) {
             return mappingOperationScriptBuilder.toInstanciationScript();
-        } else {
-            return mappingOperationScriptBuilder.toScript();
         }
+        return mappingOperationScriptBuilder.toScript();
     }
 
-    private void setGroovyScriptName(final Expression scriptExpression, final BusinessObjectData data, final ContractInput contractInput, final boolean isOnPool) {
+    private void setGroovyScriptName(final Expression scriptExpression, final BusinessObjectData data,
+            final ContractInput contractInput, final boolean isOnPool) {
         if (isOnPool) {
             final String dataName = data.getName();
-            final String nameToUpperCase = dataName.length() > 1 ? dataName.substring(0, 1).toUpperCase() + dataName.substring(1) : dataName.toUpperCase();
+            final String nameToUpperCase = dataName.length() > 1
+                    ? dataName.substring(0, 1).toUpperCase() + dataName.substring(1) : dataName.toUpperCase();
             scriptExpression.setName("init" + nameToUpperCase + "()");
         } else {
             scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
         }
     }
 
-    private void addScriptDependencies(final MappingOperationScriptBuilder scriptBuilder, final ContractInput contractInput, final BusinessObjectData data,
+    private void addScriptDependencies(final MappingOperationScriptBuilder scriptBuilder, final ContractInput contractInput,
+            final BusinessObjectData data,
             final Expression groovyScriptExpression, final boolean isOnPool) throws JavaModelException {
         groovyScriptExpression.getReferencedElements().add(
                 ExpressionHelper.createDependencyFromEObject(rootContractInput(contractInput)));
@@ -97,14 +100,16 @@ public class FieldToContractInputMappingExpressionBuilder {
         final GroovyCompilationUnit groovyCompilationUnit = groovyCompilationUnit(groovyScriptExpression);
         final ComputeScriptDependenciesJob job = new ComputeScriptDependenciesJob(groovyCompilationUnit);
         job.setNodes(availableDao());
+        job.getNodes().add(new ScriptVariable(data.getName(), data.getDataType().toString()));
         job.setContext(ModelHelper.getParentPool(data));
         groovyScriptExpression.getReferencedElements().addAll(job.findDependencies());
         groovyCompilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
     }
 
     private List<ScriptVariable> availableDao() {
-        final List<ScriptVariable> scriptVariables = new ArrayList<ScriptVariable>();
-        final IExpressionProvider daoExpressionProvider = expressionEditorService.getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final List<ScriptVariable> scriptVariables = new ArrayList<>();
+        final IExpressionProvider daoExpressionProvider = expressionEditorService
+                .getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
             final List<Expression> expressions = newArrayList(daoExpressionProvider.getExpressions(null));
             for (final Expression e : expressions) {
@@ -114,8 +119,10 @@ public class FieldToContractInputMappingExpressionBuilder {
         return scriptVariables;
     }
 
-    protected GroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression) throws JavaModelException {
-        return (GroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(groovyScriptExpression.getContent(),
+    protected GroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression)
+            throws JavaModelException {
+        return (GroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(
+                groovyScriptExpression.getContent(),
                 Repository.NULL_PROGRESS_MONITOR);
     }
 

@@ -22,7 +22,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 
 import com.google.common.base.Joiner;
 
-public class MultipleAggregationReferencePropertyInitializer extends MultipleBusinessObjectQueryInitializer implements IPropertyInitializer {
+public class MultipleAggregationReferencePropertyInitializer extends MultipleAggregationBusinessObjectQueryInitializer {
 
     private final BusinessObject multipleParentBusinessObject;
 
@@ -45,21 +45,18 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleBus
     }
 
     @Override
-    protected boolean canAppendExistingObjects() {
-        return multipleParentBusinessObject == null && !context.isOnPool();
-    }
-
-    @Override
     protected String inputListToIterate() {
         return shouldUseParentIterator() ? buildListAccessorWithIteratorName() : super.inputListToIterate();
     }
 
     private String buildListAccessorWithIteratorName() {
-        return iteratorName(multipleParentBusinessObject) + "." + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+        return iteratorName(multipleParentBusinessObject) + "."
+                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
     }
 
     private boolean shouldUseParentIterator() {
-        return contractInput.eContainer() != null && multipleParentBusinessObject != null && withComplexMultipleInHierarchy().apply(contractInput);
+        return contractInput.eContainer() != null && multipleParentBusinessObject != null
+                && withComplexMultipleInHierarchy().apply(contractInput);
     }
 
 }

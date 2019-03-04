@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
@@ -61,9 +60,6 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Image;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.wiring.BundleWiring;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicate;
@@ -90,13 +86,11 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     static {
         extensions.add(BDM_TYPE_EXTENSION);
     }
-    
-    
+
     public BusinessObjectModelConverter getConverter() {
         return converter;
     }
 
-   
     @Override
     public AbstractBDMFileStore createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
@@ -107,13 +101,11 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         return STORE_NAME;
     }
 
-    
     @Override
     public String getDisplayName() {
         return Messages.businessObjectRepositoryStoreName;
     }
 
-    
     @Override
     public Image getIcon() {
         return Pics.getImage("bdm.png", BusinessObjectPlugin.getDefault());
@@ -131,7 +123,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
                 .map(fileStore -> fileStore.getBusinessObject(qualifiedName) != null ? fileStore : null);
     }
 
-    public Optional<BusinessObject> getBusinessObjectByQualifiedName(final String qualifiedName) {
+    public Optional<BusinessObject> getBusinessObjectByQualifiedName(String qualifiedName) {
         final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
                 .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME));
         return businessObjectFileStore.map(fileStore -> fileStore.getBusinessObject(qualifiedName));

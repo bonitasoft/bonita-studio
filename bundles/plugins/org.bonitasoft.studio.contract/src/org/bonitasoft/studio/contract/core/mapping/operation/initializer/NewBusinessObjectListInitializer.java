@@ -14,18 +14,19 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import static com.google.common.collect.Iterables.getLast;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
+
+import java.util.Objects;
 
 import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 
-public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
+public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInitializer {
 
     protected ContractInput contractInput;
 
@@ -43,10 +44,6 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
         scriptBuilder.append(" = ");
         listConstructor(scriptBuilder, businessObject);
 
-        if (canAppendExistingObjects()) {
-            appendExistingBusinessObjects(scriptBuilder, listVarName);
-        }
-
         forEach(scriptBuilder, businessObject, listVarName);
         returnListVar(scriptBuilder, listVarName);
         return scriptBuilder.toString();
@@ -55,10 +52,6 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     private void listConstructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         scriptBuilder.append("[]");
         scriptBuilder.append(System.lineSeparator());
-    }
-
-    protected boolean canAppendExistingObjects() {
-        return contractInput.eContainer() != null && !context.isOnPool();
     }
 
     private void returnListVar(final StringBuilder scriptBuilder, final String listVarName) {
@@ -94,7 +87,10 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
 
         //Set new business object instance properties
         for (final IPropertyInitializer propertyInitializer : propertyInitializers) {
-            initializeProperty(scriptBuilder, propertyInitializer, variableName);
+            if (!Objects.equals(propertyInitializer.getPropertyName(),
+                    FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME)) {
+                initializeProperty(scriptBuilder, propertyInitializer, variableName);
+            }
         }
 
         returnVar(scriptBuilder, variableName);
@@ -108,7 +104,8 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
 
     protected void addCommentBeforeAddToList(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
         addCommentLine(scriptBuilder,
-                String.format("Add a new composed %s instance", BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
+                String.format("Add a new composed %s instance",
+                        BDMSimpleNameProvider.getSimpleBusinessObjectName(businessObject.getQualifiedName())));
     }
 
     protected String inputListToIterate() {
@@ -117,17 +114,6 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
 
     protected String iteratorName(final BusinessObject bo) {
         return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName()) + "Input";
-    }
-
-    protected void appendExistingBusinessObjects(final StringBuilder scriptBuilder, final String listVarName) {
-        final String refName = context.getRef(getParent() != null ? getParent().getContext() : null);
-        addCommentLine(scriptBuilder, String.format("Uncomment line below to append existing %s", getLast(Splitter.on(".").split(refName))));
-        scriptBuilder.append("//");
-        scriptBuilder.append(listVarName);
-        scriptBuilder.append(".addAll(");
-        scriptBuilder.append(refName);
-        scriptBuilder.append(")");
-        scriptBuilder.append(System.lineSeparator());
     }
 
     @Override

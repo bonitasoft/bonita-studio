@@ -43,12 +43,11 @@ public class MultipleCompositionReferencePropertyInitializerTest {
         context.setLocalVariableName("addressVar");
         context.setLocalListVariableName("addressList");
 
-        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(null, context);
+        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(
+                null, context);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
-                + "//Uncomment line below to append existing addresses" + System.lineSeparator()
-                + "//addressList.addAll(employee.addresses)" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
                 + "employeeInput.addresses.each{" + System.lineSeparator()
                 + "//Add a new composed Address instance" + System.lineSeparator()
@@ -61,7 +60,8 @@ public class MultipleCompositionReferencePropertyInitializerTest {
     }
 
     @Test
-    public void should_build_a_closure_for_multiple_field_in_a_single_businessObject_without_existingValueOnPool() throws Exception {
+    public void should_build_a_closure_for_multiple_field_in_a_single_businessObject_without_existingValueOnPool()
+            throws Exception {
         final RelationField field = aCompositionField("addresses", aBO("Address").build());
         field.setCollection(true);
 
@@ -76,7 +76,8 @@ public class MultipleCompositionReferencePropertyInitializerTest {
         context.setLocalListVariableName("addressList");
         context.setOnPool(true);
 
-        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(null, context);
+        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(
+                null, context);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()
@@ -92,7 +93,8 @@ public class MultipleCompositionReferencePropertyInitializerTest {
     }
 
     @Test
-    public void should_build_a_closure_using_parent_iterator_for_multiple_field_in_a_multiple_businessObject() throws Exception {
+    public void should_build_a_closure_using_parent_iterator_for_multiple_field_in_a_multiple_businessObject()
+            throws Exception {
         final RelationField field = aCompositionField("addresses", aBO("Address").build());
         field.setCollection(true);
 
@@ -108,7 +110,8 @@ public class MultipleCompositionReferencePropertyInitializerTest {
         context.setOnPool(true);
 
         final BusinessObject employee = aBO("Employee").withField(field).build();
-        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(employee, context);
+        final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(
+                employee, context);
 
         assertThat(initializer.getInitialValue()).isEqualTo("{" + System.lineSeparator()
                 + "def addressList = []" + System.lineSeparator()

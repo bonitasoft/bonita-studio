@@ -35,35 +35,47 @@ public class BusinessObjectQueryInitializerTest {
     @Test
     public void should_generate_a_script_using_query_to_retrieve_a_business_object_in_initial_value() throws Exception {
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
-                aBO("org.test.Country").build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                anAggregationField("country",
+                        aBO("org.test.Country").build()));
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("myCountry").build());
         context.setContractInput(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)
-                .havingInput(aContractInput().withName("persistenceId")).build());
+                .havingInput(aContractInput().withName("persistenceId_string")).build());
         context.setLocalVariableName("countryVar");
 
         final BusinessObjectQueryInitializer initializer = new BusinessObjectQueryInitializer(null, context);
 
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null, aStringField("persistenceId").build(),
-                aContractInput().withName("persistenceId").in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
+                aContractInput().withName("persistenceId_string")
+                        .in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
         initializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null, aStringField("name").build(),
-                aContractInput().withName("name").in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
+                aContractInput().withName("name")
+                        .in(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)).build()));
 
         final String initialValue = initializer.getInitialValue();
 
         assertThat(initialValue).isEqualTo(
                 "//Retrieve aggregated Country using its DAO and persistenceId" + System.lineSeparator()
-                        + "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId.toLong())" + System.lineSeparator()
-                        + "countryVar.name = countryInput.name" + System.lineSeparator()
+                        + "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId_string.toLong())"
+                        + System.lineSeparator()
+                        + "if(!countryVar) {"
+                        + System.lineSeparator()
+                        + "throw new IllegalArgumentException(\"The aggregated reference of type `Country`  with the persistence id \" + countryInput.persistenceId_string.toLong() + \" has not been found.\")"
+                        + System.lineSeparator()
+                        + "}"
+                        + System.lineSeparator()
+                        + "countryVar.name = countryInput.name"
+                        + System.lineSeparator()
                         + "return countryVar");
     }
 
     @Test
     public void should_throw_an_IllegalStateException_if_persistenceId_is_not_found() throws Exception {
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(anAggregationField("country",
-                aBO("org.test.Country").build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                anAggregationField("country",
+                        aBO("org.test.Country").build()));
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("myCountry").build());
         context.setContractInput(aContractInput().withName("countryInput").withType(ContractInputType.COMPLEX)

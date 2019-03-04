@@ -49,7 +49,8 @@ public class MappingOperationScriptBuilder {
         this.mapping = mapping;
         final VariableNameResolver variableNameResolver = new VariableNameResolver();
         businessObjectInitializerFactory = new BusinessObjectInitializerFactory(variableNameResolver);
-        propertyInitializerFactory = new PropertyInitializerFactory(new RelationPropertyInitializerFactory(variableNameResolver));
+        propertyInitializerFactory = new PropertyInitializerFactory(
+                new RelationPropertyInitializerFactory(variableNameResolver));
     }
 
     public String toInstanciationScript() throws BusinessObjectInstantiationException {
@@ -62,7 +63,8 @@ public class MappingOperationScriptBuilder {
 
     private String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
-        return format(buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, isOnPool).getInitialValue());
+        return format(
+                buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, isOnPool).getInitialValue());
     }
 
     private String format(final String initialValue) {
@@ -75,23 +77,24 @@ public class MappingOperationScriptBuilder {
         return document.get();
     }
 
-    private IPropertyInitializer buildPropertyInitializerTree(final FieldToContractInputMapping mapping,
-            final InitializerFactory initializerFactory,
-            final BusinessObjectData data,
-            final boolean isOnPool) {
-        final Field field = mapping.getField();
+    private IPropertyInitializer buildPropertyInitializerTree(FieldToContractInputMapping mapping,
+            InitializerFactory initializerFactory,
+            BusinessObjectData data,
+            boolean isOnPool) {
+        Field field = mapping.getField();
         if (field instanceof SimpleField) {
             return propertyInitializerFactory.newPropertyInitializer(mapping, data, isOnPool);
         }
         if (field instanceof RelationField) {
-            final AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) initializerFactory
+            AbstractBusinessObjectInitializer scriptInitializer = (AbstractBusinessObjectInitializer) initializerFactory
                     .newPropertyInitializer(
                             mapping,
                             data,
                             isOnPool);
-            for (final FieldToContractInputMapping child : mapping.getChildren()) {
+            for (FieldToContractInputMapping child : mapping.getChildren()) {
                 if (child.isGenerated()) {
-                    scriptInitializer.addPropertyInitializer(buildPropertyInitializerTree(child, propertyInitializerFactory, data, isOnPool));
+                    scriptInitializer.addPropertyInitializer(
+                            buildPropertyInitializerTree(child, propertyInitializerFactory, data, isOnPool));
                 }
             }
             needsDataDependency = scriptInitializer instanceof NewBusinessObjectInitializer;
