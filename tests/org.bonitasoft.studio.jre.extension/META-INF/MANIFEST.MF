@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JRE Extension fragment
 Bundle-SymbolicName: org.bonitasoft.studio.jre.extension
-Bundle-Version: 7.8.3.qualifier
+Bundle-Version: 7.8.4.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: system.bundle; extension:=framework
 Export-Package: com.sun.management
