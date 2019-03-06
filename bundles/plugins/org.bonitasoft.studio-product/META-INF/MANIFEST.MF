@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Studio
 Bundle-SymbolicName: org.bonitasoft.studio;singleton:=true
-Bundle-Version: 7.8.4.qualifier
+Bundle-Version: 7.8.3
 Bundle-Activator: org.bonitasoft.studio.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
