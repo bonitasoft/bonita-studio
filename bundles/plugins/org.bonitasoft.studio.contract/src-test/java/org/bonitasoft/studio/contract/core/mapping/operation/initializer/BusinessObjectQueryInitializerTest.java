@@ -57,11 +57,11 @@ public class BusinessObjectQueryInitializerTest {
 
         assertThat(initialValue).isEqualTo(
                 "//Retrieve aggregated Country using its DAO and persistenceId" + System.lineSeparator()
-                        + "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId_string.toLong())"
+                        + "def countryVar = countryDAO.findByPersistenceId(countryInput.persistenceId_string?.toLong())"
                         + System.lineSeparator()
                         + "if(!countryVar) {"
                         + System.lineSeparator()
-                        + "throw new IllegalArgumentException(\"The aggregated reference of type `Country`  with the persistence id \" + countryInput.persistenceId_string.toLong() + \" has not been found.\")"
+                        + "throw new IllegalArgumentException(\"The aggregated reference of type `Country`  with the persistence id \" + countryInput.persistenceId_string?.toLong() + \" has not been found.\")"
                         + System.lineSeparator()
                         + "}"
                         + System.lineSeparator()
