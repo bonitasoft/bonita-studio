@@ -51,7 +51,8 @@ public class NewBusinessObjectInitializerTest {
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(context);
 
         assertThat(propertyInitializer.getInitialValue()).isEqualTo(
-                "def addressVar = employee.address == null ? new org.test.Address() : employee.address" + System.lineSeparator() + "return addressVar");
+                "def addressVar = employee.address ?: new org.test.Address()" + System.lineSeparator()
+                        + "return addressVar");
     }
 
     @Test
@@ -59,8 +60,9 @@ public class NewBusinessObjectInitializerTest {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.STRING).notNullable().build();
 
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                aCompositionField("address",
+                        aBO("org.test.Address").withField(streetField).build()));
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().withName("employee").multiple()
@@ -74,12 +76,14 @@ public class NewBusinessObjectInitializerTest {
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
-                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
-        assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressVar = employee.address == null ? new org.test.Address() : employee.address"
-                + System.lineSeparator()
-                + "addressVar.street = employee.address.street"
-                + System.lineSeparator()
-                + "return addressVar");
+                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)))
+                        .build()));
+        assertThat(propertyInitializer.getInitialValue())
+                .isEqualTo("def addressVar = employee.address ?: new org.test.Address()"
+                        + System.lineSeparator()
+                        + "addressVar.street = employee.address.street"
+                        + System.lineSeparator()
+                        + "return addressVar");
     }
 
 }

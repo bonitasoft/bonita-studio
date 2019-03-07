@@ -41,7 +41,8 @@ public class MappingOperationScriptBuilderTest {
     @Test
     public void should_not_need_data_dependency_for_a_simple_mapping() throws Exception {
         final SimpleField firstNameField = aSimpleField().withName("firstName").ofType(FieldType.TEXT).build();
-        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(
+                aBusinessData().withName("employee").build(),
                 new SimpleFieldToContractInputMapping(firstNameField));
 
         final String script = scriptBuilder.toScript();
@@ -54,9 +55,11 @@ public class MappingOperationScriptBuilderTest {
     public void should_need_data_dependency_for_a_relation_mapping() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).build();
         final RelationField addressField = aCompositionField("address", aBO("Address").withField(streetField).build());
-        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(addressField);
+        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                addressField);
         relationFieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping(streetField));
-        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(
+                aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping);
 
         final String script = scriptBuilder.toScript();
@@ -71,11 +74,13 @@ public class MappingOperationScriptBuilderTest {
     public void should_not_add_child_initializer_if_mappping_is_not_generated() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).build();
         final RelationField addressField = aCompositionField("address", aBO("Address").withField(streetField).build());
-        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(addressField);
+        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                addressField);
         final SimpleFieldToContractInputMapping child = new SimpleFieldToContractInputMapping(streetField);
         child.setGenerated(false);
         relationFieldToContractInputMapping.addChild(child);
-        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(
+                aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping);
 
         final String script = scriptBuilder.toScript();
@@ -88,11 +93,14 @@ public class MappingOperationScriptBuilderTest {
     public void should_generate_a_closure_for_deep_relation_mapping() throws Exception {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).build();
         final RelationField countryField = aCompositionField("country", aBO("Country").build());
-        final RelationField addressField = aCompositionField("address", aBO("Address").withField(streetField).withField(countryField).build());
-        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(addressField);
+        final RelationField addressField = aCompositionField("address",
+                aBO("Address").withField(streetField).withField(countryField).build());
+        final RelationFieldToContractInputMapping relationFieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                addressField);
         relationFieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping(streetField));
         relationFieldToContractInputMapping.addChild(new RelationFieldToContractInputMapping(countryField));
-        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(
+                aBusinessData().withName("employee").build(),
                 relationFieldToContractInputMapping);
 
         final String script = scriptBuilder.toScript();
@@ -100,7 +108,7 @@ public class MappingOperationScriptBuilderTest {
         assertThat(script).isEqualTo("def addressVar = new Address()" + System.lineSeparator()
                 + "addressVar.street = address.street" + System.lineSeparator()
                 + "addressVar.country = {" + System.lineSeparator()
-                + SWT.TAB + "def countryVar = addressVar.country == null ? new Country() : addressVar.country" + System.lineSeparator()
+                + SWT.TAB + "def countryVar = addressVar.country ?: new Country()" + System.lineSeparator()
                 + SWT.TAB + "return countryVar}()" + System.lineSeparator()
                 + "return addressVar");
     }
@@ -122,7 +130,8 @@ public class MappingOperationScriptBuilderTest {
             }
         };
 
-        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(aBusinessData().withName("employee").build(),
+        final MappingOperationScriptBuilder scriptBuilder = new MappingOperationScriptBuilder(
+                aBusinessData().withName("employee").build(),
                 mapping);
 
         thrown.expect(UnsupportedOperationException.class);
