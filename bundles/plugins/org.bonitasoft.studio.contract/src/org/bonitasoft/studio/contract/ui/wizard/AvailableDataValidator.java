@@ -33,11 +33,12 @@ import org.eclipse.core.runtime.Status;
 public final class AvailableDataValidator extends MultiValidator {
 
     private final List<Data> availableBusinessData;
-    private final WritableValue selectedDataObservable;
+    private final WritableValue<Object> selectedDataObservable;
     private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final List<Document> availableDocuments;
 
-    public AvailableDataValidator(final List<Data> availableBusinessData, final WritableValue selectedDataObservable,
+    public AvailableDataValidator(final List<Data> availableBusinessData, 
+            final WritableValue<Object> selectedDataObservable,
             final List<Document> availableDocuments,
             final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore) {
         this.availableBusinessData = availableBusinessData;

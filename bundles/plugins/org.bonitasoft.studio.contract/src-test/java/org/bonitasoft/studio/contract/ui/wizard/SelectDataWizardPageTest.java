@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -43,10 +44,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,6 +62,11 @@ public class SelectDataWizardPageTest {
 
     @Mock
     private BusinessObjectModelRepositoryStore store;
+    
+    @Before
+    public void setUp() throws Exception {
+       when(store.getBusinessObjectByQualifiedName(Mockito.anyString())).thenReturn(Optional.empty());
+    }
 
     @Test
     public void should_isPageComplete_ReturnFalse_when_available_data_is_empty() {
@@ -67,7 +75,7 @@ public class SelectDataWizardPageTest {
         final Contract contract = aContract().build();
         final WritableValue selectedDataObservable = new WritableValue();
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         assertThat(page.isPageComplete()).isFalse();
     }
 
@@ -78,7 +86,7 @@ public class SelectDataWizardPageTest {
         final Contract contract = aContract().build();
         final WritableValue selectedDataObservable = new WritableValue();
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(page.isPageComplete()).isFalse();
     }
@@ -92,7 +100,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(new Object());
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         assertThat(page.isPageComplete()).isTrue();
     }
 
@@ -108,7 +116,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(page.isPageComplete()).isTrue();
     }
@@ -122,7 +130,7 @@ public class SelectDataWizardPageTest {
         availableBusinessData.add(bd);
         final WritableValue selectedDataObservable = new WritableValue();
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         assertThat(selectedDataObservable).isNotNull();
         assertThat(page.isPageComplete()).isTrue();
     }
@@ -138,7 +146,7 @@ public class SelectDataWizardPageTest {
         selectedDataObservable.setValue(bd);
         final WritableValue rootNameObservable = new WritableValue();
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                rootNameObservable, store);
+                rootNameObservable, new GenerationOptions(), store);
         page.setWizard(wizardWithContainer());
         page.createControl(realmWithDisplay.createComposite());
         assertThat(rootNameObservable.getValue()).isEqualTo("myDataInput");
@@ -155,7 +163,7 @@ public class SelectDataWizardPageTest {
         selectedDataObservable.setValue(bd);
         final WritableValue rootNameObservable = new WritableValue();
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                rootNameObservable, store);
+                rootNameObservable, new GenerationOptions(), store);
         page.setWizard(wizardWithContainer());
         page.createControl(realmWithDisplay.createComposite());
         final Text text = widgetFinder.<Text> withLabel(realmWithDisplay.getShell(), org.bonitasoft.studio.contract.i18n.Messages.rootContractInputName);
@@ -176,7 +184,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(selectedDataObservable).isNotNull();
         assertThat(page.isPageComplete()).isTrue();
@@ -194,7 +202,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(page.createDefaultValueAlreadyDefinedValidator().validate(document)).isEqualTo(Status.OK_STATUS);
     }
@@ -214,7 +222,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(page.createDefaultValueAlreadyDefinedValidator().validate(document)).isNotEqualTo(Status.OK_STATUS);
     }
@@ -231,7 +239,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         assertThat(page.canFlipToNextPage()).isFalse();
     }
@@ -248,7 +256,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(document);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(false);
         final SelectionAdapter bvSelectionAdapter = page.createBusinessVariableSelectionAdapter();
         bvSelectionAdapter.widgetSelected(mock(SelectionEvent.class));
@@ -268,7 +276,7 @@ public class SelectDataWizardPageTest {
         final WritableValue selectedDataObservable = new WritableValue();
         selectedDataObservable.setValue(bd);
         final SelectDataWizardPage page = new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                selectedDataObservable, store);
+                selectedDataObservable, new GenerationOptions(), store);
         page.setBusinessDataTypeSelected(true);
         final SelectionAdapter documentSelectionAdapter = page.createDocumentSelectionAdapter();
         documentSelectionAdapter.widgetSelected(mock(SelectionEvent.class));

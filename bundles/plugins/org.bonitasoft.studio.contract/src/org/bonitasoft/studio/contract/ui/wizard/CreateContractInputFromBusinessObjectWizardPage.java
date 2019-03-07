@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.Objects;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
+import org.bonitasoft.studio.contract.core.mapping.RemoveAggregateReferencesChildren;
+import org.bonitasoft.studio.contract.core.mapping.UnselectLazyReferencesInMultipleContainer;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.contract.ui.wizard.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldNameColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.wizard.labelProvider.FieldTypeColumnLabelProvider;
@@ -39,9 +46,9 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -52,9 +59,10 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -76,10 +84,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 
 public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage {
 
     private static final int DEFAULT_BUTTON_WIDTH_HINT = 200;
+    private static final String FORM_GENERATION_REDIRECT_ID = "685";
     private final WritableValue<BusinessObjectData> selectedDataObservable;
     private CheckboxTreeViewer treeViewer;
     private final FieldToContractInputMappingFactory fieldToContractInputMappingFactory;
@@ -88,13 +99,14 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private final Contract contract;
     private final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectStore;
     private final GenerationOptions generationOptions;
-    private SelectObservableValue actionObservable;
+    private SelectObservableValue<Boolean> actionObservable;
     private final WritableList<FieldToContractInputMapping> fieldToContractInputMappingsObservable;
     private Button deselectAll;
     private Button selectMandatories;
     private Button selectAll;
     private EmptySelectionMultivalidator multiValidator;
     private ContractContainer contractContainer;
+    private UnselectLazyReferencesInMultipleContainer lazyFieldStatusProvider;
 
     protected CreateContractInputFromBusinessObjectWizardPage(ContractContainer contractContainer,
             GenerationOptions generationOptions,
@@ -119,22 +131,20 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             setTitle(Messages.bind(Messages.selectFieldToGenerateTitle,
                     ((Element) selectedDataObservable.getValue()).getName()));
             EMFObservables
-                    .observeDetailValue(Realm.getDefault(), selectedDataObservable, ProcessPackage.Literals.ELEMENT__NAME)
+                    .observeDetailValue(Realm.getDefault(), selectedDataObservable,
+                            ProcessPackage.Literals.ELEMENT__NAME)
                     .addValueChangeListener(
                             new IValueChangeListener() {
 
                                 @Override
                                 public void handleValueChange(final ValueChangeEvent event) {
-                                    setTitle(Messages.bind(Messages.selectFieldToGenerateTitle, event.diff.getNewValue()));
+                                    setTitle(Messages.bind(Messages.selectFieldToGenerateTitle,
+                                            event.diff.getNewValue()));
                                 }
                             });
         }
     };
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
         final EMFDataBindingContext dbc = new EMFDataBindingContext();
@@ -147,6 +157,17 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         setControl(composite);
     }
 
+    private void openBrowser(String redirectId) {
+        try {
+            new OpenBrowserOperation(new URL(String.format(
+                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    redirectId,
+                    ProductVersion.majorVersion()))).execute();
+        } catch (MalformedURLException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+    
     private void createReminderText(final EMFDataBindingContext dbc, final Composite composite) {
         final CLabel reminder = new CLabel(composite, SWT.NONE);
         final Display d = Display.getCurrent();
@@ -155,9 +176,9 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         reminder.setLayoutData(GridDataFactory.fillDefaults().hint(600, SWT.DEFAULT).create());
         final Button autoGeneratedOperationButton = new Button(composite, SWT.RADIO);
         final Button manuallyDefinedOperationButton = new Button(composite, SWT.RADIO);
-        actionObservable = new SelectObservableValue(Boolean.class);
-        actionObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(autoGeneratedOperationButton));
-        actionObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(manuallyDefinedOperationButton));
+        actionObservable = new SelectObservableValue<Boolean>(Boolean.class);
+        actionObservable.addOption(Boolean.TRUE, WidgetProperties.selection().observe(autoGeneratedOperationButton));
+        actionObservable.addOption(Boolean.FALSE, WidgetProperties.selection().observe(manuallyDefinedOperationButton));
         if (contract.eContainer() instanceof Task) {
             reminder.setText(Messages.reminderForStepMessage);
             autoGeneratedOperationButton.setText(Messages.autoGeneratedOperationStepButton);
@@ -167,7 +188,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
             autoGeneratedOperationButton.setText(Messages.autoGeneratedOperationProcessButton);
             manuallyDefinedOperationButton.setText(Messages.manuallyDefinedOperationProcessButton);
         }
-        dbc.bindValue(actionObservable, PojoObservables.observeValue(generationOptions, "autogeneratedScript"));
+        dbc.bindValue(actionObservable, generationOptions.getAutoGeneratedScriptObservable());
     }
 
     public void disableAutoGeneration() {
@@ -179,8 +200,10 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
         createButtonComposite(viewerComposite);
-        treeViewer = new CheckboxTreeViewer(viewerComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
+        treeViewer = new CheckboxTreeViewer(viewerComposite,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+        treeViewer.getTree()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         treeViewer.getTree().setHeaderVisible(true);
         treeViewer.addFilter(hidePersistenceIdMapping());
         final FieldToContractInputMappingViewerCheckStateManager manager = new FieldToContractInputMappingViewerCheckStateManager();
@@ -194,7 +217,8 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         nameTreeViewerColumn.getColumn().setText(Messages.attributeName);
         nameTreeViewerColumn.getColumn().setWidth(250);
-        nameTreeViewerColumn.setLabelProvider(new FieldNameColumnLabelProvider());
+        lazyFieldStatusProvider = new UnselectLazyReferencesInMultipleContainer();
+        nameTreeViewerColumn.setLabelProvider(new FieldNameColumnLabelProvider(lazyFieldStatusProvider));
 
         final TreeViewerColumn typeTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         typeTreeViewerColumn.getColumn().setText(Messages.attributetype);
@@ -221,6 +245,13 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 null,
                 UpdateStrategyFactory.updateValueStrategy().withConverter(selectedDataToFieldMappings()).create());
 
+        generationOptions.getEditModeObservable().addValueChangeListener(event -> {
+            if (selectedDataObservable.getValue() instanceof BusinessObjectData) {
+                createMapping(selectedDataObservable.getValue());
+                treeViewer.setInput(mappings);
+            }
+        });
+
         createButtonListeners(checkedElements);
         final WritableValue checkedObservableValue = new WritableValue();
         checkedObservableValue.setValue(checkedElements);
@@ -238,6 +269,13 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                 contract.eContainer());
         dbc.addValidationStatusProvider(multiValidator);
 
+        new Label(viewerComposite, SWT.NONE); //FILLER
+        
+        Link formGenerationDocLink = new Link(viewerComposite,SWT.NONE);
+        formGenerationDocLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        formGenerationDocLink.setText(Messages.moreInfoFormGenerationLink);
+        formGenerationDocLink.addListener(SWT.Selection, event -> openBrowser(FORM_GENERATION_REDIRECT_ID));
+        
         ColumnViewerToolTipSupport.enableFor(treeViewer);
     }
 
@@ -366,20 +404,21 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
             @Override
             public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                return !Objects.equals(Field.PERSISTENCE_ID, ((FieldToContractInputMapping) element).getField().getName());
+                return !Objects.equals(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME,
+                        ((FieldToContractInputMapping) element).getField().getName());
             }
         };
     }
 
     private IConverter selectedDataToFieldMappings() {
-        return ConverterBuilder.<BusinessObjectData, List> newConverter()
-                .fromType(BusinessObjectData.class)
+        return ConverterBuilder.<Object, List> newConverter()
+                .fromType(Object.class)
                 .toType(List.class)
                 .withConvertFunction(data -> {
-                    if (data == null) {
+                    if (data == null || !(data instanceof BusinessObjectData)) {
                         return Collections.emptyList();
                     }
-                    createMapping(data);
+                    createMapping((BusinessObjectData) data);
                     return mappings;
                 })
                 .create();
@@ -387,6 +426,11 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
 
     private void createMapping(BusinessObjectData data) {
         mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(contractContainer, data);
+        if (generationOptions.getEditMode() == EditMode.EDIT) {
+            lazyFieldStatusProvider.apply(mappings, data.isMultiple());
+        }else if(generationOptions.getEditMode() == EditMode.CREATE) {
+            new RemoveAggregateReferencesChildren().apply(mappings);
+        }
         fieldToContractInputMappingsObservable.clear();
         fieldToContractInputMappingsObservable.addAll(mappings);
         if (multiValidator != null) {
@@ -397,7 +441,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     @Override
     public boolean canFlipToNextPage() {
         if (contract.eContainer() instanceof Pool) {
-            return generationOptions.isAutogeneratedScript() && super.canFlipToNextPage();
+            return generationOptions.isAutoGeneratedScript() && super.canFlipToNextPage();
         }
         return super.canFlipToNextPage();
     }
