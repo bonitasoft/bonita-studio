@@ -181,8 +181,12 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
                 Collections.<ClassNode> emptySet(), prefix.toString(),
                 false, false);
         for (final IGroovyProposal p : allProposals) {
-            final IJavaCompletionProposal javaProposal = p.createJavaProposal(contentAssistContext, javaContext);
-            result.add(javaProposal);
+            try {
+                final IJavaCompletionProposal javaProposal = p.createJavaProposal(contentAssistContext, javaContext);
+                result.add(javaProposal);
+            }catch (NullPointerException  e) {
+                // No CompletionEngine available ?
+            }
         }
         return result;
     }

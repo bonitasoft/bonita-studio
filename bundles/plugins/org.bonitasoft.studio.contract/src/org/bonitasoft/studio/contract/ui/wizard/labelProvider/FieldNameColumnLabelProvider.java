@@ -15,24 +15,69 @@
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.UnselectLazyReferencesInMultipleContainer;
+import org.bonitasoft.studio.model.process.Task;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
-/**
- * @author aurelie
- */
 public class FieldNameColumnLabelProvider extends ColumnLabelProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-     */
+    private UnselectLazyReferencesInMultipleContainer lazyFieldStatusProvider;
+
+    public FieldNameColumnLabelProvider(UnselectLazyReferencesInMultipleContainer lazyFieldStatusProvider) {
+        this.lazyFieldStatusProvider = lazyFieldStatusProvider;
+    }
+
     @Override
     public String getText(final Object element) {
-
         if (element instanceof FieldToContractInputMapping) {
             return ((FieldToContractInputMapping) element).getField().getName();
         }
-
         return super.getText(element);
+    }
+
+    @Override
+    public Image getToolTipImage(Object element) {
+        IStatus status = lazyFieldStatusProvider.getStatus((FieldToContractInputMapping) element);
+        if (!status.isOK()) {
+            return getStatusImage(status.getSeverity());
+        }
+        return super.getToolTipImage(element);
+    }
+
+    @Override
+    public String getToolTipText(Object element) {
+        IStatus status = lazyFieldStatusProvider.getStatus((FieldToContractInputMapping) element);
+        if (!status.isOK()) {
+            return status.getMessage();
+        }
+        return super.getToolTipText(element);
+    }
+
+    @Override
+    public Image getImage(Object element) {
+        IStatus status = lazyFieldStatusProvider.getStatus((FieldToContractInputMapping) element);
+        if (!status.isOK()) {
+            return getStatusImage(status.getSeverity());
+        }
+        return super.getImage(element);
+    }
+
+    private Image getStatusImage(int severity) {
+        switch (severity) {
+            case IStatus.ERROR:
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+            case IStatus.WARNING:
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+            case IStatus.INFO:
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+            default:
+                return null;
+        }
+
     }
 }

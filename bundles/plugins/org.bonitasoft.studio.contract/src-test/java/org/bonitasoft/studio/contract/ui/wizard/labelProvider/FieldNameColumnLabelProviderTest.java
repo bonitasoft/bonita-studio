@@ -20,6 +20,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.UnselectLazyReferencesInMultipleContainer;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
@@ -31,7 +32,7 @@ public class FieldNameColumnLabelProviderTest {
     public void should_return_a_simpleField_name() {
         final SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping((SimpleField) SimpleFieldBuilder.aSimpleField()
                 .withName("employee").build());
-        final FieldNameColumnLabelProvider provider = new FieldNameColumnLabelProvider();
+        final FieldNameColumnLabelProvider provider = new FieldNameColumnLabelProvider(new UnselectLazyReferencesInMultipleContainer());
         assertThat(provider.getText(mapping)).isEqualTo("employee");
 
     }
@@ -41,9 +42,8 @@ public class FieldNameColumnLabelProviderTest {
         final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping((RelationField) RelationFieldBuilder.anAggregationField(
                 "employee",
                 BusinessObjectBuilder.aBO("Employee").build()));
-        final FieldNameColumnLabelProvider provider = new FieldNameColumnLabelProvider();
+        final FieldNameColumnLabelProvider provider = new FieldNameColumnLabelProvider(new UnselectLazyReferencesInMultipleContainer());
         assertThat(provider.getText(mapping)).isEqualTo("employee");
-
     }
 
 }
