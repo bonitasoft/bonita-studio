@@ -118,11 +118,19 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
 
     @Override
     protected boolean checkExistence() {
-        return false;
+        return context.checkExistence();
     }
 
     @Override
     protected void constructor(final StringBuilder scriptBuilder, final BusinessObject businessObject) {
+        if (checkExistence()) {
+            String ref = context.getRef(getParent() != null ? getParent().getContext() : null);
+            scriptBuilder.append(ref);
+            scriptBuilder.append("?.find { ");
+            scriptBuilder.append("it.persistenceId.toString() == ");
+            scriptBuilder.append(String.format("%s.persistenceId_string", iteratorName(businessObject)));
+            scriptBuilder.append(" } ?: ");
+        }
         scriptBuilder.append("new ");
         scriptBuilder.append(businessObject.getQualifiedName());
         scriptBuilder.append("()");

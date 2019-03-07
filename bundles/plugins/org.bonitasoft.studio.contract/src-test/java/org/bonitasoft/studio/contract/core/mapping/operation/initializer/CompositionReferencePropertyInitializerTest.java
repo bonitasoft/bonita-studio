@@ -39,41 +39,44 @@ public class CompositionReferencePropertyInitializerTest {
         final SimpleField streetField = aSimpleField().withName("street").ofType(FieldType.TEXT).notNullable().build();
 
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(aCompositionField("address",
-                aBO("org.test.Address").withField(streetField).build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                aCompositionField("address", aBO("org.test.Address").withField(streetField).build()));
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().build());
         context.setLocalVariableName("addressVar");
 
-        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(context);
+        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
+                context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(null,
                 streetField, aContractInput().withName("street")
                         .in(aContractInput().withName("address").withType(ContractInputType.COMPLEX)
-                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX))).build()));
+                                .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)))
+                        .build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo(
                 "{"
                         + System.lineSeparator()
-                        + "def addressVar = employee.address == null ? new org.test.Address() : employee.address"
+                        + "def addressVar = employee.address ?: new org.test.Address()"
                         + System.lineSeparator()
                         + "addressVar.street = employee.address.street"
                         + System.lineSeparator()
-                        + "return addressVar}()"
-                );
+                        + "return addressVar}()");
     }
 
     @Test
     public void should_not_throw_an_BusinessObjectInstantiationException_when_creating_an_inconsistent_business_object_having_missing_mandatory_attributes()
             throws Exception {
         final InitializerContext context = new InitializerContext();
-        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(aCompositionField("address", aBO("org.test.Address")
-                .withField(aSimpleField().withName("street").notNullable().build()).build()));
+        final RelationFieldToContractInputMapping mapping = new RelationFieldToContractInputMapping(
+                aCompositionField("address",
+                        aBO("org.test.Address").withField(aSimpleField().withName("street").notNullable().build()).build()));
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().build());
         context.setLocalVariableName("addressVar");
 
-        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(context);
+        final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
+                context);
 
         propertyInitializer.getInitialValue();
     }

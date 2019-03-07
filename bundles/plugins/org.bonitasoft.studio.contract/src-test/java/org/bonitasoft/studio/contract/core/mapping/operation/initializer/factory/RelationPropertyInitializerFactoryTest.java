@@ -31,10 +31,12 @@ import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.AggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.CompositionReferencePropertyInitializer;
@@ -122,6 +124,34 @@ public class RelationPropertyInitializerFactoryTest {
                 false);
 
         assertThat(propertyInitializer).isInstanceOf(MultipleAggregationReferencePropertyInitializer.class);
+    }
+
+    @Test
+    public void should_check_existence_for_composition_field_with_multiple_parent_on_a_task() {
+        RelationPropertyInitializerFactory factory = newFactory();
+
+        BusinessObject businessObject = aBO("Employee").build();
+        RelationField aCompositionField = aCompositionField("address", businessObject);
+        businessObject.addField(aCompositionField);
+        BusinessObjectData businessObjectData = new BusinessObjectDataBuilder()
+                .withClassname(businessObject.getQualifiedName())
+                .multiple()
+                .build();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(repositoryStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.of(businessObject));
+        List<FieldToContractInputMapping> mappings = new FieldToContractInputMappingFactory(repositoryStore)
+                .createMappingForBusinessObjectType(aPool().build(), businessObjectData);
+        FieldToContractInputMapping addressMapping = mappings.get(0);
+
+        RelationField parentRelationField = new RelationField();
+        parentRelationField.setCollection(true);
+        parentRelationField.setType(Type.COMPOSITION);
+        new RelationFieldToContractInputMapping(parentRelationField).addChild(addressMapping);
+
+        assertThat(factory.checkExistence(addressMapping, false)).isTrue();
+        assertThat(factory.checkExistence(addressMapping, true)).isFalse();
     }
 
     private RelationPropertyInitializerFactory newFactory() {
