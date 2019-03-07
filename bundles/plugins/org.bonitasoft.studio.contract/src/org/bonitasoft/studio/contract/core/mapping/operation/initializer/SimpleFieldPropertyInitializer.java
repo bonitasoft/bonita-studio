@@ -32,7 +32,8 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     private final BusinessObject parentBusinessObject;
     private AbstractBusinessObjectInitializer parent;
 
-    public SimpleFieldPropertyInitializer(final BusinessObject parentBusinessObject, final SimpleField field, final ContractInput contractInput) {
+    public SimpleFieldPropertyInitializer(final BusinessObject parentBusinessObject, final SimpleField field,
+            final ContractInput contractInput) {
         this.parentBusinessObject = parentBusinessObject;
         this.field = field;
         this.contractInput = contractInput;
@@ -49,9 +50,10 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     @Override
     public String getInitialValue() {
-        final StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput) ?
-                new StringBuilder(prefixIterator(Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput)))) :
-                new StringBuilder(Joiner.on(".").join(ContractInputFunctions.toAncestorNameList().apply(contractInput)));
+        final StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput)
+                ? new StringBuilder(
+                        prefixIterator(Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput))))
+                : new StringBuilder(Joiner.on(".").join(ContractInputFunctions.toAncestorNameList().apply(contractInput)));
         castInputValue(scriptBuilder);
         return scriptBuilder.toString();
     }
@@ -59,10 +61,10 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     private void castInputValue(final StringBuilder scriptBuilder) {
         switch (field.getType()) {
             case FLOAT:
-                scriptBuilder.append(contractInput.isMultiple() ? ".collect{ it.toFloat() }" : ".toFloat()");
+                scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toFloat() }" : "?.toFloat()");
                 break;
             case LONG:
-                scriptBuilder.append(contractInput.isMultiple() ? ".collect{ it.toLong() }" : ".toLong()");
+                scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toLong() }" : "?.toLong()");
                 break;
             default:
                 break;
@@ -74,7 +76,8 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     }
 
     private String iteratorName() {
-        return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName()) + "Input";
+        return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(parentBusinessObject.getQualifiedName())
+                + "Input";
     }
 
     @Override
