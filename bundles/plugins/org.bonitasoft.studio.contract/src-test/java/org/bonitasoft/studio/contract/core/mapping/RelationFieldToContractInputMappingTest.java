@@ -39,9 +39,11 @@ public class RelationFieldToContractInputMappingTest {
 
     @Test
     public void should_create_contract_input_from_a_composition_relation_field() throws Exception {
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
-                Type.COMPOSITION,
-                aBusinessObject("Address", aSimpleField("number", FieldType.INTEGER), aSimpleField("street", FieldType.STRING))));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                aRelationField("address", Type.COMPOSITION,
+                        aBusinessObject("Address",
+                                aSimpleField("number", FieldType.INTEGER),
+                                aSimpleField("street", FieldType.STRING))));
 
         final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
@@ -49,12 +51,18 @@ public class RelationFieldToContractInputMappingTest {
     }
 
     @Test
-    public void should_create_contract_input_with_children_from_a_RelationFieldToContractInputMapping_with_children() throws Exception {
+    public void should_create_contract_input_with_children_from_a_RelationFieldToContractInputMapping_with_children()
+            throws Exception {
         final RelationField compositionField = aRelationField("address", Type.COMPOSITION,
-                aBusinessObject("Address", aSimpleField("number", FieldType.INTEGER), aSimpleField("street", FieldType.STRING)));
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(compositionField);
-        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(0)));
-        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
+                aBusinessObject("Address",
+                        aSimpleField("number", FieldType.INTEGER),
+                        aSimpleField("street", FieldType.STRING)));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                compositionField);
+        fieldToContractInputMapping.addChild(
+                new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(0)));
+        fieldToContractInputMapping.addChild(
+                new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
 
         final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
@@ -66,12 +74,17 @@ public class RelationFieldToContractInputMappingTest {
     @Test
     public void should_not_add_contract_input_for_not_generated_child_mapping() throws Exception {
         final RelationField compositionField = aRelationField("address", Type.AGGREGATION,
-                aBusinessObject("Address", aSimpleField("number", FieldType.INTEGER), aSimpleField("street", FieldType.STRING)));
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(compositionField);
-        final SimpleFieldToContractInputMapping child = new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(0));
+                aBusinessObject("Address",
+                        aSimpleField("number", FieldType.INTEGER),
+                        aSimpleField("street", FieldType.STRING)));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                compositionField);
+        final SimpleFieldToContractInputMapping child = new SimpleFieldToContractInputMapping(
+                (SimpleField) compositionField.getReference().getFields().get(0));
         child.setGenerated(false);
         fieldToContractInputMapping.addChild(child);
-        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
+        fieldToContractInputMapping.addChild(
+                new SimpleFieldToContractInputMapping((SimpleField) compositionField.getReference().getFields().get(1)));
 
         final ContractInput input = fieldToContractInputMapping.toContractInput(null);
 
@@ -82,17 +95,18 @@ public class RelationFieldToContractInputMappingTest {
     @Test
     public void should_create_script_initializing_an_address() throws Exception {
         final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
-                Type.COMPOSITION,
-                addressBo));
-        fieldToContractInputMapping.addChild(new SimpleFieldToContractInputMapping((SimpleField) addressBo.getField("street")));
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                aRelationField("address", Type.COMPOSITION, addressBo));
+        fieldToContractInputMapping
+                .addChild(new SimpleFieldToContractInputMapping((SimpleField) addressBo.getField("street")));
         fieldToContractInputMapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)
                 .build());
 
-        final MappingOperationScriptBuilder scriptBuilder = fieldToContractInputMapping.getScriptBuilder(aBusinessData().withName("myEmployee").build());
+        final MappingOperationScriptBuilder scriptBuilder = fieldToContractInputMapping
+                .getScriptBuilder(aBusinessData().withName("myEmployee").build());
 
         assertThat(scriptBuilder.toScript()).isEqualTo(
-                "def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator()
+                "def addressVar = myEmployee.address ?: new Address()" + System.lineSeparator()
                         + "addressVar.street = employee.address.street" + System.lineSeparator()
                         + "return addressVar");
     }
@@ -100,21 +114,18 @@ public class RelationFieldToContractInputMappingTest {
     @Test
     public void should_return_field_type() throws Exception {
         final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField("address",
-                Type.COMPOSITION,
-                addressBo));
-
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                aRelationField("address", Type.COMPOSITION, addressBo));
         assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo("Address");
     }
 
     @Test
     public void should_return_field_type_for_multiple_fields() throws Exception {
         final BusinessObject addressBo = aBusinessObject("Address", aSimpleField("street", FieldType.TEXT));
-        final RelationField aRelationField = aRelationField("address",
-                Type.COMPOSITION,
-                addressBo);
+        final RelationField aRelationField = aRelationField("address", Type.COMPOSITION, addressBo);
         aRelationField.setCollection(true);
-        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(aRelationField);
+        final RelationFieldToContractInputMapping fieldToContractInputMapping = new RelationFieldToContractInputMapping(
+                aRelationField);
 
         assertThat(fieldToContractInputMapping.getFieldType()).isEqualTo(List.class.getName());
     }

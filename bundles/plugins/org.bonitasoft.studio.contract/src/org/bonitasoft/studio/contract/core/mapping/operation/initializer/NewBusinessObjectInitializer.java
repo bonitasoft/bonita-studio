@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 
-public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
+public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer {
 
     public NewBusinessObjectInitializer(final InitializerContext context) {
         super(context);
@@ -28,20 +28,16 @@ public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitiali
     }
 
     @Override
-    protected void constructor(final StringBuilder scriptBuilder, final BusinessObject bo) {
+    protected void constructor(StringBuilder scriptBuilder, BusinessObject bo) {
         if (checkExistence()) {
-            final String ref = context.getRef(getParent() != null ? getParent().getContext() : null);
+            String ref = context.getRef(getParent() != null ? getParent().getContext() : null);
             scriptBuilder.append(ref);
-            scriptBuilder.append(" == null ? ");
-            newBusinessObject(scriptBuilder, bo);
-            scriptBuilder.append(" : ");
-            scriptBuilder.append(ref);
-        } else {
-            newBusinessObject(scriptBuilder, bo);
+            scriptBuilder.append(" ?: ");
         }
+        newBusinessObject(scriptBuilder, bo);
     }
 
-    private void newBusinessObject(final StringBuilder scriptBuilder, final BusinessObject bo) {
+    private void newBusinessObject(StringBuilder scriptBuilder, BusinessObject bo) {
         scriptBuilder.append("new");
         scriptBuilder.append(" ");
         scriptBuilder.append(bo.getQualifiedName());

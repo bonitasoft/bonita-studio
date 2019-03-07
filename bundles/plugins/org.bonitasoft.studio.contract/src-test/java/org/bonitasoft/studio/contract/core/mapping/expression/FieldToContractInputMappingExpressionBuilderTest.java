@@ -29,13 +29,19 @@ import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
+import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
+import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
+import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -60,7 +66,8 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     private GroovyCompilationUnit groovyCompilationUnit;
 
     @Test
-    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final RelationField address = aCompositionField("address", aBO("Address").build());
@@ -72,21 +79,24 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.address")
-                .hasContent("def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator() + "return addressVar")
+                .hasContent("def addressVar = myEmployee.address ?: new Address()" + System.lineSeparator()
+                        + "return addressVar")
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(2);
     }
 
     private FieldToContractInputMappingExpressionBuilder newExpressionBuilder() throws JavaModelException {
-        final FieldToContractInputMappingExpressionBuilder expressionBuilder = spy(new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
-                expressionEditorService));
+        final FieldToContractInputMappingExpressionBuilder expressionBuilder = spy(
+                new FieldToContractInputMappingExpressionBuilder(repositoryAccessor,
+                        expressionEditorService));
         doReturn(groovyCompilationUnit).when(expressionBuilder).groovyCompilationUnit(any(Expression.class));
         return expressionBuilder;
     }
 
     @Test
-    public void should_create_an_operation_for_a_given_simple_contact_input_and_a_primitive_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_simple_contact_input_and_a_primitive_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
@@ -102,7 +112,8 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     }
 
     @Test
-    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_primitive_business_data_field() throws Exception {
+    public void should_create_an_operation_for_a_given_complex_contact_input_and_a_primitive_business_data_field()
+            throws Exception {
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
@@ -124,7 +135,8 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     }
 
     @Test
-    public void should_not_add_businessVariable_dependency_forInitializationScript() throws JavaModelException, BusinessObjectInstantiationException {
+    public void should_not_add_businessVariable_dependency_forInitializationScript()
+            throws JavaModelException, BusinessObjectInstantiationException {
         final FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
         final RelationField address = aCompositionField("address", aBO("Address").build());
@@ -136,7 +148,8 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("initMyEmployee()")
-                .hasContent("def addressVar = myEmployee.address == null ? new Address() : myEmployee.address" + System.lineSeparator() + "return addressVar")
+                .hasContent("def addressVar = myEmployee.address ?: new Address()" + System.lineSeparator()
+                        + "return addressVar")
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(1);
@@ -152,6 +165,255 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 mapping, false);
 
         verify(groovyCompilationUnit).delete(true, Repository.NULL_PROGRESS_MONITOR);
+    }
 
+    @Test
+    public void should_create_expression_for_multiple_business_data_with_a_multiple_complex_field_in_aggregation()
+            throws Exception {
+        RelationFieldToContractInputMapping bookMapping = createBookMapping(true, false);
+        BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a task
+        Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageList = []\n"
+                + "            //For each item collected in multiple input\n"
+                + "            currentBookInput.page.each{\n"
+                + "                //Add Page instance\n"
+                + "                pageList.add({ currentPageInput ->\n"
+                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string.toLong())\n"
+                + "                    if(!pageVar) {\n"
+                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentPageInput.persistenceId_string.toLong() + \" has not been found.\")\n"
+                + "                    }\n"
+                + "                    pageVar.pageContent = currentPageInput.pageContent\n"
+                + "                    return pageVar\n"
+                + "                }(it))\n"
+                + "            }\n"
+                + "            return pageList}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+
+        //On a pool
+        expression = expressionBuilder.toExpression(businessData, bookMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add a new composed Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageList = []\n"
+                + "            //For each item collected in multiple input\n"
+                + "            currentBookInput.page.each{\n"
+                + "                //Add Page instance\n"
+                + "                pageList.add({ currentPageInput ->\n"
+                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string.toLong())\n"
+                + "                    if(!pageVar) {\n"
+                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentPageInput.persistenceId_string.toLong() + \" has not been found.\")\n"
+                + "                    }\n"
+                + "                    pageVar.pageContent = currentPageInput.pageContent\n"
+                + "                    return pageVar\n"
+                + "                }(it))\n"
+                + "            }\n"
+                + "            return pageList}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+    }
+
+    @Test
+    public void should_create_expression_for_multiple_business_data_with_a_simple_complex_field_in_aggregation()
+            throws Exception {
+        RelationFieldToContractInputMapping bookMapping = createBookMapping(false, false);
+        BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a task
+        Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page.persistenceId_string.toLong())\n"
+                + "            if(!pageVar) {\n"
+                + "                throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page.persistenceId_string.toLong() + \" has not been found.\")\n"
+                + "            }\n"
+                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            return pageVar}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+
+        //On a pool
+        expression = expressionBuilder.toExpression(businessData, bookMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add  a new composed Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page.persistenceId_string.toLong())\n"
+                + "            if(!pageVar) {\n"
+                + "                throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page.persistenceId_string.toLong() + \" has not been found.\")\n"
+                + "            }\n"
+                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            return pageVar}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+    }
+
+    @Test
+    public void should_create_expression_for_multiple_business_data_with_a_simple_complex_field_in_composition()
+            throws Exception {
+        RelationFieldToContractInputMapping bookMapping = createBookMapping(false, true);
+        BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a task
+        Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageVar = bookVar.page ?: new com.company.Page()\n"
+                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            return pageVar}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+
+        //On a pool
+        expression = expressionBuilder.toExpression(businessData, bookMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add  a new composed Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageVar = new com.company.Page()\n"
+                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            return pageVar}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+    }
+
+    @Test
+    public void should_create_expression_for_multiple_business_data_with_a_multiple_complex_field_in_composition()
+            throws Exception {
+        RelationFieldToContractInputMapping bookMapping = createBookMapping(true, true);
+        BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a task
+        Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageList = []\n"
+                + "            //For each item collected in multiple input\n"
+                + "            currentBookInput.page.each{\n"
+                + "                //Add a new composed Page instance\n"
+                + "                pageList.add({ currentPageInput ->\n"
+                + "                    def pageVar = bookVar.page?.find { it.persistenceId.toString() == currentPageInput.persistenceId_string } ?: new com.company.Page()\n"
+                + "                    pageVar.pageContent = currentPageInput.pageContent\n"
+                + "                    return pageVar\n"
+                + "                }(it))\n"
+                + "            }\n"
+                + "            return pageList}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+
+        //On a pool
+        expression = expressionBuilder.toExpression(businessData, bookMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "Book.each{\n"
+                + "   //Add  a new composed Book instance\n"
+                + "    bookList.add({ currentBookInput ->\n"
+                + "        def bookVar = new com.company.Book()\n"
+                + "        bookVar.page = {\n"
+                + "            def pageList = []\n"
+                + "            //For each item collected in multiple input\n"
+                + "            currentBookInput.page.each{\n"
+                + "                //Add a new composed Page instance\n"
+                + "                pageList.add({ currentPageInput ->\n"
+                + "                    def pageVar = new com.company.Page()\n"
+                + "                    pageVar.pageContent = currentPageInput.pageContent\n"
+                + "                    return pageVar\n"
+                + "                }(it))\n"
+                + "            }\n"
+                + "            return pageList}()\n"
+                + "        return bookVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return bookList");
+    }
+
+    private RelationFieldToContractInputMapping createBookMapping(boolean pageMultiple, boolean pageInComposition) {
+        RelationField bookField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("Book")
+                .multiple()
+                .referencing(new BusinessObjectBuilder("com.company.Book").build())
+                .build();
+        RelationField pageField = RelationFieldBuilder.aRelationField()
+                .withName("page")
+                .referencing(new BusinessObjectBuilder("com.company.Page").build())
+                .build();
+        pageField.setType(pageInComposition ? Type.COMPOSITION : Type.AGGREGATION);
+        if (pageMultiple) {
+            pageField.setCollection(true);
+        }
+
+        SimpleField pageContentField = SimpleFieldBuilder.aStringField("pageContent").build();
+        SimpleField persistenceIdBookField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+        SimpleField persistenceIdPageField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+
+        RelationFieldToContractInputMapping bookMapping = new RelationFieldToContractInputMapping(bookField);
+        RelationFieldToContractInputMapping pageMapping = new RelationFieldToContractInputMapping(pageField);
+        SimpleFieldToContractInputMapping pageContentMapping = new SimpleFieldToContractInputMapping(pageContentField);
+        SimpleFieldToContractInputMapping persistenceIdBookMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdBookField);
+        SimpleFieldToContractInputMapping persistenceIdPageMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdPageField);
+
+        bookMapping.addChild(pageMapping);
+        bookMapping.addChild(persistenceIdBookMapping);
+        pageMapping.addChild(pageContentMapping);
+        pageMapping.addChild(persistenceIdPageMapping);
+
+        return bookMapping;
     }
 }
