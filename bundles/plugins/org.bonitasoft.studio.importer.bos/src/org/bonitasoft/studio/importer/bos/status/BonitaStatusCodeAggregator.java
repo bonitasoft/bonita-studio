@@ -35,6 +35,7 @@ public class BonitaStatusCodeAggregator {
     public static final int REST_API_JAVA_11_GROOVY_COMPILER_STATUS_CODE = 1001;
     public static final int REST_API_JAVA_11_GROOVY_BATCH_STATUS_CODE = 1002;
     public static final int REST_API_BONITA_DEPENDENCY_STATUS_CODE = 1003;
+    public static final int REST_API_JAVA_11_MAVEN_COMPILER_STATUS_CODE = 1004;
 
     public BosArchiveImportStatus aggregateStatus(BosArchiveImportStatus bosArchiveImportStatus) {
         BosArchiveImportStatus bosArchiveStatusAggregated = new BosArchiveImportStatus();
