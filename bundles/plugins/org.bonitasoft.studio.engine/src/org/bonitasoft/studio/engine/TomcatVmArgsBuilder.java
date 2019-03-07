@@ -73,12 +73,6 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
         addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
-        addSystemProperty(args, DatabaseHandler.BITRONIX_ROOT, "\"" + getDBLocation().getAbsolutePath() + "\"");
-        try {
-            createBitronixConfiguration();
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
         final String res = args.toString();
         if (System.getProperty("log.tomcat.vm.args") != null) {
@@ -89,10 +83,6 @@ public class TomcatVmArgsBuilder {
 
     public File getDBLocation() {
         return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation();
-    }
-
-    public void createBitronixConfiguration() throws IOException {
-        repositoryAccessor.getCurrentRepository().getDatabaseHandler().createBitronixConfFile();
     }
 
     public String getProductApplicationId() {

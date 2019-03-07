@@ -17,11 +17,7 @@ package org.bonitasoft.studio.common.repository.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -87,32 +83,6 @@ public class DatabaseHandler {
 
     public File getDBLocation() {
         return new File(project.getLocation().toFile(), H2_DATABASE_FOLDER_NAME);
-    }
-
-    public Path createBitronixConfFile() throws IOException {
-        final Properties databaseProperties = readDatabaseProperties();
-        final Path confFile = getDBLocation().toPath().resolve(Paths.get("conf", BITRONIX_RESOURCES_PROPERTIES));
-        if (!confFile.getParent().toFile().exists()) {
-            confFile.getParent().toFile().mkdirs();
-        }
-        final Properties bitronixResources = new Properties();
-        bitronixResources.put("allowLocalTransactions", Boolean.TRUE.toString());
-        final BitronixDatasourceConfiguration engineDS = new BitronixDatasourceConfiguration("jdbc/bonitaDSXA");
-        engineDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar
-                + databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
-        bitronixResources.putAll(engineDS.toMap("ds1"));
-
-        final BitronixDatasourceConfiguration businessDataDS = new BitronixDatasourceConfiguration("jdbc/BusinessDataDSXA");
-        businessDataDS.setDatabaseFile(getDBLocation().getAbsolutePath() + File.separatorChar
-                + databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
-        businessDataDS.setMinPoolSize(0);
-        businessDataDS.setMaxPoolSize(5);
-        bitronixResources.putAll(businessDataDS.toMap("ds2"));
-        try (OutputStream newOutputStream = java.nio.file.Files.newOutputStream(confFile,
-                StandardOpenOption.CREATE)) {
-            bitronixResources.store(newOutputStream, null);
-        }
-        return confFile;
     }
 
 }
