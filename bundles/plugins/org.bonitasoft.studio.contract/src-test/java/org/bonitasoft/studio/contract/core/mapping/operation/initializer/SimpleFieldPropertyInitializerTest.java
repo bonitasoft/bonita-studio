@@ -27,7 +27,8 @@ public class SimpleFieldPropertyInitializerTest {
 
     @Test
     public void should_return_name_of_the_property_to_initialize() throws Exception {
-        final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(null, aSimpleField().withName("lastName").build(),
+        final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(null,
+                aSimpleField().withName("lastName").build(),
                 aContractInput()
                         .build());
 
@@ -38,7 +39,9 @@ public class SimpleFieldPropertyInitializerTest {
     public void should_return_a_groovy_expression_retrieving_contract_input_value() throws Exception {
         final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(null,
                 aSimpleField().withName("lastName").ofType(FieldType.STRING)
-                        .build(), aContractInput().withName("lastName").in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
+                        .build(),
+                aContractInput().withName("lastName")
+                        .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
         assertThat(initializer.getInitialValue()).isEqualTo("employee.lastName");
     }
@@ -49,7 +52,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("id").ofType(FieldType.LONG).build(), aContractInput().withName("id")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.id.toLong()");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee.id?.toLong()");
     }
 
     @Test
@@ -59,17 +62,18 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("salary").ofType(FieldType.FLOAT).build(), aContractInput().withName("salary")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.salary.toFloat()");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee.salary?.toFloat()");
     }
 
     @Test
     public void should_return_a_groovy_expression_retrieving_contract_input_value_cast_to_float_list() throws Exception {
         final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(
                 null,
-                (SimpleField) aSimpleField().withName("grades").ofType(FieldType.FLOAT).multiple().build(), aContractInput().withName("grades").multiple()
+                (SimpleField) aSimpleField().withName("grades").ofType(FieldType.FLOAT).multiple().build(),
+                aContractInput().withName("grades").multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.grades.collect{ it.toFloat() }");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee.grades?.collect{ it.toFloat() }");
     }
 
     @Test
@@ -79,6 +83,6 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("ids").ofType(FieldType.LONG).build(), aContractInput().withName("ids").multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.ids.collect{ it.toLong() }");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee.ids?.collect{ it.toLong() }");
     }
 }
