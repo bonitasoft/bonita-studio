@@ -52,9 +52,10 @@ public class ContractInputGenerationWizardPagesFactory {
             List<Document> availableDocuments,
             WritableValue selectedDataObservable,
             WritableValue rootNameObservable,
+           GenerationOptions generateOptions, 
             BusinessObjectModelRepositoryStore businessObjectStore) {
         return new SelectDataWizardPage(contract, availableBusinessData, availableDocuments, selectedDataObservable,
-                rootNameObservable, businessObjectStore);
+                rootNameObservable, generateOptions,businessObjectStore);
     }
 
     public GeneratedScriptPreviewPage createGeneratedScriptPreviewPage(WritableValue rootNameObservable,

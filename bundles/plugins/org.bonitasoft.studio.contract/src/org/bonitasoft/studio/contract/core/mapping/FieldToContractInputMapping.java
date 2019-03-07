@@ -65,7 +65,7 @@ public abstract class FieldToContractInputMapping {
     }
 
     public List<FieldToContractInputMapping> getChildren() {
-        return Collections.<FieldToContractInputMapping> unmodifiableList(children);
+        return children;
     }
 
     public FieldToContractInputMapping getParent() {

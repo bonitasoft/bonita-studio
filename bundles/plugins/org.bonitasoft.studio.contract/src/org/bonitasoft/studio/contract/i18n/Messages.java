@@ -126,4 +126,9 @@ public class Messages extends NLS {
     public static String taskBdmTips;
     public static String poolBdmTips;
     public static String creatingNewForm;
+    public static String createDataFromContractChoice;
+    public static String editDataFromContractChoice;
+    public static String lazyFieldInAMultipleParentRelationHasBeenDeselect;
+    public static String aChildHasBeenUnselected;
+    public static String moreInfoFormGenerationLink;
 }
