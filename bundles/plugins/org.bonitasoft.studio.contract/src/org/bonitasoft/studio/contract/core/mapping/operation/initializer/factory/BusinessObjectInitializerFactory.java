@@ -40,7 +40,7 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
     public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping, BusinessObjectData data,
             boolean isOnPool) {
         RelationField relationField = (RelationField) mapping.getField();
-        InitializerContext context = createContext(data, variableNameResolver, mapping, false, isOnPool);
+        InitializerContext context = createContext(data, variableNameResolver, mapping, isOnPool);
         return relationField.getType() == Type.AGGREGATION
                 ? newAggregatedObjectInitializer(context)
                 : newComposedObjectInitializer(context);

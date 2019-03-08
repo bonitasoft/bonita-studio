@@ -416,4 +416,171 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         return bookMapping;
     }
+
+    @Test
+    public void should_create_expression_for_single_business_data_with_two_single_composition_layers() throws Exception {
+        RelationField rootField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("rootInput")
+                .referencing(new BusinessObjectBuilder("com.company.Root").build())
+                .build();
+        RelationField nodeField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("node")
+                .referencing(new BusinessObjectBuilder("com.company.Node").build())
+                .build();
+        RelationField leafField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("leaf")
+                .referencing(new BusinessObjectBuilder("com.company.Leaf").build())
+                .build();
+        SimpleField rootNameField = SimpleFieldBuilder.aStringField("rootName").build();
+        SimpleField nodeNameField = SimpleFieldBuilder.aStringField("nodeName").build();
+        SimpleField leafNameField = SimpleFieldBuilder.aStringField("leafName").build();
+
+        RelationFieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(rootField);
+        RelationFieldToContractInputMapping nodeMapping = new RelationFieldToContractInputMapping(nodeField);
+        RelationFieldToContractInputMapping leafMapping = new RelationFieldToContractInputMapping(leafField);
+        SimpleFieldToContractInputMapping rootNameMapping = new SimpleFieldToContractInputMapping(rootNameField);
+        SimpleFieldToContractInputMapping nodeNameMapping = new SimpleFieldToContractInputMapping(nodeNameField);
+        SimpleFieldToContractInputMapping leafNameMapping = new SimpleFieldToContractInputMapping(leafNameField);
+
+        leafMapping.addChild(leafNameMapping);
+        nodeMapping.addChild(nodeNameMapping);
+        nodeMapping.addChild(leafMapping);
+        rootMapping.addChild(rootNameMapping);
+        rootMapping.addChild(nodeMapping);
+
+        BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a pool
+        Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
+                + "rootVar.rootName = rootInput.rootName\n"
+                + "rootVar.node = {\n"
+                + "    def nodeVar = new com.company.Node()\n"
+                + "    nodeVar.nodeName = rootInput.node.nodeName\n"
+                + "    nodeVar.leaf = {\n"
+                + "        def leafVar = new com.company.Leaf()\n"
+                + "        leafVar.leafName = rootInput.node.leaf.leafName\n"
+                + "        return leafVar}()\n"
+                + "    return nodeVar}()\n"
+                + "return rootVar");
+
+        // On a task -> on the node mapping (operation setNode)
+        expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
+        assertThat(expression.getContent())
+                .isEqualToIgnoringWhitespace("def nodeVar = myRoot.node ?: new com.company.Node()\n"
+                        + "nodeVar.nodeName = rootInput.node.nodeName\n"
+                        + "nodeVar.leaf = {\n"
+                        + "    def leafVar = nodeVar.leaf ?: new com.company.Leaf()\n"
+                        + "    leafVar.leafName = rootInput.node.leaf.leafName\n"
+                        + "    return leafVar}()\n"
+                        + "return nodeVar");
+    }
+
+    @Test
+    public void should_create_expression_for_single_business_data_with_two_multiple_composition_layers() throws Exception {
+        RelationField rootField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("rootInput")
+                .referencing(new BusinessObjectBuilder("com.company.Root").build())
+                .build();
+        RelationField nodeField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("node")
+                .multiple()
+                .referencing(new BusinessObjectBuilder("com.company.Node").build())
+                .build();
+        RelationField leafField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("leaf")
+                .multiple()
+                .referencing(new BusinessObjectBuilder("com.company.Leaf").build())
+                .build();
+        SimpleField rootNameField = SimpleFieldBuilder.aStringField("rootName").build();
+        SimpleField nodeNameField = SimpleFieldBuilder.aStringField("nodeName").build();
+        SimpleField leafNameField = SimpleFieldBuilder.aStringField("leafName").build();
+        SimpleField persistenceIdNodeField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+        SimpleField persistenceIdLeafField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+
+        RelationFieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(rootField);
+        RelationFieldToContractInputMapping nodeMapping = new RelationFieldToContractInputMapping(nodeField);
+        RelationFieldToContractInputMapping leafMapping = new RelationFieldToContractInputMapping(leafField);
+        SimpleFieldToContractInputMapping rootNameMapping = new SimpleFieldToContractInputMapping(rootNameField);
+        SimpleFieldToContractInputMapping nodeNameMapping = new SimpleFieldToContractInputMapping(nodeNameField);
+        SimpleFieldToContractInputMapping leafNameMapping = new SimpleFieldToContractInputMapping(leafNameField);
+        SimpleFieldToContractInputMapping persistenceIdNodeMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdNodeField);
+        SimpleFieldToContractInputMapping persistenceIdLeafMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdLeafField);
+
+        leafMapping.addChild(leafNameMapping);
+        leafMapping.addChild(persistenceIdLeafMapping);
+        nodeMapping.addChild(nodeNameMapping);
+        nodeMapping.addChild(persistenceIdNodeMapping);
+        nodeMapping.addChild(leafMapping);
+        rootMapping.addChild(rootNameMapping);
+        rootMapping.addChild(nodeMapping);
+
+        BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a pool
+        Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
+                + "rootVar.rootName = rootInput.rootName\n"
+                + "rootVar.node = {\n"
+                + "    def nodeList = []\n"
+                + "    //For each item collected in multiple input\n"
+                + "    rootInput.node.each{\n"
+                + "        //Add a new composed Node instance\n"
+                + "        nodeList.add({ currentNodeInput ->\n"
+                + "            def nodeVar = new com.company.Node()\n"
+                + "            nodeVar.nodeName = currentNodeInput.nodeName\n"
+                + "            nodeVar.leaf = {\n"
+                + "                def leafList = []\n"
+                + "                //For each item collected in multiple input\n"
+                + "                currentNodeInput.leaf.each{\n"
+                + "                    //Add a new composed Leaf instance\n"
+                + "                    leafList.add({ currentLeafInput ->\n"
+                + "                        def leafVar = new com.company.Leaf()\n"
+                + "                        leafVar.leafName = currentLeafInput.leafName\n"
+                + "                        return leafVar\n"
+                + "                    }(it))\n"
+                + "                }\n"
+                + "                return leafList}()\n"
+                + "            return nodeVar\n"
+                + "        }(it))\n"
+                + "    }\n"
+                + "    return nodeList}()\n"
+                + "return rootVar");
+
+        // On a task -> on the node mapping (operation setNode)        
+        expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def nodeList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "rootInput.node.each{\n"
+                + "    //Add Node instance\n"
+                + "    nodeList.add({ currentNodeInput ->\n"
+                + "        def nodeVar = myRoot.node.find { it.persistenceId.toString() == currentNodeInput.persistenceId_string} ?: new com.company.Node()\n"
+                + "        nodeVar.nodeName = currentNodeInput.nodeName\n"
+                + "        nodeVar.leaf = {\n"
+                + "            def leafList = []\n"
+                + "            //For each item collected in multiple input\n"
+                + "            currentNodeInput.leaf.each{\n"
+                + "                //Add a new composed Leaf instance\n"
+                + "                leafList.add({ currentLeafInput ->\n"
+                + "                    def leafVar = nodeVar.leaf?.find { it.persistenceId.toString() == currentLeafInput.persistenceId_string } ?: new com.company.Leaf()\n"
+                + "                    leafVar.leafName = currentLeafInput.leafName\n"
+                + "                    return leafVar\n"
+                + "                }(it))\n"
+                + "            }\n"
+                + "        return leafList}()\n"
+                + "        return nodeVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return nodeList");
+    }
 }

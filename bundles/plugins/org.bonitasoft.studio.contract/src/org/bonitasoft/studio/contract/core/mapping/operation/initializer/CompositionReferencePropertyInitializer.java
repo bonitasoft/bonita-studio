@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.model.process.ContractInput;
 
 public class CompositionReferencePropertyInitializer extends NewBusinessObjectInitializer {
 
@@ -33,19 +31,6 @@ public class CompositionReferencePropertyInitializer extends NewBusinessObjectIn
         scriptBuilder.append(initialValue);
         scriptBuilder.append("}()");
         return scriptBuilder.toString();
-    }
-
-    @Override
-    protected boolean checkExistence() {
-        return hasAMultipleParent()
-                ? super.checkExistence()
-                : true;
-    }
-
-    private boolean hasAMultipleParent() {
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(context.getContractInput().eContainer(),
-                ContractInput.class);
-        return parentInput != null && parentInput.isMultiple();
     }
 
 }

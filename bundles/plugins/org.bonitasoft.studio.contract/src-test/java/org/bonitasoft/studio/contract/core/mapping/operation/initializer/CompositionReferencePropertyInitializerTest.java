@@ -45,6 +45,7 @@ public class CompositionReferencePropertyInitializerTest {
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().build());
         context.setLocalVariableName("addressVar");
+        context.setCheckExistence(true);
 
         final CompositionReferencePropertyInitializer propertyInitializer = new CompositionReferencePropertyInitializer(
                 context);
