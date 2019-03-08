@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory;
 
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
@@ -38,20 +36,10 @@ public class RelationPropertyInitializerFactory extends AbsractInitializerFactor
     @Override
     public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping,
             BusinessObjectData data, boolean isOnPool) {
-        InitializerContext context = createContext(data, variableNameResolver, mapping, checkExistence(mapping, isOnPool),
-                isOnPool);
+        InitializerContext context = createContext(data, variableNameResolver, mapping, isOnPool);
         return context.getField().getType() == Type.AGGREGATION
                 ? newAggregatedReferenceInitializer(context)
                 : newComposedReferenceInitializer(context);
-    }
-
-    protected boolean checkExistence(FieldToContractInputMapping mapping, boolean isOnPool) {
-        if (!isOnPool && mapping.getParent() != null) {
-            Field parent = mapping.getParent().getField();
-            boolean isComposition = ((RelationField) mapping.getField()).getType().equals(RelationField.Type.COMPOSITION);
-            return parent.isCollection() && isComposition;
-        }
-        return false;
     }
 
     private IPropertyInitializer newAggregatedReferenceInitializer(InitializerContext context) {

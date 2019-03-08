@@ -26,7 +26,8 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
 
     protected BusinessObject firstMultipleParentBusinessObject(final FieldToContractInputMapping mapping) {
         FieldToContractInputMapping parentMapping = mapping.getParent();
-        while (parentMapping != null && !(parentMapping.getField().isCollection() && parentMapping instanceof RelationFieldToContractInputMapping)) {
+        while (parentMapping != null && !(parentMapping.getField().isCollection()
+                && parentMapping instanceof RelationFieldToContractInputMapping)) {
             parentMapping = parentMapping.getParent();
         }
 
@@ -35,7 +36,8 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
 
     protected BusinessObject businessObject(final FieldToContractInputMapping mapping) {
         FieldToContractInputMapping parentMapping = mapping;
-        while (parentMapping != null && !(parentMapping.getField().isCollection() && parentMapping instanceof RelationFieldToContractInputMapping)) {
+        while (parentMapping != null && !(parentMapping.getField().isCollection()
+                && parentMapping instanceof RelationFieldToContractInputMapping)) {
             parentMapping = parentMapping.getParent();
         }
 
@@ -45,12 +47,11 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
     protected InitializerContext createContext(final Data data,
             final VariableNameResolver resolver,
             final FieldToContractInputMapping mapping,
-            final boolean checkExistence,
             final boolean isOnPool) {
         final InitializerContext context = new InitializerContext();
         final BusinessObject businessObject = ((RelationField) mapping.getField()).getReference();
         context.setMapping(mapping);
-        context.setCheckExistence(checkExistence);
+        context.setCheckExistence(!isOnPool);
         context.setOnPool(isOnPool);
         context.setData(data);
         context.setContractInput(mapping.getContractInput());
