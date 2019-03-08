@@ -2,7 +2,7 @@
 <feature
       id="platform-specific-feature"
       label="Platform specific feature"
-      version="7.9.0.qualifier"
+      version="7.9.0.W10"
       provider-name="BonitaSoft S.A.">
 
    <description>
