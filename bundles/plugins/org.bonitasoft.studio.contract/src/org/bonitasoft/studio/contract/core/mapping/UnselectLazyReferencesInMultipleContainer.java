@@ -20,38 +20,41 @@ import java.util.Map;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 public class UnselectLazyReferencesInMultipleContainer {
 
-    private Map<FieldToContractInputMapping, IStatus> statuses = new HashMap<FieldToContractInputMapping, IStatus>();
+    private Map<FieldToContractInputMapping, IStatus> statuses = new HashMap<>();
 
-    public void apply(List<FieldToContractInputMapping> mappings, boolean multipleData) {
+    public void apply(List<FieldToContractInputMapping> mappings, BusinessObjectData data) {
         statuses.clear();
-        updateGeneratedMappings(mappings, multipleData);
+        updateGeneratedMappings(mappings, data);
     }
 
-    private void updateGeneratedMappings(List<FieldToContractInputMapping> mappings, boolean multipleData) {
+    private void updateGeneratedMappings(List<FieldToContractInputMapping> mappings, BusinessObjectData data) {
         for (FieldToContractInputMapping mapping : mappings) {
             if (mapping.getField() instanceof RelationField
                     && ((RelationField) mapping.getField()).isLazy()
-                    && (multipleData || hasAMultipleParent(mapping))) {
+                    && (data.isMultiple() || hasAMultipleParent(mapping))) {
                 mapping.setGenerated(false);
+                String name = mapping.getParent() != null
+                        ? ((RelationField) mapping.getParent().getField()).getReference().getSimpleName()
+                        : data.getName();
                 statuses.put(mapping,
                         ValidationStatus
                                 .warning(String.format(Messages.lazyFieldInAMultipleParentRelationHasBeenDeselect,
-                                        ((RelationField) mapping.getParent().getField()).getReference().getSimpleName(),
-                                        mapping.getField().getName())));
+                                        name, mapping.getField().getName())));
                 FieldToContractInputMapping parent = mapping.getParent();
                 while (parent != null) {
-                    statuses.put(parent,ValidationStatus.warning(Messages.aChildHasBeenUnselected));
+                    statuses.put(parent, ValidationStatus.warning(Messages.aChildHasBeenUnselected));
                     parent = parent.getParent();
                 }
                 unselect(mapping.getChildren());
-            }else {
-                updateGeneratedMappings(mapping.getChildren(), multipleData);
+            } else {
+                updateGeneratedMappings(mapping.getChildren(), data);
             }
         }
     }
@@ -72,7 +75,7 @@ public class UnselectLazyReferencesInMultipleContainer {
     }
 
     public IStatus getStatus(FieldToContractInputMapping mapping) {
-        return statuses.getOrDefault(mapping,Status.OK_STATUS);
+        return statuses.getOrDefault(mapping, Status.OK_STATUS);
     }
 
 }
