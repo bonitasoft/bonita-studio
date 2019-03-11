@@ -16,6 +16,7 @@ package org.bonitasoft.studio.contract.core.mapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
+import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aRelationField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
@@ -276,6 +277,68 @@ public class FieldToContractInputMappingFactoryTest {
         mappings = factory.createMappingForBusinessObjectType(aTask().build(), businessObjectData);
         assertThat(mappings).extracting(FieldToContractInputMapping::getField).extracting(Field::getName)
                 .containsExactly("name");
+    }
+
+    @Test
+    public void should_create_a_persistenceId_mapping_for_deep_multiple_objects_on_tasks() {
+        BusinessObject root = aBO("Root").withField(aStringField("rootName").build()).build();
+        BusinessObject node = aBO("Node").withField(aStringField("nodeName").build()).build();
+        BusinessObject leaf = aBO("Leaf").withField(aStringField("leafName").build()).build();
+        RelationField nodeField = aRelationField().withName("node").composition().referencing(node).build();
+        RelationField leafField = aRelationField().withName("leaf").composition().multiple().referencing(leaf).build();
+        root.addField(nodeField);
+        node.addField(leafField);
+
+        BusinessObjectData businessObjectData = new BusinessObjectDataBuilder()
+                .multiple()
+                .withClassname(root.getQualifiedName()).build();
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = mock(
+                BusinessObjectModelRepositoryStore.class);
+        when(repositoryStore.getBusinessObjectByQualifiedName(businessObjectData.getClassName()))
+                .thenReturn(Optional.of(root));
+        FieldToContractInputMappingFactory factory = new FieldToContractInputMappingFactory(repositoryStore);
+
+        // On a pool
+        List<FieldToContractInputMapping> mappings = factory.createMappingForBusinessObjectType(aPool().build(),
+                businessObjectData);
+        assertThat(mappings).extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("rootName", "node");
+        assertThat(mappings)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("nodeName", "leaf");
+        assertThat(mappings)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("leafName");
+
+        // On a task
+        mappings = factory.createMappingForBusinessObjectType(aTask().build(), businessObjectData);
+        assertThat(mappings).extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("rootName", "node",
+                        FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME);
+        assertThat(mappings)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("nodeName", "leaf");
+        assertThat(mappings)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .filteredOn(RelationFieldToContractInputMapping.class::isInstance)
+                .flatExtracting(FieldToContractInputMapping::getChildren)
+                .extracting(FieldToContractInputMapping::getField)
+                .extracting(Field::getName)
+                .containsExactlyInAnyOrder("leafName", FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME);
     }
 
 }
