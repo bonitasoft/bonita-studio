@@ -71,7 +71,6 @@ public class ContractIT {
         final ContractContainer contractContainer = (ContractContainer) activeProcessDiagramEditor
                 .getSelectedSemanticElement();
         createExpenseReport(botProcessDiagramPerspective, contractContainer);
-
     }
 
     protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective,

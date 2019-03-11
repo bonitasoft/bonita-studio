@@ -155,7 +155,7 @@ import org.junit.runners.Suite;
         BPMNConnectorExportImportTest.class,
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
-        OrganizationCreationTest.class,
+        OrganizationCreationTest.class
 })
 public class SWTBotTestSuite {
 
