@@ -32,7 +32,7 @@ public class ContractInputFunctions {
 
             @Override
             public List<String> apply(final ContractInput input) {
-                final List<String> ancestors = new ArrayList<String>();
+                final List<String> ancestors = new ArrayList<>();
                 EObject current = input;
                 while (current instanceof ContractInput) {
                     ancestors.add(((ContractInput) current).getName());
@@ -49,16 +49,14 @@ public class ContractInputFunctions {
 
             @Override
             public List<String> apply(final ContractInput input) {
-                final List<String> ancestors = new ArrayList<String>();
+                final List<String> ancestors = new ArrayList<>();
                 EObject current = input;
-                while (current instanceof ContractInput
-                        && !(((ContractInput) current).isMultiple() && ((ContractInput) current).getType() == ContractInputType.COMPLEX)) {
+                do {
                     ancestors.add(((ContractInput) current).getName());
                     current = current.eContainer();
-                }
-                if (ancestors.isEmpty()) {
-                    ancestors.add(input.getName());
-                }
+                } while (current instanceof ContractInput
+                        && !(((ContractInput) current).isMultiple()
+                                && ((ContractInput) current).getType() == ContractInputType.COMPLEX));
                 return reverse(ancestors);
             }
 

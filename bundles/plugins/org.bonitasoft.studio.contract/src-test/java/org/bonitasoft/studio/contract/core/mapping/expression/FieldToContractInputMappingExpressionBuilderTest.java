@@ -583,4 +583,114 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "}\n"
                 + "return nodeList");
     }
+
+    @Test
+    public void should_create_expression_for_multiple_business_data_with_two_composition_layers() throws Exception {
+        RelationField rootField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("rootInput")
+                .multiple()
+                .referencing(new BusinessObjectBuilder("com.company.Root").build())
+                .build();
+        RelationField nodeField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("node")
+                .referencing(new BusinessObjectBuilder("com.company.Node").build())
+                .build();
+        RelationField leafField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("leaf")
+                .multiple()
+                .referencing(new BusinessObjectBuilder("com.company.Leaf").build())
+                .build();
+        SimpleField rootNameField = SimpleFieldBuilder.aStringField("rootName").build();
+        SimpleField nodeNameField = SimpleFieldBuilder.aStringField("nodeName").build();
+        SimpleField leafNameField = SimpleFieldBuilder.aStringField("leafName").build();
+        SimpleField persistenceIdRootField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+        SimpleField persistenceIdLeafField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+
+        RelationFieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(rootField);
+        RelationFieldToContractInputMapping nodeMapping = new RelationFieldToContractInputMapping(nodeField);
+        RelationFieldToContractInputMapping leafMapping = new RelationFieldToContractInputMapping(leafField);
+        SimpleFieldToContractInputMapping rootNameMapping = new SimpleFieldToContractInputMapping(rootNameField);
+        SimpleFieldToContractInputMapping nodeNameMapping = new SimpleFieldToContractInputMapping(nodeNameField);
+        SimpleFieldToContractInputMapping leafNameMapping = new SimpleFieldToContractInputMapping(leafNameField);
+        SimpleFieldToContractInputMapping persistenceIdRootMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdRootField);
+        SimpleFieldToContractInputMapping persistenceIdLeafMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdLeafField);
+
+        leafMapping.addChild(leafNameMapping);
+        leafMapping.addChild(persistenceIdLeafMapping);
+        nodeMapping.addChild(nodeNameMapping);
+        nodeMapping.addChild(leafMapping);
+        rootMapping.addChild(rootNameMapping);
+        rootMapping.addChild(nodeMapping);
+        rootMapping.addChild(persistenceIdRootMapping);
+
+        BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // On a pool
+        Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
+                "//For each item collected in multiple input\n" +
+                "rootInput.each{\n" +
+                "    //Add a new composed Root instance\n" +
+                "    rootList.add({ currentRootInput ->\n" +
+                "        def rootVar = new com.company.Root()\n" +
+                "        rootVar.rootName = currentRootInput.rootName\n" +
+                "        rootVar.node = {\n" +
+                "            def nodeVar = new com.company.Node()\n" +
+                "            nodeVar.nodeName = currentRootInput.node.nodeName\n" +
+                "            nodeVar.leaf = {\n" +
+                "                def leafList = []\n" +
+                "                //For each item collected in multiple input\n" +
+                "                currentRootInput.node.leaf.each{\n" +
+                "                    //Add a new composed Leaf instance\n" +
+                "                    leafList.add({ currentLeafInput ->\n" +
+                "                        def leafVar = new com.company.Leaf()\n" +
+                "                        leafVar.leafName = currentLeafInput.leafName\n" +
+                "                        return leafVar\n" +
+                "                    }(it))\n" +
+                "                }\n" +
+                "                return leafList}()\n" +
+                "            return nodeVar}()\n" +
+                "        return rootVar\n" +
+                "    }(it))\n" +
+                "}\n" +
+                "return rootList");
+
+        // On a task      
+        expression = expressionBuilder.toExpression(businessData, rootMapping, false);
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
+                "//For each item collected in multiple input\n" +
+                "rootInput.each{\n" +
+                "    //Add Root instance\n" +
+                "    rootList.add({ currentRootInput ->\n" +
+                "        def rootVar = myRoot.find { it.persistenceId.toString() == currentRootInput.persistenceId_string} ?: new com.company.Root()\n"
+                +
+                "        rootVar.rootName = currentRootInput.rootName\n" +
+                "        rootVar.node = {\n" +
+                "            def nodeVar = rootVar.node ?: new com.company.Node()\n" +
+                "            nodeVar.nodeName = currentRootInput.node.nodeName\n" +
+                "            nodeVar.leaf = {\n" +
+                "                def leafList = []\n" +
+                "                //For each item collected in multiple input\n" +
+                "                currentRootInput.node.leaf.each{\n" +
+                "                    //Add a new composed Leaf instance\n" +
+                "                    leafList.add({ currentLeafInput ->\n" +
+                "                        def leafVar = nodeVar.leaf?.find { it.persistenceId.toString() == currentLeafInput.persistenceId_string } ?: new com.company.Leaf()\n"
+                +
+                "                        leafVar.leafName = currentLeafInput.leafName\n" +
+                "                        return leafVar\n" +
+                "                    }(it))\n" +
+                "                }\n" +
+                "                return leafList}()\n" +
+                "            return nodeVar}()\n" +
+                "        return rootVar\n" +
+                "    }(it))\n" +
+                "}\n" +
+                "return rootList");
+    }
 }
