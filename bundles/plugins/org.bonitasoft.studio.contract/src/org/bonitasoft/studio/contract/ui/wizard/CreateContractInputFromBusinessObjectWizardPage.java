@@ -425,7 +425,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private void createMapping(BusinessObjectData data) {
         mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(contractContainer, data);
         if (generationOptions.getEditMode() == EditMode.EDIT) {
-            lazyFieldStatusProvider.apply(mappings, data.isMultiple());
+            lazyFieldStatusProvider.apply(mappings, data);
         } else if (generationOptions.getEditMode() == EditMode.CREATE) {
             new RemoveAggregateReferencesChildren().apply(mappings);
         }
