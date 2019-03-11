@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.JavaProjectClassLoader;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.CompileUnit;
 import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -29,108 +29,108 @@ import org.eclipse.ui.IEditorPart;
 
 public class ExtendedJavaContentAssistInvocationContext extends JavaContentAssistInvocationContext {
 
-    private boolean fCUComputed = false;
+	private boolean fCUComputed = false;
 
-    private List<Expression> variableScope;
+	private List<Expression> variableScope;
 
-    private Document tmpDocument;
+	private Document tmpDocument;
 
-    private int offset;
+	private int offset;
 
-    public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
+	public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
 
-    public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
+	public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
 
-    public ExtendedJavaContentAssistInvocationContext(final ITextViewer viewer, final int offset, final IEditorPart editor) {
-        super(viewer, offset, editor);
-    }
+	public ExtendedJavaContentAssistInvocationContext(final ITextViewer viewer, final int offset,
+			final IEditorPart editor) {
+		super(viewer, offset, editor);
+	}
 
-    public ExtendedJavaContentAssistInvocationContext(IEditorPart editor,
-            ITextViewer viewer,
-            int offset,
-            Document tmpDocument,
-            int tmpOffset,
-            List<Expression> variableScope) {
-        super(viewer, tmpOffset, editor);
-        this.offset = offset;
-        this.variableScope = variableScope;
-        this.tmpDocument = tmpDocument;
-    }
+	public ExtendedJavaContentAssistInvocationContext(IEditorPart editor, ITextViewer viewer, int offset,
+			Document tmpDocument, int tmpOffset, List<Expression> variableScope) {
+		super(viewer, tmpOffset, editor);
+		this.offset = offset;
+		this.variableScope = variableScope;
+		this.tmpDocument = tmpDocument;
+	}
 
-    public List<Expression> getVariableScope() {
-        return variableScope;
-    }
+	public List<Expression> getVariableScope() {
+		return variableScope;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext#getDocument()
-     */
-    @Override
-    public IDocument getDocument() {
-        if (tmpDocument != null) {
-            return tmpDocument;
-        }
-        return super.getDocument();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext#getDocument()
+	 */
+	@Override
+	public IDocument getDocument() {
+		if (tmpDocument != null) {
+			return tmpDocument;
+		}
+		return super.getDocument();
+	}
 
-    public int getOffset() {
-        return offset;
-    }
+	public int getOffset() {
+		return offset;
+	}
 
-    @Override
-    public ICompilationUnit getCompilationUnit() {
-        if (!fCUComputed) {
-            final GroovyCompilationUnit compilationUnit = (GroovyCompilationUnit) super.getCompilationUnit();
-            final ITextViewer viewer = getViewer();
-            List<ScriptVariable> processVariables = new ArrayList<>();
-            List<ScriptVariable> providedVariables = new ArrayList<>();
-            if (viewer != null) {
-                processVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(PROCESS_VARIABLES_DATA_KEY);
-                providedVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(BONITA_KEYWORDS_DATA_KEY);
-            }
-            final VariableScope vScope = compilationUnit.getModuleNode().getStatementBlock().getVariableScope();
-            final IJavaProject javaProject = compilationUnit.getJavaProject();
-            final JavaProjectClassLoader classLoader = new JavaProjectClassLoader(javaProject);
-            if (processVariables != null) {
-                for (final ScriptVariable scriptVariable : processVariables) {
-                    try {
-                        addToScope(classLoader, vScope, scriptVariable);
-                    } catch (final ClassNotFoundException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-            if (providedVariables != null) {
-                for (final ScriptVariable scriptVariable : providedVariables) {
-                    try {
-                        addToScope(classLoader, vScope, scriptVariable);
-                    } catch (final ClassNotFoundException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-            if (variableScope != null) {
-                for (final Expression expression : variableScope) {
-                    try {
-                        addToScope(classLoader, vScope, new ScriptVariable(expression.getName(), expression.getReturnType()));
-                    } catch (final ClassNotFoundException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-            fCUComputed = true;
-            return compilationUnit;
-        }
-        return super.getCompilationUnit();
+	@Override
+	public ICompilationUnit getCompilationUnit() {
+		if (!fCUComputed) {
+			final GroovyCompilationUnit compilationUnit = (GroovyCompilationUnit) super.getCompilationUnit();
+			final ITextViewer viewer = getViewer();
+			List<ScriptVariable> processVariables = new ArrayList<>();
+			List<ScriptVariable> providedVariables = new ArrayList<>();
+			if (viewer != null) {
+				processVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(PROCESS_VARIABLES_DATA_KEY);
+				providedVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(BONITA_KEYWORDS_DATA_KEY);
+			}
+			final IJavaProject javaProject = compilationUnit.getJavaProject();
+			if (processVariables != null) {
+				for (final ScriptVariable scriptVariable : processVariables) {
+					try {
+						addToScope(compilationUnit, scriptVariable);
+					} catch (final ClassNotFoundException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
+			}
+			if (providedVariables != null) {
+				for (final ScriptVariable scriptVariable : providedVariables) {
+					try {
+						addToScope(compilationUnit, scriptVariable);
+					} catch (final ClassNotFoundException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
+			}
+			if (variableScope != null) {
+				for (final Expression expression : variableScope) {
+					try {
+						addToScope(compilationUnit,
+								new ScriptVariable(expression.getName(), expression.getReturnType()));
+					} catch (final ClassNotFoundException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
+			}
+			fCUComputed = true;
+			return compilationUnit;
+		}
+		return super.getCompilationUnit();
 
-    }
+	}
 
-    private void addToScope(final ClassLoader classloader, final VariableScope variableScope, final ScriptVariable scriptVariable)
-            throws ClassNotFoundException {
-        final ClassNode classNode = new ClassNode(classloader.loadClass(scriptVariable.getType()));
-        final VariableExpression variableExpression = new VariableExpression(scriptVariable.getName(), classNode);
-        variableExpression.setEnd(-1);
-        variableScope.putDeclaredVariable(variableExpression);
-    }
+	private void addToScope(final GroovyCompilationUnit compilationUnit, final ScriptVariable scriptVariable)
+			throws ClassNotFoundException {
+		CompileUnit cu = compilationUnit.getModuleNode().getUnit();
+		ClassNode classNode = new ClassNode(cu.getClassLoader().loadClass(scriptVariable.getType()));
+		final VariableExpression variableExpression = new VariableExpression(scriptVariable.getName(), classNode);
+		variableExpression.setEnd(-1);
+		final VariableScope vScope = compilationUnit.getModuleNode().getStatementBlock().getVariableScope();
+		vScope.putDeclaredVariable(variableExpression);
+	}
 
 }

@@ -43,7 +43,7 @@ public class BonitaGroovyConfiguration extends GroovyConfiguration {
 
     private static final Set<String> ALLOWED_CATEGORIES = new HashSet<>();
     static {
-        ALLOWED_CATEGORIES.add("org.codehaus.groovy.eclipse.codeassist.category");
+        ALLOWED_CATEGORIES.add("org.bonitasoft.groovy.codeassist.category");
         ALLOWED_CATEGORIES.add("org.codehaus.groovy.eclipse.codeassist.templates.category");
     }
 
