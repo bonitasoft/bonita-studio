@@ -37,9 +37,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 
-/**
- * @author Romain Bioteau
- */
+
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
     private Contract contract;
@@ -60,14 +58,10 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         try {
             URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
-            TreeResult treeResult = new TreeResult();
-            if (formScope == FormScope.TASK) {
-                Pool parentPool = new ModelSearch(Collections::emptyList).getDirectParentOfType(contract, Pool.class);
-                ContractToBusinessDataResolver contractToBusinessDataResolver = new ContractToBusinessDataResolver(
-                        new BusinessDataStore(parentPool, getRepositoryAccessor()));
-                treeResult = contractToBusinessDataResolver.resolve(contract);
-            }
-
+            Pool parentPool = new ModelSearch(Collections::emptyList).getDirectParentOfType(contract, Pool.class);
+            ContractToBusinessDataResolver contractToBusinessDataResolver = new ContractToBusinessDataResolver(
+                    new BusinessDataStore(parentPool, getRepositoryAccessor()));
+            TreeResult treeResult = contractToBusinessDataResolver.resolve(contract);
             Representation body = new JacksonRepresentation<>(new ToWebContract(treeResult).apply(contract));
             responseObject = createArtifact(url, body);
         } catch (MalformedURLException e) {

@@ -14737,5 +14737,53 @@
       </operation>
     </changes>
   </releases>
+  <releases xmi:id="_lzQvMESbEemR1awCVq5q5Q" date="2019-03-12T10:43:27.494+0100" label="7.9.0-002">
+    <changes xsi:type="history:OperationChange" xmi:id="_oXg0oESbEemR1awCVq5q5Q">
+      <changes xsi:type="history:Create" xmi:id="_oXg0oUSbEemR1awCVq5q5Q" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//ContractInput"/>
+        <element href="process.ecore#//ContractInput/createMode"/>
+        <changes xsi:type="history:Set" xmi:id="_oXg0okSbEemR1awCVq5q5Q" featureName="name" dataValue="createMode">
+          <element href="process.ecore#//ContractInput/createMode"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_oXg0o0SbEemR1awCVq5q5Q" featureName="defaultValueLiteral" dataValue="true">
+          <element href="process.ecore#//ContractInput/createMode"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_oXg0pESbEemR1awCVq5q5Q" featureName="eType">
+          <element href="process.ecore#//ContractInput/createMode"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_oXg0pUSbEemR1awCVq5q5Q" name="newAttribute">
+        <parameters xmi:id="_oXg0pkSbEemR1awCVq5q5Q" name="eClass">
+          <referenceValue xmi:id="_oXg0p0SbEemR1awCVq5q5Q">
+            <element href="process.ecore#//ContractInput"/>
+          </referenceValue>
+          <referenceValue xmi:id="_oXg0qESbEemR1awCVq5q5Q">
+            <element href="process.ecore#//ContractInput"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_oXg0qUSbEemR1awCVq5q5Q" name="name">
+          <dataValue>createMode</dataValue>
+        </parameters>
+        <parameters xmi:id="_oXg0qkSbEemR1awCVq5q5Q" name="type">
+          <referenceValue xmi:id="_oXg0q0SbEemR1awCVq5q5Q">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </referenceValue>
+          <referenceValue xmi:id="_oXg0rESbEemR1awCVq5q5Q">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_oXg0rUSbEemR1awCVq5q5Q" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_oXg0rkSbEemR1awCVq5q5Q" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_oXg0r0SbEemR1awCVq5q5Q" name="defaultValue">
+          <dataValue>true</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

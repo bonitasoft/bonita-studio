@@ -53,6 +53,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractInputImpl#getMapping <em>Mapping</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractInputImpl#getInputs <em>Inputs</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractInputImpl#getDataReference <em>Data Reference</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractInputImpl#isCreateMode <em>Create Mode</em>}</li>
  * </ul>
  *
  * @generated
@@ -177,6 +178,26 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
      * @ordered
      */
     protected String dataReference = DATA_REFERENCE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #isCreateMode() <em>Create Mode</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isCreateMode()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean CREATE_MODE_EDEFAULT = true;
+
+    /**
+     * The cached value of the '{@link #isCreateMode() <em>Create Mode</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isCreateMode()
+     * @generated
+     * @ordered
+     */
+    protected boolean createMode = CREATE_MODE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -372,6 +393,29 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
 
     /**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public boolean isCreateMode() {
+        return createMode;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void setCreateMode(boolean newCreateMode) {
+        boolean oldCreateMode = createMode;
+        createMode = newCreateMode;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_INPUT__CREATE_MODE, oldCreateMode, createMode));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -431,6 +475,8 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
                 return getInputs();
             case ProcessPackage.CONTRACT_INPUT__DATA_REFERENCE:
                 return getDataReference();
+            case ProcessPackage.CONTRACT_INPUT__CREATE_MODE:
+                return isCreateMode();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -466,6 +512,9 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
             case ProcessPackage.CONTRACT_INPUT__DATA_REFERENCE:
                 setDataReference((String)newValue);
                 return;
+            case ProcessPackage.CONTRACT_INPUT__CREATE_MODE:
+                setCreateMode((Boolean)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -499,6 +548,9 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
             case ProcessPackage.CONTRACT_INPUT__DATA_REFERENCE:
                 setDataReference(DATA_REFERENCE_EDEFAULT);
                 return;
+            case ProcessPackage.CONTRACT_INPUT__CREATE_MODE:
+                setCreateMode(CREATE_MODE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -525,6 +577,8 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
                 return inputs != null && !inputs.isEmpty();
             case ProcessPackage.CONTRACT_INPUT__DATA_REFERENCE:
                 return DATA_REFERENCE_EDEFAULT == null ? dataReference != null : !DATA_REFERENCE_EDEFAULT.equals(dataReference);
+            case ProcessPackage.CONTRACT_INPUT__CREATE_MODE:
+                return createMode != CREATE_MODE_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -549,6 +603,8 @@ public class ContractInputImpl extends EObjectImpl implements ContractInput {
         result.append(multiple);
         result.append(", dataReference: "); //$NON-NLS-1$
         result.append(dataReference);
+        result.append(", createMode: "); //$NON-NLS-1$
+        result.append(createMode);
         result.append(')');
         return result.toString();
     }

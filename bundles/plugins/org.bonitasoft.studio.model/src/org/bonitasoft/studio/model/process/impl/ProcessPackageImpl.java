@@ -1847,6 +1847,16 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
     /**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getContractInput_CreateMode() {
+        return (EAttribute)contractInputEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -3888,6 +3898,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         createEReference(contractInputEClass, CONTRACT_INPUT__MAPPING);
         createEReference(contractInputEClass, CONTRACT_INPUT__INPUTS);
         createEAttribute(contractInputEClass, CONTRACT_INPUT__DATA_REFERENCE);
+        createEAttribute(contractInputEClass, CONTRACT_INPUT__CREATE_MODE);
 
         contractConstraintEClass = createEClass(CONTRACT_CONSTRAINT);
         createEAttribute(contractConstraintEClass, CONTRACT_CONSTRAINT__EXPRESSION);
@@ -4420,6 +4431,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         initEReference(getContractInput_Mapping(), this.getContractInputMapping(), null, "mapping", null, 0, 1, ContractInput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEReference(getContractInput_Inputs(), this.getContractInput(), null, "inputs", null, 0, -1, ContractInput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getContractInput_DataReference(), ecorePackage.getEString(), "dataReference", null, 0, 1, ContractInput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getContractInput_CreateMode(), ecorePackage.getEBoolean(), "createMode", "true", 0, 1, ContractInput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
         addEOperation(contractInputEClass, ecorePackage.getEString(), "getJavaType", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
