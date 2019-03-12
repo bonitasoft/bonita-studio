@@ -57,28 +57,28 @@ public class FieldToContractInputMappingExpressionBuilder {
         this.expressionEditorService = expressionEditorService;
     }
 
-    public Expression toExpression(BusinessObjectData data, FieldToContractInputMapping mapping, boolean isOnPool)
+    public Expression toExpression(BusinessObjectData data, FieldToContractInputMapping mapping, boolean createMode)
             throws BusinessObjectInstantiationException, JavaModelException {
         ContractInput contractInput = mapping.getContractInput();
         MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
-        String script = getScriptText(isOnPool, mappingOperationScriptBuilder);
+        String script = getScriptText(createMode, mappingOperationScriptBuilder);
         Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
-        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, isOnPool);
-        setGroovyScriptName(scriptExpression, data, contractInput, isOnPool);
+        addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, createMode);
+        setGroovyScriptName(scriptExpression, data, contractInput, createMode);
         return scriptExpression;
     }
 
-    protected String getScriptText(boolean isOnPool, MappingOperationScriptBuilder mappingOperationScriptBuilder)
+    protected String getScriptText(boolean createMode, MappingOperationScriptBuilder mappingOperationScriptBuilder)
             throws BusinessObjectInstantiationException {
-        if (isOnPool) {
+        if (createMode) {
             return mappingOperationScriptBuilder.toInstanciationScript();
         }
         return mappingOperationScriptBuilder.toScript();
     }
 
     private void setGroovyScriptName(final Expression scriptExpression, final BusinessObjectData data,
-            final ContractInput contractInput, final boolean isOnPool) {
-        if (isOnPool) {
+            final ContractInput contractInput, final boolean createMode) {
+        if (createMode) {
             final String dataName = data.getName();
             final String nameToUpperCase = dataName.length() > 1
                     ? dataName.substring(0, 1).toUpperCase() + dataName.substring(1) : dataName.toUpperCase();

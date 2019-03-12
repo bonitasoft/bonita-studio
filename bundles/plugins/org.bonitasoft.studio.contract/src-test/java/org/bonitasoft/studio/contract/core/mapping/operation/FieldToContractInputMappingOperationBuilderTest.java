@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -86,7 +87,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
-                mapping, new NullProgressMonitor());
+                mapping, EditMode.EDIT, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -114,7 +115,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
-                mapping, new NullProgressMonitor());
+                mapping, EditMode.EDIT, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -139,7 +140,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
         when(expressionBuilder.toExpression(businessObjectData, mapping, false)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(businessObjectData,
-                mapping, new NullProgressMonitor());
+                mapping, EditMode.EDIT, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.JAVA_METHOD_OPERATOR)
@@ -163,7 +164,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                         anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
-                aSimpleMapping(lastNameField).build(), new NullProgressMonitor());
+                aSimpleMapping(lastNameField).build(), EditMode.EDIT, new NullProgressMonitor());
     }
 
     @Test
@@ -182,7 +183,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                         anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
-                mapping, new NullProgressMonitor());
+                mapping, EditMode.EDIT, new NullProgressMonitor());
     }
 
     @Test
@@ -195,7 +196,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 anyBoolean())).thenReturn(
                         anExpression().build());
         final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
-                mapping, new NullProgressMonitor());
+                mapping, EditMode.EDIT, new NullProgressMonitor());
 
         OperatorAssert.assertThat(operation.getOperator())
                 .hasType(ExpressionConstants.ASSIGNMENT_OPERATOR)

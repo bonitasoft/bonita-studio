@@ -35,8 +35,8 @@ public class RelationPropertyInitializerFactory extends AbsractInitializerFactor
 
     @Override
     public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping,
-            BusinessObjectData data, boolean isOnPool) {
-        InitializerContext context = createContext(data, variableNameResolver, mapping, isOnPool);
+            BusinessObjectData data, boolean createMode) {
+        InitializerContext context = createContext(data, variableNameResolver, mapping, createMode);
         return context.getField().getType() == Type.AGGREGATION
                 ? newAggregatedReferenceInitializer(context)
                 : newComposedReferenceInitializer(context);

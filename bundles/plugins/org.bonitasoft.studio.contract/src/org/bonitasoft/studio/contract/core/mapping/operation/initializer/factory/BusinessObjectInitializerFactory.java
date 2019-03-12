@@ -26,7 +26,6 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Multipl
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
 
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory {
 
@@ -38,9 +37,9 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
 
     @Override
     public IPropertyInitializer newPropertyInitializer(FieldToContractInputMapping mapping, BusinessObjectData data,
-            boolean isOnPool) {
+            boolean createMode) {
         RelationField relationField = (RelationField) mapping.getField();
-        InitializerContext context = createContext(data, variableNameResolver, mapping, isOnPool);
+        InitializerContext context = createContext(data, variableNameResolver, mapping, createMode);
         return relationField.getType() == Type.AGGREGATION
                 ? newAggregatedObjectInitializer(context)
                 : newComposedObjectInitializer(context);
@@ -54,11 +53,10 @@ public class BusinessObjectInitializerFactory extends AbsractInitializerFactory 
 
     private IPropertyInitializer newComposedObjectInitializer(InitializerContext context) {
         if (context.getField().isCollection()) {
-            return context.isOnPool()
+            return context.isCreateMode()
                     ? new NewBusinessObjectListInitializer(context)
                     : new MultipleCompositionBusinessObjectQueryInitializer(businessObject(context.getMapping()), context);
         }
-        context.setCheckExistence(context.getMapping().getContractInput().eContainer() instanceof ContractInput);
         return new NewBusinessObjectInitializer(context);
     }
 }

@@ -47,12 +47,12 @@ public abstract class AbsractInitializerFactory implements InitializerFactory {
     protected InitializerContext createContext(final Data data,
             final VariableNameResolver resolver,
             final FieldToContractInputMapping mapping,
-            final boolean isOnPool) {
+            final boolean createMode) {
         final InitializerContext context = new InitializerContext();
         final BusinessObject businessObject = ((RelationField) mapping.getField()).getReference();
         context.setMapping(mapping);
-        context.setCheckExistence(!isOnPool);
-        context.setOnPool(isOnPool);
+        context.setCheckExistence(!createMode);
+        context.setCreateMode(createMode);
         context.setData(data);
         context.setContractInput(mapping.getContractInput());
         context.setLocalListVariableName(resolver.newListVarName(businessObject));

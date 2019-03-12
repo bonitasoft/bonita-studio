@@ -26,6 +26,7 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -71,9 +72,10 @@ public class RootContractInputGenerator {
     /**
      * To be used if the contract is on a task -> operations will be generated
      */
-    public void build(BusinessObjectData data, IProgressMonitor monitor) throws OperationCreationException {
+    public void build(BusinessObjectData data, EditMode editMode, IProgressMonitor monitor)
+            throws OperationCreationException {
         initContractInput(data);
-        buildOperations(data, monitor);
+        buildOperations(data, editMode, monitor);
     }
 
     private void buildInitialValueExpression(BusinessObjectData data, IProgressMonitor monitor)
@@ -88,12 +90,13 @@ public class RootContractInputGenerator {
         monitor.done();
     }
 
-    private void buildOperations(final BusinessObjectData data, IProgressMonitor monitor) throws OperationCreationException {
+    private void buildOperations(final BusinessObjectData data, EditMode editMode, IProgressMonitor monitor)
+            throws OperationCreationException {
         monitor.beginTask("Building operations ...", children.size());
         for (FieldToContractInputMapping mapping : children) {
             if (mapping.isGenerated()) {
                 if (!contractInput.isMultiple()) {
-                    mappingOperations.add(operationBuilder.toOperation(data, mapping, monitor));
+                    mappingOperations.add(operationBuilder.toOperation(data, mapping, editMode, monitor));
                 }
             } else {
                 allAttributesGenerated = false;
@@ -101,7 +104,8 @@ public class RootContractInputGenerator {
         }
         if (contractInput.isMultiple()) {
             mappingOperations
-                    .add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName), monitor));
+                    .add(operationBuilder.toOperation(data, createParentMapping(data, rootContractInputName), editMode,
+                            monitor));
         }
         monitor.done();
     }

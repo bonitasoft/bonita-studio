@@ -24,7 +24,10 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -34,8 +37,10 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
@@ -50,6 +55,7 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -259,7 +265,7 @@ public class ContractInputGenerationWizardTest {
         when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
                 .thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
-                any(IProgressMonitor.class))).thenReturn(anOperation().build());
+                any(EditMode.class), any(IProgressMonitor.class))).thenReturn(anOperation().build());
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
@@ -399,6 +405,28 @@ public class ContractInputGenerationWizardTest {
         wizard.addPages();
 
         assertThat(wizard.createDocumentContractInput(document1).getDataReference()).isEqualTo("myDocument");
+    }
+
+    @Test
+    public void should_take_into_account_edit_mode_on_tasks() throws Exception {
+        ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(aTask().build(), editingDomain(),
+                repositoryAccessor, operationBuilder,
+                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
+
+        BusinessObjectData data = mock(BusinessObjectData.class);
+        RootContractInputGenerator generator = mock(RootContractInputGenerator.class);
+
+        wizard.getGenerationOptions().setEditMode(EditMode.CREATE);
+        wizard.buildContractOperationFromData(data, generator).run(new NullProgressMonitor());
+
+        verify(generator).build(any(BusinessObjectData.class), eq(EditMode.CREATE), any(IProgressMonitor.class));
+        verify(generator, times(0)).build(any(BusinessObjectData.class), eq(EditMode.EDIT), any(IProgressMonitor.class));
+
+        wizard.getGenerationOptions().setEditMode(EditMode.EDIT);
+        wizard.buildContractOperationFromData(data, generator).run(new NullProgressMonitor());
+
+        verify(generator).build(any(BusinessObjectData.class), eq(EditMode.EDIT), any(IProgressMonitor.class));
     }
 
     private EditingDomain editingDomain() {
