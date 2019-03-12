@@ -15,9 +15,7 @@
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
-import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.UnselectLazyReferencesInMultipleContainer;
-import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;

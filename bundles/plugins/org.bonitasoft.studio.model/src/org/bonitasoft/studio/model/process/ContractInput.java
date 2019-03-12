@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.model.process.ContractInput#getMapping <em>Mapping</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.ContractInput#getInputs <em>Inputs</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.ContractInput#getDataReference <em>Data Reference</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.ContractInput#isCreateMode <em>Create Mode</em>}</li>
  * </ul>
  *
  * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInput()
@@ -218,6 +219,33 @@ public interface ContractInput extends EObject {
      * @generated
      */
     void setDataReference(String value);
+
+    /**
+     * Returns the value of the '<em><b>Create Mode</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Create Mode</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Create Mode</em>' attribute.
+     * @see #setCreateMode(boolean)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractInput_CreateMode()
+     * @model default="true"
+     * @generated
+     */
+    boolean isCreateMode();
+
+    /**
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractInput#isCreateMode <em>Create Mode</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Create Mode</em>' attribute.
+     * @see #isCreateMode()
+     * @generated
+     */
+    void setCreateMode(boolean value);
 
     /**
      * <!-- begin-user-doc -->

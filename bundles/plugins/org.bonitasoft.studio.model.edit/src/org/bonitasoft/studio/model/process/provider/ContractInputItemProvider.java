@@ -85,6 +85,7 @@ public class ContractInputItemProvider
             addDescriptionPropertyDescriptor(object);
             addMultiplePropertyDescriptor(object);
             addDataReferencePropertyDescriptor(object);
+            addCreateModePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -200,6 +201,28 @@ public class ContractInputItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Create Mode feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addCreateModePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractInput_createMode_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractInput_createMode_feature", "_UI_ContractInput_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_INPUT__CREATE_MODE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -273,6 +296,7 @@ public class ContractInputItemProvider
             case ProcessPackage.CONTRACT_INPUT__DESCRIPTION:
             case ProcessPackage.CONTRACT_INPUT__MULTIPLE:
             case ProcessPackage.CONTRACT_INPUT__DATA_REFERENCE:
+            case ProcessPackage.CONTRACT_INPUT__CREATE_MODE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case ProcessPackage.CONTRACT_INPUT__MAPPING:

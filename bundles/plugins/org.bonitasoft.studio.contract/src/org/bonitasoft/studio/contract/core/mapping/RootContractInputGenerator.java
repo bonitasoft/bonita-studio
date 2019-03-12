@@ -65,7 +65,7 @@ public class RootContractInputGenerator {
      */
     public void buildForInstanciation(BusinessObjectData data, IProgressMonitor monitor)
             throws OperationCreationException {
-        initContractInput(data);
+        initContractInput(data,EditMode.CREATE);
         buildInitialValueExpression(data, monitor);
     }
 
@@ -74,7 +74,7 @@ public class RootContractInputGenerator {
      */
     public void build(BusinessObjectData data, EditMode editMode, IProgressMonitor monitor)
             throws OperationCreationException {
-        initContractInput(data);
+        initContractInput(data,editMode);
         buildOperations(data, editMode, monitor);
     }
 
@@ -110,11 +110,12 @@ public class RootContractInputGenerator {
         monitor.done();
     }
 
-    private void initContractInput(BusinessObjectData data) {
+    private void initContractInput(BusinessObjectData data, EditMode editMode) {
         contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(rootContractInputName);
         contractInput.setType(ContractInputType.COMPLEX);
         contractInput.setMultiple(data.isMultiple());
+        contractInput.setCreateMode(editMode == EditMode.CREATE);
         contractInput.setDataReference(data.getName());
         children.stream()
                 .filter(FieldToContractInputMapping::isGenerated)

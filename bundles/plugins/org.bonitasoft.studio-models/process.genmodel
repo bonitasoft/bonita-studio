@@ -349,6 +349,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/dataReference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/createMode"/>
       <genOperations ecoreOperation="process.ecore#//ContractInput/getJavaType" body="switch(getType()){&#xD;&#xA;case BOOLEAN:return java.lang.Boolean.class.getName();&#xD;&#xA;case DATE: return java.util.Date.class.getName();&#xD;&#xA;case LOCALDATE: return java.time.LocalDate.class.getName();&#xD;&#xA;case LOCALDATETIME: return java.time.LocalDateTime.class.getName();&#xD;&#xA;case OFFSETDATETIME: return java.time.OffsetDateTime.class.getName();&#xD;&#xA;case INTEGER: return java.lang.Integer.class.getName();&#xA;case LONG: return java.lang.Long.class.getName();&#xD;&#xA;case DECIMAL: return java.lang.Double.class.getName();&#xD;&#xA;case FILE:return &quot;org.bonitasoft.engine.bpm.contract.FileInputValue&quot;;&#xD;&#xA;case COMPLEX:return java.util.Map.class.getName();&#xD;&#xA;case TEXT:&#xD;&#xA;default: return java.lang.String.class.getName();&#xD;&#xA;}"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">

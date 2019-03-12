@@ -27,6 +27,7 @@ import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.web.designer.model.contract.DataReference;
+import org.bonitasoft.web.designer.model.contract.EditMode;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;
 import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 
@@ -106,6 +107,7 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
     private org.bonitasoft.web.designer.model.contract.ContractInput copyInputProperties(final ContractInput input,
             final org.bonitasoft.web.designer.model.contract.ContractInput contractInput) {
         contractInput.setMultiple(input.isMultiple());
+        contractInput.setMode(input.isCreateMode() ? EditMode.CREATE : EditMode.EDIT);
         contractInput.setDescription(input.getDescription());
         if (contractInput instanceof NodeContractInput) {
             ((NodeContractInput) contractInput).setDataReference(treeResult.getDataReference(input));
