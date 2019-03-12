@@ -74,7 +74,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 .build());
         context.setLocalVariableName("addressVar");
         context.setLocalListVariableName("addressList");
-        context.setOnPool(true);
+        context.setCreateMode(true);
 
         final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(
                 null, context);
@@ -107,7 +107,7 @@ public class MultipleCompositionReferencePropertyInitializerTest {
                 .build());
         context.setLocalVariableName("addressVar");
         context.setLocalListVariableName("addressList");
-        context.setOnPool(true);
+        context.setCreateMode(true);
 
         final BusinessObject employee = aBO("Employee").withField(field).build();
         final MultipleCompositionReferencePropertyInitializer initializer = new MultipleCompositionReferencePropertyInitializer(

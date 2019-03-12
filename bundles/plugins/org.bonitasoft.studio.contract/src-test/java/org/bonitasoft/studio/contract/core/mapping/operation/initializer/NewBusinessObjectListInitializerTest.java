@@ -93,7 +93,7 @@ public class NewBusinessObjectListInitializerTest {
                 .multiple().in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
         context.setLocalVariableName("addressVar");
         context.setLocalListVariableName("addressList");
-        context.setOnPool(true);
+        context.setCreateMode(true);
 
         final AbstractBusinessObjectInitializer propertyInitializer = new NewBusinessObjectListInitializer(context);
         propertyInitializer.addPropertyInitializer(new SimpleFieldPropertyInitializer(businessObject,

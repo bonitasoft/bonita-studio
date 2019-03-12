@@ -61,10 +61,10 @@ public class MappingOperationScriptBuilder {
         return toScript(false);
     }
 
-    private String toScript(final boolean isOnPool) throws BusinessObjectInstantiationException {
+    private String toScript(final boolean createMode) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
         return format(
-                buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, isOnPool).getInitialValue());
+                buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, createMode).getInitialValue());
     }
 
     private String format(final String initialValue) {

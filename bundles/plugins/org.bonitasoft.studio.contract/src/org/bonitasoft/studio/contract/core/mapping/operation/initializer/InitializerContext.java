@@ -26,7 +26,7 @@ public class InitializerContext {
     private FieldToContractInputMapping mapping;
     private Data data;
     private boolean checkExistence;
-    private boolean isOnPool;
+    private boolean createMode;
     private String localVariableName;
     private String localListVariableName;
     private ContractInput contractInput;
@@ -68,12 +68,12 @@ public class InitializerContext {
         this.mapping = mapping;
     }
 
-    public boolean isOnPool() {
-        return isOnPool;
+    public boolean isCreateMode() {
+        return createMode;
     }
 
-    public void setOnPool(final boolean isOnPool) {
-        this.isOnPool = isOnPool;
+    public void setCreateMode(final boolean createMode) {
+        this.createMode = createMode;
     }
 
     private String toRefName(final InitializerContext parentContext) {

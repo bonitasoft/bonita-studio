@@ -45,7 +45,7 @@ public class NewBusinessObjectInitializerTest {
                 .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
                 .build());
         context.setLocalVariableName("addressVar");
-        context.setOnPool(true);
+        context.setCreateMode(true);
         context.setCheckExistence(true);
 
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(context);
@@ -69,7 +69,7 @@ public class NewBusinessObjectInitializerTest {
                 .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
                 .build());
         context.setLocalVariableName("addressVar");
-        context.setOnPool(true);
+        context.setCreateMode(true);
         context.setCheckExistence(true);
 
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(context);
