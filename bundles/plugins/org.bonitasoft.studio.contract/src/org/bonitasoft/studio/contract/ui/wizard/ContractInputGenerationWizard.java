@@ -35,7 +35,6 @@ import org.bonitasoft.studio.contract.core.mapping.operation.DocumentUpdateOpera
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -108,7 +107,8 @@ public class ContractInputGenerationWizard extends Wizard {
         generationOptions = new GenerationOptions();
         this.editingDomain = editingDomain;
         this.repositoryAccessor = repositoryAccessor;
-        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        fieldToContractInputMappingFactory = new FieldToContractInputMappingFactory(
+                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
         this.preferenceStore = preferenceStore;
@@ -120,8 +120,8 @@ public class ContractInputGenerationWizard extends Wizard {
 
     @Override
     public void addPages() {
-        selectedDataObservable = new WritableValue<Object>();
-        rootNameObservable = new WritableValue<String>();
+        selectedDataObservable = new WritableValue<>();
+        rootNameObservable = new WritableValue<>();
         fieldToContractInputMappingsObservable = new WritableList(new ArrayList<FieldToContractInputMapping>(),
                 FieldToContractInputMapping.class);
         availableBusinessData = availableBusinessData();
@@ -136,7 +136,7 @@ public class ContractInputGenerationWizard extends Wizard {
         availableDocuments = ModelHelper.getParentPool(contractContainer).getDocuments();
         selectBusinessDataWizardPage = contractInputWizardPagesFactory.createSelectBusinessDataWizardPage(
                 contractContainer.getContract(),
-                availableBusinessData, 
+                availableBusinessData,
                 availableDocuments,
                 selectedDataObservable,
                 rootNameObservable,
@@ -146,7 +146,7 @@ public class ContractInputGenerationWizard extends Wizard {
         contractInputFromBusinessObjectWizardPage = contractInputWizardPagesFactory
                 .createCreateContratInputFromBusinessObjectWizardPage(
                         contractContainer,
-                        generationOptions, 
+                        generationOptions,
                         selectedDataObservable,
                         rootNameObservable,
                         fieldToContractInputMappingFactory,
@@ -169,7 +169,6 @@ public class ContractInputGenerationWizard extends Wizard {
         return newArrayList(filter(pool.getData(), instanceOf(BusinessObjectData.class)));
     }
 
-
     @Override
     public boolean canFinish() {
         if (availableBusinessData.isEmpty() && availableDocuments.isEmpty()) {
@@ -177,7 +176,6 @@ public class ContractInputGenerationWizard extends Wizard {
         }
         return super.canFinish();
     }
-
 
     @Override
     public boolean performFinish() {
@@ -214,14 +212,14 @@ public class ContractInputGenerationWizard extends Wizard {
         return false;
     }
 
-    private IRunnableWithProgress buildContractOperationFromData(BusinessObjectData data,
+    protected IRunnableWithProgress buildContractOperationFromData(BusinessObjectData data,
             RootContractInputGenerator contractInputGenerator) {
         return monitor -> {
             try {
                 if (contractContainer instanceof Pool) {
                     contractInputGenerator.buildForInstanciation(data, monitor);
                 } else {
-                    contractInputGenerator.build(data, monitor);
+                    contractInputGenerator.build(data, generationOptions.getEditMode(), monitor);
                 }
                 editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
             } catch (final OperationCreationException e) {
@@ -333,6 +331,10 @@ public class ContractInputGenerationWizard extends Wizard {
 
     public CreateContractInputFromBusinessObjectWizardPage getContractInputFromBusinessObjectWizardPage() {
         return contractInputFromBusinessObjectWizardPage;
+    }
+
+    protected GenerationOptions getGenerationOptions() {
+        return generationOptions;
     }
 
 }

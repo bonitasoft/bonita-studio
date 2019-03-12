@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -60,7 +61,7 @@ public class RootContractInputGeneratorTest {
                 mock(FieldToContractInputMappingOperationBuilder.class),
                 mock(FieldToContractInputMappingExpressionBuilder.class));
 
-        rootContractInputGenerator.build(aBusinessData().build(), new NullProgressMonitor());
+        rootContractInputGenerator.build(aBusinessData().build(), EditMode.EDIT, new NullProgressMonitor());
 
         ContractInputAssert.assertThat(rootContractInputGenerator.getRootContractInput()).hasName("rootInputName")
                 .hasType(ContractInputType.COMPLEX);
@@ -82,7 +83,7 @@ public class RootContractInputGeneratorTest {
                 repositoryAccessor, mock(FieldToContractInputMappingOperationBuilder.class),
                 mock(FieldToContractInputMappingExpressionBuilder.class));
 
-        rootContractInputGenerator.build(aBusinessData().build(), new NullProgressMonitor());
+        rootContractInputGenerator.build(aBusinessData().build(), EditMode.EDIT, new NullProgressMonitor());
 
         assertThat(rootContractInputGenerator.getRootContractInput().getInputs()).hasSize(1);
     }
@@ -103,9 +104,9 @@ public class RootContractInputGeneratorTest {
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
         BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
         IProgressMonitor monitor = new NullProgressMonitor();
-        rootContractInputGenerator.build(businessObjectData, monitor);
+        rootContractInputGenerator.build(businessObjectData, EditMode.EDIT, monitor);
 
-        verify(operationBuilder).toOperation(businessObjectData, mapping, monitor);
+        verify(operationBuilder).toOperation(businessObjectData, mapping, EditMode.EDIT, monitor);
     }
 
     @Test
@@ -123,7 +124,7 @@ public class RootContractInputGeneratorTest {
                 newArrayList(notGeneratedMapping),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
         BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
-        rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
+        rootContractInputGenerator.build(businessObjectData, EditMode.EDIT, new NullProgressMonitor());
         assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isFalse();
     }
 
@@ -144,7 +145,7 @@ public class RootContractInputGeneratorTest {
                                 .aStringField("input1").build())),
                 repositoryAccessor, operationBuilder, mock(FieldToContractInputMappingExpressionBuilder.class));
         BusinessObjectData businessObjectData = aBusinessData().withName("employee").build();
-        rootContractInputGenerator.build(businessObjectData, new NullProgressMonitor());
+        rootContractInputGenerator.build(businessObjectData, EditMode.EDIT, new NullProgressMonitor());
         assertThat(rootContractInputGenerator.isAllAttributesGenerated()).isTrue();
     }
 
@@ -167,11 +168,12 @@ public class RootContractInputGeneratorTest {
         BusinessObjectData businessObjectData = aBusinessData().withName("employees")
                 .withClassname("org.test.Employee").multiple().build();
         NullProgressMonitor monitor = new NullProgressMonitor();
-        rootContractInputGenerator.build(businessObjectData, monitor);
+        rootContractInputGenerator.build(businessObjectData, EditMode.EDIT, monitor);
 
         ArgumentCaptor<FieldToContractInputMapping> argumentCaptor = ArgumentCaptor
                 .forClass(FieldToContractInputMapping.class);
-        verify(operationBuilder).toOperation(eq(businessObjectData), argumentCaptor.capture(), eq(monitor));
+        verify(operationBuilder).toOperation(eq(businessObjectData), argumentCaptor.capture(), eq(EditMode.EDIT),
+                eq(monitor));
         Field field = argumentCaptor.getValue().getField();
         assertThat(field).isInstanceOf(RelationField.class);
         assertThat(field.getName()).isEqualTo("employeesInput");

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.core.mapping.operation;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -45,14 +47,16 @@ public class FieldToContractInputMappingOperationBuilder {
         this.expressionBuilder = expressionBuilder;
     }
 
-    public Operation toOperation(BusinessObjectData data, FieldToContractInputMapping mapping, IProgressMonitor monitor)
+    public Operation toOperation(BusinessObjectData data, FieldToContractInputMapping mapping, EditMode editMode,
+            IProgressMonitor monitor)
             throws OperationCreationException {
         monitor.setTaskName(String.format(Messages.creatingMappingOperation, mapping.getField().getName()));
         Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(ExpressionHelper.createVariableExpression(data));
         operation.setOperator(operator(mapping, data));
         try {
-            operation.setRightOperand(expressionBuilder.toExpression(data, mapping, false));
+            operation.setRightOperand(
+                    expressionBuilder.toExpression(data, mapping, Objects.equals(editMode, EditMode.CREATE)));
         } catch (BusinessObjectInstantiationException | JavaModelException e) {
             throw new OperationCreationException("Failed to create right operand expression", e);
         }

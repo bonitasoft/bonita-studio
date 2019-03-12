@@ -98,7 +98,7 @@ public class MultipleAggregationReferencePropertyInitializerTest {
                 .in(aContractInput().withName("employees").withType(ContractInputType.COMPLEX).multiple()).build());
         context.setLocalVariableName("employeeVar");
         context.setLocalListVariableName("employeeList");
-        context.setOnPool(true);
+        context.setCreateMode(true);
 
         final MultipleAggregationReferencePropertyInitializer initializer = new MultipleAggregationReferencePropertyInitializer(
                 null, employeeBo, context);

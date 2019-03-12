@@ -148,7 +148,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("initMyEmployee()")
-                .hasContent("def addressVar = myEmployee.address ?: new Address()" + System.lineSeparator()
+                .hasContent("def addressVar = new Address()" + System.lineSeparator()
                         + "return addressVar")
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
@@ -174,7 +174,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a task
+        // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -202,7 +202,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "}\n"
                 + "return bookList");
 
-        //On a pool
+        // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -238,7 +238,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a task
+        // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -259,7 +259,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "}\n"
                 + "return bookList");
 
-        //On a pool
+        // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -288,7 +288,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a task
+        // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -305,7 +305,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "}\n"
                 + "return bookList");
 
-        //On a pool
+        // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -330,7 +330,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myBooks").multiple().build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a task
+        // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -355,7 +355,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "}\n"
                 + "return bookList");
 
-        //On a pool
+        // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -454,7 +454,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a pool
+        // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
                 + "rootVar.rootName = rootInput.rootName\n"
@@ -468,7 +468,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "    return nodeVar}()\n"
                 + "return rootVar");
 
-        // On a task -> on the node mapping (operation setNode)
+        // Edite mode -> on the node mapping (operation setNode)
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
         assertThat(expression.getContent())
                 .isEqualToIgnoringWhitespace("def nodeVar = myRoot.node ?: new com.company.Node()\n"
@@ -527,7 +527,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a pool
+        // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
                 + "rootVar.rootName = rootInput.rootName\n"
@@ -557,7 +557,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "    return nodeList}()\n"
                 + "return rootVar");
 
-        // On a task -> on the node mapping (operation setNode)        
+        // Edit mode -> on the node mapping (operation setNode)        
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def nodeList = []\n"
                 + "//For each item collected in multiple input\n"
@@ -631,7 +631,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
         FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
 
-        // On a pool
+        // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
                 "//For each item collected in multiple input\n" +
@@ -661,7 +661,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 "}\n" +
                 "return rootList");
 
-        // On a task      
+        // Edit mode    
         expression = expressionBuilder.toExpression(businessData, rootMapping, false);
         assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
                 "//For each item collected in multiple input\n" +
