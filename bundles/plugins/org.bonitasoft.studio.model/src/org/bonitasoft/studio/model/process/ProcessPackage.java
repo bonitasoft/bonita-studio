@@ -3431,13 +3431,22 @@ public interface ProcessPackage extends EPackage {
     int CONTRACT_INPUT__DATA_REFERENCE = 6;
 
     /**
+     * The feature id for the '<em><b>Create Mode</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONTRACT_INPUT__CREATE_MODE = 7;
+
+    /**
      * The number of structural features of the '<em>Contract Input</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CONTRACT_INPUT_FEATURE_COUNT = 7;
+	int CONTRACT_INPUT_FEATURE_COUNT = 8;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl <em>Contract Constraint</em>}' class.
@@ -10492,6 +10501,17 @@ public interface ProcessPackage extends EPackage {
     EAttribute getContractInput_DataReference();
 
     /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ContractInput#isCreateMode <em>Create Mode</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Create Mode</em>'.
+     * @see org.bonitasoft.studio.model.process.ContractInput#isCreateMode()
+     * @see #getContractInput()
+     * @generated
+     */
+    EAttribute getContractInput_CreateMode();
+
+    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ContractConstraint <em>Contract Constraint</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13207,6 +13227,14 @@ public interface ProcessPackage extends EPackage {
          * @generated
          */
         EAttribute CONTRACT_INPUT__DATA_REFERENCE = eINSTANCE.getContractInput_DataReference();
+
+        /**
+         * The meta object literal for the '<em><b>Create Mode</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CONTRACT_INPUT__CREATE_MODE = eINSTANCE.getContractInput_CreateMode();
 
         /**
          * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl <em>Contract Constraint</em>}' class.

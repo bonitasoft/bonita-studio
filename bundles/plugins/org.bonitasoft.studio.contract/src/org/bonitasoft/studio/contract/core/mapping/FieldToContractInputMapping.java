@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.contract.core.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -77,6 +76,7 @@ public abstract class FieldToContractInputMapping {
         contractInput.setName(field.getName());
         contractInput.setType(getContractInputType());
         contractInput.setMultiple(field != null && field.isCollection());
+        contractInput.setCreateMode(parentInput == null || parentInput.isCreateMode());
         if (parentInput != null) {
             parentInput.getInputs().add(contractInput);
         }

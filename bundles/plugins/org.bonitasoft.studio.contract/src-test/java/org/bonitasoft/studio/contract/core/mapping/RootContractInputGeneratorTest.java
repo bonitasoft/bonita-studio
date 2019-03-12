@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.api.Condition;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
@@ -42,6 +43,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationEx
 import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -237,7 +239,63 @@ public class RootContractInputGeneratorTest {
         assertThat(fieldToContractInputMapping.getField().isCollection()).isTrue();
         assertThat(fieldToContractInputMapping.getChildren()).hasSize(1);
     }
+    
+    @Test
+    public void should_set_edit_mode_on_contract_input()
+            throws Exception {
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("firstName").build());
 
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+                FieldToContractInputMappingOperationBuilder.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
+                FieldToContractInputMappingExpressionBuilder.class);
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+                newArrayList(mapping),
+                repositoryAccessor, operationBuilder, expressionBuilder);
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").multiple().build();
+        rootContractInputGenerator.build(businessObjectData, EditMode.EDIT,new NullProgressMonitor());
+
+        ContractInput rootContractInput = rootContractInputGenerator.getRootContractInput();
+        assertThat(rootContractInput.isCreateMode()).isFalse();
+        assertEditMode(rootContractInput.getInputs(), EditMode.EDIT);
+    }
+    
+    @Test
+    public void should_set_create_mode_on_contract_input()
+            throws Exception {
+        SimpleFieldToContractInputMapping mapping = new SimpleFieldToContractInputMapping(
+                SimpleFieldBuilder.aStringField("firstName").build());
+
+        FieldToContractInputMappingOperationBuilder operationBuilder = mock(
+                FieldToContractInputMappingOperationBuilder.class);
+        RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = getBusinessObjectModelRepositoryStore();
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(businessStore);
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = mock(
+                FieldToContractInputMappingExpressionBuilder.class);
+        RootContractInputGenerator rootContractInputGenerator = new RootContractInputGenerator("rootInputName",
+                newArrayList(mapping),
+                repositoryAccessor, operationBuilder, expressionBuilder);
+        BusinessObjectData businessObjectData = aBusinessData().withName("employee").multiple().build();
+        rootContractInputGenerator.buildForInstanciation(businessObjectData, new NullProgressMonitor());
+
+        ContractInput rootContractInput = rootContractInputGenerator.getRootContractInput();
+        assertThat(rootContractInput.isCreateMode()).isTrue();
+        assertEditMode(rootContractInput.getInputs(), EditMode.CREATE);
+    }
+
+    private void assertEditMode(List<ContractInput> inputs,EditMode mode) {
+        for(ContractInput child : inputs) {
+            assertThat(child.isCreateMode()).is(new Condition<Boolean>(value -> mode == EditMode.CREATE ? value : !value, 
+                    "Invalid create mode"));
+            assertEditMode(child.getInputs(), mode);
+        }
+    }
+    
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectModelRepositoryStore() {
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessStore = mock(
                 BusinessObjectModelRepositoryStore.class);
