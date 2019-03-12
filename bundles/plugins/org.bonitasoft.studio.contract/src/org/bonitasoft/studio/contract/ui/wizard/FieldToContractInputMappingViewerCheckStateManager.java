@@ -47,9 +47,10 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
      * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
      */
     @Override
-    public boolean isGrayed(final Object element) {
-        final FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
-        return any(mapping.getChildren(), isGenerated()) && !Iterables.all(mapping.getChildren(), isGenerated());
+    public boolean isGrayed(Object element) {
+        FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
+        boolean isGrayed = any(mapping.getChildren(), isGenerated()) && !Iterables.all(mapping.getChildren(), isGenerated());
+        return isGrayed || mapping.getChildren().stream().anyMatch(this::isGrayed);
     }
 
     /*
@@ -65,6 +66,7 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         setChildrenChecked(mapping, event.getChecked());
         selectParentIfChildIsSelected(event, mapping, checkboxTreeViewer);
         deselectParentIfNoChildSelected(event, mapping, checkboxTreeViewer);
+        checkboxTreeViewer.getControl().getDisplay().asyncExec(() -> checkboxTreeViewer.refresh());
     }
 
     private void setChildrenChecked(final FieldToContractInputMapping parent, final boolean state) {
@@ -78,7 +80,8 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         }
     }
 
-    private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
+    private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event,
+            final FieldToContractInputMapping mapping,
             final CheckboxTreeViewer checkboxTreeViewer) {
         final FieldToContractInputMapping parentMapping = mapping.getParent();
         boolean deselect = true;

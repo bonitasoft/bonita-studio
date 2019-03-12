@@ -27,6 +27,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.UngenerateAggregatedReferenceChildren;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RemoveAggregateReferencesChildren;
@@ -426,6 +427,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         mappings = fieldToContractInputMappingFactory.createMappingForBusinessObjectType(contractContainer, data);
         if (generationOptions.getEditMode() == EditMode.EDIT) {
             lazyFieldStatusProvider.apply(mappings, data);
+            new UngenerateAggregatedReferenceChildren().apply(mappings);
         } else if (generationOptions.getEditMode() == EditMode.CREATE) {
             new RemoveAggregateReferencesChildren().apply(mappings);
         }
