@@ -16,14 +16,21 @@ package org.bonitasoft.studio.application.views.provider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 
 public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider {
+
+    private TreeViewer viewer;
 
     @Override
     public boolean hasChildren(Object element) {
@@ -59,8 +66,24 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     }
     
     @Override
-    public Object[] getElements(Object inputElement) {
-    	return super.getElements(inputElement);
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        super.inputChanged(viewer, oldInput, newInput);
+        this.viewer = (TreeViewer) viewer;
+    }
+
+    @Override
+    protected void postAdd(Object parent, Object element, Collection<Runnable> runnables) {
+        super.postAdd(parent, element, runnables);
+        if (viewer.testFindItem(parent) == null
+                && RepositoryManager.getInstance()
+                        .getCurrentRepository()
+                        .getAllStores()
+                        .stream()
+                        .map(IRepositoryStore::getResource)
+                        .anyMatch(parent::equals)) {
+            //Force refresh to update parent visibility in Project Explorer
+            runnables.add(() -> viewer.refresh(true));
+        }
     }
 
 }
