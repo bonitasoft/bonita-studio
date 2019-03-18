@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.ContractConstraintBuilder;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -109,6 +110,9 @@ public class ContractPropertySectionTest {
 
     @Mock
     private FieldToContractInputMappingExpressionBuilder expressionBuilder;
+  
+    @Mock
+    private ContractConstraintBuilder constraintsBuilder;
 
     /**
      * @throws java.lang.Exception
@@ -119,6 +123,7 @@ public class ContractPropertySectionTest {
         section = spy(new ContractPropertySection(sharedImages, eclipseContext, selectionProvider, poolSelectionProvider,
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
+                constraintsBuilder, 
                 progressService));
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
         doReturn(contributionItem).when(section).newContributionItem(CreateAndEditFormContributionItem.class);

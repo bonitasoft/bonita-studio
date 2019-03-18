@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.ContractConstraintBuilder;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
@@ -34,11 +35,14 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.DocumentUpdateOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
+import org.bonitasoft.studio.contract.core.mapping.treeMaching.resolver.ContractToBusinessDataResolver;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -89,12 +93,14 @@ public class ContractInputGenerationWizard extends Wizard {
     private final GroovySourceViewerFactory sourceViewerFactory;
     private SelectDataWizardPage selectBusinessDataWizardPage;
     private List<Document> availableDocuments;
+    private ContractConstraintBuilder contractConstraintBuilder;
 
     public ContractInputGenerationWizard(final ContractContainer contractContainer,
             final EditingDomain editingDomain,
             final RepositoryAccessor repositoryAccessor,
             final FieldToContractInputMappingOperationBuilder operationBuilder,
             final FieldToContractInputMappingExpressionBuilder expressionBuilder,
+            final ContractConstraintBuilder contractConstraintBuilder,
             final IPreferenceStore preferenceStore,
             final ISharedImages sharedImagesService,
             final ContractInputGenerationInfoDialogFactory infoDialogFactory,
@@ -111,6 +117,7 @@ public class ContractInputGenerationWizard extends Wizard {
                 repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
         this.operationBuilder = operationBuilder;
         this.expressionBuilder = expressionBuilder;
+        this.contractConstraintBuilder = contractConstraintBuilder;
         this.preferenceStore = preferenceStore;
         this.infoDialogFactory = infoDialogFactory;
         this.contractInputWizardPagesFactory = contractInputWizardPagesFactory;
@@ -155,8 +162,10 @@ public class ContractInputGenerationWizard extends Wizard {
         contractInputFromBusinessObjectWizardPage.setTitle();
         addPage(contractInputFromBusinessObjectWizardPage);
         if (contractContainer instanceof Pool) {
-            generatedScriptPreviewPage = contractInputWizardPagesFactory.createGeneratedScriptPreviewPage(rootNameObservable,
-                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor, operationBuilder,
+            generatedScriptPreviewPage = contractInputWizardPagesFactory.createGeneratedScriptPreviewPage(
+                    rootNameObservable,
+                    fieldToContractInputMappingsObservable, selectedDataObservable, repositoryAccessor,
+                    operationBuilder,
                     expressionBuilder,
                     sourceViewerFactory);
             generatedScriptPreviewPage.setDescription();
@@ -193,7 +202,8 @@ public class ContractInputGenerationWizard extends Wizard {
         final BusinessObjectData data = (BusinessObjectData) selectedDataObservable.getValue();
         final RootContractInputGenerator contractInputGenerator = getRootContractGenerator();
         final int returnCode = openInfoDialog();
-        if (returnCode == MessageDialogWithToggle.OK || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
+        if (returnCode == MessageDialogWithToggle.OK
+                || returnCode == ContractInputGenerationInfoDialogFactory.NOT_OPENED) {
             try {
                 getContainer().run(true, false, buildContractOperationFromData(data, contractInputGenerator));
             } catch (InvocationTargetException | InterruptedException e) {
@@ -221,7 +231,10 @@ public class ContractInputGenerationWizard extends Wizard {
                 } else {
                     contractInputGenerator.build(data, generationOptions.getEditMode(), monitor);
                 }
-                editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data));
+                monitor.beginTask("Generating contract constraints...", IProgressMonitor.UNKNOWN);
+                List<ContractConstraint> constraints = contractConstraintBuilder.buildConstraints(
+                        contractInputGenerator.getRootContractInput(), ModelHelper.getParentPool(contractContainer));
+                editingDomain.getCommandStack().execute(createCommand(contractInputGenerator, data, constraints));
             } catch (final OperationCreationException e) {
                 throw new InvocationTargetException(e);
             }
@@ -300,10 +313,14 @@ public class ContractInputGenerationWizard extends Wizard {
     }
 
     protected CompoundCommand createCommand(final RootContractInputGenerator contractInputGenerator,
-            final BusinessObjectData data) {
+            final BusinessObjectData data, List<ContractConstraint> constraints) {
         final CompoundCommand cc = new CompoundCommand();
-        cc.append(AddCommand.create(editingDomain, contractContainer.getContract(), ProcessPackage.Literals.CONTRACT__INPUTS,
+        cc.append(AddCommand.create(editingDomain, contractContainer.getContract(),
+                ProcessPackage.Literals.CONTRACT__INPUTS,
                 contractInputGenerator.getRootContractInput()));
+        cc.append(SetCommand.create(editingDomain, contractContainer.getContract(),
+                ProcessPackage.Literals.CONTRACT__CONSTRAINTS,
+                constraints));
 
         if (contractContainer instanceof OperationContainer
                 && generationOptions.isAutoGeneratedScript()) {
