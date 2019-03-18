@@ -31,8 +31,12 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.launching.LaunchingPlugin;
+import org.eclipse.jdt.launching.JavaRuntime;
 
 /**
  * @author Romain Bioteau
@@ -86,8 +90,14 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
         javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
         javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
         javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
-        javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+        javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, JavaCore.IGNORE);
+        IEclipsePreferences preferences = jdtLaunchingPrefNode();
+        preferences.put(JavaRuntime.PREF_STRICTLY_COMPATIBLE_JRE_NOT_AVAILABLE, JavaCore.IGNORE);
         monitor.worked(1);
+    }
+
+    protected IEclipsePreferences jdtLaunchingPrefNode() {
+        return DefaultScope.INSTANCE.getNode(LaunchingPlugin.ID_PLUGIN);
     }
 
     protected IJavaProject asJavaProject() {

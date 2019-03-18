@@ -29,8 +29,10 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,6 +65,8 @@ public class CreateBonitaBPMProjectOperationTest {
     private IFile manifestFile;
     @Mock
     private IFile buildFile;
+    @Mock
+    private IEclipsePreferences prefNode;
 
     /**
      * @throws java.lang.Exception
@@ -73,6 +77,7 @@ public class CreateBonitaBPMProjectOperationTest {
         doReturn(root).when(workspace).getRoot();
         doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
         doReturn(buildFile).when(project).getFile("build.properties");
+        doReturn(prefNode).when(createBonitaBPMProjectOperation).jdtLaunchingPrefNode();
     }
 
     @Test
@@ -91,7 +96,8 @@ public class CreateBonitaBPMProjectOperationTest {
         verify(javaProject).setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
         verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
         verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
-        verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+        verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, JavaCore.IGNORE);
+        verify(prefNode).put(JavaRuntime.PREF_STRICTLY_COMPATIBLE_JRE_NOT_AVAILABLE, JavaCore.IGNORE);
     }
 
 }
