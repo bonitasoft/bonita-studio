@@ -14,16 +14,16 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
+
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.common.functions.ContractInputFunctions;
 import org.bonitasoft.studio.model.process.ContractInput;
-
-import com.google.common.base.Joiner;
 
 public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
@@ -50,10 +50,10 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     @Override
     public String getInitialValue() {
-        final StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput)
-                ? new StringBuilder(
-                        prefixIterator(Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput))))
-                : new StringBuilder(Joiner.on(".").join(ContractInputFunctions.toAncestorNameList().apply(contractInput)));
+        StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput)
+                ? new StringBuilder(prefixIterator(toAncestorNameListUntilMultipleComplex().apply(contractInput).stream()
+                        .collect(Collectors.joining("?."))))
+                : new StringBuilder(toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining("?.")));
         castInputValue(scriptBuilder);
         return scriptBuilder.toString();
     }

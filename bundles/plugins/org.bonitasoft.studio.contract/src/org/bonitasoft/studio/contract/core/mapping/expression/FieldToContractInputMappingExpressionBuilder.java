@@ -59,12 +59,18 @@ public class FieldToContractInputMappingExpressionBuilder {
 
     public Expression toExpression(BusinessObjectData data, FieldToContractInputMapping mapping, boolean createMode)
             throws BusinessObjectInstantiationException, JavaModelException {
+        return toExpression(data, mapping, createMode, false);
+    }
+
+    public Expression toExpression(BusinessObjectData data, FieldToContractInputMapping mapping, boolean createMode,
+            boolean fromOperation)
+            throws BusinessObjectInstantiationException, JavaModelException {
         ContractInput contractInput = mapping.getContractInput();
         MappingOperationScriptBuilder mappingOperationScriptBuilder = mapping.getScriptBuilder(data);
         String script = getScriptText(createMode, mappingOperationScriptBuilder);
         Expression scriptExpression = ExpressionHelper.createGroovyScriptExpression(script, mapping.getFieldType());
         addScriptDependencies(mappingOperationScriptBuilder, mapping.getContractInput(), data, scriptExpression, createMode);
-        setGroovyScriptName(scriptExpression, data, contractInput, createMode);
+        setGroovyScriptName(scriptExpression, data, contractInput, fromOperation);
         return scriptExpression;
     }
 
@@ -77,14 +83,14 @@ public class FieldToContractInputMappingExpressionBuilder {
     }
 
     private void setGroovyScriptName(final Expression scriptExpression, final BusinessObjectData data,
-            final ContractInput contractInput, final boolean createMode) {
-        if (createMode) {
+            final ContractInput contractInput, boolean fromOperation) {
+        if (fromOperation) {
+            scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
+        } else {
             final String dataName = data.getName();
             final String nameToUpperCase = dataName.length() > 1
                     ? dataName.substring(0, 1).toUpperCase() + dataName.substring(1) : dataName.toUpperCase();
             scriptExpression.setName("init" + nameToUpperCase + "()");
-        } else {
-            scriptExpression.setName(Joiner.on(".").join(toAncestorNameList().apply(contractInput)));
         }
     }
 

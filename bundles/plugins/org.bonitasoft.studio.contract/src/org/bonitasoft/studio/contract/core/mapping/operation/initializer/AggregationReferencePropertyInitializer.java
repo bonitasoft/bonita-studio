@@ -17,9 +17,9 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 
-public class AggregationReferencePropertyInitializer extends BusinessObjectQueryInitializer implements IPropertyInitializer {
+public class AggregationReferencePropertyInitializer extends BusinessObjectQueryInitializer {
 
-    public AggregationReferencePropertyInitializer(final BusinessObject multipleParentBo, final InitializerContext context) {
+    public AggregationReferencePropertyInitializer(BusinessObject multipleParentBo, InitializerContext context) {
         super(multipleParentBo, context);
     }
 

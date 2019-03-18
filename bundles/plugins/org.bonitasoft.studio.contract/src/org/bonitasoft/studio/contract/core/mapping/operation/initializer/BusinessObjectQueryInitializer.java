@@ -78,23 +78,25 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
         SimpleField peristenceIdField = new SimpleField();
         peristenceIdField.setType(FieldType.LONG);
         peristenceIdField.setName(Field.PERSISTENCE_ID);
-        SimpleFieldPropertyInitializer persistenceIdInitializer = new SimpleFieldPropertyInitializer(
-                multipleParentBusinessObject,
-                peristenceIdField, persistenceIdInput);
+        String persistenceIdInitialValue = new SimpleFieldPropertyInitializer(
+                multipleParentBusinessObject, peristenceIdField, persistenceIdInput).getInitialValue();
         scriptBuilder.append(daoName(bo));
         scriptBuilder.append(".findByPersistenceId(");
-        scriptBuilder.append(persistenceIdInitializer.getInitialValue());
+        scriptBuilder.append(persistenceIdInitialValue);
         scriptBuilder.append(")");
-        validateQueryResult(scriptBuilder, persistenceIdInitializer);
+        validateQueryResult(scriptBuilder, persistenceIdInitialValue);
     }
 
-    private void validateQueryResult(StringBuilder scriptBuilder, SimpleFieldPropertyInitializer persistenceIdInitializer) {
+    private void validateQueryResult(StringBuilder scriptBuilder, String persistenceIdInitialValue) {
         String localVariableName = context.getLocalVariableName();
         scriptBuilder.append(System.lineSeparator());
-        scriptBuilder.append(String.format("if(!%s) {\n", localVariableName));
+        scriptBuilder.append(String.format("if (!%s) {\n", localVariableName));
+        scriptBuilder.append(String.format("if (%s) {\n", persistenceIdInitialValue));
         scriptBuilder.append(String.format(
                 "throw new IllegalArgumentException(\"The aggregated reference of type `%s`  with the persistence id \" + %s + \" has not been found.\")\n",
-                context.getField().getReference().getSimpleName(), persistenceIdInitializer.getInitialValue()));
+                context.getField().getReference().getSimpleName(), persistenceIdInitialValue));
+        scriptBuilder.append("}\n");
+        scriptBuilder.append("return null\n");
         scriptBuilder.append("}");
     }
 

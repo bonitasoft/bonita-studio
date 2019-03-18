@@ -109,11 +109,7 @@ public class NewBusinessObjectListInitializer extends AbstractBusinessObjectInit
     }
 
     protected String inputListToIterate() {
-        return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
-    }
-
-    protected String iteratorName(final BusinessObject bo) {
-        return "current" + BDMSimpleNameProvider.getSimpleBusinessObjectName(bo.getQualifiedName()) + "Input";
+        return Joiner.on("?.").join(toAncestorNameList().apply(contractInput));
     }
 
     @Override

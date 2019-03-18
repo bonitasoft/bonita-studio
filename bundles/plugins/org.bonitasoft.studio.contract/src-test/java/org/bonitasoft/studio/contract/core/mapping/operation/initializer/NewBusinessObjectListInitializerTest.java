@@ -64,10 +64,10 @@ public class NewBusinessObjectListInitializerTest {
                         .build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
-                + "employee.address.each{" + System.lineSeparator()
+                + "employee?.address.each{" + System.lineSeparator()
                 + "//Add Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
-                + "def addressVar = employee.address.find { it.persistenceId.toString() == employee.address.persistenceId_string} ?: new org.test.Address()"
+                + "def addressVar = employee.address.find { it.persistenceId.toString() == employee?.address?.persistenceId_string} ?: new org.test.Address()"
                 + System.lineSeparator()
                 + "addressVar.street = currentAddressInput.street" + System.lineSeparator()
                 + "return addressVar" + System.lineSeparator()
@@ -103,7 +103,7 @@ public class NewBusinessObjectListInitializerTest {
                         .build()));
         assertThat(propertyInitializer.getInitialValue()).isEqualTo("def addressList = []" + System.lineSeparator()
                 + "//For each item collected in multiple input" + System.lineSeparator()
-                + "employee.address.each{" + System.lineSeparator()
+                + "employee?.address.each{" + System.lineSeparator()
                 + "//Add a new composed Address instance" + System.lineSeparator()
                 + "addressList.add({ currentAddressInput ->" + System.lineSeparator()
                 + "def addressVar = new org.test.Address()" + System.lineSeparator()
