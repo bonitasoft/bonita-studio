@@ -36,6 +36,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.ContractConstraintBuilder;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RootContractInputGenerator;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
@@ -107,6 +108,9 @@ public class ContractInputGenerationWizardTest {
     @Mock
     private IDocument document;
 
+    @Mock
+    private ContractConstraintBuilder contractConstraintBuilder;
+
     @Test
     public void should_first_wizard_page_be_selectBusinessDataWizardPage() {
         final BusinessObjectData data = aBusinessData().build();
@@ -115,7 +119,7 @@ public class ContractInputGenerationWizardTest {
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                expressionBuilder, contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory,
                 new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
 
@@ -130,7 +134,7 @@ public class ContractInputGenerationWizardTest {
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                expressionBuilder, contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory,
                 new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
 
@@ -154,7 +158,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
         wizard.setContainer(new TestWizardContainer(realmWithDisplay.getShell()));
@@ -181,7 +185,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -213,7 +217,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -240,7 +244,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -270,7 +274,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -293,7 +297,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
         wizard.setContainer(new TestWizardContainer(realmWithDisplay.getShell()));
@@ -318,7 +322,7 @@ public class ContractInputGenerationWizardTest {
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -339,7 +343,7 @@ public class ContractInputGenerationWizardTest {
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                expressionBuilder, contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory,
                 new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
 
@@ -370,7 +374,7 @@ public class ContractInputGenerationWizardTest {
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                expressionBuilder, contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory,
                 new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
         wizard.addPages();
         wizard.setContainer(new TestWizardContainer(realmWithDisplay.getShell()));
@@ -391,7 +395,7 @@ public class ContractInputGenerationWizardTest {
         ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(process, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                null, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -400,7 +404,7 @@ public class ContractInputGenerationWizardTest {
         wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
                 expressionBuilder,
-                preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
+                null, preferenceStore, sharedImages, dialogFactory, new ContractInputGenerationWizardPagesFactory(),
                 sourceViewerFactory);
         wizard.addPages();
 
@@ -411,7 +415,7 @@ public class ContractInputGenerationWizardTest {
     public void should_take_into_account_edit_mode_on_tasks() throws Exception {
         ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(aTask().build(), editingDomain(),
                 repositoryAccessor, operationBuilder,
-                expressionBuilder, preferenceStore, sharedImages, dialogFactory,
+                expressionBuilder, contractConstraintBuilder, preferenceStore, sharedImages, dialogFactory,
                 new ContractInputGenerationWizardPagesFactory(), sourceViewerFactory);
 
         BusinessObjectData data = mock(BusinessObjectData.class);

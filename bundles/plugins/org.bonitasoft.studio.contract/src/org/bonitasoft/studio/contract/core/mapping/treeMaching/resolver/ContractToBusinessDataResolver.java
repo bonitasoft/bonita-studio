@@ -45,4 +45,11 @@ public class ContractToBusinessDataResolver {
         }
         return result;
     }
+    
+    public TreeResult resolve(ContractInput input) {
+        TreeResult result = new TreeResult();
+        TreeBuilder builder = new TreeBuilder(store);
+        findBusinessDataFor(input).ifPresent(data -> result.addNode(builder.buildBusinessObjectTree(data, input)));
+        return result;
+    }
 }

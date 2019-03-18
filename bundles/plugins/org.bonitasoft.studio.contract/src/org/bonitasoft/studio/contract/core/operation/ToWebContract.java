@@ -109,6 +109,7 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
         contractInput.setMultiple(input.isMultiple());
         contractInput.setMode(input.isCreateMode() ? EditMode.CREATE : EditMode.EDIT);
         contractInput.setDescription(input.getDescription());
+        contractInput.setMandatory(treeResult.isMandatory(input));
         if (contractInput instanceof NodeContractInput) {
             ((NodeContractInput) contractInput).setDataReference(treeResult.getDataReference(input));
         }
