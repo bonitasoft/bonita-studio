@@ -233,32 +233,35 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
         }
         try {
             final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-            final IType javaType = javaProject.findType(fileName);
-            if (javaType != null) {
-                if (javaType instanceof SourceType || isSourceType(fileName, javaProject)) {
-                    return (T) new SourceFileStore(fileName, this);
-                }
-                return null;
-            } else { // package name
-                final IPackageFragment packageFragment = javaProject
-                        .findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
-                if (packageFragment != null) {
-                    return (T) new PackageFileStore(fileName, this);
+            if (javaProject != null) {
+                final IType javaType = javaProject.findType(fileName);
+                if (javaType != null) {
+                    if (javaType instanceof SourceType || isSourceType(fileName, javaProject)) {
+                        return (T) new SourceFileStore(fileName, this);
+                    }
+                    return null;
+                } else { // package name
+                    final IPackageFragment packageFragment = javaProject
+                            .findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
+                    if (packageFragment != null) {
+                        return (T) new PackageFileStore(fileName, this);
+                    }
                 }
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
-
         return null;
     }
 
-    private boolean isSourceType(final String qualifiedClassname, final IJavaProject javaProject) throws JavaModelException {
+    private boolean isSourceType(final String qualifiedClassname, final IJavaProject javaProject)
+            throws JavaModelException {
         final SearchEngine sEngine = new SearchEngine();
         final IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { javaProject },
                 IJavaSearchScope.SOURCES);
         final TypeNameFoundRequestor nameRequestor = new TypeNameFoundRequestor();
-        sEngine.searchAllTypeNames(NamingUtils.getPackageName(qualifiedClassname).toCharArray(), SearchPattern.R_EXACT_MATCH,
+        sEngine.searchAllTypeNames(NamingUtils.getPackageName(qualifiedClassname).toCharArray(),
+                SearchPattern.R_EXACT_MATCH,
                 NamingUtils.getSimpleName(qualifiedClassname)
                         .toCharArray(),
                 SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS_AND_INTERFACE, searchScope, nameRequestor,
