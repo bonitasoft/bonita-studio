@@ -27,6 +27,7 @@ import org.bonitasoft.studio.businessobject.ui.expression.CreateBusinessDataProp
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.contract.core.mapping.ContractConstraintBuilder;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -118,6 +119,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     private final PoolAdaptableSelectionProvider poolSelectionProvider;
 
+    private ContractConstraintBuilder contractConstraintBuilder;
+
     @Inject
     public ContractPropertySection(final ISharedImages sharedImages,
             final IEclipseContext eclipseContext,
@@ -126,6 +129,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
             final RepositoryAccessor repositoryAccessor,
             final FieldToContractInputMappingOperationBuilder fieldToContractInputMappingOperationBuilder,
             final FieldToContractInputMappingExpressionBuilder fieldToContractInputMappingExpressionBuilder,
+            final ContractConstraintBuilder contractConstraintBuilder,
             final IProgressService progressService) {
         this.eclipseContext = eclipseContext;
         this.repositoryAccessor = repositoryAccessor;
@@ -135,6 +139,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         this.sharedImages = sharedImages;
         this.fieldToContractInputMappingOperationBuilder = fieldToContractInputMappingOperationBuilder;
         this.fieldToContractInputMappingExpressionBuilder = fieldToContractInputMappingExpressionBuilder;
+        this.contractConstraintBuilder = contractConstraintBuilder;
     }
 
     @Override
@@ -319,6 +324,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                         repositoryAccessor,
                         fieldToContractInputMappingOperationBuilder,
                         fieldToContractInputMappingExpressionBuilder,
+                        contractConstraintBuilder,
                         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore(),
                         sharedImages, new ContractInputGenerationInfoDialogFactory(),
                         new ContractInputGenerationWizardPagesFactory(),

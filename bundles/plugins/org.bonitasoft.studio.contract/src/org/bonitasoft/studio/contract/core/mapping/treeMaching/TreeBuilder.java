@@ -39,7 +39,7 @@ public class TreeBuilder {
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("No Business Object found with type %s", data.getClassName())));
         TreeNode node = new TreeNode(input,
-                new BusinessDataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER));
+                new BusinessDataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER),true);
         buildTree(bo, input, node);
         return node;
     }
@@ -65,7 +65,7 @@ public class TreeBuilder {
                     TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
                             businessObject.getQualifiedName(),
                             toRelationType(relationField),
-                            toLoadingType(relationField)));
+                            toLoadingType(relationField)),!relationField.isNullable());
                     buildTree(businessObject, childInput, newNode);
                 });
     }

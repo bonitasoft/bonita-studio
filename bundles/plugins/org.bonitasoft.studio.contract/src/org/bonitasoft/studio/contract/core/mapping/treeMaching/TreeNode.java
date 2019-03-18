@@ -24,15 +24,17 @@ public class TreeNode {
 
     private ContractInput input;
     private DataReference ref;
+    private boolean mandatory = true;
     private List<TreeNode> children = new ArrayList<>();
 
-    public TreeNode(ContractInput input, DataReference ref) {
+    public TreeNode(ContractInput input, DataReference ref,boolean mandatory) {
         this.input = input;
         this.ref = ref;
+        this.mandatory = mandatory;
     }
 
-    public TreeNode addNode(ContractInput input, DataReference ref) {
-        TreeNode node = new TreeNode(input, ref);
+    public TreeNode addNode(ContractInput input, DataReference ref,boolean mandatory) {
+        TreeNode node = new TreeNode(input, ref,mandatory);
         this.children.add(node);
         return node;
     }
@@ -47,5 +49,9 @@ public class TreeNode {
 
     public DataReference getRef() {
         return ref;
+    }
+    
+    public boolean isMandatory() {
+        return mandatory;
     }
 }

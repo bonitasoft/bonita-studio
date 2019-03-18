@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.web.designer.model.contract.BusinessDataReference;
 import org.bonitasoft.web.designer.model.contract.DataReference;
 
 public class TreeResult {
@@ -48,5 +49,23 @@ public class TreeResult {
             }
         }
         return null;
+    }
+    
+    private TreeNode findNode(ContractInput input,List<TreeNode> nodes) {
+        for(TreeNode node : nodes) {
+            if(Objects.equals(node.getInput(),input)) {
+                return node;
+            }
+            TreeNode foundNode = findNode(input,node.getChildren());
+            if(foundNode != null) {
+                return foundNode;
+            }
+        }
+        return null;
+    }
+
+    public boolean isMandatory(ContractInput input) {
+        TreeNode node = findNode(input, nodes);
+        return node != null ? node.isMandatory() : true;
     }
 }
