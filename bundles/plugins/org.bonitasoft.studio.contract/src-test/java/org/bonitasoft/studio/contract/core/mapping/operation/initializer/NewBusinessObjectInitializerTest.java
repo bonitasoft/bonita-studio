@@ -42,7 +42,7 @@ public class NewBusinessObjectInitializerTest {
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().withName("employee").multiple()
-                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
+                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
                 .build());
         context.setLocalVariableName("addressVar");
         context.setCreateMode(true);
@@ -50,8 +50,11 @@ public class NewBusinessObjectInitializerTest {
 
         final NewBusinessObjectInitializer propertyInitializer = new NewBusinessObjectInitializer(context);
 
-        assertThat(propertyInitializer.getInitialValue()).isEqualTo(
-                "def addressVar = employee.address ?: new org.test.Address()" + System.lineSeparator()
+        assertThat(propertyInitializer.getInitialValue()).isEqualToIgnoringWhitespace(
+                "if (!employeeInput?.employee) {\n"
+                        + "return null\n"
+                        + "}\n"
+                        + "def addressVar = employee.address ?: new org.test.Address()\n"
                         + "return addressVar");
     }
 
@@ -66,7 +69,7 @@ public class NewBusinessObjectInitializerTest {
         context.setMapping(mapping);
         context.setData(aBusinessData().withName("employee").build());
         context.setContractInput(aContractInput().withName("employee").multiple()
-                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX).multiple())
+                .in(aContractInput().withName("employeeInput").withType(ContractInputType.COMPLEX))
                 .build());
         context.setLocalVariableName("addressVar");
         context.setCreateMode(true);
@@ -79,10 +82,11 @@ public class NewBusinessObjectInitializerTest {
                                 .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)))
                         .build()));
         assertThat(propertyInitializer.getInitialValue())
-                .isEqualTo("def addressVar = employee.address ?: new org.test.Address()"
-                        + System.lineSeparator()
-                        + "addressVar.street = employee.address.street"
-                        + System.lineSeparator()
+                .isEqualToIgnoringWhitespace("if (!employeeInput?.employee) {\n"
+                        + "return null\n"
+                        + "}\n"
+                        + "def addressVar = employee.address ?: new org.test.Address()\n"
+                        + "addressVar.street = employee?.address?.street\n"
                         + "return addressVar");
     }
 

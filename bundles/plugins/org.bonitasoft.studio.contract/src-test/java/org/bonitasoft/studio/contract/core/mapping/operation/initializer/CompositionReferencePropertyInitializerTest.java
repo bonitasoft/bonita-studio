@@ -59,7 +59,7 @@ public class CompositionReferencePropertyInitializerTest {
                         + System.lineSeparator()
                         + "def addressVar = employee.address ?: new org.test.Address()"
                         + System.lineSeparator()
-                        + "addressVar.street = employee.address.street"
+                        + "addressVar.street = employee?.address?.street"
                         + System.lineSeparator()
                         + "return addressVar}()");
     }

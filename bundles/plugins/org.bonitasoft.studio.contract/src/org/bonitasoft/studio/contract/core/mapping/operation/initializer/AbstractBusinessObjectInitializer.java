@@ -178,4 +178,8 @@ public abstract class AbstractBusinessObjectInitializer implements IPropertyInit
         scriptBuilder.append(System.lineSeparator());
     }
 
+    protected String iteratorName(BusinessObject bo) {
+        return String.format("current%sInput", bo.getSimpleName());
+    }
+
 }

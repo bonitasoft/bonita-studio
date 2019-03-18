@@ -43,7 +43,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aContractInput().withName("lastName")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.lastName");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.lastName");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("id").ofType(FieldType.LONG).build(), aContractInput().withName("id")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.id?.toLong()");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.id?.toLong()");
     }
 
     @Test
@@ -62,7 +62,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("salary").ofType(FieldType.FLOAT).build(), aContractInput().withName("salary")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.salary?.toFloat()");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.salary?.toFloat()");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aContractInput().withName("grades").multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.grades?.collect{ it.toFloat() }");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.grades?.collect{ it.toFloat() }");
     }
 
     @Test
@@ -83,6 +83,6 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("ids").ofType(FieldType.LONG).build(), aContractInput().withName("ids").multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee.ids?.collect{ it.toLong() }");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.ids?.collect{ it.toLong() }");
     }
 }
