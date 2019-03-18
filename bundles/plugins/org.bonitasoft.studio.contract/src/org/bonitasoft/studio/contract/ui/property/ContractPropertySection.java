@@ -17,6 +17,8 @@ package org.bonitasoft.studio.contract.ui.property;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +55,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -357,11 +360,11 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
                 ViewersObservables.observeSingleSelection(poolSelectionProvider),
                 ProcessPackage.Literals.POOL__DOCUMENTS);
         context.bindValue(observeEnabled, observeVariables,
-                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy().create(),
-                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy()
+                neverUpdateValueStrategy().create(),
+                updateValueStrategy()
                         .withConverter(createObserveVariableToEnableButtonConverter(observeDocuments)).create());
-        context.bindValue(observeEnabled, observeDocuments, null,
-                org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy()
+        context.bindValue(observeEnabled, observeDocuments, neverUpdateValueStrategy().create(),
+                UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(createObserveDocumentToEnableButtonConverter(observeVariables)).create());
     }
 
