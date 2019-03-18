@@ -28,7 +28,6 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.eclipse.swt.SWT;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -66,7 +65,7 @@ public class MappingOperationScriptBuilderTest {
 
         assertThat(scriptBuilder.needsDataDependency()).isTrue();
         assertThat(script).isEqualTo("def addressVar = employee.address ?: new Address()" + System.lineSeparator()
-                + "addressVar.street = address.street" + System.lineSeparator()
+                + "addressVar.street = address?.street" + System.lineSeparator()
                 + "return addressVar");
     }
 
@@ -105,11 +104,14 @@ public class MappingOperationScriptBuilderTest {
 
         final String script = scriptBuilder.toScript();
 
-        assertThat(script).isEqualTo("def addressVar = employee.address ?: new Address()" + System.lineSeparator()
-                + "addressVar.street = address.street" + System.lineSeparator()
-                + "addressVar.country = {" + System.lineSeparator()
-                + SWT.TAB + "def countryVar = addressVar.country ?: new Country()" + System.lineSeparator()
-                + SWT.TAB + "return countryVar}()" + System.lineSeparator()
+        assertThat(script).isEqualToIgnoringWhitespace("def addressVar = employee.address ?: new Address()\n"
+                + "addressVar.street = address?.street\n"
+                + "addressVar.country = {\n"
+                + "if (!address?.country) {\n"
+                + "return null\n"
+                + "}\n"
+                + "def countryVar = addressVar.country ?: new Country()\n"
+                + "return countryVar}()\n"
                 + "return addressVar");
     }
 

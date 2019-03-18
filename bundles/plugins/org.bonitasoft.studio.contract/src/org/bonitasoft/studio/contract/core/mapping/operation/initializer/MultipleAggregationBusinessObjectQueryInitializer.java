@@ -65,7 +65,7 @@ public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusine
 
     @Override
     protected String inputListToIterate() {
-        return Joiner.on(".").join(toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()));
+        return Joiner.on("?.").join(toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()));
     }
 
     @Override

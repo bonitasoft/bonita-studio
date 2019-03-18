@@ -56,7 +56,7 @@ public class FieldToContractInputMappingOperationBuilder {
         operation.setOperator(operator(mapping, data));
         try {
             operation.setRightOperand(
-                    expressionBuilder.toExpression(data, mapping, Objects.equals(editMode, EditMode.CREATE)));
+                    expressionBuilder.toExpression(data, mapping, Objects.equals(editMode, EditMode.CREATE), true));
         } catch (BusinessObjectInstantiationException | JavaModelException e) {
             throw new OperationCreationException("Failed to create right operand expression", e);
         }

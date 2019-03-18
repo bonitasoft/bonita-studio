@@ -61,7 +61,7 @@ public class MappingOperationScriptBuilder {
         return toScript(false);
     }
 
-    private String toScript(final boolean createMode) throws BusinessObjectInstantiationException {
+    private String toScript(boolean createMode) throws BusinessObjectInstantiationException {
         mapping.getContractInput();
         return format(
                 buildPropertyInitializerTree(mapping, businessObjectInitializerFactory, data, createMode).getInitialValue());

@@ -37,16 +37,15 @@ public class AggregationReferencePropertyInitializerTest {
 
         final String initialValue = new AggregationReferencePropertyInitializer(null, context).getInitialValue();
 
-        assertThat(initialValue).isEqualTo("{" + System.lineSeparator()
-                + "//Retrieve aggregated country using its DAO and persistenceId" + System.lineSeparator()
-                + "def countryVar = countryDAO.findByPersistenceId(country.persistenceId_string?.toLong())"
-                + System.lineSeparator()
-                + "if(!countryVar) {"
-                + System.lineSeparator()
-                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country.persistenceId_string?.toLong() + \" has not been found.\")"
-                + System.lineSeparator()
-                + "}"
-                + System.lineSeparator()
+        assertThat(initialValue).isEqualToIgnoringWhitespace("{\n"
+                + "//Retrieve aggregated country using its DAO and persistenceId\n"
+                + "def countryVar = countryDAO.findByPersistenceId(country?.persistenceId_string?.toLong())\n"
+                + "if (!countryVar) {\n"
+                + "if (country?.persistenceId_string?.toLong()) {\n"
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "}\n"
+                + "return null\n"
+                + "}\n"
                 + "return countryVar}()");
     }
 }

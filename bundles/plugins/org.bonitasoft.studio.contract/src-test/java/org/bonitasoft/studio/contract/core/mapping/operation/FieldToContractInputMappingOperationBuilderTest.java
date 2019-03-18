@@ -85,7 +85,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(data, mapping, false, true)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
                 mapping, EditMode.EDIT, new NullProgressMonitor());
 
@@ -99,7 +99,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        verify(expressionBuilder).toExpression(data, mapping, false);
+        verify(expressionBuilder).toExpression(data, mapping, false, true);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .withName("employee").build());
 
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(data, mapping, false)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(data, mapping, false, true)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(data,
                 mapping, EditMode.EDIT, new NullProgressMonitor());
 
@@ -126,7 +126,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasName("myEmployee").hasContent("myEmployee")
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
-        verify(expressionBuilder).toExpression(data, mapping, false);
+        verify(expressionBuilder).toExpression(data, mapping, false, true);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMapping mapping = aRelationMapping(address).build();
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
-        when(expressionBuilder.toExpression(businessObjectData, mapping, false)).thenReturn(anExpression().build());
+        when(expressionBuilder.toExpression(businessObjectData, mapping, false, true)).thenReturn(anExpression().build());
         final Operation operation = inputToOperation.toOperation(businessObjectData,
                 mapping, EditMode.EDIT, new NullProgressMonitor());
 
@@ -151,7 +151,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
                 .hasType(ExpressionConstants.VARIABLE_TYPE);
         assertThat(operation.getLeftOperand().getReferencedElements()).hasSize(1);
 
-        verify(expressionBuilder).toExpression(businessObjectData, mapping, false);
+        verify(expressionBuilder).toExpression(businessObjectData, mapping, false, true);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         when(expressionReturnTypeFilter.compatibleReturnTypes(anyString(), anyString())).thenReturn(false);
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
-                anyBoolean())).thenReturn(
+                anyBoolean(), anyBoolean())).thenReturn(
                         anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
@@ -179,7 +179,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
         doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
-                anyBoolean())).thenReturn(
+                anyBoolean(), anyBoolean())).thenReturn(
                         anExpression().build());
         thrown.expect(OperationCreationException.class);
         inputToOperation.toOperation(aBusinessData().withName("myEmployee").build(),
@@ -193,7 +193,7 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
-                anyBoolean())).thenReturn(
+                anyBoolean(), anyBoolean())).thenReturn(
                         anExpression().build());
         final Operation operation = inputToOperation.toOperation(aBusinessData().multiple().withName("employees").build(),
                 mapping, EditMode.EDIT, new NullProgressMonitor());

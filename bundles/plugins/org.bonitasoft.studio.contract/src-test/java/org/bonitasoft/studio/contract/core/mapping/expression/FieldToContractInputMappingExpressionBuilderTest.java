@@ -32,12 +32,14 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+import org.bonitasoft.studio.contract.core.mapping.operation.DefaultFormatterPreferences;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
@@ -48,8 +50,12 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
+import org.codehaus.groovy.eclipse.refactoring.formatter.DefaultGroovyFormatter;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.MalformedTreeException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -75,12 +81,15 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final BusinessObjectData businessObjectData = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(businessObjectData,
-                mapping, false);
+                mapping, false, true);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.address")
-                .hasContent("def addressVar = myEmployee.address ?: new Address()" + System.lineSeparator()
-                        + "return addressVar")
+                .hasContent(format("if (!employee?.address) {\n"
+                        + "return null\n"
+                        + "}\n"
+                        + "def addressVar = myEmployee.address ?: new Address()\n"
+                        + "return addressVar"))
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(2);
@@ -102,7 +111,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         final SimpleField lastNameField = aSimpleField().withName("lastName").ofType(FieldType.STRING).build();
         final FieldToContractInputMapping mapping = aSimpleMapping(lastNameField).build();
         final Expression expression = expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
-                mapping, false);
+                mapping, false, true);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("lastName")
@@ -123,11 +132,11 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         final BusinessObjectData data = aBusinessData().withName("myEmployee").build();
         final Expression expression = expressionBuilder.toExpression(data,
-                mapping, false);
+                mapping, false, true);
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.lastName")
-                .hasContent("employee.lastName")
+                .hasContent("employee?.lastName")
                 .hasReturnType(String.class.getName())
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(1);
@@ -148,8 +157,11 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("initMyEmployee()")
-                .hasContent("def addressVar = new Address()" + System.lineSeparator()
-                        + "return addressVar")
+                .hasContent(format("if (!employee?.address) {\n"
+                        + "return null\n"
+                        + "}\n"
+                        + "def addressVar = new Address()\n"
+                        + "return addressVar"))
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
         assertThat(expression.getReferencedElements()).hasSize(1);
@@ -240,7 +252,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add Book instance\n"
@@ -248,37 +260,43 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
                 + "        bookVar.page = {\n"
                 + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
-                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page.persistenceId_string?.toLong())\n"
-                + "            if(!pageVar) {\n"
-                + "                throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.toLong())\n"
+                + "            if (!pageVar) {\n"
+                + "                if (currentBookInput.page?.persistenceId_string?.toLong()) {\n"
+                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "                }\n"
+                + "                return null\n"
                 + "            }\n"
-                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            pageVar.pageContent = currentBookInput.page?.pageContent\n"
                 + "            return pageVar}()\n"
                 + "        return bookVar\n"
                 + "    }(it))\n"
                 + "}\n"
-                + "return bookList");
+                + "return bookList"));
 
         // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
-                + "   //Add  a new composed Book instance\n"
+                + "   //Add a new composed Book instance\n"
                 + "    bookList.add({ currentBookInput ->\n"
                 + "        def bookVar = new com.company.Book()\n"
                 + "        bookVar.page = {\n"
                 + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
-                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page.persistenceId_string?.toLong())\n"
-                + "            if(!pageVar) {\n"
-                + "                throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.toLong())\n"
+                + "            if (!pageVar) {\n"
+                + "                if (currentBookInput.page?.persistenceId_string?.toLong()) {\n"
+                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "                }\n"
+                + "                return null\n"
                 + "            }\n"
-                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            pageVar.pageContent = currentBookInput.page?.pageContent\n"
                 + "            return pageVar}()\n"
                 + "        return bookVar\n"
                 + "    }(it))\n"
                 + "}\n"
-                + "return bookList");
+                + "return bookList"));
     }
 
     @Test
@@ -290,37 +308,43 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add Book instance\n"
                 + "    bookList.add({ currentBookInput ->\n"
                 + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
                 + "        bookVar.page = {\n"
+                + "            if (!currentBookInput.page) {\n"
+                + "                return null\n"
+                + "            }\n"
                 + "            def pageVar = bookVar.page ?: new com.company.Page()\n"
-                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            pageVar.pageContent = currentBookInput.page?.pageContent\n"
                 + "            return pageVar}()\n"
                 + "        return bookVar\n"
                 + "    }(it))\n"
                 + "}\n"
-                + "return bookList");
+                + "return bookList"));
 
         // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
-                + "   //Add  a new composed Book instance\n"
+                + "   //Add a new composed Book instance\n"
                 + "    bookList.add({ currentBookInput ->\n"
                 + "        def bookVar = new com.company.Book()\n"
                 + "        bookVar.page = {\n"
+                + "            if (!currentBookInput.page) {\n"
+                + "                return null\n"
+                + "            }\n"
                 + "            def pageVar = new com.company.Page()\n"
-                + "            pageVar.pageContent = currentBookInput.page.pageContent\n"
+                + "            pageVar.pageContent = currentBookInput.page?.pageContent\n"
                 + "            return pageVar}()\n"
                 + "        return bookVar\n"
                 + "    }(it))\n"
                 + "}\n"
-                + "return bookList");
+                + "return bookList"));
     }
 
     @Test
@@ -456,28 +480,40 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
-                + "rootVar.rootName = rootInput.rootName\n"
+        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+                + "rootVar.rootName = rootInput?.rootName\n"
                 + "rootVar.node = {\n"
+                + "    if (!rootInput?.node) {\n"
+                + "        return null\n"
+                + "    }\n"
                 + "    def nodeVar = new com.company.Node()\n"
-                + "    nodeVar.nodeName = rootInput.node.nodeName\n"
+                + "    nodeVar.nodeName = rootInput?.node?.nodeName\n"
                 + "    nodeVar.leaf = {\n"
+                + "        if (!rootInput?.node?.leaf) {\n"
+                + "            return null\n"
+                + "        }\n"
                 + "        def leafVar = new com.company.Leaf()\n"
-                + "        leafVar.leafName = rootInput.node.leaf.leafName\n"
+                + "        leafVar.leafName = rootInput?.node?.leaf?.leafName\n"
                 + "        return leafVar}()\n"
-                + "    return nodeVar}()\n"
-                + "return rootVar");
+                + "return nodeVar}()\n"
+                + "return rootVar"));
 
         // Edite mode -> on the node mapping (operation setNode)
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
         assertThat(expression.getContent())
-                .isEqualToIgnoringWhitespace("def nodeVar = myRoot.node ?: new com.company.Node()\n"
-                        + "nodeVar.nodeName = rootInput.node.nodeName\n"
+                .isEqualTo(format("if (!rootInput?.node) {\n"
+                        + "    return null\n"
+                        + "}\n"
+                        + "def nodeVar = myRoot.node ?: new com.company.Node()\n"
+                        + "nodeVar.nodeName = rootInput?.node?.nodeName\n"
                         + "nodeVar.leaf = {\n"
+                        + "    if (!rootInput?.node?.leaf) {\n"
+                        + "        return null\n"
+                        + "    }\n"
                         + "    def leafVar = nodeVar.leaf ?: new com.company.Leaf()\n"
-                        + "    leafVar.leafName = rootInput.node.leaf.leafName\n"
+                        + "    leafVar.leafName = rootInput?.node?.leaf?.leafName\n"
                         + "    return leafVar}()\n"
-                        + "return nodeVar");
+                        + "return nodeVar"));
     }
 
     @Test
@@ -529,12 +565,12 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootVar = new com.company.Root()\n"
-                + "rootVar.rootName = rootInput.rootName\n"
+        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+                + "rootVar.rootName = rootInput?.rootName\n"
                 + "rootVar.node = {\n"
                 + "    def nodeList = []\n"
                 + "    //For each item collected in multiple input\n"
-                + "    rootInput.node.each{\n"
+                + "    rootInput?.node.each{\n"
                 + "        //Add a new composed Node instance\n"
                 + "        nodeList.add({ currentNodeInput ->\n"
                 + "            def nodeVar = new com.company.Node()\n"
@@ -555,13 +591,13 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "        }(it))\n"
                 + "    }\n"
                 + "    return nodeList}()\n"
-                + "return rootVar");
+                + "return rootVar"));
 
         // Edit mode -> on the node mapping (operation setNode)        
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def nodeList = []\n"
+        assertThat(expression.getContent()).isEqualTo(format("def nodeList = []\n"
                 + "//For each item collected in multiple input\n"
-                + "rootInput.node.each{\n"
+                + "rootInput?.node.each{\n"
                 + "    //Add Node instance\n"
                 + "    nodeList.add({ currentNodeInput ->\n"
                 + "        def nodeVar = myRoot.node.find { it.persistenceId.toString() == currentNodeInput.persistenceId_string} ?: new com.company.Node()\n"
@@ -581,7 +617,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "        return nodeVar\n"
                 + "    }(it))\n"
                 + "}\n"
-                + "return nodeList");
+                + "return nodeList"));
     }
 
     @Test
@@ -633,64 +669,142 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
-                "//For each item collected in multiple input\n" +
-                "rootInput.each{\n" +
-                "    //Add a new composed Root instance\n" +
-                "    rootList.add({ currentRootInput ->\n" +
-                "        def rootVar = new com.company.Root()\n" +
-                "        rootVar.rootName = currentRootInput.rootName\n" +
-                "        rootVar.node = {\n" +
-                "            def nodeVar = new com.company.Node()\n" +
-                "            nodeVar.nodeName = currentRootInput.node.nodeName\n" +
-                "            nodeVar.leaf = {\n" +
-                "                def leafList = []\n" +
-                "                //For each item collected in multiple input\n" +
-                "                currentRootInput.node.leaf.each{\n" +
-                "                    //Add a new composed Leaf instance\n" +
-                "                    leafList.add({ currentLeafInput ->\n" +
-                "                        def leafVar = new com.company.Leaf()\n" +
-                "                        leafVar.leafName = currentLeafInput.leafName\n" +
-                "                        return leafVar\n" +
-                "                    }(it))\n" +
-                "                }\n" +
-                "                return leafList}()\n" +
-                "            return nodeVar}()\n" +
-                "        return rootVar\n" +
-                "    }(it))\n" +
-                "}\n" +
-                "return rootList");
+        assertThat(expression.getContent()).isEqualTo(format("def rootList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "rootInput.each{\n"
+                + "    //Add a new composed Root instance\n"
+                + "    rootList.add({ currentRootInput ->\n"
+                + "        def rootVar = new com.company.Root()\n"
+                + "        rootVar.rootName = currentRootInput.rootName\n"
+                + "        rootVar.node = {\n"
+                + "            if (!currentRootInput.node) {\n"
+                + "                return null\n"
+                + "            }\n"
+                + "            def nodeVar = new com.company.Node()\n"
+                + "            nodeVar.nodeName = currentRootInput.node?.nodeName\n"
+                + "            nodeVar.leaf = {\n"
+                + "                def leafList = []\n"
+                + "                //For each item collected in multiple input\n"
+                + "                currentRootInput.node.leaf.each{\n"
+                + "                    //Add a new composed Leaf instance\n"
+                + "                    leafList.add({ currentLeafInput ->\n"
+                + "                        def leafVar = new com.company.Leaf()\n"
+                + "                        leafVar.leafName = currentLeafInput.leafName\n"
+                + "                        return leafVar\n"
+                + "                    }(it))\n"
+                + "                }\n"
+                + "                return leafList}()\n"
+                + "            return nodeVar}()\n"
+                + "        return rootVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return rootList"));
 
         // Edit mode    
         expression = expressionBuilder.toExpression(businessData, rootMapping, false);
-        assertThat(expression.getContent()).isEqualToIgnoringWhitespace("def rootList = []\n" +
-                "//For each item collected in multiple input\n" +
-                "rootInput.each{\n" +
-                "    //Add Root instance\n" +
-                "    rootList.add({ currentRootInput ->\n" +
-                "        def rootVar = myRoot.find { it.persistenceId.toString() == currentRootInput.persistenceId_string} ?: new com.company.Root()\n"
-                +
-                "        rootVar.rootName = currentRootInput.rootName\n" +
-                "        rootVar.node = {\n" +
-                "            def nodeVar = rootVar.node ?: new com.company.Node()\n" +
-                "            nodeVar.nodeName = currentRootInput.node.nodeName\n" +
-                "            nodeVar.leaf = {\n" +
-                "                def leafList = []\n" +
-                "                //For each item collected in multiple input\n" +
-                "                currentRootInput.node.leaf.each{\n" +
-                "                    //Add a new composed Leaf instance\n" +
-                "                    leafList.add({ currentLeafInput ->\n" +
-                "                        def leafVar = nodeVar.leaf?.find { it.persistenceId.toString() == currentLeafInput.persistenceId_string } ?: new com.company.Leaf()\n"
-                +
-                "                        leafVar.leafName = currentLeafInput.leafName\n" +
-                "                        return leafVar\n" +
-                "                    }(it))\n" +
-                "                }\n" +
-                "                return leafList}()\n" +
-                "            return nodeVar}()\n" +
-                "        return rootVar\n" +
-                "    }(it))\n" +
-                "}\n" +
-                "return rootList");
+        assertThat(expression.getContent()).isEqualTo(format("def rootList = []\n"
+                + "//For each item collected in multiple input\n"
+                + "rootInput.each{\n"
+                + "    //Add Root instance\n"
+                + "    rootList.add({ currentRootInput ->\n"
+                + "        def rootVar = myRoot.find { it.persistenceId.toString() == currentRootInput.persistenceId_string} ?: new com.company.Root()\n"
+                + "        rootVar.rootName = currentRootInput.rootName\n"
+                + "        rootVar.node = {\n"
+                + "            if (!currentRootInput.node) {\n"
+                + "                return null\n"
+                + "            }\n"
+                + "            def nodeVar = rootVar.node ?: new com.company.Node()\n"
+                + "            nodeVar.nodeName = currentRootInput.node?.nodeName\n"
+                + "            nodeVar.leaf = {\n"
+                + "                def leafList = []\n"
+                + "                //For each item collected in multiple input\n"
+                + "                currentRootInput.node.leaf.each{\n"
+                + "                    //Add a new composed Leaf instance\n"
+                + "                    leafList.add({ currentLeafInput ->\n"
+                + "                        def leafVar = nodeVar.leaf?.find { it.persistenceId.toString() == currentLeafInput.persistenceId_string } ?: new com.company.Leaf()\n"
+                + "                        leafVar.leafName = currentLeafInput.leafName\n"
+                + "                        return leafVar\n"
+                + "                    }(it))\n"
+                + "                }\n"
+                + "                return leafList}()\n"
+                + "            return nodeVar}()\n"
+                + "        return rootVar\n"
+                + "    }(it))\n"
+                + "}\n"
+                + "return rootList"));
+    }
+
+    @Test
+    public void should_create_expression_for_single_business_data_with_a_simple_complex_field_in_aggregation()
+            throws Exception {
+        RelationField rootField = RelationFieldBuilder.aRelationField()
+                .composition()
+                .withName("rootInput")
+                .referencing(new BusinessObjectBuilder("com.company.Root").build())
+                .build();
+        RelationField leafField = RelationFieldBuilder.aRelationField()
+                .aggregation()
+                .withName("leaf")
+                .referencing(new BusinessObjectBuilder("com.company.Leaf").build())
+                .build();
+        SimpleField rootNameField = SimpleFieldBuilder.aStringField("rootName").build();
+        SimpleField leafNameField = SimpleFieldBuilder.aStringField("leafName").build();
+        SimpleField persistenceIdLeafField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+
+        RelationFieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(rootField);
+        RelationFieldToContractInputMapping leafMapping = new RelationFieldToContractInputMapping(leafField);
+        SimpleFieldToContractInputMapping rootNameMapping = new SimpleFieldToContractInputMapping(rootNameField);
+        SimpleFieldToContractInputMapping leafNameMapping = new SimpleFieldToContractInputMapping(leafNameField);
+        SimpleFieldToContractInputMapping persistenceIdLeafMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdLeafField);
+
+        leafMapping.addChild(leafNameMapping);
+        leafMapping.addChild(persistenceIdLeafMapping);
+        rootMapping.addChild(rootNameMapping);
+        rootMapping.addChild(leafMapping);
+
+        BusinessObjectData businessData = aBusinessData().withName("myRoot").build();
+        FieldToContractInputMappingExpressionBuilder expressionBuilder = newExpressionBuilder();
+
+        // Create mode
+        Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
+        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+                + "rootVar.rootName = rootInput?.rootName\n"
+                + "rootVar.leaf = {\n"
+                + "    //Retrieve aggregated Leaf using its DAO and persistenceId\n"
+                + "    def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.toLong())\n"
+                + "    if (!leafVar) {\n"
+                + "        if (rootInput?.leaf?.persistenceId_string?.toLong()) {\n"
+                + "            throw new IllegalArgumentException(\"The aggregated reference of type `Leaf`  with the persistence id \" + rootInput?.leaf?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "        }\n"
+                + "        return null\n"
+                + "    }\n"
+                + "    leafVar.leafName = rootInput?.leaf?.leafName\n"
+                + "    return leafVar}()\n"
+                + "return rootVar"));
+
+        // Edit mode -> setLeaf operation
+        expression = expressionBuilder.toExpression(businessData, leafMapping, false);
+        assertThat(expression.getContent())
+                .isEqualTo(format("//Retrieve aggregated Leaf using its DAO and persistenceId\n"
+                        + "def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.toLong())\n"
+                        + "if (!leafVar) {\n"
+                        + "    if (rootInput?.leaf?.persistenceId_string?.toLong()) {\n"
+                        + "        throw new IllegalArgumentException(\"The aggregated reference of type `Leaf`  with the persistence id \" + rootInput?.leaf?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                        + "    }\n"
+                        + "    return null\n"
+                        + "}\n"
+                        + "leafVar.leafName = rootInput?.leaf?.leafName\n"
+                        + "return leafVar"));
+    }
+
+    private String format(String initialValue) {
+        final Document document = new Document(initialValue);
+        try {
+            new DefaultGroovyFormatter(document, new DefaultFormatterPreferences(), 0).format().apply(document);
+        } catch (MalformedTreeException | BadLocationException e) {
+            BonitaStudioLog.error("Failed to format generated script", e);
+        }
+        return document.get();
     }
 }
