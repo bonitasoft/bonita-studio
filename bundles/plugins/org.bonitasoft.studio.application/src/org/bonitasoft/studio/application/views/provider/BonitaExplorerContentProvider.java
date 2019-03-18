@@ -14,9 +14,17 @@
  */
 package org.bonitasoft.studio.application.views.provider;
 
+import java.util.Collection;
+
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 
 public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider {
+
+    private TreeViewer viewer;
 
     @Override
     public boolean hasChildren(Object element) {
@@ -34,5 +42,30 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         return super.getChildren(parentElement);
     }
 
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        super.inputChanged(viewer, oldInput, newInput);
+        this.viewer = (TreeViewer) viewer;
+    }
+
+    @Override
+    protected void postAdd(Object parent, Object element, Collection<Runnable> runnables) {
+        super.postAdd(parent, element, runnables);
+        if (viewer.testFindItem(parent) == null
+                && RepositoryManager.getInstance()
+                        .getCurrentRepository()
+                        .getAllStores()
+                        .stream()
+                        .map(IRepositoryStore::getResource)
+                        .anyMatch(parent::equals)) {
+            runnables.add(new Runnable() { //Force refresh to update parent visibility in Project Explorer
+
+                @Override
+                public void run() {
+                    viewer.refresh(true);
+                }
+            });
+        }
+    }
 
 }
