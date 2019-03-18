@@ -491,7 +491,8 @@ public class PlatformUtil {
                         || arg.equals("org.bonitasoft.studio.initializer")
                         || arg.equals("org.bonitasoft.studio.workspaceRecovery")
                         || arg.equals("org.bonitasoft.studio.workspaceAPI")
-                        || arg.equals("org.eclipse.platform.ide")) {
+                        || arg.equals("org.eclipse.platform.ide")
+                        || arg.equals("org.bonitasoft.studio.importer.bos.ImportWorkspaceApplication")) {
                     return true;
                 }
             }
