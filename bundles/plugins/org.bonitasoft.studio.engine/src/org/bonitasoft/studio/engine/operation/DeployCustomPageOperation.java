@@ -11,12 +11,17 @@ package org.bonitasoft.studio.engine.operation;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.http.HttpException;
 import org.bonitasoft.engine.api.PageAPI;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.page.Page;
-import org.bonitasoft.engine.page.PageNotFoundException;
+import org.bonitasoft.engine.page.PageSearchDescriptor;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
+import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -31,7 +36,6 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
 
     private final PageAPI pageApi;
     private final HttpClientFactory httpClientFactory;
-    private Page deployedPage;
     private IStatus status = Status.OK_STATUS;
 
     public DeployCustomPageOperation(PageAPI pageApi, HttpClientFactory httpClientFactory) {
@@ -39,49 +43,55 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
         this.httpClientFactory = httpClientFactory;
     }
 
-    public Page deploy() throws IOException, HttpException {
+    public List<Page> deploy() throws IOException, HttpException {
         final String pageId = getPageId();
         final File file = getArchiveFile();
-        final Optional<Page> existingPage = findCustomPage(pageId);
+        final List<Page> existingPages = findDeployedPages(pageId);
         httpClientFactory.newLoginRequest().execute();
-        final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
-        if (existingPage.isPresent()) {
-            httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, existingPage.get()).execute();
+        if (!existingPages.isEmpty()) {
+            existingPages.stream().forEach(page -> {
+                try {
+                    final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
+                    httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, page).execute();
+                } catch (IOException | HttpException e) {
+                   throw new RuntimeException(e);
+                }
+            });
             BonitaStudioLog.info(
                     String.format("%s has been updated in portal.", pageId),
                     EnginePlugin.PLUGIN_ID);
         } else {
+            final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
             httpClientFactory.newAddCustomPageRequest(uploadedFileToken).execute();
             BonitaStudioLog.info(
                     String.format("%s has been added in portal.", pageId),
                     EnginePlugin.PLUGIN_ID);
         }
-        return findCustomPage(pageId).orElseThrow(RuntimeException::new);
+        Files.deleteIfExists(file.toPath());
+        return findDeployedPages(pageId);
     }
 
     protected abstract File getArchiveFile();
 
     protected abstract String getPageId();
 
-    protected Optional<Page> findCustomPage(final String pageId) {
-        Optional<Page> page = Optional.empty();
+    protected List<Page> findDeployedPages(final String pageId) {
         try {
-            page = Optional.ofNullable(pageApi.getPageByName(pageId));
-        } catch (final PageNotFoundException e) {
-            //returns empty optional
+            SearchResult<Page> searchResult = pageApi.searchPages(new SearchOptionsBuilder(0, Integer.MAX_VALUE)
+                    .filter(PageSearchDescriptor.NAME, pageId)
+                    .done());
+            return searchResult.getResult();
+        } catch (SearchException e) {
+            BonitaStudioLog.error(e);
         }
-        return page;
+        return Collections.emptyList();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.setTaskName(taskName());
         try {
-            deployedPage = deploy();
+            deploy();
             status = new Status(IStatus.OK, EnginePlugin.PLUGIN_ID,
                     String.format(Messages.deploySuccessMessage, getPageId()));
         } catch (IOException | HttpException e) {
@@ -94,10 +104,6 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
     }
 
     protected abstract String taskName();
-
-    public Page getDeployedPage() {
-        return deployedPage;
-    }
 
     @Override
     public IStatus getStatus() {

@@ -24,6 +24,7 @@ import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
@@ -52,14 +53,14 @@ public class DeployPageHandler {
             BOSEngineManager bosEngineManager = BOSEngineManager.getInstance();
             PageAPI pageAPI = bosEngineManager.getPageAPI(apiSession);
             Optional<WebPageFileStore> fStore = findFileStore(repositoryAccessor, pageName);
-            if (fStore.isPresent()) {
+             if(fStore.isPresent()) {
                 DeployPageRunnable operation = new DeployPageRunnable(pageAPI,
                         new HttpClientFactory(),
                         new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE),
                         fStore.get());
                 PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
                 displayDeploymentResult(activeShell, operation);
-            } else {
+            }else {
                 throw new IllegalArgumentException(String.format("The page %s doesn't exist", pageName));
             }
         } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException e) {
@@ -71,7 +72,7 @@ public class DeployPageHandler {
         }
     }
 
-    private void displayDeploymentResult(Shell activeShell, DeployPageRunnable operation) {
+    private void displayDeploymentResult(Shell activeShell, IRunnableWithStatus operation) {
         IStatus status = operation.getStatus();
         if (status.isOK()) {
             MessageDialog.openInformation(activeShell, Messages.deployDoneTitle, status.getMessage());
