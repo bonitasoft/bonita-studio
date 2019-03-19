@@ -43,7 +43,11 @@ public class UpdateCustomPageRequest extends HttpRequest<String> {
         updatePageRequest.setHeader(API_TOKEN_HEADER, getAPITokenFromCookie());
         final EntityBuilder entityBuilder = EntityBuilder.create();
         entityBuilder.setContentType(ContentType.APPLICATION_JSON);
-        entityBuilder.setText(String.format("{\"pageZip\" : \"%s\" }", uploadedFileToken));
+        if(pageToUpdate.getProcessDefinitionId() != null) {
+            entityBuilder.setText(String.format("{\"pageZip\" : \"%s\", \"processDefinitionId\" : \"%s\" }", uploadedFileToken,pageToUpdate.getProcessDefinitionId()));
+        }else {
+            entityBuilder.setText(String.format("{\"pageZip\" : \"%s\" }", uploadedFileToken));
+        }
         updatePageRequest.setEntity(entityBuilder.build());
         final HttpResponse response = httpClient.execute(updatePageRequest);
         final int status = response.getStatusLine().getStatusCode();
