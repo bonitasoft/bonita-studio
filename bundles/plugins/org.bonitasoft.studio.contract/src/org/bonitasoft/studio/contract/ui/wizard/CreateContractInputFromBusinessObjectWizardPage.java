@@ -265,7 +265,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
                         .withConverter(createCheckedElementsToMappingsConverter(checkedElements)).create());
 
         multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements, mappings,
-                contract.eContainer());
+                contract.eContainer(),generationOptions.getEditModeObservable());
         dbc.addValidationStatusProvider(multiValidator);
 
         new Label(viewerComposite, SWT.NONE); //FILLER

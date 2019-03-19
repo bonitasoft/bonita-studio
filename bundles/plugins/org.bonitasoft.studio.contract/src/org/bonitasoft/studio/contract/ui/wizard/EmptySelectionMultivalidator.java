@@ -18,9 +18,11 @@ import java.util.List;
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -38,13 +40,15 @@ public class EmptySelectionMultivalidator extends MultiValidator {
     private List<FieldToContractInputMapping> mappings;
     private final EObject container;
     private final WritableValue selectedDataObservable;
+    private IObservableValue<EditMode> editModeObservable;
 
     public EmptySelectionMultivalidator(final WritableValue selectedDataObservable, final IObservableSet checkedElements,
-            final List<FieldToContractInputMapping> mappings, final EObject container) {
+            final List<FieldToContractInputMapping> mappings, final EObject container, IObservableValue<EditMode> editModeObservable) {
         this.checkedElements = checkedElements;
         this.mappings = mappings;
         this.container = container;
         this.selectedDataObservable = selectedDataObservable;
+        this.editModeObservable = editModeObservable;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class EmptySelectionMultivalidator extends MultiValidator {
         if (selectedDataObservable.getValue() instanceof BusinessObjectData) {
             if (checkedElements.isEmpty()) {
                 return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
-            } else {
+            } else if(editModeObservable.getValue() == EditMode.CREATE){
                 final StringBuilder sb = new StringBuilder();
                 validateMandatoryFieldsNotSelected(sb, mappings, checkedElements);
                 if (sb.length() > 0) {
