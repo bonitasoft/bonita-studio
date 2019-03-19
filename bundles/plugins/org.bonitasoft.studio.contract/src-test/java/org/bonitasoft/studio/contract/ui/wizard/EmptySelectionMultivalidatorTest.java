@@ -26,6 +26,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
@@ -55,7 +56,7 @@ public class EmptySelectionMultivalidatorTest {
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
         final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                new ArrayList<FieldToContractInputMapping>(), aPool().build());
+                new ArrayList<FieldToContractInputMapping>(), aPool().build(), new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
 
@@ -67,7 +68,7 @@ public class EmptySelectionMultivalidatorTest {
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
         final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                new ArrayList<FieldToContractInputMapping>(), aPool().build());
+                new ArrayList<FieldToContractInputMapping>(), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
 
@@ -92,7 +93,7 @@ public class EmptySelectionMultivalidatorTest {
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
         final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build());
+                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
 
@@ -118,7 +119,7 @@ public class EmptySelectionMultivalidatorTest {
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
         final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build());
+                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
 
