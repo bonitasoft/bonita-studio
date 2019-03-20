@@ -174,9 +174,11 @@ public class VerticalLabel extends WrappingLabel {
         int labelSize = labelImage.getBounds().height;
         float containerCenter = getParent().getBounds().height / 2F;
         center = containerCenter - labelSize / 2F;
+        float widthCenter =  getParent().getBounds().width / 2F;
 
         if (center != 0) {
-            left = new Point(left.x * scale, center * scale);
+            double x = (widthCenter  * scale) - labelImage.getBounds().width/2F;
+            left = new Point(isVertical ? x : (left.x * scale), center * scale);
         } else {
             left = new Point(left.x * scale, left.y * scale);
         }

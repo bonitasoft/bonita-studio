@@ -219,7 +219,7 @@ public class CustomLaneEditPart extends LaneEditPart {
                     width = getFigure().getMinimumSize().width + 25;
                 }
 
-                final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane()).getLabelGridData().widthHint + 5;
+                final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane()).getLabelGridData().widthHint;
 
                 final Dimension size = new Dimension(width - getMapMode().DPtoLP(x), height);
                 getFigure().setPreferredSize(size);
@@ -327,14 +327,12 @@ public class CustomLaneEditPart extends LaneEditPart {
         private GridData constraintNameContainerFigure0;
 
         public CustomLaneFigure() {
-
             final GridLayout layoutThis = new GridLayout();
             layoutThis.numColumns = 2;
-            layoutThis.makeColumnsEqualWidth = false;
             layoutThis.horizontalSpacing = 0;
             layoutThis.verticalSpacing = 0;
-            layoutThis.marginWidth = 5;
-            layoutThis.marginHeight = 5;
+            layoutThis.marginWidth = 0;
+            layoutThis.marginHeight = 0;
             setLayoutManager(layoutThis);
 
             setLineWidth(1);
@@ -365,25 +363,37 @@ public class CustomLaneEditPart extends LaneEditPart {
         }
 
         private void createContents() {
+            final RectangleFigure laneNameContainerFigure0 = new RectangleFigure();
 
+            laneNameContainerFigure0.setOutline(false);
+            laneNameContainerFigure0.setFill(false);
+
+            GridData constraintLaneNameContainerFigure0 = new GridData();
+            constraintLaneNameContainerFigure0.verticalAlignment = GridData.FILL;
+            constraintLaneNameContainerFigure0.horizontalAlignment = GridData.FILL;
+            constraintLaneNameContainerFigure0.grabExcessHorizontalSpace = false;
+            constraintLaneNameContainerFigure0.grabExcessVerticalSpace = true;
+
+            this.add(laneNameContainerFigure0, constraintLaneNameContainerFigure0);
+
+            final GridLayout layoutPoolNameContainerFigure0 = new GridLayout();
+            layoutPoolNameContainerFigure0.numColumns = 1;
+            layoutPoolNameContainerFigure0.marginWidth = 0;
+            layoutPoolNameContainerFigure0.marginHeight = 0;
+            laneNameContainerFigure0.setLayoutManager(layoutPoolNameContainerFigure0);
             fFigureLaneNameFigure = new VerticalLabel();
             fFigureLaneNameFigure.setText(""); //$NON-NLS-1$
 
             constraintNameContainerFigure0 = new GridData();
             constraintNameContainerFigure0.verticalAlignment = GridData.FILL;
-            constraintNameContainerFigure0.horizontalAlignment = GridData.CENTER;
-            constraintNameContainerFigure0.horizontalIndent = 3;
-            constraintNameContainerFigure0.horizontalSpan = 1;
-            constraintNameContainerFigure0.verticalSpan = 1;
-            constraintNameContainerFigure0.widthHint = 20;
-            constraintNameContainerFigure0.grabExcessHorizontalSpace = false;
+            constraintNameContainerFigure0.horizontalAlignment = GridData.FILL;
+            constraintNameContainerFigure0.grabExcessHorizontalSpace = true;
             constraintNameContainerFigure0.grabExcessVerticalSpace = true;
-            this.add(fFigureLaneNameFigure, constraintNameContainerFigure0);
+            laneNameContainerFigure0.add(fFigureLaneNameFigure, constraintNameContainerFigure0);
 
             fFigureLaneContainerFigure = new RectangleFigure();
             fFigureLaneContainerFigure.setBorder(null);
             fFigureLaneContainerFigure.setOutline(false);
-
             fFigureLaneContainerFigure.setLineWidth(0);
             fFigureLaneContainerFigure.setFill(false);
             fFigureLaneContainerFigure.setXOR(false);// BUG : XOR=true cause error on export as image
@@ -391,9 +401,6 @@ public class CustomLaneEditPart extends LaneEditPart {
             final GridData constraintFFigureLaneContainerFigure = new GridData();
             constraintFFigureLaneContainerFigure.verticalAlignment = GridData.FILL;
             constraintFFigureLaneContainerFigure.horizontalAlignment = GridData.FILL;
-            constraintFFigureLaneContainerFigure.horizontalIndent = 0;
-            constraintFFigureLaneContainerFigure.horizontalSpan = 1;
-            constraintFFigureLaneContainerFigure.verticalSpan = 1;
             constraintFFigureLaneContainerFigure.grabExcessHorizontalSpace = true;
             constraintFFigureLaneContainerFigure.grabExcessVerticalSpace = true;
             this.add(fFigureLaneContainerFigure,
@@ -447,7 +454,7 @@ public class CustomLaneEditPart extends LaneEditPart {
             final Font font = new Font(Display.getCurrent(), fontData);
             final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(), font).height;
             font.dispose();
-            ((CustomLaneFigure) getContentPane()).getLabelGridData().widthHint = height + 2;
+           ((CustomLaneFigure) getContentPane()).getLabelGridData().widthHint = height + 8;
         }
     }
 
