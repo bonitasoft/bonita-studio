@@ -180,6 +180,8 @@ public class Messages extends NLS {
     public static String buildFailedTitle;
     public static String startingEngineServer;
     public static String deployingProcessesFrom;
+    public static String restartServerMsg;
+    public static String dropEngineDatabase;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

@@ -29,14 +29,9 @@
            </commandParameter>
         </command>
       <command
-            defaultHandler="org.bonitasoft.studio.engine.command.ResetServerCommand"
+            defaultHandler="org.bonitasoft.studio.engine.command.RestartServerCommand"
             id="org.bonitasoft.studio.engine.resetServerCommand"
             name="%resetServerCommand">
-      </command>
-       <command
-            defaultHandler="org.bonitasoft.studio.engine.command.ResetEngineCommand"
-            id="org.bonitasoft.studio.engine.resetEngineCommand"
-            name="%resetEngineCommand">
       </command>
        <command
             id="org.bonitasoft.studio.engine.exportAsBarCommand"
@@ -111,11 +106,6 @@
                  name="org.bonitasoft.studio.engine.separator2"
                  visible="true">
            </separator>
-           <command
-                 commandId="org.bonitasoft.studio.engine.resetEngineCommand"
-                 icon="icons/clean_run_history.png"
-                 style="push">
-           </command>
            <command
                  commandId="org.bonitasoft.studio.engine.resetServerCommand"
                  icon="icons/reset_server.png"
