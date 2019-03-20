@@ -32,7 +32,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
@@ -213,14 +212,14 @@ public class CustomPoolEditPart extends PoolEditPart {
             final GridLayout layoutThis = new GridLayout();
             layoutThis.numColumns = 2;
             layoutThis.makeColumnsEqualWidth = false;
-            layoutThis.horizontalSpacing = -2;
-            layoutThis.verticalSpacing = 0;
             layoutThis.marginWidth = 0;
             layoutThis.marginHeight = 0;
+            layoutThis.verticalSpacing = 0;
+            layoutThis.horizontalSpacing = 0;
             setLayoutManager(layoutThis);
 
             setLineWidth(1);
-            setOutline(true);
+            setOutline(false);
             setBackgroundColor(THIS_BACK);
             final Dimension defaultSize = new Dimension(getMapMode().DPtoLP(getDefaultWidth()),
                     getMapMode().DPtoLP(getDefaultHeight()));
@@ -255,16 +254,12 @@ public class CustomPoolEditPart extends PoolEditPart {
 
             final RectangleFigure poolNameContainerFigure0 = new RectangleFigure();
 
-            poolNameContainerFigure0.setOutline(false);
+            poolNameContainerFigure0.setOutline(true);
             poolNameContainerFigure0.setFill(false);
 
             constraintPoolNameContainerFigure0 = new GridData();
             constraintPoolNameContainerFigure0.verticalAlignment = GridData.FILL;
             constraintPoolNameContainerFigure0.horizontalAlignment = GridData.FILL;
-            constraintPoolNameContainerFigure0.horizontalIndent = 0;
-            constraintPoolNameContainerFigure0.horizontalSpan = 1;
-            constraintPoolNameContainerFigure0.verticalSpan = 1;
-            constraintPoolNameContainerFigure0.widthHint = 20;
             constraintPoolNameContainerFigure0.grabExcessHorizontalSpace = false;
             constraintPoolNameContainerFigure0.grabExcessVerticalSpace = true;
 
@@ -272,9 +267,6 @@ public class CustomPoolEditPart extends PoolEditPart {
 
             final GridLayout layoutPoolNameContainerFigure0 = new GridLayout();
             layoutPoolNameContainerFigure0.numColumns = 1;
-            layoutPoolNameContainerFigure0.makeColumnsEqualWidth = true;
-            layoutPoolNameContainerFigure0.horizontalSpacing = 10;
-            layoutPoolNameContainerFigure0.verticalSpacing = 0;
             layoutPoolNameContainerFigure0.marginWidth = 0;
             layoutPoolNameContainerFigure0.marginHeight = 0;
             poolNameContainerFigure0.setLayoutManager(layoutPoolNameContainerFigure0);
@@ -285,28 +277,19 @@ public class CustomPoolEditPart extends PoolEditPart {
             final GridData constraintFFigurePoolNameFigure = new GridData();
             constraintFFigurePoolNameFigure.verticalAlignment = GridData.FILL;
             constraintFFigurePoolNameFigure.horizontalAlignment = GridData.FILL;
-            constraintFFigurePoolNameFigure.horizontalIndent = 3;
-            constraintFFigurePoolNameFigure.horizontalSpan = 1;
-            constraintFFigurePoolNameFigure.verticalSpan = 1;
-            constraintFFigurePoolNameFigure.grabExcessHorizontalSpace = false;
+            constraintFFigurePoolNameFigure.grabExcessHorizontalSpace = true;
             constraintFFigurePoolNameFigure.grabExcessVerticalSpace = true;
             poolNameContainerFigure0.add(fFigurePoolNameFigure, constraintFFigurePoolNameFigure);
 
             fFigurePoolContainerFigure = new RectangleFigure();
             fFigurePoolContainerFigure.setOutline(true);
-            fFigurePoolContainerFigure.setFill(false);
-            fFigurePoolContainerFigure.setBorder(null);
 
             final GridData constraintFFigurePoolContainerFigure = new GridData();
             constraintFFigurePoolContainerFigure.verticalAlignment = GridData.FILL;
             constraintFFigurePoolContainerFigure.horizontalAlignment = GridData.FILL;
-            constraintFFigurePoolContainerFigure.horizontalIndent = 5;
-            constraintFFigurePoolContainerFigure.horizontalSpan = 1;
-            constraintFFigurePoolContainerFigure.verticalSpan = 1;
             constraintFFigurePoolContainerFigure.grabExcessHorizontalSpace = true;
             constraintFFigurePoolContainerFigure.grabExcessVerticalSpace = true;
             this.add(fFigurePoolContainerFigure, constraintFFigurePoolContainerFigure);
-
         }
 
         /**
@@ -429,7 +412,8 @@ public class CustomPoolEditPart extends PoolEditPart {
             final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(),
                     font).height;
             font.dispose();
-            ((CustomPoolFigure) getContentPane()).getLabelGridData().widthHint = height + 2;
+           GridData labelGridData = ((CustomPoolFigure) getContentPane()).getLabelGridData();
+           labelGridData.widthHint = height + 8;
         }
     }
 

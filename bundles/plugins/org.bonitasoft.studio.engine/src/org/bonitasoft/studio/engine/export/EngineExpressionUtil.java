@@ -559,7 +559,14 @@ public class EngineExpressionUtil {
             return ExpressionType.TYPE_VARIABLE;
         }
         if (ExpressionConstants.VARIABLE_TYPE.equals(type) && !expression.getReferencedElements().isEmpty()) {
-            final Data data = (Data) expression.getReferencedElements().get(0);
+            EObject reference = expression.getReferencedElements().get(0);
+            if(!(reference instanceof Data)) {
+                throw new RuntimeException(String.format("Incompatible expression type found. Expecting a %s but found a %s for expression %s",
+                        Data.class.getSimpleName(),
+                        reference.getClass().getSimpleName(),
+                        expression.getName()));
+            }
+            final Data data = (Data) reference;
             final String ds = data.getDatasourceId();
             if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
                 return ExpressionType.TYPE_INPUT;
