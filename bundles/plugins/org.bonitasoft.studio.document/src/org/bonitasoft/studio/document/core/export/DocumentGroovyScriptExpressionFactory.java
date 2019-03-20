@@ -20,6 +20,7 @@ import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAn
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -75,8 +76,9 @@ public class DocumentGroovyScriptExpressionFactory {
         return root;
     }
 
-    public Expression createUpdateDocumentListFromContractExpression(ContractInput input, Document document) {
-        String script = createMergeDocumentScript(input);
+    public Expression createUpdateDocumentListFromContractExpression(ContractInput input, Document document,
+            Function<String, String> formater) {
+        String script = createMergeDocumentScript(input, formater);
         String scriptName = String.format("update_%s", input.getDataReference());
         Expression expression = ExpressionHelper.createGroovyScriptExpression(script, List.class.getName(), scriptName);
         expression.getReferencedElements().add(EcoreUtil.copy(input));
@@ -84,14 +86,14 @@ public class DocumentGroovyScriptExpressionFactory {
         return expression;
     }
 
-    private String createMergeDocumentScript(ContractInput input) {
+    private String createMergeDocumentScript(ContractInput input, Function<String, String> formater) {
         StringBuilder scriptBuilder = new StringBuilder();
         appendImport(scriptBuilder);
         initVariables(scriptBuilder);
         addExistingDocuments(scriptBuilder, input);
         addNewDocuments(scriptBuilder, input);
         addReturnStatement(scriptBuilder);
-        return scriptBuilder.toString();
+        return formater.apply(scriptBuilder.toString());
     }
 
     private void appendImport(StringBuilder scriptBuilder) {
@@ -106,16 +108,18 @@ public class DocumentGroovyScriptExpressionFactory {
 
     private void addExistingDocuments(StringBuilder scriptBuilder, ContractInput input) {
         appendLine(scriptBuilder, String.format("if (%s) {", input.getDataReference()));
-        appendLine(scriptBuilder, String.format("  %s.each (filesOutput.&add)", input.getDataReference()));
+        appendLine(scriptBuilder, String.format("%s", input.getDataReference()));
+        appendLine(scriptBuilder, ".collect { doc ->  new DocumentValue(doc.id) }");
+        appendLine(scriptBuilder, ".each (filesOutput.&add)");
         appendLine(scriptBuilder, "}");
         appendLine(scriptBuilder, "");
     }
 
     private void addNewDocuments(StringBuilder scriptBuilder, ContractInput input) {
         appendLine(scriptBuilder, String.format("if (%s) {", input.getName()));
-        appendLine(scriptBuilder, String.format("  %s", input.getName()));
-        appendLine(scriptBuilder, "      .collect { doc ->  new DocumentValue(doc.content,doc.contentType, doc.fileName)}");
-        appendLine(scriptBuilder, "      .each (filesOutput.&add)");
+        appendLine(scriptBuilder, String.format("%s", input.getName()));
+        appendLine(scriptBuilder, ".collect { doc ->  new DocumentValue(doc.content,doc.contentType, doc.fileName)}");
+        appendLine(scriptBuilder, ".each (filesOutput.&add)");
         appendLine(scriptBuilder, "}");
         appendLine(scriptBuilder, "");
     }

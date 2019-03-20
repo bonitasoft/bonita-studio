@@ -10,6 +10,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.document.core.export.DocumentGroovyScriptExpressionFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -17,6 +18,9 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Document;
+import org.codehaus.groovy.eclipse.refactoring.formatter.DefaultGroovyFormatter;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.text.edits.MalformedTreeException;
 
 public class DocumentUpdateOperationBuilder {
 
@@ -47,9 +51,18 @@ public class DocumentUpdateOperationBuilder {
     private Expression createRightOperand() {
         if (document.isMultiple() && input.getDataReference() != null) {
             return new DocumentGroovyScriptExpressionFactory().createUpdateDocumentListFromContractExpression(input,
-                    document);
+                    document, this::format);
         }
         return ExpressionHelper.createExpressionFromEObject(input);
     }
 
+    private String format(String initialValue) {
+        final org.eclipse.jface.text.Document document = new org.eclipse.jface.text.Document(initialValue);
+        try {
+            new DefaultGroovyFormatter(document, new DefaultFormatterPreferences(), 0).format().apply(document);
+        } catch (MalformedTreeException | BadLocationException e) {
+            BonitaStudioLog.error("Failed to format generated script", e);
+        }
+        return document.get();
+    }
 }
