@@ -102,15 +102,9 @@ public class DocumentUpdateOperationBuilderTest {
         assertThat(operation.getOperator().getType()).isEqualTo(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
 
         Expression rightOperand = operation.getRightOperand();
-        assertThat(rightOperand.getType()).isEqualTo(ExpressionConstants.SCRIPT_TYPE);
-        assertThat(rightOperand.getName()).isEqualTo(String.format("update_%s", DOCUMENT_NAME));
+        assertThat(rightOperand.getType()).isEqualTo(ExpressionConstants.CONTRACT_INPUT_TYPE);
+        assertThat(rightOperand.getName()).isEqualTo(CONTRACT_INPUT_NAME);
         assertThat(rightOperand.getReturnType()).isEqualTo(List.class.getName());
-        assertThat(rightOperand.getReferencedElements())
-                .filteredOn(Document.class::isInstance)
-                .extracting("name").containsExactly(DOCUMENT_NAME);
-        assertThat(rightOperand.getReferencedElements())
-                .filteredOn(ContractInput.class::isInstance)
-                .extracting("name").containsExactly(CONTRACT_INPUT_NAME);
 
         String script = rightOperand.getContent();
         assertThat(script).contains(DOCUMENT_NAME);
