@@ -11,7 +11,6 @@ package org.bonitasoft.studio.contract.core.mapping.operation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.document.core.export.DocumentGroovyScriptExpressionFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -34,7 +33,7 @@ public class DocumentUpdateOperationBuilder {
 
     public Operation toOperation() {
         Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        Expression rightOperand = createRightOperand();
+        Expression rightOperand = ExpressionHelper.createExpressionFromEObject(input);
         Expression leftOperand = ExpressionHelper.createDocumentReferenceExpression(document);
         Operator operator = ExpressionFactory.eINSTANCE.createOperator();
         if (document.isMultiple()) {
@@ -46,14 +45,6 @@ public class DocumentUpdateOperationBuilder {
         operation.setRightOperand(rightOperand);
         operation.setOperator(operator);
         return operation;
-    }
-
-    private Expression createRightOperand() {
-        if (document.isMultiple() && input.getDataReference() != null) {
-            return new DocumentGroovyScriptExpressionFactory().createUpdateDocumentListFromContractExpression(input,
-                    document, this::format);
-        }
-        return ExpressionHelper.createExpressionFromEObject(input);
     }
 
     private String format(String initialValue) {
