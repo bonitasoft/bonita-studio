@@ -16,23 +16,20 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.bonitasoft.studio.ui.converter.ConverterBuilder.newConverter;
-import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
@@ -45,7 +42,6 @@ import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -341,14 +337,7 @@ public class SelectDataWizardPage extends WizardPage {
         SelectObservableValue creationTypeObservable = new SelectObservableValue<EditMode>(EditMode.class);
         creationTypeObservable.addOption(EditMode.CREATE, WidgetProperties.selection().observe(createButton));
         creationTypeObservable.addOption(EditMode.EDIT, WidgetProperties.selection().observe(editButton));
-        dbc.bindValue(WidgetProperties.enabled().observe(editButton),
-                selectionTypeObservable,
-                null,
-                updateValueStrategy().withConverter(newConverter()
-                        .withConvertFunction(isBusinessDataTypeSelected -> (isBusinessDataTypeSelected !=null && (boolean) isBusinessDataTypeSelected)
-                                && (contract.eContainer() instanceof Task))
-                        .create()).create());
-        selectionTypeObservable.addValueChangeListener(event -> { if ( !event.diff.getNewValue() ) { createButton.setSelection(true);editButton.setSelection(false);}} );
+        editButton.setEnabled(contract.eContainer() instanceof Task);
         generateOptions.setEditMode(contract.eContainer() instanceof Task ? EditMode.EDIT : EditMode.CREATE);
         dbc.bindValue(creationTypeObservable, generateOptions.getEditModeObservable());
     }
