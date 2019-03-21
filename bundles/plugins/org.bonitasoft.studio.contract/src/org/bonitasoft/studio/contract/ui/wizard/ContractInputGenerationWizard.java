@@ -35,9 +35,8 @@ import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInp
 import org.bonitasoft.studio.contract.core.mapping.operation.DocumentUpdateOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.OperationCreationException;
-import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
-import org.bonitasoft.studio.contract.core.mapping.treeMaching.resolver.ContractToBusinessDataResolver;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -283,6 +282,7 @@ public class ContractInputGenerationWizard extends Wizard {
         input.setName(selectBusinessDataWizardPage.getRootName());
         if (contractContainer instanceof Task) {
             input.setDataReference(document.getName());
+            input.setCreateMode(generationOptions.getEditMode() == EditMode.CREATE);
         }
         return input;
     }
