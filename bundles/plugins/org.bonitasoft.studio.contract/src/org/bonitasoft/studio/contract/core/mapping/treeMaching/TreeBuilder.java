@@ -65,7 +65,8 @@ public class TreeBuilder {
                     TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
                             businessObject.getQualifiedName(),
                             toRelationType(relationField),
-                            toLoadingType(relationField)),!relationField.isNullable());
+                            toLoadingType(relationField)),
+                            !relationField.isNullable());
                     buildTree(businessObject, childInput, newNode);
                 });
     }

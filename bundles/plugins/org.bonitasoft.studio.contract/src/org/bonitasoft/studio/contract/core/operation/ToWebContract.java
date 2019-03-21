@@ -97,6 +97,7 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
             final ContractInput input) {
         org.bonitasoft.web.designer.model.contract.ContractInput leafContractInput = createLeafContractInput(input,
                 File.class);
+        leafContractInput.setMandatory(input.isCreateMode());
         if (!Strings.isNullOrEmpty(input.getDataReference())) {
             ((LeafContractInput) leafContractInput)
                     .setDataReference(new DataReference(input.getDataReference(), File.class.getName()));

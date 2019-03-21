@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.web.designer.model.contract.BusinessDataReference;
 import org.bonitasoft.web.designer.model.contract.DataReference;
 
 public class TreeResult {
