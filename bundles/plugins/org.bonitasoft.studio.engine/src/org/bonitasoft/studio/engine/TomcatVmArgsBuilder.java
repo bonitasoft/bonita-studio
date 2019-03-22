@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.engine;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -58,15 +57,13 @@ public class TomcatVmArgsBuilder {
                 "\"" + bundleLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "org.bonitasoft.engine.incident.folder",
                 "\"" + tomcatInstanceLocation + File.separatorChar + "logs\"");
-        addSystemProperty(args, "bitronix.tm.configuration",
-                "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
-                        + "bitronix-config.properties\"");
         addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
         if (tomcatExtraParams == null || !tomcatExtraParams.contains("-Djava.util.logging.config.file=")) {
             addSystemProperty(args, "java.util.logging.config.file",
                     "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
                             + "logging.properties\"");
         }
+        addSystemProperty(args, "com.arjuna.ats.arjuna.common.propertiesFile", "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "jbossts-properties.xml\"");
         addSystemProperty(args, "file.encoding", "UTF-8");
         addWatchDogProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
