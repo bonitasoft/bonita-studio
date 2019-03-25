@@ -28,16 +28,9 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 
-/**
- * @author Romain
- *
- */
+
 public class DropBusinessDataDBFieldEditorContribution implements IPreferenceFieldEditorContribution {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution#createFieldEditors(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public List<FieldEditor> createFieldEditors(final Composite parent) {
         final List<FieldEditor> editors = new ArrayList<FieldEditor>();
@@ -48,36 +41,22 @@ public class DropBusinessDataDBFieldEditorContribution implements IPreferenceFie
         dropOnExitFieldEditor.setPreferenceStore(EnginePlugin.getDefault().getPreferenceStore());
         editors.add(dropOnExitFieldEditor);
 
-        final BooleanFieldEditor dropOnInstallFieldEditor = new BooleanFieldEditor(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL,
-                Messages.dropBusinessDataDBOnBDMChanges,
-                BooleanFieldEditor.DEFAULT, parent);
-        dropOnInstallFieldEditor.setPreferenceStore(EnginePlugin.getDefault().getPreferenceStore());
-        editors.add(dropOnInstallFieldEditor);
         return editors;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution#init(org.eclipse.ui.IWorkbench)
-     */
+  
     @Override
     public void init(final IWorkbench workbench) {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution#performOk()
-     */
+  
     @Override
     public boolean performOk() {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution#appliesTo(java.lang.String)
-     */
+   
     @Override
     public boolean appliesTo(final String categoryName) {
         return "Database".equals(categoryName);
