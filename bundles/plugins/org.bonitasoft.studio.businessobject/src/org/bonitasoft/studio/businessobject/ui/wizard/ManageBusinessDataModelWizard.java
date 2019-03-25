@@ -113,7 +113,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
                         Messages.bdmCompatibilityTitle,
                         Messages.bdmCompatibilityMsg,
                         Messages.clearExistingBusinessData,
-                        preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL),
+                        false,
                         preferenceStore,
                         EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
                 confirm = confirmDialog.getReturnCode() == Dialog.OK;
