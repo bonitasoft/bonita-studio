@@ -381,6 +381,8 @@ public class Messages extends NLS {
     public static String bdmImported;
     public static String bdmWillBeOverwritten;
     public static String bdmZipInvalid;
+    public static String cleanDeployTitle;
+    public static String cleanDeployMsg;
 
     private Messages() {
     }

@@ -28,20 +28,19 @@ import org.eclipse.core.runtime.jobs.Job;
 public class DeployBDMJob extends Job {
 
     private BusinessObjectModelFileStore fileStore;
+    private boolean dropDatabase;
 
-    public DeployBDMJob(BusinessObjectModelFileStore fileStore) {
+    public DeployBDMJob(BusinessObjectModelFileStore fileStore,boolean dropDatabase) {
         super(Messages.deployBDMJobName);
         this.fileStore = fileStore;
+        this.dropDatabase = dropDatabase;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         try {
-            new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+            new GenerateBDMOperation(fileStore).run(monitor);
+            new DeployBDMOperation(fileStore,dropDatabase).run(monitor);
         } catch (final InvocationTargetException e) {
             return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
                     "Failed to deploy BDM. Check Studio logs for more information.",
