@@ -40,6 +40,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     protected StructuredTextEditor fSourceEditor;
     protected T workingCopy;
     private IEclipseContext context;
+    private boolean resourceChangeEventSkip = false;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -89,8 +90,13 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        formPage.doSave(monitor);
-        fSourceEditor.doSave(monitor);
+        try {
+            resourceChangeEventSkip = true;
+            formPage.doSave(monitor);
+            fSourceEditor.doSave(monitor);
+        } finally {
+            resourceChangeEventSkip = false;
+        }
     }
 
     @Override
@@ -121,6 +127,13 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
             if (delta.getKind() == IResourceDelta.REMOVED && (IResourceDelta.MOVED_TO & flags) != 0) {
                 updateEditorInput(
                         new FileEditorInput(file.getWorkspace().getRoot().getFile(delta.getMovedToPath())));
+            } else if (delta.getKind() == IResourceDelta.CHANGED) {
+                if ((flags & IResourceDelta.CONTENT) != 0 || (flags & IResourceDelta.REPLACED) != 0) {
+                    if (!resourceChangeEventSkip) {
+                        FileEditorInput newEditorInput = new FileEditorInput(delta.getResource().getAdapter(IFile.class));
+                        Display.getDefault().asyncExec(() -> updateEditorInput(newEditorInput));
+                    }
+                }
             }
         }
     }
