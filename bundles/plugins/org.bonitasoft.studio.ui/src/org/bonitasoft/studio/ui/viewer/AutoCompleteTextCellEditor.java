@@ -14,8 +14,14 @@
  */
 package org.bonitasoft.studio.ui.viewer;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.ui.UIPlugin;
+import org.eclipse.jface.bindings.Trigger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -28,13 +34,40 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.keys.IBindingService;
 
 public class AutoCompleteTextCellEditor extends TextCellEditor {
 
     private ContentProposalAdapter proposalAdapter;
+    private KeyStroke contentAssistKeyStroke;
 
     public AutoCompleteTextCellEditor(ColumnViewer viewer) {
         super((Composite) viewer.getControl());
+        Optional<KeyStroke> eclipseContentAssistKeyStroke = retrieveEclipseContentAssistKeyStroke();
+        if (eclipseContentAssistKeyStroke.isPresent()) {
+            contentAssistKeyStroke = eclipseContentAssistKeyStroke.get();
+        } else {
+            BonitaStudioLog.warning(
+                    "Unable to retrieve eclipse content assist binding. Content assist won't be available in editors. Check key binding for the `Content Assist` command in the eclipse preferences.",
+                    UIPlugin.PLUGIN_ID);
+        }
+    }
+
+    private Optional<KeyStroke> retrieveEclipseContentAssistKeyStroke() {
+        IBindingService bindingService = PlatformUI.getWorkbench().getService(IBindingService.class);
+        return Optional
+                .ofNullable(bindingService.getBestActiveBindingFor("org.eclipse.ui.edit.text.contentAssist.proposals"))
+                .map(triggerSequence -> {
+                    List<Trigger> triggers = Arrays.asList(triggerSequence.getTriggers());
+                    return triggers.size() > 1
+                            ? null // auto complete cell editor doesn't handle sequence
+                            : triggers.stream()
+                                    .filter(KeyStroke.class::isInstance)
+                                    .map(KeyStroke.class::cast)
+                                    .findFirst()
+                                    .orElse(null);
+                });
     }
 
     @Override
@@ -47,11 +80,13 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     }
 
     private void fireControlSpaceEvent() {
-        if (proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
+        if (contentAssistKeyStroke != null
+                && proposalAdapter != null
+                && !proposalAdapter.isProposalPopupOpen()
                 && (getValue() == null || getValue().toString().isEmpty())) {
             final Event ctrlSpaceEvent = new Event();
-            ctrlSpaceEvent.keyCode = SWT.SPACE;
-            ctrlSpaceEvent.stateMask = SWT.MOD1;
+            ctrlSpaceEvent.keyCode = contentAssistKeyStroke.getNaturalKey();
+            ctrlSpaceEvent.stateMask = contentAssistKeyStroke.getModifierKeys();
             getControl().getDisplay().asyncExec(() -> getControl().notifyListeners(SWT.KeyDown, ctrlSpaceEvent));
         }
     }
@@ -66,7 +101,7 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     public void setProposalProvider(IContentProposalProvider proposalProvider) {
         final TextContentAdapter controlContentAdapter = new TextContentAdapter();
         proposalAdapter = new ContentProposalAdapter(getControl(), controlContentAdapter,
-                proposalProvider, KeyStroke.getInstance(SWT.MOD1, SWT.SPACE), null);
+                proposalProvider, contentAssistKeyStroke, null);
         proposalAdapter.setPropagateKeys(true);
         proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
         proposalAdapter.setAutoActivationDelay(0);
