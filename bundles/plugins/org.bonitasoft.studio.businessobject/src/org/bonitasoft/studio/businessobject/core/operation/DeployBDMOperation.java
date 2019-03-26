@@ -35,8 +35,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -44,7 +42,6 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
@@ -59,8 +56,16 @@ public class DeployBDMOperation implements IRunnableWithProgress {
 
     private static Object deployLock = new Object();
 
+    private boolean dropDatabase = false;
+
     public DeployBDMOperation(final BusinessObjectModelFileStore fileStore) {
+        this(fileStore,false);
+    }
+
+    
+    public DeployBDMOperation(final BusinessObjectModelFileStore fileStore,boolean dropDatabase) {
         this.fileStore = fileStore;
+        this.dropDatabase = dropDatabase;
     }
 
     public DeployBDMOperation reuseSession(final APISession session) {
@@ -68,10 +73,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
+
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         login(monitor);
@@ -194,8 +196,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     }
 
     protected boolean dropDBOnInstall() {
-        final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-        return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL);
+        return dropDatabase;
     }
 
     protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {
