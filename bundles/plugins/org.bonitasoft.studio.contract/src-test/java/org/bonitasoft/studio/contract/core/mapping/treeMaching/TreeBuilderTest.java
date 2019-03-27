@@ -38,7 +38,7 @@ public class TreeBuilderTest {
         addressField.setCollection(true);
         when(store.getBusinessObject("org.test.Employee")).thenReturn(Optional.of(aBO("org.test.Employee")
                 .withField(SimpleFieldBuilder.aStringField("firstName").build())
-                .withField(SimpleFieldBuilder.aDateOnlyField("birthDate").build())
+                .withField(SimpleFieldBuilder.aDateOnlyField("birthDate").notNullable().build())
                 .withField(addressField)
                 .build()));
     }
@@ -53,6 +53,8 @@ public class TreeBuilderTest {
         assertThat(node.getInput().getName()).isEqualTo("myDataInput");
         assertThat(node.getRef().getName()).isEqualTo("myData");
         assertThat(node.getChildren()).extracting("input.name", "ref.name").contains(tuple("address", "address"));
+        assertThat(node.getChildren()).extracting("input.name", "ref.name","mandatory").contains(tuple("firstName", null, false));
+        assertThat(node.getChildren()).extracting("input.name", "ref.name","mandatory").contains(tuple("birthDate", null, true));
         assertThat(node.getChildren().get(0).getChildren()).isEmpty();
     }
 

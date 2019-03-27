@@ -54,4 +54,10 @@ public class TreeNode {
     public boolean isMandatory() {
         return mandatory;
     }
+
+    public TreeNode addLeafNode(ContractInput input, boolean mandatory) {
+        TreeNode node = new TreeNode(input, null, mandatory);
+        this.children.add(node);
+        return node;
+    }
 }
