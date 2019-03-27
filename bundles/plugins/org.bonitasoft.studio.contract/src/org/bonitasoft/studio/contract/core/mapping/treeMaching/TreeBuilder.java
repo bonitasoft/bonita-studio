@@ -47,7 +47,6 @@ public class TreeBuilder {
     private void buildTree(BusinessObject bo, ContractInput input, TreeNode node) {
         if (input.getType() == ContractInputType.COMPLEX) {
             input.getInputs().stream()
-                    .filter(childInput -> childInput.getType() == ContractInputType.COMPLEX)
                     .forEach(childInput -> findMatchingField(bo.getFields(), childInput, node));
         }
     }
@@ -60,14 +59,18 @@ public class TreeBuilder {
                         || !(field.isCollection() && childInput.isMultiple()))
                 .findFirst()
                 .ifPresent(field -> {
-                    RelationField relationField = (RelationField) field;
-                    BusinessObject businessObject = relationField.getReference();
-                    TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
-                            businessObject.getQualifiedName(),
-                            toRelationType(relationField),
-                            toLoadingType(relationField)),
-                            !relationField.isNullable());
-                    buildTree(businessObject, childInput, newNode);
+                    if( field instanceof RelationField ) {
+                        RelationField relationField = (RelationField) field;
+                        BusinessObject businessObject = relationField.getReference();
+                        TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
+                                businessObject.getQualifiedName(),
+                                toRelationType(relationField),
+                                toLoadingType(relationField)),
+                                !relationField.isNullable());
+                        buildTree(businessObject, childInput, newNode);
+                    }else {
+                         node.addLeafNode(childInput, !field.isNullable());
+                    }
                 });
     }
 
