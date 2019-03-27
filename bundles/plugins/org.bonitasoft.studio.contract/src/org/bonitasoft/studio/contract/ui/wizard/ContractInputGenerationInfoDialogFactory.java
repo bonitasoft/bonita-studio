@@ -16,12 +16,15 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -31,6 +34,8 @@ public class ContractInputGenerationInfoDialogFactory {
 
     public static final int NOT_OPENED = -2;
     public static final String SHOW_GENERATION_SUCCESS_DIALOG = "SHOW_GENERATION_SUCCESS_DIALOG";
+    public static final String HIDE_DOCUMENT_OPERATION_INFO = "hideDocumentOperationInfo";
+    public static final String HIDE_DOCUMENT_INIT_INFO = "hideDocumentInitInfo";
 
     public int openInfoDialog(final IPreferenceStore preferenceStore, final Shell shell,
             final ContractContainer contractContainer,
@@ -49,15 +54,38 @@ public class ContractInputGenerationInfoDialogFactory {
         return NOT_OPENED;
     }
 
-    public void openUpdateDocumentOperationWarning(final String documentName, final Shell shell) {
-        shell.getDisplay().asyncExec(() -> MessageDialog.openWarning(shell, Messages.openUpdateDocumentOperationWarningTitle,
-                Messages.bind(Messages.openUpdateDocumentOperationWarningMessages, documentName)));
+    public void openUpdateDocumentOperationWarning(String documentName, Shell shell) {
+        shell.getDisplay().asyncExec(() -> {
+            IPreferenceStore preferenceStore = ContractPlugin.getDefault().getPreferenceStore();
+            if (!preferenceStore.getBoolean(HIDE_DOCUMENT_OPERATION_INFO)) {
+                MessageDialogWithPrompt.open(MessageDialog.INFORMATION,
+                        shell,
+                        Messages.openUpdateDocumentOperationWarningTitle,
+                        Messages.bind(Messages.openUpdateDocumentOperationWarningMessages, documentName),
+                        Messages.doNotShowMeAgain,
+                        false,
+                        preferenceStore,
+                        HIDE_DOCUMENT_OPERATION_INFO,
+                        SWT.NONE);
+            }
+        });
     }
 
-    public void openUpdateDocumentInitalContentWarning(final String documentName, final Shell shell) {
-        shell.getDisplay()
-                .asyncExec(() -> MessageDialog.openWarning(shell, Messages.updateInitialDocumentContentWarningTitle,
-                        String.format(Messages.updateInitialDocumentContentWarningMsg, documentName)));
+    public void openUpdateDocumentInitalContentWarning(String documentName, Shell shell) {
+        shell.getDisplay().asyncExec(() -> {
+            IPreferenceStore preferenceStore = ContractPlugin.getDefault().getPreferenceStore();
+            if (!preferenceStore.getBoolean(HIDE_DOCUMENT_INIT_INFO)) {
+                MessageDialogWithPrompt.open(MessageDialog.INFORMATION,
+                        shell,
+                        Messages.updateInitialDocumentContentWarningTitle,
+                        String.format(Messages.updateInitialDocumentContentWarningMsg, documentName),
+                        Messages.doNotShowMeAgain,
+                        false,
+                        preferenceStore,
+                        HIDE_DOCUMENT_INIT_INFO,
+                        SWT.NONE);
+            }
+        });
     }
 
     private String getInfoMessage(final ContractContainer contractContainer) {
