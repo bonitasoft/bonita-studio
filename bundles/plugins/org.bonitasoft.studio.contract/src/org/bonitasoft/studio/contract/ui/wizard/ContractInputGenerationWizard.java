@@ -280,8 +280,8 @@ public class ContractInputGenerationWizard extends Wizard {
         input.setType(ContractInputType.FILE);
         input.setMultiple(document.isMultiple());
         input.setName(selectBusinessDataWizardPage.getRootName());
+        input.setDataReference(document.getName());
         if (contractContainer instanceof Task) {
-            input.setDataReference(document.getName());
             input.setCreateMode(generationOptions.getEditMode() == EditMode.CREATE);
         }
         return input;
