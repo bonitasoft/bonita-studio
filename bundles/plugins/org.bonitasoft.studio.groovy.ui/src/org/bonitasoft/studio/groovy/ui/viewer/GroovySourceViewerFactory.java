@@ -16,7 +16,6 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 
 import java.util.Objects;
 
-import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -36,7 +35,7 @@ public class GroovySourceViewerFactory {
         return new GroovyViewer(container);
     }
 
-    public GroovyViewer createSourceViewer(final Composite container, final GroovyEditor editor) {
+    public GroovyViewer createSourceViewer(final Composite container, final BonitaGroovyEditor editor) {
         final IEclipseContext context = (IEclipseContext) container.getShell().getData("org.eclipse.e4.ui.shellContext");
         if (context == null) {
             configureContext(container.getShell());

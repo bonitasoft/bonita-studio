@@ -15,6 +15,11 @@
 
 package org.bonitasoft.studio.groovy.ui.viewer;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
+import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.editor.GroovyTextTools;
@@ -23,10 +28,9 @@ import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
-/**
- * @author Romain Bioteau
- */
 public class BonitaGroovyEditor extends GroovyEditor {
+
+    private Map<String, ScriptVariable> context = new HashMap<>();
 
     @Override
     public void editorContextMenuAboutToShow(final IMenuManager menu) {
@@ -76,6 +80,17 @@ public class BonitaGroovyEditor extends GroovyEditor {
             fActionGroups.dispose();
             fActionGroups = null;
         }
+    }
+
+    public void setContext(Map<String, ScriptVariable> context) {
+        this.context = context;
+    }
+
+    @Override
+    public BonitaScriptGroovyCompilationUnit getGroovyCompilationUnit() {
+        BonitaScriptGroovyCompilationUnit groovyCompilationUnit = (BonitaScriptGroovyCompilationUnit) super.getGroovyCompilationUnit();
+        groovyCompilationUnit.setContext(context);
+        return groovyCompilationUnit;
     }
 
     @Override

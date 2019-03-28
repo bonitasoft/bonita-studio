@@ -34,33 +34,5 @@
             class="org.bonitasoft.studio.groovy.provider.GroovyProjectListenerProvider">
       </projectListenerProvider>
    </extension>
-   <extension
-         id="org.bonitasoft.studio.groovy.completionComputer"
-         name="Groovy Code Completions"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <javaCompletionProposalComputer
-            activate="true"
-            categoryId="org.bonitasoft.groovy.codeassist.category"
-            class="org.bonitasoft.studio.groovy.contentassist.CustomGroovyCompletionProposalComputer"
-            needsSortingAfterFiltering="true">
-         <partition
-               type="__dftl_partition_content_type">
-         </partition>
-         <partition
-               type="__java_string">
-         </partition>
-         <!-- this is not an error; pde does not recognize this as a valid partition type -->
-         <partition
-               type="__groovy_multiline_string">
-         </partition>
-      </javaCompletionProposalComputer>
-   </extension>
-   <extension
-         id="org.bonitasoft.groovy.codeassist.category"
-         name="Groovy Proposals"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <proposalCategory
-            icon="icons/groovy.png"></proposalCategory>
-   </extension>
 
 </plugin>

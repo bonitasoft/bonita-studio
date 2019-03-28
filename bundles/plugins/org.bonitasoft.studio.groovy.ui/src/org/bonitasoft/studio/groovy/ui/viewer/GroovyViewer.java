@@ -19,8 +19,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -37,6 +39,7 @@ import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureP
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -47,9 +50,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
@@ -94,7 +95,7 @@ public class GroovyViewer implements IDocumentListener {
 
     public static final int MAX_SCRIPT_LENGTH = 65535;
 
-    private GroovyEditor editor;
+    private BonitaGroovyEditor editor;
 
     private IEditorInput input;
 
@@ -126,7 +127,7 @@ public class GroovyViewer implements IDocumentListener {
 
     }
 
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor,
+    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final BonitaGroovyEditor groovyEditor,
             boolean restrictScriptSize) {
         this.restrictScriptSize = restrictScriptSize;
         enbaleSyntaxHighligthing();
@@ -143,10 +144,7 @@ public class GroovyViewer implements IDocumentListener {
         } else {
             this.input = input;
         }
-        editor = groovyEditor;
-        if (editor == null) {
-            editor = new BonitaGroovyEditor();
-        }
+        editor = groovyEditor == null ? new BonitaGroovyEditor() : groovyEditor;
         try {
             groovyEditorContext = createGroovyEditorContext();
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
@@ -155,7 +153,8 @@ public class GroovyViewer implements IDocumentListener {
             editor.doSave(Repository.NULL_PROGRESS_MONITOR);
             ASTProvider astProvider = JavaPlugin.getDefault().getASTProvider();
             org.eclipse.jdt.groovy.core.util.ReflectionUtils.executePrivateMethod(ASTProvider.class,
-                    "activeJavaEditorChanged", new Class[] { IWorkbenchPart.class }, astProvider, new Object[] { editor });
+                    "activeJavaEditorChanged", new Class[] { IWorkbenchPart.class }, astProvider,
+                    new Object[] { editor });
             editor.createPartControl(mainComposite);
 
         } catch (final Exception e1) {
@@ -276,9 +275,14 @@ public class GroovyViewer implements IDocumentListener {
                 knowVariables.add(n.getName());
             }
         }
-        unknownElementsIndexer = new UnknownElementsIndexer(knowVariables, getGroovyCompilationUnit());
+        unknownElementsIndexer = new UnknownElementsIndexer(getGroovyCompilationUnit());
         unknownElementsIndexer.addJobChangeListener(
                 new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
+
+        Map<String, ScriptVariable> c = new HashMap<String, ScriptVariable>();
+        nodes.forEach(n -> c.put(n.getName(), n));
+        providedVariables.forEach(n -> c.put(n.getName(), n));
+        editor.setContext(c);
     }
 
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
@@ -319,7 +323,7 @@ public class GroovyViewer implements IDocumentListener {
         editor.dispose();
     }
 
-    public GroovyCompilationUnit getGroovyCompilationUnit() {
+    public BonitaScriptGroovyCompilationUnit getGroovyCompilationUnit() {
         return editor.getGroovyCompilationUnit();
     }
 

@@ -41,6 +41,7 @@ import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMap
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.contract.core.mapping.operation.DefaultFormatterPreferences;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
@@ -51,7 +52,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.codehaus.groovy.eclipse.refactoring.formatter.DefaultGroovyFormatter;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -69,7 +69,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
     @Mock
     private ExpressionProviderService expressionEditorService;
     @Mock
-    private GroovyCompilationUnit groovyCompilationUnit;
+    private BonitaScriptGroovyCompilationUnit groovyCompilationUnit;
 
     @Test
     public void should_create_an_operation_for_a_given_complex_contact_input_and_a_composite_reference_business_data_field()

@@ -19,6 +19,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.groovy.ui.viewer.BonitaGroovyEditor;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.Contract;
@@ -84,7 +85,7 @@ public class ContractConstraintExpressionWizardPageTest {
         sourceViewer.setDocument(new Document());
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(editorFactory.newInstance()).thenReturn(editor);
-        when(groovySourceViewerFactory.createSourceViewer(any(Composite.class), any(GroovyEditor.class))).thenReturn(groovyViewer);
+        when(groovySourceViewerFactory.createSourceViewer(any(Composite.class), any(BonitaGroovyEditor.class))).thenReturn(groovyViewer);
         wizardPage = new ContractConstraintExpressionWizardPage(constraint,
                 c.getInputs(),
                 groovySourceViewerFactory,
