@@ -35,9 +35,6 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 import com.google.common.base.Preconditions;
 
-/**
- * @author Romain Bioteau
- */
 public class FormReferenceExpressionViewer extends ExpressionViewer {
 
     private final WebPageRepositoryStore pageStore;
@@ -82,11 +79,11 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
                     updateName("");
                     return "";
                 }
-                final String displayName = webPageFileStore.getDisplayName();
-                if (!Objects.equals(displayName,fromObject)) {
-                    updateName(displayName);
+                final String pageName = webPageFileStore.getCustomPageName();
+                if (!Objects.equals(pageName,fromObject)) {
+                    updateName(pageName);
                 }
-                return displayName;
+                return pageName;
             }
         };
     }
@@ -95,11 +92,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
         expressionItemProvider.setPropertyValue(getSelectedExpression(), ExpressionPackage.Literals.EXPRESSION__NAME.getName(), newName);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#editControlSelected(org.eclipse.swt.widgets.ToolBar, org.eclipse.swt.widgets.Event,
-     * org.eclipse.emf.edit.domain.EditingDomain)
-     */
+
     @Override
     protected void editControlSelected(final ToolBar tb, final Event event, final EditingDomain editingDomain) {
         Preconditions.checkState(context instanceof FormMapping);
@@ -109,7 +102,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
             final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId);
             if (webPageFileStore != null) {
                 editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, (FormMapping) context,
-                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
+                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getName(), newPageId)));
             }
         }
     }

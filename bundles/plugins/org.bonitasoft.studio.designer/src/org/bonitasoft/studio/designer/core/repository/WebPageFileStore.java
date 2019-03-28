@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -41,7 +42,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
     private static final String ID_TYPE = "type";
-    private static final String DISPLAY_NAME_KEY = "displayName";
+    public static final String DISPLAY_NAME_KEY = "displayName";
     private static final String DESCRIPTION_KEY = "description";
 
     public static final String LAYOUT_TYPE = "layout";
@@ -125,12 +126,14 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
     @Override
     public StyledString getStyledString() {
         StyledString styledString = new StyledString();
-        String name = getDisplayName();
-        styledString.append(name != null ? name : getName());
+        String name = getDisplayName() == null ? getName() : getDisplayName();
+        styledString.append(name);
+        if(!Objects.equals(getCustomPageName(), name)) {
+            styledString.append(String.format(" (%s)", getCustomPageName()), StyledString.COUNTER_STYLER);
+        }
         String type = getType();
         if (type != null) {
-            styledString.append(" ");
-            styledString.append(String.format("(%s)", getType()), StyledString.QUALIFIER_STYLER);
+            styledString.append(String.format(" %s", type.toUpperCase()), StyledString.QUALIFIER_STYLER);
         }
         return styledString;
     }
