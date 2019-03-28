@@ -384,7 +384,7 @@ public class ContractInputGenerationWizardTest {
     }
 
     @Test
-    public void should_add_data_reference_for_document_only_on_task() {
+    public void should_add_data_reference_for_document() {
         Task task = aTask().havingContract(aContract()).build();
         Pool process = aPool().havingContract(aContract()).build();
         Document document1 = ProcessFactory.eINSTANCE.createDocument();
@@ -399,7 +399,7 @@ public class ContractInputGenerationWizardTest {
                 sourceViewerFactory);
         wizard.addPages();
 
-        assertThat(wizard.createDocumentContractInput(document1).getDataReference()).isNull();
+        assertThat(wizard.createDocumentContractInput(document1).getDataReference()).isEqualTo("myDocument");
 
         wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
