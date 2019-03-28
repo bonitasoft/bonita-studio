@@ -58,7 +58,7 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
         List<String> existingPages = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
                 .stream()
                 .filter(store -> Objects.equals(store.getType(), "page"))
-                .map(WebPageFileStore::getDisplayName)
+                .map(WebPageFileStore::getCustomPageName)
                 .collect(Collectors.toList());
         return StringIncrementer.getIncrementedString(DEFAULT_PAGE_NAME, existingPages);
     }
