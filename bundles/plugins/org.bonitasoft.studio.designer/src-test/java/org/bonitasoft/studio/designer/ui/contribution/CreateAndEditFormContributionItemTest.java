@@ -149,7 +149,7 @@ public class CreateAndEditFormContributionItemTest {
                 .getSelection();
 
         doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
-        doReturn("newName").when(webPageFileStore).getDisplayName();
+        doReturn("newName").when(webPageFileStore).getCustomPageName();
         doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
         doReturn(true).when(contribution).openHideEmptyContractDialog();
         contribution.createNewForm();

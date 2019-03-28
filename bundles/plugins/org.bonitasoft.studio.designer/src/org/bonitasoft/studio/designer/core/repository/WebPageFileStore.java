@@ -35,14 +35,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
 
-/**
- * @author Romain Bioteau
- */
+
 public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
     private static final String ID_TYPE = "type";
+    private static final String DISPLAY_NAME_KEY = "displayName";
+    private static final String DESCRIPTION_KEY = "description";
 
     public static final String LAYOUT_TYPE = "layout";
     public static final String PAGE_TYPE = "page";
@@ -97,7 +97,30 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
             return "page";
         }
     }
+    
+    @Override
+    public String getDisplayName() {
+        try {
+            return getStringAttribute(DISPLAY_NAME_KEY);
+        } catch (final JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), DISPLAY_NAME_KEY),
+                    UIDesignerPlugin.PLUGIN_ID);
+            return super.getDisplayName();
+        }
+       
+    }
 
+    public String getDescription() {
+        try {
+            return getStringAttribute(DESCRIPTION_KEY);
+        } catch (final JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), DESCRIPTION_KEY),
+                    UIDesignerPlugin.PLUGIN_ID);
+            return "";
+        }
+    }
 
     @Override
     public StyledString getStyledString() {
@@ -118,4 +141,5 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         parameters.put("name", getName());
         executeCommand(DEPLOY_PAGE_COMMAND, parameters);
     }
+
 }

@@ -97,7 +97,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
 
     public Optional<WebPageFileStore> findByPageId(String pageId) {
         return getChildren().stream()
-                .filter(fStore -> Objects.equals(pageId, "custompage_" + fStore.getDisplayName()))
+                .filter(fStore -> Objects.equals(pageId, "custompage_" + fStore.getCustomPageName()))
                 .findFirst();
     }
 
