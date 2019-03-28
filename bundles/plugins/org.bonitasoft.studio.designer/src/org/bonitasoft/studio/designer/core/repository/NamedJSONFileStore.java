@@ -24,7 +24,7 @@ import org.json.JSONException;
 
 public class NamedJSONFileStore extends JSONFileStore {
 
-    private static final String NAME_KEY = "name";
+    public static final String NAME_KEY = "name";
     private static final String UUID_KEY = "uuid";
     private static final String ID_KEY = "id";
 

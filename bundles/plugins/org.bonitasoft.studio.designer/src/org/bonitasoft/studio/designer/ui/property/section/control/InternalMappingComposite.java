@@ -48,7 +48,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class InternalMappingComposite extends Composite implements BonitaPreferenceConstants {
 
-    private static final int WIDTH_HINT = 300;
+    private static final int WIDTH_HINT = 500;
 
     private final FormReferenceExpressionViewer targetFormExpressionViewer;
     private final RepositoryAccessor repositoryAccessor;
