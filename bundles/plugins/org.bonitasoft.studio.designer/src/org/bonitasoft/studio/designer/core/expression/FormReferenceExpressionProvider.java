@@ -44,9 +44,9 @@ public class FormReferenceExpressionProvider implements IExpressionProvider {
         final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         final Set<Expression> result = new HashSet<>();
         for (final WebPageFileStore fStore : webPageRepositoryStore.getChildren()) {
-            final String displayName = fStore.getDisplayName();
-            if (displayName != null) {
-                result.add(ExpressionHelper.createFormReferenceExpression(displayName, fStore.getUUID()));
+            final String name = fStore.getCustomPageName();
+            if (name != null) {
+                result.add(ExpressionHelper.createFormReferenceExpression(name, fStore.getUUID()));
             }
         }
         return result;
