@@ -20,8 +20,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
+import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,17 +35,15 @@ import org.eclipse.jface.text.Position;
  */
 public class UnknownElementsIndexer extends Job {
 
-    private Set<String> processVariables = new HashSet<String>();
-    private final GroovyCompilationUnit groovyCompilationUnit;
+    private final BonitaScriptGroovyCompilationUnit groovyCompilationUnit;
     private final Map<String, Position> overridenVariables = new HashMap<String, Position>();
     private final Set<String> unknownVaraibles = new HashSet<String>();
 
-    public UnknownElementsIndexer(final Set<String> processVariableScope, final GroovyCompilationUnit groovyCompilationUnit) {
+    public UnknownElementsIndexer(final BonitaScriptGroovyCompilationUnit groovyCompilationUnit) {
         super("Unknown elements indexer");
         setPriority(Job.BUILD);
         setSystem(true);
         setUser(false);
-        processVariables = processVariableScope;
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
@@ -62,13 +61,14 @@ public class UnknownElementsIndexer extends Job {
         final VariablesVisitor variablesVisitor = new VariablesVisitor(statementBlock.getVariableScope());
         statementBlock.visit(variablesVisitor);
         final Map<String, Position> declaredExpressions = variablesVisitor.getDeclaredExpressions();
+        Map<String, ScriptVariable> context = groovyCompilationUnit.getContext();
         for (final String variable : variablesVisitor.getVariableExpressions()) {
-            if (!processVariables.contains(variable) && !declaredExpressions.keySet().contains(variable)) {
+            if (!context.containsKey(variable) && !declaredExpressions.keySet().contains(variable)) {
                 addUnknownVaraible(variable);
             }
         }
         for (final Entry<String, Position> declaredVariable : declaredExpressions.entrySet()) {
-            if (processVariables.contains(declaredVariable.getKey())) {
+            if (context.containsKey(declaredVariable.getKey())) {
                 addOverridenVariable(declaredVariable);
             }
         }

@@ -15,16 +15,20 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
+import org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -132,14 +136,24 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     }
 
     protected GroovyViewer createSourceViewer(final Composite container) {
-        groovyViewer = groovyViewerFactory.createSourceViewer(container, editorFactory.newInstance());
+        ContractConstraintEditor editor = editorFactory.newInstance();
+        groovyViewer = groovyViewerFactory.createSourceViewer(container, editor);
         groovyViewer.disableSyntaxHighligthing();
         ContractContainer contractContainer = null;
         if (!inputs.isEmpty()) {
             contractContainer = ModelHelper.getFirstContainerOfType(inputs.get(0), ContractContainer.class);
         }
         groovyViewer.setContext(null, contractContainer,
-                new ViewerFilter[] { new AvailableExpressionTypeFilter(ExpressionConstants.CONTRACT_INPUT_TYPE) }, null);
+                new ViewerFilter[] { new AvailableExpressionTypeFilter(ExpressionConstants.CONTRACT_INPUT_TYPE) },
+                null);
+
+        if(contractContainer != null) {
+            Map<String, ScriptVariable> c = new HashMap<String, ScriptVariable>();
+            new ContractInputExpressionProvider().getExpressions(contractContainer)
+                    .stream()
+                    .forEach(exp -> c.put(exp.getName(), new ScriptVariable(exp.getName(), exp.getReturnType())));
+            editor.setContext(c);
+        }
         return groovyViewer;
     }
 

@@ -27,13 +27,13 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -53,9 +53,9 @@ public class ComputeScriptDependenciesJob extends Job {
 
     private EObject context;
 
-    private final GroovyCompilationUnit groovyCompilationUnit;
+    private final BonitaScriptGroovyCompilationUnit groovyCompilationUnit;
 
-    public ComputeScriptDependenciesJob(final GroovyCompilationUnit groovyCompilationUnit) {
+    public ComputeScriptDependenciesJob(final BonitaScriptGroovyCompilationUnit groovyCompilationUnit) {
         super(ComputeScriptDependenciesJob.class.getName());
         cache = new HashMap<String, List<EObject>>();
         this.groovyCompilationUnit = groovyCompilationUnit;

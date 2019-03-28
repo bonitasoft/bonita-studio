@@ -16,13 +16,17 @@ package org.bonitasoft.studio.expression.editor.pattern.contentAssist;
 
 import static com.google.common.base.Predicates.not;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.pattern.GroovyExpressionPartitioner;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
+import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.contentassist.ExtendedJavaContentAssistInvocationContext;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaFieldCompletionProposal;
@@ -79,11 +83,14 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
                 script = script.substring(0, script.length() - 1);
             }
             newCompilationUnit = gcuf.newCompilationUnit(script, new NullProgressMonitor());
+            Map<String, ScriptVariable> context = new HashMap<String, ScriptVariable>();
+            variableScope.stream().forEach(exp -> context.put(exp.getName(), new ScriptVariable(exp.getName(), exp.getReturnType())));
+            ((BonitaScriptGroovyCompilationUnit) newCompilationUnit).setContext(context);
             final Document tmpDocument = new Document(script);
             editorPart.init(null, new FileEditorInput((IFile) newCompilationUnit.getResource()));
             return new ExtendedJavaContentAssistInvocationContext(editorPart, viewer, offset, tmpDocument,
                     offset - partition.getOffset() - 2,
-                    variableScope);
+                    context);
         } catch (final JavaModelException | BadLocationException | PartInitException e) {
             BonitaStudioLog.error(e);
         }

@@ -23,9 +23,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
+import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.groovy.ast.expr.DeclarationExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
@@ -34,21 +37,18 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.syntax.Token;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Position;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class UnknownElementsIndexerTest {
 
     @Test
     public void should_call_variable_visitor_on_statement_block() throws Exception {
-        final GroovyCompilationUnit groovyCompilationUnit = mock(GroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
+        final BonitaScriptGroovyCompilationUnit groovyCompilationUnit = mock(BonitaScriptGroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
         final BlockStatement statementBlock = mock(BlockStatement.class);
         when(groovyCompilationUnit.getModuleNode().getStatementBlock()).thenReturn(statementBlock);
-        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(Collections.<String> emptySet(), groovyCompilationUnit);
+        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(groovyCompilationUnit);
 
         unknownElementsIndexer.run(new NullProgressMonitor());
 
@@ -57,7 +57,7 @@ public class UnknownElementsIndexerTest {
 
     @Test
     public void should_add_to_unknonwn_variables_a_variable_not_declared_and_not_in_the_process_scope() throws Exception {
-        final GroovyCompilationUnit groovyCompilationUnit = mock(GroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
+        final BonitaScriptGroovyCompilationUnit groovyCompilationUnit = mock(BonitaScriptGroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
 
         final List<Statement> statements = new ArrayList<Statement>();
         statements.add(new ReturnStatement(new VariableExpression("unkownVariable")));
@@ -66,7 +66,7 @@ public class UnknownElementsIndexerTest {
         final BlockStatement blockStatement = new BlockStatement(statements, variableScope);
 
         when(groovyCompilationUnit.getModuleNode().getStatementBlock()).thenReturn(blockStatement);
-        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(Collections.<String> emptySet(), groovyCompilationUnit);
+        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer( groovyCompilationUnit);
 
         unknownElementsIndexer.run(new NullProgressMonitor());
 
@@ -75,7 +75,7 @@ public class UnknownElementsIndexerTest {
 
     @Test
     public void should_not_add_to_unknonwn_variables_a_variable_declared_but_not_in_the_process_scope() throws Exception {
-        final GroovyCompilationUnit groovyCompilationUnit = mock(GroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
+        final BonitaScriptGroovyCompilationUnit groovyCompilationUnit = mock(BonitaScriptGroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
 
         final List<Statement> statements = new ArrayList<Statement>();
         statements.add(new ExpressionStatement(
@@ -86,7 +86,7 @@ public class UnknownElementsIndexerTest {
         final BlockStatement blockStatement = new BlockStatement(statements, variableScope);
 
         when(groovyCompilationUnit.getModuleNode().getStatementBlock()).thenReturn(blockStatement);
-        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(Collections.<String> emptySet(), groovyCompilationUnit);
+        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(groovyCompilationUnit);
 
         unknownElementsIndexer.run(new NullProgressMonitor());
 
@@ -95,8 +95,11 @@ public class UnknownElementsIndexerTest {
 
     @Test
     public void should_add_to_overriden_variables_a_variable_declared_and_already_in_the_process_scope() throws Exception {
-        final GroovyCompilationUnit groovyCompilationUnit = mock(GroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
-
+        final BonitaScriptGroovyCompilationUnit groovyCompilationUnit = mock(BonitaScriptGroovyCompilationUnit.class, RETURNS_DEEP_STUBS);
+        Map<String, ScriptVariable> context = new HashMap<String, ScriptVariable>();
+        context.put("declaredVar", null);
+        when(groovyCompilationUnit.getContext()).thenReturn(context);
+        
         final List<Statement> statements = new ArrayList<Statement>();
         statements.add(new ExpressionStatement(
                 new DeclarationExpression(new VariableExpression("declaredVar"), Token.NULL, new VariableExpression("something"))));
@@ -106,7 +109,7 @@ public class UnknownElementsIndexerTest {
         final BlockStatement blockStatement = new BlockStatement(statements, variableScope);
 
         when(groovyCompilationUnit.getModuleNode().getStatementBlock()).thenReturn(blockStatement);
-        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(Sets.newHashSet("declaredVar"), groovyCompilationUnit);
+        final UnknownElementsIndexer unknownElementsIndexer = new UnknownElementsIndexer(groovyCompilationUnit);
 
         unknownElementsIndexer.run(new NullProgressMonitor());
 

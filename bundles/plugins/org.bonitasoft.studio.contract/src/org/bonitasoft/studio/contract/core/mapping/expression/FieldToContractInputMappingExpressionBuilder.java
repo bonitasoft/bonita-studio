@@ -32,13 +32,13 @@ import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInsta
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.job.ComputeScriptDependenciesJob;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -103,7 +103,7 @@ public class FieldToContractInputMappingExpressionBuilder {
             groovyScriptExpression.getReferencedElements().add(
                     ExpressionHelper.createDependencyFromEObject(data));
         }
-        final GroovyCompilationUnit groovyCompilationUnit = groovyCompilationUnit(groovyScriptExpression);
+        final BonitaScriptGroovyCompilationUnit groovyCompilationUnit = groovyCompilationUnit(groovyScriptExpression);
         final ComputeScriptDependenciesJob job = new ComputeScriptDependenciesJob(groovyCompilationUnit);
         job.setNodes(availableDao());
         job.getNodes().add(new ScriptVariable(data.getName(), data.getDataType().toString()));
@@ -125,9 +125,9 @@ public class FieldToContractInputMappingExpressionBuilder {
         return scriptVariables;
     }
 
-    protected GroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression)
+    protected BonitaScriptGroovyCompilationUnit groovyCompilationUnit(final Expression groovyScriptExpression)
             throws JavaModelException {
-        return (GroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(
+        return (BonitaScriptGroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(
                 groovyScriptExpression.getContent(),
                 Repository.NULL_PROGRESS_MONITOR);
     }
