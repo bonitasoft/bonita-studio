@@ -61,7 +61,7 @@ public class ContractInputGenerationInfoDialogFactory {
                 MessageDialogWithPrompt.open(MessageDialog.INFORMATION,
                         shell,
                         Messages.openUpdateDocumentOperationWarningTitle,
-                        Messages.bind(Messages.openUpdateDocumentOperationWarningMessages, documentName),
+                        String.format(Messages.openUpdateDocumentOperationWarningMessages, documentName),
                         Messages.doNotShowMeAgain,
                         false,
                         preferenceStore,
