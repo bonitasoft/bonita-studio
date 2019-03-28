@@ -80,7 +80,7 @@ public class FormReferenceExpressionProviderTest {
 
     private WebPageFileStore newWebPageFileStore(final String name, final String id) {
         final WebPageFileStore webPageFileStore = mock(WebPageFileStore.class);
-        when(webPageFileStore.getDisplayName()).thenReturn(name);
+        when(webPageFileStore.getCustomPageName()).thenReturn(name);
         when(webPageFileStore.getId()).thenReturn(id);
         when(webPageFileStore.getUUID()).thenReturn(id);
         return webPageFileStore;
