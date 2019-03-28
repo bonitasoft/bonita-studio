@@ -140,8 +140,8 @@ public class ContractInputTreeViewer extends TreeViewer {
 
         ColumnViewerToolTipSupport.enableFor(this);
 
-        configureTableLayout();
         createColumns();
+        configureTableLayout();
     }
 
     protected void createColumns() {

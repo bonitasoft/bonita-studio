@@ -45,7 +45,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
     protected File getArchiveFile() {
         File tmpFile = null;
         try {
-            tmpFile = File.createTempFile(getPageId(), ".zip");
+            tmpFile = File.createTempFile(getCustomPageId(), ".zip");
             Files.write(customPageBarResourceFactory.export(pageFileStore.getId()), tmpFile);
             return tmpFile;
         } catch (final IOException e) {
@@ -57,13 +57,18 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
     }
 
     @Override
-    protected String getPageId() {
-        return "custompage_" + pageFileStore.getDisplayName();
+    protected String getCustomPageId() {
+        return "custompage_" + pageFileStore.getCustomPageName();
     }
 
     @Override
     protected String taskName() {
         return String.format(Messages.deployingPage, pageFileStore.getDisplayName());
+    }
+
+    @Override
+    protected String getCustomPageLabel() {
+        return pageFileStore.getDisplayName();
     }
 
 }

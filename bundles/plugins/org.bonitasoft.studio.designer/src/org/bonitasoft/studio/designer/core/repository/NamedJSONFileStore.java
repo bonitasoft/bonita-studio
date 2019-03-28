@@ -21,9 +21,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.json.JSONException;
 
-/**
- * @author Romain Bioteau
- */
+
 public class NamedJSONFileStore extends JSONFileStore {
 
     private static final String NAME_KEY = "name";
@@ -55,15 +53,19 @@ public class NamedJSONFileStore extends JSONFileStore {
             return null;
         }
     }
-
-    @Override
-    public String getDisplayName() {
+    
+    public String getCustomPageName() {
         try {
             return getStringAttribute(NAME_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
             BonitaStudioLog.error(String.format("Failed to retrieve name in JSON file %s.json, with key %s.", getName(), NAME_KEY), UIDesignerPlugin.PLUGIN_ID);
             return null;
         }
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getCustomPageName();
     }
 
 }

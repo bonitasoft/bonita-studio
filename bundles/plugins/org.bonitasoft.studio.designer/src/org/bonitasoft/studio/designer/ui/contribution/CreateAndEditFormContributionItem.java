@@ -140,7 +140,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
             final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
             if (webPageFileStore != null) {
                 getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
-                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getDisplayName(), newPageId)));
+                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getCustomPageName(), newPageId)));
             }
         }
     }

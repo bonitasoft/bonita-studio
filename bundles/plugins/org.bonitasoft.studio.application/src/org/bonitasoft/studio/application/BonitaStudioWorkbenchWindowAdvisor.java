@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.application;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
@@ -25,6 +29,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -45,7 +51,13 @@ import org.eclipse.ui.part.ResourceTransfer;
 public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private final IWorkbenchWindow window;
-
+    private static final Set<String> EDITOR_TYPE_TO_CLOSE_ON_EXIT = new HashSet<>();
+    static {
+        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
+        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
+    }
+    
+    
     public BonitaStudioWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
         super(configurer);
         configurer.setShowProgressIndicator(true);
@@ -142,7 +154,14 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 IDEWorkbenchPlugin.getDefault().savePluginPreferences();
             }
         }
-
-        return true;
+        
+        IWorkbenchPage activePage = PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow()
+                .getActivePage();
+        IEditorReference[] editorReferences = activePage
+                .getEditorReferences();
+        return activePage.closeEditors(Stream.of(editorReferences)
+                .filter(ref -> EDITOR_TYPE_TO_CLOSE_ON_EXIT.contains(ref.getId()))
+                .toArray(IEditorReference[]::new), true);
     }
 }

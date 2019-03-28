@@ -90,8 +90,8 @@ public class ContractConstraintsTableViewer extends TableViewer {
                 ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         ColumnViewerToolTipSupport.enableFor(this);
-        configureTableLayout();
         createColumns();
+        configureTableLayout();
     }
 
     public void createAddListener(final Button button) {

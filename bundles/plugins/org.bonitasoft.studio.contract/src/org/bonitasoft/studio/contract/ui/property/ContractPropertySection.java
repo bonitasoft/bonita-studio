@@ -84,15 +84,18 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyComposite;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -198,8 +201,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        inputComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 0, 10, 5)
+        inputComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15, 10).numColumns(2).extendedMargins(5, 0, 0, 5)
                         .spacing(LayoutConstants.getSpacing().x, 15).create());
 
         createInputTabContent(inputComposite, observeContractValue);
@@ -208,7 +210,8 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
         final Composite constraintComposite = getWidgetFactory().createComposite(tabFolder);
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 0, 10, 5).create());
+        constraintComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15, 10).numColumns(2).extendedMargins(5, 0, 0, 5)
+                .spacing(LayoutConstants.getSpacing().x, 15).create());
 
         createConstraintTabContent(constraintComposite, observeContractValue);
 
@@ -257,7 +260,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory(),
                 progressService, sharedImages);
         inputsTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         inputsTableViewer.initialize(inputController, getMessageManager(), context);
         inputsTableViewer.setInput(observeContractValue);
 
