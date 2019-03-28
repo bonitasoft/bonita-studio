@@ -14,15 +14,15 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
+import org.bonitasoft.studio.groovy.ui.viewer.BonitaGroovyEditor;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
-import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
-public class ContractConstraintEditor extends GroovyEditor {
+public class ContractConstraintEditor extends BonitaGroovyEditor {
 
     public ContractConstraintEditor() {
         super();
@@ -78,4 +78,5 @@ public class ContractConstraintEditor extends GroovyEditor {
     protected GroovyColorManager getColorManager() {
         return GroovyPlugin.getDefault().getTextTools().getColorManager();
     }
+
 }
