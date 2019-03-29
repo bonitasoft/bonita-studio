@@ -44,7 +44,7 @@ import org.eclipse.ui.IWorkbenchPart;
 public class GroovyFileStore extends AbstractFileStore {
 
     private static final String UTF_8 = "UTF-8";
-    public static final String EXPRESSION_SCRIPT_NAME = "groovyExpressionScript.groovy";
+    public static final String EXPRESSION_SCRIPT_NAME = "BonitaScriptContext.groovy";
 
     public GroovyFileStore(final String fileName, final IRepositoryStore<?> parentStore) {
         super(fileName, parentStore);
