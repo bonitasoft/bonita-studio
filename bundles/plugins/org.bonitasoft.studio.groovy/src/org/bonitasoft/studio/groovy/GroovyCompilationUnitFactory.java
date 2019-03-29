@@ -17,6 +17,7 @@ package org.bonitasoft.studio.groovy;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -40,17 +41,13 @@ public class GroovyCompilationUnitFactory {
             final IPackageFragment packageFragment = javaProject
                     .findPackageFragmentRoot(javaProject.getPath().append("src-providedGroovy"))
                     .getPackageFragment("");//default package
-            return packageFragment.createCompilationUnit(newScriptName(), script, true, monitor);
+            return packageFragment.createCompilationUnit(GroovyFileStore.EXPRESSION_SCRIPT_NAME, script, true, monitor);
         }
         return null;
     }
 
     private IJavaProject javaProject() {
         return repositoryAccessor.getCurrentRepository() != null ? repositoryAccessor.getCurrentRepository().getJavaProject() : null;
-    }
-
-    private String newScriptName() {
-        return "script" + System.currentTimeMillis() + ".groovy";
     }
 
 }
