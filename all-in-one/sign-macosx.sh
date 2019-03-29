@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 filename=$1
 url=$2
