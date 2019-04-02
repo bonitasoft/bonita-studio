@@ -104,9 +104,6 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         try {
             return getStringAttribute(DISPLAY_NAME_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
-            BonitaStudioLog.error(
-                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), DISPLAY_NAME_KEY),
-                    UIDesignerPlugin.PLUGIN_ID);
             return super.getDisplayName();
         }
        

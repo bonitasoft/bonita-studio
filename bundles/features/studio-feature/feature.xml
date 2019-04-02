@@ -86,18 +86,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.babel.nls_technology.recommenders_es"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.recommenders_fr"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.recommenders_ja"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.babel.nls_webtools_es"
          version="0.0.0"/>
 
@@ -123,10 +111,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.babel.nls_technology.jgit_pt_BR"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.recommenders_pt_BR"
          version="0.0.0"/>
 
    <includes
