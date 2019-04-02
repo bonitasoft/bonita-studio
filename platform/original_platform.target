@@ -30,12 +30,6 @@
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20181128170323/repository/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-			<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.2.0.xx-201812291959-e2018-12-RELEASE"/>
-			<unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.2.0.xx-201812291959-e2018-12-RELEASE"/>
-			<unit id="org.codehaus.groovy24.feature.feature.group" version="3.2.0.xx-201812291959-e2018-12-RELEASE"/>
-			<repository location="http://dist.springsource.org/release/GRECLIPSE/3.2.0/e4.10"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.7.0.201806111355"/>
 			<unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.7.0.201806111355"/>
 			<unit id="org.eclipse.swtbot.eclipse.gef.source.feature.group" version="2.7.0.201806111355"/>
@@ -159,12 +153,6 @@
 			<unit id="org.eclipse.xsd.sdk.feature.group" version="2.16.0.v20181127-0852"/>
 			<unit id="org.eclipse.xtext.sdk.feature.group" version="2.16.0.v20181203-1555"/>
 			<unit id="org.sonatype.m2e.mavenarchiver.feature.feature.group" version="0.17.2.201606141937-signed-20160830073346"/>
-			<unit id="org.eclipse.egit.feature.group" version="5.2.0.201812061821-r"/>
-			<unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.2.0.201812061821-r"/>
-			<unit id="org.eclipse.jgit.feature.group" version="5.2.0.201812061821-r"/>
-			<unit id="org.eclipse.jgit.http.apache.feature.group" version="5.2.0.201812061821-r"/>
-			<unit id="org.eclipse.jgit.lfs.feature.group" version="5.2.0.201812061821-r"/>
-			<unit id="org.eclipse.jgit.ssh.apache.feature.group" version="5.2.0.201812061821-r"/>
 			<unit id="org.eclipse.sdk.feature.group" version="4.10.0.v20181206-1038"/>
 			<unit id="org.eclipse.gmf.feature.group" version="1.12.0.201806010809"/>
 			<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.12.0.201805221301"/>
@@ -218,6 +206,7 @@
 			<unit id="org.apache.lucene.queryparser" version="7.5.0.v20181003-1532"/>
 			<unit id="javax.activation" version="1.1.0.v201211130549"/>
 			<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
+			<unit id="org.eclipse.epp.package.javascript.feature.feature.group" version="4.10.0.20181214-0600"/>
 			<repository location="https://download.eclipse.org/releases/2018-12"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -233,36 +222,52 @@
 			<repository location="https://download.eclipse.org/datatools/updates/1.14.104-SNAPSHOT/repository"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.egit_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.jgit_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.recommenders_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.recommenders_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.recommenders_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_technology.recommenders_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.8.0.v20180815020001"/>
-			<unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.8.0.v20180815020001"/>
-			<repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.0/photon"/>
+			<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.egit_pt_BR.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.jgit_es.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.10.0.v20190126060001"/>
+			<unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.10.0.v20190126060001"/>
+			<repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.1/2018-12"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.9.0.v201611141242"/>
 			<repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
 		</location>
-	</locations>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.3.0.xx-201903290056-e1812-RELEASE"/>
+		<unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.3.0.xx-201903290056-e1812-RELEASE"/>
+		<unit id="org.codehaus.groovy24.feature.feature.group" version="3.3.0.xx-201903290056-e1812-RELEASE"/>
+		<repository location="https://dist.springsource.org/release/GRECLIPSE/3.3.0/e4.10"/>
+	</location>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<unit id="org.eclipse.egit.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.jgit.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.jgit.pgm.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.jgit.ssh.apache.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.jgit.http.apache.feature.group" version="5.3.0.201903130848-r"/>
+		<unit id="org.eclipse.jgit.lfs.feature.group" version="5.3.0.201903130848-r"/>
+		<repository location="http://download.eclipse.org/egit/updates/"/>
+	</location>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.5.0"/>
+		<repository location="https://dl.bintray.com/de-jcup/jenkinseditor/"/>
+	</location>
+</locations>
 	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 </target>

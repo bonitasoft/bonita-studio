@@ -35,12 +35,12 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  .jar;g="commons-codec";a="commons-codec";v="1.7",lib/bonita-common.jar;
  g="org.bonitasoft.engine";a="bonita-common";v="7.9.0-SNAPSHOT",lib/comm
  ons-io.jar;g="commons-io";a="commons-io";v="2.5",lib/jackson-databind.j
- ar;g="com.fasterxml.jackson.core";a="jackson-databind";v="2.9.0",lib/ja
- ckson-core.jar;g="com.fasterxml.jackson.core";a="jackson-core";v="2.9.0
+ ar;g="com.fasterxml.jackson.core";a="jackson-databind";v="2.9.8",lib/ja
+ ckson-core.jar;g="com.fasterxml.jackson.core";a="jackson-core";v="2.9.8
  ",lib/slf4j-api.jar;g="org.slf4j";a="slf4j-api";v="1.7.25",lib/commons-
  lang3.jar;g="org.apache.commons";a="commons-lang3";v="3.3.2",lib/jackso
  n-annotations.jar;g="com.fasterxml.jackson.core";a="jackson-annotations
- ";v="2.9.0",lib/activation.jar;g="javax.activation";a="activation";v="1
+ ";v="2.9.8",lib/activation.jar;g="javax.activation";a="activation";v="1
  .1.1",lib/console-server.jar;g="org.bonitasoft.console";a="console-serv
  er";v="7.9.0-SNAPSHOT";c="classes",lib/console-common.jar;g="org.bonita
  soft.console";a="console-common";v="7.9.0-SNAPSHOT"
@@ -119,46 +119,44 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  ,javax.xml.bind.annotation;version="2.2.0",javax.xml.bind.annotation.ad
  apters;version="2.2.0",javax.xml.bind.attachment;version="2.2.0",javax.
  xml.bind.helpers;version="2.2.0",javax.xml.bind.util;version="2.2.0"
-Include-Resource: , lib/bonita-client.jar=/Users/adrien/.m2/repository/o
- rg/bonitasoft/engine/bonita-client/7.9.0-SNAPSHOT/bonita-client-7.9.0-S
- NAPSHOT.jar,lib/jaxb-api.jar=/Users/adrien/.m2/repository/javax/xml/bin
- d/jaxb-api/2.2.7/jaxb-api-2.2.7.jar,lib/jaxb-impl.jar=/Users/adrien/.m2
- /repository/com/sun/xml/bind/jaxb-impl/2.2.7/jaxb-impl-2.2.7.jar,lib/ja
- xb-core.jar=/Users/adrien/.m2/repository/com/sun/xml/bind/jaxb-core/2.2
- .7/jaxb-core-2.2.7.jar,lib/istack-commons-runtime.jar=/Users/adrien/.m2
- /repository/com/sun/istack/istack-commons-runtime/2.16/istack-commons-r
- untime-2.16.jar,lib/FastInfoset.jar=/Users/adrien/.m2/repository/com/su
- n/xml/fastinfoset/FastInfoset/1.2.12/FastInfoset-1.2.12.jar,lib/httpcli
- ent.jar=/Users/adrien/.m2/repository/org/apache/httpcomponents/httpclie
- nt/4.5.2/httpclient-4.5.2.jar,lib/httpcore.jar=/Users/adrien/.m2/reposi
- tory/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar,lib/co
- mmons-logging.jar=/Users/adrien/.m2/repository/commons-logging/commons-
- logging/1.2/commons-logging-1.2.jar,lib/xstream.jar=/Users/adrien/.m2/r
- epository/com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.jar,li
- b/xmlpull.jar=/Users/adrien/.m2/repository/xmlpull/xmlpull/1.1.3.1/xmlp
- ull-1.1.3.1.jar,lib/xpp3_min.jar=/Users/adrien/.m2/repository/xpp3/xpp3
- _min/1.1.4c/xpp3_min-1.1.4c.jar,lib/httpmime.jar=/Users/adrien/.m2/repo
- sitory/org/apache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.jar,lib/
- commons-codec.jar=/Users/adrien/.m2/repository/commons-codec/commons-co
- dec/1.7/commons-codec-1.7.jar,lib/bonita-common.jar=/Users/adrien/.m2/r
- epository/org/bonitasoft/engine/bonita-common/7.9.0-SNAPSHOT/bonita-com
- mon-7.9.0-SNAPSHOT.jar,lib/commons-io.jar=/Users/adrien/.m2/repository/
- commons-io/commons-io/2.5/commons-io-2.5.jar,lib/jackson-databind.jar=/
- Users/adrien/.m2/repository/com/fasterxml/jackson/core/jackson-databind
- /2.9.0/jackson-databind-2.9.0.jar,lib/jackson-core.jar=/Users/adrien/.m
- 2/repository/com/fasterxml/jackson/core/jackson-core/2.9.0/jackson-core
- -2.9.0.jar,lib/slf4j-api.jar=/Users/adrien/.m2/repository/org/slf4j/slf
- 4j-api/1.7.25/slf4j-api-1.7.25.jar,lib/commons-lang3.jar=/Users/adrien/
- .m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3
- .2.jar,lib/jackson-annotations.jar=/Users/adrien/.m2/repository/com/fas
- terxml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0
- .jar,lib/activation.jar=/Users/adrien/.m2/repository/javax/activation/a
- ctivation/1.1.1/activation-1.1.1.jar,lib/console-server.jar=/Users/adri
- en/.m2/repository/org/bonitasoft/console/console-server/7.9.0-SNAPSHOT/
- console-server-7.9.0-SNAPSHOT-classes.jar,lib/console-common.jar=/Users
- /adrien/.m2/repository/org/bonitasoft/console/console-common/7.9.0-SNAP
- SHOT/console-common-7.9.0-SNAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=to
- mcat
+Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/newrepo/org/b
+ onitasoft/engine/bonita-client/7.9.0-SNAPSHOT/bonita-client-7.9.0-SNAPS
+ HOT.jar,lib/jaxb-api.jar=/home/romain/.m2/newrepo/javax/xml/bind/jaxb-a
+ pi/2.2.7/jaxb-api-2.2.7.jar,lib/jaxb-impl.jar=/home/romain/.m2/newrepo/
+ com/sun/xml/bind/jaxb-impl/2.2.7/jaxb-impl-2.2.7.jar,lib/jaxb-core.jar=
+ /home/romain/.m2/newrepo/com/sun/xml/bind/jaxb-core/2.2.7/jaxb-core-2.2
+ .7.jar,lib/istack-commons-runtime.jar=/home/romain/.m2/newrepo/com/sun/
+ istack/istack-commons-runtime/2.16/istack-commons-runtime-2.16.jar,lib/
+ FastInfoset.jar=/home/romain/.m2/newrepo/com/sun/xml/fastinfoset/FastIn
+ foset/1.2.12/FastInfoset-1.2.12.jar,lib/httpclient.jar=/home/romain/.m2
+ /newrepo/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.ja
+ r,lib/httpcore.jar=/home/romain/.m2/newrepo/org/apache/httpcomponents/h
+ ttpcore/4.4.4/httpcore-4.4.4.jar,lib/commons-logging.jar=/home/romain/.
+ m2/newrepo/commons-logging/commons-logging/1.2/commons-logging-1.2.jar,
+ lib/xstream.jar=/home/romain/.m2/newrepo/com/thoughtworks/xstream/xstre
+ am/1.4.10/xstream-1.4.10.jar,lib/xmlpull.jar=/home/romain/.m2/newrepo/x
+ mlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=/home/romai
+ n/.m2/newrepo/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar,lib/httpmime.jar
+ =/home/romain/.m2/newrepo/org/apache/httpcomponents/httpmime/4.5.2/http
+ mime-4.5.2.jar,lib/commons-codec.jar=/home/romain/.m2/newrepo/commons-c
+ odec/commons-codec/1.7/commons-codec-1.7.jar,lib/bonita-common.jar=/hom
+ e/romain/.m2/newrepo/org/bonitasoft/engine/bonita-common/7.9.0-SNAPSHOT
+ /bonita-common-7.9.0-SNAPSHOT.jar,lib/commons-io.jar=/home/romain/.m2/n
+ ewrepo/commons-io/commons-io/2.5/commons-io-2.5.jar,lib/jackson-databin
+ d.jar=/home/romain/.m2/newrepo/com/fasterxml/jackson/core/jackson-datab
+ ind/2.9.8/jackson-databind-2.9.8.jar,lib/jackson-core.jar=/home/romain/
+ .m2/newrepo/com/fasterxml/jackson/core/jackson-core/2.9.8/jackson-core-
+ 2.9.8.jar,lib/slf4j-api.jar=/home/romain/.m2/newrepo/org/slf4j/slf4j-ap
+ i/1.7.25/slf4j-api-1.7.25.jar,lib/commons-lang3.jar=/home/romain/.m2/ne
+ wrepo/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar,li
+ b/jackson-annotations.jar=/home/romain/.m2/newrepo/com/fasterxml/jackso
+ n/core/jackson-annotations/2.9.8/jackson-annotations-2.9.8.jar,lib/acti
+ vation.jar=/home/romain/.m2/newrepo/javax/activation/activation/1.1.1/a
+ ctivation-1.1.1.jar,lib/console-server.jar=/home/romain/.m2/newrepo/org
+ /bonitasoft/console/console-server/7.9.0-SNAPSHOT/console-server-7.9.0-
+ SNAPSHOT-classes.jar,lib/console-common.jar=/home/romain/.m2/newrepo/or
+ g/bonitasoft/console/console-common/7.9.0-SNAPSHOT/console-common-7.9.0
+ -SNAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=tomcat
 Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  r.conf.Catalina.localhost,tomcat.server.conf,tomcat.server.lib,tomcat.s
  erver.lib.bonita,tomcat.server.logs,tomcat.server.temp,tomcat.server.we
