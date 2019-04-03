@@ -38,6 +38,7 @@ import org.restlet.resource.ResourceException;
 public abstract class CreateUIDArtifactOperation implements IRunnableWithProgress {
 
     public static final String DEFAULT_PAGE_NAME = "newPage";
+    public static final String DEFAULT_FORM_NAME = "newForm";
     public static final String DEFAULT_LAYOUT_NAME = "newLayout";
     public static final String DEFAULT_WIDGET_NAME = "newWidget";
     public static final String DEFAULT_FRAGMENT_NAME = "newFragment";

@@ -105,7 +105,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             if (repositoryStore.isPresent()) {
                 IRepositoryStore<? extends IRepositoryFileStore> iRepositoryStore = repositoryStore.get();
                 String displayName = iRepositoryStore.getDisplayName();
-                return new StyledString(displayName != null ? displayName : iRepositoryStore.getName());
+                return new StyledString(displayName != null && !displayName.isEmpty() ? displayName : iRepositoryStore.getName());
             }
             return asFileStore(element, repositoryManager)
                     .filter(fStore -> Objects.equals(fStore.getResource(), element))
