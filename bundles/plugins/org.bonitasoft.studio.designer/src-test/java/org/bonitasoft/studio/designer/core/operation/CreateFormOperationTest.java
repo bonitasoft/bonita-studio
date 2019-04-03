@@ -16,21 +16,25 @@ package org.bonitasoft.studio.designer.core.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.net.URL;
+import java.util.Collections;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.restlet.representation.Representation;
@@ -51,12 +55,17 @@ public class CreateFormOperationTest {
 
     @Mock
     private RepositoryAccessor repositoryAccessor;
+    
+    @Mock
+    private WebPageRepositoryStore pageStore;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        when(pageStore.getChildren()).thenReturn(Collections.emptyList());
+        when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         createFormOperation = spy(new CreateFormOperation(pageDesignerURLFactory, repositoryAccessor));
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", "newPage");

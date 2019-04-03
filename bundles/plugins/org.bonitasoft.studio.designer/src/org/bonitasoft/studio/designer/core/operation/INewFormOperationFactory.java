@@ -24,7 +24,6 @@ import org.bonitasoft.studio.model.process.Contract;
 public interface INewFormOperationFactory {
 
    CreateUIDArtifactOperation newCreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
-            String formName, 
             Contract contract, 
             FormScope formScope, 
             RepositoryAccessor repositoryAccessor);

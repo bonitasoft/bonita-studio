@@ -123,7 +123,8 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
     @Override
     public StyledString getStyledString() {
         StyledString styledString = new StyledString();
-        String name = getDisplayName() == null ? getName() : getDisplayName();
+        String displayName = getDisplayName();
+        String name = displayName == null || displayName.isEmpty() ? getName() : displayName;
         styledString.append(name);
         if(!Objects.equals(getCustomPageName(), name)) {
             styledString.append(String.format(" (%s)", getCustomPageName()), StyledString.COUNTER_STYLER);
