@@ -32,12 +32,11 @@ public class NewFormOperationFactoryDelegate implements INewFormOperationFactory
     private static final String NEW_FORM_OPERATION_FACTORY_EXT_ID = "org.bonitasoft.studio.designer.formOperationFactory";
 
     public CreateUIDArtifactOperation newCreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
-            String formName, 
             Contract contract, 
             FormScope formScope, 
             RepositoryAccessor repositoryAccessor) {
         INewFormOperationFactory delegate = findFactory();
-        return delegate.newCreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope, repositoryAccessor);
+        return delegate.newCreateFormFromContractOperation(pageDesignerURLBuilder, contract, formScope, repositoryAccessor);
     }
 
     private INewFormOperationFactory findFactory() {

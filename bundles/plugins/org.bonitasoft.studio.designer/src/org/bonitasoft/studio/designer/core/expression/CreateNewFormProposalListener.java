@@ -79,8 +79,9 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public String handleEvent(final EObject context, final String fixedReturnType) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
-        final CreateUIDArtifactOperation operation = doCreateFormOperation(pageDesignerURLFactory, "newForm",
-                contractFor(context), formScopeFor(context));
+        final CreateUIDArtifactOperation operation = doCreateFormOperation(pageDesignerURLFactory,
+                contractFor(context), 
+                formScopeFor(context));
 
         try {
             progressService.busyCursorWhile(operation);
@@ -133,9 +134,9 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     }
 
     protected CreateUIDArtifactOperation doCreateFormOperation(final PageDesignerURLFactory pageDesignerURLBuilder,
-            final String formName,
-            final Contract contract, final FormScope formScope) {
-        return operationFactory.newCreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope,
+            final Contract contract,
+            final FormScope formScope) {
+        return operationFactory.newCreateFormFromContractOperation(pageDesignerURLBuilder, contract, formScope,
                 repositoryAccessor);
     }
 

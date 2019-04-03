@@ -28,8 +28,8 @@ public class NewFormFromContractOperationFactory implements INewFormOperationFac
 
     @Override
     public CreateUIDArtifactOperation newCreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
-            String formName, Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
-        return new CreateFormFromContractOperation(pageDesignerURLBuilder, formName, contract, formScope, repositoryAccessor);
+            Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
+        return new CreateFormFromContractOperation(pageDesignerURLBuilder, contract, formScope, repositoryAccessor);
     }
 
 }

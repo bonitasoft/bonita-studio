@@ -18,7 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
@@ -33,7 +37,6 @@ import org.eclipse.ui.progress.IProgressService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +67,6 @@ public class CreateOrEditFormProposalListenerTest {
         when(fileStore.getUUID()).thenReturn("page-id");
 
         doReturn(operation).when(operationFactory).newCreateFormFromContractOperation(any(PageDesignerURLFactory.class),
-                anyString(),
                 any(Contract.class),
                 any(FormScope.class),
                 any(RepositoryAccessor.class));
