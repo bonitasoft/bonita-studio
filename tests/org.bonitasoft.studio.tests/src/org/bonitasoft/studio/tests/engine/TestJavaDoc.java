@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.tests.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.flownode.AutomaticTaskDefinition;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -41,6 +43,6 @@ public class TestJavaDoc extends TestCase {
         final String javadocClient = javaProject.findType(TenantAPIAccessor.class.getName())
                 .getAttachedJavadoc(Repository.NULL_PROGRESS_MONITOR);
         assertNotNull("JavaDoc not working for bonita-client", javadocClient);
-        assertTrue(javadocClient.contains("Matthieu Chaffotte"));
+        assertThat(javadocClient).contains("Accessor class");
     }
 }
