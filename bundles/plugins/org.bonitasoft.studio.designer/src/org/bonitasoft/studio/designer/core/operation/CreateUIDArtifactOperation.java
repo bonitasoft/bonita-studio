@@ -41,6 +41,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     public static final String DEFAULT_LAYOUT_NAME = "newLayout";
     public static final String DEFAULT_WIDGET_NAME = "newWidget";
     public static final String DEFAULT_FRAGMENT_NAME = "newFragment";
+    public static final String DEFAULT_FORM_NAME = "newForm";
 
     public enum ArtifactyType {
         PAGE("page"), FORM("form"), WIDGET("widget"), LAYOUT("layout"), FRAGMENT("fragment");

@@ -16,10 +16,16 @@ package org.bonitasoft.studio.designer.core.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
@@ -36,6 +42,7 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
+        setArtifactName(getNewName());
         JSONObject jsonBody = createBody();
         try {
             responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(jsonBody));
@@ -47,6 +54,15 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
     @Override
     protected ArtifactyType getArtifactType() {
         return ArtifactyType.FORM;
+    }
+    
+    private String getNewName() {
+        List<String> existingForms = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
+                .stream()
+                .filter(store -> Objects.equals(store.getType(), "form"))
+                .map(WebPageFileStore::getId)
+                .collect(Collectors.toList());
+        return StringIncrementer.getIncrementedString(DEFAULT_FORM_NAME, existingForms);
     }
 
 }

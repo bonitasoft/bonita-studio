@@ -20,13 +20,19 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.converter.ToWebContract;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
@@ -54,6 +60,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         try {
             URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
+            setArtifactName(getNewName());
             Representation body = new JacksonRepresentation<>(new ToWebContract().apply(contract));
             responseObject = createArtifact(url, body);
         } catch (MalformedURLException e) {
@@ -64,6 +71,15 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     @Override
     protected ArtifactyType getArtifactType() {
         return ArtifactyType.FORM;
+    }
+    
+    private String getNewName() {
+        List<String> existingForms = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
+                .stream()
+                .filter(store -> Objects.equals(store.getType(), "form"))
+                .map(WebPageFileStore::getId)
+                .collect(Collectors.toList());
+        return StringIncrementer.getIncrementedString(DEFAULT_FORM_NAME, existingForms);
     }
 
 }
