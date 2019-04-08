@@ -25,6 +25,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUp
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -152,7 +153,7 @@ public class SelectDataWizardPage extends WizardPage {
         businessVariableButton.setText(Messages.businessVariable);
         documentButton = new Button(radioButtonComposite, SWT.RADIO);
         documentButton.setText(Messages.document);
-        selectionTypeObservable = new SelectObservableValue<Boolean>(Boolean.class);
+        selectionTypeObservable = new SelectObservableValue<>(Boolean.class);
         selectionTypeObservable.addOption(Boolean.TRUE, WidgetProperties.selection().observe(businessVariableButton));
         selectionTypeObservable.addOption(Boolean.FALSE, WidgetProperties.selection().observe(documentButton));
 
@@ -323,7 +324,16 @@ public class SelectDataWizardPage extends WizardPage {
                 .addValidator(mandatoryValidator(Messages.rootContractInputName))
                 .addValidator(maxLengthValidator(Messages.rootContractInputName, INPUT_NAME_MAX_LENGTH))
                 .addValidator(groovyReferenceValidator(Messages.rootContractInputName).startsWithLowerCase())
-                .addValidator(uniqueValidator().onProperty("name").in(contract.getInputs())).create();
+                .addValidator(uniqueValidator().onProperty("name").in(contract.getInputs()))
+                .addValidator(this::validateInputNameDifferentThanBusinessDataName)
+                .create();
+    }
+
+    private IStatus validateInputNameDifferentThanBusinessDataName(Object value) {
+        if (Objects.equals(value, ((Data) selectedDataObservable.getValue()).getName())) {
+            return ValidationStatus.error(Messages.contractInputEqualToBusinessDataError);
+        }
+        return ValidationStatus.ok();
     }
 
     private void createEditOrCreateOptionFields(final Composite parent, final DataBindingContext dbc) {

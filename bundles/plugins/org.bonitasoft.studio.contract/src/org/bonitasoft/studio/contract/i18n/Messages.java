@@ -131,4 +131,5 @@ public class Messages extends NLS {
     public static String lazyFieldInAMultipleParentRelationHasBeenDeselect;
     public static String aChildHasBeenUnselected;
     public static String moreInfoFormGenerationLink;
+    public static String contractInputEqualToBusinessDataError;
 }
