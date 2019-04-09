@@ -59,8 +59,8 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
         try {
-            URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
             setArtifactName(getNewName());
+            URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
             Representation body = new JacksonRepresentation<>(new ToWebContract().apply(contract));
             responseObject = createArtifact(url, body);
         } catch (MalformedURLException e) {
