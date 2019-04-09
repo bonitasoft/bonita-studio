@@ -77,7 +77,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         List<String> existingForms = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
                 .stream()
                 .filter(store -> Objects.equals(store.getType(), "form"))
-                .map(WebPageFileStore::getId)
+                .map(WebPageFileStore::getDisplayName)
                 .collect(Collectors.toList());
         return StringIncrementer.getIncrementedString(DEFAULT_FORM_NAME, existingForms);
     }
