@@ -29,7 +29,11 @@ import org.bonitasoft.studio.groovy.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
+
+import com.google.common.base.Function;
 
 /**
  * @author Romain Bioteau
@@ -52,6 +56,16 @@ public class GroovyRepositoryStore extends SourceRepositoryStore<GroovyFileStore
     @Override
     public GroovyFileStore createRepositoryFileStore(String fileName) {
         return new GroovyFileStore(fileName, this);
+    }
+
+    @Override
+    protected Function<IResource, GroovyFileStore> toFileStore() {
+        return resource -> {
+            IPath resourcePath = resource.getProjectRelativePath();
+            IPath repositoryStorePath = getResource().getProjectRelativePath();
+            String fileName = resourcePath.makeRelativeTo(repositoryStorePath).toString();
+            return createRepositoryFileStore(fileName);
+        };
     }
 
     /* (non-Javadoc)
