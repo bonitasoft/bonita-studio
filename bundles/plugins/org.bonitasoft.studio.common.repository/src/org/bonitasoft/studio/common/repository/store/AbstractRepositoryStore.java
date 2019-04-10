@@ -312,7 +312,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         }
     }
 
-    private Function<IResource, T> toFileStore() {
+    protected Function<IResource, T> toFileStore() {
         return resource -> createRepositoryFileStore(resource.getName());
     }
 
