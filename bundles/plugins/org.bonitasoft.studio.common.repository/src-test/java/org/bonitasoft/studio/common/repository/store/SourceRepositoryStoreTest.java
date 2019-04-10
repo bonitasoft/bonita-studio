@@ -48,6 +48,7 @@ public class SourceRepositoryStoreTest {
         final SourceRepositoryStore sourceRepositoryStore = mock(SourceRepositoryStore.class);
         doReturn(Collections.singleton("groovy")).when(sourceRepositoryStore).getCompatibleExtensions();
         doCallRealMethod().when(sourceRepositoryStore).getChildren();
+        when(sourceRepositoryStore.toFileStore()).thenReturn(resource -> null);
 
         sourceRepositoryStore.getChildren();
 
