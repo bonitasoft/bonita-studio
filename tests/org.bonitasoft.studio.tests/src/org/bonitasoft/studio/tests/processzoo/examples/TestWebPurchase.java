@@ -52,7 +52,6 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestWebPurchase implements SWTBotConstants {
 
-    private static final String PAGEFLOW_LABEL = "Pageflow";
     private String diagramTitle = null;
 
     private final SWTGefBot bot = new SWTGefBot();
