@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
-import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,7 +47,6 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -235,7 +232,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         mandatoryTreeViewerColumn.getColumn().setWidth(80);
         mandatoryTreeViewerColumn.setLabelProvider(new MandatoryColumnLabelProvider());
 
-        final IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer,
+        IViewerObservableSet checkedElements = ViewersObservables.observeCheckedElements(treeViewer,
                 FieldToContractInputMapping.class);
 
         final IObservableValue<FieldToContractInputMapping> observeInput = ViewersObservables.observeInput(treeViewer);
@@ -252,20 +249,9 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         });
 
         createButtonListeners(checkedElements);
-        final WritableValue checkedObservableValue = new WritableValue();
-        checkedObservableValue.setValue(checkedElements);
-        final WritableValue mappingsObservableValue = new WritableValue();
-        mappingsObservableValue.setValue(fieldToContractInputMappingsObservable);
-
-        dbc.bindValue(checkedObservableValue, observeInput,
-                updateValueStrategy()
-                        .withConverter(createMappingsToCheckedElementsConverter(mappingsObservableValue))
-                        .create(),
-                updateValueStrategy()
-                        .withConverter(createCheckedElementsToMappingsConverter(checkedElements)).create());
 
         multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements, mappings,
-                contract.eContainer(),generationOptions.getEditModeObservable());
+                contract.eContainer(), generationOptions.getEditModeObservable());
         dbc.addValidationStatusProvider(multiValidator);
 
         new Label(viewerComposite, SWT.NONE); //FILLER
@@ -276,39 +262,6 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         formGenerationDocLink.addListener(SWT.Selection, event -> openBrowser(FORM_GENERATION_REDIRECT_ID));
 
         ColumnViewerToolTipSupport.enableFor(treeViewer);
-    }
-
-    protected IConverter createMappingsToCheckedElementsConverter(WritableValue mappingsObservableValue) {
-        return ConverterBuilder.<IObservableSet, WritableValue> newConverter()
-                .fromType(IObservableSet.class)
-                .toType(WritableValue.class)
-                .withConvertFunction(set -> {
-                    if (set != null) {
-                        for (FieldToContractInputMapping mapping : mappings) {
-                            boolean generated = set.contains(mapping) || Objects.equals(mapping.getField().getName(),
-                                    FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME);
-                            mapping.setGenerated(generated);
-                        }
-                        return mappingsObservableValue;
-                    }
-                    return new WritableValue<>();
-                }).create();
-    }
-
-    protected Converter createCheckedElementsToMappingsConverter(final IObservableSet checkedElements) {
-        return new Converter(WritableList.class, IObservableSet.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                checkedElements.clear();
-                for (final FieldToContractInputMapping mapping : mappings) {
-                    if (mapping.isGenerated()) {
-                        checkedElements.add(mapping);
-                    }
-                }
-                return checkedElements;
-            }
-        };
     }
 
     protected void createButtonComposite(final Composite viewerComposite) {

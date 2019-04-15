@@ -15,27 +15,33 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
+import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
+import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
 
-/**
- * @author aurelie
- */
 public class FieldToContractInputMappingViewerCheckStateManagerTest {
 
     @Rule
@@ -45,8 +51,10 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
     public void should_selectParentIfChildIsSelected() {
         final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
 
-        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
         rootMapping.addChild(childMapping);
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
 
@@ -60,8 +68,10 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
     public void should_deselectParent_IfNoChildIsSelected() {
         final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
 
-        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
         rootMapping.addChild(childMapping);
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
 
@@ -75,9 +85,12 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
     public void should_not_deselectParent_IfNoChildIsSelected() {
         final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
 
-        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
         rootMapping.addChild(childMapping1);
         rootMapping.addChild(childMapping2);
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
@@ -90,9 +103,12 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
     @Test
     public void should_regeneratedAttributes_whenReselectParent() {
         final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
-        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
-        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
-        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(Mockito.mock(SimpleField.class));
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
+        final SimpleFieldToContractInputMapping childMapping1 = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
+        final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(
+                Mockito.mock(SimpleField.class));
         rootMapping.addChild(childMapping1);
         rootMapping.addChild(childMapping2);
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
@@ -110,19 +126,73 @@ public class FieldToContractInputMappingViewerCheckStateManagerTest {
     public void should_not_deselectParent_IfmappingHasNoParent() {
         final FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
 
-        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final FieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
 
         final CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
         checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, false));
         assertThat(viewer.getChecked(rootMapping)).isFalse();
     }
 
-    private CheckboxTreeViewer aCheckBoxTreeViewer(final List<FieldToContractInputMapping> input) {
-        final CheckboxTreeViewer viewer = new CheckboxTreeViewer(realmWithDisplay.createComposite());
-        viewer.setContentProvider(new ObservableListTreeContentProvider(new FieldToContractInputMappingObservableFactory(),
-                new FieldToContractInputMappingTreeStructureAdvisor()));
+    @Test
+    public void should_manage_persistence_id_fields_generated() {
+
+        BusinessObject rootBo = mock(BusinessObject.class);
+
+        RelationField root = RelationFieldBuilder.aCompositionField("root", rootBo);
+        SimpleField nameField = SimpleFieldBuilder.aStringField("name").build();
+        SimpleField persistenceIdField = SimpleFieldBuilder.aStringField("persistenceId_string").build();
+
+        RelationFieldToContractInputMapping rootMapping = new RelationFieldToContractInputMapping(root);
+        SimpleFieldToContractInputMapping rootNameMapping = new SimpleFieldToContractInputMapping(nameField);
+        SimpleFieldToContractInputMapping rootPersistenceIdMapping = new SimpleFieldToContractInputMapping(
+                persistenceIdField);
+        rootMapping.addChild(rootNameMapping);
+        rootMapping.addChild(rootPersistenceIdMapping);
+
+        CheckboxTreeViewer viewer = aCheckBoxTreeViewer(Lists.newArrayList(rootMapping));
+        FieldToContractInputMappingViewerCheckStateManager checkedStateManager = new FieldToContractInputMappingViewerCheckStateManager();
+
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, false));
+        assertThat(viewer.getCheckedElements()).isEmpty();
+        assertThat(Arrays.asList(rootMapping, rootNameMapping, rootPersistenceIdMapping))
+                .allMatch(mapping -> !mapping.isGenerated());
+
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootMapping, true));
+        assertThat(viewer.getChecked(rootMapping)).isTrue();
+        assertThat(checkedStateManager.isGrayed(rootMapping)).isFalse();
+        assertThat(viewer.getChecked(rootNameMapping)).isTrue();
+        assertThat(Arrays.asList(rootMapping, rootNameMapping, rootPersistenceIdMapping))
+                .allMatch(FieldToContractInputMapping::isGenerated);
+
+        checkedStateManager.checkStateChanged(new CheckStateChangedEvent(viewer, rootNameMapping, false));
+        assertThat(viewer.getChecked(rootMapping)).isTrue();
+        assertThat(checkedStateManager.isGrayed(rootMapping)).isTrue();
+        assertThat(rootMapping.isGenerated()).isTrue();
+        assertThat(rootNameMapping.isGenerated()).isFalse();
+        assertThat(rootPersistenceIdMapping.isGenerated()).isTrue();
+    }
+
+    private CheckboxTreeViewer aCheckBoxTreeViewer(List<FieldToContractInputMapping> input) {
+        CheckboxTreeViewer viewer = new CheckboxTreeViewer(realmWithDisplay.createComposite());
+        viewer.setFilters(hidePersistenceIdMapping());
+        ObservableListTreeContentProvider provider = new ObservableListTreeContentProvider(
+                new FieldToContractInputMappingObservableFactory(),
+                new FieldToContractInputMappingTreeStructureAdvisor());
+        viewer.setContentProvider(provider);
         viewer.setInput(input);
         return viewer;
+    }
+
+    private ViewerFilter hidePersistenceIdMapping() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                return !Objects.equals(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME,
+                        ((FieldToContractInputMapping) element).getField().getName());
+            }
+        };
     }
 
 }

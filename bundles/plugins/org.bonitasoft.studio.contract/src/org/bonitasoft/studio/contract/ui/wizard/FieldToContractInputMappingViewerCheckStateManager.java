@@ -14,54 +14,48 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
-import static com.google.common.collect.Iterables.any;
+import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-/**
- * @author aurelie
- */
 public class FieldToContractInputMappingViewerCheckStateManager implements ICheckStateListener, ICheckStateProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-     */
     @Override
     public boolean isChecked(final Object element) {
         return ((FieldToContractInputMapping) element).isGenerated();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-     */
     @Override
     public boolean isGrayed(Object element) {
         FieldToContractInputMapping mapping = (FieldToContractInputMapping) element;
-        boolean isGrayed = any(mapping.getChildren(), isGenerated()) && !Iterables.all(mapping.getChildren(), isGenerated());
+        boolean isGrayed = hasAtLeastOneMappingGenerated(mapping) && !hasAllMappingGenerated(mapping);
         return isGrayed || mapping.getChildren().stream().anyMatch(this::isGrayed);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
-     */
+    private boolean hasAllMappingGenerated(FieldToContractInputMapping mapping) {
+        return mapping.getChildren().stream().allMatch(FieldToContractInputMapping::isGenerated);
+    }
+
+    private boolean hasAtLeastOneMappingGenerated(FieldToContractInputMapping mapping) {
+        return mapping.getChildren().stream().anyMatch(FieldToContractInputMapping::isGenerated);
+    }
+
+    private boolean isPersistenceIdMapping(FieldToContractInputMapping mapping) {
+        return Objects.equals(mapping.getField().getName(),
+                FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME);
+    }
+
     @Override
     public void checkStateChanged(final CheckStateChangedEvent event) {
-        final FieldToContractInputMapping mapping = (FieldToContractInputMapping) event.getElement();
+        FieldToContractInputMapping mapping = (FieldToContractInputMapping) event.getElement();
         mapping.setGenerated(event.getChecked());
-        final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
+        setGeneratedStatePersistenceIdChild(mapping, event.getChecked());
+        CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
         checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
         setChildrenChecked(mapping, event.getChecked());
         selectParentIfChildIsSelected(event, mapping, checkboxTreeViewer);
@@ -69,61 +63,51 @@ public class FieldToContractInputMappingViewerCheckStateManager implements IChec
         checkboxTreeViewer.getControl().getDisplay().asyncExec(() -> checkboxTreeViewer.refresh());
     }
 
+    private void setGeneratedStatePersistenceIdChild(FieldToContractInputMapping parent, boolean generated) {
+        parent.getChildren().stream()
+                .filter(this::isPersistenceIdMapping)
+                .findFirst()
+                .ifPresent(m -> m.setGenerated(generated));
+    }
+
     private void setChildrenChecked(final FieldToContractInputMapping parent, final boolean state) {
         for (final FieldToContractInputMapping mapping : parent.getChildren()) {
-            if (!Field.PERSISTENCE_ID.equals(mapping.getField().getName())) {
+            if (!isPersistenceIdMapping(mapping)) {
                 mapping.setGenerated(state);
                 setChildrenChecked(mapping, state);
             } else {
-                mapping.setGenerated(true);
+                mapping.setGenerated(state);
             }
         }
     }
 
-    private void deselectParentIfNoChildSelected(final CheckStateChangedEvent event,
-            final FieldToContractInputMapping mapping,
-            final CheckboxTreeViewer checkboxTreeViewer) {
-        final FieldToContractInputMapping parentMapping = mapping.getParent();
-        boolean deselect = true;
-        if (!event.getChecked() && parentMapping != null && !isAggregationField(parentMapping.getField())) {
-
-            for (final FieldToContractInputMapping m : parentMapping.getChildren()) {
-                if (checkboxTreeViewer.getChecked(m)) {
-                    deselect = false;
-                }
-            }
-            if (deselect) {
-                checkboxTreeViewer.setChecked(parentMapping, false);
-                parentMapping.setGenerated(false);
-                deselectParentIfNoChildSelected(event, parentMapping, checkboxTreeViewer);
-            }
+    private void deselectParentIfNoChildSelected(CheckStateChangedEvent event,
+            FieldToContractInputMapping mapping,
+            CheckboxTreeViewer checkboxTreeViewer) {
+        FieldToContractInputMapping parentMapping = mapping.getParent();
+        if (parentMapping != null && !event.getChecked() && hasNoChildGenerated(parentMapping)) {
+            checkboxTreeViewer.setChecked(parentMapping, false);
+            parentMapping.setGenerated(false);
+            setGeneratedStatePersistenceIdChild(parentMapping, false);
+            deselectParentIfNoChildSelected(event, parentMapping, checkboxTreeViewer);
         }
     }
 
-    private boolean isAggregationField(final Field field) {
-        return field instanceof RelationField && ((RelationField) field).getType() == Type.AGGREGATION;
+    private boolean hasNoChildGenerated(FieldToContractInputMapping parentMapping) {
+        return parentMapping.getChildren().stream().noneMatch(FieldToContractInputMapping::isGenerated);
     }
 
-    private void selectParentIfChildIsSelected(final CheckStateChangedEvent event, final FieldToContractInputMapping mapping,
-            final CheckboxTreeViewer checkboxTreeViewer) {
+    private void selectParentIfChildIsSelected(CheckStateChangedEvent event, FieldToContractInputMapping mapping,
+            CheckboxTreeViewer checkboxTreeViewer) {
         if (event.getChecked()) {
             final FieldToContractInputMapping parentMapping = mapping.getParent();
             if (parentMapping != null) {
                 checkboxTreeViewer.setChecked(parentMapping, true);
                 parentMapping.setGenerated(true);
+                setGeneratedStatePersistenceIdChild(parentMapping, true);
                 selectParentIfChildIsSelected(event, parentMapping, checkboxTreeViewer);
             }
         }
-    }
-
-    private Predicate<FieldToContractInputMapping> isGenerated() {
-        return new Predicate<FieldToContractInputMapping>() {
-
-            @Override
-            public boolean apply(final FieldToContractInputMapping input) {
-                return input.isGenerated();
-            }
-        };
     }
 
 }
