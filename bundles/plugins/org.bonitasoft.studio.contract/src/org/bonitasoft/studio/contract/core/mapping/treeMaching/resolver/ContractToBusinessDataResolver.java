@@ -36,20 +36,22 @@ public class ContractToBusinessDataResolver {
                 .filter(data -> data.getName().equals(input.getDataReference()))
                 .findFirst();
     }
-    
-    public TreeResult resolve(Contract contract) {
+
+    public TreeResult resolve(Contract contract, boolean createReadOnlyInputs) {
         TreeResult result = new TreeResult();
         TreeBuilder builder = new TreeBuilder(store);
-        for(ContractInput input : contract.getInputs()) {
-            findBusinessDataFor(input).ifPresent(data -> result.addNode(builder.buildBusinessObjectTree(data, input)));
+        for (ContractInput input : contract.getInputs()) {
+            findBusinessDataFor(input)
+                    .ifPresent(data -> result.addNode(
+                            builder.buildBusinessObjectTree(data, input, createReadOnlyInputs && !input.isCreateMode())));
         }
         return result;
     }
-    
+
     public TreeResult resolve(ContractInput input) {
         TreeResult result = new TreeResult();
         TreeBuilder builder = new TreeBuilder(store);
-        findBusinessDataFor(input).ifPresent(data -> result.addNode(builder.buildBusinessObjectTree(data, input)));
+        findBusinessDataFor(input).ifPresent(data -> result.addNode(builder.buildBusinessObjectTree(data, input, false)));
         return result;
     }
 }
