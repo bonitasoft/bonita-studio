@@ -8,7 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.contract.core.mapping.treeMaching;
 
+import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.findMatchingContractInputForField;
+import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.matchingMultiple;
+import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.matchingType;
+
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -17,6 +22,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -33,43 +39,92 @@ public class TreeBuilder {
         this.store = store;
     }
 
-    public TreeNode buildBusinessObjectTree(BusinessObjectData data, ContractInput input) {
+    public TreeNode buildBusinessObjectTree(BusinessObjectData data, ContractInput input, boolean createReadOnlyInputs) {
         Optional<BusinessObject> businessObject = store.getBusinessObject(data.getClassName());
         BusinessObject bo = businessObject
                 .orElseThrow(() -> new IllegalStateException(
                         String.format("No Business Object found with type %s", data.getClassName())));
         TreeNode node = new TreeNode(input,
-                new BusinessDataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER),true);
-        buildTree(bo, input, node);
+                new BusinessDataReference(data.getName(), data.getClassName(), RelationType.COMPOSITION, LoadingType.EAGER),
+                true, false);
+        buildTree(bo, input, node, createReadOnlyInputs);
         return node;
     }
 
-    private void buildTree(BusinessObject bo, ContractInput input, TreeNode node) {
+    private void buildTree(BusinessObject bo, ContractInput input, TreeNode node, boolean createReadOnlyInputs) {
         if (input.getType() == ContractInputType.COMPLEX) {
             input.getInputs().stream()
-                    .forEach(childInput -> findMatchingField(bo.getFields(), childInput, node));
+                    .forEach(childInput -> findMatchingField(bo.getFields(), childInput, node, createReadOnlyInputs));
+            if (createReadOnlyInputs) {
+                bo.getFields().stream()
+                        .filter(field -> !findMatchingContractInputForField(field, input.getInputs()).isPresent())
+                        .forEach(field -> createReadOnlyNode(bo, field, node, input));
+            }
         }
     }
 
-    private void findMatchingField(List<Field> fields, ContractInput childInput, TreeNode node) {
+    private void createReadOnlyNode(BusinessObject bo, Field field, TreeNode node, ContractInput parent) {
+        if (field instanceof RelationField) {
+            createReadOnlyNodeForRelationField(bo, (RelationField) field, node, parent);
+        } else {
+            createReadOnlyNodeForSimpleField(bo, (SimpleField) field, node, parent);
+        }
+    }
+
+    private void createReadOnlyNodeForSimpleField(BusinessObject bo, SimpleField field, TreeNode node,
+            ContractInput parent) {
+        ContractInput contractInput = new SimpleFieldToContractInputMapping(field).getContractInput();
+        contractInput.setCreateMode(parent.isCreateMode());
+        if (bo.getFields().contains(field)) {
+            parent.getInputs().add(bo.getFields().indexOf(field), contractInput);
+        } else { // persistenceId isn't in the bo
+            parent.getInputs().add(contractInput);
+        }
+        node.addLeafNode(contractInput, !field.isNullable(), true);
+    }
+
+    private void createReadOnlyNodeForRelationField(BusinessObject bo, RelationField relationField, TreeNode node,
+            ContractInput parent) {
+        LoadingType loadingType = toLoadingType(relationField);
+        if (!(Objects.equals(loadingType, LoadingType.LAZY) && parent.isMultiple())) {
+            BusinessObject businessObjectReference = relationField.getReference();
+            ContractInput contractInput = new RelationFieldToContractInputMapping(relationField).getContractInput();
+            parent.getInputs().add(bo.getFields().indexOf(relationField), contractInput);
+            RelationType relationType = toRelationType(relationField);
+            TreeNode newNode = node.addNode(contractInput, new BusinessDataReference(relationField.getName(),
+                    businessObjectReference.getQualifiedName(),
+                    relationType,
+                    loadingType),
+                    !relationField.isNullable(),
+                    true);
+            businessObjectReference.getFields().stream()
+                    .filter(SimpleField.class::isInstance)
+                    .map(SimpleField.class::cast)
+                    .forEach(field -> createReadOnlyNodeForSimpleField(businessObjectReference, field, newNode,
+                            contractInput));
+        }
+    }
+
+    private void findMatchingField(List<Field> fields, ContractInput childInput, TreeNode node,
+            boolean createReadOnlyInputs) {
         fields.stream()
                 .filter(field -> field.getName().equals(childInput.getName()))
                 .filter(field -> matchingType(field, childInput))
-                .filter(field -> field.isCollection() && childInput.isMultiple()
-                        || !(field.isCollection() && childInput.isMultiple()))
+                .filter(field -> matchingMultiple(field, childInput))
                 .findFirst()
                 .ifPresent(field -> {
-                    if( field instanceof RelationField ) {
+                    if (field instanceof RelationField) {
                         RelationField relationField = (RelationField) field;
                         BusinessObject businessObject = relationField.getReference();
                         TreeNode newNode = node.addNode(childInput, new BusinessDataReference(relationField.getName(),
                                 businessObject.getQualifiedName(),
                                 toRelationType(relationField),
                                 toLoadingType(relationField)),
-                                !relationField.isNullable());
-                        buildTree(businessObject, childInput, newNode);
-                    }else {
-                         node.addLeafNode(childInput, !field.isNullable());
+                                !relationField.isNullable(),
+                                false);
+                        buildTree(businessObject, childInput, newNode, createReadOnlyInputs);
+                    } else {
+                        node.addLeafNode(childInput, !field.isNullable(), false);
                     }
                 });
     }
@@ -80,16 +135,6 @@ public class TreeBuilder {
 
     private RelationType toRelationType(RelationField relationField) {
         return relationField.getType() == Type.COMPOSITION ? RelationType.COMPOSITION : RelationType.AGGREGATION;
-    }
-
-    private boolean matchingType(Field field, ContractInput childInput) {
-        if (field instanceof SimpleField) {
-            return new SimpleFieldToContractInputMapping((SimpleField) field).getContractInputType() == childInput
-                    .getType();
-        } else if (field instanceof RelationField) {
-            return childInput.getType() == ContractInputType.COMPLEX;
-        }
-        throw new IllegalStateException(String.format("Unknown Field type: %s", field.getClass()));
     }
 
 }

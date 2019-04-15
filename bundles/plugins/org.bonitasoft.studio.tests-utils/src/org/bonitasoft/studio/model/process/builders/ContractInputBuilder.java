@@ -59,7 +59,7 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
         contractInput.setMultiple(false);
         return this;
     }
-    
+
     public ContractInputBuilder withDataReference(String dataReference) {
         contractInput.setDataReference(dataReference);
         return this;
@@ -79,6 +79,11 @@ public class ContractInputBuilder implements Buildable<ContractInput> {
 
     public ContractInputBuilder in(final Buildable<ContractInput> input) {
         input.build().getInputs().add(contractInput);
+        return this;
+    }
+
+    public ContractInputBuilder inCreateMode(boolean createMode) {
+        contractInput.setCreateMode(createMode);
         return this;
     }
 

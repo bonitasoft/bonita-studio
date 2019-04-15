@@ -47,7 +47,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 import com.google.common.base.Objects;
 
-
 @Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
@@ -63,7 +62,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     public CreateNewFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory,
             final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor,
-            NewFormOperationFactoryDelegate  operationFactory) {
+            NewFormOperationFactoryDelegate operationFactory) {
         this.progressService = progressService;
         this.pageDesignerURLFactory = pageDesignerURLFactory;
         this.repositoryAccessor = repositoryAccessor;
@@ -80,11 +79,11 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
         final CreateUIDArtifactOperation operation = doCreateFormOperation(pageDesignerURLFactory,
-                contractFor(context), 
+                contractFor(context),
                 formScopeFor(context));
 
         try {
-            progressService.busyCursorWhile(operation);
+            progressService.run(true, false, operation);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }

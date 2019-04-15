@@ -70,7 +70,7 @@ public class CreateOrEditFormProposalListenerTest {
                 any(Contract.class),
                 any(FormScope.class),
                 any(RepositoryAccessor.class));
-        
+
         final String newPageId = listener.handleEvent(
                 TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression()))
                         .havingContract(aContract()).build()
@@ -78,7 +78,7 @@ public class CreateOrEditFormProposalListenerTest {
                 null);
 
         assertThat(newPageId).isEqualTo("page-id");
-        verify(progressService).busyCursorWhile(operation);
+        verify(progressService).run(true, false, operation);
         verify(fileStore).open();
     }
 

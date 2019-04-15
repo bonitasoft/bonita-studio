@@ -25,16 +25,18 @@ public class TreeNode {
     private ContractInput input;
     private DataReference ref;
     private boolean mandatory = true;
+    private boolean readOnly = false;
     private List<TreeNode> children = new ArrayList<>();
 
-    public TreeNode(ContractInput input, DataReference ref,boolean mandatory) {
+    public TreeNode(ContractInput input, DataReference ref, boolean mandatory, boolean readOnly) {
         this.input = input;
         this.ref = ref;
         this.mandatory = mandatory;
+        this.readOnly = readOnly;
     }
 
-    public TreeNode addNode(ContractInput input, DataReference ref,boolean mandatory) {
-        TreeNode node = new TreeNode(input, ref,mandatory);
+    public TreeNode addNode(ContractInput input, DataReference ref, boolean mandatory, boolean readOnly) {
+        TreeNode node = new TreeNode(input, ref, mandatory, readOnly);
         this.children.add(node);
         return node;
     }
@@ -50,13 +52,17 @@ public class TreeNode {
     public DataReference getRef() {
         return ref;
     }
-    
+
     public boolean isMandatory() {
         return mandatory;
     }
 
-    public TreeNode addLeafNode(ContractInput input, boolean mandatory) {
-        TreeNode node = new TreeNode(input, null, mandatory);
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public TreeNode addLeafNode(ContractInput input, boolean mandatory, boolean readOnly) {
+        TreeNode node = new TreeNode(input, null, mandatory, readOnly);
         this.children.add(node);
         return node;
     }
