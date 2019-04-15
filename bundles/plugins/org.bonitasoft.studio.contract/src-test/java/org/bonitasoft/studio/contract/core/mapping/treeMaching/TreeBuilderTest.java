@@ -48,13 +48,15 @@ public class TreeBuilderTest {
         TreeBuilder treeBuilder = new TreeBuilder(store);
 
         Contract contract = createMatchingContract();
-        TreeNode node = treeBuilder.buildBusinessObjectTree(businessData.get(0), contract.getInputs().get(0));
+        TreeNode node = treeBuilder.buildBusinessObjectTree(businessData.get(0), contract.getInputs().get(0), false);
 
         assertThat(node.getInput().getName()).isEqualTo("myDataInput");
         assertThat(node.getRef().getName()).isEqualTo("myData");
         assertThat(node.getChildren()).extracting("input.name", "ref.name").contains(tuple("address", "address"));
-        assertThat(node.getChildren()).extracting("input.name", "ref.name","mandatory").contains(tuple("firstName", null, false));
-        assertThat(node.getChildren()).extracting("input.name", "ref.name","mandatory").contains(tuple("birthDate", null, true));
+        assertThat(node.getChildren()).extracting("input.name", "ref.name", "mandatory")
+                .contains(tuple("firstName", null, false));
+        assertThat(node.getChildren()).extracting("input.name", "ref.name", "mandatory")
+                .contains(tuple("birthDate", null, true));
         assertThat(node.getChildren().get(0).getChildren()).isEmpty();
     }
 

@@ -34,29 +34,29 @@ public class TreeResult {
     }
 
     public DataReference getDataReference(ContractInput input) {
-        return findReference(input,nodes);
+        return findReference(input, nodes);
     }
 
     private DataReference findReference(ContractInput input, List<TreeNode> nodes) {
-        for(TreeNode node : nodes) {
-            if(Objects.equals(node.getInput(),input)) {
+        for (TreeNode node : nodes) {
+            if (Objects.equals(node.getInput(), input)) {
                 return node.getRef();
             }
-            DataReference reference = findReference(input,node.getChildren());
-            if(reference != null) {
+            DataReference reference = findReference(input, node.getChildren());
+            if (reference != null) {
                 return reference;
             }
         }
         return null;
     }
-    
-    private TreeNode findNode(ContractInput input,List<TreeNode> nodes) {
-        for(TreeNode node : nodes) {
-            if(Objects.equals(node.getInput(),input)) {
+
+    private TreeNode findNode(ContractInput input, List<TreeNode> nodes) {
+        for (TreeNode node : nodes) {
+            if (Objects.equals(node.getInput(), input)) {
                 return node;
             }
-            TreeNode foundNode = findNode(input,node.getChildren());
-            if(foundNode != null) {
+            TreeNode foundNode = findNode(input, node.getChildren());
+            if (foundNode != null) {
                 return foundNode;
             }
         }
@@ -66,5 +66,10 @@ public class TreeResult {
     public boolean isMandatory(ContractInput input) {
         TreeNode node = findNode(input, nodes);
         return node != null ? node.isMandatory() : true;
+    }
+
+    public boolean isReadOnly(ContractInput input) {
+        TreeNode node = findNode(input, nodes);
+        return node != null ? node.isReadOnly() : false;
     }
 }

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.contract.core.operation;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.findMatchingContractInputForField;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -22,8 +23,11 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
@@ -35,18 +39,23 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
-
 
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
     private Contract contract;
     private FormScope formScope;
+    private boolean buildReadOnlyAttributes = false;
 
     public CreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
             Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
@@ -63,16 +72,59 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
             setArtifactName(getNewName());
             URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
             Pool parentPool = new ModelSearch(Collections::emptyList).getDirectParentOfType(contract, Pool.class);
+            BusinessDataStore businessDataStore = new BusinessDataStore(parentPool, getRepositoryAccessor());
             ContractToBusinessDataResolver contractToBusinessDataResolver = new ContractToBusinessDataResolver(
-                    new BusinessDataStore(parentPool, getRepositoryAccessor()));
-            TreeResult treeResult = contractToBusinessDataResolver.resolve(contract);
-            Representation body = new JacksonRepresentation<>(new ToWebContract(treeResult).apply(contract));
+                    businessDataStore);
+            Contract tmpContract = EcoreUtil.copy(contract); // will contains unwanted contractInput for readOnly attributes 
+            openReadOnlyAttributeDialog(tmpContract, businessDataStore);
+            TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
+            Representation body = new JacksonRepresentation<>(new ToWebContract(treeResult).apply(tmpContract));
             responseObject = createArtifact(url, body);
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
     }
-    
+
+    private void openReadOnlyAttributeDialog(Contract contract, BusinessDataStore businessDataStore) {
+        if (containsAttributesToDisplayInReadOnly(contract, businessDataStore)) {
+            Display.getDefault().syncExec(() -> {
+                buildReadOnlyAttributes = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                        Messages.createReadOnlWidgetsTitle,
+                        Messages.createReadOnlWidgetsMessage);
+            });
+        }
+    }
+
+    protected boolean containsAttributesToDisplayInReadOnly(Contract contract, BusinessDataStore businessDataStore) {
+        return contract.getInputs().stream()
+                .filter(contractInput -> !contractInput.isCreateMode())
+                .anyMatch(contractInput -> {
+                    Optional<BusinessObject> businessObject = businessDataStore.getBusinessData().stream()
+                            .filter(aBusinessData -> Objects.equals(contractInput.getDataReference(),
+                                    aBusinessData.getName()))
+                            .findFirst()
+                            .map(BusinessObjectData::getClassName)
+                            .map(boClassName -> businessDataStore.getBusinessObject(boClassName).orElse(null));
+                    if (businessObject.isPresent()) {
+                        return hasFieldMissingInContractInput(businessObject.get(), contractInput);
+                    }
+                    return false;
+                });
+    }
+
+    private boolean hasFieldMissingInContractInput(BusinessObject businessObject, ContractInput contractInput) {
+        return businessObject.getFields().stream().anyMatch(aField -> {
+            Optional<ContractInput> matchingInput = findMatchingContractInputForField(aField, contractInput.getInputs());
+            if (matchingInput.isPresent()) {
+                if (aField instanceof RelationField) {
+                    return hasFieldMissingInContractInput(((RelationField) aField).getReference(), matchingInput.get());
+                }
+                return false;
+            }
+            return true;
+        });
+    }
+
     private String getNewName() {
         List<String> existingForms = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
                 .stream()
