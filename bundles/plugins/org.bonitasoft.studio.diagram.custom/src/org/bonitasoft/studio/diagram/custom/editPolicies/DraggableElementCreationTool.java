@@ -171,10 +171,10 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
         if (helper != null && figure != null) {
             final PrecisionRectangle baseRect = sourceRectangle.getPreciseCopy();
             final PrecisionRectangle jointRect = compoundSrcRect.getPreciseCopy();
-            final PrecisionPoint preciseDelta = new PrecisionPoint(getLocation().preciseX(), getLocation().preciseY());
+            Point location = getLocation().getTranslated(-figure.getSize().width / 2, -figure.getSize().height / 2);
+            final PrecisionPoint preciseDelta = new PrecisionPoint(location.preciseX(), location.preciseY());
             baseRect.translate(preciseDelta);
             jointRect.translate(preciseDelta);
-
             helper.snapPoint(request, PositionConstants.HORIZONTAL | PositionConstants.VERTICAL, new PrecisionRectangle[] {
                     baseRect, jointRect }, preciseDelta);
             request.setLocation(preciseDelta);
@@ -228,7 +228,9 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
             FiguresHelper.translateToAbsolute(parentFigure, location);
 
             showTargetCompartmentFeedback();
-            figure.setLocation(location);
+            Point translated = getLocation().getTranslated(-figure.getSize().width / 2, -figure.getSize().height / 2);
+            FiguresHelper.translateToAbsolute(figure, translated);
+            figure.setLocation(translated);
         } else {
             if (draggableElement.getLayer().getChildren().contains(figure)) {
                 draggableElement.getLayer().remove(figure);
@@ -276,7 +278,10 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
             draggableElement.getLayer().remove(figure);
         }
         final GraphicalEditPart editPart = (GraphicalEditPart) getTargetEditPart();
+        Point creationLocation = getLocation()
+                .getTranslated(-figure.getSize().width / 2, -figure.getSize().height / 2);
         if (editPart != null) {
+            getCreateRequest().setLocation(creationLocation);
             final Command command = getCommand();
             IAdaptable targetAdapter = null;
             if (command instanceof ICommandProxy) {
@@ -326,12 +331,14 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
                 if (!ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)) {
                     connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001,
                             ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), getPreferencesHint());
+                    connectionRequest.setLocation(creationLocation);
                     connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, draggableElement.getHost(), targetAdapter,
                             editPart.getViewer());
 
                 } else if (ProcessElementTypes.TextAnnotation_3015.getId().contains(semanticHint)) {
                     connectionRequest = new CreateConnectionViewAndElementRequest(ProcessElementTypes.TextAnnotationAttachment_4003,
                             ((IHintedType) ProcessElementTypes.TextAnnotationAttachment_4003).getSemanticHint(), getPreferencesHint());
+                    connectionRequest.setLocation(creationLocation);
                     //need to inverse source and target for textAnnotation
                     connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, targetAdapter, draggableElement.getHost(),
                             editPart.getViewer());
