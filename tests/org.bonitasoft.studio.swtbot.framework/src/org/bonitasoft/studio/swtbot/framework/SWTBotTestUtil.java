@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -329,15 +330,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final IFigure toolbarFigure = nextElementEditPolicy.getFigure(elementIndex);
         Point dropLocation = null;
 
+        final int xPaletteDelta = computeXPaletteDelta(elementIndex);
         final int yPaletteDelta = computeYPaletteDelta(elementIndex);
 
         final Rectangle bounds = graphicalEditPart.getFigure().getBounds();
         switch (position) {
             case PositionConstants.NORTH:
-                dropLocation = bounds.getTop().getCopy().translate(-20, -Y_MARGIN);
+                dropLocation = bounds.getTop().getCopy().translate(xPaletteDelta, -Y_MARGIN);
                 break;
             case PositionConstants.SOUTH:
-                dropLocation = bounds.getBottom().getCopy().translate(-20, Y_MARGIN);
+                dropLocation = bounds.getBottom().getCopy().translate(xPaletteDelta, Y_MARGIN);
                 break;
             case PositionConstants.WEST:
                 dropLocation = bounds.getLeft().getCopy().translate(-X_MARGIN, yPaletteDelta);
@@ -370,13 +372,28 @@ public class SWTBotTestUtil implements SWTBotConstants {
     private static int computeYPaletteDelta(final int elementIndex) {
         switch (elementIndex) {
             case CONTEXTUALPALETTE_EVENT:
-                return -8;
+                return FiguresHelper.EVENT_WIDTH/2;
             case CONTEXTUALPALETTE_GATEWAY:
-                return 5;
+                return FiguresHelper.GATEWAY_WIDTH/2 +1;
             case CONTEXTUALPALETTE_SEQUENCEFLOW:
-                return -5;
+                return 5;
             case CONTEXTUALPALETTE_STEP:
-                return 8;
+                return FiguresHelper.ACTIVITY_HEIGHT/2 + 1;
+            default:
+                return 0;
+        }
+    }
+    
+    private static int computeXPaletteDelta(final int elementIndex) {
+        switch (elementIndex) {
+            case CONTEXTUALPALETTE_EVENT:
+                return FiguresHelper.EVENT_WIDTH/2;
+            case CONTEXTUALPALETTE_GATEWAY:
+                return FiguresHelper.GATEWAY_WIDTH/2;
+            case CONTEXTUALPALETTE_SEQUENCEFLOW:
+                return 5;
+            case CONTEXTUALPALETTE_STEP:
+                return FiguresHelper.ACTIVITY_WIDTH/2 - 15;
             default:
                 return 0;
         }
