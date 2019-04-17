@@ -27,23 +27,26 @@ import java.util.stream.Stream;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 public class ApplicationRepositoryStore extends AbstractRepositoryStore<ApplicationFileStore> {
 
     private static final String XML_EXTENSION = "xml";
-    
+
     private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new CustomApplicationNodeContainerConverter();
 
- 
-    public ApplicationNodeContainerConverter getConverter(){
+    public ApplicationNodeContainerConverter getConverter() {
         return applicationNodeContainerConverter;
     }
-    
+
     @Override
     public String getName() {
         return "applications"; //$NON-NLS-N$
@@ -118,5 +121,34 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
                 return false;
             }
         };
+    }
+
+    @Override
+    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+        super.migrate(monitor);
+        for (ApplicationFileStore fileStore : getChildren()) {
+            try {
+                ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
+                applicationNodeContainer.getApplications().forEach(application -> {
+                    updateBonitaTheme(application);
+                    updateBonitaLayout(application);
+                });
+                fileStore.save(applicationNodeContainer);
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
+
+    private void updateBonitaLayout(ApplicationNode application) {
+        if(Objects.equals(application.getLayout(),"custompage_defaultlayout")) {
+            application.setLayout("custompage_bonitaLayout");
+        }
+    }
+
+    private void updateBonitaTheme(ApplicationNode application) {
+        if(Objects.equals(application.getLayout(),"custompage_bonitadefaulttheme")) {
+            application.setTheme("custompage_bonitaTheme");
+        }
     }
 }
