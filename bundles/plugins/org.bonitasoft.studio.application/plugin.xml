@@ -403,6 +403,10 @@
                   visible="true">
             </separator>
             <separator
+                  name="org.bonitasoft.studio.application.placeholder.theme"
+                  visible="true">
+            </separator>
+            <separator
                   name="org.bonitasoft.studio.application.placeholder.connector"
                   visible="true">
             </separator>
@@ -532,7 +536,7 @@
    </menuContribution>
    <menuContribution
          allPopups="false"
-         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=org.bonitasoft.studio.application.openMenu">
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?before=group.edit">
       <command
             commandId="org.eclipse.ui.ide.showInSystemExplorer"
             icon="icons/menuIcons/showInExplorer.png"
@@ -1332,6 +1336,9 @@
                    </instanceof>
                    <instanceof
                          value="org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer">
+                   </instanceof>
+                   <instanceof
+                         value="org.eclipse.core.resources.IFile">
                    </instanceof>
                    <adapt
                          type="java.util.Collection">

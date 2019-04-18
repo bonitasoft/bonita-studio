@@ -182,15 +182,18 @@ public class ExportBosArchiveOperation {
     private void addChildrenFile(IResource resource, Set<IResource> resourcesToExport) throws CoreException {
         if (resource instanceof IFile) {
             resourcesToExport.add(resource);
-        } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isTargetFolder(resource)) {
+        } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isBuildOutputFolder(resource)) {
             for (final IResource r : ((IFolder) resource).members()) {
                 addChildrenFile(r, resourcesToExport);
             }
         }
     }
 
-    private boolean isTargetFolder(IResource resource) {
-        return Pattern.matches("target", resource.getName());
+    private boolean isBuildOutputFolder(IResource resource) {
+        return Pattern.matches("target", resource.getName()) 
+                || Pattern.matches("bin", resource.getName())
+                || Pattern.matches("node", resource.getName())
+                || Pattern.matches("node_modules", resource.getName());
     }
 
     private boolean isMetadataFolder(IResource resource) {
