@@ -3,9 +3,9 @@ Bundle-ClassPath: .,lib/bonita-client.jar,lib/jaxb-api.jar,lib/jaxb-impl
  .jar,lib/jaxb-core.jar,lib/istack-commons-runtime.jar,lib/FastInfoset.j
  ar,lib/httpclient.jar,lib/httpcore.jar,lib/commons-logging.jar,lib/xstr
  eam.jar,lib/xmlpull.jar,lib/xpp3_min.jar,lib/httpmime.jar,lib/commons-c
- odec.jar,lib/bonita-common.jar,lib/commons-io.jar,lib/jackson-databind.
- jar,lib/jackson-core.jar,lib/slf4j-api.jar,lib/commons-lang3.jar,lib/ja
- ckson-annotations.jar,lib/activation.jar,lib/console-server.jar,lib/con
+ odec.jar,lib/bonita-common.jar,lib/activation.jar,lib/commons-io.jar,li
+ b/jackson-databind.jar,lib/jackson-core.jar,lib/slf4j-api.jar,lib/commo
+ ns-lang3.jar,lib/jackson-annotations.jar,lib/console-server.jar,lib/con
  sole-common.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Community Tomcat Bundle
@@ -33,15 +33,15 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  3.1",lib/xpp3_min.jar;g="xpp3";a="xpp3_min";v="1.1.4c",lib/httpmime.jar
  ;g="org.apache.httpcomponents";a="httpmime";v="4.5.2",lib/commons-codec
  .jar;g="commons-codec";a="commons-codec";v="1.7",lib/bonita-common.jar;
- g="org.bonitasoft.engine";a="bonita-common";v="7.9.0-SNAPSHOT",lib/comm
- ons-io.jar;g="commons-io";a="commons-io";v="2.5",lib/jackson-databind.j
- ar;g="com.fasterxml.jackson.core";a="jackson-databind";v="2.9.8",lib/ja
- ckson-core.jar;g="com.fasterxml.jackson.core";a="jackson-core";v="2.9.8
- ",lib/slf4j-api.jar;g="org.slf4j";a="slf4j-api";v="1.7.25",lib/commons-
- lang3.jar;g="org.apache.commons";a="commons-lang3";v="3.3.2",lib/jackso
- n-annotations.jar;g="com.fasterxml.jackson.core";a="jackson-annotations
- ";v="2.9.8",lib/activation.jar;g="javax.activation";a="activation";v="1
- .1.1",lib/console-server.jar;g="org.bonitasoft.console";a="console-serv
+ g="org.bonitasoft.engine";a="bonita-common";v="7.9.0-SNAPSHOT",lib/acti
+ vation.jar;g="javax.activation";a="activation";v="1.1.1",lib/commons-io
+ .jar;g="commons-io";a="commons-io";v="2.5",lib/jackson-databind.jar;g="
+ com.fasterxml.jackson.core";a="jackson-databind";v="2.9.8",lib/jackson-
+ core.jar;g="com.fasterxml.jackson.core";a="jackson-core";v="2.9.8",lib/
+ slf4j-api.jar;g="org.slf4j";a="slf4j-api";v="1.7.25",lib/commons-lang3.
+ jar;g="org.apache.commons";a="commons-lang3";v="3.3.2",lib/jackson-anno
+ tations.jar;g="com.fasterxml.jackson.core";a="jackson-annotations";v="2
+ .9.0",lib/console-server.jar;g="org.bonitasoft.console";a="console-serv
  er";v="7.9.0-SNAPSHOT";c="classes",lib/console-common.jar;g="org.bonita
  soft.console";a="console-common";v="7.9.0-SNAPSHOT"
 Export-Package: org.bonitasoft.console.common.server.preferences.constan
@@ -119,44 +119,45 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  ,javax.xml.bind.annotation;version="2.2.0",javax.xml.bind.annotation.ad
  apters;version="2.2.0",javax.xml.bind.attachment;version="2.2.0",javax.
  xml.bind.helpers;version="2.2.0",javax.xml.bind.util;version="2.2.0"
-Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/newrepo/org/b
- onitasoft/engine/bonita-client/7.9.0-SNAPSHOT/bonita-client-7.9.0-SNAPS
- HOT.jar,lib/jaxb-api.jar=/home/romain/.m2/newrepo/javax/xml/bind/jaxb-a
- pi/2.2.7/jaxb-api-2.2.7.jar,lib/jaxb-impl.jar=/home/romain/.m2/newrepo/
- com/sun/xml/bind/jaxb-impl/2.2.7/jaxb-impl-2.2.7.jar,lib/jaxb-core.jar=
- /home/romain/.m2/newrepo/com/sun/xml/bind/jaxb-core/2.2.7/jaxb-core-2.2
- .7.jar,lib/istack-commons-runtime.jar=/home/romain/.m2/newrepo/com/sun/
- istack/istack-commons-runtime/2.16/istack-commons-runtime-2.16.jar,lib/
- FastInfoset.jar=/home/romain/.m2/newrepo/com/sun/xml/fastinfoset/FastIn
- foset/1.2.12/FastInfoset-1.2.12.jar,lib/httpclient.jar=/home/romain/.m2
- /newrepo/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.ja
- r,lib/httpcore.jar=/home/romain/.m2/newrepo/org/apache/httpcomponents/h
- ttpcore/4.4.4/httpcore-4.4.4.jar,lib/commons-logging.jar=/home/romain/.
- m2/newrepo/commons-logging/commons-logging/1.2/commons-logging-1.2.jar,
- lib/xstream.jar=/home/romain/.m2/newrepo/com/thoughtworks/xstream/xstre
- am/1.4.10/xstream-1.4.10.jar,lib/xmlpull.jar=/home/romain/.m2/newrepo/x
- mlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar,lib/xpp3_min.jar=/home/romai
- n/.m2/newrepo/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar,lib/httpmime.jar
- =/home/romain/.m2/newrepo/org/apache/httpcomponents/httpmime/4.5.2/http
- mime-4.5.2.jar,lib/commons-codec.jar=/home/romain/.m2/newrepo/commons-c
- odec/commons-codec/1.7/commons-codec-1.7.jar,lib/bonita-common.jar=/hom
- e/romain/.m2/newrepo/org/bonitasoft/engine/bonita-common/7.9.0-SNAPSHOT
- /bonita-common-7.9.0-SNAPSHOT.jar,lib/commons-io.jar=/home/romain/.m2/n
- ewrepo/commons-io/commons-io/2.5/commons-io-2.5.jar,lib/jackson-databin
- d.jar=/home/romain/.m2/newrepo/com/fasterxml/jackson/core/jackson-datab
- ind/2.9.8/jackson-databind-2.9.8.jar,lib/jackson-core.jar=/home/romain/
- .m2/newrepo/com/fasterxml/jackson/core/jackson-core/2.9.8/jackson-core-
- 2.9.8.jar,lib/slf4j-api.jar=/home/romain/.m2/newrepo/org/slf4j/slf4j-ap
- i/1.7.25/slf4j-api-1.7.25.jar,lib/commons-lang3.jar=/home/romain/.m2/ne
- wrepo/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar,li
- b/jackson-annotations.jar=/home/romain/.m2/newrepo/com/fasterxml/jackso
- n/core/jackson-annotations/2.9.8/jackson-annotations-2.9.8.jar,lib/acti
- vation.jar=/home/romain/.m2/newrepo/javax/activation/activation/1.1.1/a
- ctivation-1.1.1.jar,lib/console-server.jar=/home/romain/.m2/newrepo/org
- /bonitasoft/console/console-server/7.9.0-SNAPSHOT/console-server-7.9.0-
- SNAPSHOT-classes.jar,lib/console-common.jar=/home/romain/.m2/newrepo/or
- g/bonitasoft/console/console-common/7.9.0-SNAPSHOT/console-common-7.9.0
- -SNAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=tomcat
+Include-Resource: , lib/bonita-client.jar=/home/romain/.m2/repository/or
+ g/bonitasoft/engine/bonita-client/7.9.0-SNAPSHOT/bonita-client-7.9.0-SN
+ APSHOT.jar,lib/jaxb-api.jar=/home/romain/.m2/repository/javax/xml/bind/
+ jaxb-api/2.2.7/jaxb-api-2.2.7.jar,lib/jaxb-impl.jar=/home/romain/.m2/re
+ pository/com/sun/xml/bind/jaxb-impl/2.2.7/jaxb-impl-2.2.7.jar,lib/jaxb-
+ core.jar=/home/romain/.m2/repository/com/sun/xml/bind/jaxb-core/2.2.7/j
+ axb-core-2.2.7.jar,lib/istack-commons-runtime.jar=/home/romain/.m2/repo
+ sitory/com/sun/istack/istack-commons-runtime/2.16/istack-commons-runtim
+ e-2.16.jar,lib/FastInfoset.jar=/home/romain/.m2/repository/com/sun/xml/
+ fastinfoset/FastInfoset/1.2.12/FastInfoset-1.2.12.jar,lib/httpclient.ja
+ r=/home/romain/.m2/repository/org/apache/httpcomponents/httpclient/4.5.
+ 2/httpclient-4.5.2.jar,lib/httpcore.jar=/home/romain/.m2/repository/org
+ /apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar,lib/commons-lo
+ gging.jar=/home/romain/.m2/repository/commons-logging/commons-logging/1
+ .2/commons-logging-1.2.jar,lib/xstream.jar=/home/romain/.m2/repository/
+ com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.jar,lib/xmlpull.
+ jar=/home/romain/.m2/repository/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1
+ .jar,lib/xpp3_min.jar=/home/romain/.m2/repository/xpp3/xpp3_min/1.1.4c/
+ xpp3_min-1.1.4c.jar,lib/httpmime.jar=/home/romain/.m2/repository/org/ap
+ ache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.jar,lib/commons-codec
+ .jar=/home/romain/.m2/repository/commons-codec/commons-codec/1.7/common
+ s-codec-1.7.jar,lib/bonita-common.jar=/home/romain/.m2/repository/org/b
+ onitasoft/engine/bonita-common/7.9.0-SNAPSHOT/bonita-common-7.9.0-SNAPS
+ HOT.jar,lib/activation.jar=/home/romain/.m2/repository/javax/activation
+ /activation/1.1.1/activation-1.1.1.jar,lib/commons-io.jar=/home/romain/
+ .m2/repository/commons-io/commons-io/2.5/commons-io-2.5.jar,lib/jackson
+ -databind.jar=/home/romain/.m2/repository/com/fasterxml/jackson/core/ja
+ ckson-databind/2.9.8/jackson-databind-2.9.8.jar,lib/jackson-core.jar=/h
+ ome/romain/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.9.8
+ /jackson-core-2.9.8.jar,lib/slf4j-api.jar=/home/romain/.m2/repository/o
+ rg/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar,lib/commons-lang3.jar=/h
+ ome/romain/.m2/repository/org/apache/commons/commons-lang3/3.3.2/common
+ s-lang3-3.3.2.jar,lib/jackson-annotations.jar=/home/romain/.m2/reposito
+ ry/com/fasterxml/jackson/core/jackson-annotations/2.9.0/jackson-annotat
+ ions-2.9.0.jar,lib/console-server.jar=/home/romain/.m2/repository/org/b
+ onitasoft/console/console-server/7.9.0-SNAPSHOT/console-server-7.9.0-SN
+ APSHOT-classes.jar,lib/console-common.jar=/home/romain/.m2/repository/o
+ rg/bonitasoft/console/console-common/7.9.0-SNAPSHOT/console-common-7.9.
+ 0-SNAPSHOT.jar,javadoc.zip,plugin.xml,tomcat=tomcat
 Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  r.conf.Catalina.localhost,tomcat.server.conf,tomcat.server.lib,tomcat.s
  erver.lib.bonita,tomcat.server.logs,tomcat.server.temp,tomcat.server.we
@@ -226,33 +227,33 @@ Private-Package: lib,tomcat,tomcat.server,tomcat.server.bin,tomcat.serve
  dec.binary,org.apache.commons.codec.digest,org.apache.commons.codec.lan
  guage,org.apache.commons.codec.language.bm,org.apache.commons.codec.net
  ,com.bonitasoft.engine.api,com.bonitasoft.engine.bdm,com.bonitasoft.eng
- ine.bdm.dao,org.apache.commons.io,org.apache.commons.io.comparator,org.
- apache.commons.io.filefilter,org.apache.commons.io.input,org.apache.com
- mons.io.monitor,org.apache.commons.io.output,org.apache.commons.io.seri
- alization,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind
- .annotation,com.fasterxml.jackson.databind.cfg,com.fasterxml.jackson.da
- tabind.deser,com.fasterxml.jackson.databind.deser.impl,com.fasterxml.ja
- ckson.databind.deser.std,com.fasterxml.jackson.databind.exc,com.fasterx
- ml.jackson.databind.ext,com.fasterxml.jackson.databind.introspect,com.f
- asterxml.jackson.databind.jsonFormatVisitors,com.fasterxml.jackson.data
- bind.jsonschema,com.fasterxml.jackson.databind.jsontype,com.fasterxml.j
- ackson.databind.jsontype.impl,com.fasterxml.jackson.databind.module,com
- .fasterxml.jackson.databind.node,com.fasterxml.jackson.databind.ser,com
- .fasterxml.jackson.databind.ser.impl,com.fasterxml.jackson.databind.ser
- .std,com.fasterxml.jackson.databind.type,com.fasterxml.jackson.databind
- .util,com.fasterxml.jackson.core,com.fasterxml.jackson.core.async,com.f
- asterxml.jackson.core.base,com.fasterxml.jackson.core.filter,com.faster
- xml.jackson.core.format,com.fasterxml.jackson.core.io,com.fasterxml.jac
- kson.core.json,com.fasterxml.jackson.core.json.async,com.fasterxml.jack
- son.core.sym,com.fasterxml.jackson.core.type,com.fasterxml.jackson.core
- .util,org.slf4j,org.slf4j.event,org.slf4j.helpers,org.slf4j.spi,org.apa
- che.commons.lang3,org.apache.commons.lang3.builder,org.apache.commons.l
- ang3.concurrent,org.apache.commons.lang3.event,org.apache.commons.lang3
- .exception,org.apache.commons.lang3.math,org.apache.commons.lang3.mutab
- le,org.apache.commons.lang3.reflect,org.apache.commons.lang3.text,org.a
- pache.commons.lang3.text.translate,org.apache.commons.lang3.time,org.ap
- ache.commons.lang3.tuple,com.fasterxml.jackson.annotation,com.sun.activ
- ation.registries,com.sun.activation.viewers,javax.activation,WEB-INF,ht
+ ine.bdm.dao,com.sun.activation.registries,com.sun.activation.viewers,ja
+ vax.activation,org.apache.commons.io,org.apache.commons.io.comparator,o
+ rg.apache.commons.io.filefilter,org.apache.commons.io.input,org.apache.
+ commons.io.monitor,org.apache.commons.io.output,org.apache.commons.io.s
+ erialization,com.fasterxml.jackson.databind,com.fasterxml.jackson.datab
+ ind.annotation,com.fasterxml.jackson.databind.cfg,com.fasterxml.jackson
+ .databind.deser,com.fasterxml.jackson.databind.deser.impl,com.fasterxml
+ .jackson.databind.deser.std,com.fasterxml.jackson.databind.exc,com.fast
+ erxml.jackson.databind.ext,com.fasterxml.jackson.databind.introspect,co
+ m.fasterxml.jackson.databind.jsonFormatVisitors,com.fasterxml.jackson.d
+ atabind.jsonschema,com.fasterxml.jackson.databind.jsontype,com.fasterxm
+ l.jackson.databind.jsontype.impl,com.fasterxml.jackson.databind.module,
+ com.fasterxml.jackson.databind.node,com.fasterxml.jackson.databind.ser,
+ com.fasterxml.jackson.databind.ser.impl,com.fasterxml.jackson.databind.
+ ser.std,com.fasterxml.jackson.databind.type,com.fasterxml.jackson.datab
+ ind.util,com.fasterxml.jackson.core,com.fasterxml.jackson.core.async,co
+ m.fasterxml.jackson.core.base,com.fasterxml.jackson.core.filter,com.fas
+ terxml.jackson.core.format,com.fasterxml.jackson.core.io,com.fasterxml.
+ jackson.core.json,com.fasterxml.jackson.core.json.async,com.fasterxml.j
+ ackson.core.sym,com.fasterxml.jackson.core.type,com.fasterxml.jackson.c
+ ore.util,org.slf4j,org.slf4j.event,org.slf4j.helpers,org.slf4j.spi,org.
+ apache.commons.lang3,org.apache.commons.lang3.builder,org.apache.common
+ s.lang3.concurrent,org.apache.commons.lang3.event,org.apache.commons.la
+ ng3.exception,org.apache.commons.lang3.math,org.apache.commons.lang3.mu
+ table,org.apache.commons.lang3.reflect,org.apache.commons.lang3.text,or
+ g.apache.commons.lang3.text.translate,org.apache.commons.lang3.time,org
+ .apache.commons.lang3.tuple,com.fasterxml.jackson.annotation,WEB-INF,ht
  ml,org.bonitasoft.console.common.server,org.bonitasoft.console.common.s
  erver.api,org.bonitasoft.console.common.server.api.token,org.bonitasoft
  .console.common.server.auth,org.bonitasoft.console.common.server.auth.i

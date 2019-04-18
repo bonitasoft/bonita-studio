@@ -43,7 +43,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator,
  org.eclipse.e4.core.commands,
  org.eclipse.jdt.core.manipulation,
- org.eclipse.debug.core;bundle-version="3.13.100"
+ org.eclipse.debug.core;bundle-version="3.13.100",
+ org.eclipse.wst.validation;bundle-version="1.2.701"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,

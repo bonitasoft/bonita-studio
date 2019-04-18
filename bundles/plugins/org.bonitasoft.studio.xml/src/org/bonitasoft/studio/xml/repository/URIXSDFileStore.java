@@ -31,6 +31,11 @@ public class URIXSDFileStore extends XSDFileStore {
     public boolean isReadOnly() {
         return true;
     }
+    
+    @Override
+    public boolean canBeExported() {
+        return false;
+    }
 
     @Override
     public boolean canBeShared() {

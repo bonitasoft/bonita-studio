@@ -90,6 +90,7 @@ public class Messages extends NLS {
     public static String actorFilterDef;
     public static String actorFilterImpl;
     public static String groovyClass;
+    public static String theme;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
