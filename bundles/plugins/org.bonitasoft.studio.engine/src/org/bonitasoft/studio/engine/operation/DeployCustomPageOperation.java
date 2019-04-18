@@ -43,9 +43,9 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
         this.httpClientFactory = httpClientFactory;
     }
 
-    public List<Page> deploy() throws IOException, HttpException {
+    public List<Page> deploy(IProgressMonitor monitor) throws IOException, HttpException {
         final String pageId = getCustomPageId();
-        final File file = getArchiveFile();
+        final File file = getArchiveFile(monitor);
         final List<Page> existingPages = findDeployedPages(pageId);
         httpClientFactory.newLoginRequest().execute();
         if (!existingPages.isEmpty()) {
@@ -71,7 +71,7 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
         return findDeployedPages(pageId);
     }
 
-    protected abstract File getArchiveFile();
+    protected abstract File getArchiveFile(IProgressMonitor monitor);
 
     protected abstract String getCustomPageId();
     
@@ -93,7 +93,7 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.setTaskName(taskName());
         try {
-            deploy();
+            deploy(monitor);
             status = new Status(IStatus.OK, EnginePlugin.PLUGIN_ID,
                     String.format(Messages.deploySuccessMessage, getCustomPageLabel()));
         } catch (IOException | HttpException e) {

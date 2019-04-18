@@ -24,6 +24,7 @@ import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.google.common.io.Files;
 
@@ -42,7 +43,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
     }
 
     @Override
-    protected File getArchiveFile() {
+    protected File getArchiveFile(IProgressMonitor monitor) {
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile(getCustomPageId(), ".zip");
