@@ -26,7 +26,10 @@
                     <italic>true</italic>
                     <fontSize>58</fontSize>
                     <color>#0B4361</color>
-                    <versionLabel>${project.version}</versionLabel>
+                    <versionLabel>${unqualifiedVersion}.${buildQualifier}</versionLabel>
+                    <showQualifier>true</showQualifier>
+                    <qualifierX>5</qualifierX>
+                    <qualifierY>280</qualifierY>
                 </configuration>
                 <executions>
                     <execution>
