@@ -106,8 +106,8 @@
       </perspective>
    </extension>
    <extension
-         id="id1"
-         name="name"
+         id="menuLevelValidator"
+         name="Application descriptor menu level validator"
          point="org.eclipse.wst.validation.validatorV2">
       <validator
             class="org.bonitasoft.studio.la.application.ui.validator.MenuLevelValidator">

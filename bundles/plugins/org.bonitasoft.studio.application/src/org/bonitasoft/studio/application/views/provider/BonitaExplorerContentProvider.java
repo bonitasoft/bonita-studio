@@ -25,7 +25,12 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
+import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -49,7 +54,19 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         if (parentElement instanceof IFolder && isEnvironmentsFolder((IFolder) parentElement)) {
             return addLocalEnvironment(parentElement);
         }
-        return super.getChildren(parentElement);
+        
+        Object[] children = super.getChildren(parentElement);
+        if (parentElement instanceof IProject && children.length == 0) {
+            IProject project = (IProject) parentElement;
+            if (project.isAccessible()) {
+                try {
+                    return project.members();
+                } catch (CoreException e) {
+                    return NO_CHILDREN;
+                }
+            }
+        }
+        return children;
     }
 
     // The local environment is not persisted in a fileStore, we must 'fake' it to display it.
@@ -65,7 +82,7 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     private boolean isEnvironmentsFolder(IFolder parentElement) {
         return Objects.equals(parentElement.getName(), "environements");
     }
-    
+
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         super.inputChanged(viewer, oldInput, newInput);

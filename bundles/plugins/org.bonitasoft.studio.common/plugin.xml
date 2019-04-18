@@ -38,6 +38,9 @@
                 class="org.bonitasoft.studio.common.RestAPIExtensionNature">
           </run>
        </runtime>
+       <builder
+             id="org.bonitasoft.studio.rest.api.extension.themePagePropertyBuilder">
+       </builder>
     </extension>
    <extension
          point="org.eclipse.ui.perspectives">
