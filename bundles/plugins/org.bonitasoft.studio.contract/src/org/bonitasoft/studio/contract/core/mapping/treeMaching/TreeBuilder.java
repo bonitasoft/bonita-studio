@@ -76,7 +76,11 @@ public class TreeBuilder {
         ContractInput contractInput = new SimpleFieldToContractInputMapping(field).getContractInput();
         contractInput.setCreateMode(parent.isCreateMode());
         if (bo.getFields().contains(field)) {
-            parent.getInputs().add(bo.getFields().indexOf(field), contractInput);
+            int expectedIndex = bo.getFields().indexOf(field);
+            int index = expectedIndex > parent.getInputs().size() // might happen if a subpart of the bo isn't displayed in read only
+                    ? parent.getInputs().size()
+                    : expectedIndex;
+            parent.getInputs().add(index, contractInput);
         } else { // persistenceId isn't in the bo
             parent.getInputs().add(contractInput);
         }
