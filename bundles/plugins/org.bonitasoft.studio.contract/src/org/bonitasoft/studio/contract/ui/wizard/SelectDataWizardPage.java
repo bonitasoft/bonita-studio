@@ -330,8 +330,12 @@ public class SelectDataWizardPage extends WizardPage {
     }
 
     private IStatus validateInputNameDifferentThanBusinessDataName(Object value) {
-        if (Objects.equals(value, ((Data) selectedDataObservable.getValue()).getName())) {
+        if (selectedDataObservable.getValue() instanceof Data
+                && Objects.equals(value, ((Data) selectedDataObservable.getValue()).getName())) {
             return ValidationStatus.error(Messages.contractInputEqualToBusinessDataError);
+        } else if (selectedDataObservable.getValue() instanceof Document
+                && Objects.equals(value, ((Document) selectedDataObservable.getValue()).getName())) {
+            return ValidationStatus.error(Messages.contractInputEqualToDocumentError);
         }
         return ValidationStatus.ok();
     }
