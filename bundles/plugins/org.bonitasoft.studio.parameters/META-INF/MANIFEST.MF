@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: Parameters Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.parameters;singleton:=true
-Bundle-Version: 7.9.0.qualifier
+Bundle-Version: 7.9.0.W17
 Bundle-Activator: org.bonitasoft.studio.parameters.ParameterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
