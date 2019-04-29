@@ -36,7 +36,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
@@ -112,13 +116,17 @@ public class GroovyFileStore extends AbstractFileStore {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-     */
     @Override
     protected IWorkbenchPart doOpen() {
-        return null;
+        try {
+            return IDE.openEditor(getActivePage(), getResource());
+        } catch (final PartInitException e) {
+            throw new RuntimeException("Failed to open application descriptor.", e);
+        }
+    }
+
+    protected IWorkbenchPage getActivePage() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     }
 
     /*
@@ -132,7 +140,7 @@ public class GroovyFileStore extends AbstractFileStore {
 
     public List<IFile> getClassFiles() {
         if (getResource().exists()) {
-            final List<IFile> res = new ArrayList<IFile>();
+            final List<IFile> res = new ArrayList<>();
             final IProject project = getParentStore().getResource().getProject();
             final IFolder binFolder = project.getFolder("bin");
             final IFile classFile = binFolder.getFile(getName().replace(".groovy", ".class"));
