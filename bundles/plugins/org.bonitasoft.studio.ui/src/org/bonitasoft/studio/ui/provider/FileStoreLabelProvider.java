@@ -23,8 +23,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
 
-public abstract class FileStoreLabelProvider extends StyledCellLabelProvider
-        implements ILabelProvider {
+public class FileStoreLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
     @Override
     public void update(ViewerCell cell) {
@@ -40,18 +39,17 @@ public abstract class FileStoreLabelProvider extends StyledCellLabelProvider
         }
     }
 
-    protected abstract void contentValidation(IRepositoryFileStore fileStore, StyledString styledString, ViewerCell cell);
+    protected void contentValidation(IRepositoryFileStore fileStore, StyledString styledString, ViewerCell cell) {
+        // Default implementation doesn't perform any content validation.
+    };
 
-    /**
-     * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
-     */
     @Override
     public String getToolTipText(Object element) {
         final IRepositoryFileStore fileStore = (IRepositoryFileStore) element;
         try {
             fileStore.getContent();
         } catch (ReadFileStoreException e) {
-            return Messages.unparsableXmlFile;
+            return Messages.unparsableFile;
         }
         return super.getToolTipText(element);
     }

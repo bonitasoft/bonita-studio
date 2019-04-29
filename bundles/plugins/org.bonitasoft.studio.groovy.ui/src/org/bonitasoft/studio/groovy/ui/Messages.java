@@ -72,6 +72,16 @@ public final class Messages extends NLS {
 
     public static String createNewGroovyClass;
 
+    public static String open;
+
+    public static String openExistingGroovyScript;
+
+    public static String openExistingGroovyScriptDescription;
+
+    public static String deleteExistingGroovyScript;
+
+    public static String deleteExistingGroovyScriptDescription;
+
     private Messages() {
         // Do not instantiate
     }

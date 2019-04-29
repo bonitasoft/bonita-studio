@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorLabelProvider;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerProblemsDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -83,6 +84,8 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                             .orElse(super.getImage(element));
                 }
             }
+        }
+        if (!(element instanceof PackageFragment)) {
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
                     .getRepositoryStore(element);
             if (repositoryStore.isPresent()) {
@@ -105,7 +108,8 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             if (repositoryStore.isPresent()) {
                 IRepositoryStore<? extends IRepositoryFileStore> iRepositoryStore = repositoryStore.get();
                 String displayName = iRepositoryStore.getDisplayName();
-                return new StyledString(displayName != null && !displayName.isEmpty() ? displayName : iRepositoryStore.getName());
+                return new StyledString(
+                        displayName != null && !displayName.isEmpty() ? displayName : iRepositoryStore.getName());
             }
             return asFileStore(element, repositoryManager)
                     .filter(fStore -> Objects.equals(fStore.getResource(), element))
