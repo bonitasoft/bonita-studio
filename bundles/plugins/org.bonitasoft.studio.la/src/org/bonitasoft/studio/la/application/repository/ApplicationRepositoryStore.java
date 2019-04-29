@@ -129,20 +129,11 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
         for (ApplicationFileStore fileStore : getChildren()) {
             try {
                 ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
-                applicationNodeContainer.getApplications().forEach(application -> {
-                    updateBonitaTheme(application);
-                    updateBonitaLayout(application);
-                });
+                applicationNodeContainer.getApplications().forEach(application -> updateBonitaTheme(application));
                 fileStore.save(applicationNodeContainer);
             } catch (ReadFileStoreException e) {
                 BonitaStudioLog.error(e);
             }
-        }
-    }
-
-    private void updateBonitaLayout(ApplicationNode application) {
-        if(Objects.equals(application.getLayout(),"custompage_defaultlayout")) {
-            application.setLayout("custompage_layoutBonita");
         }
     }
 
