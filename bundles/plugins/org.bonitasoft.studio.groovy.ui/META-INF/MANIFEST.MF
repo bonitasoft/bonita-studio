@@ -6,6 +6,20 @@ Bundle-Version: 7.9.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.groovy.ui;
+  x-friends:="org.bonitasoft.studio.tests.ex,
+   org.bonitasoft.studio.tests,
+   org.bonitasoft.groovy.tests,
+   org.bonitasoft.studio.repository.tests.ex",
+ org.bonitasoft.studio.groovy.ui.contentassist,
+ org.bonitasoft.studio.groovy.ui.dialog,
+ org.bonitasoft.studio.groovy.ui.handler,
+ org.bonitasoft.studio.groovy.ui.job,
+ org.bonitasoft.studio.groovy.ui.providers,
+ org.bonitasoft.studio.groovy.ui.viewer,
+ org.bonitasoft.studio.groovy.ui.widgets,
+ org.bonitasoft.studio.groovy.ui.widgets.pojo,
+ org.bonitasoft.studio.groovy.ui.wizard
 Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.core.runtime,
  org.codehaus.groovy,
@@ -67,6 +81,7 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.bonitasoft.studio.ui;bundle-version="7.9.0",
  com.ibm.icu;bundle-version="63.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.dao,
  org.bonitasoft.engine.bpm,
@@ -80,18 +95,3 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.session,
  org.bonitasoft.studio.dependencies.ui.dialog,
  org.eclipse.ui.part
-Export-Package: org.bonitasoft.studio.groovy.ui;
-  x-friends:="org.bonitasoft.studio.tests.ex,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.groovy.tests,
-   org.bonitasoft.studio.repository.tests.ex",
- org.bonitasoft.studio.groovy.ui.contentassist,
- org.bonitasoft.studio.groovy.ui.dialog,
- org.bonitasoft.studio.groovy.ui.handler,
- org.bonitasoft.studio.groovy.ui.job,
- org.bonitasoft.studio.groovy.ui.providers,
- org.bonitasoft.studio.groovy.ui.viewer,
- org.bonitasoft.studio.groovy.ui.widgets,
- org.bonitasoft.studio.groovy.ui.widgets.pojo,
- org.bonitasoft.studio.groovy.ui.wizard
-Bundle-ActivationPolicy: lazy

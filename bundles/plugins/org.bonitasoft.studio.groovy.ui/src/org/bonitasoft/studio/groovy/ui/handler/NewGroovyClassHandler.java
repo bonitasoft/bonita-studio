@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Bonitasoft S.A.
+ * Copyright (C) 2019 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,29 +15,22 @@
 package org.bonitasoft.studio.groovy.ui.handler;
 
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.groovy.ui.wizard.NewGroovyClassWizard;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-public class NewGroovyScript extends AbstractHandler {
+// Handler used for menu entry point -> no selection, and the command is different to avoid some issues..
+public class NewGroovyClassHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
-
-    @Override
     @Execute
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        final NewGroovyClassWizard wizard = new NewGroovyClassWizard();
-        wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selectionFinder.getSelectionInExplorer());
+    public void execute() {
+        NewGroovyClassWizard wizard = new NewGroovyClassWizard();
+        wizard.init(PlatformUI.getWorkbench(), new StructuredSelection());
         new WizardDialog(Display.getDefault().getActiveShell(), wizard).open();
         AbstractFileStore.refreshExplorerView();
-        return null;
     }
 
 }
