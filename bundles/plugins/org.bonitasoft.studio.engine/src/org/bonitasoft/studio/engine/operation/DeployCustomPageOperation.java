@@ -76,6 +76,8 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
     protected abstract String getCustomPageId();
     
     protected abstract String getCustomPageLabel();
+    
+    protected abstract String getCustomPageType();
 
     protected List<Page> findDeployedPages(final String pageId) {
         try {
@@ -95,7 +97,7 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
         try {
             deploy(monitor);
             status = new Status(IStatus.OK, EnginePlugin.PLUGIN_ID,
-                    String.format(Messages.deploySuccessMessage, getCustomPageLabel()));
+                    String.format(Messages.deploySuccessMessage, getCustomPageLabel(),getCustomPageType()));
         } catch (IOException | HttpException e) {
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
                     NLS.bind(Messages.deployFailedMessage, getCustomPageLabel()), e);

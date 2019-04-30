@@ -72,4 +72,9 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
         return pageFileStore.getDisplayName();
     }
 
+    @Override
+    protected String getCustomPageType() {
+        return pageFileStore.getType();
+    }
+
 }
