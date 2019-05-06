@@ -64,12 +64,18 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
 
     @Override
     protected String taskName() {
-        return String.format(Messages.deployingPage, pageFileStore.getDisplayName());
+        return String.format(Messages.deployingPage, pageLabel());
     }
 
     @Override
     protected String getCustomPageLabel() {
-        return pageFileStore.getDisplayName();
+        return pageLabel();
+    }
+
+    private String pageLabel() {
+        return pageFileStore.getDisplayName() != null && !pageFileStore.getDisplayName().isEmpty()
+                ? pageFileStore.getDisplayName()
+                : pageFileStore.getName();
     }
 
     @Override

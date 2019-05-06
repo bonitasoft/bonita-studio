@@ -138,7 +138,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     }
 
     private void updateBonitaTheme(ApplicationNode application) {
-        if(Objects.equals(application.getLayout(),"custompage_bonitadefaulttheme")) {
+        if(Objects.equals(application.getTheme(),"custompage_bonitadefaulttheme")) {
             application.setTheme("custompage_themeBonita");
         }
     }
