@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
   <extension-point id="prefrenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/prefrenceFieldEditorContribution.exsd"/>
+  <extension-point id="preferenceInitializerExtension" name="Preference Initializer Extension" schema="schema/preferenceInitializerExtension.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
