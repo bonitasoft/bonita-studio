@@ -37,12 +37,12 @@ public class AggregationReferencePropertyInitializerTest {
 
         final String initialValue = new AggregationReferencePropertyInitializer(null, context).getInitialValue();
 
-        assertThat(initialValue).isEqualToIgnoringWhitespace("{\n"
+        assertThat(initialValue).isEqualTo("{\n"
                 + "//Retrieve aggregated country using its DAO and persistenceId\n"
-                + "def countryVar = countryDAO.findByPersistenceId(country?.persistenceId_string?.toLong())\n"
+                + "def countryVar = countryDAO.findByPersistenceId(country?.persistenceId_string?.find()?.toLong())\n"
                 + "if (!countryVar) {\n"
-                + "if (country?.persistenceId_string?.toLong()) {\n"
-                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                + "if (country?.persistenceId_string?.find()?.toLong()) {\n"
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
                 + "}\n"
                 + "return null\n"
                 + "}\n"

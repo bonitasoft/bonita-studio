@@ -25,6 +25,8 @@ import javax.inject.Inject;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -33,6 +35,7 @@ import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.resolver.ContractToBusinessDataResolver;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.web.designer.model.contract.BusinessDataReference;
@@ -92,10 +95,13 @@ public class ContractConstraintBuilder {
                             : input.getName();
                     result.add(createMandatoryConstraint(node, typeName, businessObject.getSimpleName()));
                 }
+                if (isLongField(input, businessObject)) {
+                    result.add(createLongConstraint(node, businessObject.getSimpleName()));
+                }
                 if (dataReference instanceof BusinessDataReference) {
-                    if(((BusinessDataReference) dataReference).getRelationType() == RelationType.AGGREGATION) {
-                        String typeName =  bmdStore.getBusinessObjectByQualifiedName(dataReference.getType())
-                                        .map(bo -> bo.getSimpleName()).orElse(input.getName());
+                    if (((BusinessDataReference) dataReference).getRelationType() == RelationType.AGGREGATION) {
+                        String typeName = bmdStore.getBusinessObjectByQualifiedName(dataReference.getType())
+                                .map(bo -> bo.getSimpleName()).orElse(input.getName());
                         result.add(createAggregationConstraint(node, typeName, businessObject.getSimpleName()));
                     }
                     bmdStore.getBusinessObjectByQualifiedName(dataReference.getType())
@@ -107,6 +113,27 @@ public class ContractConstraintBuilder {
         }
     }
 
+    // Long field are used as text contract input, to avoid errors because MAX_VAlUE is different in js
+    private boolean isLongField(ContractInput input, BusinessObject businessObject) {
+        if (Objects.equals(input.getType(), ContractInputType.TEXT)) {
+            return businessObject.getFields().stream()
+                    .filter(SimpleField.class::isInstance)
+                    .map(SimpleField.class::cast)
+                    .filter(field -> Objects.equals(field.getType(), FieldType.LONG))
+                    .anyMatch(f -> Objects.equals(f.getName(), input.getName()));
+        }
+        return false;
+    }
+
+    private ContractConstraint createLongConstraint(Node node, String parentTypeName) {
+        ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        constraint.setName(String.format("type_long_%s", node.toPath("_")));
+        constraint.setExpression(node.toLongConstraintExpression());
+        constraint.setErrorMessage(
+                String.format("A Long value is expected for %s.%s", parentTypeName, node.name));
+        return constraint;
+    }
+
     private ContractConstraint createMandatoryConstraint(Node node, String typeName, String parentTypeName) {
         ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint.setName(String.format("mandatory_%s", node.toPath("_")));
@@ -114,12 +141,13 @@ public class ContractConstraintBuilder {
         constraint.setErrorMessage(String.format("%s is mandatory for %s", typeName, parentTypeName));
         return constraint;
     }
-    
+
     private ContractConstraint createAggregationConstraint(Node node, String typeName, String parentTypeName) {
         ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint.setName(String.format("aggregation_%s", node.toPath("_")));
         constraint.setExpression(node.toAggregationConstraintExpression());
-        constraint.setErrorMessage(String.format("%s must reference an existing instance with a persistenceId for %s", typeName, parentTypeName));
+        constraint.setErrorMessage(String.format("%s must reference an existing instance with a persistenceId for %s",
+                typeName, parentTypeName));
         return constraint;
     }
 
@@ -142,7 +170,7 @@ public class ContractConstraintBuilder {
         }
 
         private String toMandatoryConstraintExpression() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             boolean hasAMultipleParent = hasAMultipleParent();
             result.add(hasAMultipleParent ? String.format("%s.flatten().every{it!=null}", name) : name);
             Node parentNode = parent;
@@ -157,17 +185,38 @@ public class ContractConstraintBuilder {
             }
             return expression + " != null";
         }
-        
+
         private String toAggregationConstraintExpression() {
-            if(hasAMultipleParent()) {
+            if (hasAMultipleParent()) {
                 return toMulitpleAggregationConstraintExpression();
             }
-            Node persistenceIdNode= new Node(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME, false, this);
-            return "!"+toPath("?.") +" || "+ persistenceIdNode.toPath("?.");
+            Node persistenceIdNode = new Node(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME, false,
+                    this);
+            return "!" + toPath("?.") + " || " + persistenceIdNode.toPath("?.");
+        }
+
+        private String toLongConstraintExpression() {
+            if (isMultiple || hasAMultipleParent()) {
+                return toMultipleLongConstraintExpression();
+            }
+            String path = toPath("?.");
+            return "!" + path + " || " + path + ".isLong()";
+        }
+
+        private String toMultipleLongConstraintExpression() {
+            List<String> result = new ArrayList<>();
+            result.add(String.format("%s.flatten().findAll().every{ it.isLong() }", name));
+            Node parentNode = parent;
+            while (parentNode != null) {
+                result.add(parentNode.name);
+                parentNode = parentNode.parent;
+            }
+            Collections.reverse(result);
+            return result.stream().collect(Collectors.joining("?."));
         }
 
         private String toPath(String separator) {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(name);
             Node parentNode = parent;
             while (parentNode != null) {
@@ -179,7 +228,7 @@ public class ContractConstraintBuilder {
         }
 
         private String toMulitpleAggregationConstraintExpression() {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             result.add(String.format("%s.flatten().every{!it || it.persistenceId_string}", name));
             Node parentNode = parent;
             while (parentNode != null) {

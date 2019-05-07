@@ -72,6 +72,10 @@ public abstract class FieldBuilder {
         return aSimpleField().withName(name).ofType(DOUBLE);
     }
 
+    public static SimpleFieldBuilder aLongField(final String name) {
+        return aSimpleField().withName(name).ofType(FieldType.LONG);
+    }
+
     public static SimpleFieldBuilder anIntegerField(final String name) {
         return aSimpleField().withName(name).ofType(INTEGER);
     }

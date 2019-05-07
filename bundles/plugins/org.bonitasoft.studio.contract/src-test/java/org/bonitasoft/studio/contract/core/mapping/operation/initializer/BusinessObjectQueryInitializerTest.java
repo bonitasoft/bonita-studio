@@ -57,10 +57,10 @@ public class BusinessObjectQueryInitializerTest {
 
         assertThat(initialValue).isEqualToIgnoringWhitespace(
                 "//Retrieve aggregated Country using its DAO and persistenceId\n"
-                        + "def countryVar = countryDAO.findByPersistenceId(countryInput?.persistenceId_string?.toLong())\n"
+                        + "def countryVar = countryDAO.findByPersistenceId(countryInput?.persistenceId_string?.find()?.toLong())\n"
                         + "if (!countryVar) {\n"
-                        + "if (countryInput?.persistenceId_string?.toLong()) {\n"
-                        + "throw new IllegalArgumentException(\"The aggregated reference of type `Country`  with the persistence id \" + countryInput?.persistenceId_string?.toLong() + \" has not been found.\")\n"
+                        + "if (countryInput?.persistenceId_string?.find()?.toLong()) {\n"
+                        + "throw new IllegalArgumentException(\"The aggregated reference of type `Country`  with the persistence id \" + countryInput?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
                         + "}\n"
                         + "return null\n"
                         + "}\n"
