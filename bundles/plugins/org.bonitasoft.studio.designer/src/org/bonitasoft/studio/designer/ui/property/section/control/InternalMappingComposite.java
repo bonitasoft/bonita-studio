@@ -21,23 +21,16 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.FormReferenceProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -52,7 +45,6 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
 
     private final FormReferenceExpressionViewer targetFormExpressionViewer;
     private final RepositoryAccessor repositoryAccessor;
-    private final WebPageNameResourceChangeListener webPageNameResourceChangeListener;
     private final Label info;
 
     public InternalMappingComposite(final Composite parent,
@@ -62,14 +54,12 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
             final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
         this.repositoryAccessor = repositoryAccessor;
-        webPageNameResourceChangeListener = new WebPageNameResourceChangeListener(new ExpressionItemProvider(
-                new ExpressionItemProviderAdapterFactory()));
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
         final Label label = widgetFactory.createLabel(this, Messages.targetForm);
         label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
-        targetFormExpressionViewer = createFormExpressionViewer(widgetFactory, repositoryAccessor, formReferenceExpressionValidator, createOrEditFormListener);
-        addResourceChangeListener(webPageNameResourceChangeListener);
+        targetFormExpressionViewer = createFormExpressionViewer(widgetFactory, repositoryAccessor,
+                formReferenceExpressionValidator, createOrEditFormListener);
 
         info = widgetFactory.createLabel(this, "", SWT.WRAP);
         info.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).align(SWT.FILL, SWT.CENTER).create());
@@ -81,7 +71,8 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
             final RepositoryAccessor repositoryAccessor,
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
-        final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+        final WebPageRepositoryStore webPageRepositoryStore = repositoryAccessor
+                .getRepositoryStore(WebPageRepositoryStore.class);
         final FormReferenceExpressionViewer expressionViewer = new FormReferenceExpressionViewer(this, SWT.BORDER,
                 widgetFactory,
                 webPageRepositoryStore, createOrEditFormListener);
@@ -91,44 +82,14 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
         expressionViewer.addExpressionValidator(formReferenceExpressionValidator);
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.FORM_REFERENCE_TYPE));
         expressionViewer.setProposalsFiltering(false);
-        expressionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                final Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (selection instanceof Expression) {
-                    webPageNameResourceChangeListener.setExpression((Expression) selection);
-                    if (webPageRepositoryStore != null) {
-                        webPageNameResourceChangeListener.setWebPageStore(webPageRepositoryStore);
-                    }
-                }
-            }
-        });
         return expressionViewer;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.swt.widgets.Widget#dispose()
-     */
-    @Override
-    public void dispose() {
-        removeResourceChangeListener(webPageNameResourceChangeListener);
-        super.dispose();
-    }
-
-    private void addResourceChangeListener(final IResourceChangeListener resourceChangeListener) {
-        repositoryAccessor.getWorkspace().addResourceChangeListener(resourceChangeListener);
-    }
-
-    private void removeResourceChangeListener(final IResourceChangeListener resourceChangeListener) {
-        repositoryAccessor.getWorkspace().removeResourceChangeListener(resourceChangeListener);
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
         context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
         context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
-                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable,
+                        ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
         doBindInfo(context, formMappingObservable);
     }
 
