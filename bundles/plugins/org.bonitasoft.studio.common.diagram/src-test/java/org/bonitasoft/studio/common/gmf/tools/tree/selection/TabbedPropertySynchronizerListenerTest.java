@@ -78,7 +78,7 @@ public class TabbedPropertySynchronizerListenerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(processEditorReference.getId()).thenReturn("org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID");
+        when(processEditorReference.getId()).thenReturn("org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID");
         when(processEditorReference.getPart(false)).thenReturn(editorPart);
         when(activePage.getActiveEditor()).thenReturn(editorPart);
         when(activePage.getViewReferences()).thenReturn(new IViewReference[] {});

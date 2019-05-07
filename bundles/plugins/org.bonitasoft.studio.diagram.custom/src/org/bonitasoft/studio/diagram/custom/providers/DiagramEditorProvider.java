@@ -18,8 +18,8 @@ package org.bonitasoft.studio.diagram.custom.providers;
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -33,23 +33,23 @@ import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * @author Aurelien Pupier
- * Provider to be able to open form diagram via GMF EditorService.
+ *         Provider to be able to open form diagram via GMF EditorService.
  */
 public class DiagramEditorProvider extends AbstractEditorProvider {
 
-	@Override
-	protected boolean canOpen(final IEditorInput editorInput) {
-		return true;
-	}
+    @Override
+    protected boolean canOpen(final IEditorInput editorInput) {
+        return true;
+    }
 
-	@Override
-	protected String getEditorId(final IEditorInput editorInput) {
+    @Override
+    protected String getEditorId(final IEditorInput editorInput) {
         final URI uri = retrieveURI(editorInput);
         return isAProcessDiagramURI(uri) ? getID() : null;
-	}
+    }
 
     protected String getID() {
-        return ProcessDiagramEditor.ID;
+        return CustomProcessDiagramEditor.ID;
     }
 
     protected boolean isAProcessDiagramURI(final URI uri) {

@@ -14,34 +14,52 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
+import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
+import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.engine.io.IoUtils;
 
 public class WebPageNameResourceChangeListener implements IResourceChangeListener {
 
-    private WebPageRepositoryStore webPageStore;
-    private Expression expression;
-    private final ExpressionItemProvider expressionItemProvider;
+    private MainProcess mainProcess;
+    private RepositoryAccessor repositoryAccessor;
+    private ExpressionItemProvider expressionItemProvider;
 
-    public WebPageNameResourceChangeListener(final ExpressionItemProvider expressionItemProvider) {
-        this.expressionItemProvider = expressionItemProvider;
+    public WebPageNameResourceChangeListener(RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+        expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
     }
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     * @see
+     * org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
     @Override
     public void resourceChanged(final IResourceChangeEvent event) {
-        if (webPageStore != null && expression != null) {
+        if (mainProcess != null) {
             try {
                 event.getDelta().accept(resourceDeltaVisitor());
             } catch (final CoreException e) {
@@ -51,28 +69,51 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
     }
 
     private IResourceDeltaVisitor resourceDeltaVisitor() {
-        return new IResourceDeltaVisitor() {
-
-            @Override
-            public boolean visit(final IResourceDelta delta) throws CoreException {
-                String name = delta.getResource().getName();
-                if (webPageStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
-                        && name.endsWith(".json")) {
-                        expressionItemProvider.setPropertyValue(expression,
-                            ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
-                            webPageStore.getDisplayNameFor(expression.getContent()));
+        return delta -> {
+            String name = delta.getResource().getName();
+            WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+            if (delta.getKind() == IResourceDelta.ADDED
+                    && repositoryStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
+                    && delta.getResource() instanceof IFolder
+                    && delta.getResource().isSynchronized(IResource.DEPTH_INFINITE)
+                    && repositoryStore.getChild(name) != null) {
+                IFile indexJsonFile = retrieveIndexJsonFile(repositoryStore);
+                try (InputStream is = indexJsonFile.getContents()) {
+                    JSONObject jsonObject = new JSONObject(IoUtils.toString(is));
+                    updateMatchingFormMapping(mainProcess, jsonObject, name);
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
                 }
-                return true;
             }
+            return true;
         };
     }
 
-    public void setWebPageStore(final WebPageRepositoryStore webPageStore) {
-        this.webPageStore = webPageStore;
+    private IFile retrieveIndexJsonFile(WebPageRepositoryStore repositoryStore) {
+        return repositoryStore.getResource()
+                .findMember("/.metadata/.index.json")
+                .getAdapter(IFile.class);
     }
 
+    private void updateMatchingFormMapping(MainProcess container, JSONObject jsonObject, String name) {
+        List<Expression> expressions = ModelHelper.getAllElementOfTypeIn(container, FormMapping.class)
+                .stream()
+                .map(FormMapping::getTargetForm)
+                .collect(Collectors.toList());
+        for (Expression expression : expressions) {
+            try {
+                if (jsonObject.has(expression.getContent()) && jsonObject.get(expression.getContent()) == name) {
+                    expressionItemProvider.setPropertyValue(expression,
+                            ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
+                            name);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
-    public void setExpression(final Expression expression) {
-        this.expression = expression;
+    public void setMainProcess(MainProcess mainProcess) {
+        this.mainProcess = mainProcess;
     }
 }
