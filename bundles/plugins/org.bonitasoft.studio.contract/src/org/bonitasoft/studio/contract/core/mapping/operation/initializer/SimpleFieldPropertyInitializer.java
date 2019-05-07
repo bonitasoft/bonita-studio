@@ -64,7 +64,8 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
                 scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toFloat() }" : "?.toFloat()");
                 break;
             case LONG:
-                scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toLong() }" : "?.toLong()");
+                scriptBuilder
+                        .append(contractInput.isMultiple() ? "?.findAll().collect{ it.toLong() }" : "?.find()?.toLong()");
                 break;
             default:
                 break;

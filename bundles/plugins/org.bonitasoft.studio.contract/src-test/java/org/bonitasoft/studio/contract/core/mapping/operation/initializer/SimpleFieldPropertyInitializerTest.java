@@ -52,7 +52,7 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("id").ofType(FieldType.LONG).build(), aContractInput().withName("id")
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee?.id?.toLong()");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.id?.find()?.toLong()");
     }
 
     @Test
@@ -83,6 +83,6 @@ public class SimpleFieldPropertyInitializerTest {
                 aSimpleField().withName("ids").ofType(FieldType.LONG).build(), aContractInput().withName("ids").multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
-        assertThat(initializer.getInitialValue()).isEqualTo("employee?.ids?.collect{ it.toLong() }");
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.ids?.findAll().collect{ it.toLong() }");
     }
 }

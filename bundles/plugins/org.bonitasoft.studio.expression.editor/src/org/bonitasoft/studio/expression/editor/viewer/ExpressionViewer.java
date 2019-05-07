@@ -537,6 +537,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (selectedExpression != null && selectedExpression.eResource() != null) {
             return TransactionUtil.getEditingDomain(selectedExpression);
         }
+        if (context != null && context.eResource() != null) {
+            return TransactionUtil.getEditingDomain(context);
+        }
         return null;
     }
 

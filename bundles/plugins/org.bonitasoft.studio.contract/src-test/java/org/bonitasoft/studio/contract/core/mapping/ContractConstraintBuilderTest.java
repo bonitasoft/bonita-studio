@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -148,7 +147,7 @@ public class ContractConstraintBuilderTest {
                         "invoiceInput?.invoiceLines?.product.flatten().every{it!=null}",
                         "Product is mandatory for InvoiceLine", Collections.singletonList("invoiceInput")));
     }
-    
+
     @Test
     public void should_create_a_constraint_for_aggregated_fields_persistenceId_in_a_multiple_parent() throws Exception {
         ContractConstraintBuilder builder = createBuilder();
@@ -178,10 +177,12 @@ public class ContractConstraintBuilderTest {
                         .withClassname("org.test.Invoice")).build());
 
         assertThat(constraints).extracting("name", "expression", "errorMessage", "inputNames")
-                .contains(tuple("aggregation_invoiceInput_invoiceLines_product", "invoiceInput?.invoiceLines?.product.flatten().every{!it || it.persistenceId_string}",
-                        "Product must reference an existing instance with a persistenceId for InvoiceLine", Collections.singletonList("invoiceInput")));
+                .contains(tuple("aggregation_invoiceInput_invoiceLines_product",
+                        "invoiceInput?.invoiceLines?.product.flatten().every{!it || it.persistenceId_string}",
+                        "Product must reference an existing instance with a persistenceId for InvoiceLine",
+                        Collections.singletonList("invoiceInput")));
     }
-    
+
     @Test
     public void should_create_a_constraint_for_aggregated_fields_persistenceId() throws Exception {
         ContractConstraintBuilder builder = createBuilder();
@@ -209,8 +210,69 @@ public class ContractConstraintBuilderTest {
                         .withClassname("org.test.Invoice")).build());
 
         assertThat(constraints).extracting("name", "expression", "errorMessage", "inputNames")
-                .contains(tuple("aggregation_invoiceInput_customer", "!invoiceInput?.customer || invoiceInput?.customer?.persistenceId_string",
-                        "Customer must reference an existing instance with a persistenceId for Invoice", Collections.singletonList("invoiceInput")));
+                .contains(tuple("aggregation_invoiceInput_customer",
+                        "!invoiceInput?.customer || invoiceInput?.customer?.persistenceId_string",
+                        "Customer must reference an existing instance with a persistenceId for Invoice",
+                        Collections.singletonList("invoiceInput")));
+    }
+
+    @Test
+    public void should_create_a_constraint_for_field_with_type_long() {
+        ContractConstraintBuilder builder = createBuilder();
+        BusinessObject invoice = aBO("org.test.Invoice")
+                .withField(SimpleFieldBuilder.aLongField("amount").build())
+                .build();
+
+        when(bdmStore.getBusinessObjectByQualifiedName("org.test.Invoice")).thenReturn(Optional.of(invoice));
+
+        List<ContractConstraint> constraints = builder.buildConstraints(aContractInput()
+                .withName("invoiceInput")
+                .withType(ContractInputType.COMPLEX)
+                .withDataReference("invoice")
+                .havingInput(aContractInput()
+                        .withName("amount")
+                        .withType(ContractInputType.TEXT)
+                        .single())
+                .build(),
+                aPool().havingData(aBusinessData()
+                        .withName("invoice")
+                        .withClassname("org.test.Invoice")).build());
+
+        assertThat(constraints).extracting("name", "expression", "errorMessage", "inputNames")
+                .contains(tuple("type_long_invoiceInput_amount",
+                        "!invoiceInput?.amount || invoiceInput?.amount.isLong()",
+                        "A Long value is expected for Invoice.amount",
+                        Collections.singletonList("invoiceInput")));
+    }
+
+    @Test
+    public void should_create_a_constraint_for_field_with_type_long_and_multiple_parent() {
+        ContractConstraintBuilder builder = createBuilder();
+        BusinessObject invoice = aBO("org.test.Invoice")
+                .withField(SimpleFieldBuilder.aLongField("amount").build())
+                .build();
+
+        when(bdmStore.getBusinessObjectByQualifiedName("org.test.Invoice")).thenReturn(Optional.of(invoice));
+
+        List<ContractConstraint> constraints = builder.buildConstraints(aContractInput()
+                .withName("invoiceInput")
+                .multiple()
+                .withType(ContractInputType.COMPLEX)
+                .withDataReference("invoice")
+                .havingInput(aContractInput()
+                        .withName("amount")
+                        .withType(ContractInputType.TEXT)
+                        .single())
+                .build(),
+                aPool().havingData(aBusinessData()
+                        .withName("invoice")
+                        .withClassname("org.test.Invoice")).build());
+
+        assertThat(constraints).extracting("name", "expression", "errorMessage", "inputNames")
+                .contains(tuple("type_long_invoiceInput_amount",
+                        "invoiceInput?.amount.flatten().findAll().every{ it.isLong() }",
+                        "A Long value is expected for Invoice.amount",
+                        Collections.singletonList("invoiceInput")));
     }
 
     private RelationField customerAggregation() {
@@ -242,7 +304,7 @@ public class ContractConstraintBuilderTest {
                 .withField(SimpleFieldBuilder.aDoubleField("price").build())
                 .build();
     }
-    
+
     private BusinessObject customerBo() {
         return aBO("org.test.Customer")
                 .withField(SimpleFieldBuilder.aStringField("name").build())
