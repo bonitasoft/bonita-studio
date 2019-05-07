@@ -21,7 +21,9 @@ import org.eclipse.ui.IEditorReference;
 
 public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionProvider {
 
-    private final String viewId;
+    private static final String PROCESS_EDITOR_EX_ID = "org.bonitasoft.studio.model.process.diagram.custom.ex.part.ProcessDiagramEditorExID";
+	private static final String PROCESS_EDITOR_ID = "org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID";
+	private final String viewId;
     private String tabId;
     private GeneralTabResolver resolver;
 
@@ -72,13 +74,8 @@ public class DefaultTabbedPropertyProvider implements ITabbedPropertySelectionPr
     }
 
     public static boolean isProcessDiagramEditor(final IEditorReference activeEditor) {
-        return "org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID".equals(activeEditor.getId()) ||
-                "org.bonitasoft.studio.model.process.diagram.custom.ex.part.ProcessDiagramEditorExID".equals(activeEditor.getId());
-    }
-
-    public static boolean isFormDiagramEditor(final IEditorReference activeEditor) {
-        return "org.bonitasoft.studio.diagram.form.custom.ex.part.FormDiagramEditorEx".equals(activeEditor.getId()) ||
-                "org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorID".equals(activeEditor.getId());
+        return PROCESS_EDITOR_ID.equals(activeEditor.getId()) ||
+                PROCESS_EDITOR_EX_ID.equals(activeEditor.getId());
     }
 
     private static class GeneralTabResolver {

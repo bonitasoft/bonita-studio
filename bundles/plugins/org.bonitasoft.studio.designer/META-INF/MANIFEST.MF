@@ -18,6 +18,7 @@ Export-Package: org.bonitasoft.studio.designer,
  org.bonitasoft.studio.designer.core.resources,
  org.bonitasoft.studio.designer.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework",
  org.bonitasoft.studio.designer.ui.contribution,
+ org.bonitasoft.studio.designer.ui.property.section.control,
  org.bonitasoft.web.designer.model.contract
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

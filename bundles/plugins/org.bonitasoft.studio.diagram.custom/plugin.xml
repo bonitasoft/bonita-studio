@@ -26,7 +26,7 @@
                name="Medium">
          </Priority>
          <ViewId
-               id="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID">
+               id="org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID">
             <ElementType
                   class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
                <GlobalActionId
@@ -37,6 +37,9 @@
                </GlobalActionId>
                <GlobalActionId
                      actionId="paste">
+               </GlobalActionId>
+               <GlobalActionId
+                     actionId="delete">
                </GlobalActionId>
             </ElementType>
          </ViewId>
@@ -886,4 +889,17 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+<extension
+      point="org.eclipse.ui.editors">
+   <editor
+         class="org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramEditor"
+         contributorClass="org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramActionBarContributor"
+         default="false"
+         extensions="proc"
+         icon="icons/ProcessDiagramFile.gif"
+         id="org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID"
+         matchingStrategy="org.bonitasoft.studio.model.process.diagram.part.ProcessMatchingStrategy"
+         name="Process Diagram Editor">
+   </editor>
+</extension>
 </plugin>
