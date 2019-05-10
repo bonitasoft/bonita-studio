@@ -17,6 +17,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -57,6 +58,8 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     private IObservableValue boObservableValue;
 
+    private BusinessObjectNameComparator boComparator;
+
     public FieldTypeEditingSupport(final ColumnViewer viewer, final BusinessObjectModel bom,
             final IObservableList fieldsList,
             final IObservableValue selectedFieldObservableValue,
@@ -68,6 +71,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
         this.selectedFieldObservableValue = selectedFieldObservableValue;
         this.boObservableValue = boObservableValue;
         this.diffLogger = diffLogger;
+        this.boComparator = new BusinessObjectNameComparator();
     }
 
     @Override
@@ -97,7 +101,9 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 FieldType.STRING,
                 FieldType.TEXT,
                 FieldType.DATE));
-        result.addAll(bom.getBusinessObjects());
+        List<BusinessObject> businessObjects = bom.getBusinessObjects();
+        businessObjects.sort(boComparator);
+        result.addAll(businessObjects);
         return result;
     }
 
@@ -185,6 +191,15 @@ public class FieldTypeEditingSupport extends EditingSupport {
             diffLogger.fieldTypeChanged(parent.getQualifiedName(),
                     realtionField.getName(), oldType,
                     reference);
+        }
+
+    }
+
+    private class BusinessObjectNameComparator implements Comparator<BusinessObject> {
+
+        @Override
+        public int compare(BusinessObject o1, BusinessObject o2) {
+            return o1.getSimpleName().compareTo(o2.getSimpleName());
         }
 
     }
