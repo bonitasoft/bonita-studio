@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.studio.businessobject.core.difflog.NullDiffLogger;
@@ -36,7 +37,13 @@ public class FieldTypeEditingSupportTest {
 
     @Test
     public void should_sort_alphabeticaly_attribute_types() throws Exception {
-        final FieldTypeEditingSupport editingSupport = createEditingSupport();
+        BusinessObjectModel bom = new BusinessObjectModel();
+        BusinessObject B = new BusinessObject("com.company.B");
+        bom.addBusinessObject(B);
+        BusinessObject A = new BusinessObject("com.company.A");
+        bom.addBusinessObject(A);
+
+        final FieldTypeEditingSupport editingSupport = createEditingSupport(bom);
 
         final List<Object> input = editingSupport.getInput(new FieldTypeLabelProvider());
 
@@ -50,11 +57,13 @@ public class FieldTypeEditingSupportTest {
                 FieldType.LONG,
                 FieldType.STRING,
                 FieldType.TEXT,
-                FieldType.DATE);
+                FieldType.DATE,
+                A,
+                B);
     }
 
-    private FieldTypeEditingSupport createEditingSupport() {
-        return new FieldTypeEditingSupport(new TableViewer(realm.createComposite()), new BusinessObjectModel(),
+    private FieldTypeEditingSupport createEditingSupport(BusinessObjectModel bom) {
+        return new FieldTypeEditingSupport(new TableViewer(realm.createComposite()), bom,
                 new WritableList(), new WritableValue(), new WritableValue(), new NullDiffLogger());
     }
 
