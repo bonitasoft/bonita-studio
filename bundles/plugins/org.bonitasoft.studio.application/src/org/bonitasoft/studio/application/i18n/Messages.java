@@ -92,6 +92,9 @@ public class Messages extends NLS {
     public static String groovyClass;
     public static String theme;
 
+    public static String importDragDropInfoTitle;
+    public static String importDragDropInfo;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

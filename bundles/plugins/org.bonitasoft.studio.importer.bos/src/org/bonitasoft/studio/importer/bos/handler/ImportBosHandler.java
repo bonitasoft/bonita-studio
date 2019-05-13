@@ -7,6 +7,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import javax.inject.Named;
+
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -28,10 +30,12 @@ import org.eclipse.swt.widgets.Shell;
 public class ImportBosHandler {
 
     @Execute
-    public void execute(Shell activeShell, RepositoryAccessor repositoryAccessor,
-            ExceptionDialogHandler exceptionDialogHandler) {
+    public void execute(Shell activeShell,
+            RepositoryAccessor repositoryAccessor,
+            ExceptionDialogHandler exceptionDialogHandler,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file) {
         final ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier(
-                repositoryAccessor, exceptionDialogHandler);
+                repositoryAccessor, exceptionDialogHandler, file);
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
                 .needProgress()
@@ -58,7 +62,7 @@ public class ImportBosHandler {
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
     }
 
-    private void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
+    protected void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         final ImportBosArchiveOperation operation = createImportOperation(model, archive, progressManager,
@@ -91,8 +95,8 @@ public class ImportBosHandler {
     }
 
     protected ImportBosArchiveControlSupplier newImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
-            ExceptionDialogHandler exceptionDialogHandler) {
-        return new ImportBosArchiveControlSupplier(repositoryAccessor, exceptionDialogHandler);
+            ExceptionDialogHandler exceptionDialogHandler, String file) {
+        return new ImportBosArchiveControlSupplier(repositoryAccessor, exceptionDialogHandler, file);
     }
 
 }

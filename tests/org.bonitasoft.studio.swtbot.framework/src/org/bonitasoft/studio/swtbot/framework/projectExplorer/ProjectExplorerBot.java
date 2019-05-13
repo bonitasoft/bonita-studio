@@ -30,7 +30,6 @@ import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationW
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -163,8 +162,11 @@ public class ProjectExplorerBot extends BotBase {
         node.contextMenu(menu).click();
     }
 
-    protected SWTBotTree getProjectExplorerTree() {
-        bot.waitUntil(Conditions.waitForWidget(allOf(widgetOfType(Tree.class), withId("org.bonitasoft.studio.application.projectExplorerTree"))), 120000);
+    public SWTBotTree getProjectExplorerTree() {
+        bot.waitUntil(
+                Conditions.waitForWidget(
+                        allOf(widgetOfType(Tree.class), withId("org.bonitasoft.studio.application.projectExplorerTree"))),
+                120000);
         return bot.treeWithId("org.bonitasoft.studio.application.projectExplorerTree");
     }
 

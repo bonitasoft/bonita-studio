@@ -78,7 +78,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
 
     protected TreeViewer viewer;
-    private String filePath;
+    protected String filePath;
     protected ButtonWidget overwriteButton;
     protected ButtonWidget keepAllButton;
     private ArchiveTreeContentProvider provider;
@@ -100,8 +100,14 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
             ExceptionDialogHandler exceptionDialogHandler) {
+        this(repositoryAccessor, exceptionDialogHandler, null);
+    }
+
+    public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
+            ExceptionDialogHandler exceptionDialogHandler, String filePath) {
         this.repositoryAccessor = repositoryAccessor;
         this.exceptionDialogHandler = exceptionDialogHandler;
+        this.filePath = filePath;
     }
 
     /**
@@ -123,12 +129,27 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         doCreateAdditionalControl(mainComposite, ctx);
         doCreateFileTree(mainComposite, ctx);
 
-        treeSection.setVisible(false);
+        treeSection.setVisible(filePath != null);
         textWidget.addTextListener(SWT.Modify, e -> {
             treeSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty()
                     && new File(textWidget.getText()).exists());
             treeSection.layout();
         });
+
+        if (filePath != null) {
+            File myFile = new File(filePath);
+            archiveModel = parseArchive(myFile.getAbsolutePath());
+            if (archiveModel != null) {
+                textWidget
+                        .setMessage(String.format("%s %s (%s)",
+                                Messages.bosArchiveName,
+                                myFile.getName(),
+                                archiveModel.getBosArchive().getVersion()));
+                importActionSelector.setArchiveModel(archiveModel);
+                viewer.setInput(archiveModel);
+                openTree();
+            }
+        }
 
         return mainComposite;
     }
