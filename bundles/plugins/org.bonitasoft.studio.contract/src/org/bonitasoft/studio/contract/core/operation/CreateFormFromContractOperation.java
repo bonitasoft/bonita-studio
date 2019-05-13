@@ -17,8 +17,12 @@ package org.bonitasoft.studio.contract.core.operation;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.findMatchingContractInputForField;
 
+import java.awt.Desktop;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +32,9 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
@@ -47,11 +54,25 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
+
+    private static URI FORM_GENERATION_DOCUMENTATION_LINK;
+
+    static {
+        try {
+            FORM_GENERATION_DOCUMENTATION_LINK = new URI(String.format(
+                    "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=685&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
+                    ProductVersion.majorVersion()));
+        } catch (URISyntaxException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 
     private Contract contract;
     private FormScope formScope;
@@ -87,10 +108,22 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
 
     private void openReadOnlyAttributeDialog(Contract contract, BusinessDataStore businessDataStore) {
         if (containsAttributesToDisplayInReadOnly(contract, businessDataStore)) {
+            Listener linkListener = e -> {
+                try {
+                    Desktop.getDesktop().browse(FORM_GENERATION_DOCUMENTATION_LINK);
+                } catch (IOException e1) {
+                    BonitaStudioLog.error(e1);
+                }
+            };
             Display.getDefault().syncExec(() -> {
-                buildReadOnlyAttributes = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                int returnCode = MessageDialogWithPrompt.openWithDetails(MessageDialog.QUESTION,
+                        Display.getDefault().getActiveShell(),
                         Messages.createReadOnlWidgetsTitle,
-                        Messages.createReadOnlWidgetsMessage);
+                        Messages.createReadOnlWidgetsMessage,
+                        Messages.createReadOnlWidgetsdetails,
+                        linkListener,
+                        SWT.NONE).getReturnCode();
+                buildReadOnlyAttributes = returnCode == 0;
             });
         }
     }

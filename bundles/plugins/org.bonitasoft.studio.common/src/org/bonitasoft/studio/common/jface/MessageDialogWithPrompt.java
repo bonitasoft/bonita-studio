@@ -24,6 +24,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -40,13 +41,14 @@ import org.eclipse.ui.forms.widgets.Section;
 public class MessageDialogWithPrompt extends MessageDialogWithToggle {
 
     private String detailsMessage;
+    private boolean withToggle = true;
     private Optional<Listener> linkSelectionListener = Optional.empty();
 
     public MessageDialogWithPrompt(Shell parentShell, String dialogTitle,
             Image image, String message, int dialogImageType,
             String[] dialogButtonLabels, int defaultIndex,
             String toggleMessage, boolean toggleState) {
-        super(parentShell, dialogTitle, image, message, dialogImageType,
+        this(parentShell, dialogTitle, image, message, null, dialogImageType,
                 dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
     }
 
@@ -62,6 +64,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         super(parentShell, dialogTitle, image, message, dialogImageType,
                 dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
         this.linkSelectionListener = Optional.ofNullable(linkSelectionListener);
+        this.withToggle = toggleMessage != null;
     }
 
     @Override
@@ -91,6 +94,32 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
                     .applyTo(messageLabel);
         }
         return composite;
+    }
+
+    @Override
+    protected Button createToggleButton(Composite parent) {
+        return withToggle ? super.createToggleButton(parent) : null;
+    }
+
+    @Override
+    protected void setToggleButton(Button button) {
+        if (withToggle) {
+            super.setToggleButton(button);
+        }
+    }
+
+    @Override
+    protected void setToggleMessage(String message) {
+        if (withToggle) {
+            super.setToggleMessage(message);
+        }
+    }
+
+    @Override
+    public void setToggleState(boolean toggleState) {
+        if (withToggle) {
+            super.setToggleState(toggleState);
+        }
     }
 
     public static MessageDialogWithPrompt openOkCancelConfirm(Shell parent,
@@ -163,6 +192,30 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         return dialog;
     }
 
+    public static MessageDialogWithPrompt openWithDetails(int kind,
+            Shell parent,
+            String title,
+            String message,
+            String detailMessage,
+            Listener linkSelectionListener,
+            int style) {
+        MessageDialogWithPrompt dialog = new MessageDialogWithPrompt(parent,
+                title,
+                null,
+                message,
+                linkSelectionListener,
+                kind,
+                getButtonLabelsFor(kind),
+                0,
+                null,
+                false);
+        style &= SWT.SHEET;
+        dialog.setShellStyle(dialog.getShellStyle() | style);
+        dialog.setDetails(detailMessage);
+        dialog.open();
+        return dialog;
+    }
+
     public void setDetails(String detailsMessage) {
         this.detailsMessage = detailsMessage;
     }
@@ -222,44 +275,42 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
-     */
     @Override
-    protected Control createCustomArea(final Composite parent) {
+    protected Control createCustomArea(Composite parent) {
         if (detailsMessage != null) {
             parent.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
             //Above Image filler
-            final Image image = getImage();
+            Image image = getImage();
             if (image != null) {
-                final Label filler = new Label(parent, SWT.NULL);
+                Label filler = new Label(parent, SWT.NULL);
                 filler.setImage(image);
                 GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
                         .applyTo(filler);
                 filler.setVisible(false);
             }
 
-            final Section section = new Section(parent,
+            Section section = new Section(parent,
                     Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
             section.setText(Messages.moreDetails);
             section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-            final Composite client = new Composite(section, SWT.NONE);
+            Composite client = new Composite(section, SWT.NONE);
             client.setLayoutData(GridDataFactory.fillDefaults().create());
             client.setLayout(GridLayoutFactory.fillDefaults().create());
 
-            final Label detailsLabel = new Label(client, SWT.NONE);
-            detailsLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            Link detailsLabel = new Link(client, getMessageLabelStyle());
+            linkSelectionListener.ifPresent(listener -> detailsLabel.addListener(SWT.Selection, listener));
             detailsLabel.setText(detailsMessage);
+            GridDataFactory
+                    .fillDefaults()
+                    .align(SWT.FILL, SWT.BEGINNING)
+                    .grab(true, false)
+                    .hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
+                            SWT.DEFAULT)
+                    .applyTo(detailsLabel);
             section.setClient(client);
             section.addExpansionListener(new ExpansionAdapter() {
 
-                /*
-                 * (non-Javadoc)
-                 * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.
-                 * ExpansionEvent)
-                 */
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
                     parent.getShell().pack();
