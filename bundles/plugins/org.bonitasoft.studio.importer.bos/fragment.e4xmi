@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
 <fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_hbc3oNQuEeafpJHNDSpq0Q">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_juvI4NQuEeafpJHNDSpq0Q" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
-    <elements xsi:type="commands:Command" xmi:id="_onx7cNQuEeafpJHNDSpq0Q" elementId="org.bonitasoft.studio.importer.bos.command" commandName="%importBosCommandLabel"/>
+    <elements xsi:type="commands:Command" xmi:id="_onx7cNQuEeafpJHNDSpq0Q" elementId="org.bonitasoft.studio.importer.bos.command" commandName="%importBosCommandLabel">
+      <parameters xmi:id="_IHZ8wHMeEemzZOLXgtIFrw" elementId="org.bonitasoft.studio.importer.bos.commandparameter.file" name="file"/>
+    </elements>
     <elements xsi:type="commands:Command" xmi:id="_r91rAFAyEeefQ_E99kZKIw" elementId="org.bonitasoft.studio.importer.workspace.command" commandName="%importWorkspaceCommandLabel"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_uNoJoNQuEeafpJHNDSpq0Q" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
