@@ -123,7 +123,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
                         Messages.createReadOnlWidgetsdetails,
                         linkListener,
                         SWT.NONE).getReturnCode();
-                buildReadOnlyAttributes = returnCode == 0;
+                buildReadOnlyAttributes = returnCode == 2;
             });
         }
     }
