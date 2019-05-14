@@ -92,11 +92,7 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
         super.setInput(part, selection);
         selectionProvider.setSelection(selection);
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
-     */
+    
     @Override
     public String getSectionDescription() {
         return Messages.entryFormMappingDescription;
