@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -52,11 +53,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
         expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     */
+
     @Override
     public void resourceChanged(final IResourceChangeEvent event) {
         if (mainProcess != null) {
@@ -102,7 +99,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
                 .collect(Collectors.toList());
         for (Expression expression : expressions) {
             try {
-                if (jsonObject.has(expression.getContent()) && jsonObject.get(expression.getContent()) == name) {
+                if (jsonObject.has(expression.getContent()) && Objects.equals(jsonObject.get(expression.getContent()),name)) {
                     expressionItemProvider.setPropertyValue(expression,
                             ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
                             name);
