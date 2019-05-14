@@ -16,7 +16,7 @@
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
-		<tomcat.version>8.5.40</tomcat.version>
+		<tomcat.version>8.5.34</tomcat.version>
 		<security.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
 		<console.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
 	    <context.config.file>${tomcat.bundle.dir}/server/conf/context.xml</context.config.file>
