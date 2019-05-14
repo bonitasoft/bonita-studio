@@ -208,6 +208,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.bonitasoft.engine.data</groupId>
+				<artifactId>bonita-business-data-generator</artifactId>
+				<version>${engine.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<profiles>
 		<profile>
