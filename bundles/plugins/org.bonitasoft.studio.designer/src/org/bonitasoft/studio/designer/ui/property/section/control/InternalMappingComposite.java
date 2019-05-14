@@ -27,7 +27,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -36,15 +36,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-/**
- * @author Romain Bioteau
- */
+
 public class InternalMappingComposite extends Composite implements BonitaPreferenceConstants {
 
     private static final int WIDTH_HINT = 500;
 
     private final FormReferenceExpressionViewer targetFormExpressionViewer;
-    private final RepositoryAccessor repositoryAccessor;
     private final Label info;
 
     public InternalMappingComposite(final Composite parent,
@@ -53,7 +50,6 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
         super(parent, SWT.NONE);
-        this.repositoryAccessor = repositoryAccessor;
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
         final Label label = widgetFactory.createLabel(this, Messages.targetForm);
         label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -96,7 +92,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
     protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
         infoStrategy.setConverter(new InfoMessageConverter(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL));
-        context.bindValue(SWTObservables.observeText(info), formMappingObservable, null, infoStrategy);
+        context.bindValue(WidgetProperties.text().observe(info), formMappingObservable, null, infoStrategy);
     }
 
 }
