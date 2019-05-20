@@ -95,6 +95,13 @@
                     <requireJDK>0</requireJDK>
                     <vendor></vendor>
                 </validVersion>
+			    <validVersion>
+			         <vendor></vendor>
+			         <requireJDK>0</requireJDK>
+			         <minVersion>11</minVersion>
+			         <maxVersion>11</maxVersion>
+			         <bitness>@os_arch@</bitness>
+			     </validVersion>
             </validVersionList>
         </autodetectJava>
         <showQuestion>
