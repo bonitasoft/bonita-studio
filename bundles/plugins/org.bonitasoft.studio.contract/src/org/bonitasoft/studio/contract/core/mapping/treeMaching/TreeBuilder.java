@@ -93,6 +93,7 @@ public class TreeBuilder {
         if (!(Objects.equals(loadingType, LoadingType.LAZY) && parent.isMultiple())) {
             BusinessObject businessObjectReference = relationField.getReference();
             ContractInput contractInput = new RelationFieldToContractInputMapping(relationField).getContractInput();
+            contractInput.setCreateMode(false);
             parent.getInputs().add(bo.getFields().indexOf(relationField), contractInput);
             RelationType relationType = toRelationType(relationField);
             TreeNode newNode = node.addNode(contractInput, new BusinessDataReference(relationField.getName(),
