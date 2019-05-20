@@ -57,7 +57,7 @@ public class Messages extends NLS {
     public static String expression;
     public static String removeConstraintConfirmationTitle;
     public static String removeConstraintConfirmationMessage;
-    public static String errorMessage;
+    public static String technicalErrorMessage;
     public static String noInputReferencedInConstraintExpression;
     public static String unknownInputReferencedInConstraintExpression;
     public static String duplicatedConstraintNames;
