@@ -169,7 +169,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
     }
 
     protected void createConstraintErrorMessageColumn() {
-        final TableViewerColumn descriptionColumnViewer = createColumnViewer(Messages.errorMessage, SWT.FILL);
+        final TableViewerColumn descriptionColumnViewer = createColumnViewer(Messages.technicalErrorMessage, SWT.FILL);
         descriptionColumnViewer.setLabelProvider(new ConstraintErrorMessageCellLabelProvider(propertySourceProvider, knowElements()));
         final ErrorMessageObservableEditingSupport editingSupport = new ErrorMessageObservableEditingSupport(this,
                 messageManager,
