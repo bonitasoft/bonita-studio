@@ -85,10 +85,14 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("employee.address")
-                .hasContent(format("if (!employee?.address) {\n"
-                        + "return null\n"
-                        + "}\n"
-                        + "def addressVar = myEmployee.address ?: new Address()\n"
+                .hasContent(format("if (!employee?.address) {"
+                        + System.lineSeparator()
+                        + "return null"
+                         + System.lineSeparator()
+                        + "}"
+                         + System.lineSeparator()
+                        + "def addressVar = myEmployee.address ?: new Address()"
+                         + System.lineSeparator()
                         + "return addressVar"))
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
@@ -157,10 +161,14 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         ExpressionAssert.assertThat(expression)
                 .hasName("initMyEmployee()")
-                .hasContent(format("if (!employee?.address) {\n"
-                        + "return null\n"
-                        + "}\n"
-                        + "def addressVar = new Address()\n"
+                .hasContent(format("if (!employee?.address) {"
+                        + System.lineSeparator()
+                        + "return null"
+                        + System.lineSeparator()
+                        + "}"
+                        + System.lineSeparator()
+                        + "def addressVar = new Address()"
+                        + System.lineSeparator()
                         + "return addressVar"))
                 .hasReturnType("Address")
                 .hasType(ExpressionConstants.SCRIPT_TYPE);
@@ -200,9 +208,9 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "            currentBookInput.page.each{\n"
                 + "                //Add Page instance\n"
                 + "                pageList.add({ currentPageInput ->\n"
-                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string?.find()?.toLong())\n"
+                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string?.trim() ? currentPageInput.persistenceId_string.toLong() : null)\n"
                 + "                    if(!pageVar) {\n"
-                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentPageInput.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page` with the persistence id \" + currentPageInput.persistenceId_string?.trim() ? currentPageInput.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                 + "                    }\n"
                 + "                    pageVar.pageContent = currentPageInput.pageContent\n"
                 + "                    return pageVar\n"
@@ -228,9 +236,9 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "            currentBookInput.page.each{\n"
                 + "                //Add Page instance\n"
                 + "                pageList.add({ currentPageInput ->\n"
-                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string?.find()?.toLong())\n"
+                + "                    def pageVar = pageDAO.findByPersistenceId(currentPageInput.persistenceId_string?.trim() ? currentPageInput.persistenceId_string.toLong() : null)\n"
                 + "                    if(!pageVar) {\n"
-                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentPageInput.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                + "                        throw new IllegalArgumentException(\"The aggregated reference of type `Page` with the persistence id \" + currentPageInput.persistenceId_string?.trim() ? currentPageInput.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                 + "                    }\n"
                 + "                    pageVar.pageContent = currentPageInput.pageContent\n"
                 + "                    return pageVar\n"
@@ -252,7 +260,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
-        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add Book instance\n"
@@ -260,10 +268,10 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "        def bookVar = myBooks.find { it.persistenceId.toString() == currentBookInput.persistenceId_string} ?: new com.company.Book()\n"
                 + "        bookVar.page = {\n"
                 + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
-                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.find()?.toLong())\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null)\n"
                 + "            if (!pageVar) {\n"
-                + "                if (currentBookInput.page?.persistenceId_string?.find()?.toLong()) {\n"
-                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                + "                if (currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null) {\n"
+                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page` with the persistence id \" + currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                 + "                }\n"
                 + "                return null\n"
                 + "            }\n"
@@ -276,7 +284,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add a new composed Book instance\n"
@@ -284,10 +292,10 @@ public class FieldToContractInputMappingExpressionBuilderTest {
                 + "        def bookVar = new com.company.Book()\n"
                 + "        bookVar.page = {\n"
                 + "            //Retrieve aggregated Page using its DAO and persistenceId\n"
-                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.find()?.toLong())\n"
+                + "            def pageVar = pageDAO.findByPersistenceId(currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null)\n"
                 + "            if (!pageVar) {\n"
-                + "                if (currentBookInput.page?.persistenceId_string?.find()?.toLong()) {\n"
-                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page`  with the persistence id \" + currentBookInput.page?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                + "                if (currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null) {\n"
+                + "                    throw new IllegalArgumentException(\"The aggregated reference of type `Page` with the persistence id \" + currentBookInput.page?.persistenceId_string?.trim() ? currentBookInput.page.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                 + "                }\n"
                 + "                return null\n"
                 + "            }\n"
@@ -308,7 +316,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode
         Expression expression = expressionBuilder.toExpression(businessData, bookMapping, false);
-        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add Book instance\n"
@@ -328,7 +336,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         expression = expressionBuilder.toExpression(businessData, bookMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def bookList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def bookList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "Book.each{\n"
                 + "   //Add a new composed Book instance\n"
@@ -480,7 +488,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def rootVar = new com.company.Root()\n"
                 + "rootVar.rootName = rootInput?.rootName\n"
                 + "rootVar.node = {\n"
                 + "    if (!rootInput?.node) {\n"
@@ -501,7 +509,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         // Edite mode -> on the node mapping (operation setNode)
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
         assertThat(expression.getContent())
-                .isEqualTo(format("if (!rootInput?.node) {\n"
+                .isEqualToIgnoringWhitespace(format("if (!rootInput?.node) {\n"
                         + "    return null\n"
                         + "}\n"
                         + "def nodeVar = myRoot.node ?: new com.company.Node()\n"
@@ -565,7 +573,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def rootVar = new com.company.Root()\n"
                 + "rootVar.rootName = rootInput?.rootName\n"
                 + "rootVar.node = {\n"
                 + "    def nodeList = []\n"
@@ -595,7 +603,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode -> on the node mapping (operation setNode)        
         expression = expressionBuilder.toExpression(businessData, nodeMapping, false);
-        assertThat(expression.getContent()).isEqualTo(format("def nodeList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def nodeList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "rootInput?.node.each{\n"
                 + "    //Add Node instance\n"
@@ -669,7 +677,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def rootList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def rootList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "rootInput.each{\n"
                 + "    //Add a new composed Root instance\n"
@@ -702,7 +710,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Edit mode    
         expression = expressionBuilder.toExpression(businessData, rootMapping, false);
-        assertThat(expression.getContent()).isEqualTo(format("def rootList = []\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def rootList = []\n"
                 + "//For each item collected in multiple input\n"
                 + "rootInput.each{\n"
                 + "    //Add Root instance\n"
@@ -768,14 +776,14 @@ public class FieldToContractInputMappingExpressionBuilderTest {
 
         // Create mode
         Expression expression = expressionBuilder.toExpression(businessData, rootMapping, true);
-        assertThat(expression.getContent()).isEqualTo(format("def rootVar = new com.company.Root()\n"
+        assertThat(expression.getContent()).isEqualToIgnoringWhitespace(format("def rootVar = new com.company.Root()\n"
                 + "rootVar.rootName = rootInput?.rootName\n"
                 + "rootVar.leaf = {\n"
                 + "    //Retrieve aggregated Leaf using its DAO and persistenceId\n"
-                + "    def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.find()?.toLong())\n"
+                + "    def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null)\n"
                 + "    if (!leafVar) {\n"
-                + "        if (rootInput?.leaf?.persistenceId_string?.find()?.toLong()) {\n"
-                + "            throw new IllegalArgumentException(\"The aggregated reference of type `Leaf`  with the persistence id \" + rootInput?.leaf?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                + "        if (rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null) {\n"
+                + "            throw new IllegalArgumentException(\"The aggregated reference of type `Leaf` with the persistence id \" + rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                 + "        }\n"
                 + "        return null\n"
                 + "    }\n"
@@ -786,11 +794,11 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         // Edit mode -> setLeaf operation
         expression = expressionBuilder.toExpression(businessData, leafMapping, false);
         assertThat(expression.getContent())
-                .isEqualTo(format("//Retrieve aggregated Leaf using its DAO and persistenceId\n"
-                        + "def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.find()?.toLong())\n"
+                .isEqualToIgnoringWhitespace(format("//Retrieve aggregated Leaf using its DAO and persistenceId\n"
+                        + "def leafVar = leafDAO.findByPersistenceId(rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null)\n"
                         + "if (!leafVar) {\n"
-                        + "    if (rootInput?.leaf?.persistenceId_string?.find()?.toLong()) {\n"
-                        + "        throw new IllegalArgumentException(\"The aggregated reference of type `Leaf`  with the persistence id \" + rootInput?.leaf?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
+                        + "    if (rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null) {\n"
+                        + "        throw new IllegalArgumentException(\"The aggregated reference of type `Leaf` with the persistence id \" + rootInput?.leaf?.persistenceId_string?.trim() ? rootInput.leaf.persistenceId_string.toLong() : null + \" has not been found.\")\n"
                         + "    }\n"
                         + "    return null\n"
                         + "}\n"
