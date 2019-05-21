@@ -37,15 +37,24 @@ public class AggregationReferencePropertyInitializerTest {
 
         final String initialValue = new AggregationReferencePropertyInitializer(null, context).getInitialValue();
 
-        assertThat(initialValue).isEqualTo("{\n"
-                + "//Retrieve aggregated country using its DAO and persistenceId\n"
-                + "def countryVar = countryDAO.findByPersistenceId(country?.persistenceId_string?.find()?.toLong())\n"
-                + "if (!countryVar) {\n"
-                + "if (country?.persistenceId_string?.find()?.toLong()) {\n"
-                + "throw new IllegalArgumentException(\"The aggregated reference of type `country`  with the persistence id \" + country?.persistenceId_string?.find()?.toLong() + \" has not been found.\")\n"
-                + "}\n"
-                + "return null\n"
-                + "}\n"
+        assertThat(initialValue).isEqualTo("{"
+                + System.lineSeparator()
+                + "//Retrieve aggregated country using its DAO and persistenceId"
+                + System.lineSeparator()
+                + "def countryVar = countryDAO.findByPersistenceId(country?.persistenceId_string?.trim() ? country.persistenceId_string.toLong() : null)"
+                + System.lineSeparator()
+                + "if (!countryVar) {"
+                + System.lineSeparator()
+                + "if (country?.persistenceId_string?.trim() ? country.persistenceId_string.toLong() : null) {"
+                 + System.lineSeparator()
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `country` with the persistence id \" + country?.persistenceId_string?.trim() ? country.persistenceId_string.toLong() : null + \" has not been found.\")"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
+                + "return null"
+                + System.lineSeparator()
+                + "}"
+                + System.lineSeparator()
                 + "return countryVar}()");
     }
 }

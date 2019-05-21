@@ -75,11 +75,11 @@ public class MultipleAggregationBusinessObjectQueryInitializerTest {
                 + "employeeInput.each{" + System.lineSeparator()
                 + "//Add Employee instance" + System.lineSeparator()
                 + "employeeList.add({ currentEmployeeInput ->" + System.lineSeparator()
-                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string?.find()?.toLong())"
+                + "def employeeVar = employeeDAO.findByPersistenceId(currentEmployeeInput.persistenceId_string?.trim() ? currentEmployeeInput.persistenceId_string.toLong() : null)"
                 + System.lineSeparator()
                 + "if(!employeeVar) {"
                 + System.lineSeparator()
-                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee`  with the persistence id \" + currentEmployeeInput.persistenceId_string?.find()?.toLong() + \" has not been found.\")"
+                + "throw new IllegalArgumentException(\"The aggregated reference of type `Employee` with the persistence id \" + currentEmployeeInput.persistenceId_string?.trim() ? currentEmployeeInput.persistenceId_string.toLong() : null + \" has not been found.\")"
                 + System.lineSeparator()
                 + "}"
                 + System.lineSeparator()
