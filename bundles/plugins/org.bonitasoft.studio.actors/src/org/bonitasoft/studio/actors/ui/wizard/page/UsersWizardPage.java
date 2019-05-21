@@ -88,6 +88,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -126,16 +128,16 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private TabItem personalTab;
     private TabItem professionnalTab;
     private TabFolder tab;
-    private final List<Membership> userMemberShips = new ArrayList<Membership>();
+    private final List<Membership> userMemberShips = new ArrayList<>();
     private TabItem memberShipTab;
     private TabItem customTab;
-    private TabItem infoTab;
+    private CTabItem infoTab;
 
     TableViewer customUserInfoTable;
     private IObservableList customUserInfoObservableList;
     private CustomUserInformationDefinitionNameEditingSupport customUserInformationDefinitionNameEditingSupport;
     private IViewerObservableValue userSingleSelectionObservable;
-    private TabItem userTab;
+    private CTabItem userTab;
     private Composite labelComposite;
     private ComboViewer managerNameComboViewer;
     private SelectionAdapter selectionAdapter;
@@ -1203,7 +1205,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
     private String generateUsername() {
-        final Set<String> names = new HashSet<String>();
+        final Set<String> names = new HashSet<>();
         for (final User u : userList) {
             names.add(u.getUserName());
         }
@@ -1215,7 +1217,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     protected void removeButtonSelected() {
         for (final Object sel : ((IStructuredSelection) getViewer().getSelection()).toList()) {
             if (sel instanceof User) {
-                final List<Membership> toRemove = new ArrayList<Membership>();
+                final List<Membership> toRemove = new ArrayList<>();
                 for (final Membership m : membershipList) {
                     if (m.getUserName().equals(((User) sel).getUserName())) {
                         toRemove.add(m);
@@ -1246,15 +1248,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     @Override
     public void createControl(final Composite parent) {
 
-        tabFolder = new TabFolder(parent, SWT.NONE);
+        tabFolder = new CTabFolder(parent, SWT.TOP);
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final TabItem item = (TabItem) e.item;
-                if (item.equals(userTab)) {
+                if (e.item.equals(userTab)) {
                     refreshCustomTab();
                     refreshMembershipTab();
                 }
@@ -1265,16 +1266,15 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         super.createControl(tabFolder);
         super.setControl(tabFolder);
 
-        userTab = new TabItem(tabFolder, SWT.NONE);
+        userTab = new CTabItem(tabFolder, SWT.NONE);
         userTab.setText(Messages.listOfUsersTabTitle);
         userTab.setControl(mainComposite);
 
-        final Composite compo = addInformationComposite();
-
-        infoTab = new TabItem(tabFolder, SWT.NONE);
+        infoTab = new CTabItem(tabFolder, SWT.NONE);
         infoTab.setText(Messages.customUserInformationTabTitle);
-        infoTab.setControl(compo);
+        infoTab.setControl(addInformationComposite());
 
+        tabFolder.setSelection(userTab);
     }
 
     private void refreshCustomTab() {
@@ -1393,7 +1393,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                     customUserInfoObservableList.removeAll(definitions);
                     for (final User user : organization.getUsers().getUser()) {
-                        final List<CustomUserInfoValue> toRemove = new ArrayList<CustomUserInfoValue>();
+                        final List<CustomUserInfoValue> toRemove = new ArrayList<>();
                         for (final CustomUserInfoDefinition def : definitions) {
                             for (final CustomUserInfoValue v : user.getCustomUserInfoValues().getCustomUserInfoValue()) {
                                 if (v.getName().equals(def.getName())) {
@@ -1486,7 +1486,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
     private Set<String> getLowerCaseExistingCustomerUserInfoName() {
-        final Set<String> existingCustomUserInfoNames = new HashSet<String>();
+        final Set<String> existingCustomUserInfoNames = new HashSet<>();
         if (organization != null) {
             if (organization.getCustomUserInfoDefinitions() == null) {
                 organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
