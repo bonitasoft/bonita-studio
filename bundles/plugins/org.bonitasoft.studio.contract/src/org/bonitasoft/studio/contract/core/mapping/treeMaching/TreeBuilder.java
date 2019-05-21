@@ -76,8 +76,7 @@ public class TreeBuilder {
                         FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME, childInput.getName()))
                 .findFirst()
                 .ifPresent(persistenceIdInput -> {
-                    input.getInputs().remove(persistenceIdInput);
-                    input.getInputs().add(0, persistenceIdInput);
+                    input.getInputs().move(0, persistenceIdInput);
                 });
     }
 
