@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.ui.property.section.control.WebPageNameResourceChangeListener;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -38,6 +39,23 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         if (store != null) {
             webPageNameResourceChangeListener.setMainProcess(store.getContent());
             repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
+        }
+    }
+
+    @Override
+    protected void setPartName(String partName) {
+        super.setPartName(partName);
+        if (partName != null) {
+            updateWebPageChangeListener(partName);
+        }
+    }
+
+    private void updateWebPageChangeListener(String processName) {
+        DiagramFileStore fileStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class)
+                .getChild(processName);
+        if (fileStore != null && webPageNameResourceChangeListener != null) {
+            webPageNameResourceChangeListener.setMainProcess(fileStore.getContent());
         }
     }
 
