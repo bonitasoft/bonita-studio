@@ -90,13 +90,13 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
     private void validateQueryResult(StringBuilder scriptBuilder, String persistenceIdInitialValue) {
         String localVariableName = context.getLocalVariableName();
         scriptBuilder.append(System.lineSeparator());
-        scriptBuilder.append(String.format("if (!%s) {\n", localVariableName));
-        scriptBuilder.append(String.format("if (%s) {\n", persistenceIdInitialValue));
+        scriptBuilder.append(String.format("if (!%s) {" + System.lineSeparator(), localVariableName));
+        scriptBuilder.append(String.format("if (%s) {" + System.lineSeparator(), persistenceIdInitialValue));
         scriptBuilder.append(String.format(
-                "throw new IllegalArgumentException(\"The aggregated reference of type `%s`  with the persistence id \" + %s + \" has not been found.\")\n",
+                "throw new IllegalArgumentException(\"The aggregated reference of type `%s` with the persistence id \" + %s + \" has not been found.\")" + System.lineSeparator(),
                 context.getField().getReference().getSimpleName(), persistenceIdInitialValue));
-        scriptBuilder.append("}\n");
-        scriptBuilder.append("return null\n");
+        scriptBuilder.append("}" + System.lineSeparator() );
+        scriptBuilder.append("return null" + System.lineSeparator());
         scriptBuilder.append("}");
     }
 

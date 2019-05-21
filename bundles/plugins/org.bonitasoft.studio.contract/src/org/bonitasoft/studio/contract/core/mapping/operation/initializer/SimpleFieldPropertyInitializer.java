@@ -50,22 +50,27 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
     @Override
     public String getInitialValue() {
-        StringBuilder scriptBuilder = withComplexMultipleInHierarchy().apply(contractInput)
-                ? new StringBuilder(prefixIterator(toAncestorNameListUntilMultipleComplex().apply(contractInput).stream()
-                        .collect(Collectors.joining("?."))))
-                : new StringBuilder(toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining("?.")));
-        castInputValue(scriptBuilder);
+        String initialValueScript = initialValueScript("?.");
+        StringBuilder scriptBuilder = new StringBuilder(initialValueScript);
+        castInputValue(scriptBuilder,initialValueScript);
         return scriptBuilder.toString();
     }
 
-    private void castInputValue(final StringBuilder scriptBuilder) {
+    private String initialValueScript(String separator) {
+        return withComplexMultipleInHierarchy().apply(contractInput)
+                ? prefixIterator(toAncestorNameListUntilMultipleComplex().apply(contractInput).stream()
+                        .collect(Collectors.joining(separator)))
+                : toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining(separator));
+    }
+
+    private void castInputValue(final StringBuilder scriptBuilder, String initialValueScript) {
         switch (field.getType()) {
             case FLOAT:
                 scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toFloat() }" : "?.toFloat()");
                 break;
             case LONG:
                 scriptBuilder
-                        .append(contractInput.isMultiple() ? "?.findAll().collect{ it.toLong() }" : "?.find()?.toLong()");
+                        .append(contractInput.isMultiple() ? "?.findAll().collect{ it.toLong() }" : String.format("?.trim() ? %s.toLong() : null", initialValueScript(".")));
                 break;
             default:
                 break;
