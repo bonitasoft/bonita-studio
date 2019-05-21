@@ -22,6 +22,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -59,8 +60,25 @@ public class TreeBuilder {
                 bo.getFields().stream()
                         .filter(field -> !findMatchingContractInputForField(field, input.getInputs()).isPresent())
                         .forEach(field -> createReadOnlyNode(bo, field, node, input));
+                sortChildInputs(input);
             }
         }
+    }
+
+    /**
+     * persistenceId input should have index 0, so the drop down generated to selected an aggregated reference
+     * comes first in the form.
+     * other inputs are already sorted.
+     */
+    private void sortChildInputs(ContractInput input) {
+        input.getInputs().stream()
+                .filter(childInput -> Objects.equals(
+                        FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME, childInput.getName()))
+                .findFirst()
+                .ifPresent(persistenceIdInput -> {
+                    input.getInputs().remove(persistenceIdInput);
+                    input.getInputs().add(0, persistenceIdInput);
+                });
     }
 
     private void createReadOnlyNode(BusinessObject bo, Field field, TreeNode node, ContractInput parent) {
