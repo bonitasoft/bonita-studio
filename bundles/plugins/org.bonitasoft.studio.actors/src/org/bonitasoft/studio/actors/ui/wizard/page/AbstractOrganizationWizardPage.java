@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
@@ -38,6 +36,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,13 +53,11 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
  */
-public abstract class AbstractOrganizationWizardPage extends WizardPage implements ISelectionChangedListener{
+public abstract class AbstractOrganizationWizardPage extends WizardPage implements ISelectionChangedListener {
 
-    final int NAME_SIZE=50;
-    final int PASSWORD_SIZE=60;
-
+    final int NAME_SIZE = 50;
+    final int PASSWORD_SIZE = 60;
 
     private StructuredViewer viewer;
     protected Group infoGroup;
@@ -72,7 +69,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     protected List<Role> roleList;
     protected EMFDataBindingContext context;
     protected WizardPageSupport pageSupport;
-    protected TabFolder tabFolder;
+    protected CTabFolder tabFolder;
     protected Composite mainComposite;
 
     protected AbstractOrganizationWizardPage(final String pageName) {
@@ -83,27 +80,28 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     @Override
     public void dispose() {
         super.dispose();
-        if(pageSupport != null){
-            pageSupport.dispose() ;
+        if (pageSupport != null) {
+            pageSupport.dispose();
         }
-        if(context != null){
-            context.dispose() ;
+        if (context != null) {
+            context.dispose();
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void createControl(final Composite parent) {
-        context = new EMFDataBindingContext() ;
+        context = new EMFDataBindingContext();
         mainComposite = doCreateControl(parent);
         setControl(mainComposite);
     }
 
     protected Composite doCreateControl(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).equalWidth(true).create());
 
         final Composite leftComposite = new Composite(mainComposite, SWT.NONE);
@@ -114,133 +112,130 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
         rightComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         rightComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-
         final Composite buttonComposite = new Composite(leftComposite, SWT.NONE);
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).create()) ;
-        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).spacing(0, 2).create()) ;
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).spacing(0, 2).create());
 
         final Button removeButton = createButtons(buttonComposite);
 
         viewer = createViewer(leftComposite);
 
-        viewer.addSelectionChangedListener(this) ;
+        viewer.addSelectionChangedListener(this);
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
-                removeButton.setEnabled(!event.getSelection().isEmpty()) ;
+                removeButton.setEnabled(!event.getSelection().isEmpty());
             }
-        }) ;
+        });
 
-
-        configureViewer(viewer) ;
-
+        configureViewer(viewer);
 
         infoGroup = new Group(rightComposite, SWT.NONE);
         infoGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        infoGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create()) ;
+        infoGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
-        configureInfoGroup(infoGroup) ;
+        configureInfoGroup(infoGroup);
 
-        pageSupport = WizardPageSupport.create(this, context) ;
+        pageSupport = WizardPageSupport.create(this, context);
         return mainComposite;
     }
 
     /**
      * Returns the remove button
+     * 
      * @param buttonComposite
      * @return
      */
     protected Button createButtons(final Composite buttonComposite) {
-        final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
-        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        addButton.setText(Messages.add) ;
+        final Button addButton = new Button(buttonComposite, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        addButton.setText(Messages.add);
         addButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                addButtonSelected() ;
+                addButtonSelected();
             }
-        }) ;
+        });
 
-        final Button removeButton = new Button(buttonComposite, SWT.FLAT) ;
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        removeButton.setText(Messages.remove) ;
+        final Button removeButton = new Button(buttonComposite, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        removeButton.setText(Messages.remove);
         removeButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 removeButtonSelected();
             }
-        }) ;
-        removeButton.setEnabled(false) ;
+        });
+        removeButton.setEnabled(false);
         return removeButton;
     }
 
-
-
     protected StructuredViewer createViewer(final Composite parent) {
-        final Composite viewerComposite = new Composite(parent, SWT.NONE) ;
+        final Composite viewerComposite = new Composite(parent, SWT.NONE);
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).margins(0, 0).spacing(0, 5).create()) ;
+        viewerComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).margins(0, 0).spacing(0, 5).create());
 
-
-        final Text searchBox = new Text(viewerComposite, SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL) ;
-        searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        searchBox.setMessage(Messages.search) ;
+        final Text searchBox = new Text(viewerComposite, SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL);
+        searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        searchBox.setMessage(Messages.search);
 
         final Composite tableViewerComposite = new Composite(viewerComposite, SWT.NONE);
         tableViewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
         tableViewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        final TableViewer tableViewer = new TableViewer(tableViewerComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+        final TableViewer tableViewer = new TableViewer(tableViewerComposite,
+                SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
         final Table table = tableViewer.getTable();
-        table.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT,270).create()) ;
+        table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).create());
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
-        tableViewer.setContentProvider(new ArrayContentProvider()) ;
+        tableViewer.setContentProvider(new ArrayContentProvider());
         tableViewer.addFilter(new ViewerFilter() {
 
             @Override
             public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                return viewerSelect(element,searchQuery) ;
+                return viewerSelect(element, searchQuery);
             }
-        }) ;
-
-
+        });
 
         searchBox.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(final ModifyEvent e) {
-                searchQuery = searchBox.getText() ;
-                tableViewer.refresh() ;
+                searchQuery = searchBox.getText();
+                tableViewer.refresh();
             }
 
-        }) ;
+        });
 
-        return tableViewer ;
+        return tableViewer;
     }
 
-    protected abstract boolean viewerSelect(Object element, String searchQuery) ;
+    protected abstract boolean viewerSelect(Object element, String searchQuery);
 
-    protected abstract void addButtonSelected() ;
+    protected abstract void addButtonSelected();
 
-    protected abstract void removeButtonSelected() ;
+    protected abstract void removeButtonSelected();
 
-    protected abstract void configureInfoGroup(Group group) ;
+    protected abstract void configureInfoGroup(Group group);
 
-    protected abstract void configureViewer(StructuredViewer viewer) ;
+    protected abstract void configureViewer(StructuredViewer viewer);
 
-    protected StructuredViewer getViewer(){
+    protected StructuredViewer getViewer() {
         return viewer;
     }
 
-    protected Group getInfoGroup(){
+    protected Group getInfoGroup() {
         return infoGroup;
     }
 
-    protected void setControlEnabled(final Control control,final boolean enabled){
-        if(control instanceof TabFolder){
-            for(final TabItem item :  ((TabFolder) control).getItems()){
+    protected void setControlEnabled(final Control control, final boolean enabled) {
+        if (control instanceof TabFolder) {
+            for (final TabItem item : ((TabFolder) control).getItems()) {
                 final Control tabControl = item.getControl();
                 if (tabControl != null) {
                     tabControl.setEnabled(enabled);
@@ -252,39 +247,37 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
             return;
         }
 
-        if(control instanceof Composite){
-            for(final Control c :  ((Composite) control).getChildren()){
-                c.setEnabled(enabled) ;
-                if(c instanceof Composite){
-                    setControlEnabled(c, enabled) ;
+        if (control instanceof Composite) {
+            for (final Control c : ((Composite) control).getChildren()) {
+                c.setEnabled(enabled);
+                if (c instanceof Composite) {
+                    setControlEnabled(c, enabled);
                 }
             }
             return;
         }
 
-
-
         control.setEnabled(enabled);
 
     }
 
-    public void setOrganization(final Organization organization){
-        this.organization = organization ;
-        if(organization != null){
-            membershipList = organization.getMemberships().getMembership() ;
-            groupList = organization.getGroups().getGroup() ;
-            roleList = organization.getRoles().getRole() ;
-            userList = organization.getUsers().getUser() ;
+    public void setOrganization(final Organization organization) {
+        this.organization = organization;
+        if (organization != null) {
+            membershipList = organization.getMemberships().getMembership();
+            groupList = organization.getGroups().getGroup();
+            roleList = organization.getRoles().getRole();
+            userList = organization.getUsers().getUser();
         }
     }
 
-    public Organization getOrganization(){
-        return organization  ;
+    public Organization getOrganization() {
+        return organization;
     }
 
     protected void addTableColumLayout(final Table table) {
         final TableColumnLayout tcLayout = new TableColumnLayout();
-        for(final TableColumn col : table.getColumns()){
+        for (final TableColumn col : table.getColumns()) {
             tcLayout.setColumnData(col, new ColumnWeightData(1));
         }
         table.getParent().setLayout(tcLayout);
