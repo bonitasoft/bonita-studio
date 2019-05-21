@@ -30,16 +30,22 @@ public class UngenerateAggregatedReferenceChildren {
 
     private void ungenerateAggregateReferencesChildren(List<FieldToContractInputMapping> mappings) {
         for (FieldToContractInputMapping mapping : mappings) {
-            if (mapping.getField() instanceof RelationField
+            if (mapping.isGenerated() &&
+                    mapping.getField() instanceof RelationField
                     && ((RelationField) mapping.getField()).getType() == Type.AGGREGATION) {
                 mapping.getChildren()
                         .stream()
                         .filter(childMapping -> !Objects.equals(childMapping.getField().getName(),
                                 FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME))
-                        .forEach(childMapping -> childMapping.setGenerated(false));
+                        .forEach(childMapping -> ungenerate(childMapping));
             }
             ungenerateAggregateReferencesChildren(mapping.getChildren());
         }
+    }
+
+    private void ungenerate(FieldToContractInputMapping mapping) {
+        mapping.setGenerated(false);
+        mapping.getChildren().forEach(this::ungenerate);
     }
 
 }
