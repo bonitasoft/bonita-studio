@@ -8,7 +8,7 @@ In order to build this repository it is required to build its dependencies. To h
 Bonita Studio is an Eclipse RCP. It relies on a custom Eclipse **target platform**.  
 Those target platforms are available here [http://update-site.bonitasoft.com/p2](http://update-site.bonitasoft.com/p2).
 
-`./mvnw package -DskipTests -Pmirrored -Dp2MirrorUrl=http://update-site.bonitasoft.com/p2/7.7`
+`./mvnw package -DskipTests -Pmirrored -Dp2MirrorUrl=http://update-site.bonitasoft.com/p2/4.10`
 
 ### Built artifacts
 
