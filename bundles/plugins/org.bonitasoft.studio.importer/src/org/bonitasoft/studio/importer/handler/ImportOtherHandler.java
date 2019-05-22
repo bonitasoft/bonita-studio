@@ -77,7 +77,7 @@ public class ImportOtherHandler extends AbstractHandler {
                     Display.getDefault().getActiveShell());
             final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
             try {
-                progressManager.run(true, false, operation);
+                progressManager.run(false, false, operation);
             } catch (final InvocationTargetException | InterruptedException e) {
                 final Throwable t = e instanceof InvocationTargetException
                         ? ((InvocationTargetException) e).getTargetException() : e;
