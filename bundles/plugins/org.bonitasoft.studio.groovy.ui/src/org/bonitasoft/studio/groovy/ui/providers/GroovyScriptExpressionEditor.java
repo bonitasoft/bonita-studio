@@ -32,12 +32,14 @@ import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserC
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
+import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
@@ -484,6 +486,9 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context,
             final Expression inputExpression,
             final ViewerFilter[] filters, final ExpressionViewer viewer) {
+        
+        GroovyDocumentUtil.refreshUserLibrary(RepositoryManager.getInstance().getCurrentRepository());
+        
         this.inputExpression = inputExpression;
         this.context = context;
 
