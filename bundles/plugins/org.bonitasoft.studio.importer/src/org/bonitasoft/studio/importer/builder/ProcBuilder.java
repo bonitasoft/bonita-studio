@@ -512,8 +512,11 @@ public class ProcBuilder implements IProcBuilder {
                 ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), diagramPart
                         .getDiagramPreferencesHint());
         final Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, sourceNode, targetNode);
-        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
-
+        if(!createSequenceFlowCommand.canExecute()) {
+           return;
+        }
+        createSequenceFlowCommand.execute();
+        
         final ConnectionViewAndElementDescriptor newObject = (ConnectionViewAndElementDescriptor) request.getNewObject();
         final Edge edge = (Edge) newObject.getAdapter(Edge.class);
         final SequenceFlow createdElement = (SequenceFlow) newObject.getElementAdapter().getAdapter(EObject.class);
