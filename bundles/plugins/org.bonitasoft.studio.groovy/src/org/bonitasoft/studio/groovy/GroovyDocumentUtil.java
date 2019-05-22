@@ -143,7 +143,7 @@ public class GroovyDocumentUtil {
             GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
             IJavaProject javaProject = repository.getJavaProject();
             for (IRepositoryFileStore artifact : store.getChildren()) {
-                IType type = javaProject.findType(artifact.getDisplayName());
+                IType type = javaProject.findType(artifact.getDisplayName().replace("/", "."));
                 if (type != null) {
                     for (IMethod m : type.getMethods()) {
                         if (m.getFlags() == (Flags.AccStatic | Flags.AccPublic)) {
