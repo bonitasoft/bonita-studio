@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Designer Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.designer;singleton:=true
-Bundle-Version: 7.9.0.qualifier
+Bundle-Version: 7.9.0.beta-01
 Bundle-ClassPath: .,
  lib/ui-designer-backend-contract.jar
 Bundle-Activator: org.bonitasoft.studio.designer.UIDesignerPlugin
