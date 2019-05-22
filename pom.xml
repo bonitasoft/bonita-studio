@@ -18,9 +18,8 @@
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
-		<theme.builder.version>1.1.0</theme.builder.version>
 		<watchdog.version>7.2.0</watchdog.version>
-		<p2MirrorUrl>http://repositories.rd.lan/p2/4.10</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/4.10.1</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.exclusions>
 			**/org/w3/**/*,
