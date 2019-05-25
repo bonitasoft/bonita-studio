@@ -54,12 +54,21 @@ public class SimpleFieldPropertyInitializerTest {
 
         assertThat(initializer.getInitialValue()).isEqualTo("employee?.id?.trim() ? employee.id.toLong() : null");
     }
+    
+    @Test
+    public void should_not_cast_input_value_to_long() throws Exception {
+        final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(null,
+                aSimpleField().withName("id").ofType(FieldType.LONG).build(), aContractInput().withName("id").withType(ContractInputType.LONG)
+                        .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
+
+        assertThat(initializer.getInitialValue()).isEqualTo("employee?.id");
+    }
 
     @Test
     public void should_return_a_groovy_expression_retrieving_contract_input_value_cast_to_float() throws Exception {
         final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(
                 null,
-                aSimpleField().withName("salary").ofType(FieldType.FLOAT).build(), aContractInput().withName("salary")
+                aSimpleField().withName("salary").ofType(FieldType.FLOAT).build(), aContractInput().withName("salary").withType(ContractInputType.DECIMAL)
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
         assertThat(initializer.getInitialValue()).isEqualTo("employee?.salary?.toFloat()");
@@ -70,7 +79,7 @@ public class SimpleFieldPropertyInitializerTest {
         final SimpleFieldPropertyInitializer initializer = new SimpleFieldPropertyInitializer(
                 null,
                 (SimpleField) aSimpleField().withName("grades").ofType(FieldType.FLOAT).multiple().build(),
-                aContractInput().withName("grades").multiple()
+                aContractInput().withName("grades").withType(ContractInputType.DECIMAL).multiple()
                         .in(aContractInput().withName("employee").withType(ContractInputType.COMPLEX)).build());
 
         assertThat(initializer.getInitialValue()).isEqualTo("employee?.grades?.collect{ it.toFloat() }");
