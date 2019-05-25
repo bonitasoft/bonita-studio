@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 
 public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
 
@@ -52,8 +54,25 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     public String getInitialValue() {
         String initialValueScript = initialValueScript("?.");
         StringBuilder scriptBuilder = new StringBuilder(initialValueScript);
-        castInputValue(scriptBuilder,initialValueScript);
+        if (shouldCastStringToLong()) {
+            castStringToLong(scriptBuilder, initialValueScript);
+        } else if (shouldCastToFloat()) {
+            castToFloat(scriptBuilder, initialValueScript);
+        }
         return scriptBuilder.toString();
+    }
+
+    private void castToFloat(StringBuilder scriptBuilder, String initialValueScript) {
+        scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toFloat() }" : "?.toFloat()");
+    }
+
+    //By default a Double is used so we have to cast the double value to a float value
+    private boolean shouldCastToFloat() {
+        return field.getType() == FieldType.FLOAT && contractInput.getType() == ContractInputType.DECIMAL;
+    }
+
+    private boolean shouldCastStringToLong() {
+        return field.getType() == FieldType.LONG && contractInput.getType() == ContractInputType.TEXT;
     }
 
     private String initialValueScript(String separator) {
@@ -63,18 +82,10 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
                 : toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining(separator));
     }
 
-    private void castInputValue(final StringBuilder scriptBuilder, String initialValueScript) {
-        switch (field.getType()) {
-            case FLOAT:
-                scriptBuilder.append(contractInput.isMultiple() ? "?.collect{ it.toFloat() }" : "?.toFloat()");
-                break;
-            case LONG:
-                scriptBuilder
-                        .append(contractInput.isMultiple() ? "?.findAll().collect{ it.toLong() }" : String.format("?.trim() ? %s.toLong() : null", initialValueScript(".")));
-                break;
-            default:
-                break;
-        }
+    private void castStringToLong(final StringBuilder scriptBuilder, String initialValueScript) {
+        scriptBuilder
+                .append(contractInput.isMultiple() ? "?.findAll().collect{ it.toLong() }"
+                        : String.format("?.trim() ? %s.toLong() : null", initialValueScript(".")));
     }
 
     private String prefixIterator(final String content) {
