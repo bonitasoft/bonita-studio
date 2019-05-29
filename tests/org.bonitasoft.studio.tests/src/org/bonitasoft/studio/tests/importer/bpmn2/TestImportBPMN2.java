@@ -14,11 +14,16 @@
  */
 package org.bonitasoft.studio.tests.importer.bpmn2;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -166,11 +171,12 @@ public class TestImportBPMN2 extends TestCase {
 
         checkContent(mainProcess, 2, 0, 0, 0, 0, "proc");
 
-        CallActivity subprocTask = (CallActivity) ModelHelper.findElement(mainProcess, "subproc", true);
-
-        final Pool subProcPool = (Pool) ModelHelper.findElement(mainProcess,
-                subprocTask.getCalledActivityName().getContent(), true);
-        assertNotNull("Sub proc not found", subProcPool);
+        Optional<CallActivity> callActivity = ModelHelper.getAllElementOfTypeIn(mainProcess, CallActivity.class)
+                .stream().filter(c -> Objects.equals("subproc", c.getCalledActivityName().getName())).findFirst();
+        assertThat(callActivity).isPresent();
+        Optional<Pool> subprocess = ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class).stream()
+                .filter(p -> Objects.equals("subproc", p.getName())).findFirst();
+        assertThat(subprocess).isPresent();
     }
 
     public void testImportWithAll() throws MalformedURLException, IOException {
