@@ -44,29 +44,6 @@
 		        </exclusion>
 		    </exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-server</artifactId>
-			<version>${bundle.version}</version>
-			<classifier>classes</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-common</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>
@@ -265,9 +242,6 @@
                             Tool
                         </_removeheaders>
 						<_exportcontents>
-							org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
-							org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
-							org.bonitasoft.console.common.server.sso;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
 							org.bonitasoft.engine.*;version="0.0.0",
