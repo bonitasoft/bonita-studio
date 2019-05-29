@@ -23,10 +23,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import org.bonitasoft.console.common.server.preferences.constants.WebBonitaConstants;
+import org.bonitasoft.engine.api.APIClient;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -35,39 +34,16 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.w3c.dom.Document;
 
-/**
- * @author Mickael Istria
- *
- */
+
 public class ProjectUtil {
 
 
 	public static final String NEW_WORKSPACE = "NEW_WORKSPACE";
-	/**
-	 * 
-	 */
-	private static final String JETTY_WORK_FOLDER_NAME = "work";
+
 	public static final String WEBAPP_PROJECT = "MyWebapp"; //$NON-NLS-1$
 	private static final String WORK_FOLDER_NAME = "work";
 
-	public static File getBonitaWebappeProject() {
-		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		final File workspaceRoot = workspace.getRoot().getLocation().toFile() ;
-		final File jettyFolder = new File(workspaceRoot,WEBAPP_PROJECT) ;
-		if(!jettyFolder.exists()){
-			jettyFolder.mkdir() ;
-		}
-
-		final File webappWorkFolder = new File(jettyFolder,JETTY_WORK_FOLDER_NAME);
-		if(!webappWorkFolder.exists()){
-			webappWorkFolder.mkdir() ;
-		}
-		return jettyFolder;
-	}
-
-	/**
-	 * @return
-	 */
+	
 	public static String generateTypeName(Type clazz) {
 		if (clazz.equals(Document.class)) {
 			return Document.class.getName();
@@ -115,7 +91,7 @@ public class ProjectUtil {
     }
 
 	public static Bundle getConsoleLibsBundle() {
-		return FrameworkUtil.getBundle(WebBonitaConstants.class);
+		return FrameworkUtil.getBundle(APIClient.class);
 	}
 
 }
