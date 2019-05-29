@@ -55,8 +55,13 @@ public abstract class UpdateConnectorDefinitionMigration extends CustomMigration
             }
             if (shouldUpdateVersion(defId)) {
                 updateConfigVersion(connectorConfigInstance);
+                updateConfiguration(connectorConfigInstance, model);
             }
         }
+    }
+
+    protected void updateConfiguration(Instance connectorConfigInstance, Model model) {
+        //Does nothing by default
     }
 
     private void updateVersion(final Instance connectorInstance) {

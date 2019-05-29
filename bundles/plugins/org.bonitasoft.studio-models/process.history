@@ -14785,5 +14785,8 @@
       </operation>
     </changes>
   </releases>
+  <releases xmi:id="_2CaBgIFbEembYuBMnmqjaw" date="2019-05-26T11:43:27.494+0200" label="7.10.0-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_7V1C8IFbEembYuBMnmqjaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateEmailConnectorVersionTo110"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>
