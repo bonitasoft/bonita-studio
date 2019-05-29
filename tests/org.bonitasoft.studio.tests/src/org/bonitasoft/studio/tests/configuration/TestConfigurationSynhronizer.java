@@ -16,6 +16,10 @@
  */
 package org.bonitasoft.studio.tests.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -32,24 +36,30 @@ import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
 
-/**
- * @author Romain Bioteau
- *
- */
-public class TestConfigurationSynhronizer extends TestCase {
+
+public class TestConfigurationSynhronizer {
 
 
     private Configuration configuration;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
     }
+    
+    @After
+    public void tearDown() throws Exception {
+        configuration = null ;
+    }
 
+    @Test
     public void testDependenciesMainFragmentContainers() throws Exception {
         AbstractProcess dummyProcess = ProcessFactory.eINSTANCE.createPool() ;
 
@@ -87,6 +97,7 @@ public class TestConfigurationSynhronizer extends TestCase {
         assertTrue("Missing Other fragment container",otherFragmentFound);
     }
 
+    @Test
     public void testActorMappingSynchronization() throws Exception {
         AbstractProcess dummyProcess = ProcessFactory.eINSTANCE.createPool() ;
         Actor actor = ProcessFactory.eINSTANCE.createActor() ;
@@ -140,6 +151,7 @@ public class TestConfigurationSynhronizer extends TestCase {
         assertTrue("DeliveryMan actor is missing",deliveryManExists) ;
     }
 
+    @Test
     public void testConnectorsSynchronization() throws Exception {
         AbstractProcess dummyProcess = ProcessFactory.eINSTANCE.createPool() ;
         Connector c1 = createEmailConnector("emailConnector1");
@@ -189,6 +201,7 @@ public class TestConfigurationSynhronizer extends TestCase {
         return null;
     }
 
+    @Test
     public void testActorFiltersSynchronization() throws Exception {
         AbstractProcess dummyProcess = ProcessFactory.eINSTANCE.createPool() ;
         ActorFilter af1 = createActorFilter("initiatorFilter1");
@@ -235,19 +248,15 @@ public class TestConfigurationSynhronizer extends TestCase {
         return c;
     }
 
-    //TODO add to a util class.
     private Connector createEmailConnector(String connectorName) {
         Connector c = ProcessFactory.eINSTANCE.createConnector();
         c.setName(connectorName);
         c.setDefinitionId("email");
-        c.setDefinitionVersion("1.0.0");
+        c.setDefinitionVersion("1.1.0");
         c.setEvent(ConnectorEvent.ON_ENTER.toString());
         return c;
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        configuration = null ;
-    }
+ 
 
 }
