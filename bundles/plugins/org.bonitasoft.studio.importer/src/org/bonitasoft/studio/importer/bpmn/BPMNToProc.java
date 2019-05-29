@@ -608,9 +608,6 @@ public class BPMNToProc extends ToProcProcessor {
                         // after
                         final String idOfParent = ((TBoundaryEvent) flowNode)
                                 .getAttachedToRef().getLocalPart();
-                        //						if (subProcessesId.contains(idOfParent)) {
-                        //							idOfParent = "subProc_" + idOfParent;
-                        //						}
                         builder.setCurrentStep(idOfParent);
 
                         final String name = computeBoundaryName(flowNode);
@@ -795,10 +792,10 @@ public class BPMNToProc extends ToProcProcessor {
         // FIXME : we are loosing the name of the subprocess :'(
         if (subProc != null) {
             createPool("subProc_" + NamingUtils.convertToId(subProcess.getId()),
-                    "subProc_" + NamingUtils.convertToId(subProcess.getId()), location, true);
+                    subprocessName(subProcess), location, true);
         } else {
             createPool("subProc_" + NamingUtils.convertToId(subProcess.getId()),
-                    "subProc_" + NamingUtils.convertToId(subProcess.getId()), location,
+                    subprocessName(subProcess), location,
                     false);
         }
         location.x += 220; // next
@@ -1232,8 +1229,6 @@ public class BPMNToProc extends ToProcProcessor {
                             final String id = flowNode.getId();
                             if (flowNode instanceof TSubProcess) {
                                 subProcessesId.add(id);
-                                //								id = NamingUtils.convertToId(/*"subProc_" +*/ id);
-                                //								name = id;
                             }
 
                             builder.addTask(id, name, location, null, taskType);
@@ -1339,10 +1334,16 @@ public class BPMNToProc extends ToProcProcessor {
         return name;
     }
 
+    private String subprocessName(TSubProcess bpmnSubProcess) {
+        String name = bpmnSubProcess.getName();
+        if(name == null || name.isEmpty()) {
+            return "subProc_" + NamingUtils.convertToId(bpmnSubProcess.getId());
+        }
+       return name;
+    }
+    
     private void processSubProcess(final TSubProcess bpmnSubProcess) throws ProcBuilderException {
-        builder.addCallActivityTargetProcess(
-                "subProc_" + NamingUtils.convertToId(bpmnSubProcess
-                        .getId()),
+        builder.addCallActivityTargetProcess(subprocessName(bpmnSubProcess),
                 "1.0");
 
         for (final TDataInputAssociation input : bpmnSubProcess
