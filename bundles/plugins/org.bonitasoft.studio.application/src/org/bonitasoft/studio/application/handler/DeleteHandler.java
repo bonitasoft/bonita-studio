@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +26,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.designer.core.operation.DeleteUIDArtifactOperation;
+import org.bonitasoft.studio.designer.core.repository.InFolderJSONFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebResource;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -35,6 +39,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 
 public class DeleteHandler extends AbstractHandler {
@@ -58,7 +63,16 @@ public class DeleteHandler extends AbstractHandler {
                 IRepositoryFileStore fileStore = currentRepository
                         .getFileStore(res);
                 if (fileStore != null) {
-                    fileStore.delete();
+                    if(fileStore instanceof InFolderJSONFileStore) {
+                        try {
+                            PlatformUI.getWorkbench().getProgressService().run(true, false, new DeleteUIDArtifactOperation((WebResource) fileStore));
+                        } catch (InvocationTargetException | InterruptedException e) {
+                           BonitaStudioLog.error(e);
+                        }
+                    }else {
+                        fileStore.delete();
+                    }
+                    
                 } else {
                     try {
                         res.delete(false, null);
@@ -71,7 +85,6 @@ public class DeleteHandler extends AbstractHandler {
         }
         return null;
     }
-
 
     @Override
     public boolean isEnabled() {
