@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -27,7 +29,7 @@ import org.json.JSONException;
 /**
  * @author Romain Bioteau
  */
-public class WebWidgetFileStore extends InFolderJSONFileStore {
+public class WebWidgetFileStore extends InFolderJSONFileStore implements WebResource {
 
     public WebWidgetFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(folderName, parentStore);
@@ -60,5 +62,10 @@ public class WebWidgetFileStore extends InFolderJSONFileStore {
             BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
         }
         return null;
+    }
+    
+    @Override
+    public URI toURI() throws MalformedURLException, URISyntaxException {
+        return urlFactory().widget(getId()).toURI();
     }
 }
