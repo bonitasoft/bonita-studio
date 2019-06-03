@@ -16,6 +16,8 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +39,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
 
 
-public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable {
+public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable,WebResource {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
@@ -141,6 +143,11 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", getName());
         executeCommand(DEPLOY_PAGE_COMMAND, parameters);
+    }
+    
+    @Override
+    public URI toURI() throws MalformedURLException, URISyntaxException {
+        return urlFactory().page(getId()).toURI();
     }
 
 }
