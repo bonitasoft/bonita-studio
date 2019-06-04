@@ -43,6 +43,8 @@ import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -66,8 +68,10 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -133,7 +137,6 @@ public class SelectDataWizardPage extends WizardPage {
         createBusinessVariableTableViewerComposite(stackedComposite, dbc);
         createDocumentTableViewerComposite(stackedComposite, dbc);
         createInputNameField(composite, dbc);
-        createEditOrCreateOptionFields(composite, dbc);
 
         bindRadioButtonsToComposite(dbc);
         final MultiValidator multiValidator = new AvailableDataValidator(availableBusinessData,
@@ -145,13 +148,63 @@ public class SelectDataWizardPage extends WizardPage {
         setControl(composite);
     }
 
-    public void createRadioButtonComposite(final Composite parent, final DataBindingContext dbc) {
-        final Composite radioButtonComposite = new Composite(parent, SWT.NONE);
+    public void createRadioButtonComposite(Composite parent, DataBindingContext dbc) {
+        Composite radioButtonComposite = new Composite(parent, SWT.NONE);
         radioButtonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        radioButtonComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
-        businessVariableButton = new Button(radioButtonComposite, SWT.RADIO);
+        radioButtonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        createDataTypeSelectionRadioButtons(radioButtonComposite);
+        createActionModeSelectionRadioButtons(dbc, radioButtonComposite);
+    }
+
+    private void createActionModeSelectionRadioButtons(DataBindingContext dbc, Composite parent) {
+        Label actionLabel = new Label(parent, SWT.NONE);
+        actionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        actionLabel.setText(Messages.action);
+        actionLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+
+        Composite buttonComposite = new Composite(parent, SWT.NONE);
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 0).create());
+
+        Button createButton = new Button(buttonComposite, SWT.RADIO);
+        createButton.setText(Messages.createDataFromContractChoice);
+
+        ControlDecoration createModeCcontrolDecoration = new ControlDecoration(createButton, SWT.RIGHT);
+        createModeCcontrolDecoration.setDescriptionText(Messages.createActionHint);
+        createModeCcontrolDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        createModeCcontrolDecoration.setShowOnlyOnFocus(false);
+        createModeCcontrolDecoration.setMarginWidth(-5);
+
+        Button editButton = new Button(buttonComposite, SWT.RADIO);
+        editButton.setText(Messages.editDataFromContractChoice);
+
+        ControlDecoration editModeCcontrolDecoration = new ControlDecoration(editButton, SWT.RIGHT);
+        editModeCcontrolDecoration.setDescriptionText(Messages.editActionHint);
+        editModeCcontrolDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        editModeCcontrolDecoration.setShowOnlyOnFocus(false);
+        editModeCcontrolDecoration.setMarginWidth(-5);
+
+        SelectObservableValue creationTypeObservable = new SelectObservableValue<EditMode>(EditMode.class);
+        creationTypeObservable.addOption(EditMode.CREATE, WidgetProperties.selection().observe(createButton));
+        creationTypeObservable.addOption(EditMode.EDIT, WidgetProperties.selection().observe(editButton));
+        editButton.setEnabled(contract.eContainer() instanceof Task);
+        generateOptions.setEditMode(contract.eContainer() instanceof Task ? EditMode.EDIT : EditMode.CREATE);
+        dbc.bindValue(creationTypeObservable, generateOptions.getEditModeObservable());
+    }
+
+    private void createDataTypeSelectionRadioButtons(Composite parent) {
+        Label dataLabel = new Label(parent, SWT.NONE);
+        dataLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        dataLabel.setText(Messages.data);
+        dataLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+
+        Composite buttonComposite = new Composite(parent, SWT.NONE);
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+
+        businessVariableButton = new Button(buttonComposite, SWT.RADIO);
         businessVariableButton.setText(Messages.businessVariable);
-        documentButton = new Button(radioButtonComposite, SWT.RADIO);
+        documentButton = new Button(buttonComposite, SWT.RADIO);
         documentButton.setText(Messages.document);
         selectionTypeObservable = new SelectObservableValue<>(Boolean.class);
         selectionTypeObservable.addOption(Boolean.TRUE, WidgetProperties.selection().observe(businessVariableButton));
@@ -338,22 +391,6 @@ public class SelectDataWizardPage extends WizardPage {
             return ValidationStatus.error(Messages.contractInputEqualToDocumentError);
         }
         return ValidationStatus.ok();
-    }
-
-    private void createEditOrCreateOptionFields(final Composite parent, final DataBindingContext dbc) {
-        final Composite radioButtonComposite = new Composite(parent, SWT.NONE);
-        radioButtonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        radioButtonComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(1).create());
-        Button createButton = new Button(radioButtonComposite, SWT.RADIO);
-        createButton.setText(Messages.createDataFromContractChoice);
-        Button editButton = new Button(radioButtonComposite, SWT.RADIO);
-        editButton.setText(Messages.editDataFromContractChoice);
-        SelectObservableValue creationTypeObservable = new SelectObservableValue<EditMode>(EditMode.class);
-        creationTypeObservable.addOption(EditMode.CREATE, WidgetProperties.selection().observe(createButton));
-        creationTypeObservable.addOption(EditMode.EDIT, WidgetProperties.selection().observe(editButton));
-        editButton.setEnabled(contract.eContainer() instanceof Task);
-        generateOptions.setEditMode(contract.eContainer() instanceof Task ? EditMode.EDIT : EditMode.CREATE);
-        dbc.bindValue(creationTypeObservable, generateOptions.getEditModeObservable());
     }
 
     protected IConverter createSelectionTypeToLabelTextConverter() {
