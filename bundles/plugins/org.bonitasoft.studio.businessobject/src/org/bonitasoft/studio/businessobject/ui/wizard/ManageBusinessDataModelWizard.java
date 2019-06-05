@@ -226,7 +226,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
     }
 
     protected IStatus runDeployBDM(IProgressMonitor monitor) {
-        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fStore);
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fStore, getPreferenceStore().getBoolean( EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL));
         try {
             deployBDMOperation.run(monitor);
         } catch (InvocationTargetException e) {
