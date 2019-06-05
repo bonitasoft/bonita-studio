@@ -136,4 +136,8 @@ public class Messages extends NLS {
     public static String createReadOnlWidgetsMessage;
     public static String contractInputEqualToDocumentError;
     public static String createReadOnlWidgetsdetails;
+    public static String data;
+    public static String action;
+    public static String createActionHint;
+    public static String editActionHint;
 }

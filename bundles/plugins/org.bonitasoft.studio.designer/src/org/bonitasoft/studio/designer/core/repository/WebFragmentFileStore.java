@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -25,7 +27,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class WebFragmentFileStore extends InFolderJSONFileStore {
+public class WebFragmentFileStore extends InFolderJSONFileStore implements WebResource {
 
     public WebFragmentFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
@@ -50,6 +52,9 @@ public class WebFragmentFileStore extends InFolderJSONFileStore {
         return null;
     }
 
-
+    @Override
+    public URI toURI() throws MalformedURLException, URISyntaxException {
+        return urlFactory().fragment(getId()).toURI();
+    }
 
 }
