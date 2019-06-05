@@ -32,6 +32,7 @@ import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
@@ -77,13 +78,13 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         return extensions;
     }
 
-
     @Override
     public WebPageFileStore createRepositoryFileStore(final String fileName) {
         WebPageFileStore webPageFileStore = null;
         IFolder folder = getResource().getFolder(fileName);
         if (folder.exists()) {
-            webPageFileStore = folder.getFile(fileName + ".json").exists() ? new WebPageFileStore(fileName, this) : null;
+            webPageFileStore = folder.getFile(fileName + ".json").exists() ? new WebPageFileStore(fileName, this)
+                    : null;
             if (webPageFileStore == null) {
                 return null;
             }
@@ -107,38 +108,46 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
      */
     @Override
     public WebPageFileStore getChild(String uuid) {
-        String id = new PageUUIDResolver(getResource().getLocation().toFile()).resolveUUID(uuid);
-        WebPageFileStore page = super.getChild(id);
-        if (page == null) {
-            return super.getChild(uuid);
+        IPath location = getResource().getLocation();
+        if (location != null) {
+            String id = new PageUUIDResolver(location.toFile()).resolveUUID(uuid);
+            WebPageFileStore page = super.getChild(id);
+            if (page == null) {
+                return super.getChild(uuid);
+            }
+            return page;
         }
-        return page;
+        return null;
     }
 
     public String getDisplayNameFor(String uuid) {
-        File pageFolder = getResource().getLocation().toFile();
-        String id = new PageUUIDResolver(pageFolder).resolveUUID(uuid);
-        return Stream.of(pageFolder.listFiles())
-                .filter(file -> file.getName().equals(id))
-                .map(file -> new File(file, file.getName() + ".json"))
-                .map(file -> {
-                    try {
-                        return new org.json.JSONObject(Files.toString(file, Charsets.UTF_8));
-                    } catch (JSONException | IOException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(json -> {
-                    try {
-                        return json.getString("name");
-                    } catch (JSONException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse("");
+        IPath location = getResource().getLocation();
+        if (location != null) {
+            File pageFolder = location.toFile();
+            String id = new PageUUIDResolver(pageFolder).resolveUUID(uuid);
+            return Stream.of(pageFolder.listFiles())
+                    .filter(file -> file.getName().equals(id))
+                    .map(file -> new File(file, file.getName() + ".json"))
+                    .map(file -> {
+                        try {
+                            return new org.json.JSONObject(Files.toString(file, Charsets.UTF_8));
+                        } catch (JSONException | IOException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .map(json -> {
+                        try {
+                            return json.getString("name");
+                        } catch (JSONException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse("");
+        }
+        return null;
     }
 
     /*
