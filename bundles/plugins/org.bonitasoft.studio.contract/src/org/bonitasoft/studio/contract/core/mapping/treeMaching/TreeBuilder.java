@@ -60,8 +60,8 @@ public class TreeBuilder {
                 bo.getFields().stream()
                         .filter(field -> !findMatchingContractInputForField(field, input.getInputs()).isPresent())
                         .forEach(field -> createReadOnlyNode(bo, field, node, input));
-                sortChildInputs(input);
             }
+            sortChildInputs(input);
         }
     }
 
