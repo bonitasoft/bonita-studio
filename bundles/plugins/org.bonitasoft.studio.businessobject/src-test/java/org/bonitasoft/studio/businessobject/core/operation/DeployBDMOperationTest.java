@@ -88,6 +88,7 @@ public class DeployBDMOperationTest {
         when(manager.getTenantAdministrationAPI((APISession) anyObject())).thenReturn(tenantAdminAPI);
         doReturn(manager).when(operationUnderTest).getEngineManager();
         doNothing().when(operationUnderTest).uninstallBDMAccessControl(any(IProgressMonitor.class));
+        doNothing().when(operationUnderTest).forceH2Drop();
         parentFolder = new File("test");
         parentFolder.mkdirs();
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
@@ -129,6 +130,7 @@ public class DeployBDMOperationTest {
         verify(bdmFileStore).getContent();
         final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();
+        verify(operationUnderTest).forceH2Drop();
         inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
         inOrder.verify(tenantAdminAPI).resume();

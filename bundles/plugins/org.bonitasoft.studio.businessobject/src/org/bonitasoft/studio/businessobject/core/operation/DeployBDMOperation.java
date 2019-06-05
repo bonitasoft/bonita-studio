@@ -16,9 +16,17 @@ package org.bonitasoft.studio.businessobject.core.operation;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -31,6 +39,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -59,11 +68,10 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     private boolean dropDatabase = false;
 
     public DeployBDMOperation(final BusinessObjectModelFileStore fileStore) {
-        this(fileStore,false);
+        this(fileStore, false);
     }
 
-    
-    public DeployBDMOperation(final BusinessObjectModelFileStore fileStore,boolean dropDatabase) {
+    public DeployBDMOperation(final BusinessObjectModelFileStore fileStore, boolean dropDatabase) {
         this.fileStore = fileStore;
         this.dropDatabase = dropDatabase;
     }
@@ -72,7 +80,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         this.session = session;
         return this;
     }
-
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -143,6 +150,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             }
             try {
                 if (dropDBOnInstall()) {
+                    forceH2Drop();
                     tenantManagementAPI.cleanAndUninstallBusinessDataModel();
                 } else {
                     tenantManagementAPI.uninstallBusinessDataModel();
@@ -175,6 +183,44 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 session = null;
             }
         }
+    }
+
+    protected void forceH2Drop() {
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            BonitaStudioLog.error(e);
+        }
+        try (Connection conn = DriverManager.getConnection(String.format(
+                "jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;",
+                pathToDBFolder(fileStore.getRepositoryAccessor())), "sa", "");
+                Statement stmt = conn.createStatement();) {
+            stmt.executeUpdate("DROP ALL OBJECTS");
+        } catch (SQLException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected String locateH2jar(RepositoryAccessor repositoryAccessor) throws IOException {
+        final File root = rootFile(repositoryAccessor);
+        final Path path = Paths.get(root.toURI()).resolve(Paths.get("tomcat", "server", "lib", "bonita"));
+        return Stream.of(path.toFile().listFiles(this::h2Jar))
+                .findFirst()
+                .orElseThrow(
+                        () -> new FileNotFoundException(String.format("Cannot find h2 jar file in %s folder.", path)))
+                .getAbsolutePath();
+    }
+
+    protected File rootFile(RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getWorkspace().getRoot().getLocation().toFile();
+    }
+
+    private boolean h2Jar(File dir, String name) {
+        return name.startsWith("h2-") && name.endsWith(".jar");
+    }
+
+    protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
     }
 
     protected IEventBroker eventBroker() {
