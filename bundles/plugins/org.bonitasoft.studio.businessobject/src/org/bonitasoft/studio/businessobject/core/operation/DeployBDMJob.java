@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,10 +50,6 @@ public class DeployBDMJob extends Job {
         return Status.OK_STATUS;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-     */
     @Override
     public boolean belongsTo(Object family) {
         return DeployBDMJob.class.equals(family);

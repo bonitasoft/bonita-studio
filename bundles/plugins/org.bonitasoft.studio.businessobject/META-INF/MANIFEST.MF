@@ -4,7 +4,8 @@ Bundle-Name: Business Object Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
 Bundle-Version: 7.10.0.qualifier
 Bundle-ClassPath: .,
- lib/bonita-business-data-generator.jar
+ lib/bonita-business-data-generator.jar,
+ lib/h2.jar
 Bundle-Activator: org.bonitasoft.studio.businessobject.BusinessObjectPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -84,3 +85,4 @@ Import-Package: javax.activation;version="1.1.0",
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.session
+  

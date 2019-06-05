@@ -22,6 +22,25 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-h2-dependency</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                   <groupId>com.h2database</groupId>
+    							   <artifactId>h2</artifactId>
+    							   <version>1.4.199</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${lib.dir}</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>Retrieve bonita-business-data-generator dependencies</id>
                         <phase>process-sources</phase>
                         <goals>
