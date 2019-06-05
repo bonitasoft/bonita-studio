@@ -86,7 +86,10 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
 
     @Override
     protected ActorFilterDefFileStore getDefFileStore(final URL url) {
-        return new URLActorFilterDefFileStore(url, this);
+        if (url.toString().endsWith(DEF_EXT)) {
+            return new URLActorFilterDefFileStore(url, this);
+        }
+        return null;
     }
 
     @Override
