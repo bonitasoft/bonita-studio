@@ -40,7 +40,7 @@ public class BotManageOrganizationWizard extends BotWizardDialog {
         final SWTBotShell shell = bot.activeShell();
         super.finish();
         //this is a long-running operation, wait that the shell closes
-        bot.waitUntil(Conditions.shellCloses(shell));
+        bot.waitUntil(Conditions.shellCloses(shell),25000);
     }
 
 }
