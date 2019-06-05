@@ -56,7 +56,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
 
     @Override
     public void resourceChanged(final IResourceChangeEvent event) {
-        if (mainProcess != null) {
+        if (mainProcess != null &&  event.getDelta() != null) {
             try {
                 event.getDelta().accept(resourceDeltaVisitor());
             } catch (final CoreException e) {
