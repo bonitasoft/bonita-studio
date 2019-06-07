@@ -2,7 +2,7 @@
 <feature
       id="tests-dependencies-feature"
       label="Tests dependencies feature"
-      version="7.9.0.qualifier"
+      version="7.9.0"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
