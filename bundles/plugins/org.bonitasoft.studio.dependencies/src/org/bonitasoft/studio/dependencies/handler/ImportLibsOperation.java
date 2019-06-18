@@ -30,7 +30,6 @@ import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 
 public class ImportLibsOperation implements IRunnableWithProgress {
 
@@ -50,38 +49,36 @@ public class ImportLibsOperation implements IRunnableWithProgress {
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.beginToAddJars, jarAndZips.length);
-        final Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
+        final Map<String, File> jarsToImportMap = new HashMap<String, File>();
         for (final String filePath : jarAndZips) {
             if (monitor.isCanceled()) {
                 return;
             }
             final File file = getFile(filePath);
             final String fileName = file.getName();
-            try (FileInputStream fis = new FileInputStream(file);) {
-                if (fileName.endsWith(JAR_EXTENSION)) { //$NON-NLS-1$
-                    monitor.setTaskName(Messages.addingJar + " " + fileName);
-                    jarsToImportMap.put(fileName, fis);
-                } else if (fileName.endsWith(ZIP_EXTENSION)) { //$NON-NLS-1$
+
+            if (fileName.endsWith(JAR_EXTENSION)) { //$NON-NLS-1$
+                monitor.setTaskName(Messages.addingJar + " " + fileName);
+                jarsToImportMap.put(fileName, file);
+            } else if (fileName.endsWith(ZIP_EXTENSION)) { //$NON-NLS-1$
+                try (FileInputStream fis = new FileInputStream(file)) {
                     importJarsFromZip(monitor, fis);
+                } catch (final Exception ex) {
+                    BonitaStudioLog.error(ex);
+                    throw new InvocationTargetException(ex);
                 }
-                importJars(jarsToImportMap);
-            } catch (final Exception ex) {
-                BonitaStudioLog.error(ex);
-                throw new InvocationTargetException(ex);
             }
         }
-
+        importJars(jarsToImportMap);
     }
 
-    private void importJars(final Map<String, InputStream> jarsToImportMap) {
-        for (final Entry<String, InputStream> entry : jarsToImportMap.entrySet()) {
-            Display.getDefault().syncExec(() -> {
-                try (InputStream is = entry.getValue()) {
-                    libStore.createRepositoryFileStore(entry.getKey()).save(is);
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-            });
+    private void importJars(final Map<String, File> jarsToImportMap) {
+        for (final Entry<String, File> entry : jarsToImportMap.entrySet()) {
+            try (InputStream is = new FileInputStream(entry.getValue())) {
+                libStore.createRepositoryFileStore(entry.getKey()).save(is);
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
+            }
         }
     }
 
