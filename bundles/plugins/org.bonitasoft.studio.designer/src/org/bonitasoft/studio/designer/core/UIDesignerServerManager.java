@@ -228,17 +228,19 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     protected List<String> buildCommand(Repository repository) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
+        port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, -1);
         if (port == -1 || !isPortAvailable(port)) {
             port = SocketUtil.findFreePort();
+            getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
         }
         File cpJar = configureClasspath();
         return Arrays.asList(
+                getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"),
                 "-classpath",
                 cpJar == null ? "\"" + locateUIDjar() + "\""
                         : "\"" + locateUIDjar() + "\"" + System.getProperty("path.separator") + "\""
                                 + cpJar.getAbsolutePath() + "\"",
                 "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
-                "-Xmx256m",
                 workspaceSystemProperties.getPageRepositoryLocation(),
                 workspaceSystemProperties.getWidgetRepositoryLocation(),
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
@@ -252,7 +254,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 "-httpPort",
                 String.valueOf(port));
     }
-
+    
     private String getProductApplicationId() {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
