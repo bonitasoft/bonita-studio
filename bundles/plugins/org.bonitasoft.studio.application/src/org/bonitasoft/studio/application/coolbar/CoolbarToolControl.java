@@ -39,11 +39,12 @@ import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.UIEvents.UIElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.modeling.ISelectionListener;
 import org.eclipse.e4.ui.workbench.renderers.swt.TrimmedPartLayout;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -54,14 +55,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.INullSelectionListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.eclipse.ui.internal.WorkbenchWindow;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
@@ -69,7 +66,7 @@ import org.osgi.service.event.EventHandler;
  * @author Romain Bioteau
  */
 public class CoolbarToolControl
-        implements INullSelectionListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
+        implements ISelectionListener, org.eclipse.e4.ui.workbench.modeling.IPartListener {
 
     enum CoolbarSize {
         SMALL, NORMAL
@@ -88,7 +85,10 @@ public class CoolbarToolControl
     private Font biggerFont;
 
     @PostConstruct
-    public void createControls(final Composite parent, final IEclipseContext context) {
+    public void createControls( Composite parent, 
+            EPartService partService, 
+            ESelectionService selectionService, 
+            IEclipseContext context) {
         if (isRendered(context) && toolbarContainer == null && context.get(IWorkbenchPage.class) != null) {
             IWorkbenchPage page = context.get(IWorkbenchPage.class);
             size = getCoolBarPreferredSize();
@@ -114,18 +114,11 @@ public class CoolbarToolControl
                     rightTrim.setSize(0, 0);
                 }
                 createToolbar(toolbarContainer, page);
-                final IEventBroker eventBroker = context.get(IEventBroker.class);
-                eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
 
-                    @Override
-                    public void handleEvent(final Event arg0) {
-                        final IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
-                        final IWorkbenchPage page = context.get(IWorkbenchPage.class);
-                        if (window != null) {
-                            registerHandlers((WorkbenchWindow) window, page);
-                        }
-                    }
-                });
+                if(!isRegistered) {
+                    partService.addPartListener(this);
+                    selectionService.addSelectionListener(this);
+                }
             }
         }
     }
@@ -180,7 +173,8 @@ public class CoolbarToolControl
         final ToolItem changeSizeButton = new ToolItem(sizingToolbar, SWT.PUSH);
         changeSizeButton.setText(size == CoolbarSize.SMALL ? UNICODE_INCREASE : UNICODE_REDUCE);
         changeSizeButton
-                .setToolTipText(size == CoolbarSize.SMALL ? Messages.maximizeCoolbarTooltip : Messages.reduceCoolbarTooltip);
+                .setToolTipText(
+                        size == CoolbarSize.SMALL ? Messages.maximizeCoolbarTooltip : Messages.reduceCoolbarTooltip);
         changeSizeButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -199,8 +193,9 @@ public class CoolbarToolControl
                 .forEach(partListener -> page.removePartListener((IPartListener) partListener));
         contributions.clear();
 
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.coolbarContributionItem");
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        "org.bonitasoft.studio.coolbarContributionItem");
         if (elements.length >= MAX_CONTRIBUTION_SIZE) {
             throw new RuntimeException("Too many coolbar contributions defined");
         }
@@ -208,7 +203,8 @@ public class CoolbarToolControl
             final IConfigurationElement element = findContributionForPosition(i, elements);
             if (element != null) {
                 try {
-                    final IBonitaContributionItem item = (IBonitaContributionItem) element.createExecutableExtension(CLASS);
+                    final IBonitaContributionItem item = (IBonitaContributionItem) element
+                            .createExecutableExtension(CLASS);
                     if (contributions.size() > i && item instanceof SeparatorCoolbarItem) {
                         final IBonitaContributionItem previousItem = contributions.get(i - 1).getContributionItem();
                         if (previousItem instanceof SeparatorCoolbarItem) {
@@ -257,7 +253,8 @@ public class CoolbarToolControl
         Display.getDefault().asyncExec(() -> contributions.stream().forEach(CustomToolItem::update));
     }
 
-    private IConfigurationElement findContributionForPosition(final int position, final IConfigurationElement[] elements) {
+    private IConfigurationElement findContributionForPosition(final int position,
+            final IConfigurationElement[] elements) {
         List<IConfigurationElement> list = new ArrayList<IConfigurationElement>();
         for (final IConfigurationElement element : elements) {
             final int pos = Integer.parseInt(element.getAttribute(POSITION));
@@ -304,17 +301,16 @@ public class CoolbarToolControl
 
     }
 
-    public void registerHandlers(final WorkbenchWindow workbenchWindow, final IWorkbenchPage page) {
-        if (!isRegistered) {
-            workbenchWindow.getModel().getContext().get(EPartService.class).addPartListener(CoolbarToolControl.this);
+    public void registerHandlers(final IEclipseContext context, final IWorkbenchPage page) {
+        EPartService partService = context.get(EPartService.class);
+        ESelectionService selectionService = context.get(ESelectionService.class);
+        if (!isRegistered && partService != null && selectionService != null) {
+            partService.addPartListener(CoolbarToolControl.this);
+            selectionService.addSelectionListener(CoolbarToolControl.this);
             isRegistered = true;
         }
     }
 
-    @Override
-    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-        refreshCoolBarButtons();
-    }
 
     @Override
     public void partActivated(final MPart part) {
@@ -338,6 +334,11 @@ public class CoolbarToolControl
 
     @Override
     public void partVisible(final MPart part) {
+        refreshCoolBarButtons();
+    }
+
+    @Override
+    public void selectionChanged(MPart part, Object selection) {
         refreshCoolBarButtons();
     }
 }
