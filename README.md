@@ -7,7 +7,7 @@ Development environment to build your applications with Bonita.
 
 ### Installation
 
-[Download](download)
+[Download][download]
 
 Run the installer
 * Linux
@@ -38,4 +38,4 @@ If you want to report an issue or a bug use our [official bugtracker](https://bo
 
 
 
-[download]:https://www.bonitasoft.com/downloads
+[download]: https://www.bonitasoft.com/downloads
