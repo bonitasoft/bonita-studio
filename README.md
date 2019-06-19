@@ -1,9 +1,26 @@
 # Bonita Studio
 
-This repository contains the source code of the Bonita Studio component from Bonita Platform.  
-In order to build this repository it is required to build its dependencies. To help you achieve this there is a dedicated repository [here](https://github.com/Bonitasoft-Community/Build-Bonita).
+Development environment to build your applications with Bonita.
+//TODO screenshot studio global
 
-## Run build
+## Quick start
+
+### Installation
+
+[Download](download)
+
+Run the installer
+* Linux
+  `BonitaStudioCommunity-[version].run`
+* Windows
+  `BonitaStudioCommunity-[version].exe`
+* MacOs
+  `BonitaStudioCommunity-[version].dmg`
+
+And you're good to go!
+Just follow the [documentation](https://documentation.bonitasoft.com) to start designing your applications 
+
+## To go thu
 
 Bonita Studio is an Eclipse RCP. It relies on a custom Eclipse **target platform**.  
 Those target platforms are available here [http://update-site.bonitasoft.com/p2](http://update-site.bonitasoft.com/p2).
@@ -18,3 +35,7 @@ Those target platforms are available here [http://update-site.bonitasoft.com/p2]
 ## Report issues
 
 If you want to report an issue or a bug use our [official bugtracker](https://bonita.atlassian.net/projects/BBPMC)
+
+
+
+[download]:https://www.bonitasoft.com/downloads
