@@ -5,17 +5,17 @@ Development environment to build your applications with Bonita.
 
 ## Installation
 
-[Download][download]
+* [Download][download]
 
-Run the installer
-* Linux
+* Run the installer
+  * Linux
   `BonitaStudioCommunity-[version].run`
-* Windows
+  * Windows
   `BonitaStudioCommunity-[version].exe`
-* MacOs
+  * MacOs
   `BonitaStudioCommunity-[version].dmg`
-
-And you're good to go!
+  
+* And you're good to go!
 Just follow the [documentation](documentation) to start designing your applications 
 
 ## To go further
