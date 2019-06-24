@@ -33,7 +33,7 @@
     <singleInstanceCheck>1</singleInstanceCheck>
     <overrideGtkButtonText>1</overrideGtkButtonText>
     <compressionAlgorithm>zip</compressionAlgorithm>
-    <allowedLanguages>en es fr ja</allowedLanguages>
+    <allowedLanguages>en es fr ja pt_BR</allowedLanguages>
     <customLanguageFileList>
         <language>
             <code>en</code>
@@ -56,6 +56,12 @@
         <language>
             <code>ja</code>
             <file>i18n/messages_ja.properties</file>
+            <encoding>iso8859-1</encoding>
+            <resolveUCN>1</resolveUCN>
+        </language>
+        <language>
+            <code>pt_BR</code>
+            <file>i18n/messages_pt_BR.properties</file>
             <encoding>iso8859-1</encoding>
             <resolveUCN>1</resolveUCN>
         </language>

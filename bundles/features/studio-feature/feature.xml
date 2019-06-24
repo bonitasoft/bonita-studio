@@ -101,6 +101,14 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.emf.compare.ide.ui"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.babel.nls_eclipse_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_webtools_pt_BR"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.10.0" match="equivalent"/>
