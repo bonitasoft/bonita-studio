@@ -112,8 +112,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private final boolean allowRowSort;
     private Button upRowSortButton;
     private Button downRowSortButton;
-    private List<ViewerFilter> viewerFilters = new ArrayList<ViewerFilter>();
-    private final List<IExpressionNatureProvider> viewerExprProviders = new ArrayList<IExpressionNatureProvider>();
+    private List<ViewerFilter> viewerFilters = new ArrayList<>();
+    private final List<IExpressionNatureProvider> viewerExprProviders = new ArrayList<>();
     private boolean withConnectors = false;
     private boolean isPageFlowContext = false;
     private final SelectionAdapter removeRowListener = new SelectionAdapter() {
@@ -164,10 +164,6 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                 null, allowSwitchTableMode, allowRowSort);
     }
 
-    public ExpressionCollectionViewer(final Composite composite) {
-        this(composite, 0, false, 1, true, null, null, null, true, false);
-    }
-
     public ExpressionCollectionViewer(final Composite composite, final int nbRow,
             final boolean fixedRow, final int nbCol, final boolean fixedCol,
             final List<String> colCaptions,
@@ -178,11 +174,11 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         captions = colCaptions;
         minNbRow = nbRow;
         minNbCol = nbCol;
-        listeners = new ArrayList<Listener>();
-        modeListeners = new ArrayList<IExpressionModeListener>();
+        listeners = new ArrayList<>();
+        modeListeners = new ArrayList<>();
         this.fixedCol = fixedCol;
         this.fixedRow = fixedRow;
-        editingSupports = new ArrayList<ExpressionCollectionEditingSupport>();
+        editingSupports = new ArrayList<>();
         this.allowSwitchTableMode = allowSwitchTableMode;
         this.allowRowSort = allowRowSort;
         this.withConnectors = withConnectors;
@@ -283,7 +279,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                         }
                         currentWidth = currentWidth + c.getWidth();
                     }
-                    if (item == null) {
+                    if (item == null && fixedRow) { //When fixedRow is true, no add button is present so we need to keep this behavior
                         addRow(colIndex);
                     }
                 }
