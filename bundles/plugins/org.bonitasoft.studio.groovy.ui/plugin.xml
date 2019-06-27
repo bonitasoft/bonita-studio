@@ -37,6 +37,7 @@
          </separator>
          <command
                commandId="org.bonitasoft.studio.groovy.ui.newScript"
+               label="%newGroovy"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -84,7 +85,7 @@
          point="org.eclipse.ui.commands">
       <command
             id="org.bonitasoft.studio.groovy.ui.newScript"
-            name="%GroovyClass">
+            name="%newGroovy">
       </command>
    </extension>
    <extension
@@ -147,7 +148,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.bonitasoft.studio.groovy.ui.newScript"
-            icon="icons/newgroovyclass_wiz.gif">
+            icon="icons/groovy_file.gif">
       </image>
    </extension>
    <extension
