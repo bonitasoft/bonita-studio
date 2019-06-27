@@ -47,7 +47,6 @@ public class RepositoryManager {
     private static final String PROJECT_LISTENER_PROVIDER_ID = "org.bonitasoft.studio.common.repository.projectListenerProvider";
     private static final String PRIORITY = "priority";
     private static final String CLASS = "class";
-    private static final Object LOCK = new Object();
 
     private static RepositoryManager INSTANCE;
 
@@ -258,6 +257,10 @@ public class RepositoryManager {
 
     public boolean hasActiveRepository() {
         return repository != null;
+    }
+
+    public void setCurrentRepository(Repository repository) {
+       this.repository = repository;
     }
 
 }
