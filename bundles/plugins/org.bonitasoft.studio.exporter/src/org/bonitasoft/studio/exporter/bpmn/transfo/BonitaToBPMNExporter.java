@@ -711,7 +711,7 @@ public class BonitaToBPMNExporter {
     private TExpression createBPMNExpressionFromString(final String value) {
         final TExpression fromExpression = ModelFactory.eINSTANCE.createTExpression();
         fromExpression.setId(EcoreUtil.generateUUID());
-        FeatureMapUtil.addText(fromExpression.getMixed(), value);
+        FeatureMapUtil.addText(fromExpression.getMixed(), value == null ? "" : value);
         return fromExpression;
     }
 
@@ -1193,8 +1193,10 @@ public class BonitaToBPMNExporter {
             if (processSource != null) {
                 inputAssignment.setFrom(createBPMNExpressionFromString(processSource.getName()));
                 final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget(), modelSearch);
-                inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
-                dia.getAssignment().add(inputAssignment);
+                if(dataTo != null) {
+                    inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
+                    dia.getAssignment().add(inputAssignment);
+                }
             }
         }
         final TDataOutputAssociation doa = ModelFactory.eINSTANCE.createTDataOutputAssociation();
