@@ -28,7 +28,7 @@ public class NewGroovyClassWizard extends NewTypeWizard {
 
     public NewGroovyClassWizard() {
         super();
-        setWindowTitle(Messages.createNewGroovyClass);
+        setWindowTitle(Messages.createNewGroovyFile);
     }
 
     @Override
