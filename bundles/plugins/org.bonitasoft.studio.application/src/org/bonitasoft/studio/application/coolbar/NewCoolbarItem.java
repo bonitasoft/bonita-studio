@@ -178,7 +178,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                     listener.add("org.bonitasoft.studio.actors.newFilterDef", Messages.actorFilterDef);
                     listener.add("org.bonitasoft.studio.actors.newFilterImpl", Messages.actorFilterImpl);
                     listener.addSeparator();
-                    listener.add("org.bonitasoft.studio.groovy.ui.newScript", Messages.groovyClass);
+                    listener.add("org.bonitasoft.studio.groovy.ui.newScript", Messages.newGroovy);
                     listener.widgetSelected(e);
                 }
             }
