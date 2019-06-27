@@ -20,15 +20,21 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.Synchronizer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -36,6 +42,7 @@ import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.runtime.CoreException;
@@ -56,25 +63,28 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 /**
  * @author Romain Bioteau
  */
-public class ConfigurationSynchronizer {
+public class ConfigurationSynchronizer implements Synchronizer {
 
-    private final AbstractProcess process;
-    private final Configuration configuration;
+    private AbstractProcess process;
+    private  Configuration configuration;
     private AdapterFactoryEditingDomain editingDomain;
     private ComposedAdapterFactory adapterFactory;
-    private final boolean synchronizeLocalConfiguraiton;
-    private final ActiveOrganizationProvider activeOrganizationProvider;
+    private boolean synchronizeLocalConfiguraiton;
+    private final ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
     private static ArrayList<IConfigurationSynchronizer> synchronizers;
     private static ArrayList<IProcessConfigurationWizardPage> wizardPages;
     private static final String CONFIGURATION_WIZARD_PAGE_ID = "org.bonitasoft.studio.configuration.wizardPage";
     private static final String CLASS_ATTRIBUTE = "class";
 
     public ConfigurationSynchronizer(final AbstractProcess process, final Configuration configuration) {
+        this();
         this.process = process;
         this.configuration = configuration;
         synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
-        activeOrganizationProvider = new ActiveOrganizationProvider();
+    }
+    
+    public ConfigurationSynchronizer() {
         initializaSynchronizers();
         initializaWizardPages();
     }
@@ -127,6 +137,15 @@ public class ConfigurationSynchronizer {
 
     public void synchronize() {
         synchronize(Repository.NULL_PROGRESS_MONITOR);
+    }
+    
+    @Override
+    public void synchronize(Pool process, Configuration configuration) {
+        this.process = process;
+        this.configuration = configuration;
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null;
+        editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
+        synchronize();
     }
 
     public void synchronize(final IProgressMonitor monitor) {
@@ -227,5 +246,5 @@ public class ConfigurationSynchronizer {
     public Configuration getConfiguration() {
         return configuration;
     }
-
+    
 }

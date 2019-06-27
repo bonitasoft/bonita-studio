@@ -44,9 +44,12 @@ import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.RemoveDanglingReferences;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -64,6 +67,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -98,11 +102,26 @@ public class DiagramRepositoryStore extends
     private AdapterFactoryLabelProvider labelProvider;
 
     private final Map<String, String> eObjectIdToLabel = new HashMap<>();
+    private Synchronizer synchronizer;
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
-     */
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        super.createRepositoryStore(repository);
+        synchronizer = loadSynchronizer();
+    }
+
+    private Synchronizer loadSynchronizer() {
+        for (IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements("org.bonitasoft.studio.diagram.custom.configurationSynchronizer")) {
+            try {
+                return (Synchronizer) elem.createExecutableExtension("class");
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
+    }
+
     @Override
     public String getName() {
         return STORE_NAME;
@@ -430,7 +449,8 @@ public class DiagramRepositoryStore extends
             final Iterator<EObject> iterator = mainProcess.iterator();
             final MainProcess diagram = (MainProcess) iterator.next();
             if (iterator.hasNext()) {
-                throw new IOException("Resource content is invalid. There should be only one MainProcess per .proc file.");
+                throw new IOException(
+                        "Resource content is invalid. There should be only one MainProcess per .proc file.");
             }
             if (diagram == null) {
                 throw new IOException("Resource content is null.");
@@ -446,6 +466,22 @@ public class DiagramRepositoryStore extends
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
             diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
             updateConfigurationId(diagramResource, diagram);
+
+            ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+            for (Pool process : ModelHelper.getAllElementOfTypeIn(diagram, Pool.class)) {
+                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf");
+                if (file != null) {
+                    synchronizer.synchronize(process,file.getContent());
+                }
+                process.getConfigurations().stream().forEach(conf -> synchronizer.synchronize(process, conf));
+            }
+            try {
+                diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));
         } finally {
@@ -477,11 +513,6 @@ public class DiagramRepositoryStore extends
         if (diagram.getAuthor() == null) {
             diagram.setAuthor(System.getProperty("user.name",
                     "Unknown"));
-        }
-        try {
-            diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
+   <extension-point id="configurationSynchronizer" name="configurationSynchronizer" schema="schema/synchronizer.exsd"/>
 
    <extension
          point="org.eclipse.gmf.runtime.diagram.ui.editpolicyProviders">

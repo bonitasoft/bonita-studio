@@ -272,6 +272,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
             try {
+                RepositoryManager.getInstance().setCurrentRepository(this);
                 migrate(monitor);
             } catch (final MigrationException | CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
