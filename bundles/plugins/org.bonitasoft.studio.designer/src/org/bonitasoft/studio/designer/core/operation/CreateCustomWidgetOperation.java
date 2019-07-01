@@ -82,7 +82,7 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
                 .stream()
                 .map(WebWidgetFileStore::getDisplayName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(DEFAULT_WIDGET_NAME, existingWidgets);
+        return StringIncrementer.getNextIncrement(DEFAULT_WIDGET_NAME, existingWidgets);
     }
 
 }

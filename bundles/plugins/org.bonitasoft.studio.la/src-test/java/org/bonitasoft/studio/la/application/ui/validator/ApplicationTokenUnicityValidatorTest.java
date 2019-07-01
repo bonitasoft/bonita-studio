@@ -42,16 +42,17 @@ public class ApplicationTokenUnicityValidatorTest {
         ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         nodeContainer.addApplication(ApplicationNodeBuilder.newApplication("token3", "appName", "1.0").create());
         ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", new WritableValue<String>("token2", String.class));
+                nodeContainer, "filename.xml", new WritableValue<>("token2", String.class));
 
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("token2")).isNotOK();
         assertThat(validator.validate("token3")).isNotOK();
 
         validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", new WritableValue<String>("token3", String.class));
+                nodeContainer, "filename.xml", new WritableValue<>("token3", String.class));
 
         assertThat(validator.validate("token1")).isNotOK();
+        assertThat(validator.validate("TOKEN1")).isNotOK();
         assertThat(validator.validate("token2")).isNotOK();
         assertThat(validator.validate("token3")).isOK();
     }
@@ -61,7 +62,7 @@ public class ApplicationTokenUnicityValidatorTest {
         final RepositoryAccessor repositoryAccessor = initRepositoryAccessor();
         ApplicationNodeContainer nodeContainer = new ApplicationNodeContainer();
         final ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                nodeContainer, "filename.xml", new WritableValue<String>("token4", String.class));
+                nodeContainer, "filename.xml", new WritableValue<>("token4", String.class));
 
         assertThat(validator.validate("token4")).isNotOK();
     }
@@ -77,16 +78,17 @@ public class ApplicationTokenUnicityValidatorTest {
         workingCopy.addApplication(ApplicationNodeBuilder.newApplication("duplicatedToken", "name5", "1.0").create());
 
         ApplicationTokenUnicityValidator validator = new ApplicationTokenUnicityValidator(repositoryAccessor,
-                workingCopy, "filename.xml", new WritableValue<String>("workingcpy_token2", String.class));
+                workingCopy, "filename.xml", new WritableValue<>("workingcpy_token2", String.class));
         assertThat(validator.validate("token1")).isNotOK();
         assertThat(validator.validate("workingcpy_token1")).isNotOK();
+        assertThat(validator.validate("workingcpy_TOKEN1")).isNotOK();
         assertThat(validator.validate("workingcpy_token2")).isOK();
 
         validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml");
         assertThat(validator.validate("token2")).isOK();
 
         validator = new ApplicationTokenUnicityValidator(repositoryAccessor, workingCopy, "myApp.xml",
-                new WritableValue<String>("duplicatedToken", String.class));
+                new WritableValue<>("duplicatedToken", String.class));
         assertThat(validator.validate("duplicatedToken")).isNotOK();
     }
 

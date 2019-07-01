@@ -15,11 +15,14 @@ public class StringIncrementerTest {
     public void should_increment_file_name() {
         List<String> existingFileNameList = new ArrayList<>();
         existingFileNameList.add(defaultFileName + "a");
-        String filename = StringIncrementer.getIncrementedString(defaultFileName, existingFileNameList);
+        String filename = StringIncrementer.getNextIncrement(defaultFileName, existingFileNameList);
         assertThat(filename).isEqualTo(defaultFileName);
         existingFileNameList.add(filename);
-        filename = StringIncrementer.getIncrementedString(defaultFileName, existingFileNameList);
+        filename = StringIncrementer.getNextIncrement(defaultFileName, existingFileNameList);
         assertThat(filename).isEqualTo(defaultFileName + "1");
+        existingFileNameList.add(filename.toLowerCase());
+        filename = StringIncrementer.getNextIncrementIgnoringCase(defaultFileName, existingFileNameList);
+        assertThat(filename).isEqualTo(defaultFileName + "2");
     }
 
 }

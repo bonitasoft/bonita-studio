@@ -12,9 +12,19 @@ import java.util.List;
 
 public class StringIncrementer {
 
-    public static String getIncrementedString(String defaultString, List<String> existingStringList) {
+    public static String getNextIncrement(String defaultString, List<String> existingStringList) {
+        return getNextIncrement(defaultString, existingStringList, true);
+    }
+
+    public static String getNextIncrementIgnoringCase(String defaultString, List<String> existingStringList) {
+        return getNextIncrement(defaultString, existingStringList, false);
+    }
+
+    private static String getNextIncrement(String defaultString, List<String> existingStringList, boolean caseSensitive) {
         int id = existingStringList.stream()
-                .filter(fileName -> fileName.startsWith(defaultString))
+                .map(existingToken -> caseSensitive ? existingToken : existingToken.toLowerCase())
+                .filter(fileName -> caseSensitive ? fileName.startsWith(defaultString)
+                        : fileName.toLowerCase().startsWith(defaultString.toLowerCase()))
                 .map(fileName -> getEndString(fileName, defaultString))
                 .filter(StringIncrementer::isInt)
                 .mapToInt(Integer::parseInt)

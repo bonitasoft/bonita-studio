@@ -91,15 +91,19 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
                 .filter(Objects::nonNull)
                 .flatMap(container -> container.getApplications().stream())
                 .map(ApplicationNode::getToken)
+                .map(String::toLowerCase)
                 .collect(Collectors.toList());
         applicationWorkingCopy.getApplications().stream()
                 .map(ApplicationNode::getToken)
+                .map(String::toLowerCase)
                 .forEach(allTokens::add);
 
         applicationWorkingCopy.getApplications().stream()
-                .filter(application -> Objects.equals(currentTokenObservable.orElse(new WritableValue<>()).getValue(),
-                        application.getToken()))
+                .filter(application -> Objects.equals(
+                        currentTokenObservable.orElse(new WritableValue<>("", String.class)).getValue().toLowerCase(),
+                        application.getToken().toLowerCase()))
                 .map(ApplicationNode::getToken)
+                .map(String::toLowerCase)
                 .findFirst().ifPresent(allTokens::remove);
         return allTokens;
     }
@@ -110,7 +114,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     @Override
     public IStatus validate(Object value) {
         setIterable(getTokenList());
-        return super.validate(value);
+        return super.validate(((String) value).toLowerCase());
     }
 
 }

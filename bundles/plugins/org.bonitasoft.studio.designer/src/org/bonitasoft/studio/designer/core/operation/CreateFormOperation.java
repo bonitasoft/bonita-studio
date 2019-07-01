@@ -60,7 +60,7 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
                 .filter(store -> Objects.equals(store.getType(), "form"))
                 .map(WebPageFileStore::getCustomPageName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(DEFAULT_FORM_NAME, existingForms);
+        return StringIncrementer.getNextIncrement(DEFAULT_FORM_NAME, existingForms);
     }
 
 }

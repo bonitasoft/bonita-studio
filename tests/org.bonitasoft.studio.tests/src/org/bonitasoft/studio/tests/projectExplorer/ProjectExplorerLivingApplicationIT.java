@@ -139,7 +139,7 @@ public class ProjectExplorerLivingApplicationIT {
     private String findNewApplicationName() {
         List<String> existingApplicationNameList = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
                 .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
-        String newName = StringIncrementer.getIncrementedString(NewApplicationHandler.DEFAULT_FILE_NAME,
+        String newName = StringIncrementer.getNextIncrement(NewApplicationHandler.DEFAULT_FILE_NAME,
                 existingApplicationNameList);
         return newName;
     }
