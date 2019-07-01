@@ -60,7 +60,7 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
                 .filter(store -> Objects.equals(store.getType(), "page"))
                 .map(WebPageFileStore::getCustomPageName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(DEFAULT_PAGE_NAME, existingPages);
+        return StringIncrementer.getNextIncrement(DEFAULT_PAGE_NAME, existingPages);
     }
 
 }

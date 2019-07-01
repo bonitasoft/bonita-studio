@@ -39,7 +39,7 @@ public abstract class NewFileHandler extends AbstractHandler {
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
                 .map(IRepositoryFileStore::getDisplayName).collect(Collectors.toList());
         createFileStore(repositoryAccessor,
-                StringIncrementer.getIncrementedString(getDefaultFileName(), existingFileNameList)).open();
+                StringIncrementer.getNextIncrement(getDefaultFileName(), existingFileNameList)).open();
     }
 
     protected abstract void openHelpDialog(Shell activeShell);

@@ -166,7 +166,7 @@ public class ProjectExplorerDiagramIT {
                 .filter(diagram -> Objects.equals(diagram.getVersion(), DEFAULT_VERSION))
                 .map(MainProcess::getName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(
+        return StringIncrementer.getNextIncrement(
                 org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix,
                 existingDiagrams);
     }

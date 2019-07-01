@@ -60,7 +60,7 @@ public class CreateLayoutOperation extends CreateUIDArtifactOperation {
                 .filter(store -> Objects.equals(store.getType(), "layout"))
                 .map(WebPageFileStore::getCustomPageName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(DEFAULT_LAYOUT_NAME, existingLayouts);
+        return StringIncrementer.getNextIncrement(DEFAULT_LAYOUT_NAME, existingLayouts);
     }
 
 }

@@ -76,7 +76,7 @@ public class UIDArtifactCreationIT {
                 .filter(store -> Objects.equals(store.getType(), artifactType))
                 .map(WebPageFileStore::getDisplayName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(defaultName, existingPages);
+        return StringIncrementer.getNextIncrement(defaultName, existingPages);
     }
 
     private String getCustomWidgetNewName() {
@@ -84,7 +84,7 @@ public class UIDArtifactCreationIT {
                 .stream()
                 .map(WebWidgetFileStore::getDisplayName)
                 .collect(Collectors.toList());
-        return StringIncrementer.getIncrementedString(CreateUIDArtifactOperation.DEFAULT_WIDGET_NAME, existingWidgets);
+        return StringIncrementer.getNextIncrement(CreateUIDArtifactOperation.DEFAULT_WIDGET_NAME, existingWidgets);
     }
 
 }
