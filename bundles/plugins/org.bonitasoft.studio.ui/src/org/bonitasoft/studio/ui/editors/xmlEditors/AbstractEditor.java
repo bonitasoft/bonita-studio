@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -24,6 +25,10 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -41,6 +46,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     protected T workingCopy;
     private IEclipseContext context;
     private boolean resourceChangeEventSkip = false;
+    private Composite pageContainer;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -60,6 +66,12 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     }
 
     @Override
+    protected Composite createPageContainer(Composite parent) {
+        this.pageContainer = super.createPageContainer(parent);
+        return pageContainer;
+    }
+
+    @Override
     protected void addPages() {
         createFormPage();
         formPage.initialize(this);
@@ -70,6 +82,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
             setPageText(addPage(createSourceEditor(), getEditorInput()), Messages.source);
             initVariablesAndListeners();
             addPageChangedListener(e -> formPage.reflow());
+            customizeTabItem();
         } catch (final PartInitException e) {
             throw new RuntimeException("fail to create editor", e);
         }
@@ -81,6 +94,19 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
             formPage.update();
         }
         super.pageChange(newPageIndex);
+    }
+
+    private void customizeTabItem() {
+        Arrays.asList(pageContainer.getChildren()).stream()
+                .filter(CTabFolder.class::isInstance)
+                .map(CTabFolder.class::cast)
+                .findFirst()
+                .ifPresent(cTabFolder -> {
+                    cTabFolder.setSelectionBackground(
+                            new Color[] { Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT),
+                                    Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND) },
+                            new int[] { 100 }, true);
+                });
     }
 
     @Override
