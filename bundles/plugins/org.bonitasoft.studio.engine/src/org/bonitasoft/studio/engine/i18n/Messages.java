@@ -183,6 +183,8 @@ public class Messages extends NLS {
     public static String restartServerMsg;
     public static String dropEngineDatabase;
 
+    public static String uidExtraParams;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }

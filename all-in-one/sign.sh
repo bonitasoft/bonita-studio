@@ -12,7 +12,11 @@ cd $workdir
 echo "cd into $workdir"
 if [ -f $filename ]; then
     echo "Signing $filename..."
-    curl --request POST -F exeFile=@$filename $url > /tmp/$filename
+    HTTP_STATUS=$(curl --request POST -F exeFile=@$filename $url -w "%{http_code}" -o /tmp/$filename)
+    if [ $HTTP_STATUS != 200 ]; then 
+    	echo "An error occured while signing $filename..."
+    	return 1
+    fi
     cat /tmp/$filename > $output
     if [ $filename != $output ]; then
         rm $filename
