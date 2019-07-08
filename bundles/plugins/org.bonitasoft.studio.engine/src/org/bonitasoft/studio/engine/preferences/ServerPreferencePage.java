@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.engine.preferences;
 
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -45,6 +48,8 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
     private Integer xmx = new Integer(-1);
     private String newExtraParams;
     private StringFieldEditor extraParamsField;
+    private StringFieldEditor uidExtraParamsField;
+    private String newuidExtraParams;
 
     public ServerPreferencePage() {
         super(GRID);
@@ -80,6 +85,11 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 getFieldEditorParent());
         addField(extraParamsField);
         getContributedEditors().put(extraParamsField, EnginePlugin.getDefault().getPreferenceStore());
+        
+        
+        uidExtraParamsField = new StringFieldEditor(BonitaPreferenceConstants.UID_JVM_OPTS, Messages.uidExtraParams,
+                getFieldEditorParent());
+        addField(uidExtraParamsField);
     }
 
     @Override
@@ -102,10 +112,27 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         final boolean ok = super.performOk();
         if (newPort != -1) {
             updatePortConfiguration(newPort);
+            newPort = -1;
         } else if (xmx != -1) {
             restartServer();
+            xmx = -1;
         } else if (newExtraParams != null) {
             restartServer();
+            newExtraParams = null;
+        }
+        if(newuidExtraParams != null) {
+            if (MessageDialog.openConfirm(getShell(), Messages.restartServer, Messages.restartServerConfirmationMsg)) {
+                new Job(Messages.restartingWebServer) {
+
+                    @Override
+                    protected IStatus run(IProgressMonitor monitor) {
+                        UIDesignerServerManager.getInstance().stop();
+                        UIDesignerServerManager.getInstance().start(RepositoryManager.getInstance().getCurrentRepository(), monitor);
+                        return Status.OK_STATUS;
+                    }
+                }.schedule();
+            }
+            newuidExtraParams = null;
         }
         return ok;
     }
@@ -147,6 +174,9 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         }
         if (event.getSource().equals(extraParamsField)) {
             newExtraParams = extraParamsField.getStringValue();
+        }
+        if( event.getSource().equals(uidExtraParamsField)) {
+            newuidExtraParams = uidExtraParamsField.getStringValue();
         }
         super.propertyChange(event);
     }

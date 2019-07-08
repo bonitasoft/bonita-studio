@@ -70,7 +70,7 @@ public final class Messages extends NLS {
 
     public static String onlyReadOnly;
 
-    public static String createNewGroovyClass;
+    public static String createNewGroovyFile;
 
     public static String open;
 
