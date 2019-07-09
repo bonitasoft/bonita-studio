@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Listener;
  */
 public abstract class SelectionAwareExpressionEditor implements IExpressionEditor {
 
-    private final List<Listener> listeners = new ArrayList<Listener>();
+    private final List<Listener> listeners = new ArrayList<>();
     private boolean isPageFlowContext;
     private boolean isOverviewContext;
 
@@ -95,7 +95,8 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
             final Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
             return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
         } catch (final Exception ex) {
-            BonitaStudioLog.debug("Failed to determine the compatibility between " + expressionReturnType + " and " + currentReturnType,
+            BonitaStudioLog.debug(
+                    "Failed to determine the compatibility between " + expressionReturnType + " and " + currentReturnType,
                     ExpressionEditorPlugin.PLUGIN_ID);
         }
         return expressionReturnTypeFilter.compatibleReturnTypes(currentReturnType, expressionReturnType);
