@@ -36,9 +36,9 @@ import org.eclipse.swt.graphics.Image;
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
 
     private static final String BDM_CLIENT_POJO_JAR = "bdm-client-pojo.jar";
-	public static final String STORE_NAME = "lib";
+    public static final String STORE_NAME = "lib";
     public static final String JAR_EXT = "jar";
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     static {
         extensions.add("jar");
     }
@@ -55,7 +55,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     protected static Set<String> retriveAllJarFilesFrom(final File root) {
-        final Set<String> allJarFiles = new HashSet<String>();
+        final Set<String> allJarFiles = new HashSet<>();
         final File[] listFiles = root.listFiles();
         if (listFiles != null) {
             for (final File f : listFiles) {
@@ -107,7 +107,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     public Map<String, String> getRuntimeDependencies() {
         if (runtimeDependencies == null) {
-            runtimeDependencies = new HashMap<String, String>();
+            runtimeDependencies = new HashMap<>();
             final File tomcatRoot = getTomcatRootFile();
             final Set<String> allJarFiles = retriveAllJarFilesFrom(new File(tomcatRoot, "lib"));
             allJarFiles.add(BDM_CLIENT_POJO_JAR);
@@ -155,7 +155,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     protected File getTomcatRootFile() {
-        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat" + File.separatorChar + "server");
+        return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
+                "tomcat" + File.separatorChar + "server");
     }
 
     @Override

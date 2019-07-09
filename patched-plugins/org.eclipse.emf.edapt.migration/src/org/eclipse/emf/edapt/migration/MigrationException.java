@@ -4,7 +4,6 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
  * BMW Car IT - Initial API and implementation
  * Technische Universitaet Muenchen - Major refactoring and extension
@@ -23,34 +22,34 @@ import org.eclipse.emf.common.util.URI;
  */
 public class MigrationException extends Exception {
 
-	private static final long serialVersionUID = -8389485839750438901L;
-	/** The location where the exception occurred. */
-	private final URI location;
+    private static final long serialVersionUID = -8389485839750438901L;
+    /** The location where the exception occurred. */
+    private final URI location;
 
-	/** Constructor. */
-	public MigrationException(Throwable cause) {
-		this((URI) null, cause);
-	}
+    /** Constructor. */
+    public MigrationException(Throwable cause) {
+        this((URI) null, cause);
+    }
 
-	/** Constructor. */
-	public MigrationException(URI location, Throwable cause) {
-		super(cause);
-		this.location = location;
-	}
+    /** Constructor. */
+    public MigrationException(URI location, Throwable cause) {
+        super(cause);
+        this.location = location;
+    }
 
-	/** Constructor. */
-	public MigrationException(String message, Throwable cause) {
-		this(null, message, cause);
-	}
+    /** Constructor. */
+    public MigrationException(String message, Throwable cause) {
+        this(null, message, cause);
+    }
 
-	/** Constructor. */
-	public MigrationException(URI location, String message, Throwable cause) {
-		super(message, cause);
-		this.location = location;
-	}
+    /** Constructor. */
+    public MigrationException(URI location, String message, Throwable cause) {
+        super(message, cause);
+        this.location = location;
+    }
 
-	/** Return the location where the exception occurred. */
-	public URI getLocation() {
-		return location;
-	}
+    /** Return the location where the exception occurred. */
+    public URI getLocation() {
+        return location;
+    }
 }
