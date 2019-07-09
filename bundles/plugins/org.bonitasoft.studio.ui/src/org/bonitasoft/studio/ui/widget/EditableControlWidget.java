@@ -76,6 +76,12 @@ public abstract class EditableControlWidget extends ControlWidget {
     @Override
     protected void init() {
         super.init();
+        if (message.isPresent()) {
+            createMessageDecorator();
+        }
+    }
+
+    private void createMessageDecorator() {
         messageDecorator = new WidgetMessageDecorator(this, message);
         messageDecorator
                 .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.FILL).grab(true, false)
@@ -181,7 +187,11 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     protected void statusChanged(IStatus status) {
         EditableControlWidget.this.status = status;
-        messageDecorator.setStatus(status);
+        if (messageDecorator == null) {
+            createMessageDecorator();
+        } else {
+            messageDecorator.setStatus(status);
+        }
         redraw(control);
     }
 
@@ -199,7 +209,11 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     public void setMessage(String message) {
         this.message = Optional.ofNullable(message);
-        messageDecorator.setMessage(this.message);
+        if (messageDecorator == null) {
+            createMessageDecorator();
+        } else {
+            messageDecorator.setMessage(this.message);
+        }
         messageDecorator.setStatus(null);
     }
 

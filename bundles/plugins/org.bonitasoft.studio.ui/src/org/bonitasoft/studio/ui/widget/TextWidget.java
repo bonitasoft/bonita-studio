@@ -174,7 +174,6 @@ public class TextWidget extends EditableControlWidget {
             buttonListner.ifPresent(control::onCLickButton);
             placeholder.ifPresent(control::setPlaceholder);
             tooltip.ifPresent(control::setTooltip);
-
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))
@@ -510,7 +509,6 @@ public class TextWidget extends EditableControlWidget {
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;
     }
-
 
     public void addTextListener(int eventType, Listener listener) {
         text.addListener(eventType, listener);

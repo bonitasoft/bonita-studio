@@ -77,7 +77,6 @@ public class WidgetMessageDecorator extends ExpandableComposite {
             setExpanded(false);
         }
         parent.layout();
-
     }
 
     public void adapt(FormToolkit toolkit) {
