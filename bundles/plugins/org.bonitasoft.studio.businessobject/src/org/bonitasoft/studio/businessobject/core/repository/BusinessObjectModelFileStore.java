@@ -36,17 +36,20 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
@@ -58,7 +61,7 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements IDeployable {
+public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
 
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
@@ -235,6 +238,24 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             });
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("An error occured while depoying the BDM", e);
+        }
+    }
+
+    @Override
+    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+        IPath bdmFolderPath = buildPath.append("bdm");
+        IFolder bdmFolder = getRepository().getProject()
+                .getFolder(bdmFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+        if (!bdmFolder.exists()) {
+            bdmFolder.create(true, true, new NullProgressMonitor());
+        }
+        try {
+            IFile zipFile = bdmFolder.getFile(ZIP_FILENAME);
+            try (InputStream inputStream = ByteSource.wrap(toByteArray()).openBufferedStream();) {
+                zipFile.create(inputStream, true, new NullProgressMonitor());
+            }
+        } catch (IOException e) {
+            throw new CoreException(ValidationStatus.error(e.getMessage(), e));
         }
     }
 }

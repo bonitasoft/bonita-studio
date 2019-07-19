@@ -95,6 +95,8 @@ public class Messages extends NLS {
     public static String importDragDropInfoTitle;
     public static String importDragDropInfo;
 
+    public static String creatingArchive;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

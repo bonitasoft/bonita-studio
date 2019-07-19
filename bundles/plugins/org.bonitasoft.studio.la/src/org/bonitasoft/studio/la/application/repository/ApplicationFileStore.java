@@ -31,6 +31,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -41,8 +42,12 @@ import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.graphics.Image;
@@ -58,11 +63,10 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IRenamable {
+public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IRenamable, IBuildable {
 
     public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
-
 
     public ApplicationFileStore(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
@@ -80,7 +84,7 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
             throw new ReadFileStoreException("Failed to load application model", e);
         }
     }
-    
+
     protected ApplicationNodeContainerConverter getConverter() {
         return ((ApplicationRepositoryStore) getParentStore()).getConverter();
     }
@@ -203,6 +207,17 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
         Optional<IEditorPart> editor = (Optional<IEditorPart>) executeCommand(
                 "org.bonitasoft.studio.la.findOpenedEditor.command", parameters);
         return editor;
+    }
+
+    @Override
+    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+        IPath applicationFolderPath = buildPath.append("application");
+        IFolder applicationFolder = getRepository().getProject()
+                .getFolder(applicationFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+        if (!applicationFolder.exists()) {
+            applicationFolder.create(true, true, new NullProgressMonitor());
+        }
+        getResource().copy(applicationFolderPath.append(getName()), false, new NullProgressMonitor());
     }
 
 }

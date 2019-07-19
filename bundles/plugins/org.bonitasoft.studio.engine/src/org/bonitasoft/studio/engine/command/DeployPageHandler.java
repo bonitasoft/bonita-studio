@@ -53,14 +53,14 @@ public class DeployPageHandler {
             BOSEngineManager bosEngineManager = BOSEngineManager.getInstance();
             PageAPI pageAPI = bosEngineManager.getPageAPI(apiSession);
             Optional<WebPageFileStore> fStore = findFileStore(repositoryAccessor, pageName);
-             if(fStore.isPresent()) {
+            if (fStore.isPresent()) {
                 DeployPageRunnable operation = new DeployPageRunnable(pageAPI,
                         new HttpClientFactory(),
                         new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE),
                         fStore.get());
                 PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
                 displayDeploymentResult(activeShell, operation);
-            }else {
+            } else {
                 throw new IllegalArgumentException(String.format("The page %s doesn't exist", pageName));
             }
         } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException e) {
