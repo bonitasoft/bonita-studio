@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
@@ -33,6 +34,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -41,7 +43,12 @@ import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -59,13 +66,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.google.common.base.Objects;
 import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable {
+public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     private static final String ORGANIZATION_EXT = ".organization";
@@ -199,7 +205,7 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
         String oldName = organization.getName();
         String newNameWithoutExtension = stripExtension(newName, ORGANIZATION_EXT);
         organization.setName(newNameWithoutExtension);
-        if (Objects.equal(activeOrganizationProvider.getActiveOrganization(), oldName)) {
+        if (Objects.equals(activeOrganizationProvider.getActiveOrganization(), oldName)) {
             activeOrganizationProvider.saveActiveOrganization(newNameWithoutExtension);
         }
         doSave(organization);
@@ -223,11 +229,31 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     @Override
     public StyledString getStyledString() {
         StyledString styledString = super.getStyledString();
-        if (Objects.equal(activeOrganizationProvider.getActiveOrganization(), getContent().getName())) {
+        if (isActiveOrganization()) {
             styledString.append(String.format("  (%s)", org.bonitasoft.studio.actors.i18n.Messages.active),
                     activeOrganizationStyler);
         }
         return styledString;
+    }
+
+    /**
+     * build the current Organization if it is the active one, else does nothing.
+     */
+    @Override
+    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+        if (isActiveOrganization()) {
+            IPath orgaFolderPath = buildPath.append("organization");
+            IFolder orgaFolder = getRepository().getProject()
+                    .getFolder(orgaFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+            if (!orgaFolder.exists()) {
+                orgaFolder.create(true, true, new NullProgressMonitor());
+            }
+            getResource().copy(orgaFolderPath.append(getName()), false, new NullProgressMonitor());
+        }
+    }
+
+    public boolean isActiveOrganization() {
+        return Objects.equals(activeOrganizationProvider.getActiveOrganization(), getContent().getName());
     }
 
 }

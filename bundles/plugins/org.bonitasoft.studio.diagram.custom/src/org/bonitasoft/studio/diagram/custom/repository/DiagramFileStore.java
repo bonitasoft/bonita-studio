@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -56,9 +57,14 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -91,11 +97,12 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable {
+public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
 
     public static final String PROC_EXT = "proc";
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
+    public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 
@@ -409,6 +416,25 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     @Override
     public Optional<String> retrieveNewName() {
         return Optional.of(""); // Specific behavior for diagrams, all is done in the rename method
+    }
+
+    @Override
+    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+        IPath processFolderPath = buildPath.append("process");
+        IFolder processFolder = getRepository().getProject()
+                .getFolder(processFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+        if (!processFolder.exists()) {
+            processFolder.create(true, true, new NullProgressMonitor());
+        }
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("fileName", getName());
+        parameters.put("destinationPath", processFolder.getLocation().toOSString());
+        try {
+            monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
+            executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
+        } catch (RuntimeException e) {
+            throw new CoreException(ValidationStatus.error(e.getMessage(), e.getCause()));
+        }
     }
 
 }

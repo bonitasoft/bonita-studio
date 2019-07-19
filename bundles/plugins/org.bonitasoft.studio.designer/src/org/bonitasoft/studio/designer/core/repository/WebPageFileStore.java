@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,21 +26,33 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
+import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.designer.i18n.Messages;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
 
+import com.google.common.io.ByteSource;
 
-public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable,WebResource {
+public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable, IBuildable, WebResource {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
@@ -51,8 +64,11 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
     public static final String PAGE_TYPE = "page";
     public static final String DEPLOY_PAGE_COMMAND = "org.bonitasoft.studio.engine.deploy.page.command";
 
+    private CustomPageBarResourceFactory customPageBarResourceFactory;
+
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
+        customPageBarResourceFactory = new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE);
     }
 
     public void setWebFormBOSArchiveFileStoreProvider(
@@ -100,7 +116,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
             return "page";
         }
     }
-    
+
     @Override
     public String getDisplayName() {
         try {
@@ -108,7 +124,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         } catch (final JSONException | ReadFileStoreException e) {
             return super.getDisplayName();
         }
-       
+
     }
 
     public String getDescription() {
@@ -128,7 +144,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         String displayName = getDisplayName();
         String name = displayName == null || displayName.isEmpty() ? getName() : displayName;
         styledString.append(name);
-        if(!Objects.equals(getCustomPageName(), name)) {
+        if (!Objects.equals(getCustomPageName(), name)) {
             styledString.append(String.format(" (%s)", getCustomPageName()), StyledString.COUNTER_STYLER);
         }
         String type = getType();
@@ -144,10 +160,29 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         parameters.put("name", getName());
         executeCommand(DEPLOY_PAGE_COMMAND, parameters);
     }
-    
+
     @Override
     public URI toURI() throws MalformedURLException, URISyntaxException {
         return urlFactory().page(getId()).toURI();
+    }
+
+    @Override
+    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+        IPath webPageFolderPath = buildPath.append("webPage");
+        IFolder webPageFolder = getRepository().getProject()
+                .getFolder(webPageFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+        if (!webPageFolder.exists()) {
+            webPageFolder.create(true, true, new NullProgressMonitor());
+        }
+        monitor.subTask(String.format(Messages.buildingWebPage, getName()));
+        try (InputStream inputStream = ByteSource.wrap(customPageBarResourceFactory.export(getId()))
+                .openBufferedStream();) {
+            IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
+            zipFile.create(inputStream, true, new NullProgressMonitor());
+        } catch (IOException e) {
+            throw new CoreException(
+                    ValidationStatus.error(String.format("An error occured while building %s", getName()), e));
+        }
     }
 
 }

@@ -15,10 +15,12 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 
-public abstract class AbstractBDMFileStore extends AbstractFileStore {
+public abstract class AbstractBDMFileStore extends AbstractFileStore implements IDeployable, IBuildable {
 
     public AbstractBDMFileStore(String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);

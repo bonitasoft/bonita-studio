@@ -83,5 +83,6 @@ public class Messages extends NLS {
     public static String DeleteDiagramWizardPage_title;
     public static String DeleteDiagramWizardPage_desc;
     public static String noDiagramSelected;
+    public static String buildingDiagram;
 
 }
