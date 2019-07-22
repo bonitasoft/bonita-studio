@@ -90,8 +90,8 @@ public class DeployProjectOperation implements IRunnableWithStatus {
                         monitor);
                 monitor.worked(1);
             } catch (CoreException e) {
-                status = ValidationStatus.error(String.format("An error occured while building %s.", fileStore.getName()),
-                        e);
+                String buildErrorMessage = String.format(Messages.buildError, fileStore.getName());
+                status = ValidationStatus.error(String.format("%s\n\n%s", buildErrorMessage, Messages.buildErrorHelp), e);
                 break;
             }
         }

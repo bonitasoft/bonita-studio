@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -31,7 +32,7 @@ public class DeployProjectHandler {
         DeployProjectOperation operation = new DeployProjectOperation(repositoryAccessor);
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
         if (!operation.getStatus().isOK()) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), "Deploy error",
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.deployErrorTitle,
                     operation.getStatus().getMessage());
             BonitaStudioLog.error(operation.getStatus().getMessage(), operation.getStatus().getException());
         }
