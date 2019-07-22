@@ -6,6 +6,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,14 @@ public class BosArchive {
     public ImportArchiveModel toImportModel(Repository repository, IProgressMonitor monitor) throws IOException {
         final IStatus validationStatus = validate();
         if (!validationStatus.isOK()) {
-            throw new IllegalArgumentException(validationStatus.getMessage());
+            String message = validationStatus instanceof MultiStatus
+                    ? Arrays.asList(((MultiStatus) validationStatus).getChildren())
+                            .stream()
+                            .filter(status -> !status.isOK())
+                            .map(IStatus::getMessage)
+                            .reduce("", (m1, m2) -> String.format("%s\n%s", m1, m2))
+                    : validationStatus.getMessage();
+            throw new IllegalArgumentException(message);
         }
         final Set<String> resourcesToOpen = getResourcesToOpen();
 
