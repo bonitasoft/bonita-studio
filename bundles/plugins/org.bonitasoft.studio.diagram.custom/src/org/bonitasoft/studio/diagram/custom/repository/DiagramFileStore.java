@@ -21,16 +21,19 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
@@ -64,6 +67,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
@@ -103,6 +108,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
     public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
+    public static final String VALIDATE_DIAGRAM_COMMAND = "org.bonitasoft.studio.validation.command.headlessDiagramValidation";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 
@@ -426,15 +432,28 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         if (!processFolder.exists()) {
             processFolder.create(true, true, new NullProgressMonitor());
         }
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("fileName", getName());
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
-        try {
-            monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
-            executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
-        } catch (RuntimeException e) {
-            throw new CoreException(ValidationStatus.error(e.getMessage(), e.getCause()));
+        monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
+        IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
+        if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
+            throw new CoreException(parseStatus(buildStatus));
         }
+    }
+
+    // We only want to log error status
+    private IStatus parseStatus(IStatus status) {
+        if (status instanceof MultiStatus) {
+            MultiStatus multiStatus = ((MultiStatus) status);
+            IStatus[] errorChildren = Arrays.asList(multiStatus.getChildren()).stream()
+                    .filter(aStatus -> Objects.equals(aStatus.getSeverity(), ValidationStatus.ERROR))
+                    .collect(Collectors.toList()).toArray(new IStatus[0]);
+            status = new MultiStatus(multiStatus.getPlugin(), multiStatus.getCode(), errorChildren,
+                    multiStatus.getMessage(), multiStatus.getException());
+        }
+        return status;
     }
 
 }

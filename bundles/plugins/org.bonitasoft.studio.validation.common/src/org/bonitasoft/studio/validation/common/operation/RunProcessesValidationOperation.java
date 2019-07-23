@@ -161,8 +161,14 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                 }
             }
         }
-        validationOperation.run(monitor);
-        status = validationOperation.getResult();
+        try {
+            validationOperation.run(monitor);
+            status = validationOperation.getResult();
+        } catch (InterruptedException e) {
+            if (!monitor.isCanceled()) {
+                throw e;
+            }
+        }
     }
 
     protected TransactionalEditingDomain editingDomain(final Resource eResource) {
