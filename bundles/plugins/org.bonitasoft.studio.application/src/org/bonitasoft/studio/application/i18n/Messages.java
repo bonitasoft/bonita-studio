@@ -101,6 +101,7 @@ public class Messages extends NLS {
     public static String buildErrorHelp;
     public static String validationErrorTitle;
     public static String validationError;
+    public static String bdmGenerationError;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
