@@ -83,7 +83,7 @@ public class DeployProjectOperation implements IRunnableWithStatus {
 
     private IPath buildProject(IPath buildPath, IProgressMonitor monitor) {
         List<IRepositoryFileStore> storeToBuild = retrieveFileStoresToBuild();
-        monitor.beginTask("Building project...", storeToBuild.size());
+        monitor.beginTask("Building project...", storeToBuild.size() + 1);
         for (IRepositoryFileStore fileStore : storeToBuild) {
             try {
                 ((IBuildable) fileStore).build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),
@@ -92,15 +92,14 @@ public class DeployProjectOperation implements IRunnableWithStatus {
             } catch (CoreException e) {
                 String buildErrorMessage = String.format(Messages.buildError, fileStore.getName());
                 status = ValidationStatus.error(String.format("%s\n\n%s", buildErrorMessage, Messages.buildErrorHelp), e);
-                break;
+                return buildPath;
             }
         }
-        monitor.done();
         String archiveFileName = String.format("%s_%s.zip", repositoryAccessor.getCurrentRepository().getName(),
                 System.currentTimeMillis());
         IPath archiveFilePath = buildPath.append(archiveFileName);
         if (status.isOK()) {
-            monitor.beginTask(String.format(Messages.creatingArchive, archiveFileName), IProgressMonitor.UNKNOWN);
+            monitor.subTask(String.format(Messages.creatingArchive, archiveFileName));
             createZip(buildPath, archiveFileName, archiveFilePath);
             monitor.done();
         }

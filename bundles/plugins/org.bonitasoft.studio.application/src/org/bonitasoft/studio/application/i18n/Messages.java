@@ -99,6 +99,8 @@ public class Messages extends NLS {
     public static String buildError;
     public static String deployErrorTitle;
     public static String buildErrorHelp;
+    public static String validationErrorTitle;
+    public static String validationError;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

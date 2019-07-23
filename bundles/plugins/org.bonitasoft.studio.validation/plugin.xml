@@ -1281,12 +1281,19 @@
          <handler
                commandId="org.bonitasoft.studio.validation.batchValidation">
             <class
-                  class="org.bonitasoft.studio.validation.BatchValidationHandler">
+                  class="org.bonitasoft.studio.validation.handler.BatchValidationHandler">
             </class>
          </handler>
          <handler
-               class="org.bonitasoft.studio.validation.ValidateDiagramHandler"
+               class="org.bonitasoft.studio.validation.handler.ValidateDiagramHandler"
                commandId="org.bonitasoft.studio.validation.command.validateDiagram">
          </handler>
+      </extension>
+      <extension
+            id="id1"
+            point="org.eclipse.e4.workbench.model">
+         <fragment
+               uri="fragment.e4xmi">
+         </fragment>
       </extension>
 </plugin>

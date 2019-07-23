@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.ui.dialog;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -125,8 +127,20 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     protected Collection<IStatus> getInput() {
         return Stream
                 .of(status.getChildren())
+                .map(this::getChildren)
+                .flatMap(Collection::stream)
                 .sorted((s1, s2) -> -Integer.valueOf(s1.getSeverity()).compareTo(Integer.valueOf(s2.getSeverity())))
                 .collect(Collectors.toList());
+    }
+
+    private List<IStatus> getChildren(IStatus status) {
+        if (status instanceof MultiStatus) {
+            return Arrays.asList(status.getChildren()).stream()
+                    .map(this::getChildren)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+        }
+        return Arrays.asList(status);
     }
 
 }
