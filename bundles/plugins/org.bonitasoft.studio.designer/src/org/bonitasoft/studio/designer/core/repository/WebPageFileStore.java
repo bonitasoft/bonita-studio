@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -52,7 +51,7 @@ import org.json.JSONException;
 
 import com.google.common.io.ByteSource;
 
-public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable, IBuildable, WebResource {
+public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable, WebResource {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 

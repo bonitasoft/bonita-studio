@@ -28,6 +28,7 @@ public class ButtonWidget extends ControlWidget {
     public static class Builder extends ControlWidgetBuilder<Builder, ButtonWidget> {
 
         private Listener listener;
+        private int style = SWT.PUSH;
 
         /**
          * Add a {@link Listener} to this button
@@ -37,9 +38,17 @@ public class ButtonWidget extends ControlWidget {
             return this;
         }
 
+        /**
+         * Default value: {@link SWT.PUSH}
+         */
+        public Builder withStyle(int style) {
+            this.style = style;
+            return this;
+        }
+
         @Override
         public ButtonWidget createIn(Composite container) {
-            final ButtonWidget control = new ButtonWidget(container);
+            final ButtonWidget control = new ButtonWidget(container, style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (this.label != null) {
@@ -53,9 +62,11 @@ public class ButtonWidget extends ControlWidget {
     }
 
     private Button button;
+    private int style;
 
-    protected ButtonWidget(Composite parent) {
+    protected ButtonWidget(Composite parent, int style) {
         super(parent);
+        this.style = style;
     }
 
     @Override
@@ -91,7 +102,7 @@ public class ButtonWidget extends ControlWidget {
 
     @Override
     protected Control createControl() {
-        button = new Button(this, SWT.PUSH);
+        button = new Button(this, style);
         button.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         return this;
     }

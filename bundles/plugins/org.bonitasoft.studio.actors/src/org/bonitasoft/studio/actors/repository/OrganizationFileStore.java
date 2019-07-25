@@ -34,7 +34,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -71,7 +70,7 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
+public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     private static final String ORGANIZATION_EXT = ".organization";

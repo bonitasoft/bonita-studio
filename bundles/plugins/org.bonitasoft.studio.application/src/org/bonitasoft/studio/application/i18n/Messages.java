@@ -102,6 +102,15 @@ public class Messages extends NLS {
     public static String validationErrorTitle;
     public static String validationError;
     public static String bdmGenerationError;
+    public static String selectArtifactToDeployTitle;
+    public static String selectArtifactToDeploy;
+    public static String warningMissingDependency;
+    public static String deploy;
+    public static String selectAll;
+    public static String selectNone;
+    public static String searchArtifact;
+    public static String expandAll;
+    public static String collapseAll;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

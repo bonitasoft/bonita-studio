@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.MultiValidator;
@@ -39,6 +40,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
 
     private IViewerObservableSet checkedElementsObservable;
+    private IObservableList<IRepositoryStore<? extends IRepositoryFileStore>> inputObservable;
 
     public CheckboxRepositoryTreeViewer(final Composite parent) {
         super(parent, SWT.VIRTUAL | SWT.BORDER | SWT.V_SCROLL);
@@ -47,12 +49,20 @@ public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
 
     private void initialize() {
         setLabelProvider(new FileStoreLabelProvider());
-        setContentProvider(new ObservableListTreeContentProvider(new FileStoreObservableFactory(), new FileStoreTreeStructureAdvisor()));
+        setContentProvider(new ObservableListTreeContentProvider(new FileStoreObservableFactory(),
+                new FileStoreTreeStructureAdvisor()));
     }
 
-    public void bindTree(final DataBindingContext context, final List<IRepositoryStore<? extends IRepositoryFileStore>> stores) {
-        setInput(new WritableList(stores, IRepositoryStore.class));
-        final IObservableSet checkedElementsObservable = checkedElementsObservable();
+    public void bindTree(final DataBindingContext context,
+            final List<IRepositoryStore<? extends IRepositoryFileStore>> stores) {
+        bindTree(context, new WritableList(stores, IRepositoryStore.class));
+    }
+
+    public void bindTree(final DataBindingContext context,
+            IObservableList<IRepositoryStore<? extends IRepositoryFileStore>> stores) {
+        inputObservable = stores;
+        setInput(inputObservable);
+        this.checkedElementsObservable = ViewersObservables.observeCheckedElements(this, Object.class);
         context.addValidationStatusProvider(new MultiValidator() {
 
             @Override
@@ -66,11 +76,15 @@ public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
         collapseAll();
     }
 
-    public IObservableSet checkedElementsObservable() {
-        if(checkedElementsObservable == null) {
+    public IObservableSet<Object> checkedElementsObservable() {
+        if (checkedElementsObservable == null) {
             checkedElementsObservable = ViewersObservables.observeCheckedElements(this, Object.class);
         }
         return checkedElementsObservable;
+    }
+
+    public IObservableList<IRepositoryStore<? extends IRepositoryFileStore>> observeInput() {
+        return inputObservable;
     }
 
 }

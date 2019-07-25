@@ -31,7 +31,6 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -63,7 +62,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IRenamable, IBuildable {
+public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IRenamable {
 
     public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
