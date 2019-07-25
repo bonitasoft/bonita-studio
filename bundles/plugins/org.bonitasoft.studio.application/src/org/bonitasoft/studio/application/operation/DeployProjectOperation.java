@@ -17,8 +17,6 @@ package org.bonitasoft.studio.application.operation;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -26,9 +24,8 @@ import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.model.IBuildable;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -44,9 +41,12 @@ public class DeployProjectOperation implements IRunnableWithStatus {
 
     private IStatus status;
     private RepositoryAccessor repositoryAccessor;
+    private Collection<IRepositoryFileStore> artifactsToDeploy;
 
-    public DeployProjectOperation(RepositoryAccessor repositoryAccessor) {
+    public DeployProjectOperation(RepositoryAccessor repositoryAccessor,
+            Collection<IRepositoryFileStore> artifactsToDeploy) {
         this.repositoryAccessor = repositoryAccessor;
+        this.artifactsToDeploy = artifactsToDeploy;
         status = ValidationStatus.ok();
     }
 
@@ -82,11 +82,10 @@ public class DeployProjectOperation implements IRunnableWithStatus {
     }
 
     private IPath buildProject(IPath buildPath, IProgressMonitor monitor) {
-        List<IRepositoryFileStore> storeToBuild = retrieveFileStoresToBuild();
-        monitor.beginTask("Building project...", storeToBuild.size() + 1);
-        for (IRepositoryFileStore fileStore : storeToBuild) {
+        monitor.beginTask("Building project...", artifactsToDeploy.size() + 1);
+        for (IRepositoryFileStore fileStore : artifactsToDeploy) {
             try {
-                ((IBuildable) fileStore).build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),
+                ((IDeployable) fileStore).build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),
                         monitor);
                 monitor.worked(1);
             } catch (CoreException e) {
@@ -119,15 +118,6 @@ public class DeployProjectOperation implements IRunnableWithStatus {
             status = ValidationStatus.error(String.format("An error occured while creating archive %s.", archiveFileName),
                     e);
         }
-    }
-
-    protected List<IRepositoryFileStore> retrieveFileStoresToBuild() {
-        return repositoryAccessor.getCurrentRepository().getAllStores()
-                .stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(IBuildable.class::isInstance)
-                .collect(Collectors.toList());
     }
 
     @Override

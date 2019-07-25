@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -14,7 +13,6 @@ import org.eclipse.jdt.ui.JavaElementSorter;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
-
 
 public class ProjectExplorerViewerComparator extends ViewerComparator {
 
@@ -29,21 +27,21 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
         ORDER.put("web_page", 12);
         ORDER.put("web_widgets", 13);
         ORDER.put("web_fragments", 14);
-        ORDER.put("restAPIExtensions", 15);
-        ORDER.put("connectors-def", 16);
-        ORDER.put("connectors-impl", 17);
-        ORDER.put("connectors-conf", 18);
-        ORDER.put("src-connectors", 19);
-        ORDER.put("filters-def", 20);
-        ORDER.put("filters-impl", 21);
-        ORDER.put("filters-conf", 22);
-        ORDER.put("src-filters", 23);
-        ORDER.put("customTypes", 24);
-        ORDER.put("src-customTypes", 25);
-        ORDER.put("environements", 26);
-        ORDER.put("src-groovy", 27);
+        ORDER.put("themes", 15);
+        ORDER.put("restAPIExtensions", 16);
+        ORDER.put("connectors-def", 17);
+        ORDER.put("connectors-impl", 18);
+        ORDER.put("connectors-conf", 19);
+        ORDER.put("src-connectors", 20);
+        ORDER.put("filters-def", 21);
+        ORDER.put("filters-impl", 22);
+        ORDER.put("filters-conf", 23);
+        ORDER.put("src-filters", 24);
+        ORDER.put("customTypes", 25);
+        ORDER.put("src-customTypes", 26);
+        ORDER.put("environements", 27);
+        ORDER.put("src-groovy", 28);
     }
-
 
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
@@ -57,8 +55,9 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
 
     @Override
     public int category(Object element) {
-        IRepositoryStore<? extends IRepositoryFileStore> store = RepositoryManager.getInstance().getRepositoryStore(element)
-                .orElse(null);
+        IRepositoryStore store = element instanceof IRepositoryStore
+                ? (IRepositoryStore) element
+                : RepositoryManager.getInstance().getRepositoryStore(element).orElse(null);
         if (store != null) {
             Integer rank = ORDER.get(store.getResource().getName());
             if (rank != null) {

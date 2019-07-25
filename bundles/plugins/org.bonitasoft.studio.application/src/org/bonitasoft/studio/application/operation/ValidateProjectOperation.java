@@ -15,13 +15,15 @@
 package org.bonitasoft.studio.application.operation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -34,17 +36,19 @@ import org.eclipse.core.runtime.MultiStatus;
 public class ValidateProjectOperation implements IRunnableWithStatus {
 
     private MultiStatus status;
-    private RepositoryAccessor repositoryAccessor;
+    private List<DiagramFileStore> fileStoreToValidate;
 
-    public ValidateProjectOperation(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
+    public ValidateProjectOperation(Collection<? extends IRepositoryFileStore> artifactsToValidate) {
+        this.fileStoreToValidate = artifactsToValidate.stream()
+                .filter(DiagramFileStore.class::isInstance)
+                .map(DiagramFileStore.class::cast)
+                .collect(Collectors.toList());
         this.status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, "", null);
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for (DiagramFileStore fileStore : repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChildren()) {
+        for (DiagramFileStore fileStore : fileStoreToValidate) {
             if (monitor.isCanceled()) {
                 break;
             }

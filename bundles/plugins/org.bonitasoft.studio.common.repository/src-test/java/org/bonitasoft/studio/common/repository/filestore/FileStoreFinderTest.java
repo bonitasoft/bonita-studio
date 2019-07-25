@@ -20,23 +20,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IWorkbenchPart;
 import org.junit.Test;
 
 public class FileStoreFinderTest {
@@ -59,15 +54,19 @@ public class FileStoreFinderTest {
         IStructuredSelection selection = new StructuredSelection(file);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
         Repository repository = mock(Repository.class);
-        when(repository.getFileStore(file)).thenReturn(new FileStoreWithInterface(FILE_NAME, mock(IRepositoryStore.class)));
+        DeployableFileStore deployableFileStore = mock(DeployableFileStore.class);
+        when(deployableFileStore.getName()).thenReturn(FILE_NAME);
+        when(deployableFileStore.canBeRenamed()).thenReturn(true);
+        when(repository.getFileStore(file)).thenReturn(deployableFileStore);
         Optional<IRenamable> elementToRename = finder.findElementToRename(repository);
         assertThat(elementToRename).isPresent();
-        FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToRename.get();
+        DeployableFileStore fileStore = (DeployableFileStore) elementToRename.get();
         assertThat(fileStore.getName()).isEqualTo(FILE_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
-        when(repository.getFileStore(file))
-                .thenReturn(new FileStoreWithoutInterface(DOCUMENT_NAME, mock(IRepositoryStore.class)));
+        NotDeployableFileStore notDeployableFileStore = mock(NotDeployableFileStore.class);
+        when(notDeployableFileStore.getName()).thenReturn(DOCUMENT_NAME);
+        when(repository.getFileStore(file)).thenReturn(notDeployableFileStore);
         elementToRename = finder.findElementToRename(repository);
         assertThat(elementToRename).isEmpty();
     }
@@ -88,115 +87,27 @@ public class FileStoreFinderTest {
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
         Repository repository = mock(Repository.class);
 
-        when(repository.getFileStore(file)).thenReturn(new FileStoreWithInterface(FILE_NAME, mock(IRepositoryStore.class)));
+        DeployableFileStore deployableFileStore = mock(DeployableFileStore.class);
+        when(deployableFileStore.getName()).thenReturn(FILE_NAME);
+        when(repository.getFileStore(file)).thenReturn(deployableFileStore);
         Optional<IDeployable> elementToDeploy = finder.findElementToDeploy(repository);
         assertThat(elementToDeploy).isPresent();
-        FileStoreWithInterface fileStore = (FileStoreWithInterface) elementToDeploy.get();
+        DeployableFileStore fileStore = (DeployableFileStore) elementToDeploy.get();
         assertThat(fileStore.getName()).isEqualTo(FILE_NAME);
 
         when(file.getName()).thenReturn(DOCUMENT_NAME);
-        when(repository.getFileStore(file))
-                .thenReturn(new FileStoreWithoutInterface(DOCUMENT_NAME, mock(IRepositoryStore.class)));
+        NotDeployableFileStore notDeployableFileStore = mock(NotDeployableFileStore.class);
+        when(notDeployableFileStore.getName()).thenReturn(DOCUMENT_NAME);
+        when(repository.getFileStore(file)).thenReturn(notDeployableFileStore);
         elementToDeploy = finder.findElementToDeploy(repository);
         assertThat(elementToDeploy).isEmpty();
     }
 
-
-    private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithInterfaces() {
-        IRepositoryStore<FileStoreWithInterface> repositoryStore = mock(IRepositoryStore.class);
-        when(repositoryStore.getName()).thenReturn(ORGANIZATION_FOLDER_NAME);
-        FileStoreWithInterface fileStore = new FileStoreWithInterface(FILE_NAME, repositoryStore);
-        when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore));
-        return repositoryStore;
-    }
-
-    private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithInterfaces2() {
-        IRepositoryStore<FileStoreWithInterface> repositoryStore = mock(IRepositoryStore.class);
-        when(repositoryStore.getName()).thenReturn(DIAGRAMS_FOLDER_NAME);
-        FileStoreWithInterface fileStore = new FileStoreWithInterface(FILE_NAME, repositoryStore);
-        when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore));
-        return repositoryStore;
-    }
-
-    private IRepositoryStore<? extends IRepositoryFileStore> initStoreWithoutInterface() {
-        IRepositoryStore<FileStoreWithoutInterface> repositoryStore = mock(IRepositoryStore.class);
-        FileStoreWithoutInterface fileStore = new FileStoreWithoutInterface(DOCUMENT_NAME, repositoryStore);
-        when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore));
-        return repositoryStore;
-    }
-
 }
 
-class FileStoreWithoutInterface extends AbstractFileStore {
-
-    public FileStoreWithoutInterface(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
-        super(fileName, parentStore);
-    }
-
-    @Override
-    public Object getContent() throws ReadFileStoreException {
-        return null;
-    }
-
-    @Override
-    public Image getIcon() {
-        return null;
-    }
-
-    @Override
-    protected void doSave(Object content) {
-    }
-
-    @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
-    }
-
-    @Override
-    protected void doClose() {
-    }
+abstract class NotDeployableFileStore implements IRepositoryFileStore {
 }
 
-class FileStoreWithInterface extends AbstractFileStore implements IDeployable, IRenamable {
-
-    public FileStoreWithInterface(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
-        super(fileName, parentStore);
-    }
-
-    @Override
-    public Object getContent() throws ReadFileStoreException {
-        return null;
-    }
-
-    @Override
-    public Image getIcon() {
-        return null;
-    }
-
-    @Override
-    protected void doSave(Object content) {
-    }
-
-    @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
-    }
-
-    @Override
-    protected void doClose() {
-    }
-
-    @Override
-    public void rename(String newName) {
-    }
-
-    @Override
-    public Optional<String> retrieveNewName() {
-        return null;
-    }
-
-    @Override
-    public void deploy() {
-    }
+abstract class DeployableFileStore implements IRepositoryFileStore, IDeployable, IRenamable {
 
 }
