@@ -19,7 +19,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationXMLContentValidator;
-import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.la.ui.validator.ImportFileStoreConflictsValidator;
 import org.bonitasoft.studio.ui.page.AbstractImportPage;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -35,7 +34,7 @@ public class ImportApplicationPage extends AbstractImportPage {
     @Override
     protected List<IValidator> getValidators() {
         List<IValidator> validators = super.getValidators();
-        validators.add(new ApplicationXMLContentValidator(Messages.notAnApplicationError));
+        validators.add(new ApplicationXMLContentValidator());
         validators.add(new ImportFileStoreConflictsValidator(
                 repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)));
         return validators;

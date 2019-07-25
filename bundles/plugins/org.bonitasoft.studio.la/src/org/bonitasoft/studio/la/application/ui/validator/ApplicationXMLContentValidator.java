@@ -23,22 +23,29 @@ import javax.xml.bind.JAXBException;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.ui.validator.XMLContentValidator;
+import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.xml.sax.SAXException;
 
-public class ApplicationXMLContentValidator extends XMLContentValidator {
+public class ApplicationXMLContentValidator implements IValidator<String> {
 
     private ApplicationNodeContainerConverter applicationNodeContainerConverter;
 
-    public ApplicationXMLContentValidator(String errorMessage) {
-        super(errorMessage);
+    public ApplicationXMLContentValidator() {
         this.applicationNodeContainerConverter = RepositoryManager.getInstance()
                 .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
 
     }
 
     @Override
-    protected void validateModel(String value) throws JAXBException, IOException, SAXException {
-        applicationNodeContainerConverter.unmarshallFromXML(Files.readAllBytes(Paths.get(value)));
+    public IStatus validate(String value) {
+        try {
+            applicationNodeContainerConverter.unmarshallFromXML(Files.readAllBytes(Paths.get(value)));
+        } catch (JAXBException | IOException | SAXException e) {
+            return ValidationStatus.error(Messages.notAnApplicationError);
+        }
+        return ValidationStatus.ok();
     }
 }
