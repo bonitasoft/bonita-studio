@@ -16,6 +16,7 @@ package org.bonitasoft.studio.actors.configuration;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.action.ExportActorMappingAction;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.SelectGroupsWizard;
 import org.bonitasoft.studio.actors.ui.wizard.SelectMembershipsWizard;
@@ -82,7 +84,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     private Button roleButton;
     private Button membershipButton;
     private Button userButton;
-    private Organization deployedOrganization;
+    private Optional<Organization> deployedOrganization;
 
     public ActorMappingConfigurationWizardPage() {
         super(ActorMappingConfigurationWizardPage.class.getName());
@@ -90,10 +92,10 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
         setDescription(Messages.actorMappingDesc);
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ActorMappingAdapterFactory());
-        deployedOrganization = RepositoryManager.getInstance()
+        deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()))
-                .getContent();
+                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization())))
+                .map(OrganizationFileStore::getContent);
     }
 
     @Override
@@ -350,15 +352,18 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     }
 
     private boolean isUnknownGroup(String group) {
-        return deployedOrganization.getGroups().getGroup().stream().map(this::getGroupPath).noneMatch(group::equals);
+        return !deployedOrganization.isPresent() || deployedOrganization.get().getGroups().getGroup().stream()
+                .map(this::getGroupPath).noneMatch(group::equals);
     }
 
     private boolean isUnknownRole(String role) {
-        return deployedOrganization.getRoles().getRole().stream().map(Role::getName).noneMatch(role::equals);
+        return !deployedOrganization.isPresent()
+                || deployedOrganization.get().getRoles().getRole().stream().map(Role::getName).noneMatch(role::equals);
     }
 
     private boolean isUnknownUser(String user) {
-        return deployedOrganization.getUsers().getUser().stream().map(User::getUserName).noneMatch(user::equals);
+        return !deployedOrganization.isPresent()
+                || deployedOrganization.get().getUsers().getUser().stream().map(User::getUserName).noneMatch(user::equals);
     }
 
     private String getGroupPath(Group group) {
