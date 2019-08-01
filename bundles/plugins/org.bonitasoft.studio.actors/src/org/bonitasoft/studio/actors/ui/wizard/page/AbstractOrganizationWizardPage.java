@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,7 +68,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     protected List<Role> roleList;
     protected EMFDataBindingContext context;
     protected WizardPageSupport pageSupport;
-    protected CTabFolder tabFolder;
+    protected TabFolder tabFolder;
     protected Composite mainComposite;
 
     protected AbstractOrganizationWizardPage(final String pageName) {
