@@ -51,7 +51,8 @@ import org.json.JSONException;
 
 import com.google.common.io.ByteSource;
 
-public class WebPageFileStore extends InFolderJSONFileStore implements IDeployable, WebResource {
+public class WebPageFileStore extends InFolderJSONFileStore
+        implements IDeployable, WebResource, Comparable<WebPageFileStore> {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 
@@ -61,6 +62,7 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
 
     public static final String LAYOUT_TYPE = "layout";
     public static final String PAGE_TYPE = "page";
+    public static final String FORM_TYPE = "form";
     public static final String DEPLOY_PAGE_COMMAND = "org.bonitasoft.studio.engine.deploy.page.command";
 
     private CustomPageBarResourceFactory customPageBarResourceFactory;
@@ -181,6 +183,28 @@ public class WebPageFileStore extends InFolderJSONFileStore implements IDeployab
         } catch (IOException e) {
             throw new CoreException(
                     ValidationStatus.error(String.format("An error occured while building %s", getName()), e));
+        }
+    }
+
+    @Override
+    public int compareTo(WebPageFileStore o) {
+        if (o != null) {
+            int res = getPriority().compareTo(o.getPriority());
+            return res != 0 ? res : getName().compareTo(o.getName());
+        }
+        return 0;
+    }
+
+    private Integer getPriority() {
+        switch (getType()) {
+            case FORM_TYPE:
+                return 0;
+            case PAGE_TYPE:
+                return 1;
+            case LAYOUT_TYPE:
+                return 2;
+            default:
+                return 3;
         }
     }
 

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -23,7 +24,6 @@ import java.net.URL;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,8 @@ public class WebPageFileStoreTest {
         doReturn("myPageId").when(webPageFileStore).getId();
         doReturn(urlFactory).when(webPageFileStore).urlFactory();
         doReturn(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId")).when(urlFactory).openPage("myPageId");
-        doReturn(operationBrowser).when(webPageFileStore).openBrowserOperation(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId"));
+        doReturn(operationBrowser).when(webPageFileStore)
+                .openBrowserOperation(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId"));
     }
 
     @Test
@@ -63,5 +64,30 @@ public class WebPageFileStoreTest {
 
         verify(urlFactory).openPage("myPageId");
         verify(operationBrowser).execute();
+    }
+
+    @Test
+    public void should_compare_web_pages() {
+        WebPageFileStore form = spy(new WebPageFileStore("myform.json", parentStore));
+        WebPageFileStore form2 = spy(new WebPageFileStore("myform2.json", parentStore));
+        WebPageFileStore page = spy(new WebPageFileStore("mypage.json", parentStore));
+        WebPageFileStore layout = spy(new WebPageFileStore("mylayout.json", parentStore));
+        doReturn(WebPageFileStore.FORM_TYPE).when(form).getType();
+        doReturn(WebPageFileStore.FORM_TYPE).when(form2).getType();
+        doReturn(WebPageFileStore.PAGE_TYPE).when(page).getType();
+        doReturn(WebPageFileStore.LAYOUT_TYPE).when(layout).getType();
+
+        assertThat(form.compareTo(page)).isLessThan(0);
+        assertThat(form.compareTo(layout)).isLessThan(0);
+        assertThat(form.compareTo(form2)).isLessThan(0);
+        assertThat(form.compareTo(form)).isEqualTo(0);
+
+        assertThat(page.compareTo(form)).isGreaterThan(0);
+        assertThat(page.compareTo(layout)).isLessThan(0);
+        assertThat(page.compareTo(page)).isEqualTo(0);
+
+        assertThat(layout.compareTo(form)).isGreaterThan(0);
+        assertThat(layout.compareTo(page)).isGreaterThan(0);
+        assertThat(layout.compareTo(layout)).isEqualTo(0);
     }
 }
