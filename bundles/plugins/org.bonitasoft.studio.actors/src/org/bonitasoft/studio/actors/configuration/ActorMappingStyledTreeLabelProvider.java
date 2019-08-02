@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.actors.configuration;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
@@ -30,7 +32,8 @@ public class ActorMappingStyledTreeLabelProvider extends StyledCellLabelProvider
 
     private ActorMappingLabelProvider labelProvider;
 
-    public ActorMappingStyledTreeLabelProvider(ComposedAdapterFactory adapterFactory, Organization deployedOrganization) {
+    public ActorMappingStyledTreeLabelProvider(ComposedAdapterFactory adapterFactory,
+            Optional<Organization> deployedOrganization) {
         labelProvider = new ActorMappingLabelProvider(new AdapterFactoryLabelProvider(adapterFactory), deployedOrganization);
     }
 

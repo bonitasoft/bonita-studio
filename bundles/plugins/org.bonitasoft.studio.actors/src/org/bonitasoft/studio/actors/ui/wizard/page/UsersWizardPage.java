@@ -88,8 +88,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -131,13 +129,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private final List<Membership> userMemberShips = new ArrayList<>();
     private TabItem memberShipTab;
     private TabItem customTab;
-    private CTabItem infoTab;
+    private TabItem infoTab;
 
     TableViewer customUserInfoTable;
     private IObservableList customUserInfoObservableList;
     private CustomUserInformationDefinitionNameEditingSupport customUserInformationDefinitionNameEditingSupport;
     private IViewerObservableValue userSingleSelectionObservable;
-    private CTabItem userTab;
+    private TabItem userTab;
     private Composite labelComposite;
     private ComboViewer managerNameComboViewer;
     private SelectionAdapter selectionAdapter;
@@ -1248,8 +1246,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     @Override
     public void createControl(final Composite parent) {
 
-        tabFolder = new CTabFolder(parent, SWT.TOP);
-        tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
+        tabFolder = new TabFolder(parent, SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
 
@@ -1266,11 +1263,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         super.createControl(tabFolder);
         super.setControl(tabFolder);
 
-        userTab = new CTabItem(tabFolder, SWT.NONE);
+        userTab = new TabItem(tabFolder, SWT.NONE);
         userTab.setText(Messages.listOfUsersTabTitle);
         userTab.setControl(mainComposite);
 
-        infoTab = new CTabItem(tabFolder, SWT.NONE);
+        infoTab = new TabItem(tabFolder, SWT.NONE);
         infoTab.setText(Messages.customUserInformationTabTitle);
         infoTab.setControl(addInformationComposite());
 

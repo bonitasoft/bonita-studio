@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.actors.configuration;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.Role;
@@ -28,11 +30,12 @@ import org.eclipse.swt.widgets.Display;
 
 public class ActorMappingLabelProvider extends ColumnLabelProvider {
 
-    private Organization deployedOrganization;
+    private Optional<Organization> deployedOrganization;
     private Color errorColor;
     private AdapterFactoryLabelProvider adapterFactory;
 
-    public ActorMappingLabelProvider(AdapterFactoryLabelProvider adapterFactory, Organization deployedOrganization) {
+    public ActorMappingLabelProvider(AdapterFactoryLabelProvider adapterFactory,
+            Optional<Organization> deployedOrganization) {
         this.adapterFactory = adapterFactory;
         this.deployedOrganization = deployedOrganization;
         this.errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
@@ -44,9 +47,11 @@ public class ActorMappingLabelProvider extends ColumnLabelProvider {
                     && isPresentInDeployedOrganization(((MembershipType) element).getRole());
         }
         String elt = (String) element;
-        return deployedOrganization.getGroups().getGroup().stream().map(this::getGroupPath).anyMatch(elt::equals)
-                || deployedOrganization.getRoles().getRole().stream().map(Role::getName).anyMatch(elt::equals)
-                || deployedOrganization.getUsers().getUser().stream().map(User::getUserName).anyMatch(elt::equals);
+        return deployedOrganization.isPresent()
+                && (deployedOrganization.get().getGroups().getGroup().stream().map(this::getGroupPath).anyMatch(elt::equals)
+                        || deployedOrganization.get().getRoles().getRole().stream().map(Role::getName).anyMatch(elt::equals)
+                        || deployedOrganization.get().getUsers().getUser().stream().map(User::getUserName)
+                                .anyMatch(elt::equals));
     }
 
     private String getGroupPath(Group group) {
