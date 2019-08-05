@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dependencies plugin
 Bundle-SymbolicName: org.bonitasoft.studio.dependencies;singleton:=true
-Bundle-Version: 7.9.2.qualifier
+Bundle-Version: 7.9.3.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.dependencies.DependenciesPlugin
 Bundle-Vendor: BonitaSoft S.A.
