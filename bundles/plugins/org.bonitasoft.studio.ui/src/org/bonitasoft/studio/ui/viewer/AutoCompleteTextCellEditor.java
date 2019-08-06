@@ -24,6 +24,8 @@ import org.bonitasoft.studio.ui.UIPlugin;
 import org.eclipse.jface.bindings.Trigger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -111,6 +113,14 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
             public void focusLost(FocusEvent e) {
                 AutoCompleteTextCellEditor.this.focusLost();
             }
+        });
+        proposalAdapter.addContentProposalListener(new IContentProposalListener() {
+
+            @Override
+            public void proposalAccepted(IContentProposal proposal) {
+                fireApplyEditorValue();
+            }
+
         });
     }
 
