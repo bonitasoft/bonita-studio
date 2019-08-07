@@ -18,6 +18,8 @@ import static com.google.common.collect.Iterators.forArray;
 import static com.google.common.collect.Maps.uniqueIndex;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -128,7 +130,11 @@ public class PortConfigurator {
     }
 
     protected boolean isPortInUse(final int port) {
-        return SocketUtil.isPortInUse(port);
+        try {
+            return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port);
+        } catch (UnknownHostException e) {
+            return SocketUtil.isPortInUse(port);
+        }
     }
 
     protected int findUnusedPort(final int low, final int hight) {
