@@ -19,11 +19,12 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -254,16 +255,16 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 "-httpPort",
                 String.valueOf(port));
     }
-    
+
     private String getProductApplicationId() {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
 
     private static boolean isPortAvailable(int port) {
-        try (Socket ignored = new Socket("localhost", port)) {
-            return false;
-        } catch (IOException ignored) {
-            return true;
+        try {
+            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port);
+        } catch (UnknownHostException e) {
+            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
         }
     }
 
