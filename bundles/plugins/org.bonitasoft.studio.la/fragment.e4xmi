@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_jKdtYNKdEeaEE_Umqe0dXA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tWbyINKdEeaEE_Umqe0dXA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_0n838NKdEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.new.command" commandName="%newApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_dHtcoP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.open.command" commandName="%openApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_2helYP6PEeaqYIbFhsSGFw" elementId="org.bonitasoft.studio.la.delete.command" commandName="%deleteApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_YHf6AAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.export.command" commandName="%exportApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_g4OJ8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.import.command" commandName="%importApplication"/>
+    <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication">
+      <parameters xmi:id="_tvi1sMI4EeiSmOxE9tpWmw" elementId="application" name="Application to deploy"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_kyZscPyMEeicTeF1RHOGZw" elementId="org.bonitasoft.studio.la.findOpenedEditor.command" commandName="findOpenedEditor">
+      <parameters xmi:id="_oYJrIPyMEeicTeF1RHOGZw" elementId="fileStore" name="File store" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_--2aUNKdEeaEE_Umqe0dXA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_BKi10NKeEeaEE_Umqe0dXA" elementId="org.bonitasoft.studio.la.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.NewApplicationHandler" command="_0n838NKdEeaEE_Umqe0dXA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_jUDDEP3SEeanhv23kWy-6w" elementId="org.bonitasoft.studio.la.openHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.OpenApplicationHandler" command="_dHtcoP3SEeanhv23kWy-6w"/>
+    <elements xsi:type="commands:Handler" xmi:id="_57EXYP6PEeaqYIbFhsSGFw" elementId="org.bonitasoft.studio.la.deleteHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.DeleteApplicationHandler" command="_2helYP6PEeaqYIbFhsSGFw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_cIN9cAomEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.exportHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.ExportApplicationHandler" command="_YHf6AAomEeekfeZYiUbzLg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_kWFX8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.importHandler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.ImportApplicationhandler" command="_g4OJ8ApAEeekfeZYiUbzLg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_JVGowM6fEee2rb_HhIZr1w" elementId="org.bonitasoft.studio.la.handler.deployapplication" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.DeployApplicationHandler" command="_pL3WsPnPEea-3Os5NcIV0g"/>
+    <elements xsi:type="commands:Handler" xmi:id="_NaDQgPyNEeicTeF1RHOGZw" elementId="org.bonitasoft.studio.la.findOpenedEditor.handler" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.handler.FindOpenedEditorHandler" command="_kyZscPyMEeicTeF1RHOGZw"/>
+  </fragments>
+</fragment:ModelFragments>
