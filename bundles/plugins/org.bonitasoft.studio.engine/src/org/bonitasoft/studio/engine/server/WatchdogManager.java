@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -55,9 +53,10 @@ public class WatchdogManager {
         @Override
         public void run() {
             try {
-                if (SocketUtil.isPortInUse(WATCHDOG_PORT)) {
+                if (portIsUsed()) {
                     final int oldPort = WATCHDOG_PORT;
-                    WATCHDOG_PORT = SocketUtil.findUnusedPort(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
+                    WATCHDOG_PORT = SocketUtil.findUnusedPort(PortConfigurator.MIN_PORT_NUMBER,
+                            PortConfigurator.MAX_PORT_NUMBER);
                     BonitaStudioLog.debug("Port "
                             + oldPort
                             + " is not available for server watchdog, studio will use next available port : "
@@ -83,6 +82,14 @@ public class WatchdogManager {
                 }
             } catch (final IOException e) {
                 logErrorDuringWatchDogUsage(e);
+            }
+        }
+
+        private boolean portIsUsed() {
+            try {
+                return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), WATCHDOG_PORT);
+            } catch (UnknownHostException e) {
+                return SocketUtil.isPortInUse(WATCHDOG_PORT);
             }
         }
 
@@ -117,7 +124,8 @@ public class WatchdogManager {
             i++;
         }
         if (i == 100 && watchdogServer == null) {
-            BonitaStudioLog.error("Watchdog server wasn't able to start in less than 5 seconds. It may lead to issue.", EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Watchdog server wasn't able to start in less than 5 seconds. It may lead to issue.",
+                    EnginePlugin.PLUGIN_ID);
         }
     }
 
