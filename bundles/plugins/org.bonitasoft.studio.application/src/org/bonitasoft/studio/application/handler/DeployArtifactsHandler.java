@@ -25,6 +25,7 @@ import java.util.Optional;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.BuildProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
 import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
@@ -49,6 +50,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class DeployArtifactsHandler {
+
+    private BuildProjectOperation buildOperation;
 
     @Execute
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
@@ -85,7 +88,12 @@ public class DeployArtifactsHandler {
                     Optional.of(Messages.validationError));
             return;
         }
-        IStatus deployStatus = performDeploy(repositoryAccessor, artifactsToDeploy);
+        IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy);
+        if (!buildStatus.isOK()) {
+            manageError(activeShell, buildStatus, Messages.buildErrorTitle, Optional.empty());
+            return;
+        }
+        IStatus deployStatus = performDeploy(repositoryAccessor);
         if (!deployStatus.isOK()) {
             manageError(activeShell, deployStatus, Messages.deployErrorTitle, Optional.empty());
         }
@@ -133,9 +141,17 @@ public class DeployArtifactsHandler {
         return ValidationStatus.ok();
     }
 
-    private IStatus performDeploy(RepositoryAccessor repositoryAccessor, Collection<IRepositoryFileStore> artifactsToDeploy)
+    private IStatus performBuild(RepositoryAccessor repositoryAccessor, Collection<IRepositoryFileStore> artifactsToDeploy)
             throws InterruptedException, InvocationTargetException {
-        DeployProjectOperation operation = new DeployProjectOperation(repositoryAccessor, artifactsToDeploy);
+        buildOperation = new BuildProjectOperation(repositoryAccessor, artifactsToDeploy);
+        PlatformUI.getWorkbench().getProgressService().run(true, false, buildOperation);
+        return buildOperation.getStatus();
+    }
+
+    private IStatus performDeploy(RepositoryAccessor repositoryAccessor)
+            throws InterruptedException, InvocationTargetException {
+        DeployProjectOperation operation = new DeployProjectOperation(repositoryAccessor,
+                buildOperation.getArchiveFilePath());
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
         return operation.getStatus();
     }

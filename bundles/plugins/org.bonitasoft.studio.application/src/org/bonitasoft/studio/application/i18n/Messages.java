@@ -111,6 +111,7 @@ public class Messages extends NLS {
     public static String searchArtifact;
     public static String expandAll;
     public static String collapseAll;
+    public static String buildErrorTitle;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
