@@ -15,6 +15,18 @@
         <connectors.def.target>${basedir}/connectors-def</connectors.def.target>
         <connectors.deps.target>${basedir}/dependencies</connectors.deps.target>
         <connectors.tmp.dir>${basedir}/connectors</connectors.tmp.dir>
+        <!-- connectors versions -->
+        <connector.version.alfresco>2.0.1</connector.version.alfresco>
+        <connector.version.cmis>3.0.3</connector.version.cmis>
+        <connector.version.database>2.0.1</connector.version.database>
+        <connector.version.email>1.2.1</connector.version.email>
+        <connector.version.google-calendar-v3>1.0.0</connector.version.google-calendar-v3>
+        <connector.version.ldap>1.0.1</connector.version.ldap>
+        <connector.version.salesforce>1.1.2</connector.version.salesforce>
+        <connector.version.scripting>1.1.0</connector.version.scripting>
+        <connector.version.twitter>1.2.0</connector.version.twitter>
+        <connector.version.webservice>1.2.3</connector.version.webservice>
+        <connector.version.rest>1.0.6</connector.version.rest>
     </properties>
 
 
@@ -36,7 +48,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-alfresco</artifactId>
-                                    <version>2.0.1</version>
+                                    <version>${connector.version.alfresco}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -44,7 +56,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-cmis</artifactId>
-                                    <version>3.0.3</version>
+                                    <version>${connector.version.cmis}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -52,7 +64,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-database</artifactId>
-                                    <version>2.0.1</version>
+                                    <version>${connector.version.database}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -60,7 +72,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-email</artifactId>
-                                    <version>1.2.1</version>
+                                    <version>${connector.version.email}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -68,35 +80,35 @@
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-create-event-impl</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${connector.version.google-calendar-v3}</version>
                                     <type>zip</type>
                                     <classifier>connector</classifier>
                                 </dependency>
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-get-event-impl</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${connector.version.google-calendar-v3}</version>
                                     <type>zip</type>
                                     <classifier>connector</classifier>
                                 </dependency>
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-delete-event-impl</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${connector.version.google-calendar-v3}</version>
                                     <type>zip</type>
                                     <classifier>connector</classifier>
                                 </dependency>
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-update-event-impl</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${connector.version.google-calendar-v3}</version>
                                     <type>zip</type>
                                     <classifier>connector</classifier>
                                 </dependency>
                                 <dependency>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-google-calendar-v3-move-event-impl</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${connector.version.google-calendar-v3}</version>
                                     <type>zip</type>
                                     <classifier>connector</classifier>
                                 </dependency>
@@ -104,7 +116,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-ldap-impl</artifactId>
-                                    <version>1.0.1</version>
+                                    <version>${connector.version.ldap}</version>
                                     <classifier>connector</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -112,7 +124,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-salesforce</artifactId>
-                                    <version>1.1.2</version>
+                                    <version>${connector.version.salesforce}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -120,7 +132,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-scripting</artifactId>
-                                    <version>1.1.0</version>
+                                    <version>${connector.version.scripting}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -128,7 +140,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-twitter</artifactId>
-                                    <version>1.2.0</version>
+                                    <version>${connector.version.twitter}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -136,7 +148,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-webservice</artifactId>
-                                    <version>1.2.3</version>
+                                    <version>${connector.version.webservice}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
@@ -144,7 +156,7 @@
                                 <artifactItem>
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-rest</artifactId>
-                                    <version>1.0.6</version>
+                                    <version>${connector.version.rest}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
