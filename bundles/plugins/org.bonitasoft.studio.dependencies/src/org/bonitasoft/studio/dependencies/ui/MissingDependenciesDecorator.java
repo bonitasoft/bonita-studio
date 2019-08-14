@@ -140,7 +140,7 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 	}
 
 	protected boolean isInRuntimeContainerWithAnotherVersion(String lib,Fragment fragment) {
-		DependencyFileStore fileStore = store.getChild(lib);
+		DependencyFileStore fileStore = store.getChild(lib, true);
 		if(fileStore != null){
 			return fileStore.existsInRuntimeContainerWithAnotherVersion();
 		}
@@ -148,7 +148,7 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 	}
 
 	protected boolean isInRuntimeContainer(String lib, Fragment fragment) {
-		DependencyFileStore fileStore = store.getChild(lib);
+		DependencyFileStore fileStore = store.getChild(lib, true);
 		if(fileStore != null){
 			return fileStore.existsInRuntimeContainer();
 		}
@@ -156,7 +156,7 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 	}
 
 	protected boolean isDependencyMissing(String libName, Fragment fragment) {
-		IRepositoryFileStore file = store.getChild(libName) ;
+		IRepositoryFileStore file = store.getChild(libName, true) ;
 		if(file == null && isGeneratedJar(libName,fragment)){//Check in custom connector
 			return false;
 		}

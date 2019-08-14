@@ -109,7 +109,7 @@ public class DependencyFileStore extends AbstractFileStore {
                 r.delete(true, Repository.NULL_PROGRESS_MONITOR);
                 final Repository repository = getRepository();
                 final IProject project = repository.getProject();
-                project.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+                project.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
                 if (repository.isBuildEnable()) {
                     project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
                 }

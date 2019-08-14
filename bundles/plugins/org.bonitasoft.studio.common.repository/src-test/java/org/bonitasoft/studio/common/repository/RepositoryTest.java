@@ -127,8 +127,8 @@ public class RepositoryTest {
 
         IRepositoryFileStore fileStore1 = mock(IRepositoryFileStore.class);
         IRepositoryFileStore fileStore2 = mock(IRepositoryFileStore.class);
-        when(repositoryStore1.getChild("name.xml")).thenReturn(fileStore1);
-        when(repositoryStore2.getChild("name.xml")).thenReturn(fileStore2);
+        when(repositoryStore1.getChild("name.xml", false)).thenReturn(fileStore1);
+        when(repositoryStore2.getChild("name.xml", false)).thenReturn(fileStore2);
 
         Repository repository = newRepository();
         doReturn(Arrays.asList(repositoryStore1, repositoryStore2)).when(repository).getAllStores();

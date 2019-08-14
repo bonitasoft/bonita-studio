@@ -118,7 +118,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 
     private MainProcess getMainProcess(String diagramToRename) {
         DiagramFileStore fileStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(diagramToRename);
+                .getChild(diagramToRename, true);
         return fileStore != null
                 ? fileStore.getContent()
                 : null;

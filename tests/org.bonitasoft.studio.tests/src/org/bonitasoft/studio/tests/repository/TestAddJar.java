@@ -41,7 +41,7 @@ public class TestAddJar extends TestCase {
         DependencyRepositoryStore drs = (DependencyRepositoryStore) RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
         drs.importInputStream(file.getName(), new FileInputStream(file));
-        assertNotNull("Jar missing after import", drs.getChild(file.getName()));
+        assertNotNull("Jar missing after import", drs.getChild(file.getName(), true));
     }
 
     public void testAddJarTwiceWithSameId() throws URISyntaxException, IOException, CoreException {
@@ -61,10 +61,10 @@ public class TestAddJar extends TestCase {
         drs.importInputStream("antlr-2.7.7.jar", fis);
         fis.close();
 
-        assertTrue("Overwrite jar has failed", drs.getChild("antlr-2.7.7.jar") != null
-                && drs.getChild("antlr-2.7.7.jar").getResource().exists()
-                && drs.getChild("antlr-2.7.7.jar").getResource().getContents().available() > 0);
+        assertTrue("Overwrite jar has failed", drs.getChild("antlr-2.7.7.jar", true) != null
+                && drs.getChild("antlr-2.7.7.jar", true).getResource().exists()
+                && drs.getChild("antlr-2.7.7.jar", true).getResource().getContents().available() > 0);
 
-        drs.getChild("antlr-2.7.7.jar").delete();
+        drs.getChild("antlr-2.7.7.jar", true).delete();
     }
 }

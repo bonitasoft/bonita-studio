@@ -114,7 +114,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 	protected void initialize() {
 		implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
 		if(originalImpl != null){
-			fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true)) ;
+			fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true), true) ;
 		}
 		defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
 		sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
@@ -218,12 +218,12 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 					if(editMode){
 						final String qualifiedClassname = implWorkingCopy.getImplementationClassname() ;
-						final IRepositoryFileStore file = sourceStore.getChild(ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname())) ;
+						final IRepositoryFileStore file = sourceStore.getChild(ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname()), true) ;
 						if(file != null){
 							file.delete() ;
 						}
 						if(!originalImpl.getImplementationClassname().equals(implWorkingCopy.getImplementationClassname())){
-							SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname()) ;
+							SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname(), true) ;
 							if(sourceFile != null){
 								sourceFile.renameLegacy(qualifiedClassname) ;
 								try {

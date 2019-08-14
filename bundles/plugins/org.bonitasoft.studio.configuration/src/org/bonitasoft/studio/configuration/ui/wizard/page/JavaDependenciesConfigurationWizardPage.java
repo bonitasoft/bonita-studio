@@ -48,7 +48,7 @@ public class JavaDependenciesConfigurationWizardPage extends AbstractDependencie
                 if(f instanceof Fragment && ((Fragment) f).isExported() && isAProcessDependency(f)){
                     String jarName = ((Fragment) f).getValue() ;
                     if(jarName.endsWith(DependencyRepositoryStore.JAR_EXT)){
-                        IRepositoryFileStore jarFile =  store.getChild(jarName) ;
+                        IRepositoryFileStore jarFile =  store.getChild(jarName, true) ;
                         if(jarFile == null && isGeneratedJar(jarName,(Fragment) f)){
                         	return null;
                         }

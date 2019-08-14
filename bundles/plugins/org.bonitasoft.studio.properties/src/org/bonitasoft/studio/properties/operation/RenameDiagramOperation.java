@@ -75,7 +75,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                 throw new InvocationTargetException(e);
             }
         }
-        diagramFileStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        diagramFileStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion), true);
         diagram = diagramFileStore.getContent();
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagram);
 

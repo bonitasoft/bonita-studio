@@ -159,7 +159,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             final DefinitionResourceProvider resourceProvider = getDefinitionResourceProvider();
             final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
             for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
-                if (depStore.getChild(jarName) == null) {
+                if (depStore.getChild(jarName, true) == null) {
                     final InputStream is = resourceProvider.getDependencyInputStream(jarName);
                     if (is != null) {
                         depStore.importInputStream(jarName, is);

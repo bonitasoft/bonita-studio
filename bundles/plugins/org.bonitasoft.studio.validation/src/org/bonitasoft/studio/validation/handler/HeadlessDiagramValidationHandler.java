@@ -36,7 +36,7 @@ public class HeadlessDiagramValidationHandler {
     public IStatus execute(RepositoryAccessor repositoryAccessor,
             @Named("fileName") String fileName) {
         DiagramFileStore diagramFileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(fileName);
+                .getChild(fileName, true);
         if (diagramFileStore != null) {
             RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
                     new BatchValidationOperation(

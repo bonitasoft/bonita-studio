@@ -192,7 +192,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
                     if(selection instanceof ConnectorConfiguration){
                         final Resource r = ((ConnectorConfiguration)selection).eResource() ;
                         final String fileName =  URI.decode(r.getURI().lastSegment()) ;
-                        final IRepositoryFileStore artifact = configurationStore.getChild(fileName) ;
+                        final IRepositoryFileStore artifact = configurationStore.getChild(fileName, true) ;
                         if(artifact != null){
                             if(FileActionDialog.confirmDeletionQuestion(fileName)){
                                 artifact.delete();

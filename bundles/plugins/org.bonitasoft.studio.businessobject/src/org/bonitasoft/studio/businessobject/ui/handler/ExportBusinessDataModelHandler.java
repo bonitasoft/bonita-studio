@@ -60,7 +60,7 @@ public class ExportBusinessDataModelHandler extends AbstractHandler {
         if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             final BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) RepositoryManager.getInstance()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                    .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+                    .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
             return fileStore != null && fileStore.getContent() != null
                     && !fileStore.getContent().getBusinessObjects().isEmpty();
         }

@@ -75,7 +75,7 @@ public class BusinessObjectDataWizardPageTest {
     @Before
     public void setUp() throws Exception {
         final BusinessObjectModelRepositoryStore store = mock(BusinessObjectModelRepositoryStore.class);
-        when(store.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).thenReturn(fileStore);
+        when(store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true)).thenReturn(fileStore);
         final BusinessObjectData data = aBusinessData()
                 .havingDataType(BusinessObjectDataTypeBuilder.aBusinessObjectDataType()).build();
         final Pool pool = aPool().build();

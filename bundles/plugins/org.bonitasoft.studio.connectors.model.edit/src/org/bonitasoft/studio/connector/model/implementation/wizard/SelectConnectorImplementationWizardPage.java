@@ -113,7 +113,7 @@ public class SelectConnectorImplementationWizardPage extends WizardPage
             public void widgetSelected(SelectionEvent e) {
                 if (selectedImplementation != null) {
                     String fileName = URI.decode(selectedImplementation.eResource().getURI().lastSegment());
-                    IRepositoryFileStore file = implStore.getChild(fileName);
+                    IRepositoryFileStore file = implStore.getChild(fileName, true);
                     file.delete();
                     refresh();
                 }

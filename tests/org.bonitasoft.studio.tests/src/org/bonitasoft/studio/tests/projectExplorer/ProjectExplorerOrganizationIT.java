@@ -59,18 +59,18 @@ public class ProjectExplorerOrganizationIT {
         projectExplorerBot.organization().renameOrganization("ACME", "ACME2");
         assertThat(repositoryAccessor
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME.organization")).isNull();
+                .getChild("ACME.organization", true)).isNull();
         assertThat(repositoryAccessor
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME2.organization")).isNotNull();
+                .getChild("ACME2.organization", true)).isNotNull();
 
         projectExplorerBot.organization().renameOrganization("ACME2", "ACME");
         assertThat(repositoryAccessor
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME2.organization")).isNull();
+                .getChild("ACME2.organization", true)).isNull();
         assertThat(repositoryAccessor
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild("ACME.organization")).isNotNull();
+                .getChild("ACME.organization", true)).isNotNull();
         projectExplorerBot.organization().deployOrganization("ACME", "walter.bates");
     }
 

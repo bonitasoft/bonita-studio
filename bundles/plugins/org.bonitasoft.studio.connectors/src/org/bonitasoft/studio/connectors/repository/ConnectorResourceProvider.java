@@ -67,13 +67,13 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                 final ConnectorDefinition def = connectorDefSotre.getDefinition(defId, defVersion, existingDefinitions);
                 if (def != null) {
                     final IRepositoryFileStore definition = ((IRepositoryStore<? extends IRepositoryFileStore>) connectorDefSotre).getChild(URI.decode(def
-                            .eResource().getURI().lastSegment()));
+                            .eResource().getURI().lastSegment()), true);
                     if (definition != null && definition.canBeShared()) {
                         files.add(definition);
 
                         try {
                             for (final String jarName : ((ConnectorDefinition) definition.getContent()).getJarDependency()) {
-                                final IRepositoryFileStore jarFile = depStore.getChild(jarName);
+                                final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                                 if (jarFile != null) {
                                     files.add(jarFile);
                                 }
@@ -97,13 +97,13 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                         final ConnectorImplementation impl = (ConnectorImplementation) implementation.getContent();
                         final String className = impl.getImplementationClassname();
                         final String packageName = className.substring(0, className.lastIndexOf("."));
-                        final IRepositoryFileStore packageFileStore = connectorSourceStore.getChild(packageName);
+                        final IRepositoryFileStore packageFileStore = connectorSourceStore.getChild(packageName, true);
                         if (packageFileStore != null) {
                             files.add(packageFileStore);
                         }
 
                         for (final String jarName : impl.getJarDependencies().getJarDependency()) {
-                            final IRepositoryFileStore jarFile = depStore.getChild(jarName);
+                            final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                             if (jarFile != null) {
                                 files.add(jarFile);
                             }

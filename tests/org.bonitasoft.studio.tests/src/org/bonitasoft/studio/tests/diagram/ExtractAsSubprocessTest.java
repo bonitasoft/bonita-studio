@@ -227,7 +227,7 @@ public class ExtractAsSubprocessTest {
                 .setArchive(ExtractAsSubprocessTest.class.getResource("BoundaryProcess_1_0.bos"))
                 .finish();
 
-        bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
+        bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc", true).getResource()));
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }
 

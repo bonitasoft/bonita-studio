@@ -52,7 +52,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
             final String id = event.getParameter("artifact");
             final IRepositoryStore<?> organizationStore = RepositoryManager.getInstance()
                     .getRepositoryStore(OrganizationRepositoryStore.class);
-            IRepositoryFileStore file = organizationStore.getChild(id);
+            IRepositoryFileStore file = organizationStore.getChild(id, true);
             if (file == null) {
                 BonitaStudioLog.warning("Organization : " + id + " not found !", ActorsPlugin.PLUGIN_ID);
                 final List<? extends IRepositoryFileStore> organizationFiles = organizationStore.getChildren();

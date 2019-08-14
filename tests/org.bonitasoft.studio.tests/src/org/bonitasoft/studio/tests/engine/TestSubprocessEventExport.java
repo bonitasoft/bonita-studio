@@ -44,7 +44,7 @@ public class TestSubprocessEventExport extends TestCase {
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
-        initialPa = drs.getChild("MyDiagram3-1.0.proc");
+        initialPa = drs.getChild("MyDiagram3-1.0.proc", true);
         for (final AbstractProcess process : initialPa.getProcesses()) {
             if (process.getName().equals("Pool3")) {
                 assertNotNull("Missing Event Subprocess @ Studio Engine Export",

@@ -22,7 +22,7 @@ public class BDMPropertyTester extends PropertyTester {
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         switch (property) {
             case BDM_EXITS_PROPERTY:
-                return store.getChild(BusinessObjectModelFileStore.BOM_FILENAME) == null;
+                return store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) == null;
             case BDM_FOLDER_PROPERTY:
                 return isBDMFolder(receiver, store);
             case BDM_FILE_PROPERTY:
@@ -41,7 +41,7 @@ public class BDMPropertyTester extends PropertyTester {
 
     private boolean isBDMFile(Object receiver, BusinessObjectModelRepositoryStore store) {
         if (receiver instanceof IAdaptable) {
-            AbstractBDMFileStore child = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+            AbstractBDMFileStore child = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
             return child != null && Objects.equals(child.getResource(),
                     ((IAdaptable) receiver).getAdapter(IResource.class));
         }

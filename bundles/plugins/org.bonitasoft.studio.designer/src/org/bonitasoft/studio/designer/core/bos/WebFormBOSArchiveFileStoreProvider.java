@@ -137,7 +137,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         return matchingEntry -> {
             final Matcher matcher = widgetPattern.matcher(matchingEntry);
             checkState(matcher.matches());
-            return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1));
+            return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1), true);
         };
     }
 
@@ -151,7 +151,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
             final Matcher matcher = fragmentPattern.matcher(matchingEntry);
             checkState(matcher.matches());
             return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
-                    .getChild(matcher.group(1));
+                    .getChild(matcher.group(1), true);
         };
     }
 
@@ -169,7 +169,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private WebPageFileStore fileStoreFromFormUUID(final String formUUID) {
         checkArgument(!isNullOrEmpty(formUUID));
-        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(formUUID);
+        return repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(formUUID, true);
     }
 
     private Predicate<FormMapping> withInternalType() {

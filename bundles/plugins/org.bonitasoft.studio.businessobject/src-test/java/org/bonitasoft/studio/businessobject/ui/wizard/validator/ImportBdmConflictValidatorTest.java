@@ -32,13 +32,13 @@ public class ImportBdmConflictValidatorTest {
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = mock(
                 BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = mock(BusinessObjectModelFileStore.class);
-        when(repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).thenReturn(fileStore);
+        when(repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true)).thenReturn(fileStore);
 
         IStatus status = new ImportBdmConflictValidator(repositoryStore).validate("myFile.zip");
         StatusAssert.assertThat(status).isWarning();
         assertThat(status.getMessage()).isEqualTo(Messages.bdmWillBeOverwritten);
 
-        when(repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).thenReturn(null);
+        when(repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true)).thenReturn(null);
         status = new ImportBdmConflictValidator(repositoryStore).validate("myFile.zip");
         StatusAssert.assertThat(status).isOK();
     }

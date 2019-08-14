@@ -86,7 +86,7 @@ public class AbstractConnectorImplRepositoryStoreTest {
 
         doReturn(connectorImpl).when(fStore).getContent();
 
-        doReturn(depFileStore).when(dependencyRepositoryStore).getChild(jarName);
+        doReturn(depFileStore).when(dependencyRepositoryStore).getChild(jarName, true);
     }
 
     /**
@@ -98,14 +98,14 @@ public class AbstractConnectorImplRepositoryStoreTest {
 
     @Test
     public void should_cleanJarDependency_remove_jar_from_dependencies_if_impl_has_sources() throws Exception {
-        doReturn(sourceFileStore).when(sourceRepositoryStore).getChild(connectorImpl.getImplementationClassname());
+        doReturn(sourceFileStore).when(sourceRepositoryStore).getChild(connectorImpl.getImplementationClassname(), true);
         implRepositoryStore.cleanJarDependency(fStore, dependencyRepositoryStore, sourceRepositoryStore);
         verify(depFileStore).delete();
     }
 
     @Test
     public void should_cleanJarDependency_not_remove_jar_from_dependencies_if_impl_has_no_sources() throws Exception {
-        doReturn(null).when(sourceRepositoryStore).getChild(connectorImpl.getImplementationClassname());
+        doReturn(null).when(sourceRepositoryStore).getChild(connectorImpl.getImplementationClassname(), true);
         implRepositoryStore.cleanJarDependency(fStore, dependencyRepositoryStore, sourceRepositoryStore);
         verifyZeroInteractions(depFileStore);
     }

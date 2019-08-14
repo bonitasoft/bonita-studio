@@ -18,36 +18,35 @@ import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.BuildProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
+import org.bonitasoft.studio.application.operation.DeployTenantResourcesOperation;
 import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
-import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 public class DeployArtifactsHandler {
 
@@ -57,111 +56,112 @@ public class DeployArtifactsHandler {
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
             RepositoryAccessor repositoryAccessor)
             throws InvocationTargetException, InterruptedException {
-        Collection<IRepositoryFileStore> artifactsToDeploy = retrieveArtifactsToDeploy(activeShell, repositoryAccessor);
-        if (!artifactsToDeploy.isEmpty()) {
-            deployArtifacts(activeShell, repositoryAccessor, artifactsToDeploy);
-        }
-    }
-
-    protected Collection<IRepositoryFileStore> retrieveArtifactsToDeploy(Shell activeShell,
-            RepositoryAccessor repositoryAccessor) {
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryAccessor);
-        Optional<Collection<IRepositoryFileStore>> userChoices = createWizard(newWizard(), page,
-                Messages.selectArtifactToDeployTitle, Messages.selectArtifactToDeploy)
+        Optional<IStatus> result = createWizard(newWizard(), page,
+                repositoryAccessor,
+                Messages.selectArtifactToDeployTitle,
+                Messages.selectArtifactToDeploy)
                         .open(activeShell, Messages.deploy);
-        return userChoices.orElse(new ArrayList<IRepositoryFileStore>());
-    }
-
-    protected void deployArtifacts(Shell activeShell, RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToDeploy) throws InvocationTargetException, InterruptedException {
-        if (artifactsToDeploy.stream().anyMatch(BusinessObjectModelFileStore.class::isInstance)) {
-            IStatus generateBdmSatus = performBdmGeneration(repositoryAccessor);
-            if (!generateBdmSatus.isOK()) {
-                manageError(activeShell, generateBdmSatus, Messages.deployErrorTitle,
-                        Optional.of(Messages.bdmGenerationError));
-                return;
-            }
-        }
-        IStatus validationStatus = performArtifactsValidation(activeShell, artifactsToDeploy);
-        if (!validationStatus.isOK()) {
-            manageError(activeShell, validationStatus, Messages.validationErrorTitle,
-                    Optional.of(Messages.validationError));
-            return;
-        }
-        IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy);
-        if (!buildStatus.isOK()) {
-            manageError(activeShell, buildStatus, Messages.buildErrorTitle, Optional.empty());
-            return;
-        }
-        IStatus deployStatus = performDeploy(repositoryAccessor);
-        if (!deployStatus.isOK()) {
-            manageError(activeShell, deployStatus, Messages.deployErrorTitle, Optional.empty());
+        if (result.isPresent()) {
+            openStatusDialog(activeShell, result.get());
         }
     }
 
-    private WizardBuilder<Collection<IRepositoryFileStore>> createWizard(
-            WizardBuilder<Collection<IRepositoryFileStore>> builder,
+    protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
+            Collection<IRepositoryFileStore> artifactsToDeploy, IWizardContainer container) {
+        MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
+
+        try {
+            container.run(true, false, monitor -> {
+                GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+                apiSessionOperation.run(monitor);
+                try {
+                    APISession session = apiSessionOperation.getSession();
+                    DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
+                            artifactsToDeploy, session);
+                    deployTenantResourcesOperation.run(monitor);
+                    status.addAll(deployTenantResourcesOperation.getStatus());
+                    if (shouldValidate()) {
+                        IStatus validationStatus = performArtifactsValidation(artifactsToDeploy, monitor);
+                        if (!validationStatus.isOK()) {
+                            status.addAll(validationStatus);
+                            return;
+                        }
+                    }
+                    IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
+                    if (!buildStatus.isOK()) {
+                        status.addAll(buildStatus);
+                        return;
+                    }
+                    IStatus deployStatus = performDeploy(repositoryAccessor, monitor);
+                    status.addAll(deployStatus);
+                } finally {
+                    apiSessionOperation.logout();
+                }
+
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Failed to deploy some tenant resources.", e);
+        }
+        return status;
+    }
+
+    private boolean shouldValidate() {
+        return true;
+    }
+
+    private WizardBuilder<IStatus> createWizard(
+            WizardBuilder<IStatus> builder,
             SelectArtifactToDeployPage page,
+            RepositoryAccessor repositoryAccessor,
             String title,
             String description) {
         return builder
                 .withTitle(title)
                 .withSize(1000, 700)
+                .needProgress()
                 .havingPage(newPage()
                         .withTitle(title)
                         .withDescription(description)
                         .withControl(page))
-                .onFinish(container -> Optional.of(page.getElements()));
+                .onFinish(container -> Optional
+                        .ofNullable(deployArtifacts(repositoryAccessor, page.getElements(), container)));
 
     }
 
-    private void manageError(Shell activeShell, IStatus status, String title, Optional<String> message) {
+    private void openStatusDialog(Shell activeShell, IStatus status) {
         if (status instanceof MultiStatus) {
-            new MultiStatusDialog(activeShell, title, message.orElse(""),
+            new MultiStatusDialog(activeShell, Messages.deployStatus, Messages.deployStatusMessage,
                     new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status).open();
         } else {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), title,
-                    String.format("%s\n\n%s", message.orElse(""), status.getMessage()));
-            BonitaStudioLog.error(status.getMessage(), status.getException());
+            StatusManager.getManager().handle(status);
+            //            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.deployErrorTitle,
+            //                    String.format("%s\n\n%s", message.orElse(""), status.getMessage()));
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private IStatus performBdmGeneration(RepositoryAccessor repositoryAccessor) {
-        BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryAccessor
-                .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
-        if (bdmFileStore != null) {
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, new GenerateBDMOperation(bdmFileStore));
-            } catch (InvocationTargetException | InterruptedException e) {
-                return ValidationStatus.error(Messages.bdmGenerationError, e);
-            }
-        }
-        return ValidationStatus.ok();
-    }
-
-    private IStatus performBuild(RepositoryAccessor repositoryAccessor, Collection<IRepositoryFileStore> artifactsToDeploy)
-            throws InterruptedException, InvocationTargetException {
+    private IStatus performBuild(RepositoryAccessor repositoryAccessor,
+            Collection<IRepositoryFileStore> artifactsToDeploy, IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
         buildOperation = new BuildProjectOperation(repositoryAccessor, artifactsToDeploy);
-        PlatformUI.getWorkbench().getProgressService().run(true, false, buildOperation);
+        buildOperation.run(monitor);
         return buildOperation.getStatus();
     }
 
-    private IStatus performDeploy(RepositoryAccessor repositoryAccessor)
+    private IStatus performDeploy(RepositoryAccessor repositoryAccessor, IProgressMonitor monitor)
             throws InterruptedException, InvocationTargetException {
         DeployProjectOperation operation = new DeployProjectOperation(repositoryAccessor,
                 buildOperation.getArchiveFilePath());
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+        operation.run(monitor);
         return operation.getStatus();
     }
 
-    private IStatus performArtifactsValidation(Shell activeShell, Collection<IRepositoryFileStore> artifactsToDeploy)
+    private IStatus performArtifactsValidation(Collection<IRepositoryFileStore> artifactsToDeploy,
+            IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        SkippableProgressMonitorJobsDialog dialog = new SkippableProgressMonitorJobsDialog(activeShell);
-        dialog.canBeSkipped();
         ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
-        dialog.run(true, false, operation);
+        operation.run(monitor);
         return operation.getStatus();
     }
 

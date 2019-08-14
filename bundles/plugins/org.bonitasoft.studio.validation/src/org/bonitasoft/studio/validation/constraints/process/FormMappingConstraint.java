@@ -68,7 +68,7 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
         if (targetForm.hasContent()) {
             final RepositoryAccessor repositoryAccessor = getRepositoryAccessor();
             final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-            if (repositoryStore.getChild(targetForm.getContent()) == null) {
+            if (repositoryStore.getChild(targetForm.getContent(), true) == null) {
                 return ctx.createFailureStatus(Messages.bind(Messages.invalidInternalFormMapping, mappingKind(formMapping), targetForm.getContent()));
             }
             final List<FormMapping> duplicatedMappings = findDuplicatedNameMappings(formMapping, repositoryStore);

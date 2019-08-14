@@ -373,7 +373,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
     }
 
     private void setJars(String connectorId, List<String> jars) {
-        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId));
+        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId), true);
         if (fileStore == null) {
             fileStore = store.createRepositoryFileStore(getDBPrefFilename(connectorId));
         }
@@ -381,7 +381,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
     }
 
     private String getDefaultDriver(String connectorId) {
-        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId));
+        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId), true);
         if (fileStore != null) {
             return fileStore.getDefault();
         }
@@ -394,13 +394,13 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 
     private boolean getAutoAddDriverProperty(String connectorId) {
         DatabaseConnectorPropertiesFileStore fileStore = store
-                .getChild(connectorId + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
+                .getChild(connectorId + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT, true);
         return fileStore != null && fileStore.getAutoAddDriver();
     }
 
     private void setDefaultDriver(String connectorId, String defaultDriver) {
         final String dbPrefFilename = getDBPrefFilename(connectorId);
-        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
+        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename, true);
         if (fileStore == null) {
             fileStore = store.createRepositoryFileStore(dbPrefFilename);
         }
@@ -409,7 +409,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 
     private void setAutoAddDriverProperty(String connectorId) {
         final String dbPrefFilename = getDBPrefFilename(connectorId);
-        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
+        DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename, true);
         if (fileStore != null) {
             fileStore.setAutoAddDriver(Boolean.valueOf(automaticallyAddDriver.getSelection()));
         } else {

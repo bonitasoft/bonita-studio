@@ -84,7 +84,7 @@ public class DeployOrganizationHandler {
 
     private Optional<Organization> findOrganizationToDeploy(RepositoryAccessor repositoryAccessor, String organization) {
         return Optional.ofNullable(organization)
-                .map(repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)::getChild)
+                .map(orga -> repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChild(orga, true))
                 .map(OrganizationFileStore::getContent);
     }
 

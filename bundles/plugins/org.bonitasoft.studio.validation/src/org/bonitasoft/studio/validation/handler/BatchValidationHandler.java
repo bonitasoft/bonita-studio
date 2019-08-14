@@ -148,7 +148,7 @@ public class BatchValidationHandler extends AbstractHandler {
         final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         for (final String fName : files) {
             final String fileName = fName.trim();
-            final DiagramFileStore fileStore = store.getChild(fileName);
+            final DiagramFileStore fileStore = store.getChild(fileName, true);
             if (fileStore == null) {
                 throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
             }

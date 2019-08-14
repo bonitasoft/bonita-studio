@@ -244,7 +244,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     private void setJars(String connectorId, List<String> jars) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
-                .getChild(getDBPrefFilename(connectorId));
+                .getChild(getDBPrefFilename(connectorId), true);
         if (fileStore == null) {
             fileStore = (DatabaseConnectorPropertiesFileStore) store
                     .createRepositoryFileStore(getDBPrefFilename(connectorId));
@@ -254,7 +254,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     public String getDefaultDriver(String connectorId) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
-                .getChild(getDBPrefFilename(connectorId));
+                .getChild(getDBPrefFilename(connectorId), true);
         if (fileStore != null) {
             return fileStore.getDefault();
         }
@@ -263,7 +263,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     private boolean getAutoAddDriverProperty(String connectorId) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
-                .getChild(getDBPrefFilename(connectorId));
+                .getChild(getDBPrefFilename(connectorId), true);
         if (fileStore != null) {
             return fileStore.getAutoAddDriver();
         }
@@ -273,7 +273,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     private void setDefaultDriver(String connectorId, String defaultDriver) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
-                .getChild(getDBPrefFilename(connectorId));
+                .getChild(getDBPrefFilename(connectorId), true);
         if (fileStore == null) {
             fileStore = (DatabaseConnectorPropertiesFileStore) store
                     .createRepositoryFileStore(getDBPrefFilename(connectorId));
@@ -283,7 +283,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 
     private void setAutoAddDriverProperty(String connectorId) {
         DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store
-                .getChild(getDBPrefFilename(connectorId));
+                .getChild(getDBPrefFilename(connectorId), true);
         if (fileStore != null) {
             fileStore.setAutoAddDriver(new Boolean(automaticallyAddDriver.getSelection()));
         } else {

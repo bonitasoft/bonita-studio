@@ -125,7 +125,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
         final DependencyRepositoryStore dependencyRepositoryStore = fileStore.getRepository()
                 .getRepositoryStore(DependencyRepositoryStore.class);
         final DependencyFileStore bdmFileStore = dependencyRepositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (bdmFileStore != null) {
             bdmFileStore.delete();
         }
@@ -158,7 +158,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
         try (ByteArrayInputStream is = new ByteArrayInputStream(jarContent)) {
             final DependencyRepositoryStore store = fileStore.getRepository()
                     .getRepositoryStore(DependencyRepositoryStore.class);
-            final DependencyFileStore depFileStore = store.getChild(fileStore.getDependencyName());
+            final DependencyFileStore depFileStore = store.getChild(fileStore.getDependencyName(), true);
             if (depFileStore != null) {
                 depFileStore.delete();
             }

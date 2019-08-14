@@ -24,8 +24,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -43,6 +45,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
@@ -52,7 +55,7 @@ import org.json.JSONException;
 import com.google.common.io.ByteSource;
 
 public class WebPageFileStore extends InFolderJSONFileStore
-        implements IDeployable, WebResource, Comparable<WebPageFileStore> {
+        implements IDeployable, IBuildable, WebResource, Comparable<WebPageFileStore> {
 
     private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
 

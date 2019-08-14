@@ -149,7 +149,7 @@ public class TestDocumentRefactoring {
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
-        final DiagramFileStore diagramFileStore = store.getChild(diagramName + ".proc");
+        final DiagramFileStore diagramFileStore = store.getChild(diagramName + ".proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();
         assertEquals(mainProcessName, mainProcess.getName());

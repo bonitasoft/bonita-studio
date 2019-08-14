@@ -55,12 +55,12 @@ public class ImportLibsRunnableIT {
         final ImportLibsOperation importLibsRunnable = new ImportLibsOperation(libStore, jarAndZips, "");
         importLibsRunnable.run(new NullProgressMonitor());
 
-        assertThat(libStore.getChild("test.jar")).isNotNull();
-        assertThat(libStore.getChild("test2.jar")).isNotNull();
-        assertThat(libStore.getChild("test-2.jar")).isNotNull();
-        assertThat(libStore.getChild("test2-2.jar")).isNotNull();
-        assertThat(libStore.getChild(tmpJarFileWhichWillBeCopied1.getName())).isNotNull();
-        assertThat(libStore.getChild(tmpJarFileWhichWillBeCopied2.getName())).isNotNull();
+        assertThat(libStore.getChild("test.jar", true)).isNotNull();
+        assertThat(libStore.getChild("test2.jar", true)).isNotNull();
+        assertThat(libStore.getChild("test-2.jar", true)).isNotNull();
+        assertThat(libStore.getChild("test2-2.jar", true)).isNotNull();
+        assertThat(libStore.getChild(tmpJarFileWhichWillBeCopied1.getName(), true)).isNotNull();
+        assertThat(libStore.getChild(tmpJarFileWhichWillBeCopied2.getName(), true)).isNotNull();
     }
 
 }

@@ -89,13 +89,13 @@ public class TestSubprocess {
         op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
-        final MainProcess diagram = store.getChild("ActivityToAdmin-1.0.proc").getContent();
+        final MainProcess diagram = store.getChild("ActivityToAdmin-1.0.proc", true).getContent();
         assertEquals("ActivityToAdmin", diagram.getName());
 
         final URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeActivityToAdmin-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.run(new NullProgressMonitor());
-        final MainProcess mainProcess = store.getChild("InvokeActivityToAdmin-1.0.proc").getContent();
+        final MainProcess mainProcess = store.getChild("InvokeActivityToAdmin-1.0.proc", true).getContent();
         assertEquals("InvokeActivityToAdmin", mainProcess.getName());
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
         final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions)
@@ -148,7 +148,7 @@ public class TestSubprocess {
         op.setArchiveFile(FileLocator.toFileURL(fileURL3).getFile());
         op.run(new NullProgressMonitor());
 
-        final MainProcess mainProcess2 = store.getChild("DynamicSubprocess-1.0.proc").getContent();
+        final MainProcess mainProcess2 = store.getChild("DynamicSubprocess-1.0.proc", true).getContent();
         assertEquals("DynamicSubprocess", mainProcess2.getName());
 
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess2.getElements().get(0)));
@@ -180,7 +180,7 @@ public class TestSubprocess {
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
-        final MainProcess mainProcess = store.getChild("InvokeCalculator-1.0.proc").getContent();
+        final MainProcess mainProcess = store.getChild("InvokeCalculator-1.0.proc", true).getContent();
         assertEquals("InvokeCalculator", mainProcess.getName());
 
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
@@ -230,7 +230,7 @@ public class TestSubprocess {
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
-        final MainProcess mainProcess = store.getChild("ParentSubProcEvent-1.0.proc").getContent();
+        final MainProcess mainProcess = store.getChild("ParentSubProcEvent-1.0.proc", true).getContent();
         RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();

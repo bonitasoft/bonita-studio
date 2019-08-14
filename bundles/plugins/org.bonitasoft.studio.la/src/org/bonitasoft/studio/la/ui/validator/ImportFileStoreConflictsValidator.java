@@ -30,7 +30,7 @@ public class ImportFileStoreConflictsValidator extends TypedValidator<String, IS
     protected IStatus doValidate(Optional<String> value) {
         if (value.isPresent()) {
             final File file = new File(value.get());
-            return repositoryStore.getChild(file.getName()) != null
+            return repositoryStore.getChild(file.getName(), true) != null
                     ? ValidationStatus.warning(Messages.importConflictWarning)
                     : ValidationStatus.ok();
         }

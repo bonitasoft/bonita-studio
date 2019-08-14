@@ -142,7 +142,7 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                     BonitaStudioLog.error(e);
                 }
 
-                final IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName());
+                final IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName(), true);
                 try {
                     final ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent();
                     if (impl.isHasSources()) {
@@ -175,7 +175,7 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                     if (connectorDefinition == null) {
                         fileStore = defStore.importInputStream(defFile.getName(), fis);
                     } else {
-                        final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName());
+                        final IRepositoryFileStore existingDef = defStore.getChild(defFile.getName(), true);
                         if (existingDef == null || !existingDef.isReadOnly()
                                 || !defintionHasIdAndVersion(existingDef, connectorDefinition.getId(),
                                         connectorDefinition.getVersion())) {

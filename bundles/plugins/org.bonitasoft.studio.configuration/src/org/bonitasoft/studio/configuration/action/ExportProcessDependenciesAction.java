@@ -76,7 +76,7 @@ public class ExportProcessDependenciesAction extends Action implements IConfigur
                 List<Fragment> fragments = ModelHelper.getAllItemsOfType(container, ConfigurationPackage.Literals.FRAGMENT) ;
                 for(Fragment f : fragments){
                     if(f.isExported() && f.getType().equals(FragmentTypes.JAR)){
-                        IRepositoryFileStore fileStore = depStore.getChild(f.getValue()) ;
+                        IRepositoryFileStore fileStore = depStore.getChild(f.getValue(), true) ;
                         if(fileStore != null){
                             try {
 								fileStore.export(destDir.getAbsolutePath()) ;

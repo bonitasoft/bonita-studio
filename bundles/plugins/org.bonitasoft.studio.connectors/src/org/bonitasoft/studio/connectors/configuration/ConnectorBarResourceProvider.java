@@ -142,7 +142,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                     if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
                         addImplementationJar(builder, implementation);
                     }
-                    final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue());
+                    final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue(), true);
                     if (jarFile != null) {
                         resources.add(new BarResource(jarFile.getName(), jarFile.toByteArray()));
                     }
@@ -152,7 +152,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
-        final IRepositoryFileStore jarFileStore = libStore.getChild(jarName);
+        final IRepositoryFileStore jarFileStore = libStore.getChild(jarName, true);
         if (jarFileStore != null) {
             resources.add(new BarResource(jarFileStore.getName(), jarFileStore.toByteArray()));
         }
@@ -167,7 +167,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         if (qualifiedClassName.indexOf(".") != -1) {
             packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf("."));
         }
-        final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName);
+        final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName, true);
         if (file == null) {
             return false;
         }

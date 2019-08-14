@@ -119,7 +119,7 @@ public class DuplicateCommandTest {
         for (final Pool p : pools) {
             final String id = ModelHelper.getEObjectID(p);
             final ProcessConfigurationFileStore file = store
-                    .getChild(id + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                    .getChild(id + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
             assertNotNull(
                     "Process configuration is missing after duplicate for " + p.getName() + " (" + p.getVersion() + ")",
                     file);

@@ -206,6 +206,9 @@ public class DiagramRepositoryStore extends
     }
 
     public List<DiagramFileStore> getRecentChildren(final int nbResult) {
+        if(!getResource().exists()) {
+            return Collections.emptyList();
+        }
         refresh();
 
         final List<DiagramFileStore> result = new ArrayList<>();
@@ -470,7 +473,7 @@ public class DiagramRepositoryStore extends
             ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
             for (Pool process : ModelHelper.getAllElementOfTypeIn(diagram, Pool.class)) {
-                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf");
+                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf", true);
                 if (file != null) {
                     synchronizer.synchronize(process,file.getContent());
                 }

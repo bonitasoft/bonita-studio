@@ -67,9 +67,9 @@ public class ImportBusinessDataModelHandler extends AbstractHandler {
         final File file = new File(importBdmPage.getFilePath());
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        if (repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME) != null) {
+        if (repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) != null) {
             if (FileActionDialog.overwriteQuestion(file.getName())) {
-                repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).delete();
+                repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).delete();
             } else {
                 return Optional.empty();
             }

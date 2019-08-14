@@ -47,7 +47,7 @@ public class InternalDocumentConstraint extends AbstractLiveValidationMarkerCons
                 if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
                     final String id = document.getDefaultValueIdOfDocumentStore();
                     if (id != null && !id.isEmpty()) {
-                        if (store.getChild(id) == null) {
+                        if (store.getChild(id, true) == null) {
                             return ctx.createFailureStatus(Messages.bind(Messages.missingDocumentFile, document.getName(),
                                     document.getDefaultValueIdOfDocumentStore()));
                         }

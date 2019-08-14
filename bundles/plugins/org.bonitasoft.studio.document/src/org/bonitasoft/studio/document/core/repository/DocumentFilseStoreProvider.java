@@ -45,7 +45,7 @@ public class DocumentFilseStoreProvider implements IBOSArchiveFileStoreProvider 
             for(final Document doc :  ((Pool) process).getDocuments()){
                 if (doc.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL) && doc.getDefaultValueIdOfDocumentStore() != null
                         && !doc.getDefaultValueIdOfDocumentStore().isEmpty()) {
-                    final DocumentFileStore fileStore = store.getChild(doc.getDefaultValueIdOfDocumentStore());
+                    final DocumentFileStore fileStore = store.getChild(doc.getDefaultValueIdOfDocumentStore(), true);
                     if(fileStore != null){
                         result.add(fileStore);
                     }

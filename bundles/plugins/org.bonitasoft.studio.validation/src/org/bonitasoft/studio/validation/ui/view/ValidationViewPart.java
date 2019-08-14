@@ -202,7 +202,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
                                             DiagramRepositoryStore.class);
                             final DiagramFileStore file = store.getChild(marker
                                     .getResource().getLocation().toFile()
-                                    .getName());
+                                    .getName(), true);
                             if (file != null) {
                                 final EObject view = file.getEMFResource()
                                         .getEObject(elementId);

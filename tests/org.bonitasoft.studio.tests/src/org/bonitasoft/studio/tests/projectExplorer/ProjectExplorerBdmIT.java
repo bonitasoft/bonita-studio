@@ -65,14 +65,14 @@ public class ProjectExplorerBdmIT {
     private void validateBdmIsDeleted() {
         ICondition bdmDeletedCondition = new ConditionBuilder()
                 .withTest(() -> repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                        .getChild("bom.xml") == null)
+                        .getChild("bom.xml", true) == null)
                 .withFailureMessage(() -> "Business data model has not been deleted.")
                 .create();
         bot.waitUntil(bdmDeletedCondition);
     }
 
     private void createBdmIfRequired() {
-        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml") == null) {
+        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml", true) == null) {
             new ProjectExplorerBot(bot).newBdm().addBusinessObject("ProjectExplorerBo1")
                     .addAttribute("ProjectExplorerBo1", "name", FieldType.STRING.toString()).deploy();
             assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)

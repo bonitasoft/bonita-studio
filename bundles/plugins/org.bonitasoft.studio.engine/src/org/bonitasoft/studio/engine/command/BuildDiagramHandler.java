@@ -67,7 +67,7 @@ public class BuildDiagramHandler {
     }
 
     private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName) {
-        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChild(fileName).getProcesses();
+        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChild(fileName, true).getProcesses();
     }
 
     protected ExportBarOperation getExportOperation() {

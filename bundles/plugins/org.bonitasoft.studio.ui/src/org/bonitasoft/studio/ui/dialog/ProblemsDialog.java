@@ -85,7 +85,9 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
     @Override
     public void create() {
         super.create();
-        tableViewerColumn.getColumn().pack();
+        if(tableViewerColumn != null) {
+            tableViewerColumn.getColumn().pack();
+        }
     }
 
     protected abstract TypedLabelProvider<T> getTypedLabelProvider();

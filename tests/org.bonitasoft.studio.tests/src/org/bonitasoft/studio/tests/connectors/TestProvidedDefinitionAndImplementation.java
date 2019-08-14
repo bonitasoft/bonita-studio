@@ -57,7 +57,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
         final StringBuilder testReport = new StringBuilder("testProvidedDefinitionsSanity report:");
         for (final ConnectorDefinition definition : connectorDefStore.getDefinitions()) {
             final String resourceName = definition.eResource().getURI().lastSegment();
-            if (connectorDefStore.getChild(resourceName).isReadOnly()) {
+            if (connectorDefStore.getChild(resourceName, true).isReadOnly()) {
                 if (!(definition.getId() != null && !definition.getId().isEmpty())) {
                     testReport.append("\n");
                     testReport.append("Missing definition id for " + resourceName);
@@ -194,7 +194,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
         final List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
         for (final ConnectorImplementation implementation : connectorImplStore.getImplementations()) {
             final String resourceName = implementation.eResource().getURI().lastSegment();
-            if (connectorImplStore.getChild(resourceName).isReadOnly()) {
+            if (connectorImplStore.getChild(resourceName, true).isReadOnly()) {
                 if (implementation.getImplementationId() == null || implementation.getImplementationId().isEmpty()) {
                     testReport.append("\n");
                     testReport.append("Missing implementation id for " + resourceName);

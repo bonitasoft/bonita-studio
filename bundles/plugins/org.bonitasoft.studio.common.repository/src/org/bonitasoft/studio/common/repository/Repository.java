@@ -425,8 +425,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                 if (monitor == null) {
                     monitor = NULL_PROGRESS_MONITOR;
                 }
-                if (!getProject().isSynchronized(IResource.DEPTH_INFINITE)) {
-                    getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                if (!getProject().isSynchronized(IResource.DEPTH_ONE)) {
+                    getProject().refreshLocal(IResource.DEPTH_ONE, monitor);
                 }
                 new ProjectClasspathFactory().refresh(this, monitor);
                 project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
@@ -595,7 +595,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
             IFolder container = store.getResource();
             if (Objects.equals(resource.getParent(), container)
                     || Objects.equals(resource.getParent(), resource.getWorkspace().getRoot())) {
-                IRepositoryFileStore fStore = store.getChild(resource.getName());
+                IRepositoryFileStore fStore = store.getChild(resource.getName(), false);
                 if (fStore != null) {
                     return fStore;
                 }
@@ -673,7 +673,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         }
         if (!iResource.exists()) {
             if (force) {
-                iResource.getParent().refreshLocal(IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+                iResource.getParent().refreshLocal(IResource.DEPTH_ONE, NULL_PROGRESS_MONITOR);
                 if (!iResource.exists()) {
                     throw new FileNotFoundException(path.toFile().getAbsolutePath());
                 }

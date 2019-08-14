@@ -121,7 +121,7 @@ public class SaveCommandHandler extends SaveHandler {
             final IEditorInput editorInput = editorPart.getEditorInput();
             final ResourceSet resourceSet = proc.eResource().getResourceSet();
             maintainListOfEditorsWithSameResourceSet(editorsWithSameResourceSet, editorReferences, editorInput, resourceSet);
-            oldArtifact = diagramStore.getChild(NamingUtils.toDiagramFilename(getOldProcess(proc)));
+            oldArtifact = diagramStore.getChild(NamingUtils.toDiagramFilename(getOldProcess(proc)), true);
             changed = true;
         }
 
@@ -142,7 +142,7 @@ public class SaveCommandHandler extends SaveHandler {
                 final Resource res = root.eResource();
                 if (res != null) {
                     final String procFile = URI.decode(res.getURI().lastSegment());
-                    final DiagramFileStore fileStore = diagramStore.getChild(procFile);
+                    final DiagramFileStore fileStore = diagramStore.getChild(procFile, true);
                     if (fileStore != null) {
                         fileStore.save(editorPart);
                     }

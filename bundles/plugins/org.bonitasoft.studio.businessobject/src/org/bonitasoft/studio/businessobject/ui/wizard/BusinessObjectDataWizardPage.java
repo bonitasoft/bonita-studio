@@ -350,7 +350,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     protected List<BusinessObject> getAllBusinessObjects() {
-        return Optional.ofNullable(businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME))
+        return Optional.ofNullable(businessObjectModelStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true))
                 .map(BusinessObjectModelFileStore::getBusinessObjects)
                 .orElse(new ArrayList<>());
     }

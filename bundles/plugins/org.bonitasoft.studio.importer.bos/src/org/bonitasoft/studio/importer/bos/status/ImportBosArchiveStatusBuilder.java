@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.importer.bos.status;
 
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
 /**

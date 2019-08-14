@@ -58,7 +58,7 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
         final String fileName = id + ".conf";
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
         Configuration localeConfiguration = null;
         Configuration localConfigurationCopy = null;
         if (file != null) {

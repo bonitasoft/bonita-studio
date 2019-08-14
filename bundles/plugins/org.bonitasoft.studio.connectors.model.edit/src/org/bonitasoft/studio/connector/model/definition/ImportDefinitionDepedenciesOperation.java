@@ -41,10 +41,10 @@ public class ImportDefinitionDepedenciesOperation implements IRunnableWithProgre
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         if (definition.getJarDependency().stream()
-                .noneMatch(dep -> depStore.getChild(dep) != null)) {
+                .noneMatch(dep -> depStore.getChild(dep, true) != null)) {
             boolean shouldBuild = false;
             for (final String jarName : definition.getJarDependency()) {
-                if (depStore.getChild(jarName) == null) {
+                if (depStore.getChild(jarName, true) == null) {
                     final InputStream is = definitionResourceProvider.getDependencyInputStream(jarName);
                     if (is != null) {
                         depStore.importInputStream(jarName, is);

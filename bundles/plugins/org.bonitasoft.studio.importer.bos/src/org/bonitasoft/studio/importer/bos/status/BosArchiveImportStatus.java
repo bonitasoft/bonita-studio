@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 

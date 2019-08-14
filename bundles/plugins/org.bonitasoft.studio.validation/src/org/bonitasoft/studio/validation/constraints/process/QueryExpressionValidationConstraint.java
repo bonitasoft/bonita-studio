@@ -132,7 +132,7 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
 
     protected BusinessObject getBusinessObject(final String simpleBOName) {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectDefinitionStore();
-        BusinessObjectModelFileStore fStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        BusinessObjectModelFileStore fStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
             if (simpleBOName.equals(NamingUtils.getSimpleName(bo.getQualifiedName()))) {

@@ -51,7 +51,7 @@ public class DeployBDROperationIT {
         if (apiSession != null) {
             managerEx.logoutDefaultTenant(apiSession);
         }
-        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip");
+        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip", true);
         if (fileStore != null) {
             fileStore.delete();
         }
@@ -64,7 +64,7 @@ public class DeployBDROperationIT {
         PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), Repository.NULL_PROGRESS_MONITOR);
         depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         bomRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip");
+        final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip", true);
         if (fileStore != null) {
             fileStore.delete();
         }
@@ -79,7 +79,7 @@ public class DeployBDROperationIT {
         new GenerateBDMOperation(businessObjectDefinitionFileStore).run(null);
 
         final String dependencyName = businessObjectDefinitionFileStore.getDependencyName();
-        final DependencyFileStore fileStore = depStore.getChild(dependencyName);
+        final DependencyFileStore fileStore = depStore.getChild(dependencyName, true);
         assertThat(fileStore).isNotNull();
         assertThat(fileStore.getResource().exists()).isTrue();
 

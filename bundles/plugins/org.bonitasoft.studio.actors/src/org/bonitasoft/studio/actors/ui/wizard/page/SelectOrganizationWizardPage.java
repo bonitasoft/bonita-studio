@@ -86,7 +86,7 @@ public abstract class SelectOrganizationWizardPage extends WizardPage implements
         organizationCombo.setInput(organizationStore.getChildren());
 
         IRepositoryFileStore defaultOrganization = organizationStore
-                .getChild(activeOrganizationProvider.getActiveOrganization() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                .getChild(activeOrganizationProvider.getActiveOrganization() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
         if (defaultOrganization == null) {
             final List<OrganizationFileStore> orga = organizationStore.getChildren();
             if (!orga.isEmpty()) {

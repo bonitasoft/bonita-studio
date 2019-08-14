@@ -62,6 +62,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     protected final Organization organization;
     private APISession session;
     private boolean flushSession;
+    private boolean shouldApplyAllProfileToUser = true;
 
     public PublishOrganizationOperation(final Organization organization) {
         this.organization = organization;
@@ -70,11 +71,12 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     public void setSession(final APISession session) {
         this.session = session;
     }
+    
+    public PublishOrganizationOperation doNotAllProfileToUsers() {
+        shouldApplyAllProfileToUser = false;
+        return this;
+    }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
@@ -111,7 +113,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     }
 
     protected boolean shouldApplyAllProfileToUsers() {
-        return true;
+        return shouldApplyAllProfileToUser;
     }
 
     protected abstract void importOrganization(IdentityAPI identityAPI)

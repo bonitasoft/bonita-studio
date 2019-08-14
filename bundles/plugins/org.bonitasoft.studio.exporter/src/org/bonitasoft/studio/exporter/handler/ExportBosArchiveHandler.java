@@ -112,7 +112,7 @@ public class ExportBosArchiveHandler {
 
     private MainProcess getDiagram(RepositoryAccessor repositoryAccessor, String diagramToExport) {
         DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(diagramToExport);
+                .getChild(diagramToExport, true);
         if (fileStore != null) {
             return fileStore.getContent();
         }
@@ -197,7 +197,7 @@ public class ExportBosArchiveHandler {
         }
         if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
             final String id = ModelHelper.getEObjectID(process);
-            IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
+            IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {
                 file = processConfStore.createRepositoryFileStore(id + ".conf");
                 final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();

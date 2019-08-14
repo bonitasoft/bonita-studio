@@ -116,7 +116,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         }
 
         final MainProcess mainProcess = ModelHelper.getMainProcess(diagram.resolveSemanticElement());
-        DiagramFileStore diagramFile = (DiagramFileStore) diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess));
+        DiagramFileStore diagramFile = (DiagramFileStore) diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess), true);
         Assert.isNotNull(diagramFile, "Diagram not found in repository");
 
         final String archiveName = mainProcess.getName() + "_" + mainProcess.getVersion();
@@ -134,7 +134,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
                 try {
                     String processUUID = ModelHelper.getEObjectID(process);
                     IRepositoryFileStore file = processConfStore
-                            .getChild(processUUID + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                            .getChild(processUUID + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
                     file.export(tmpDir.getAbsolutePath());
 
                     final File targetBarFile = new File(tmpDir, process.getName() + "--" + process.getVersion() + ".bar");

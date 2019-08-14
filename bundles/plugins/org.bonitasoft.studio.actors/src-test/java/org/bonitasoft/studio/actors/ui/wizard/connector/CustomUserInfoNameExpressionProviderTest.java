@@ -41,7 +41,7 @@ public class CustomUserInfoNameExpressionProviderTest {
     @Before
     public void setUp() throws Exception {
         provider = new CustomUserInfoNameExpressionProvider(repoStore, ACME);
-        when(repoStore.getChild(ACME)).thenReturn(fileStore);
+        when(repoStore.getChild(ACME, true)).thenReturn(fileStore);
         when(fileStore.getContent()).thenReturn(organization);
         given(organization.getCustomUserInfoDefinitions()).willReturn(definitionsContainer);
     }

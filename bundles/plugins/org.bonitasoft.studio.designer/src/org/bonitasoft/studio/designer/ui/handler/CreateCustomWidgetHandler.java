@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateCustomWidgetOperation;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.commands.AbstractHandler;
@@ -46,7 +47,7 @@ public class CreateCustomWidgetHandler extends AbstractHandler {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, operation);
-            repositoryAccessor.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+            repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getResource().refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
             AbstractFileStore.refreshExplorerView();
         } catch (InvocationTargetException | InterruptedException e) {
             new ExceptionDialogHandler().openErrorDialog(shell, Messages.createWidgetFailed, e);

@@ -113,7 +113,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         editMode = true;
         originalDefinition = definition;
         this.defStore = defStore;
-        fileStore = defStore.getChild(NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true));
+        fileStore = defStore.getChild(NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true), true);
         definitionWorkingCopy = EcoreUtil.copy(definition);
         this.messageProvider = messageProvider;
         messages = messageProvider.getDefaultMessageProperties(definition);
@@ -269,7 +269,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
             }
         }
 
-        IRepositoryFileStore oldDefFilseStore = defStore.getChild(oldFileName);
+        IRepositoryFileStore oldDefFilseStore = defStore.getChild(oldFileName, true);
         if (!oldFileName.equals(defFileName)) {
             if (oldDefFilseStore != null) {
                 oldDefFilseStore.delete();
@@ -277,7 +277,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         } else if (oldDefFilseStore == null) {
             final ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(), originalDefinition.getVersion());
             oldFileName = URI.decode(oldef.eResource().getURI().lastSegment());
-            oldDefFilseStore = defStore.getChild(oldFileName);
+            oldDefFilseStore = defStore.getChild(oldFileName, true);
             if (oldDefFilseStore != null) {
                 oldDefFilseStore.delete();
             }

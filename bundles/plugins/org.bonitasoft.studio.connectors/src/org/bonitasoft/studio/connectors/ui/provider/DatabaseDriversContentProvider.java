@@ -43,7 +43,7 @@ public class DatabaseDriversContentProvider extends ArrayContentProvider {
 		List<String> jars = new ArrayList<String>();
 		if (element instanceof String){
 			String currentConnector = (String)element;
-			DatabaseConnectorPropertiesFileStore properties=(DatabaseConnectorPropertiesFileStore)store.getChild(getDBPrefFilename(currentConnector));
+			DatabaseConnectorPropertiesFileStore properties=(DatabaseConnectorPropertiesFileStore)store.getChild(getDBPrefFilename(currentConnector), true);
 			if (properties!=null){
 				jars.addAll(properties.getJarList());
 			}

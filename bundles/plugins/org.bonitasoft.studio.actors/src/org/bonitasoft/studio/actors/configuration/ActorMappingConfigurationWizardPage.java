@@ -94,7 +94,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
         adapterFactory.addAdapterFactory(new ActorMappingAdapterFactory());
         deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization())))
+                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()), true))
                 .map(OrganizationFileStore::getContent);
     }
 

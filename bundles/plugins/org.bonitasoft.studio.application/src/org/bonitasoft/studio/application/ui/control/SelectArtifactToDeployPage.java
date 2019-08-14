@@ -79,9 +79,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-
-    // For test purpose
-    protected SelectArtifactToDeployPage() {
+    
+    SelectArtifactToDeployPage(){
+        
     }
 
     @Override

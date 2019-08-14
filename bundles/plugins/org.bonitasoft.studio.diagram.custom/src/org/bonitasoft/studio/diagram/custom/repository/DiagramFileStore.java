@@ -35,12 +35,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -101,7 +103,7 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable {
+public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
 
     public static final String PROC_EXT = "proc";
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
@@ -333,7 +335,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         for (final AbstractProcess process : getProcesses()) {
             final String uuid = toUUID().apply(process);
             result.add(processConfigurationRepositoryStore
-                    .getChild(String.format("%s.%s", uuid, ProcessConfigurationRepositoryStore.CONF_EXT)));
+                    .getChild(String.format("%s.%s", uuid, ProcessConfigurationRepositoryStore.CONF_EXT), true));
         }
         return newHashSet(filter(result, Predicates.notNull()));
     }

@@ -49,8 +49,8 @@ public class DriverAssociationContributionIT {
     public void testAssociationCreated() {
         final DatabaseConnectorPropertiesRepositoryStore repo = RepositoryManager.getInstance().getRepositoryStore(
                 DatabaseConnectorPropertiesRepositoryStore.class);
-        assertThat(repo.getChild(DriverConstants.POSTGRES_DEFINITION_ID + ".properties")).isNotNull();
-        assertThat(repo.getChild(DriverConstants.ORACLE_11G_DEFINITION_ID + ".properties")).isNotNull();
+        assertThat(repo.getChild(DriverConstants.POSTGRES_DEFINITION_ID + ".properties", true)).isNotNull();
+        assertThat(repo.getChild(DriverConstants.ORACLE_11G_DEFINITION_ID + ".properties", true)).isNotNull();
     }
 
 }

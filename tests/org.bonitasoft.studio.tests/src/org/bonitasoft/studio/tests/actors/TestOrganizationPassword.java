@@ -65,7 +65,7 @@ public class TestOrganizationPassword {
         final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final OrganizationFileStore orgaFileStore = organizationStore.getChild("OrganizationWithEncryptedPassword."
-                + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
         final PasswordType password = orgaFileStore.getContent().getUsers().getUser().get(0).getPassword();
         Assert.assertEquals("The passsword value should have been updated.", "updatedPassord", password.getValue());
         Assert.assertFalse("The password has been updated and the value of the attribute encrypted should be set to false",

@@ -71,7 +71,7 @@ public class CreateDeployExportBusinessObjectIT {
 
         bdmStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore businessObjectModelFileStore = bdmStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (businessObjectModelFileStore != null) {
             businessObjectModelFileStore.delete();
         }
@@ -141,7 +141,7 @@ public class CreateDeployExportBusinessObjectIT {
     }
 
     protected void validateBDMContent() {
-        final BusinessObjectModelFileStore fStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        final BusinessObjectModelFileStore fStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         assertThat(fStore).isNotNull();
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         assertThat(businessObjectModel).isNotNull();

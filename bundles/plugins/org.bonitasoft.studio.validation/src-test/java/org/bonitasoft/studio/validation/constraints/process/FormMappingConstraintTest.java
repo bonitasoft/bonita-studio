@@ -83,7 +83,7 @@ public class FormMappingConstraintTest {
     public void should_return_a_valid_status_if_form_exists_in_repository() throws Exception {
         //Given
         doReturn(aFormMapping().havingTargetForm(anExpression().withContent("an_id_that_exists")).build()).when(ctx).getTarget();
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("an_id_that_exists");
+        doReturn(fileStore).when(webPageRepositoryStore).getChild("an_id_that_exists", true);
 
         //When
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);
@@ -124,8 +124,8 @@ public class FormMappingConstraintTest {
                                 aFormMapping().withType(FormMappingType.INTERNAL)
                                         .havingTargetForm(anExpression().withName("newForm").withContent("id2"))))
                 .build();
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("id1");
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("id2");
+        doReturn(fileStore).when(webPageRepositoryStore).getChild("id1", true);
+        doReturn(fileStore).when(webPageRepositoryStore).getChild("id2", true);
         doReturn(pool.getFormMapping()).when(ctx).getTarget();
 
         //When
@@ -144,7 +144,7 @@ public class FormMappingConstraintTest {
                         aTask().withName("Task1").havingFormMapping(
                                 aFormMapping().withType(FormMappingType.INTERNAL).havingTargetForm(anExpression().withName("newForm").withContent("id1"))))
                 .build();
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("id1");
+        doReturn(fileStore).when(webPageRepositoryStore).getChild("id1", true);
         doReturn(pool.getFormMapping()).when(ctx).getTarget();
 
         //When

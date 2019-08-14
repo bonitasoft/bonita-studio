@@ -89,7 +89,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
         }
 
         final String newPageId = operation.getNewArtifactId();
-        WebPageFileStore pagStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId);
+        WebPageFileStore pagStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newPageId, true);
         pagStore.open();
         return pagStore.getUUID();
     }

@@ -86,7 +86,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
         doReturn(formRepository).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         formFileStore = mock(WebPageFileStore.class);
         when(formFileStore.getUUID()).thenReturn("page-id");
-        doReturn(formFileStore).when(formRepository).getChild("page-id");
+        doReturn(formFileStore).when(formRepository).getChild("page-id", true);
 
         createNewFormProposal = spy(
                 new CreateNewFormProposalListener(pageDesignerURLFactory, progressService, repositoryAccessor,

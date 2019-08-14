@@ -53,7 +53,7 @@ public class JarBarResourceProvider implements BARResourcesProvider {
             for (final Fragment fragment : fragments) {
                 if (fragment.getType().equals(FragmentTypes.JAR)) {
                     if (fragment.isExported()) {
-                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue());
+                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue(), true);
                         if (jarArtifact != null) {
                             final File file = jarArtifact.getResource().getLocation().toFile();
                             try {

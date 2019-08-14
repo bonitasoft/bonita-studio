@@ -68,7 +68,7 @@ public class ExportBosArchiveIT {
 
         assertThat(pageName).isNotEmpty();
         assertThat(pageId).isNotEmpty();
-        assertThat(repositoryStore.getChild(pageId)).isNotNull();
+        assertThat(repositoryStore.getChild(pageId, true)).isNotNull();
 
         final File bosFile = temporaryFolder.newFile("exportWithoutMetadat.bos");
         new BotApplicationWorkbenchWindow(bot).export().selectAll().setDestinationPath(bosFile.getAbsolutePath()).finish();

@@ -89,7 +89,7 @@ public class TestParametersRefactoring {
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
-        final DiagramFileStore diagramFileStore = store.getChild("testParametersRefactoring-1.0.proc");
+        final DiagramFileStore diagramFileStore = store.getChild("testParametersRefactoring-1.0.proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();
         assertEquals(mainProcessName, mainProcess.getName());
@@ -178,7 +178,7 @@ public class TestParametersRefactoring {
         final String fileName = id + ".conf";
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
                 ProcessConfigurationRepositoryStore.class);
-        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
         final Configuration localeConfiguration = file.getContent();
         assertNotNull("local configuration does not exist", localeConfiguration);
         return localeConfiguration;

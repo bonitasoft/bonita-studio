@@ -53,7 +53,7 @@ public class TestImportOrganization {
         }
         final String orgaNameWithBosExtansion = organizationName.substring(0, organizationName.indexOf(".")) + "."
                 + OrganizationRepositoryStore.ORGANIZATION_EXT;
-        final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+        final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion, true).getContent();
         assertNotNull(orgaNameWithBosExtansion + " was not imported", organizationTest);
         assertTrue("not all groups have been imported", organizationTest.getGroups().getGroup().size() == 6);
         assertTrue("not all roles have been imported", organizationTest.getRoles().getRole().size() == 3);
@@ -90,7 +90,7 @@ public class TestImportOrganization {
             organizationStore.importInputStream(id, fis);
             final String orgaNameWithBosExtansion = organizationName.substring(0, organizationName.indexOf(".")) + "."
                     + OrganizationRepositoryStore.ORGANIZATION_EXT;
-            final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+            final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion, true).getContent();
             assertNotNull(orgaNameWithBosExtansion + " was not imported", organizationTest);
         }
     }

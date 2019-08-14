@@ -146,7 +146,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         final List<Pool> pools = ModelHelper.getAllItemsOfType(sourceDiagram, ProcessPackage.Literals.POOL);
         for (final Pool p : pools) {
             final ProcessConfigurationFileStore file = confStore
-                    .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                    .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
             if (file != null) {
                 final Copier copier = new Copier(true, false);
                 final Collection<EObject> copiedElements = copier.copyAll(file.getContent().eResource().getContents());

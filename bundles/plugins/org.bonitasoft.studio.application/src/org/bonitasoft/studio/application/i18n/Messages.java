@@ -112,6 +112,9 @@ public class Messages extends NLS {
     public static String expandAll;
     public static String collapseAll;
     public static String buildErrorTitle;
+    public static String build;
+    public static String deployStatus;
+    public static String deployStatusMessage;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

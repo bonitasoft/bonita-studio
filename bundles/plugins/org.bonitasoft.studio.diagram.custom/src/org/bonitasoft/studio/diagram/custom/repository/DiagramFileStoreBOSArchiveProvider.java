@@ -44,7 +44,7 @@ public class DiagramFileStoreBOSArchiveProvider implements IBOSArchiveFileStoreP
         final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
         final DiagramRepositoryStore diagramSotre = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final String diagramFileName = URI.decode(process.eResource().getURI().lastSegment());
-        final IRepositoryFileStore diagram = diagramSotre.getChild(diagramFileName);
+        final IRepositoryFileStore diagram = diagramSotre.getChild(diagramFileName, true);
         if (diagram != null) {
             files.add(diagram);
         }

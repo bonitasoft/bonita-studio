@@ -515,31 +515,6 @@
             </visibleWhen>
          </command>
          <command
-               commandId="org.bonitasoft.studio.application.command.deployProject"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <or>
-                        <iterate>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IProject">
-                           </instanceof>
-                           <test
-                                 property="org.bonitasoft.studio.application.isBonitaProject">
-                           </test>
-                        </iterate>
-                     </or>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
                commandId="org.bonitasoft.studio.application.command.deployArtifacts"
                style="push">
             <visibleWhen

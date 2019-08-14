@@ -79,7 +79,7 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
             final String fileName = id + ".conf";
             final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-            final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+            final ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
             Configuration localeConfiguration = null;
             Configuration localeConfigurationWorkingCopy = null;
             if (file != null) {

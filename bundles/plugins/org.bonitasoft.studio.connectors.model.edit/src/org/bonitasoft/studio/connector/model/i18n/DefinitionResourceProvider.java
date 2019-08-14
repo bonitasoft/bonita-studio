@@ -159,7 +159,7 @@ public class DefinitionResourceProvider {
         if (resourceBundle != null) {
             return resourceBundle;
         }
-        final IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()));
+        final IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()), true);
         if (fileStore == null) {
             return null;
         }

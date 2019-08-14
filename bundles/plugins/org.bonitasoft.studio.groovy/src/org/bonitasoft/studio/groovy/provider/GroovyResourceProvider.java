@@ -53,7 +53,7 @@ public class GroovyResourceProvider implements IBOSArchiveFileStoreProvider {
 
     protected void addScriptFile(final Set<IRepositoryFileStore> files, final GroovyRepositoryStore groovySotre, FragmentContainer groovyContainer) {
         for(Fragment script : groovyContainer.getFragments()){
-            GroovyFileStore file = groovySotre.getChild(script.getValue()) ;
+            GroovyFileStore file = groovySotre.getChild(script.getValue(), true) ;
             if(script.isExported() && file != null && file.canBeShared()){
                 files.add(file) ;
             }
