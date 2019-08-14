@@ -196,7 +196,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance().getRepositoryStore(
                 DatabaseConnectorPropertiesRepositoryStore.class);
         final DatabaseConnectorPropertiesFileStore file = dbStore
-                .getChild(implem.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
+                .getChild(implem.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT, true);
         String driver = null;
         boolean addDriver = false;
         if (file != null) {
@@ -369,7 +369,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                     RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle());
             for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
                 dependencies.add(jarName);
-                if (depStore.getChild(jarName) == null) {
+                if (depStore.getChild(jarName, true) == null) {
                     final InputStream is = resourceProvider.getDependencyInputStream(jarName);
                     if (is != null) {
                         depStore.importInputStream(jarName, is);

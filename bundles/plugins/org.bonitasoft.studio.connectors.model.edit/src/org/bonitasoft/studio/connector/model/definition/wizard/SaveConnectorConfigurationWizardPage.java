@@ -75,7 +75,7 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
                     return ValidationStatus.error(Messages.nameIsEmpty);
                 }
 
-                if(configurationStore.getChild(newText+"."+configurationStore.getCompatibleExtensions().iterator().next()) != null){
+                if(configurationStore.getChild(newText+"."+configurationStore.getCompatibleExtensions().iterator().next(), true) != null){
                     return ValidationStatus.error(Messages.nameAlreadyExists) ;
                 }
                 return Status.OK_STATUS;

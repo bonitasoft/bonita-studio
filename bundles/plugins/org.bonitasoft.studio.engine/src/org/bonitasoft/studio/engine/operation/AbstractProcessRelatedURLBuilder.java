@@ -89,7 +89,7 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
                 ProcessConfigurationRepositoryStore.class);
         final String id = ModelHelper.getEObjectID(process);
         final IRepositoryFileStore file = processConfStore.getChild(id
-                + ".conf");
+                + ".conf", true);
         if (file == null) {
             return null;
         }

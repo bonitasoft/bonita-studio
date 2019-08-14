@@ -48,6 +48,7 @@ public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
     }
 
     private void initialize() {
+        setUseHashlookup(true);
         setLabelProvider(new FileStoreLabelProvider());
         setContentProvider(new ObservableListTreeContentProvider(new FileStoreObservableFactory(),
                 new FileStoreTreeStructureAdvisor()));

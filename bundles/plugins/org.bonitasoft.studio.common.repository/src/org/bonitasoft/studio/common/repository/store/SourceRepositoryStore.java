@@ -120,7 +120,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
         }
         final String packageName = fileName.substring(0, fileName.lastIndexOf("/"));
         final String className = fileName.substring(packageName.length() + 1, fileName.length());
-        PackageFileStore packageStore = (PackageFileStore) getChild(packageName);
+        PackageFileStore packageStore = (PackageFileStore) getChild(packageName, true);
         if (packageStore == null) {
             final IFolder folder = getResource();
             final IFolder packageFolder = folder.getFolder(packageName);
@@ -128,7 +128,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
                 try {
                     packageFolder.getLocation().toFile().mkdirs();
                     packageFolder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-                    packageStore = (PackageFileStore) getChild(packageName);
+                    packageStore = (PackageFileStore) getChild(packageName, true);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
@@ -221,12 +221,12 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 
     @SuppressWarnings("unchecked")
     @Override
-    public T getChild(final String fileName) {
+    public T getChild(final String fileName, boolean force) {
         if (fileName == null) {
             return null;
         }
         if (fileName.endsWith(".java") || fileName.endsWith(".groovy")) {
-            final T fileStore = super.getChild(fileName);
+            final T fileStore = super.getChild(fileName, force);
             if (fileStore != null) {
                 return fileStore;
             }

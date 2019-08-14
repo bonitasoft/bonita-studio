@@ -55,7 +55,7 @@ public class SelectUserFilterDefinitionWizardPage extends SelectFilterDefinition
                 if(selection != null){
                     ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
                     String fileName = selection.eResource().getURI().lastSegment() ;
-                    IRepositoryFileStore file = store.getChild(fileName) ;
+                    IRepositoryFileStore file = store.getChild(fileName, true) ;
                     if(FileActionDialog.confirmDeletionQuestion(fileName)){
                         file.delete() ;
                     }

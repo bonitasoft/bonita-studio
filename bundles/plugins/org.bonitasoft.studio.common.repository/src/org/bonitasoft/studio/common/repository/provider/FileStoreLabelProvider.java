@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.provider;
 
 import org.bonitasoft.studio.common.repository.model.IDisplayable;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -26,7 +27,11 @@ public class FileStoreLabelProvider extends LabelProvider {
     @Override
     public String getText(final Object element) {
         if (element instanceof IDisplayable) {
-            return ((IDisplayable) element).getDisplayName();
+            String displayName = ((IDisplayable) element).getDisplayName();
+            if(displayName == null || displayName.isEmpty()) {
+                displayName = ((IRepositoryFileStore) element).getName();
+            }
+            return displayName;
         }
         return super.getText(element);
     }

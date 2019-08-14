@@ -267,7 +267,7 @@ public abstract class AbstractFileStore
     @Override
     public void renameLegacy(final String newName) {
         if (!isReadOnly()) {
-            if (getParentStore().getChild(newName) != null) {
+            if (getParentStore().getChild(newName, true) != null) {
                 throw new IllegalArgumentException(newName + " already exists in this store");
             }
             try {

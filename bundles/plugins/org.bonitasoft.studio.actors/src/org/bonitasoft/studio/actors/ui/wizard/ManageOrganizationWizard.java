@@ -195,7 +195,7 @@ public class ManageOrganizationWizard extends Wizard {
                             }
                             if (!exists) {
                                 final IRepositoryFileStore f = store
-                                        .getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                                        .getChild(orga.getName() + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
                                 if (f != null) {
                                     f.delete();
                                 }
@@ -215,7 +215,7 @@ public class ManageOrganizationWizard extends Wizard {
                     }
                     final String fileName = organization.getName() + "."
                             + OrganizationRepositoryStore.ORGANIZATION_EXT;
-                    IRepositoryFileStore file = store.getChild(fileName);
+                    IRepositoryFileStore file = store.getChild(fileName, true);
                     Organization oldOrga = null;
                     if (file == null) {
                         file = store.createRepositoryFileStore(fileName);

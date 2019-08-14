@@ -27,8 +27,8 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
     private static Map<String, Integer> ORDER = new HashMap<>();
     static {
         ORDER.put("organizations", 1);
-        ORDER.put("bdm", 2);
-        ORDER.put("profiles", 9);
+        ORDER.put("profiles", 2);
+        ORDER.put("bdm", 3);
         ORDER.put("applications", 10);
         ORDER.put("diagrams", 11);
         ORDER.put("web_page", 12);

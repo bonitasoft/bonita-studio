@@ -281,7 +281,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
                             definitions);
             final AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                     .getChild(URI.decode(definition.eResource().getURI()
-                            .lastSegment()));
+                            .lastSegment()), true);
             if (!fStore.isReadOnly() && cleanConfiguration(definition)) {
                 MessageDialog.openWarning(
                         Display.getDefault().getActiveShell(),
@@ -440,7 +440,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
             DependencyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(DependencyRepositoryStore.class);
             String defaultDriver = ((DatabaseConnectorDriversWizardPage) page).getDefaultDriver(definition.getId());
-            if (defaultDriver != null && store.getChild(defaultDriver) == null) {
+            if (defaultDriver != null && store.getChild(defaultDriver, true) == null) {
                 URL resource = ConnectorPlugin.getDefault().getBundle().getResource("/drivers/" + defaultDriver);
                 if (resource != null) {
                     try (InputStream is = resource.openStream()) {

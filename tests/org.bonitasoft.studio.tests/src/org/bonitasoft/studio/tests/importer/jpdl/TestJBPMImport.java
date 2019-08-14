@@ -83,7 +83,7 @@ public class TestJBPMImport extends TestCase {
         final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         final String fileName = ModelHelper.getEObjectID(process) + ".conf";
-        ProcessConfigurationFileStore fileStore = store.getChild(fileName);
+        ProcessConfigurationFileStore fileStore = store.getChild(fileName, true);
         if (fileStore == null) {
             fileStore = store.createRepositoryFileStore(fileName);
             fileStore.save(ConfigurationFactory.eINSTANCE.createConfiguration());

@@ -52,10 +52,12 @@ public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore>
     }
 
     @Override
-    public T getChild(final String folderName) {
+    public T getChild(final String folderName, boolean force) {
         if (folderName != null) {
             final IFolder folder = getResource().getFolder(folderName);
-            refresh(folder);
+            if(force) {
+                refresh(folder);
+            }
             IResource jsonDescriptorFile = folder.findMember(folderName + ".json");
             if (folder.exists() && jsonDescriptorFile != null && jsonDescriptorFile.exists()) {
                 return createRepositoryFileStore(folderName);

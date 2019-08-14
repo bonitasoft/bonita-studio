@@ -92,7 +92,7 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
     @Override
     public boolean performFinish() {
         final ConnectorConfiguration conf = connectorWorkingCopy.getConfiguration();
-        final DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName() + "." + ConnectorConfRepositoryStore.CONF_EXT);
+        final DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName() + "." + ConnectorConfRepositoryStore.CONF_EXT, true);
         fileStore.save(conf);
         return true;
 

@@ -103,7 +103,7 @@ public class ImportOrganizationHandler extends AbstractHandler {
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
                             final OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName()
-                                    .replace(".xml", "." + OrganizationRepositoryStore.ORGANIZATION_EXT));
+                                    .replace(".xml", "." + OrganizationRepositoryStore.ORGANIZATION_EXT), true);
                             if (file != null) {
                                 file.delete();
                             }

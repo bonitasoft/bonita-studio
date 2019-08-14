@@ -71,7 +71,7 @@ public class NewDiagramFactoryTest {
 
         doReturn(null).when(newDiagramFactory).getConfigurationId(any(MainProcess.class));
         when(repository.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramRepositoryStore);
-        when(diagramRepositoryStore.getChild(anyString())).thenReturn(null);
+        when(diagramRepositoryStore.getChild(anyString(), any(Boolean.class))).thenReturn(null);
         when(preferenceStore.getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION)).thenReturn(true);
     }
 

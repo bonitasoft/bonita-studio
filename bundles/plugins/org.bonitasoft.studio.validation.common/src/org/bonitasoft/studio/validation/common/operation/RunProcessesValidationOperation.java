@@ -180,7 +180,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final Resource eResource = process.eResource();
         if (eResource != null) {
-            return store.getChild(URI.decode(eResource.getURI().lastSegment()));
+            return store.getChild(URI.decode(eResource.getURI().lastSegment()), true);
         }
         return null;
     }

@@ -141,7 +141,7 @@ public class ExportConnectorArchiveOperation {
                 if(fileName == null){
                     fileName = NamingUtils.toConnectorImplementationFilename(implBackup.getImplementationId(), implBackup.getImplementationVersion(), true);
                 }
-                final IRepositoryFileStore implFile = store.getChild(fileName) ;
+                final IRepositoryFileStore implFile = store.getChild(fileName, true) ;
                 if(implFile != null){
                     implFile.save(implBackup) ;
                 }else{
@@ -209,7 +209,7 @@ public class ExportConnectorArchiveOperation {
         if(qualifiedClassName.indexOf(".")!= -1){
             packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf(".")) ;
         }
-        final PackageFileStore file =  (PackageFileStore) sourceStore.getChild(packageName) ;
+        final PackageFileStore file =  (PackageFileStore) sourceStore.getChild(packageName, true) ;
         if(file != null){
             file.exportAsJar(jarFile.getLocation().toFile().getAbsolutePath(), false) ;
             if(includeSources){
@@ -290,7 +290,7 @@ public class ExportConnectorArchiveOperation {
     protected void addConnectorDefinition(final ConnectorImplementation impl, final List<IResource> resourcesToExport) throws FileNotFoundException, CoreException {
         final IRepositoryStore store = getDefinitionStore() ;
         final ConnectorDefinition def = ((IDefinitionRepositoryStore) store).getDefinition(impl.getDefinitionId(), impl.getDefinitionVersion()) ;
-        final EMFFileStore file = (EMFFileStore) store.getChild(URI.decode(def.eResource().getURI().lastSegment())) ;
+        final EMFFileStore file = (EMFFileStore) store.getChild(URI.decode(def.eResource().getURI().lastSegment()), true) ;
 
         if(file != null && !file.canBeShared()){
             final File f = new File(file.getEMFResource().getURI().toFileString()) ;
@@ -394,7 +394,7 @@ public class ExportConnectorArchiveOperation {
     protected void addConnectorImplementation(final ConnectorImplementation impl, final List<IResource> resourcesToExport,final boolean includeSources) throws FileNotFoundException, CoreException {
         final IRepositoryStore store = getImplementationStore() ;
         final String fileName = NamingUtils.getEResourceFileName(impl,true);
-        final EMFFileStore fileStore = (EMFFileStore) store.getChild(fileName) ;
+        final EMFFileStore fileStore = (EMFFileStore) store.getChild(fileName, true) ;
         if(!fileStore.canBeShared()){
             final File f = new File(fileStore.getEMFResource().getURI().toFileString()) ;
             if(f.exists()){
@@ -410,7 +410,7 @@ public class ExportConnectorArchiveOperation {
                 impl.getJarDependencies().getJarDependency().add(jarName) ;
             }
             impl.setHasSources(includeSources) ;
-            final IRepositoryFileStore file = store.getChild(fileName) ;
+            final IRepositoryFileStore file = store.getChild(fileName, true) ;
             file.save(EcoreUtil.copy(impl)) ;
             resourcesToExport.add(file.getResource()) ;
         }
@@ -427,7 +427,7 @@ public class ExportConnectorArchiveOperation {
             if(ignoredLibs.contains(jarName)){
                 continue ;
             }
-            final IRepositoryFileStore file = depStore.getChild(jarName) ;
+            final IRepositoryFileStore file = depStore.getChild(jarName, true) ;
             if(file != null){
                 if(file.getResource().exists()){
                     if(!classpathFolder.getFile(file.getName()).exists()){
@@ -454,7 +454,7 @@ public class ExportConnectorArchiveOperation {
             if(ignoredLibs.contains(jarName)){
                 continue ;
             }
-            final IRepositoryFileStore file = depStore.getChild(jarName) ;
+            final IRepositoryFileStore file = depStore.getChild(jarName, true) ;
             if(file != null){
                 if(file.getResource().exists()){
                     if(!classpathFolder.getFile(file.getName()).exists()){

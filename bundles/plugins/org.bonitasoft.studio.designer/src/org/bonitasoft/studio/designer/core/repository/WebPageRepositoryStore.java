@@ -107,13 +107,13 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
      * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#getChild(java.lang.String)
      */
     @Override
-    public WebPageFileStore getChild(String uuid) {
+    public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
             String id = new PageUUIDResolver(location.toFile()).resolveUUID(uuid);
-            WebPageFileStore page = super.getChild(id);
+            WebPageFileStore page = super.getChild(id, force);
             if (page == null) {
-                return super.getChild(uuid);
+                return super.getChild(uuid, force);
             }
             return page;
         }

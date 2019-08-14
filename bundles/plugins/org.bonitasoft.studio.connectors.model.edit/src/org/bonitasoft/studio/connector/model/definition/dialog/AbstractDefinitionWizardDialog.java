@@ -207,7 +207,7 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             final IConnectorDefinitionContainer wizard = (IConnectorDefinitionContainer) getWizard();
             final ConnectorDefinition defintion = wizard.getDefinition();
             final IRepositoryFileStore def = ((IRepositoryStore<? extends IRepositoryFileStore>) definitionRepositoryStore).getChild(URI.decode(defintion
-                    .eResource().getURI().lastSegment()));
+                    .eResource().getURI().lastSegment()), true);
             if (def != null) {
                 final String displayName = def.getDisplayName();
                 if (!displayName.equals(getShell().getText())) {

@@ -23,6 +23,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -75,11 +76,11 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         this.repository = repository;
         final IProject project = repository.getProject();
         this.folder = project.getFolder(getName());
-        if (!this.folder.exists()) {
+        if (!this.folder.exists() && this.folder.getLocation() != null) {
             try {
                 if (!this.folder.getParent().exists()) {
-                    this.folder.getLocation().toFile().mkdirs();
-                    this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                     this.folder.getLocation().toFile().mkdirs();
+                     this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
                 } else {
                     this.folder.create(true, true, Repository.NULL_PROGRESS_MONITOR);
                 }
@@ -164,6 +165,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             final File file = iFile.getLocation().toFile();
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
+                getResource().refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
             }
             if (!iFile.exists()) {
                 iFile.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
@@ -269,7 +271,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
      * @return IRepositoryFileStore
      */
     protected T doImportInputStream(final String fileName, final InputStream inputStream) {
-        final IFile file = getResource().getFile(fileName);
+        IFolder folder = getResource();
+        final IFile file = folder.getFile(fileName);
         try {
             if (file.exists()) {
                 if (FileActionDialog.overwriteQuestion(fileName)) {
@@ -282,7 +285,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             final File f = file.getLocation().toFile();
             if (!f.getParentFile().exists()) {
                 f.getParentFile().mkdirs();
-                refresh();
+                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
             }
             file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
         } catch (final Exception e) {
@@ -317,10 +320,10 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     }
 
     @Override
-    public T getChild(final String fileName) {
+    public T getChild(final String fileName, boolean force) {
         Assert.isNotNull(fileName);
         final IFile file = getResource().getFile(fileName);
-        if (!file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()) {
+        if (force && !file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()) {
             try {
                 file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
@@ -396,12 +399,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     @Override
     public boolean isEmpty() {
-        try {
-            return listChildren().isEmpty();
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-        return false;
+       return !getChildren().stream().findFirst().isPresent();
     }
 
     protected List<IResource> listChildren() throws CoreException {

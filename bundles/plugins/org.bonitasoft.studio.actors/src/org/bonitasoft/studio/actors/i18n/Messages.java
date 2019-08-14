@@ -275,4 +275,5 @@ public class Messages extends NLS {
     public static String deployOrganizationPageTitle;
     public static String organizationValidationFailedMsg;
     public static String deployingOrganization;
+    public static String organizationDeployed;
 }

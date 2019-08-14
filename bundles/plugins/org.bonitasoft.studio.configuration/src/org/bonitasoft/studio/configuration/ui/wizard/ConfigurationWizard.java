@@ -151,7 +151,7 @@ public class ConfigurationWizard extends Wizard {
             final String id = ModelHelper.getEObjectID(process);
             if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
                 final String fileName = id + ".conf";
-                ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+                ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
                 if (file == null) {
                     file = processConfStore.createRepositoryFileStore(fileName);
                 }
@@ -219,7 +219,7 @@ public class ConfigurationWizard extends Wizard {
         final String id = ModelHelper.getEObjectID(getProcess());
         Configuration configuration = null;
         if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(confName)) {
-            final IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
+            final IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file != null) {
                 try {
                     configuration = (Configuration) file.getContent();

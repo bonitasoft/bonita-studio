@@ -16,15 +16,21 @@ package org.bonitasoft.studio.actors.repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.operation.CleanPublishOrganizationOperation;
+import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
+import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.styler.ActiveOrganizationStyler;
 import org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
@@ -36,18 +42,16 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
+import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -70,7 +74,7 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable {
+public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable, ITenantResource {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     private static final String ORGANIZATION_EXT = ".organization";
@@ -215,7 +219,8 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     public Optional<String> retrieveNewName() {
         String currentName = getDisplayName();
         OrganizationRepositoryStore repositoryStore = (OrganizationRepositoryStore) store;
-        FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.ORGANIZATION, currentName);
+        FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.ORGANIZATION,
+                currentName);
         InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
                 Messages.renameFile, currentName, new InputValidatorWrapper(validator));
         if (dialog.open() == Dialog.OK
@@ -235,24 +240,29 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
         return styledString;
     }
 
-    /**
-     * build the current Organization if it is the active one, else does nothing.
-     */
-    @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
-        if (isActiveOrganization()) {
-            IPath orgaFolderPath = buildPath.append("organization");
-            IFolder orgaFolder = getRepository().getProject()
-                    .getFolder(orgaFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
-            if (!orgaFolder.exists()) {
-                orgaFolder.create(true, true, new NullProgressMonitor());
-            }
-            getResource().copy(orgaFolderPath.append(getName()), false, new NullProgressMonitor());
-        }
-    }
-
     public boolean isActiveOrganization() {
         return Objects.equals(activeOrganizationProvider.getActiveOrganization(), getContent().getName());
+    }
+
+    @Override
+    public IStatus deploy(APISession session, IProgressMonitor monitor) {
+        final String activeOrganization = activeOrganizationProvider.getActiveOrganization();
+        Organization organization = getContent();
+        PublishOrganizationOperation operation = Objects.equals(organization.getName(), activeOrganization)
+                ? new UpdateOrganizationOperation(organization)
+                : new CleanPublishOrganizationOperation(organization);
+        if(!PlatformUtil.isACommunityBonitaProduct()) {
+            operation.doNotAllProfileToUsers();
+        }
+        operation.setSession(session);
+        try {
+            operation.run(monitor);
+            return ValidationStatus.info(String.format(org.bonitasoft.studio.actors.i18n.Messages.organizationDeployed,
+                    organization.getName()));
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, "An error occured while depoying the Organization", e);
+        }
     }
 
 }

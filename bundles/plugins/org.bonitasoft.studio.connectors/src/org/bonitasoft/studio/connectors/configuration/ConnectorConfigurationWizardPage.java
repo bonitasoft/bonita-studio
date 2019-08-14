@@ -311,7 +311,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                         monitor.beginTask(Messages.addingImplementationDependencies, IProgressMonitor.UNKNOWN) ;
                         final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
                         for(final String jarName : implementation.getJarDependencies().getJarDependency()){
-                            if( depStore.getChild(jarName) == null){
+                            if( depStore.getChild(jarName, true) == null){
                                 final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
                                 if(is != null){
                                     depStore.importInputStream(jarName, is) ;

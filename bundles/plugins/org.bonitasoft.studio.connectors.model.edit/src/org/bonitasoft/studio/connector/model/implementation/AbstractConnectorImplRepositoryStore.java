@@ -174,7 +174,7 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
                                 false)
                                 + ".jar";
                         if (dep.equals(depJarName)) {
-                            final IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName);
+                            final IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName, true);
                             if (dependencyFileStore != null) {
                                 dependencyFileStore.delete();
                             }
@@ -188,6 +188,6 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     }
 
     private boolean hasSources(final ConnectorImplementation content, final IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
-        return sourceRepositoryStore.getChild(content.getImplementationClassname()) != null;
+        return sourceRepositoryStore.getChild(content.getImplementationClassname(), true) != null;
     }
 }

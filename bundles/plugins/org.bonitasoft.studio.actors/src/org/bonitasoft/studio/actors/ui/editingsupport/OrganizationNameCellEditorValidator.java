@@ -41,7 +41,7 @@ class OrganizationNameCellEditorValidator implements ICellEditorValidator {
         }
         //Check unicity
         final OrganizationRepositoryStore store = getOrganizationStore();
-        if (store.getChild(toValidate + "." + OrganizationRepositoryStore.ORGANIZATION_EXT) != null) {
+        if (store.getChild(toValidate + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true) != null) {
     		return Messages.nameAlreadyExists ;
     	}
     	return null;

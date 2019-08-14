@@ -32,7 +32,7 @@ public class ImportApplicationAction {
         if (repositoryStore.getChildren().stream()
                 .anyMatch(applicationFileStore -> Objects.equals(applicationFileStore.getName(), file.getName()))) {
             if (FileActionDialog.overwriteQuestion(file.getName())) {
-                repositoryStore.getChild(file.getName()).delete();
+                repositoryStore.getChild(file.getName(), true).delete();
             } else {
                 return Optional.empty();
             }

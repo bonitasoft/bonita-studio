@@ -188,7 +188,7 @@ public class BarExporter {
         }
         if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
             final String id = ModelHelper.getEObjectID(process);
-            IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
+            IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {
                 file = processConfStore.createRepositoryFileStore(id + ".conf");
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();

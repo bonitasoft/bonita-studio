@@ -34,7 +34,7 @@ public class ImportFileStoreConflictsValidatorTest {
 
     private AbstractRepositoryStore<? extends IRepositoryFileStore> appRepository() {
         final AbstractRepositoryStore<ApplicationFileStore> repo = mock(AbstractRepositoryStore.class);
-        when(repo.getChild("myApp.xml")).thenReturn(mock(ApplicationFileStore.class));
+        when(repo.getChild("myApp.xml", true)).thenReturn(mock(ApplicationFileStore.class));
         return repo;
     }
 }

@@ -211,7 +211,7 @@ public class NewDiagramFactory {
         String processName = Messages.newFilePrefix;
         String fileName = NamingUtils.toDiagramFilename(processName, BASE_VERSION);
         int i = 1;
-        while (store.getChild(fileName) != null) {
+        while (store.getChild(fileName, true) != null) {
             processName = Messages.newFilePrefix + i;
             fileName = NamingUtils.toDiagramFilename(processName, BASE_VERSION);
             i++;

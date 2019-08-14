@@ -92,8 +92,8 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     }
 
     @Override
-    public ActorFilterImplFileStore getChild(String fileName) {
-        ActorFilterImplFileStore file = super.getChild(fileName);
+    public ActorFilterImplFileStore getChild(String fileName, boolean force) {
+        ActorFilterImplFileStore file = super.getChild(fileName, force);
         if (file == null) {
             URL url = ActorsPlugin.getDefault().getBundle().getResource(STORE_NAME + "/" + fileName);
             if (url != null) {

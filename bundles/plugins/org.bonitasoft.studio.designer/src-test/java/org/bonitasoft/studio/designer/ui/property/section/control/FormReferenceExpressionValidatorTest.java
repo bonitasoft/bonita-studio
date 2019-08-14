@@ -100,7 +100,7 @@ public class FormReferenceExpressionValidatorTest {
         final WebPageRepositoryStore pageRepositoryStore = mock(WebPageRepositoryStore.class);
         if (fileStoreIds != null) {
             for (final String id : fileStoreIds) {
-                doReturn(mock(WebPageFileStore.class)).when(pageRepositoryStore).getChild(id);
+                doReturn(mock(WebPageFileStore.class)).when(pageRepositoryStore).getChild(id, true);
             }
         }
         return pageRepositoryStore;

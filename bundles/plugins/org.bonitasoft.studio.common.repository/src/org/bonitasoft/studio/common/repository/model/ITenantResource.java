@@ -18,8 +18,8 @@ import org.bonitasoft.engine.session.APISession;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
-public interface IDeployable {
-
-    public void deploy();
+public interface ITenantResource {
+    
+    public IStatus deploy(APISession session, IProgressMonitor monitor);
 
 }

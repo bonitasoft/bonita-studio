@@ -26,7 +26,7 @@ public class UpdateOrganizationOperation extends PublishOrganizationOperation {
     public UpdateOrganizationOperation(Organization organization) {
         super(organization);
     }
-
+    
     @Override
     protected void importOrganization(IdentityAPI identityAPI) throws IOException, OrganizationImportException {
         identityAPI.importOrganization(toString(organization), ImportPolicy.MERGE_DUPLICATES);

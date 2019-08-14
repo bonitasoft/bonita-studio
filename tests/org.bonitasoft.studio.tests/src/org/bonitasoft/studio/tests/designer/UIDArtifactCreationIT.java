@@ -45,7 +45,7 @@ public class UIDArtifactCreationIT {
                 repositoryAccessor);
         String newName = getPageNewName("page", CreateUIDArtifactOperation.DEFAULT_PAGE_NAME);
         createPageOperation.run(new NullProgressMonitor());
-        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName)).isNotNull();
+        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName, true)).isNotNull();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class UIDArtifactCreationIT {
                 repositoryAccessor);
         String newName = getPageNewName("layout", CreateUIDArtifactOperation.DEFAULT_LAYOUT_NAME);
         createLayoutOperation.run(new NullProgressMonitor());
-        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName))
+        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName, true))
                 .isNotNull();
     }
 
@@ -66,7 +66,7 @@ public class UIDArtifactCreationIT {
         createCustomWidgetOperation.run(new NullProgressMonitor());
         String newArtifactId = createCustomWidgetOperation.getNewArtifactId();
         assertThat(newArtifactId.toLowerCase()).endsWith(newName.toLowerCase());
-        assertThat(repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(newArtifactId))
+        assertThat(repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(newArtifactId, true))
                 .isNotNull();
     }
 

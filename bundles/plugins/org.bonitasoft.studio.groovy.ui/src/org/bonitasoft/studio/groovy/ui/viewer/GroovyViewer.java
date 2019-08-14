@@ -134,7 +134,7 @@ public class GroovyViewer implements IDocumentListener {
         if (input == null) {
             final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-            GroovyFileStore tmpGroovyFileStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
+            GroovyFileStore tmpGroovyFileStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
             if (tmpGroovyFileStore != null) {
                 tmpGroovyFileStore.delete();
             }
@@ -242,7 +242,7 @@ public class GroovyViewer implements IDocumentListener {
                 final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance()
                         .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
                 final ProcessConfigurationFileStore fileStore = store
-                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
                 if (fileStore != null) {
                     final Configuration c = fileStore.getContent();
                     for (final Parameter p : c.getParameters()) {
@@ -308,7 +308,7 @@ public class GroovyViewer implements IDocumentListener {
     public void dispose() {
         final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
+        GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
         if (fStore != null) {
             fStore.delete();
         }

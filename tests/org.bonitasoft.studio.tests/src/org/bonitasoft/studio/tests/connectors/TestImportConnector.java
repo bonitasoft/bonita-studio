@@ -73,7 +73,7 @@ public class TestImportConnector{
         assertNotNull("Implmentation not found after import",impl);
 
 
-        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname());
+        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname(), true);
         assertNotNull("Source file not found after import",sourceFile);
     }
 
@@ -94,19 +94,19 @@ public class TestImportConnector{
         assertNotNull("Implmentation not found after import",impl);
 
 
-        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname());
+        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname(), true);
         assertNotNull("Source file not found after import",sourceFile);
     }
 
     @After
     public void tearDown() throws Exception {
-        IRepositoryFileStore def = cdrs.getChild(NamingUtils.toConnectorDefinitionFilename("process-cloner", "1.0.0",true));
+        IRepositoryFileStore def = cdrs.getChild(NamingUtils.toConnectorDefinitionFilename("process-cloner", "1.0.0",true), true);
         if(def != null){
             def.delete();
         }
-        IRepositoryFileStore impl = cirs.getChild(NamingUtils.toConnectorImplementationFilename("process-cloner-impl", "1.0.0",true));
+        IRepositoryFileStore impl = cirs.getChild(NamingUtils.toConnectorImplementationFilename("process-cloner-impl", "1.0.0",true), true);
         if(impl != null){
-            SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(((ConnectorImplementation)impl.getContent()).getImplementationClassname());
+            SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(((ConnectorImplementation)impl.getContent()).getImplementationClassname(), true);
             sourceFile.delete();
             impl.delete();
         }

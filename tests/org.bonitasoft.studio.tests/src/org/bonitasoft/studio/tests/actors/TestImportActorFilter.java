@@ -74,23 +74,23 @@ public class TestImportActorFilter extends TestCase {
         assertNotNull("Implmentation not found after import",impl);
 
 
-        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname());
+        SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname(), true);
         assertNotNull("Source file not found after import",sourceFile);
         
-        DependencyFileStore depFile = depStore.getChild(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)+".jar");
+        DependencyFileStore depFile = depStore.getChild(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)+".jar", true);
         assertNull("Jar file should not be found after import with sources",depFile);
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        IRepositoryFileStore def = cdrs.getChild(NamingUtils.toConnectorDefinitionFilename("test", "1.0.0",true));
+        IRepositoryFileStore def = cdrs.getChild(NamingUtils.toConnectorDefinitionFilename("test", "1.0.0",true), true);
         if(def != null){
             def.delete();
         }
-        IRepositoryFileStore impl = cirs.getChild(NamingUtils.toConnectorImplementationFilename("test", "1.0.0",true));
+        IRepositoryFileStore impl = cirs.getChild(NamingUtils.toConnectorImplementationFilename("test", "1.0.0",true), true);
         if(impl != null){
-            SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(((ConnectorImplementation)impl.getContent()).getImplementationClassname());
+            SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(((ConnectorImplementation)impl.getContent()).getImplementationClassname(), true);
             sourceFile.delete();
             impl.delete();
         }

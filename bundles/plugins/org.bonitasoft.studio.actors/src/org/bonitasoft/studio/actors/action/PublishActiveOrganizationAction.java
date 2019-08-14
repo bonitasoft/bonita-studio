@@ -60,7 +60,7 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             final OrganizationRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(OrganizationRepositoryStore.class);
             final OrganizationFileStore organizationFileStore = store
-                    .getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                    .getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
             if (organizationFileStore == null) {
                 throw new FileNotFoundException(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
             }

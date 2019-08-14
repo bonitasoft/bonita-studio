@@ -64,7 +64,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
     }
 
     protected AbstractDefFileStore getDefFileStore(AbstractDefinitionRepositoryStore<?> connectorDefStore, ConnectorDefinition def) {
-        return (AbstractDefFileStore) connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()));
+        return (AbstractDefFileStore) connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()), true);
     }
 
     protected IStatus checkInputConsistency(ConnectorConfiguration configuration,ConnectorDefinition def, IValidationContext context) {

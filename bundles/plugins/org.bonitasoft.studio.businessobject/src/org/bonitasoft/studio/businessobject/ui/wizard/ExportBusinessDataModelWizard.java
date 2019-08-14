@@ -122,7 +122,7 @@ public class ExportBusinessDataModelWizard extends Wizard {
     }
 
     protected BusinessObjectModelFileStore getDefaultArtifact() {
-        return getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        return getStore().getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
     }
 
     protected void runExportOperationInWizard(final String destinationPath) throws InvocationTargetException,

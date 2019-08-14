@@ -68,4 +68,5 @@ Bundle-ClassPath: lib/nlcl.jar,
 Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.connector,
- org.bonitasoft.engine.filter
+ org.bonitasoft.engine.filter,
+ org.bonitasoft.engine.session

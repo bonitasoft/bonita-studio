@@ -47,7 +47,7 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDispl
 
     IFolder getResource();
 
-    T getChild(String fileName);
+    T getChild(String fileName, boolean force);
 
     List<T> getChildren();
 

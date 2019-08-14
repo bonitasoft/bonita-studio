@@ -91,7 +91,7 @@ public class DiagramFileStoreTest {
         doReturn(repository).when(diagramFileStore).getRepository();
         doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses();
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
-        when(processConfStore.getChild("aProcessUUID.conf")).thenReturn(processConfFStore);
+        when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(processConfFStore);
 
         //When
         final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
@@ -106,7 +106,7 @@ public class DiagramFileStoreTest {
         doReturn(repository).when(diagramFileStore).getRepository();
         doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses();
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
-        when(processConfStore.getChild("aProcessUUID.conf")).thenReturn(null);
+        when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(null);
 
         //When
         final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();

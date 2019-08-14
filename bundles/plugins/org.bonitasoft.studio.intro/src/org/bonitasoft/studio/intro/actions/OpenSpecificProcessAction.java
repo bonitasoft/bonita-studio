@@ -55,7 +55,7 @@ public class OpenSpecificProcessAction implements IIntroAction {
 			DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
 					.getInstance().getCurrentRepository()
 					.getRepositoryStore(DiagramRepositoryStore.class);
-			IRepositoryFileStore store = diagramSotre.getChild(fileName);
+			IRepositoryFileStore store = diagramSotre.getChild(fileName, true);
 			store.open();
 		}
 	}

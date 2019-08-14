@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -24,7 +25,12 @@ import org.eclipse.core.runtime.Path;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnit44Runner;
 
+@RunWith(MockitoJUnit44Runner.class)
 public class SelectArtifactToDeployPageTest {
 
     public static String DIAGRAM_REPOSITORY_NAME = "Diagrams";
@@ -35,7 +41,8 @@ public class SelectArtifactToDeployPageTest {
     @Rule
     public RealmWithDisplay displayRule = new RealmWithDisplay();
 
-    SelectArtifactToDeployPage page = spy(SelectArtifactToDeployPage.class);
+    @Spy
+    SelectArtifactToDeployPage page;
     List<IRepositoryFileStore> fileStores;
     WritableSet<Object> checkedElementObservable;
     HashSet<IRepositoryFileStore> allCheckedElement;
@@ -48,7 +55,6 @@ public class SelectArtifactToDeployPageTest {
     public void init() {
         fileStores = initFileStores();
         when(page.getAllFileStores()).thenReturn(fileStores);
-
         checkedElementObservable = new WritableSet<>();
         allCheckedElement = new HashSet<>();
         artifactsToFilter = new ArrayList<>();

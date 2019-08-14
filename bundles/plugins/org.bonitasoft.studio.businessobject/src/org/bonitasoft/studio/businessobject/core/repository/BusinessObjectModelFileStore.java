@@ -27,6 +27,7 @@ import java.util.Map;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
@@ -42,14 +43,11 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
@@ -129,7 +127,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     @Override
     protected void doDelete() {
         final DependencyRepositoryStore depStore = getDependencyRepositoryStore();
-        final DependencyFileStore depJar = depStore.getChild(getDependencyName());
+        final DependencyFileStore depJar = depStore.getChild(getDependencyName(), true);
         if (depJar != null) {
             depJar.delete();
         }
@@ -196,7 +194,8 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
             }
         }
         return ValidationStatus.error(
-                String.format(org.bonitasoft.studio.common.repository.Messages.failedToRetrieveResourceToExport, getName()));
+                String.format(org.bonitasoft.studio.common.repository.Messages.failedToRetrieveResourceToExport,
+                        getName()));
     }
 
     @Override
@@ -242,20 +241,17 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
-        IPath bdmFolderPath = buildPath.append("bdm");
-        IFolder bdmFolder = getRepository().getProject()
-                .getFolder(bdmFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
-        if (!bdmFolder.exists()) {
-            bdmFolder.create(true, true, new NullProgressMonitor());
-        }
+    public IStatus deploy(APISession session, IProgressMonitor monitor) {
+        GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this).reuseSession(session);
         try {
-            IFile zipFile = bdmFolder.getFile(ZIP_FILENAME);
-            try (InputStream inputStream = ByteSource.wrap(toByteArray()).openBufferedStream();) {
-                zipFile.create(inputStream, true, new NullProgressMonitor());
-            }
-        } catch (IOException e) {
-            throw new CoreException(ValidationStatus.error(e.getMessage(), e));
+            generateBDMOperation.run(monitor);
+            deployBDMOperation.run(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM", e);
         }
+        return ValidationStatus.info(Messages.businessDataModelDeployed);
     }
+
 }

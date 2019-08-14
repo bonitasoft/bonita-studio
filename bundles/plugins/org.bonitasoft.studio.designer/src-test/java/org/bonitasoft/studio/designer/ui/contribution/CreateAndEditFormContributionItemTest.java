@@ -148,7 +148,7 @@ public class CreateAndEditFormContributionItemTest {
                 selectionProvider)
                 .getSelection();
 
-        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
+        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm", true);
         doReturn("newName").when(webPageFileStore).getCustomPageName();
         doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
         doReturn(true).when(contribution).openHideEmptyContractDialog();
@@ -170,7 +170,7 @@ public class CreateAndEditFormContributionItemTest {
                 selectionProvider)
                 .getSelection();
 
-        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm");
+        doReturn(webPageFileStore).when(repositoryStore).getChild("newForm", true);
         doReturn("newName").when(webPageFileStore).getDisplayName();
         doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
         contribution.createNewForm();

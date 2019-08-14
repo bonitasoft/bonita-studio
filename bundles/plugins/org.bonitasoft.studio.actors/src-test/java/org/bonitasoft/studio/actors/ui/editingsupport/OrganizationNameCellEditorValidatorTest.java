@@ -68,7 +68,7 @@ public class OrganizationNameCellEditorValidatorTest {
     @Test
     public void testInvalidWhenorganiezationAlreadyExists() throws Exception {
         final String OrgaToTest = "Myorga";
-        doReturn(orgaFileStore).when(orgaStore).getChild(OrgaToTest + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+        doReturn(orgaFileStore).when(orgaStore).getChild(OrgaToTest + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
         assertThat(validator.isValid(OrgaToTest)).isEqualTo(Messages.nameAlreadyExists);
     }
 

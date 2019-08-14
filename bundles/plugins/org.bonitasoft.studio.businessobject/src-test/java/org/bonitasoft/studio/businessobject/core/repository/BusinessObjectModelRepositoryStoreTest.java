@@ -62,14 +62,14 @@ public class BusinessObjectModelRepositoryStoreTest {
 
     @Test
     public void shouldGetChildFromPackage_ReturnBusinessObjectFromPackageName() throws Exception {
-        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.poc.model.Car")).isPresent()
                 .isEqualTo(Optional.of(businessObjectFileStore));
     }
 
     @Test
     public void shouldGetChildFromPackage_ReturnNullIfNoPackageFound() throws Exception {
-        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.notexists")).isEmpty();
     }
 

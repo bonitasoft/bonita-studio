@@ -310,13 +310,13 @@ public class ConnectorImplementationTest implements SWTBotConstants {
                 .getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
         ConnectorImplementation impl = store.getImplementation(implId, "1.0.0");
         String fileName = impl.eResource().getURI().lastSegment();
-        IRepositoryFileStore file = store.getChild(fileName);
+        IRepositoryFileStore file = store.getChild(fileName, true);
         if (FileActionDialog.confirmDeletionQuestion(fileName)) {
             file.delete();
             String className = impl.getImplementationClassname();
-            IRepositoryFileStore sourceFile = store.getChild(className);
+            IRepositoryFileStore sourceFile = store.getChild(className, true);
             String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-            IRepositoryFileStore abstractFile = store.getChild(abstarctClassName);
+            IRepositoryFileStore abstractFile = store.getChild(abstarctClassName, true);
             if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
                 sourceFile.delete();
                 if (abstractFile != null) {
@@ -331,7 +331,7 @@ public class ConnectorImplementationTest implements SWTBotConstants {
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
                         ConnectorDefRepositoryStore.class);
-        IRepositoryFileStore file = store.getChild(NamingUtils.toConnectorDefinitionFilename("testEdit", "1.0.0", true));
+        IRepositoryFileStore file = store.getChild(NamingUtils.toConnectorDefinitionFilename("testEdit", "1.0.0", true), true);
         assertNotNull(file);
         file.delete();
         bot.closeAllEditors();

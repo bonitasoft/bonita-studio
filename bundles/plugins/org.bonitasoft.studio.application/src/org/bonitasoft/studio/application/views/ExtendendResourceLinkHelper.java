@@ -46,7 +46,7 @@ public class ExtendendResourceLinkHelper extends ResourceLinkHelper {
             DiagramRepositoryStore store = RepositoryManager.getInstance().getCurrentRepository()
                     .getRepositoryStore(DiagramRepositoryStore.class);
             IFile file = (IFile) aSelection.getFirstElement();
-            DiagramFileStore fStore = store.getChild(file.getName());
+            DiagramFileStore fStore = store.getChild(file.getName(), true);
             if (fStore != null) {
                 DiagramEditor openedEditor = fStore.getOpenedEditor();
                 if (openedEditor != null) {

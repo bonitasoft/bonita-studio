@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer.bos.status;
+package org.bonitasoft.studio.ui.util;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -38,11 +38,11 @@ public class ProcessValidationStatus extends Status {
         if (validationStatus.isMultiStatus()) {
             final int issues = countIssues();
             if (issues == 1) {
-                return countIssues() + " " + Messages.issueFoundIn + " " + process.getName() + " (" + process.getVersion() + ") ";
+                return String.format("%s %s %s (%s)", issues, Messages.issueFoundIn, process.getName(), process.getVersion());
             }
-            return issues + " " + Messages.issuesFoundIn + " " + process.getName() + " (" + process.getVersion() + ") ";
+            return String.format("%s %s %s (%s)", issues, Messages.issuesFoundIn, process.getName(), process.getVersion());
         }
-        return process.getName() + " (" + process.getVersion() + ")";
+        return  String.format("%s (%s)", process.getName(), process.getVersion());
     }
 
     protected int countIssues() {
@@ -60,10 +60,6 @@ public class ProcessValidationStatus extends Status {
         return getSeverity() != IStatus.ERROR;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.Status#getSeverity()
-     */
     @Override
     public int getSeverity() {
         final int severity = super.getSeverity();

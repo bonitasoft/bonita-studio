@@ -92,9 +92,9 @@ public class ActorFilterImplFileStore extends EMFFileStore {
             String className = implementation.getImplementationClassname();
             ActorFilterSourceRepositoryStore sourceStore = getRepositoryAccessor()
                     .getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-            IRepositoryFileStore sourceFile = sourceStore.getChild(className);
+            IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
             String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName);
+            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
             if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
                 sourceFile.delete();
                 if (abstractFile != null) {

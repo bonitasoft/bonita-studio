@@ -73,7 +73,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
             @Override
             public Object convert(final Object fromObject) {
                 final String content = getSelectedExpression().getContent();
-                final WebPageFileStore webPageFileStore = pageStore.getChild(content);
+                final WebPageFileStore webPageFileStore = pageStore.getChild(content, true);
                 if (webPageFileStore == null) {
                     updateContent("");
                     updateName("");
@@ -99,7 +99,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
         final String newPageId = createOrEditFormListener.handleEvent(context, null);
         if (newPageId != null) {
             pageStore.refresh();
-            final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId);
+            final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId, true);
             if (webPageFileStore != null) {
                 editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, (FormMapping) context,
                         ExpressionHelper.createFormReferenceExpression(webPageFileStore.getName(), newPageId)));

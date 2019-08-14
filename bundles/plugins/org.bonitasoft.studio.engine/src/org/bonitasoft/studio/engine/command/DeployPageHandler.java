@@ -82,6 +82,6 @@ public class DeployPageHandler {
     }
 
     private Optional<WebPageFileStore> findFileStore(RepositoryAccessor repositoryAccessor, String pageName) {
-        return Optional.ofNullable(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(pageName));
+        return Optional.ofNullable(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(pageName, true));
     }
 }

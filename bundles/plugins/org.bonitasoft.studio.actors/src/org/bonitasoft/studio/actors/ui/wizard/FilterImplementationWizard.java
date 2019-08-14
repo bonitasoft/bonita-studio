@@ -66,7 +66,7 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
     protected void initialize() {
         implStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
         if(getOriginalImplementation() != null){
-            fileStore = implStore.getChild(NamingUtils.toConnectorImplementationFilename(getOriginalImplementation().getImplementationId(),getOriginalImplementation().getImplementationVersion(),true)) ;
+            fileStore = implStore.getChild(NamingUtils.toConnectorImplementationFilename(getOriginalImplementation().getImplementationId(),getOriginalImplementation().getImplementationVersion(),true), true) ;
         }
         defStore =  RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
         sourceStore = (ActorFilterSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class) ;

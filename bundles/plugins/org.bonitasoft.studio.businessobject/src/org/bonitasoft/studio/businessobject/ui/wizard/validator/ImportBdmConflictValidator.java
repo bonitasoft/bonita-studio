@@ -31,7 +31,7 @@ public class ImportBdmConflictValidator implements IValidator {
 
     @Override
     public IStatus validate(Object value) {
-        if (repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME) != null) {
+        if (repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) != null) {
             return ValidationStatus.warning(Messages.bdmWillBeOverwritten);
         }
         return ValidationStatus.ok();

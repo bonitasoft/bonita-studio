@@ -24,6 +24,8 @@ import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -57,11 +59,12 @@ public class ValidateProjectOperation implements IRunnableWithStatus {
                             new OffscreenEditPartFactory(
                                     org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                             new ValidationMarkerProvider()));
-            validationAction.addProcess(fileStore.getContent());
+            MainProcess content = fileStore.getContent();
+            validationAction.addProcess(content);
             validationAction.run(monitor);
             if (!monitor.isCanceled()
                     && Objects.equals(validationAction.getStatus().getSeverity(), ValidationStatus.ERROR)) {
-                status.add(validationAction.getStatus());
+                status.add(new ProcessValidationStatus(content,validationAction.getStatus()));
             }
         }
     }

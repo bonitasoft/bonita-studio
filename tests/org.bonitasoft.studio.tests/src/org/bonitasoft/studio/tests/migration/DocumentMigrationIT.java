@@ -53,7 +53,7 @@ public class DocumentMigrationIT {
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
         final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
-        final MainProcess mainProcess = store.getChild("DiagramToTestDocumentTypeMigration-1.0.proc").getContent();
+        final MainProcess mainProcess = store.getChild("DiagramToTestDocumentTypeMigration-1.0.proc", true).getContent();
         final Pool pool = (Pool) mainProcess.getElements().get(0);
         for (final Document document : pool.getDocuments()) {
             final String documentName = document.getName();
@@ -80,7 +80,7 @@ public class DocumentMigrationIT {
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
         final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
-        final MainProcess mainProcess = store.getChild("MultipleDocumentDiagram-1.0.proc").getContent();
+        final MainProcess mainProcess = store.getChild("MultipleDocumentDiagram-1.0.proc", true).getContent();
         final Pool pool = (Pool) mainProcess.getElements().get(0);
         assertThat(pool.getDocuments()).hasSize(1);
         assertThat(pool.getDocuments().get(0).isMultiple()).isTrue();

@@ -83,7 +83,7 @@ public class ManageBusinessObjectHandler implements Runnable {
         BusinessObjectModelRepositoryStore repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) repositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (fileStore == null) {
             fileStore = (BusinessObjectModelFileStore) repositoryStore
                     .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);

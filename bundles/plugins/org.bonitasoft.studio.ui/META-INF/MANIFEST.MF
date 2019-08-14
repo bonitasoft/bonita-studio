@@ -39,7 +39,8 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.bindings,
  org.bonitasoft.studio.common.repository,
- org.eclipse.e4.ui.services
+ org.eclipse.e4.ui.services,
+ org.bonitasoft.studio.model;bundle-version="7.10.0"
 Export-Package: org.bonitasoft.studio.ui,
  org.bonitasoft.studio.ui.contribution,
  org.bonitasoft.studio.ui.converter,

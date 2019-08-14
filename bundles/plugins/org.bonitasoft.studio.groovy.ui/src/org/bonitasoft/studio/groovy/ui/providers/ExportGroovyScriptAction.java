@@ -81,7 +81,7 @@ public class ExportGroovyScriptAction extends Action implements IConfigurationEx
         FragmentContainer groovyContainer = getGroovyProcessContainer(configuration);
         for (Fragment script : groovyContainer.getFragments()) {
             if (script.isExported()) {
-                GroovyFileStore file = groovyStore.getChild(script.getValue());
+                GroovyFileStore file = groovyStore.getChild(script.getValue(), true);
                 if (file != null) {
                     scripts.add(file.getResource().getLocation().toFile()); //source file
                     List<IFile> classFiles = file.getClassFiles();
@@ -126,7 +126,7 @@ public class ExportGroovyScriptAction extends Action implements IConfigurationEx
         FragmentContainer groovyContainer = getGroovyApplicationContainer(configuration);
         for (Fragment script : groovyContainer.getFragments()) {
             if (script.isExported()) {
-                GroovyFileStore file = groovyStore.getChild(script.getValue());
+                GroovyFileStore file = groovyStore.getChild(script.getValue(), true);
                 if (file != null) {
                     scripts.add(file.getResource().getLocation().toFile()); //source file                   
                     List<IFile> classFiles = file.getClassFiles();

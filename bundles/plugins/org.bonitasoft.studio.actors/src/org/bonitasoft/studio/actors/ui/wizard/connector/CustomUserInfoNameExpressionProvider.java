@@ -45,7 +45,7 @@ public class CustomUserInfoNameExpressionProvider implements IExpressionNaturePr
 
     @Override
     public Expression[] getExpressions(final EObject context) {
-        final OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName);
+        final OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName, true);
         final Organization organization = organizationFileStore.getContent();
         final CustomUserInfoDefinitions infoDefContainer = organization.getCustomUserInfoDefinitions();
         return getExpressions(infoDefContainer);

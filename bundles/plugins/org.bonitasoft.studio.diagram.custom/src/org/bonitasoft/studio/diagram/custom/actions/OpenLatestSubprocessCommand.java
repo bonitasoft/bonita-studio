@@ -90,7 +90,7 @@ public class OpenLatestSubprocessCommand extends AbstractHandler {
 				Resource r = subProcessParent.eResource() ;
 				if(r != null){
 					String fileName = r.getURI().lastSegment() ;
-					DiagramFileStore store = diagramSotre.getChild(URI.decode(fileName)) ;
+					DiagramFileStore store = diagramSotre.getChild(URI.decode(fileName), true) ;
 					// if the diagram is already opened
 					if(store.getOpenedEditor()!=null){
 						for(IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){

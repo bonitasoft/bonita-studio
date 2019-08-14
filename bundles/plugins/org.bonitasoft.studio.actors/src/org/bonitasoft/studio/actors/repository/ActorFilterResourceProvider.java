@@ -61,7 +61,7 @@ public class ActorFilterResourceProvider implements IBOSArchiveFileStoreProvider
                 final ConnectorDefinition def = filterDefSotre.getDefinition(defId, defVersion, existingDefinitions);
                 if (def != null) {
                     final IRepositoryFileStore definition = ((IRepositoryStore<? extends IRepositoryFileStore>) filterDefSotre).getChild(URI.decode(def
-                            .eResource().getURI().lastSegment()));
+                            .eResource().getURI().lastSegment()), true);
                     if (definition != null && definition.canBeShared()) {
                         files.add(definition);
 
@@ -69,7 +69,7 @@ public class ActorFilterResourceProvider implements IBOSArchiveFileStoreProvider
                         try {
                             connectorDefinition = (ConnectorDefinition) definition.getContent();
                             for (final String jarName : connectorDefinition.getJarDependency()) {
-                                final IRepositoryFileStore jarFile = depStore.getChild(jarName);
+                                final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                                 if (jarFile != null) {
                                     files.add(jarFile);
                                 }
@@ -82,7 +82,7 @@ public class ActorFilterResourceProvider implements IBOSArchiveFileStoreProvider
                 }
                 final String implId = mapping.getImplementationId();
                 final String implVersion = mapping.getImplementationVersion();
-                final IRepositoryFileStore implementation = filterImplStore.getChild(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true));
+                final IRepositoryFileStore implementation = filterImplStore.getChild(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), true);
                 if (implementation != null && implementation.canBeShared()) {
                     files.add(implementation);
 
@@ -91,13 +91,13 @@ public class ActorFilterResourceProvider implements IBOSArchiveFileStoreProvider
                         impl = (ConnectorImplementation) implementation.getContent();
                         final String className = impl.getImplementationClassname();
                         final String packageName = className.substring(0, className.lastIndexOf("."));
-                        final IRepositoryFileStore packageFileStore = filterSourceStore.getChild(packageName);
+                        final IRepositoryFileStore packageFileStore = filterSourceStore.getChild(packageName, true);
                         if (packageFileStore != null) {
                             files.add(packageFileStore);
                         }
 
                         for (final String jarName : impl.getJarDependencies().getJarDependency()) {
-                            final IRepositoryFileStore jarFile = depStore.getChild(jarName);
+                            final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                             if (jarFile != null) {
                                 files.add(jarFile);
                             }

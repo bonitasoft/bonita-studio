@@ -48,7 +48,7 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
         final FormMapping mapping = (FormMapping) context;
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
-            final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent());
+            final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent(), true);
             if (pageStore != null) {
                 pageStore.open();
             } else {

@@ -182,11 +182,11 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
 
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
-        XSDFileStore legacyXSD = getChild("soap-encoding.xsd");
+        XSDFileStore legacyXSD = getChild("soap-encoding.xsd", true);
         if (legacyXSD != null) {
             legacyXSD.delete();
         }
-        legacyXSD = getChild("soap-envelope.xsd");
+        legacyXSD = getChild("soap-envelope.xsd", true);
         if (legacyXSD != null) {
             legacyXSD.delete();
         }

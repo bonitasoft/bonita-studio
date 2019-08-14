@@ -34,7 +34,7 @@ public class TestExportOrganization extends TestCase {
         final IRepositoryStore<? extends IRepositoryFileStore> organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final String fileName = "ACME." + OrganizationRepositoryStore.ORGANIZATION_EXT;
-        IRepositoryFileStore organization = organizationStore.getChild(fileName);
+        IRepositoryFileStore organization = organizationStore.getChild(fileName, true);
         assertNotNull("organization " + fileName + " does not exist in repository", organization);
         File f = new File(ProjectUtil.getBonitaStudioWorkFolder(), "ACME.XML");
         final String exportPath = f.getAbsolutePath();

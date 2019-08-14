@@ -54,7 +54,7 @@ public class DeployApplicationHandler {
             String application) {
         if (application != null) {
             ApplicationFileStore fileStore = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
-                    .getChild(application);
+                    .getChild(application, true);
             try {
                 return fileStore == null
                         ? Optional.empty()

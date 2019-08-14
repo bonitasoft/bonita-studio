@@ -71,7 +71,7 @@ public class TestCheckTenantAfterStartup {
 
         final String activeOrganization = new ActiveOrganizationProvider().getActiveOrganization();
         final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-        final OrganizationFileStore fileStore = store.getChild(activeOrganization + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+        final OrganizationFileStore fileStore = store.getChild(activeOrganization + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
 
         final Organization organization = fileStore.getContent();
         for (final Group group : organization.getGroups().getGroup()) {

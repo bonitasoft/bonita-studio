@@ -91,7 +91,7 @@ public class SelectUserConnectorDefinitionWizardPage extends SelectConnectorDefi
 
 			final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
 			final String fileName = selection.eResource().getURI().lastSegment() ;
-			final IRepositoryFileStore file = store.getChild(fileName) ;
+			final IRepositoryFileStore file = store.getChild(fileName, true) ;
 
 			if(FileActionDialog.confirmDeletionQuestionWithCustomMessage(Messages.bind(Messages.deleteConnectorDefinition, fileName))){
 				deleteConnectorConfigurations();
@@ -107,7 +107,7 @@ public class SelectUserConnectorDefinitionWizardPage extends SelectConnectorDefi
 		if (selection!=null){
             final List<ConnectorConfiguration> connectorConfs = connectorConfStore.getConnectorConfigurationsFor(selection.getId(), selection.getVersion());
 			for (final ConnectorConfiguration conf:connectorConfs){
-				final DefinitionConfigurationFileStore file = connectorConfStore.getChild(conf.getName()+"."+ConnectorConfRepositoryStore.CONF_EXT);
+				final DefinitionConfigurationFileStore file = connectorConfStore.getChild(conf.getName()+"."+ConnectorConfRepositoryStore.CONF_EXT, true);
 				if (file!=null){
 					file.delete();
 				}

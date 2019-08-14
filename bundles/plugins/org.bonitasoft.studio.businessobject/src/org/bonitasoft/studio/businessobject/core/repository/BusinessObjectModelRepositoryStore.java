@@ -118,14 +118,14 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     public Optional<BusinessObjectModelFileStore> getChildByQualifiedName(final String qualifiedName) {
         final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
-                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME));
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
         return businessObjectFileStore
                 .map(fileStore -> fileStore.getBusinessObject(qualifiedName) != null ? fileStore : null);
     }
 
     public Optional<BusinessObject> getBusinessObjectByQualifiedName(String qualifiedName) {
         final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
-                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME));
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
         return businessObjectFileStore.map(fileStore -> fileStore.getBusinessObject(qualifiedName));
     }
 
@@ -165,7 +165,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
         final BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
-                BusinessObjectModelFileStore.ZIP_FILENAME);
+                BusinessObjectModelFileStore.ZIP_FILENAME, true);
         if (fStore != null) {
             final File legacyBDM = fStore.getResource().getLocation().toFile();
             BusinessObjectModel businessObjectModel;
@@ -291,8 +291,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public F getChild(String fileName) {
-        return (F) super.getChild(fileName);
+    public F getChild(String fileName, boolean force) {
+        return (F) super.getChild(fileName, force);
     }
 
 }

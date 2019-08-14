@@ -56,7 +56,7 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
                 if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
                     final String documentID = document.getDefaultValueIdOfDocumentStore();
                     if (documentID != null) {
-                        final DocumentFileStore artifact = store.getChild(documentID);
+                        final DocumentFileStore artifact = store.getChild(documentID, true);
                         if (artifact != null) {
                             try {
                                 addFileContents(resources, artifact.getResource().getLocation().toFile(), "");

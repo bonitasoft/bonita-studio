@@ -144,8 +144,8 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
     }
 
     @Override
-    public T getChild(final String fileName) {
-        final T file = super.getChild(fileName);
+    public T getChild(final String fileName, boolean force) {
+        final T file = super.getChild(fileName, force);
         if (file == null) {
             final URL url = getBundle().getResource(getName() + "/" + fileName);
             if (url != null) {

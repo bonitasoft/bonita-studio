@@ -383,6 +383,7 @@ public class Messages extends NLS {
     public static String bdmZipInvalid;
     public static String cleanDeployTitle;
     public static String cleanDeployMsg;
+    public static String businessDataModelDeployed;
 
     private Messages() {
     }

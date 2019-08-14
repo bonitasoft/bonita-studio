@@ -28,7 +28,7 @@ public class FindOpenedEditorHandler {
     public Optional<IEditorPart> execute(RepositoryAccessor repositoryAccessor,
             @org.eclipse.e4.core.di.annotations.Optional @Named(FILE_STORE_PARAMETER) String fileStore) {
         ApplicationFileStore application = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
-                .getChild(fileStore);
+                .getChild(fileStore, true);
         return application != null
                 ? EditorFinder.findOpenedEditor(application, this::validateEditorInstance)
                 : Optional.empty();

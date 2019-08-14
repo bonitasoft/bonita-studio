@@ -133,7 +133,7 @@ public class BusinessObjectModelFileStoreTest {
     @Test
     public void shouldDoDelete_DeleteDependency() throws Exception {
         doReturn(depStore).when(fileStoreUnderTest).getDependencyRepositoryStore();
-        when(depStore.getChild(anyString())).thenReturn(depFileStore);
+        when(depStore.getChild(anyString(), any(Boolean.class))).thenReturn(depFileStore);
         fileStoreUnderTest.doDelete();
         verify(depFileStore).delete();
     }

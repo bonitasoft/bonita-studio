@@ -63,7 +63,7 @@ public class CreateOrEditFormProposalListenerTest {
                 pageDesignerURLFactory, progressService, repositoryAccessor, operationFactory));
         when(operation.getNewArtifactId()).thenReturn("page-id");
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
-        when(pageStore.getChild("page-id")).thenReturn(fileStore);
+        when(pageStore.getChild("page-id", true)).thenReturn(fileStore);
         when(fileStore.getUUID()).thenReturn("page-id");
 
         doReturn(operation).when(operationFactory).newCreateFormFromContractOperation(any(PageDesignerURLFactory.class),
@@ -87,7 +87,7 @@ public class CreateOrEditFormProposalListenerTest {
         final CreateOrEditFormProposalListener listener = spy(new CreateOrEditFormProposalListener(
                 pageDesignerURLFactory, progressService, repositoryAccessor, operationFactory));
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
-        when(pageStore.getChild("page-id")).thenReturn(fileStore);
+        when(pageStore.getChild("page-id", true)).thenReturn(fileStore);
 
         final String newPageId = listener.handleEvent(
                 TaskBuilder.aTask()

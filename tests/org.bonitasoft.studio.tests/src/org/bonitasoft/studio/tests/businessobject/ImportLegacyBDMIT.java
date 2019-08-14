@@ -44,7 +44,7 @@ public class ImportLegacyBDMIT {
 
     @After
     public void deleteFileStore() throws Exception {
-        defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).delete();
+        defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).delete();
     }
 
     @Before
@@ -68,13 +68,13 @@ public class ImportLegacyBDMIT {
         StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
         assertThat(defStore.getResource().getFile(BusinessObjectModelFileStore.ZIP_FILENAME).getLocation().toFile().exists())
                 .isFalse();
-        assertThat(defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME)).isNotNull();
-        final BusinessObjectModel model = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME).getContent();
+        assertThat(defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true)).isNotNull();
+        final BusinessObjectModel model = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).getContent();
         assertThat(model).isNotNull();
         assertThat(model.getBusinessObjectsClassNames()).contains("com.bonita.lr.model.VacationRequest");
 
         assertThat(defStore.getChildren()).hasSize(1);
-        assertThat(depStore.getChild(BusinessObjectModelFileStore.BDM_JAR_NAME)).isNotNull();
+        assertThat(depStore.getChild(BusinessObjectModelFileStore.BDM_JAR_NAME, true)).isNotNull();
     }
 
 }

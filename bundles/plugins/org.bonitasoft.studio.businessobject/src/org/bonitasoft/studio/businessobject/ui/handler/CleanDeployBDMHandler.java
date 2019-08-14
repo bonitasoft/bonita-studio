@@ -32,7 +32,7 @@ public class CleanDeployBDMHandler {
     public void deploy(RepositoryAccessor repositoryAccessor, Shell shell) {
         if(MessageDialog.openConfirm(shell, Messages.cleanDeployTitle, Messages.cleanDeployMsg)) {
             BusinessObjectModelRepositoryStore store = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-            DeployBDMJob job = new DeployBDMJob((BusinessObjectModelFileStore) store.getChild(BusinessObjectModelFileStore.BOM_FILENAME),true);
+            DeployBDMJob job = new DeployBDMJob((BusinessObjectModelFileStore) store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true),true);
             job.setUser(true);
             job.schedule();
         }
@@ -41,6 +41,6 @@ public class CleanDeployBDMHandler {
     @CanExecute
     public boolean bdmExists(RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME) != null;
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) != null;
     }
 }

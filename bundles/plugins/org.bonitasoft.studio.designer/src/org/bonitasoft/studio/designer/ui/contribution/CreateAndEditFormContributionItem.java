@@ -137,7 +137,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
             final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null);
             final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
             repositoryStore.refresh();
-            final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId);
+            final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId, true);
             if (webPageFileStore != null) {
                 getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
                         ExpressionHelper.createFormReferenceExpression(webPageFileStore.getCustomPageName(), newPageId)));
@@ -200,7 +200,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         final FormMapping mapping = pageFlow.getFormMapping();;
         final Expression targetForm = mapping.getTargetForm();
-        final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent());
+        final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent(), true);
         if (pageStore != null) {
             pageStore.open();
         } else {

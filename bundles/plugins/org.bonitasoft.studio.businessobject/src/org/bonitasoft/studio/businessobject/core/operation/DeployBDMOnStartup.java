@@ -36,7 +36,7 @@ public class DeployBDMOnStartup implements IEngineAction {
     public void run(APISession session) throws Exception {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+        final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (fileStore != null) {
             new GenerateBDMOperation(fileStore);
             new DeployBDMOperation(fileStore)

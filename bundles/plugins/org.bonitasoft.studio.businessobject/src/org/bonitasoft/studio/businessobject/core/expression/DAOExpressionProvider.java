@@ -145,6 +145,6 @@ public class DAOExpressionProvider implements IExpressionProvider {
     protected BusinessObjectModelFileStore getBusinessFileStore() {
         return ((BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore>) repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class))
-                        .getChild(BusinessObjectModelFileStore.BOM_FILENAME);
+                        .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
     }
 }

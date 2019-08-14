@@ -95,7 +95,7 @@ public class ConnectorBarResourceProviderTest {
         when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
                 "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
-        when(connectorSourceStore.getChild("org.test")).thenReturn(connectorSourceFileStore);
+        when(connectorSourceStore.getChild("org.test", true)).thenReturn(connectorSourceFileStore);
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
         when(connectorImplStore.getImplementation("myConnectorImpl", "1.0.0")).thenReturn(
                 aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
@@ -119,7 +119,7 @@ public class ConnectorBarResourceProviderTest {
                 "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
-        when(depStore.getChild("myConnectorImpl-1.0.0.jar")).thenReturn(libFileStore);
+        when(depStore.getChild("myConnectorImpl-1.0.0.jar", true)).thenReturn(libFileStore);
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
@@ -140,7 +140,7 @@ public class ConnectorBarResourceProviderTest {
                 "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
-        when(depStore.getChild("myConnectorImpl-1.0.0.jar")).thenReturn(libFileStore);
+        when(depStore.getChild("myConnectorImpl-1.0.0.jar", true)).thenReturn(libFileStore);
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);

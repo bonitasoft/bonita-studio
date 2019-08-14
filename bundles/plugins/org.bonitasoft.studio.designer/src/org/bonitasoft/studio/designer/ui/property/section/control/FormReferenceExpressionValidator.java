@@ -59,7 +59,7 @@ public class FormReferenceExpressionValidator implements IExpressionValidator {
         } else {
             errorMessage = Messages.bind(Messages.formDoesntExist, content);
         }
-        return repositoryStore.getChild(content) == null ? ValidationStatus.error(errorMessage) : ValidationStatus.ok();
+        return repositoryStore.getChild(content, true) == null ? ValidationStatus.error(errorMessage) : ValidationStatus.ok();
     }
 
     /*

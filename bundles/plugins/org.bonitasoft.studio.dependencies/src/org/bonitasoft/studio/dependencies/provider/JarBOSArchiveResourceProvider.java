@@ -51,7 +51,7 @@ public class JarBOSArchiveResourceProvider implements IBOSArchiveFileStoreProvid
             for (Fragment fragment : fragments) {
                 if(fragment.getType().equals(FragmentTypes.JAR)) {
                     if(fragment.isExported()){
-                        IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue()) ;
+                        IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue(), true) ;
                         if(jarArtifact != null){
                             files.add(jarArtifact) ;
                         }
@@ -64,7 +64,7 @@ public class JarBOSArchiveResourceProvider implements IBOSArchiveFileStoreProvid
             for (Fragment fragment : fragments) {
                 if(fragment.getType().equals(FragmentTypes.JAR)) {
                     if(fragment.isExported()){
-                        IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue()) ;
+                        IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue(), true) ;
                         if(jarArtifact != null){
                             files.add(jarArtifact) ;
                         }

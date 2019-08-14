@@ -1318,7 +1318,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         if (!resource.getContents().isEmpty()) {
                             content = (XSDSchema) resource.getContents().get(0);
                         }
-                        XSDFileStore artifact = store.getChild(fileName);
+                        XSDFileStore artifact = store.getChild(fileName, true);
                         if (artifact == null) {
                             artifact = store.createRepositoryFileStore(fileName);
                         }

@@ -133,7 +133,7 @@ public class DeployDiagramHandler extends AbstractHandler {
     protected DiagramFileStore retrieveDiagram(ExecutionEvent event) {
         String diagramFileStoreName = event.getParameter("diagram");
         DiagramFileStore diagramFileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(diagramFileStoreName);
+                .getChild(diagramFileStoreName, true);
         if (diagramFileStore == null) {
             throw new IllegalArgumentException(String.format(Messages.diagramDoesntExist, diagramFileStoreName));
         }

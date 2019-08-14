@@ -119,7 +119,7 @@ public class TestProcessZoo {
                             for (final Fragment fragment : fragmentContainer.getFragments()) {
                                 final String lib = fragment.getValue();
                                 if (lib.endsWith(DependencyRepositoryStore.JAR_EXT)) {
-                                    assertNotNull("A lib is unresolved " + lib, store.getChild(lib));
+                                    assertNotNull("A lib is unresolved " + lib, store.getChild(lib, true));
                                 }
                             }
                         }

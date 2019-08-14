@@ -126,7 +126,7 @@ public class OrganizationCreationTest {
         final OrganizationRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final OrganizationFileStore fileStore = store
-                .getChild(organizationName + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                .getChild(organizationName + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
         final Organization orga = fileStore.getContent();
         assertNotNull(orga);
         int nbRootGroup = 0;

@@ -63,7 +63,7 @@ public class TestTestConnectorOperation {
 
 	private ConnectorImplementation createConnectorImplementation() {
 		ConnectorImplRepositoryStore c = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		return c.getChild("scripting-groovy.impl").getContent();
+		return c.getChild("scripting-groovy.impl", true).getContent();
 	}
 
 	private Connector createConnectorOutput() {

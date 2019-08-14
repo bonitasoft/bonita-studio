@@ -33,7 +33,7 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileStore> extends AbstractRepositoryStore<T> {
 
     @Override
-    public T getChild(final String folderName) {
+    public T getChild(final String folderName, boolean force) {
         if (folderName != null) {
             final IFolder folder = getResource().getFolder(folderName);
             refresh(folder);
@@ -45,9 +45,9 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     }
 
     protected void refresh(final IFolder folder) {
-        if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
+        if (!folder.isSynchronized(IResource.DEPTH_ONE)) {
             try {
-                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+                folder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
                  BonitaStudioLog.error(e);
             }

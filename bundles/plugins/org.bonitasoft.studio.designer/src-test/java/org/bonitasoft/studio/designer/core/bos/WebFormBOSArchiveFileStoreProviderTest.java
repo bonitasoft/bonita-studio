@@ -75,16 +75,16 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         repositoryAccessor = mock(RepositoryAccessor.class, RETURNS_DEEP_STUBS);
         final WebPageRepositoryStore formRepositoryStore = mock(WebPageRepositoryStore.class);
         doReturn(formRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
-        when(formRepositoryStore.getChild("process-form-id")).thenReturn(processFormFileStore);
-        when(formRepositoryStore.getChild("step-form-id")).thenReturn(taskFormFileStore);
+        when(formRepositoryStore.getChild("process-form-id", true)).thenReturn(processFormFileStore);
+        when(formRepositoryStore.getChild("step-form-id", true)).thenReturn(taskFormFileStore);
 
         final WebFragmentRepositoryStore fragmentRepositoryStore = mock(WebFragmentRepositoryStore.class);
         doReturn(fragmentRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebFragmentRepositoryStore.class);
-        when(fragmentRepositoryStore.getChild("fragmentDep")).thenReturn(fragmentFileStore);
+        when(fragmentRepositoryStore.getChild("fragmentDep", true)).thenReturn(fragmentFileStore);
 
         final WebWidgetRepositoryStore widgetRepositoryStore = mock(WebWidgetRepositoryStore.class);
         doReturn(widgetRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebWidgetRepositoryStore.class);
-        when(widgetRepositoryStore.getChild("customTestWidget")).thenReturn(customWidgetFileStore);
+        when(widgetRepositoryStore.getChild("customTestWidget", true)).thenReturn(customWidgetFileStore);
         when(customWidgetFileStore.canBeExported()).thenReturn(true);
 
         webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));

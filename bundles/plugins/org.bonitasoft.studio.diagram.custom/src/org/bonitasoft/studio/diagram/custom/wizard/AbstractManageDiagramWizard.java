@@ -63,7 +63,7 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
                     for (final AbstractProcess process : file.getProcesses()) {
                         final String uuid = ModelHelper.getEObjectID(process);
                         final IRepositoryFileStore confFile = getConfigurationRepositoryStore()
-                                .getChild(uuid + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                                .getChild(uuid + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
                         if (confFile != null) {
                             confFile.delete();
                         }

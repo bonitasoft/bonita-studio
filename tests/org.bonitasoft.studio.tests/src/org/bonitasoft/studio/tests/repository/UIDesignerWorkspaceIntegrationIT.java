@@ -92,7 +92,7 @@ public class UIDesignerWorkspaceIntegrationIT {
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
-        newPageResource = repositoryStore.getChild(createFormOperation.getNewArtifactId()).getResource()
+        newPageResource = repositoryStore.getChild(createFormOperation.getNewArtifactId(), true).getResource()
                 .getFile(createFormOperation.getNewArtifactId() + ".json");
         assertThat(newPageResource.exists()).overridingErrorMessage(
                 "Workspace should be in sync with new page file").isTrue();
@@ -107,7 +107,7 @@ public class UIDesignerWorkspaceIntegrationIT {
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
-        assertThat(repositoryStore.getChild("f3ae2099-6298-4b91-add3-bddb3af60b45").getResource()
+        assertThat(repositoryStore.getChild("f3ae2099-6298-4b91-add3-bddb3af60b45", true).getResource()
                 .getFile("f3ae2099-6298-4b91-add3-bddb3af60b45.json").exists())
                         .overridingErrorMessage(
                                 "Workspace should be in sync with imported page file")

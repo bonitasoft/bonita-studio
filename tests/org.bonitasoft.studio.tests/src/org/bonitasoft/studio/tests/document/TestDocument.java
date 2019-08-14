@@ -120,7 +120,7 @@ public class TestDocument {
         botFileStoreSelectDialog.ok();
         assertInitialContentNotEmpty(botAddDocumentDialog);
         botAddDocumentDialog.finish();
-        store.getChild(fileName).delete();
+        store.getChild(fileName, true).delete();
     }
 
     @Test

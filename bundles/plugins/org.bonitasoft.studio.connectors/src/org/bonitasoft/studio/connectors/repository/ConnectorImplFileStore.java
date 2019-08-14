@@ -100,9 +100,9 @@ public class ConnectorImplFileStore extends EMFFileStore {
             String className = implementation.getImplementationClassname();
             ConnectorSourceRepositoryStore sourceStore = getRepositoryAccessor()
                     .getRepositoryStore(ConnectorSourceRepositoryStore.class);
-            IRepositoryFileStore sourceFile = sourceStore.getChild(className);
+            IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
             String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName);
+            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
             if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
                 sourceFile.delete();
                 if (abstractFile != null) {

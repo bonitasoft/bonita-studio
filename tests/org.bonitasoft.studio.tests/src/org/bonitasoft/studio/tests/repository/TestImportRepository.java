@@ -87,7 +87,7 @@ public class TestImportRepository extends TestCase {
     @Test
     public void testImportAttachments() throws Exception {
         final DocumentRepositoryStore store = repositoryAccessor.getRepositoryStore(DocumentRepositoryStore.class);
-        final DocumentFileStore fileStore = store.getChild(TEST_ATTACHMENT_ARTIFACT_ID);
+        final DocumentFileStore fileStore = store.getChild(TEST_ATTACHMENT_ARTIFACT_ID, true);
 
         assertNotNull(fileStore);
         assertEquals(fileStore.getName(), TEST_ATTACHMENT_ARTIFACT_ID);
@@ -101,7 +101,7 @@ public class TestImportRepository extends TestCase {
     @Test
     public void testImportGroovy() throws Exception {
         final GroovyRepositoryStore gStore = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
-        final GroovyFileStore artifact = gStore.getChild(TEST_GROOVY_ARTIFACT_ID);
+        final GroovyFileStore artifact = gStore.getChild(TEST_GROOVY_ARTIFACT_ID, true);
         assertNotNull(artifact);
         assertEquals(artifact.getName(), TEST_GROOVY_ARTIFACT_ID);
         final InputStream is = artifact.getResource().getContents();
