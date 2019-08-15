@@ -35,7 +35,9 @@ public class MenuLevelValidatorTest {
     @Test
     public void should_add_warning_message() throws Exception {
         final IFile resource = anIFile().build();
-        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator(new ApplicationNodeContainerConverter()));
+        final MenuLevelValidator menuLevelValidator = spy(MenuLevelValidator.class);
+        doReturn(new ApplicationNodeContainerConverter()).when(menuLevelValidator).getConverter();
+        doReturn(true).when(menuLevelValidator).shouldValidate();
         doReturn(appWithDeepMenus()).when(menuLevelValidator)
                 .toApplicationContainer(resource);
         doReturn(null).when(menuLevelValidator).createMessage(resource);
@@ -48,7 +50,9 @@ public class MenuLevelValidatorTest {
     @Test
     public void should_not_add_warning_message() throws Exception {
         final IFile resource = anIFile().build();
-        final MenuLevelValidator menuLevelValidator = spy(new MenuLevelValidator(new ApplicationNodeContainerConverter()));
+        final MenuLevelValidator menuLevelValidator = spy(MenuLevelValidator.class);
+        doReturn(new ApplicationNodeContainerConverter()).when(menuLevelValidator).getConverter();
+        doReturn(true).when(menuLevelValidator).shouldValidate();
         doReturn(appWithSingleMenus()).when(menuLevelValidator)
                 .toApplicationContainer(resource);
         doReturn(null).when(menuLevelValidator).createMessage(resource);

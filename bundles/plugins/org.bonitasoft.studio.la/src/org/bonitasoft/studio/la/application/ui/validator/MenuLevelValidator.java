@@ -46,17 +46,12 @@ public class MenuLevelValidator extends AbstractValidator {
 
     private ApplicationNodeContainerConverter converter;
 
-    MenuLevelValidator(ApplicationNodeContainerConverter converter) {
-        this.converter = converter;
-    }
-
-    public MenuLevelValidator() {
-        this.converter = RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
-    }
-
     @Override
     public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+        if (!shouldValidate()) {
+            return new ValidationResult();
+        }
+        this.converter = getConverter();
         if (resource.getType() != IResource.FILE) {
             return null;
         }
@@ -78,6 +73,15 @@ public class MenuLevelValidator extends AbstractValidator {
                 .forEach(validationResult::add);
 
         return validationResult;
+    }
+
+    protected ApplicationNodeContainerConverter getConverter() {
+        return RepositoryManager.getInstance()
+                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
+    }
+
+    protected boolean shouldValidate() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
     protected ValidatorMessage createMessage(IResource resource) {

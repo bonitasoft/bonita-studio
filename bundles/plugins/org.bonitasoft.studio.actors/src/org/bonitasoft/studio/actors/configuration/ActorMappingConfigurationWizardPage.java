@@ -92,14 +92,15 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
         setDescription(Messages.actorMappingDesc);
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ActorMappingAdapterFactory());
-        deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
-                .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()), true))
-                .map(OrganizationFileStore::getContent);
     }
 
     @Override
     public void createControl(final Composite parent) {
+        deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
+                .getRepositoryStore(OrganizationRepositoryStore.class)
+                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()), true))
+                .map(OrganizationFileStore::getContent);
+        
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5, 2).create());

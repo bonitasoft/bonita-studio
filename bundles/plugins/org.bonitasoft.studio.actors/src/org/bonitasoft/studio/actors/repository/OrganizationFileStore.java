@@ -27,11 +27,14 @@ import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
+import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.actors.operation.CleanPublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.styler.ActiveOrganizationStyler;
+import org.bonitasoft.studio.actors.ui.control.DeployOrganizationControlSupplier;
 import org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -40,6 +43,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
@@ -245,7 +249,7 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     @Override
-    public IStatus deploy(APISession session, IProgressMonitor monitor) {
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         final String activeOrganization = activeOrganizationProvider.getActiveOrganization();
         Organization organization = getContent();
         PublishOrganizationOperation operation = Objects.equals(organization.getName(), activeOrganization)
@@ -257,11 +261,33 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
         operation.setSession(session);
         try {
             operation.run(monitor);
+            String defaultUsername = String.valueOf(options.get(DeployOptions.DEFAULT_USERNAME));
+            updateDefaultUserPreference(organization, defaultUsername);
             return ValidationStatus.info(String.format(org.bonitasoft.studio.actors.i18n.Messages.organizationDeployed,
                     organization.getName()));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, "An error occured while depoying the Organization", e);
+        }
+    }
+    
+    protected void updateDefaultUserPreference(Organization organization,
+            String userName) {
+        if(userName == null || userName.isEmpty()) {
+            if(!organization.getUsers().getUser().isEmpty()) {
+                User user = organization.getUsers().getUser().get(0);
+                userName = user.getUserName();
+            }
+        }
+        String defaultUserName = userName;
+        activeOrganizationProvider.saveDefaultUser(userName);
+        if (organization != null) {
+            activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
+                    .filter(user -> Objects.equals(user.getUserName(), defaultUserName))
+                    .findFirst()
+                    .map(User::getPassword)
+                    .map(PasswordType::getValue)
+                    .orElse(""));
         }
     }
 

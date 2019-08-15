@@ -19,6 +19,8 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Named;
@@ -33,6 +35,7 @@ import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
@@ -68,7 +71,7 @@ public class DeployArtifactsHandler {
     }
 
     protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToDeploy, IWizardContainer container) {
+            Collection<IRepositoryFileStore> artifactsToDeploy,  Map<String, Object> deployOptions, IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
 
         try {
@@ -78,7 +81,7 @@ public class DeployArtifactsHandler {
                 try {
                     APISession session = apiSessionOperation.getSession();
                     DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                            artifactsToDeploy, session);
+                            artifactsToDeploy, session, deployOptions);
                     deployTenantResourcesOperation.run(monitor);
                     status.addAll(deployTenantResourcesOperation.getStatus());
                     if (shouldValidate()) {
@@ -102,7 +105,7 @@ public class DeployArtifactsHandler {
             });
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Failed to deploy some tenant resources.", e);
+            return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed", e.getCause() != null ? e.getCause() : e);
         }
         return status;
     }
@@ -126,8 +129,15 @@ public class DeployArtifactsHandler {
                         .withDescription(description)
                         .withControl(page))
                 .onFinish(container -> Optional
-                        .ofNullable(deployArtifacts(repositoryAccessor, page.getElements(), container)));
+                        .ofNullable(deployArtifacts(repositoryAccessor, page.getElements(), buildOptions(page), container)));
 
+    }
+
+    private Map<String, Object> buildOptions(SelectArtifactToDeployPage page) {
+        HashMap<String, Object> options = new HashMap<String, Object>();
+        options.put(DeployOptions.CLEAN_BDM, page.isCleanBDM());
+        options.put(DeployOptions.DEFAULT_USERNAME, page.getDefaultUsername());
+        return options;
     }
 
     private void openStatusDialog(Shell activeShell, IStatus status) {
@@ -135,9 +145,7 @@ public class DeployArtifactsHandler {
             new MultiStatusDialog(activeShell, Messages.deployStatus, Messages.deployStatusMessage,
                     new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status).open();
         } else {
-            StatusManager.getManager().handle(status);
-            //            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.deployErrorTitle,
-            //                    String.format("%s\n\n%s", message.orElse(""), status.getMessage()));
+            StatusManager.getManager().handle(status, StatusManager.SHOW);
         }
     }
 

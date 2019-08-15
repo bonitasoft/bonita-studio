@@ -64,7 +64,9 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.html.core,
  org.bonitasoft.studio.ui;bundle-version="7.9.0",
- org.bonitasoft.studio.validation.common
+ org.bonitasoft.studio.validation.common,
+ org.bonitasoft.studio.actors;bundle-version="7.10.0",
+ org.eclipse.core.databinding.property;bundle-version="1.6.300"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

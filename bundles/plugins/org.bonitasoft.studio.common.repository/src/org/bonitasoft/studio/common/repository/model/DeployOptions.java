@@ -14,14 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import java.util.Map;
 
-import org.bonitasoft.engine.session.APISession;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+public interface DeployOptions {
 
-public interface ITenantResource {
+    public static final String DEFAULT_USERNAME = "DEFAULT_USERNAME";
+    public static final String CLEAN_BDM = "CLEAN_BDM";
     
-    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor);
-
 }
