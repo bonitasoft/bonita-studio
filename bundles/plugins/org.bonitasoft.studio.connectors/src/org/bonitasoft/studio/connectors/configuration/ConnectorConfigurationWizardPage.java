@@ -86,9 +86,6 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
 
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
     protected TableViewer viewer;
-    protected IDefinitionRepositoryStore defStore;
-    protected IImplementationRepositoryStore implStore;
-    protected DefinitionResourceProvider resourceProvider;
     private Button selectImplementationButton;
     private Button clearImplementationButton;
     protected Configuration configuration;
@@ -97,9 +94,18 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         super(ConnectorConfigurationWizardPage.class.getName());
         setTitle(Messages.connectors) ;
         setDescription(Messages.connectorsConfigurationDescription) ;
-        defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
-        resourceProvider= DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) defStore, ConnectorPlugin.getDefault().getBundle()) ;
+    }
+    
+    protected DefinitionResourceProvider getResourceProvider() {
+        return DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) getDefinitionStore(), ConnectorPlugin.getDefault().getBundle());
+    }
+
+    protected IImplementationRepositoryStore getImplStore() {
+        return (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+    }
+
+    protected IDefinitionRepositoryStore getDefinitionStore() {
+        return (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
     }
 
     /* (non-Javadoc)
@@ -151,12 +157,12 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         viewer.getTable().setLayout(tableLayout);
 
         final TableViewerColumn columnDefViewer = new TableViewerColumn(viewer, SWT.NONE);
-        columnDefViewer.setLabelProvider(new DefinitionLabelProvider(resourceProvider, defStore));
+        columnDefViewer.setLabelProvider(new DefinitionLabelProvider(getResourceProvider(), getDefinitionStore()));
         TableColumn column = columnDefViewer.getColumn();
         column.setText(Messages.definition);
 
         final TableViewerColumn columnImplIdViewer = new TableViewerColumn(viewer, SWT.NONE);
-        columnImplIdViewer.setLabelProvider(new ImplementationLabelProvider(implStore));
+        columnImplIdViewer.setLabelProvider(new ImplementationLabelProvider(getImplStore()));
         column = columnImplIdViewer.getColumn();
         column.setText(Messages.implementation);
 
@@ -270,7 +276,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                 if(implementationId == null || implementationVersion == null){
                     return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId()) ;
                 }
-                final ConnectorImplementation impl = implStore.getImplementation(implementationId,implementationVersion) ;
+                final ConnectorImplementation impl = getImplStore().getImplementation(implementationId,implementationVersion) ;
                 if(impl == null){
                     return Messages.bind(Messages.implementationNotFound, implementationId +" ("+implementationVersion+")") ;
                 }
@@ -312,7 +318,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                         final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
                         for(final String jarName : implementation.getJarDependencies().getJarDependency()){
                             if( depStore.getChild(jarName, true) == null){
-                                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
+                                final InputStream is = getResourceProvider().getDependencyInputStream(jarName) ;
                                 if(is != null){
                                     depStore.importInputStream(jarName, is) ;
                                 }

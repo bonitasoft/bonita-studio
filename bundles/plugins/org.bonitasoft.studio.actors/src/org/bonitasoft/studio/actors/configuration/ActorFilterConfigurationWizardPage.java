@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.configuration;
 
@@ -57,101 +55,122 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWizardPage implements IProcessConfigurationWizardPage, ISelectionChangedListener {
-
+public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWizardPage
+        implements IProcessConfigurationWizardPage, ISelectionChangedListener {
 
     private static final ActorFiltersConfigurationSynchronizer ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER = new ActorFiltersConfigurationSynchronizer();
 
     public ActorFilterConfigurationWizardPage() {
-        super() ;
-        setTitle(Messages.actorFilters) ;
-        setDescription(Messages.actorFiltersConfigurationDescription) ;
-        defStore = (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
-        implStore = (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
-        resourceProvider= DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) defStore, ActorsPlugin.getDefault().getBundle()) ;
+        super();
+        setTitle(Messages.actorFilters);
+        setDescription(Messages.actorFiltersConfigurationDescription);
     }
 
+    @Override
+    protected DefinitionResourceProvider getResourceProvider() {
+        return DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) getDefinitionStore(),
+                ActorsPlugin.getDefault().getBundle());
+    }
 
+    @Override
+    protected IImplementationRepositoryStore getImplStore() {
+        return (IImplementationRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ActorFilterImplRepositoryStore.class);
+    }
+
+    @Override
+    protected IDefinitionRepositoryStore getDefinitionStore() {
+        return (IDefinitionRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ActorFilterDefRepositoryStore.class);
+    }
 
     @Override
     protected void openImplementationSelection() {
-        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
-        SelectActorFilterImplementationWizard wizard = new SelectActorFilterImplementationWizard(connectorAssociation) ;
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
-        if(dialog.open() == Dialog.OK){
-            ConnectorImplementation impl =  wizard.getConnectorImplementation() ;
-            DefinitionMapping association = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
-            association.setImplementationId(impl.getImplementationId()) ;
-            association.setImplementationVersion(impl.getImplementationVersion()) ;
+        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection())
+                .getFirstElement();
+        SelectActorFilterImplementationWizard wizard = new SelectActorFilterImplementationWizard(connectorAssociation);
+        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
+        if (dialog.open() == Dialog.OK) {
+            ConnectorImplementation impl = wizard.getConnectorImplementation();
+            DefinitionMapping association = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection())
+                    .getFirstElement();
+            association.setImplementationId(impl.getImplementationId());
+            association.setImplementationVersion(impl.getImplementationVersion());
 
-            EditingDomain editingDomain = TransactionUtil.getEditingDomain(configuration) ;
-            boolean dispose = false  ;
-            ComposedAdapterFactory adapterFactory = null ;
-            if(editingDomain == null){
-                dispose = true ;
+            EditingDomain editingDomain = TransactionUtil.getEditingDomain(configuration);
+            boolean dispose = false;
+            ComposedAdapterFactory adapterFactory = null;
+            if (editingDomain == null) {
+                dispose = true;
                 // Create an adapter factory that yields item providers.
                 adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
                 adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
                 adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-                adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-                adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+                adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
+                adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
                 // command stack that will notify this editor as commands are executed
                 BasicCommandStack commandStack = new BasicCommandStack();
 
                 // Create the editing domain with our adapterFactory and command stack.
-                editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
-                editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
+                editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack,
+                        new HashMap<Resource, Boolean>());
+                editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf",
+                        new ConfigurationResourceFactoryImpl());
             }
-            CompoundCommand cc = new CompoundCommand() ;
-            ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain,false) ;
-            editingDomain.getCommandStack().execute(cc) ;
-            if(dispose){
-                adapterFactory.dispose() ;
+            CompoundCommand cc = new CompoundCommand();
+            ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc,
+                    editingDomain, false);
+            editingDomain.getCommandStack().execute(cc);
+            if (dispose) {
+                adapterFactory.dispose();
             }
-            checkImplementationDependencies(impl) ;
-            viewer.refresh() ;
-            getContainer().updateMessage() ;
+            checkImplementationDependencies(impl);
+            viewer.refresh();
+            getContainer().updateMessage();
         }
     }
 
     @Override
     protected void clearImplementation() {
-        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
-        String implId = NamingUtils.toConnectorImplementationFilename(connectorAssociation.getImplementationId(), connectorAssociation.getImplementationVersion(), false) ;
-        connectorAssociation.setImplementationId(null) ;
-        connectorAssociation.setImplementationVersion(null) ;
+        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection())
+                .getFirstElement();
+        String implId = NamingUtils.toConnectorImplementationFilename(connectorAssociation.getImplementationId(),
+                connectorAssociation.getImplementationVersion(), false);
+        connectorAssociation.setImplementationId(null);
+        connectorAssociation.setImplementationVersion(null);
 
-        EditingDomain editingDomain = TransactionUtil.getEditingDomain(configuration) ;
-        boolean dispose = false  ;
-        ComposedAdapterFactory adapterFactory = null ;
-        if(editingDomain == null){
-            dispose = true ;
+        EditingDomain editingDomain = TransactionUtil.getEditingDomain(configuration);
+        boolean dispose = false;
+        ComposedAdapterFactory adapterFactory = null;
+        if (editingDomain == null) {
+            dispose = true;
             // Create an adapter factory that yields item providers.
             adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
             adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
             adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-            adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-            adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+            adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
+            adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
             // command stack that will notify this editor as commands are executed
             BasicCommandStack commandStack = new BasicCommandStack();
 
             // Create the editing domain with our adapterFactory and command stack.
-            editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
-            editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
+            editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack,
+                    new HashMap<Resource, Boolean>());
+            editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf",
+                    new ConfigurationResourceFactoryImpl());
         }
-        CompoundCommand cc = new CompoundCommand() ;
-        ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.removeConnectorDependencies(configuration, implId, cc, editingDomain) ;
-        editingDomain.getCommandStack().execute(cc) ;
-        if(dispose){
-            adapterFactory.dispose() ;
+        CompoundCommand cc = new CompoundCommand();
+        ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.removeConnectorDependencies(configuration, implId, cc, editingDomain);
+        editingDomain.getCommandStack().execute(cc);
+        if (dispose) {
+            adapterFactory.dispose();
         }
 
-        viewer.refresh() ;
-        getContainer().updateMessage() ;
+        viewer.refresh();
+        getContainer().updateMessage();
     }
 
     @Override
@@ -161,17 +180,19 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
 
     @Override
     public String isConfigurationPageValid(Configuration conf) {
-        if(viewer != null && viewer.getInput() != null){
-            for(Object element : ((IStructuredContentProvider) viewer.getContentProvider()).getElements(viewer.getInput())){
-                DefinitionMapping association = (DefinitionMapping) element ;
+        if (viewer != null && viewer.getInput() != null) {
+            for (Object element : ((IStructuredContentProvider) viewer.getContentProvider())
+                    .getElements(viewer.getInput())) {
+                DefinitionMapping association = (DefinitionMapping) element;
                 String implementationId = association.getImplementationId();
                 String implementationVersion = association.getImplementationVersion();
-                if(implementationId == null || implementationVersion == null){
-                    return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId()) ;
+                if (implementationId == null || implementationVersion == null) {
+                    return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId());
                 }
-                ConnectorImplementation impl = implStore.getImplementation(implementationId,implementationVersion) ;
-                if(impl == null){
-                    return Messages.bind(Messages.implementationNotFound, implementationId +" ("+implementationVersion+")") ;
+                ConnectorImplementation impl = getImplStore().getImplementation(implementationId, implementationVersion);
+                if (impl == null) {
+                    return Messages.bind(Messages.implementationNotFound,
+                            implementationId + " (" + implementationVersion + ")");
                 }
 
             }
@@ -179,12 +200,13 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#getConfigurationImage()
      */
     @Override
     public Image getConfigurationImage() {
-        return Pics.getImage("actor_filter.png",ActorsPlugin.getDefault());
+        return Pics.getImage("actor_filter.png", ActorsPlugin.getDefault());
     }
 
 }

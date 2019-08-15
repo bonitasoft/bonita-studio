@@ -28,11 +28,12 @@ public class BonitaStatusHandler extends WorkbenchErrorHandler {
             String message = statusAdapter.getStatus().getMessage();
             if (message != null && message.contains("Server Tomcat")) {
                 return;
+            }else {
+                super.handle(statusAdapter, style);
             }
         } else {
             super.handle(statusAdapter, style);
         }
-
     }
 
     @Override

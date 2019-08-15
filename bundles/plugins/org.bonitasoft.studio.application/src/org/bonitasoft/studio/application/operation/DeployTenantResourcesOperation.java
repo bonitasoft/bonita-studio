@@ -16,6 +16,8 @@ package org.bonitasoft.studio.application.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
@@ -31,10 +33,12 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     private Collection<IRepositoryFileStore> artifactsToDeploy;
     private MultiStatus status;
     private APISession apiSession;
+    private Map<String, Object> deployOptions = new HashMap<String, Object>();
 
-    public DeployTenantResourcesOperation(Collection<IRepositoryFileStore> artifactsToDeploy, APISession apiSession) {
+    public DeployTenantResourcesOperation(Collection<IRepositoryFileStore> artifactsToDeploy, APISession apiSession, Map<String, Object> deployOptions) {
         this.artifactsToDeploy = artifactsToDeploy;
         this.apiSession = apiSession;
+        this.deployOptions = deployOptions;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
         status = artifactsToDeploy.stream()
                 .filter(ITenantResource.class::isInstance)
                 .map(ITenantResource.class::cast)
-                .map(artifact -> artifact.deploy(apiSession, monitor))
+                .map(artifact -> artifact.deploy(apiSession, deployOptions, monitor))
                 .collect(StatusCollectors.toMultiStatus());
     }
 

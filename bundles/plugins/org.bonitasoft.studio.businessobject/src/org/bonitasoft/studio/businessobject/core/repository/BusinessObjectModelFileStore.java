@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -241,9 +242,15 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     }
 
     @Override
-    public IStatus deploy(APISession session, IProgressMonitor monitor) {
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
-        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this).reuseSession(session);
+        Object cleanBDM = options.containsKey(DeployOptions.CLEAN_BDM) ? false : options.get(DeployOptions.CLEAN_BDM);
+        if(!(cleanBDM instanceof Boolean)) {
+            return new Status(IStatus.ERROR, 
+                    BusinessObjectPlugin.PLUGIN_ID, 
+                    String.format("Invalid option type for %s. Expected a Boolean value but found a %s",DeployOptions.CLEAN_BDM, cleanBDM.getClass()));
+        }
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this, (boolean) cleanBDM).reuseSession(session);
         try {
             generateBDMOperation.run(monitor);
             deployBDMOperation.run(monitor);
