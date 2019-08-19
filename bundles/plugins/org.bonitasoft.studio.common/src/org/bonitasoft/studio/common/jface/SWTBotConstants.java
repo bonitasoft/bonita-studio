@@ -130,4 +130,6 @@ public interface SWTBotConstants {
 
 	public static final String SWTBOT_ID_RULE_NAME_TEXTEDITOR = "SWTBOT_ID_RULE_NAME_TEXTEDITOR";
 
+    public static final Object SWTBOT_ID_DEPLOY_TOOLITEM = "SWTBOT_ID_DEPLOY_TOOLITEM";
+
 }

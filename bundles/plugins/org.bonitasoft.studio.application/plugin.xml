@@ -55,6 +55,14 @@
                id="org.bonitasoft.studio.fileMenu"
                label="%fileMenu_Label">
             <command
+                  commandId="org.bonitasoft.studio.application.command.deployArtifacts"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.application.deploySeparator"
+                  visible="true">
+            </separator>
+            <command
                   commandId="org.bonitasoft.studio.diagram.command.newDiagram"
                   disabledIcon="icons/menuIcons/new_disabled.png"
                   hoverIcon="icons/menuIcons/new_hover.png"
@@ -1189,6 +1197,10 @@
             priority="0"
             toolbarPosition="15">
       </coolbarItem>
+      <coolbarItem
+            class="org.bonitasoft.studio.application.coolbar.DeployCoolbarItem"
+            toolbarPosition="11">
+      </coolbarItem>
    </extension>
    <extension
          point="org.eclipse.ui.startup">
@@ -1483,6 +1495,13 @@
                id="org.eclipse.jdt.ui.source.menu">
          </hiddenMenuItem>
       </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.application.command.deployArtifacts"
+            icon="icons/rocket16.png">
+      </image>
    </extension>
 
 </plugin>
