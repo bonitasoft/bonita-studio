@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
+import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -203,6 +205,46 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 return !toFilter.contains(element);
             }
         });
+        fileStoreViewer.addCheckStateListener(event -> {
+            if (event.getElement() instanceof OrganizationRepositoryStore && event.getChecked()) {
+                uniqueOrganizationSelection(getDefaultOrganization());
+            }
+            if (event.getElement() instanceof OrganizationFileStore && countSelectedOrganizations() > 1) {
+                uniqueOrganizationSelection((OrganizationFileStore) event.getElement());
+            }
+        });
+    }
+
+    private OrganizationFileStore getDefaultOrganization() {
+        return input.stream()
+                .filter(OrganizationRepositoryStore.class::isInstance)
+                .map(IRepositoryStore::getChildren)
+                .flatMap(Collection::stream)
+                .filter(fStore -> Objects.equals(new ActiveOrganizationProvider().getActiveOrganizationFileName(),
+                        fStore.getName()))
+                .map(OrganizationFileStore.class::cast)
+                .findFirst()
+                .orElse(input.stream()
+                        .filter(OrganizationRepositoryStore.class::isInstance)
+                        .map(IRepositoryStore::getChildren)
+                        .flatMap(Collection::stream)
+                        .map(OrganizationFileStore.class::cast)
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    private void uniqueOrganizationSelection(OrganizationFileStore selectedOrganizationFilestore) {
+        checkedElementsObservable.add(selectedOrganizationFilestore);
+        checkedElementsObservable
+                .removeIf(element -> (element instanceof OrganizationFileStore)
+                        && !Objects.equals(element, selectedOrganizationFilestore));
+        updateUserProposals();
+    }
+
+    private long countSelectedOrganizations() {
+        return checkedElementsObservable.stream()
+                .filter(OrganizationFileStore.class::isInstance)
+                .count();
     }
 
     private void createSearchAndCollapseComposite(DataBindingContext ctx, Composite parent) {
@@ -294,9 +336,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void updateUserProposals() {
+        usernameObservable.setValue("");
         Organization selectedOrganization = getSelectedOrganization();
         if (selectedOrganization == null) {
-            usernameObservable.setValue("");
             setWidgetEnabled(defaultUserTextWidget, false);
             return;
         }
@@ -321,7 +363,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         control.setEnabled(enabled);
         if (control instanceof CLabel) {
             control.setForeground(enabled ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND)
-                    : Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+                    : Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY));
         }
         if (control instanceof Composite) {
             Stream.of(((Composite) control).getChildren()).forEach(c -> setWidgetEnabled(c, enabled));
@@ -384,7 +426,11 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         input.stream()
                 .map(IRepositoryStore::getChildren)
                 .flatMap(Collection::stream)
+                .filter(fStore -> !OrganizationFileStore.class.isInstance(fStore))
                 .forEach(checkedElementsObservable::add);
+
+        //Only one organization can be selected at a time
+        uniqueOrganizationSelection(getDefaultOrganization());
     }
 
     private List<IRepositoryStore<? extends IRepositoryFileStore>> findDeployableRepositoryStore() {
