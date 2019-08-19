@@ -38,13 +38,12 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator.Builder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
+import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -55,9 +54,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.fieldassist.AutoCompleteField;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -66,12 +63,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -86,13 +84,11 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private IObservableList<IRepositoryStore<? extends IRepositoryFileStore>> input;
     private List<IRepositoryFileStore> allFileStores;
     private Button cleanDeployOption;
-    private Text defaultUsernameText;
-    private AutoCompleteField userAutoCompleteField;
-    private Label defaultUsernameLabel;
     private String defaultUsername;
     private boolean cleanBDM;
-    private Binding defaultUserBinding;
     private IObservableValue<String> usernameObservable;
+    private SimpleContentProposalProvider usernameProposalProvider;
+    private TextWidget defaultUserTextWidget;
 
     public SelectArtifactToDeployPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
@@ -115,12 +111,13 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 20).create());
+        mainComposite.setLayout(GridLayoutFactory.swtDefaults()
+                .create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        Label warningDependencyLabel = new Label(mainComposite, SWT.WRAP);
-        warningDependencyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        warningDependencyLabel.setText(Messages.warningMissingDependency);
+        //        Label warningDependencyLabel = new Label(mainComposite, SWT.WRAP);
+        //        warningDependencyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        //        warningDependencyLabel.setText(Messages.warningMissingDependency);
 
         Composite viewerAndButtonsComposite = new Composite(mainComposite, SWT.NONE);
         viewerAndButtonsComposite.setLayout(
@@ -131,6 +128,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         createSearchAndCollapseComposite(ctx, viewerAndButtonsComposite);
         createSelectButtonComposite(viewerAndButtonsComposite);
         createViewer(ctx, viewerAndButtonsComposite);
+        createDeployOptions(ctx, viewerAndButtonsComposite);
 
         checkedElementsObservable = fileStoreViewer.checkedElementsObservable();
         checkAllElements();
@@ -222,7 +220,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         composite.setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).create());
 
-        ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
+        ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
+        toolBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TRANSPARENT));
 
         ToolItem expandAll = new ToolItem(toolBar, SWT.PUSH);
         expandAll.setImage(Pics.getImage(PicsConstants.expandAll));
@@ -235,28 +234,40 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         collapseAll.addListener(SWT.Selection, e -> fileStoreViewer.collapseAll());
     }
 
-    @SuppressWarnings("unchecked")
     private void createSearch(DataBindingContext ctx, Composite parent) {
         Composite searchComposite = new Composite(parent, SWT.NONE);
-        searchComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).create());
-        searchComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        searchComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        searchComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM).create());
 
         new SearchWidget.Builder()
                 .labelAbove()
                 .fill()
-                .widthHint(300)
+                .widthHint(400)
                 .withPlaceholder(Messages.searchArtifact)
                 .bindTo(searchObservableValue)
                 .withDelay(500)
                 .inContext(ctx)
                 .createIn(searchComposite);
+    }
 
-        cleanDeployOption = new Button(searchComposite, SWT.CHECK);
-        cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().create());
+    private void createDeployOptions(DataBindingContext ctx, Composite parent) {
+        new Label(parent, SWT.NONE);
+
+        Group deployOptionGroup = new Group(parent, SWT.NONE);
+        deployOptionGroup
+                .setLayout(GridLayoutFactory.swtDefaults().numColumns(1).extendedMargins(10, 0, 10, 0).create());
+        deployOptionGroup.setLayoutData(GridDataFactory.fillDefaults().create());
+        deployOptionGroup.setText(Messages.deployOptions);
+
+        cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
+        cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
         cleanDeployOption.setSelection(false);
-        ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption), PojoProperties.value("cleanBDM").observe(this));
-        createDefaultUserTextWidget(ctx, searchComposite);
+
+        ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
+                PojoProperties.value("cleanBDM").observe(this));
+
+        createDefaultUserTextWidget(ctx, deployOptionGroup);
     }
 
     private Organization getSelectedOrganization() {
@@ -269,54 +280,52 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite) {
-        defaultUsernameLabel = new Label(mainComposite, SWT.NONE);
-        defaultUsernameLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-        defaultUsernameLabel.setText(org.bonitasoft.studio.actors.i18n.Messages.defaultUser);
-
-        defaultUsernameText = new Text(mainComposite, SWT.BORDER);
-        defaultUsernameText.setLayoutData(GridDataFactory.swtDefaults().indent(15, 0).hint(200, SWT.DEFAULT).create());
-        userAutoCompleteField = new AutoCompleteField(defaultUsernameText, new TextContentAdapter());
-
-        ControlDecoration controlDecoration = new ControlDecoration(defaultUsernameLabel, SWT.RIGHT, mainComposite);
-        controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
-        controlDecoration.setDescriptionText(org.bonitasoft.studio.actors.i18n.Messages.defaultUserTooltip);
-        controlDecoration.show();
-
         usernameObservable = PojoProperties.value("defaultUsername").observe(this);
-        defaultUserBinding = ctx.bindValue(WidgetProperties.text(SWT.Modify).observe(defaultUsernameText),
-                usernameObservable,
-                UpdateStrategyFactory.updateValueStrategy().withValidator(defaultUserValidator()).create(),
-                null);
-
-        defaultUserBinding.getValidationStatus().addValueChangeListener(event -> {
-            if (!event.diff.getNewValue().isOK()) {
-                controlDecoration.setDescriptionText(event.diff.getNewValue().getMessage());
-                controlDecoration.setMarginWidth(3);
-                controlDecoration.setImage(Pics.getImage(PicsConstants.error));
-            } else {
-                controlDecoration.setDescriptionText(org.bonitasoft.studio.actors.i18n.Messages.defaultUserTooltip);
-                controlDecoration.setMarginWidth(0);
-                controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
-            }
-        });
+        usernameProposalProvider = new SimpleContentProposalProvider();
+        defaultUserTextWidget = new TextWidget.Builder()
+                .widthHint(530)
+                .withLabel(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)
+                .withTootltip(org.bonitasoft.studio.actors.i18n.Messages.defaultUserTooltip)
+                .bindTo(usernameObservable)
+                .withProposalProvider(usernameProposalProvider)
+                .withValidator(defaultUserValidator().create())
+                .inContext(ctx)
+                .createIn(mainComposite);
     }
 
     private void updateUserProposals() {
+        Organization selectedOrganization = getSelectedOrganization();
+        if (selectedOrganization == null) {
+            usernameObservable.setValue("");
+            setWidgetEnabled(defaultUserTextWidget, false);
+            return;
+        }
         String[] proposals = usernames();
-        defaultUsernameLabel.setEnabled(proposals != null && proposals.length > 0);
-        defaultUsernameText.setEnabled(proposals != null && proposals.length > 0);
-        userAutoCompleteField.setProposals(proposals);
+        boolean enableDefaultUser = proposals != null && proposals.length > 0;
+        setWidgetEnabled(defaultUserTextWidget, enableDefaultUser);
+        usernameProposalProvider.setProposals(proposals);
         if (usernameObservable.getValue() == null || usernameObservable.getValue().isEmpty()) {
             if (proposals != null && proposals.length > 0) {
                 ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
-               if( Objects.equals(activeOrganizationProvider.getActiveOrganization(),getSelectedOrganization().getName())){
-                   usernameObservable.setValue(activeOrganizationProvider.getDefaultUser());
-               } else {
-                   usernameObservable.setValue(proposals[0]);
-               }
+                if (Objects.equals(activeOrganizationProvider.getActiveOrganization(),
+                        selectedOrganization.getName())) {
+                    usernameObservable.setValue(activeOrganizationProvider.getDefaultUser());
+                } else {
+                    usernameObservable.setValue(proposals[0]);
+                }
             }
         }
-        defaultUserBinding.validateTargetToModel();
+    }
+
+    private void setWidgetEnabled(Control control, boolean enabled) {
+        control.setEnabled(enabled);
+        if (control instanceof CLabel) {
+            control.setForeground(enabled ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND)
+                    : Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+        }
+        if (control instanceof Composite) {
+            Stream.of(((Composite) control).getChildren()).forEach(c -> setWidgetEnabled(c, enabled));
+        }
     }
 
     private IStatus userExistsInOrganization(Object user) {

@@ -171,7 +171,7 @@ public class TextWidget extends EditableControlWidget {
                             Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
-            buttonListner.ifPresent(control::onCLickButton);
+            buttonListner.ifPresent(control::onClickButton);
             placeholder.ifPresent(control::setPlaceholder);
             tooltip.ifPresent(control::setTooltip);
             if (ctx != null && modelObservable != null) {
@@ -227,7 +227,10 @@ public class TextWidget extends EditableControlWidget {
 
     @Override
     protected int horizontalSpacing() {
-        return labelAbove && transactionalEdit ? 1 : LayoutConstants.getSpacing().x;
+        if(labelAbove && transactionalEdit) {
+            return 1 ;
+        }
+        return super.horizontalSpacing();
     }
 
     public ISWTObservableValue observeText(int event) {
@@ -249,14 +252,14 @@ public class TextWidget extends EditableControlWidget {
         } else {
             controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT);
         }
-        controlDecoration.setMarginWidth(5);
+        controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
         controlDecoration.setShowOnlyOnFocus(false);
         controlDecoration.setImage(FieldDecorationRegistry.getDefault()
                 .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
         controlDecoration.setDescriptionText(tooltip);
     }
 
-    public void onCLickButton(Listener listener) {
+    public void onClickButton(Listener listener) {
         if (listener != null) {
             button.ifPresent(b -> b.addListener(SWT.Selection, listener));
         }
