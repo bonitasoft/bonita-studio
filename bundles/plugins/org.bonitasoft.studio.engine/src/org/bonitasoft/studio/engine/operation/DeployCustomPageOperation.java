@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.http.HttpException;
 import org.bonitasoft.engine.api.PageAPI;
@@ -27,6 +29,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -52,23 +55,44 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
             existingPages.stream().forEach(page -> {
                 try {
                     final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
-                    httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, page).execute();
+                    if(checkUploadResponse(uploadedFileToken)) {
+                        httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, page).execute();
+                        BonitaStudioLog.info(
+                                String.format("%s has been updated in portal.", pageId),
+                                EnginePlugin.PLUGIN_ID);
+                    }
                 } catch (IOException | HttpException e) {
                    throw new RuntimeException(e);
                 }
             });
-            BonitaStudioLog.info(
-                    String.format("%s has been updated in portal.", pageId),
-                    EnginePlugin.PLUGIN_ID);
         } else {
             final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
-            httpClientFactory.newAddCustomPageRequest(uploadedFileToken).execute();
-            BonitaStudioLog.info(
-                    String.format("%s has been added in portal.", pageId),
-                    EnginePlugin.PLUGIN_ID);
+            if(checkUploadResponse(uploadedFileToken)) {
+                httpClientFactory.newAddCustomPageRequest(uploadedFileToken).execute();
+                BonitaStudioLog.info(
+                        String.format("%s has been added in portal.", pageId),
+                        EnginePlugin.PLUGIN_ID);
+            }
         }
         Files.deleteIfExists(file.toPath());
         return findDeployedPages(pageId);
+    }
+
+    protected boolean checkUploadResponse(String uploadedFileToken) {
+        String[] parsedResult = uploadedFileToken.split("::");
+        if(parsedResult.length == 3 ) {
+            String permissions = parsedResult[2].substring(1,parsedResult[2].length()-1);
+            List<String> missingAPIExtensions = Stream.of(permissions.split(","))
+                    .map(String::trim)
+                    .filter(entry -> entry.startsWith("<"))
+                    .collect(Collectors.toList());
+            if(!missingAPIExtensions.isEmpty()) {
+                status = ValidationStatus.error(String.format(Messages.missingRestAPIStatus, getCustomPageLabel(), missingAPIExtensions.stream()
+                        .collect(Collectors.joining(", "))));
+                return false;
+            }
+        }
+        return true;
     }
 
     protected abstract File getArchiveFile(IProgressMonitor monitor);
@@ -95,9 +119,9 @@ public abstract class DeployCustomPageOperation implements IRunnableWithStatus {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.setTaskName(taskName());
         try {
-            deploy(monitor);
             status = new Status(IStatus.OK, EnginePlugin.PLUGIN_ID,
                     String.format(Messages.deploySuccessMessage, getCustomPageLabel(),getCustomPageType()));
+            deploy(monitor);
         } catch (IOException | HttpException e) {
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
                     NLS.bind(Messages.deployFailedMessage, getCustomPageLabel()), e);
