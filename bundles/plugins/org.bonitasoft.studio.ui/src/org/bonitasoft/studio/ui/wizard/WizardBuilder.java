@@ -29,6 +29,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
  * A helper builder to create a JFace {@link Wizard}
@@ -105,6 +106,7 @@ public class WizardBuilder<T> {
         wizard.setNeedsProgressMonitor(needProgress);
         wizard.setWindowTitle(windowTitle);
         wizard.setDefaultPageImageDescriptor(imageDescriptor);
+        wizard.setDialogSettings(WorkbenchPlugin.getDefault().getDialogSettings());
         return wizard;
     }
 

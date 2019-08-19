@@ -15,13 +15,17 @@
 package org.bonitasoft.studio.ui.wizard;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-@FunctionalInterface
 public interface ControlSupplier {
 
     Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx);
 
+    default void loadSettings(IDialogSettings settings) {}
+    
+    default void saveSettings(IDialogSettings settings) {}
+    
 }

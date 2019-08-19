@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.application.ui.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,6 +56,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -77,6 +78,9 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class SelectArtifactToDeployPage implements ControlSupplier {
 
+    private static final String DEPLOY_DEFAULT_SELECTION = "deployDefaultSelection";
+    private static final String CLEAN_BDM_DEFAULT_SELECTION = "cleanBDMDefaultSelection";
+    
     private RepositoryAccessor repositoryAccessor;
     private CheckboxRepositoryTreeViewer fileStoreViewer;
     protected IObservableSet<Object> checkedElementsObservable; // Bounded to the viewer -> doesn't contain filtered elements
@@ -91,6 +95,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private IObservableValue<String> usernameObservable;
     private SimpleContentProposalProvider usernameProposalProvider;
     private TextWidget defaultUserTextWidget;
+    private Set<IRepositoryFileStore> defaultSelectedElements;
 
     public SelectArtifactToDeployPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
@@ -108,6 +113,36 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     SelectArtifactToDeployPage() {
 
+    }
+
+    @Override
+    public void loadSettings(IDialogSettings settings) {
+        IDialogSettings section = settings.getSection(repositoryAccessor.getCurrentRepository().getName());
+        if (section != null && section.getArray(DEPLOY_DEFAULT_SELECTION) != null) {
+            defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
+            cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
+        }
+    }
+
+    @Override
+    public void saveSettings(IDialogSettings settings) {
+        mergeSets();
+        IDialogSettings section = settings.addNewSection(repositoryAccessor.getCurrentRepository().getName());
+        section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
+        section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
+    }
+
+    private String[] stringify(Set<IRepositoryFileStore> selectedElements) {
+        return selectedElements.stream()
+                .map(fStore -> fStore.getResource().getLocation().toString())
+                .toArray(String[]::new);
+    }
+
+    private Set<IRepositoryFileStore> fromStrings(String[] selectedElements) {
+        Collection<String> selection = Arrays.asList(selectedElements);
+        return allFileStores.stream()
+                .filter(fStore -> selection.contains(fStore.getResource().getLocation().toString()))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -133,7 +168,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         createDeployOptions(ctx, viewerAndButtonsComposite);
 
         checkedElementsObservable = fileStoreViewer.checkedElementsObservable();
-        checkAllElements();
+        defaultSelection();
         searchObservableValue.addValueChangeListener(e -> applySearch(e.diff.getNewValue()));
         checkedElementsObservable.addSetChangeListener(event -> {
             updateCleanDeployEnablement();
@@ -304,7 +339,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
-        cleanDeployOption.setSelection(false);
 
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
@@ -420,6 +454,15 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 .filter(fileStore -> !fileStore.getDisplayName().toLowerCase().contains(searchValue.toLowerCase()))
                 .filter(fileStore -> !Objects.equals(searchValue, fileStore.getParentStore().getDisplayName()))
                 .forEach(toFilter::add);
+    }
+
+    private void defaultSelection() {
+        if (defaultSelectedElements != null && !defaultSelectedElements.isEmpty()) {
+            defaultSelectedElements.stream()
+                    .forEach(checkedElementsObservable::add);
+        } else {
+            checkAllElements();
+        }
     }
 
     private void checkAllElements() {

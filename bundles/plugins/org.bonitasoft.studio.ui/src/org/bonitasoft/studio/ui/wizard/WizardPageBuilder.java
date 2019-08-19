@@ -82,7 +82,14 @@ public class WizardPageBuilder {
             public void createControl(Composite parent) {
                 final DataBindingContext ctx = context.orElse(new DataBindingContext());
                 NoMessageWizardPageSupport.create(this, ctx);
+                controlSupplier.loadSettings(getDialogSettings());
                 setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
+            }
+            
+            @Override
+            public void dispose() {
+                controlSupplier.saveSettings(getDialogSettings());
+                super.dispose();
             }
 
         };
