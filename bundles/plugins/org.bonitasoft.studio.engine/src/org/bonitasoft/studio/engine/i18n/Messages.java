@@ -185,6 +185,8 @@ public class Messages extends NLS {
 
     public static String uidExtraParams;
 
+    public static String missingRestAPIStatus;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }
