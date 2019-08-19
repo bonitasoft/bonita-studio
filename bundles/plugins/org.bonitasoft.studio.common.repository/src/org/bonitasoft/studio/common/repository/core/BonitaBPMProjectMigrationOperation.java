@@ -45,22 +45,25 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
         //In order to force the reorder of natures we must reset description
-        project.setDescription(
-                new ProjectDescriptionBuilder().withProjectName(project.getName())
-                        .withComment(ProductVersion.CURRENT_VERSION).build(),
-                IResource.FORCE,
-                monitor);
-        project.setDescription(new ProjectDescriptionBuilder()
-                .withProjectName(project.getName())
-                .withComment(ProductVersion.CURRENT_VERSION)
-                .havingNatures(natures)
-                .havingBuilders(builders).build(),
-                IResource.FORCE,
-                monitor);
+        String currentVersion = project.getDescription().getComment();
+        if(ProductVersion.canBeMigrated(currentVersion)) {
+            project.setDescription(
+                    new ProjectDescriptionBuilder().withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION).build(),
+                    IResource.FORCE,
+                    monitor);
+            project.setDescription(new ProjectDescriptionBuilder()
+                    .withProjectName(project.getName())
+                    .withComment(ProductVersion.CURRENT_VERSION)
+                    .havingNatures(natures)
+                    .havingBuilders(builders).build(),
+                    IResource.FORCE,
+                    monitor);
 
-        final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
-        bonitaBPMProjectClasspath.delete(repository, monitor);
-        bonitaBPMProjectClasspath.create(repository, monitor);
+            final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
+            bonitaBPMProjectClasspath.delete(repository, monitor);
+            bonitaBPMProjectClasspath.create(repository, monitor);
+        }
     }
 
     public BonitaBPMProjectMigrationOperation addBuilder(final String builderId) {
