@@ -21,6 +21,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
+
     private static String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
     public static String openProcessWizardPage_title;
@@ -117,6 +118,7 @@ public class Messages extends NLS {
     public static String deployStatusMessage;
     public static String cleanBDMDatabase;
     public static String deployOptions;
+    public static String DeployButtonLabel;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

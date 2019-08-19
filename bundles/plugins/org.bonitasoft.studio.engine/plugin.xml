@@ -47,7 +47,7 @@
      <coolbarItem
            class="org.bonitasoft.studio.engine.coolbar.RunCoolbarItem"
            priority="0"
-           toolbarPosition="11">
+           toolbarPosition="12">
      </coolbarItem>
      <coolbarItem
            class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
