@@ -120,7 +120,7 @@ public abstract class ControlWidget extends Composite {
     }
 
     protected int horizontalSpacing() {
-        return LayoutConstants.getSpacing().x;
+        return labelAbove ? LayoutConstants.getSpacing().x : LayoutConstants.getSpacing().x + 5 ;
     }
 
     public Control getControl() {
