@@ -51,11 +51,11 @@ public class UpdateCustomPageRequest extends HttpRequest<String> {
         updatePageRequest.setEntity(entityBuilder.build());
         final HttpResponse response = httpClient.execute(updatePageRequest);
         final int status = response.getStatusLine().getStatusCode();
+        String responseContent = contentAsString(response);
         if (status != HttpURLConnection.HTTP_OK) {
-            throw new HttpException(
-                    String.format("Update custom page failed with status: %s. Open Engine log for more details.", status));
+            throw new HttpException(responseContent.isEmpty() ? String.format("Add custom page failed with status: %s. Open Engine log for more details.", status) : responseContent);
         }
-        return contentAsString(response);
+        return responseContent;
     }
 
 }
