@@ -72,6 +72,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,
+ org.bonitasoft.engine.api.result,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.session,

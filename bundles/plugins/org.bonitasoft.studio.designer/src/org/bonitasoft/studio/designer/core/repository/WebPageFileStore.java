@@ -174,7 +174,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
         IPath webPageFolderPath = buildPath.append("webPage");
         IFolder webPageFolder = getRepository().getProject()
-                .getFolder(webPageFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+                .getFolder(webPageFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!webPageFolder.exists()) {
             webPageFolder.create(true, true, new NullProgressMonitor());
         }

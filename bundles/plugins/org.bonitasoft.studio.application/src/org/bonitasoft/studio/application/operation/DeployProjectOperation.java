@@ -14,36 +14,59 @@
  */
 package org.bonitasoft.studio.application.operation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 
+import org.bonitasoft.engine.api.ApplicationAPI;
+import org.bonitasoft.engine.api.result.ExecutionResult;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.DeployerException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.ApplicationPlugin;
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.ui.dialog.EngineStatusMapper;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 
 public class DeployProjectOperation implements IRunnableWithStatus {
 
-    private IStatus status;
-    private RepositoryAccessor repositoryAccessor;
+    private MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, -1, null, null);
     private IPath archivePath;
+    private APISession session;
 
-    public DeployProjectOperation(RepositoryAccessor repositoryAccessor, IPath archivePath) {
-        this.repositoryAccessor = repositoryAccessor;
+    public DeployProjectOperation(APISession session, IPath archivePath) {
+        this.session = session;
         this.archivePath = archivePath;
-        status = ValidationStatus.ok();
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        deployProject();
-    }
-
-    private void deployProject() {
-        BonitaStudioLog.info("Deploy not implemented yet ... ZzzZ ...", ApplicationPlugin.PLUGIN_ID);
+        monitor.beginTask(Messages.deployingApplicationArtifacts, IProgressMonitor.UNKNOWN);
+        try {
+            ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(session);
+            ExecutionResult result = applicationAPI
+                    .deployApplication(Files.readAllBytes(archivePath.toFile().toPath()));
+            result.getAllStatus().stream()
+                    .map(new EngineStatusMapper())
+                    .forEach(status::add);
+            if(status.isOK() && status.getChildren().length == 0) {
+                status.add(ValidationStatus.info("Application artifacts deployed successfully."));
+            }
+        } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException | DeployerException
+                | IOException e) {
+            status.add(new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, e.getMessage(), e));
+        }finally {
+            monitor.done();
+        }
     }
 
     @Override

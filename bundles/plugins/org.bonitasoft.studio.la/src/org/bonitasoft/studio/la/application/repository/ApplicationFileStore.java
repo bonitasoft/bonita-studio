@@ -28,7 +28,6 @@ import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
-import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -48,7 +47,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -215,11 +213,11 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
     public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
         IPath applicationFolderPath = buildPath.append("application");
         IFolder applicationFolder = getRepository().getProject()
-                .getFolder(applicationFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+                .getFolder(applicationFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!applicationFolder.exists()) {
             applicationFolder.create(true, true, new NullProgressMonitor());
         }
-        getResource().copy(applicationFolderPath.append(getName()), false, new NullProgressMonitor());
+        getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false, new NullProgressMonitor());
     }
 
 }
