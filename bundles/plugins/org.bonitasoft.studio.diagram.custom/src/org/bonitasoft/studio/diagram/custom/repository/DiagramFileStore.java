@@ -35,7 +35,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -429,7 +428,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
         IPath processFolderPath = buildPath.append("process");
         IFolder processFolder = getRepository().getProject()
-                .getFolder(processFolderPath.makeRelativeTo(getRepository().getProject().getFullPath()));
+                .getFolder(processFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!processFolder.exists()) {
             processFolder.create(true, true, new NullProgressMonitor());
         }

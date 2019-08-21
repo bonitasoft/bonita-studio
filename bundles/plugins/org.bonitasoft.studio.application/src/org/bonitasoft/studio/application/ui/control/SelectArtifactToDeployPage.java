@@ -358,6 +358,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite) {
         usernameObservable = PojoProperties.value("defaultUsername").observe(this);
         usernameProposalProvider = new SimpleContentProposalProvider();
+        usernameProposalProvider.setFiltering(true);
         defaultUserTextWidget = new TextWidget.Builder()
                 .widthHint(530)
                 .withLabel(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)

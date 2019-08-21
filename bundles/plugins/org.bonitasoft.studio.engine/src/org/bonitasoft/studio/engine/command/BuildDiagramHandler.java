@@ -14,6 +14,8 @@ import java.util.Objects;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.configuration.ConfigurationPlugin;
+import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -44,6 +46,8 @@ public class BuildDiagramHandler {
             ExportBarOperation exportBarOperation = getExportOperation();
             processes.forEach(exportBarOperation::addProcessToDeploy);
             exportBarOperation.setTargetFolder(destinationPath);
+            exportBarOperation.setConfigurationId(ConfigurationPlugin.getDefault().getPreferenceStore()
+                    .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
             exportBarOperation.run(new NullProgressMonitor());
             if (Objects.equals(exportBarOperation.getStatus().getSeverity(), ValidationStatus.ERROR)) {
                 this.status = exportBarOperation.getStatus();
@@ -60,14 +64,14 @@ public class BuildDiagramHandler {
     public IStatus execute(RepositoryAccessor repositoryAccessor,
             @Named("fileName") String fileName,
             @Named("destinationPath") String destinationPath) {
-        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName,
-                destinationPath);
+        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName, destinationPath);
         Display.getDefault().syncExec(runnable);
         return runnable.getStatus();
     }
 
     private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName) {
-        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChild(fileName, true).getProcesses();
+        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChild(fileName, true)
+                .getProcesses();
     }
 
     protected ExportBarOperation getExportOperation() {

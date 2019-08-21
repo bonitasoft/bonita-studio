@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -73,41 +74,48 @@ public class DeployArtifactsHandler {
     protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
             Collection<IRepositoryFileStore> artifactsToDeploy,  Map<String, Object> deployOptions, IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
-
         try {
-            container.run(true, false, monitor -> {
-                GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
-                apiSessionOperation.run(monitor);
-                try {
-                    APISession session = apiSessionOperation.getSession();
-                    DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                            artifactsToDeploy, session, deployOptions);
-                    deployTenantResourcesOperation.run(monitor);
-                    status.addAll(deployTenantResourcesOperation.getStatus());
-                    if (shouldValidate()) {
-                        IStatus validationStatus = performArtifactsValidation(artifactsToDeploy, monitor);
-                        if (!validationStatus.isOK()) {
-                            status.addAll(validationStatus);
-                            return;
-                        }
-                    }
-                    IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
-                    if (!buildStatus.isOK()) {
-                        status.addAll(buildStatus);
-                        return;
-                    }
-                    IStatus deployStatus = performDeploy(repositoryAccessor, monitor);
-                    status.addAll(deployStatus);
-                } finally {
-                    apiSessionOperation.logout();
-                }
-
-            });
+            container.run(true, false, performFinish(repositoryAccessor, artifactsToDeploy, deployOptions, status));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed", e.getCause() != null ? e.getCause() : e);
         }
         return status;
+    }
+
+    private IRunnableWithProgress performFinish(RepositoryAccessor repositoryAccessor,
+            Collection<IRepositoryFileStore> artifactsToDeploy, Map<String, Object> deployOptions, MultiStatus status) {
+        return monitor -> {
+            GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+            apiSessionOperation.run(monitor);
+            try {
+                APISession session = apiSessionOperation.getSession();
+                DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
+                        artifactsToDeploy, session, deployOptions);
+                deployTenantResourcesOperation.run(monitor);
+                status.addAll(deployTenantResourcesOperation.getStatus());
+                if (shouldValidate()) {
+                    IStatus validationStatus = performArtifactsValidation(artifactsToDeploy, monitor);
+                    if (!validationStatus.isOK()) {
+                        status.addAll(validationStatus);
+                        return;
+                    }
+                }
+                IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
+                if (!buildStatus.isOK()) {
+                    if(buildStatus instanceof MultiStatus) {
+                        status.addAll(buildStatus);
+                    }else {
+                        status.add(buildStatus);
+                    }
+                    return;
+                }
+                IStatus deployStatus = performDeploy(session, monitor);
+                status.addAll(deployStatus);
+            } finally {
+                apiSessionOperation.logout();
+            }
+        };
     }
 
     private boolean shouldValidate() {
@@ -157,10 +165,9 @@ public class DeployArtifactsHandler {
         return buildOperation.getStatus();
     }
 
-    private IStatus performDeploy(RepositoryAccessor repositoryAccessor, IProgressMonitor monitor)
+    private IStatus performDeploy(APISession session, IProgressMonitor monitor)
             throws InterruptedException, InvocationTargetException {
-        DeployProjectOperation operation = new DeployProjectOperation(repositoryAccessor,
-                buildOperation.getArchiveFilePath());
+        DeployProjectOperation operation = new DeployProjectOperation(session, buildOperation.getArchiveFilePath());
         operation.run(monitor);
         return operation.getStatus();
     }

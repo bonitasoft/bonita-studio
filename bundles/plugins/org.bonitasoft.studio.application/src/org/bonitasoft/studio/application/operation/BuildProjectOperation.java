@@ -72,7 +72,7 @@ public class BuildProjectOperation implements IRunnableWithStatus {
         targetFolder.getFolder(repositoryAccessor.getCurrentRepository().getName()).create(true, true,
                 new NullProgressMonitor());
         monitor.done();
-        return targetFolder.getFullPath();
+        return targetFolder.getLocation();
     }
 
     private IPath buildProject(IPath buildPath, IProgressMonitor monitor) {
@@ -85,7 +85,7 @@ public class BuildProjectOperation implements IRunnableWithStatus {
                     monitor.worked(1);
                 } catch (CoreException e) {
                     String buildErrorMessage = String.format(Messages.buildError, fileStore.getName());
-                    status = ValidationStatus.error(String.format("%s\n\n%s", buildErrorMessage, Messages.buildErrorHelp), e);
+                    status = ValidationStatus.error(String.format("%s %s", buildErrorMessage, Messages.buildErrorHelp), e);
                     BonitaStudioLog.error(e);
                     return buildPath;
                 }
@@ -105,8 +105,8 @@ public class BuildProjectOperation implements IRunnableWithStatus {
     private void createZip(IPath buildPath, String archiveFileName, IPath archiveFilePath) {
         IProject project = repositoryAccessor.getCurrentRepository().getProject();
         IFolder sourceFolder = project.getFolder(
-                buildPath.append(repositoryAccessor.getCurrentRepository().getName()).makeRelativeTo(project.getFullPath()));
-        IFile zipFile = project.getFile(archiveFilePath.makeRelativeTo(project.getFullPath()));
+                buildPath.append(repositoryAccessor.getCurrentRepository().getName()).makeRelativeTo(project.getLocation()));
+        IFile zipFile = project.getFile(archiveFilePath.makeRelativeTo(project.getLocation()));
         try {
             ZipUtil.zip(sourceFolder.getRawLocation().toFile().toPath(), zipFile.getRawLocation().toFile().toPath());
             project.getFolder(buildPath.makeRelativeTo(project.getFullPath())).refreshLocal(IResource.DEPTH_INFINITE,

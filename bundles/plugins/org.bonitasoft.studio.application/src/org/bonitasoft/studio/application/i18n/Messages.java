@@ -119,6 +119,7 @@ public class Messages extends NLS {
     public static String cleanBDMDatabase;
     public static String deployOptions;
     public static String DeployButtonLabel;
+    public static String deployingApplicationArtifacts;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
