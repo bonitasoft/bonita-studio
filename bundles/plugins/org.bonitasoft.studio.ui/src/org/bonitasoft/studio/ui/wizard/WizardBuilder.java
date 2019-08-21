@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -39,7 +40,8 @@ public class WizardBuilder<T> {
     private String windowTitle;
     private final List<WizardPageBuilder> pages = new ArrayList<>();
     private FinishHandler<T> finishHandler;
-    private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class, "defaultPage.png");//$NON-NLS-N$
+    private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class,
+            "defaultPage.png");//$NON-NLS-N$
     private Optional<T> finishResult = Optional.empty();
     private boolean needProgress = false;
     private int width = SWT.DEFAULT;
@@ -90,6 +92,10 @@ public class WizardBuilder<T> {
 
             @Override
             public boolean performFinish() {
+                pages.stream()
+                        .map(WizardPageBuilder::getControlSupplier)
+                        .filter(Objects::nonNull)
+                        .forEachOrdered(controlSupplier -> controlSupplier.saveSettings(getDialogSettings()));
                 try {
                     if (finishHandler != null) {
                         finishResult = finishHandler.finish(getContainer());
