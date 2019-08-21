@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -60,7 +61,7 @@ public class DeployArtifactsHandler {
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
             RepositoryAccessor repositoryAccessor)
             throws InvocationTargetException, InterruptedException {
-        SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryAccessor);
+        SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryAccessor,new EnvironmentProviderFactory().getEnvironmentProvider());
         Optional<IStatus> result = createWizard(newWizard(), page,
                 repositoryAccessor,
                 Messages.selectArtifactToDeployTitle,

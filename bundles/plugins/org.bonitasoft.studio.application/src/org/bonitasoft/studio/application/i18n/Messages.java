@@ -120,6 +120,7 @@ public class Messages extends NLS {
     public static String deployOptions;
     public static String DeployButtonLabel;
     public static String deployingApplicationArtifacts;
+    public static String environment;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

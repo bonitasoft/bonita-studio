@@ -85,17 +85,15 @@ public class WizardPageBuilder {
                 controlSupplier.loadSettings(getDialogSettings());
                 setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
             }
-            
-            @Override
-            public void dispose() {
-                controlSupplier.saveSettings(getDialogSettings());
-                super.dispose();
-            }
 
         };
         page.setTitle(title);
         page.setDescription(description);
         return page;
+    }
+
+    public ControlSupplier getControlSupplier() {
+        return controlSupplier;
     }
 
 }

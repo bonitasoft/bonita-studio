@@ -5,6 +5,7 @@
    <extension-point id="org.bonitasoft.studio.configuration.exportConfigurationAction" name="org.bonitasoft.studio.configuration.exportConfigurationAction" schema="schema/org.bonitasoft.studio.configuration.exportConfigurationAction.exsd"/>
    <extension-point id="org.bonitasoft.studio.configuration.importConfigurationAction" name="org.bonitasoft.studio.configuration.importConfigurationAction" schema="schema/org.bonitasoft.studio.configuration.importConfigurationAction.exsd"/>
    <extension-point id="org.bonitasoft.studio.configuration.synchronizer" name="org.bonitasoft.studio.configuration.synchronizer" schema="schema/org.bonitasoft.studio.configuration.synchronizer.exsd"/>
+   <extension-point id="org.bonitasoft.studio.configuration.environmentProvider" name="org.bonitasoft.studio.configuration.environmentProvider" schema="schema/org.bonitasoft.studio.configuration.environmentProvider.exsd"/>
    <extension
          point="org.eclipse.ui.commands">
       <command

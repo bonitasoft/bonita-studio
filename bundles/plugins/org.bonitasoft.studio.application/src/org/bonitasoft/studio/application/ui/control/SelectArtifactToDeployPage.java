@@ -38,11 +38,15 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
+import org.bonitasoft.studio.configuration.ConfigurationPlugin;
+import org.bonitasoft.studio.configuration.extension.IEnvironmentProvider;
+import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator.Builder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
+import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -91,14 +95,17 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private List<IRepositoryFileStore> allFileStores;
     private Button cleanDeployOption;
     private String defaultUsername;
+    private String environment;
     private boolean cleanBDM;
     private IObservableValue<String> usernameObservable;
     private SimpleContentProposalProvider usernameProposalProvider;
     private TextWidget defaultUserTextWidget;
     private Set<IRepositoryFileStore> defaultSelectedElements;
+    private IEnvironmentProvider environmentProvider;
 
-    public SelectArtifactToDeployPage(RepositoryAccessor repositoryAccessor) {
+    public SelectArtifactToDeployPage(RepositoryAccessor repositoryAccessor, IEnvironmentProvider environmentProvider) {
         this.repositoryAccessor = repositoryAccessor;
+        this.environmentProvider = environmentProvider;
         allCheckedElements = new HashSet<>();
         searchObservableValue = new WritableValue<>();
         toFilter = new ArrayList<>();
@@ -122,6 +129,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
         }
+        environment = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
     }
 
     @Override
@@ -130,6 +138,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         IDialogSettings section = settings.addNewSection(repositoryAccessor.getCurrentRepository().getName());
         section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
         section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
+        ConfigurationPlugin.getDefault().getPreferenceStore().setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, environment);
     }
 
     private String[] stringify(Set<IRepositoryFileStore> selectedElements) {
@@ -317,6 +326,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         searchComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM).create());
 
         new SearchWidget.Builder()
+                .useNativeRender()
                 .labelAbove()
                 .fill()
                 .widthHint(400)
@@ -332,10 +342,25 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
         Group deployOptionGroup = new Group(parent, SWT.NONE);
         deployOptionGroup
-                .setLayout(GridLayoutFactory.swtDefaults().numColumns(1).extendedMargins(10, 0, 10, 0).create());
+                .setLayout(GridLayoutFactory.swtDefaults().numColumns(1).extendedMargins(10, 0, 0, 0).create());
         deployOptionGroup.setLayoutData(GridDataFactory.fillDefaults().create());
         deployOptionGroup.setText(Messages.deployOptions);
 
+        if(!environmentProvider.getEnvironment().isEmpty()) {
+            new ComboWidget.Builder()
+            .withLabel(Messages.environment)
+            .labelAbove()
+            .widthHint(400)
+            .useNativeRender()
+            .readOnly()
+            .withItems(environmentProvider.getEnvironment().toArray(new String[] {}))
+            .bindTo(PojoProperties.value("environment").observe(this))
+            .inContext(ctx)
+            .createIn(deployOptionGroup);
+        }
+        
+        createDefaultUserTextWidget(ctx, deployOptionGroup);
+        
         cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
@@ -343,7 +368,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
 
-        createDefaultUserTextWidget(ctx, deployOptionGroup);
     }
 
     private Organization getSelectedOrganization() {
@@ -360,6 +384,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         usernameProposalProvider = new SimpleContentProposalProvider();
         usernameProposalProvider.setFiltering(true);
         defaultUserTextWidget = new TextWidget.Builder()
+                .useNativeRender()
+                .labelAbove()
                 .widthHint(530)
                 .withLabel(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)
                 .withTootltip(org.bonitasoft.studio.actors.i18n.Messages.defaultUserTooltip)
@@ -516,6 +542,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     public void setCleanBDM(boolean cleanBDM) {
         this.cleanBDM = cleanBDM;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
 }
