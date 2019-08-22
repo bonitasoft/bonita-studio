@@ -21,23 +21,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
-import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
+import org.bonitasoft.studio.application.ui.control.model.Artifact;
+import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
+import org.bonitasoft.studio.application.ui.control.model.ProcessArtifact;
+import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
+import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
+import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
+import org.bonitasoft.studio.common.repository.ui.viewer.FileStoreObservableFactory;
+import org.bonitasoft.studio.common.repository.ui.viewer.FileStoreTreeStructureAdvisor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.extension.IEnvironmentProvider;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -52,7 +54,7 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -60,6 +62,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -67,6 +70,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
@@ -84,15 +88,12 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private static final String DEPLOY_DEFAULT_SELECTION = "deployDefaultSelection";
     private static final String CLEAN_BDM_DEFAULT_SELECTION = "cleanBDMDefaultSelection";
-    
-    private RepositoryAccessor repositoryAccessor;
+
     private CheckboxRepositoryTreeViewer fileStoreViewer;
     protected IObservableSet<Object> checkedElementsObservable; // Bounded to the viewer -> doesn't contain filtered elements
-    protected Set<IRepositoryFileStore> allCheckedElements; // Contains all checked elements, even those not in the viewer anymore (filtered) 
-    private IObservableValue<String> searchObservableValue;
-    protected List<Object> toFilter;
-    private IObservableList<IRepositoryStore<? extends IRepositoryFileStore>> input;
-    private List<IRepositoryFileStore> allFileStores;
+    protected Set<Object> allCheckedElements = new HashSet<>(); // Contains all checked elements, even those not in the viewer anymore (filtered) 
+    private IObservableValue<String> searchObservableValue = new WritableValue<>();
+    protected List<Object> toFilter = new ArrayList<>();
     private Button cleanDeployOption;
     private String defaultUsername;
     private String environment;
@@ -100,58 +101,65 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private IObservableValue<String> usernameObservable;
     private SimpleContentProposalProvider usernameProposalProvider;
     private TextWidget defaultUserTextWidget;
-    private Set<IRepositoryFileStore> defaultSelectedElements;
     private IEnvironmentProvider environmentProvider;
+    private Set<Object> defaultSelectedElements;
+    private RepositoryModel repositoryModel;
 
-    public SelectArtifactToDeployPage(RepositoryAccessor repositoryAccessor, IEnvironmentProvider environmentProvider) {
-        this.repositoryAccessor = repositoryAccessor;
+    public SelectArtifactToDeployPage(RepositoryModel repositoryModel, IEnvironmentProvider environmentProvider) {
+        this.repositoryModel = repositoryModel;
         this.environmentProvider = environmentProvider;
-        allCheckedElements = new HashSet<>();
-        searchObservableValue = new WritableValue<>();
-        toFilter = new ArrayList<>();
-        input = new WritableList<>();
-
-        findDeployableRepositoryStore().forEach(input::add);
-        allFileStores = input.stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-    }
-
-    SelectArtifactToDeployPage() {
-
     }
 
     @Override
     public void loadSettings(IDialogSettings settings) {
-        IDialogSettings section = settings.getSection(repositoryAccessor.getCurrentRepository().getName());
+        IDialogSettings section = settings.getSection(repositoryModel.getName());
         if (section != null && section.getArray(DEPLOY_DEFAULT_SELECTION) != null) {
             defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
         }
-        environment = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+        environment = ConfigurationPlugin.getDefault().getPreferenceStore()
+                .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
     }
 
     @Override
     public void saveSettings(IDialogSettings settings) {
         mergeSets();
-        IDialogSettings section = settings.addNewSection(repositoryAccessor.getCurrentRepository().getName());
+        IDialogSettings section = settings.addNewSection(repositoryModel.getName());
         section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
         section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
-        ConfigurationPlugin.getDefault().getPreferenceStore().setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, environment);
+        ConfigurationPlugin.getDefault().getPreferenceStore()
+                .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, environment);
     }
 
-    private String[] stringify(Set<IRepositoryFileStore> selectedElements) {
+    private String[] stringify(Set<Object> selectedElements) {
         return selectedElements.stream()
-                .map(fStore -> fStore.getResource().getLocation().toString())
+                .map(elem -> {
+                    if (elem instanceof ProcessArtifact && ((ProcessArtifact) elem).getVersions().size() == 1) {
+                        return ((ProcessArtifact) elem).getLatestVersion().toString();
+                    } else if (elem instanceof Artifact && !(elem instanceof ProcessArtifact)) {
+                        return elem.toString();
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
                 .toArray(String[]::new);
     }
 
-    private Set<IRepositoryFileStore> fromStrings(String[] selectedElements) {
+    private Set<Object> fromStrings(String[] selectedElements) {
         Collection<String> selection = Arrays.asList(selectedElements);
-        return allFileStores.stream()
-                .filter(fStore -> selection.contains(fStore.getResource().getLocation().toString()))
+        return repositoryModel.getArtifacts().stream()
+                .filter(artifact -> selection.contains(artifact.toString()))
+                .map(singleVersionProcess())
                 .collect(Collectors.toSet());
+    }
+
+    private Function<Object, Object> singleVersionProcess() {
+        return object -> {
+            if (object instanceof ProcessVersion && ((ProcessVersion) object).getParent().getVersions().size() == 1) {
+                return ((ProcessVersion) object).getParent();
+            }
+            return object;
+        };
     }
 
     @Override
@@ -197,10 +205,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     protected void mergeSets() {
         checkedElementsObservable.stream()
-                .filter(IRepositoryFileStore.class::isInstance)
-                .map(IRepositoryFileStore.class::cast)
+                .filter(object -> object instanceof Artifact)
                 .forEach(allCheckedElements::add);
-        List<IRepositoryFileStore> toRemove = allCheckedElements.stream()
+        List<Object> toRemove = allCheckedElements.stream()
                 .filter(fileStore -> !checkedElementsObservable.contains(fileStore)
                         && !toFilter.contains(fileStore))
                 .collect(Collectors.toList());
@@ -228,8 +235,23 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void createViewer(DataBindingContext ctx, Composite parent) {
         fileStoreViewer = new CheckboxRepositoryTreeViewer(parent);
         fileStoreViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        fileStoreViewer.bindTree(ctx, input);
-        fileStoreViewer.setComparator(new ProjectExplorerViewerComparator());
+        fileStoreViewer.setContentProvider(new ObservableListTreeContentProvider(observableFactory(),
+                treeStructureAdvisor()));
+        fileStoreViewer.setLabelProvider(new DeployTreeLabelProvider());
+        fileStoreViewer.bindTree(ctx, new WritableList(repositoryModel.getStores(), RepositoryStore.class));
+        fileStoreViewer.setComparator(new ViewerComparator() {
+
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                if (e1 instanceof ProcessVersion && e2 instanceof ProcessVersion) {
+                    return ((ProcessVersion) e1).compareTo((ProcessVersion) e2);
+                }
+                if (e1 instanceof RepositoryStore && e2 instanceof RepositoryStore) {
+                    return ((RepositoryStore) e1).compareTo((RepositoryStore) e2);
+                }
+                return super.compare(viewer, e1, e2);
+            }
+        });
         fileStoreViewer.addDoubleClickListener(
                 e -> {
                     if (e.getSelection() instanceof TreeSelection) {
@@ -242,52 +264,91 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IRepositoryStore) {
-                    return ((IRepositoryStore) element).getChildren().stream()
+                if (element instanceof RepositoryStore) {
+                    return ((RepositoryStore) element).getArtifacts().stream()
                             .anyMatch(fileStore -> !toFilter.contains(fileStore));
                 }
                 return !toFilter.contains(element);
             }
         });
         fileStoreViewer.addCheckStateListener(event -> {
-            if (event.getElement() instanceof OrganizationRepositoryStore && event.getChecked()) {
+            if (isOrganizationRepositoryStore(event.getElement()) && event.getChecked()) {
                 uniqueOrganizationSelection(getDefaultOrganization());
             }
-            if (event.getElement() instanceof OrganizationFileStore && countSelectedOrganizations() > 1) {
-                uniqueOrganizationSelection((OrganizationFileStore) event.getElement());
+            if (event.getElement() instanceof OrganizationArtifact && countSelectedOrganizations() > 1) {
+                uniqueOrganizationSelection((OrganizationArtifact) event.getElement());
             }
         });
     }
 
-    private OrganizationFileStore getDefaultOrganization() {
-        return input.stream()
-                .filter(OrganizationRepositoryStore.class::isInstance)
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(fStore -> Objects.equals(new ActiveOrganizationProvider().getActiveOrganizationFileName(),
-                        fStore.getName()))
-                .map(OrganizationFileStore.class::cast)
+    private boolean isOrganizationRepositoryStore(Object element) {
+        if(element instanceof RepositoryStore) {
+            return ((RepositoryStore) element).getArtifacts().get(0) instanceof OrganizationArtifact;
+        }
+        return false;
+    }
+
+    private FileStoreTreeStructureAdvisor treeStructureAdvisor() {
+        return new FileStoreTreeStructureAdvisor() {
+
+            @Override
+            public Boolean hasChildren(Object element) {
+                if (element instanceof ProcessArtifact) {
+                    return ((ProcessArtifact) element).getVersions().size() > 1;
+                }
+                return element instanceof RepositoryStore || super.hasChildren(element);
+            }
+
+            @Override
+            public Object getParent(Object element) {
+                if (element instanceof Artifact) {
+                    return ((Artifact) element).getParent();
+                }
+                return super.getParent(element);
+            }
+
+        };
+    }
+
+    private FileStoreObservableFactory observableFactory() {
+        return new FileStoreObservableFactory() {
+
+            @Override
+            public IObservable createObservable(Object target) {
+                if (target instanceof RepositoryStore) {
+                    return new WritableList(((RepositoryStore) target).getArtifacts(), Artifact.class);
+                }
+                if (target instanceof ProcessArtifact) {
+                    return new WritableList(((ProcessArtifact) target).getVersions(), ProcessVersion.class);
+                }
+                return super.createObservable(target);
+            }
+        };
+    }
+
+    private Artifact getDefaultOrganization() {
+        return repositoryModel.getArtifacts().stream()
+                .filter(OrganizationArtifact.class::isInstance)
+                .filter(artifact -> Objects.equals(new ActiveOrganizationProvider().getActiveOrganizationFileName(),
+                        artifact.getName()))
                 .findFirst()
-                .orElse(input.stream()
-                        .filter(OrganizationRepositoryStore.class::isInstance)
-                        .map(IRepositoryStore::getChildren)
-                        .flatMap(Collection::stream)
-                        .map(OrganizationFileStore.class::cast)
+                .orElse(repositoryModel.getArtifacts().stream()
+                        .filter(OrganizationArtifact.class::isInstance)
                         .findFirst()
                         .orElse(null));
     }
 
-    private void uniqueOrganizationSelection(OrganizationFileStore selectedOrganizationFilestore) {
-        checkedElementsObservable.add(selectedOrganizationFilestore);
+    private void uniqueOrganizationSelection(Artifact selectedOrganizationArtifact) {
+        checkedElementsObservable.add(selectedOrganizationArtifact);
         checkedElementsObservable
-                .removeIf(element -> (element instanceof OrganizationFileStore)
-                        && !Objects.equals(element, selectedOrganizationFilestore));
+                .removeIf(element -> (element instanceof OrganizationArtifact)
+                        && !Objects.equals(element, selectedOrganizationArtifact));
         updateUserProposals();
     }
 
     private long countSelectedOrganizations() {
         return checkedElementsObservable.stream()
-                .filter(OrganizationFileStore.class::isInstance)
+                .filter(OrganizationArtifact.class::isInstance)
                 .count();
     }
 
@@ -346,21 +407,21 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         deployOptionGroup.setLayoutData(GridDataFactory.fillDefaults().create());
         deployOptionGroup.setText(Messages.deployOptions);
 
-        if(!environmentProvider.getEnvironment().isEmpty()) {
+        if (!environmentProvider.getEnvironment().isEmpty()) {
             new ComboWidget.Builder()
-            .withLabel(Messages.environment)
-            .labelAbove()
-            .widthHint(400)
-            .useNativeRender()
-            .readOnly()
-            .withItems(environmentProvider.getEnvironment().toArray(new String[] {}))
-            .bindTo(PojoProperties.value("environment").observe(this))
-            .inContext(ctx)
-            .createIn(deployOptionGroup);
+                    .withLabel(Messages.environment)
+                    .labelAbove()
+                    .widthHint(400)
+                    .useNativeRender()
+                    .readOnly()
+                    .withItems(environmentProvider.getEnvironment().toArray(new String[] {}))
+                    .bindTo(PojoProperties.value("environment").observe(this))
+                    .inContext(ctx)
+                    .createIn(deployOptionGroup);
         }
-        
+
         createDefaultUserTextWidget(ctx, deployOptionGroup);
-        
+
         cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
@@ -372,9 +433,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private Organization getSelectedOrganization() {
         return checkedElementsObservable != null ? checkedElementsObservable.stream()
-                .filter(OrganizationFileStore.class::isInstance)
-                .map(OrganizationFileStore.class::cast)
-                .map(OrganizationFileStore::getContent)
+                .filter(OrganizationArtifact.class::isInstance)
+                .map(OrganizationArtifact.class::cast)
+                .map(artifact -> artifact.getModel())
                 .findFirst()
                 .orElse(null) : null;
     }
@@ -477,9 +538,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     protected void updateArtifactsToFilter(String searchValue) {
         toFilter.clear();
-        getAllFileStores().stream()
-                .filter(fileStore -> !fileStore.getDisplayName().toLowerCase().contains(searchValue.toLowerCase()))
-                .filter(fileStore -> !Objects.equals(searchValue, fileStore.getParentStore().getDisplayName()))
+        repositoryModel.getArtifacts().stream()
+                .filter(artifact -> !artifact.getDisplayName().toLowerCase().contains(searchValue.toLowerCase()))
+                .filter(artifact -> !Objects.equals(searchValue, artifact.getParent().toString()))
                 .forEach(toFilter::add);
     }
 
@@ -493,39 +554,22 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void checkAllElements() {
-        input.stream()
-                .map(IRepositoryStore::getChildren)
-                .flatMap(Collection::stream)
-                .filter(fStore -> !OrganizationFileStore.class.isInstance(fStore))
+        repositoryModel.getArtifacts().stream()
+                .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
+                .filter(artifact -> ProcessVersion.class.isInstance(artifact) ? ((ProcessVersion) artifact).getParent().getVersions().size() > 1 : true )
                 .forEach(checkedElementsObservable::add);
 
         //Only one organization can be selected at a time
         uniqueOrganizationSelection(getDefaultOrganization());
     }
 
-    private List<IRepositoryStore<? extends IRepositoryFileStore>> findDeployableRepositoryStore() {
-        return repositoryAccessor.getCurrentRepository()
-                .getAllStores()
-                .stream()
-                .filter(repositoryStore -> repositoryStore.getChildren().stream()
-                        .anyMatch(IDeployable.class::isInstance))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Only visible checked elements are returned: If the user filters on `Diagrams` and click ok, only checked diagrams will
-     * be returned.
-     */
-    public Collection<IRepositoryFileStore> getElements() {
+    public Collection<Artifact> getSelectedArtifacts() {
         return checkedElementsObservable.stream()
-                .filter(IRepositoryFileStore.class::isInstance)
-                .map(IRepositoryFileStore.class::cast)
+                .filter(Artifact.class::isInstance)
+                .map(Artifact.class::cast)
+                .map(artifact -> artifact instanceof ProcessArtifact && ((ProcessArtifact) artifact).getVersions().size() == 1
+                        ? ((ProcessArtifact) artifact).getLatestVersion() : artifact)
                 .collect(Collectors.toList());
-    }
-
-    // for test purpose
-    protected List<IRepositoryFileStore> getAllFileStores() {
-        return allFileStores;
     }
 
     public String getDefaultUsername() {

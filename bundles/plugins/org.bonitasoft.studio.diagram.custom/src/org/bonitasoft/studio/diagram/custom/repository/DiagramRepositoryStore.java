@@ -87,11 +87,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * @author Romain Bioteau
- */
-public class DiagramRepositoryStore extends
-        AbstractEMFRepositoryStore<DiagramFileStore> {
+public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore> {
 
     private static final String STORE_NAME = "diagrams";
     private static final Set<String> extensions = new HashSet<>();
@@ -206,7 +202,7 @@ public class DiagramRepositoryStore extends
     }
 
     public List<DiagramFileStore> getRecentChildren(final int nbResult) {
-        if(!getResource().exists()) {
+        if (!getResource().exists()) {
             return Collections.emptyList();
         }
         refresh();
@@ -473,9 +469,10 @@ public class DiagramRepositoryStore extends
             ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
             for (Pool process : ModelHelper.getAllElementOfTypeIn(diagram, Pool.class)) {
-                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf", true);
+                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf",
+                        true);
                 if (file != null) {
-                    synchronizer.synchronize(process,file.getContent());
+                    synchronizer.synchronize(process, file.getContent());
                 }
                 process.getConfigurations().stream().forEach(conf -> synchronizer.synchronize(process, conf));
             }

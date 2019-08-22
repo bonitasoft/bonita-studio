@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
@@ -32,11 +33,15 @@ import org.bonitasoft.studio.application.operation.BuildProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployTenantResourcesOperation;
 import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
+import org.bonitasoft.studio.application.ui.control.RepositoryModelBuilder;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
+import org.bonitasoft.studio.application.ui.control.model.Artifact;
+import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
+import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
+import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
@@ -51,17 +56,25 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 public class DeployArtifactsHandler {
 
     private BuildProjectOperation buildOperation;
+    private RepositoryModel repositoryModel;
 
     @Execute
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
-            RepositoryAccessor repositoryAccessor)
+            RepositoryAccessor repositoryAccessor, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
-        SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryAccessor,new EnvironmentProviderFactory().getEnvironmentProvider());
+
+        progressService.busyCursorWhile( monitor -> {
+            repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);
+        });
+
+        SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
+                new EnvironmentProviderFactory().getEnvironmentProvider());
         Optional<IStatus> result = createWizard(newWizard(), page,
                 repositoryAccessor,
                 Messages.selectArtifactToDeployTitle,
@@ -73,26 +86,32 @@ public class DeployArtifactsHandler {
     }
 
     protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToDeploy,  Map<String, Object> deployOptions, IWizardContainer container) {
+            Collection<Artifact> artifactsToDeploy,
+            Map<String, Object> deployOptions,
+            IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
         try {
-            container.run(true, false, performFinish(repositoryAccessor, artifactsToDeploy, deployOptions, status));
+            container.run(true, false,
+                    performFinish(repositoryAccessor,artifactsToDeploy, deployOptions, status));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed", e.getCause() != null ? e.getCause() : e);
+            return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
+                    e.getCause() != null ? e.getCause() : e);
         }
         return status;
     }
 
     private IRunnableWithProgress performFinish(RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToDeploy, Map<String, Object> deployOptions, MultiStatus status) {
+            Collection<Artifact> artifactsToDeploy,
+            Map<String, Object> deployOptions,
+            MultiStatus status) {
         return monitor -> {
             GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
             apiSessionOperation.run(monitor);
             try {
                 APISession session = apiSessionOperation.getSession();
                 DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                        artifactsToDeploy, session, deployOptions);
+                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance).map(TenantArtifact.class::cast).collect(Collectors.toList()), session, deployOptions);
                 deployTenantResourcesOperation.run(monitor);
                 status.addAll(deployTenantResourcesOperation.getStatus());
                 if (shouldValidate()) {
@@ -104,9 +123,9 @@ public class DeployArtifactsHandler {
                 }
                 IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
                 if (!buildStatus.isOK()) {
-                    if(buildStatus instanceof MultiStatus) {
+                    if (buildStatus instanceof MultiStatus) {
                         status.addAll(buildStatus);
-                    }else {
+                    } else {
                         status.add(buildStatus);
                     }
                     return;
@@ -138,8 +157,10 @@ public class DeployArtifactsHandler {
                         .withDescription(description)
                         .withControl(page))
                 .onFinish(container -> Optional
-                        .ofNullable(deployArtifacts(repositoryAccessor, page.getElements(), buildOptions(page), container)));
-
+                        .ofNullable(deployArtifacts(repositoryAccessor,
+                                page.getSelectedArtifacts(),
+                                buildOptions(page),
+                                container)));
     }
 
     private Map<String, Object> buildOptions(SelectArtifactToDeployPage page) {
@@ -159,9 +180,12 @@ public class DeployArtifactsHandler {
     }
 
     private IStatus performBuild(RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToDeploy, IProgressMonitor monitor)
+            Collection<Artifact> artifactsToDeploy, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        buildOperation = new BuildProjectOperation(repositoryAccessor, artifactsToDeploy);
+        buildOperation = new BuildProjectOperation(repositoryAccessor, artifactsToDeploy.stream()
+                .filter(BuildableArtifact.class::isInstance)
+                .map(BuildableArtifact.class::cast)
+                .collect(Collectors.toList()));
         buildOperation.run(monitor);
         return buildOperation.getStatus();
     }
@@ -173,7 +197,7 @@ public class DeployArtifactsHandler {
         return operation.getStatus();
     }
 
-    private IStatus performArtifactsValidation(Collection<IRepositoryFileStore> artifactsToDeploy,
+    private IStatus performArtifactsValidation(Collection<Artifact> artifactsToDeploy,
             IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);

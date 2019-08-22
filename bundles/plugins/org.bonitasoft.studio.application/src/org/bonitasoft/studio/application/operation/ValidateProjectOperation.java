@@ -21,10 +21,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
+import org.bonitasoft.studio.application.ui.control.model.Artifact;
+import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
@@ -38,19 +37,19 @@ import org.eclipse.core.runtime.MultiStatus;
 public class ValidateProjectOperation implements IRunnableWithStatus {
 
     private MultiStatus status;
-    private List<DiagramFileStore> fileStoreToValidate;
+    private List<ProcessVersion> fileStoreToValidate;
 
-    public ValidateProjectOperation(Collection<? extends IRepositoryFileStore> artifactsToValidate) {
+    public ValidateProjectOperation(Collection<Artifact> artifactsToValidate) {
         this.fileStoreToValidate = artifactsToValidate.stream()
-                .filter(DiagramFileStore.class::isInstance)
-                .map(DiagramFileStore.class::cast)
+                .filter(ProcessVersion.class::isInstance)
+                .map(ProcessVersion.class::cast)
                 .collect(Collectors.toList());
         this.status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, "", null);
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for (DiagramFileStore fileStore : fileStoreToValidate) {
+        for (ProcessVersion pv : fileStoreToValidate) {
             if (monitor.isCanceled()) {
                 break;
             }
@@ -59,12 +58,11 @@ public class ValidateProjectOperation implements IRunnableWithStatus {
                             new OffscreenEditPartFactory(
                                     org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                             new ValidationMarkerProvider()));
-            MainProcess content = fileStore.getContent();
-            validationAction.addProcess(content);
+            validationAction.addProcess(pv.getModel());
             validationAction.run(monitor);
             if (!monitor.isCanceled()
                     && Objects.equals(validationAction.getStatus().getSeverity(), ValidationStatus.ERROR)) {
-                status.add(new ProcessValidationStatus(content,validationAction.getStatus()));
+                status.add(new ProcessValidationStatus(pv.getModel(),validationAction.getStatus()));
             }
         }
     }

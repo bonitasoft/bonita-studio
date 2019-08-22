@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -40,11 +39,11 @@ public class BuildProjectOperation implements IRunnableWithStatus {
 
     private IStatus status;
     private RepositoryAccessor repositoryAccessor;
-    private Collection<IRepositoryFileStore> artifactsToBuild;
+    private Collection<IBuildable> artifactsToBuild;
     private IPath archiveFilePath;
 
     public BuildProjectOperation(RepositoryAccessor repositoryAccessor,
-            Collection<IRepositoryFileStore> artifactsToBuild) {
+            Collection<IBuildable> artifactsToBuild) {
         this.repositoryAccessor = repositoryAccessor;
         this.artifactsToBuild = artifactsToBuild;
         status = ValidationStatus.ok();
@@ -77,19 +76,16 @@ public class BuildProjectOperation implements IRunnableWithStatus {
 
     private IPath buildProject(IPath buildPath, IProgressMonitor monitor) {
         monitor.beginTask(Messages.build, artifactsToBuild.size() + 1);
-        for (IRepositoryFileStore fileStore : artifactsToBuild) {
-            if(fileStore instanceof IBuildable) {
+        for (IBuildable buildable : artifactsToBuild) {
                 try {
-                    ((IBuildable) fileStore).build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),
-                            monitor);
+                    buildable.build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),monitor);
                     monitor.worked(1);
                 } catch (CoreException e) {
-                    String buildErrorMessage = String.format(Messages.buildError, fileStore.getName());
+                    String buildErrorMessage = String.format(Messages.buildError, buildable.getName());
                     status = ValidationStatus.error(String.format("%s %s", buildErrorMessage, Messages.buildErrorHelp), e);
                     BonitaStudioLog.error(e);
                     return buildPath;
                 }
-            }
         }
         String archiveFileName = String.format("%s_%s.zip", repositoryAccessor.getCurrentRepository().getName(),
                 System.currentTimeMillis());

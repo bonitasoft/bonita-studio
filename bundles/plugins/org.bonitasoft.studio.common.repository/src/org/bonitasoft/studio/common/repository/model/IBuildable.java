@@ -10,5 +10,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface IBuildable {
 
     public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException;
+
+    String getName();
     
 }
