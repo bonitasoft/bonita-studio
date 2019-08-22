@@ -120,7 +120,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
             return "page";
         }
     }
-
+    
     @Override
     public String getDisplayName() {
         try {

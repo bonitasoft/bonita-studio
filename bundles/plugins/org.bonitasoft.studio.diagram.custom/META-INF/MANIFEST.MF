@@ -58,7 +58,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.model.workbench;bundle-version="2.0.1.v20170713-1800",
  org.eclipse.e4.core.di.annotations,
  org.bonitasoft.studio.ui,
- org.bonitasoft.studio.designer;bundle-version="7.9.0"
+ org.bonitasoft.studio.designer;bundle-version="7.9.0",
+ org.eclipse.m2e.maven.runtime,
+ org.eclipse.jface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.session

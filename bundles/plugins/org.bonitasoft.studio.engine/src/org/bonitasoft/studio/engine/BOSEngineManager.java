@@ -19,12 +19,8 @@ import static java.util.Objects.requireNonNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
@@ -46,7 +42,6 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -58,7 +53,6 @@ import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -296,29 +290,6 @@ public class BOSEngineManager {
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
-    }
-
-    protected ClassLoader createEngineClassloader() {
-        final Set<URL> urls = new HashSet<>();
-        Enumeration<URL> foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/lib", "*.jar", true);
-        while (foundJars.hasMoreElements()) {
-            final URL url = foundJars.nextElement();
-            try {
-                urls.add(FileLocator.toFileURL(url));
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/h2", "h2-*.jar", true);
-        while (foundJars.hasMoreElements()) {
-            final URL url = foundJars.nextElement();
-            try {
-                urls.add(FileLocator.toFileURL(url));
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[] {}));
     }
 
     public IdentityAPI getIdentityAPI(final APISession session)

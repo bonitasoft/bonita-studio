@@ -24,30 +24,30 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
     private ViewerComparator defaultSorter = new JavaElementComparator();
     private FileStoreFinder fileStoreFinder = new FileStoreFinder();
 
-    private static Map<String, Integer> ORDER = new HashMap<>();
+    public static Map<String, Integer> REPO_STORE_ORDER = new HashMap<>();
     static {
-        ORDER.put("organizations", 1);
-        ORDER.put("profiles", 2);
-        ORDER.put("bdm", 3);
-        ORDER.put("applications", 10);
-        ORDER.put("diagrams", 11);
-        ORDER.put("web_page", 12);
-        ORDER.put("web_widgets", 13);
-        ORDER.put("web_fragments", 14);
-        ORDER.put("themes", 15);
-        ORDER.put("restAPIExtensions", 16);
-        ORDER.put("connectors-def", 17);
-        ORDER.put("connectors-impl", 18);
-        ORDER.put("connectors-conf", 19);
-        ORDER.put("src-connectors", 20);
-        ORDER.put("filters-def", 21);
-        ORDER.put("filters-impl", 22);
-        ORDER.put("filters-conf", 23);
-        ORDER.put("src-filters", 24);
-        ORDER.put("customTypes", 25);
-        ORDER.put("src-customTypes", 26);
-        ORDER.put("environements", 27);
-        ORDER.put("src-groovy", 28);
+        REPO_STORE_ORDER.put("organizations", 1);
+        REPO_STORE_ORDER.put("profiles", 2);
+        REPO_STORE_ORDER.put("bdm", 3);
+        REPO_STORE_ORDER.put("applications", 10);
+        REPO_STORE_ORDER.put("diagrams", 11);
+        REPO_STORE_ORDER.put("web_page", 12);
+        REPO_STORE_ORDER.put("web_widgets", 13);
+        REPO_STORE_ORDER.put("web_fragments", 14);
+        REPO_STORE_ORDER.put("themes", 15);
+        REPO_STORE_ORDER.put("restAPIExtensions", 16);
+        REPO_STORE_ORDER.put("connectors-def", 17);
+        REPO_STORE_ORDER.put("connectors-impl", 18);
+        REPO_STORE_ORDER.put("connectors-conf", 19);
+        REPO_STORE_ORDER.put("src-connectors", 20);
+        REPO_STORE_ORDER.put("filters-def", 21);
+        REPO_STORE_ORDER.put("filters-impl", 22);
+        REPO_STORE_ORDER.put("filters-conf", 23);
+        REPO_STORE_ORDER.put("src-filters", 24);
+        REPO_STORE_ORDER.put("customTypes", 25);
+        REPO_STORE_ORDER.put("src-customTypes", 26);
+        REPO_STORE_ORDER.put("environements", 27);
+        REPO_STORE_ORDER.put("src-groovy", 28);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
                 ? (IRepositoryStore) element
                 : RepositoryManager.getInstance().getRepositoryStore(element).orElse(null);
         if (store != null) {
-            Integer rank = ORDER.get(store.getResource().getName());
+            Integer rank = REPO_STORE_ORDER.get(store.getResource().getName());
             if (rank != null) {
                 return -100 + rank;
             }

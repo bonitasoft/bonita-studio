@@ -7,6 +7,7 @@
     <elements xsi:type="commands:Command" xmi:id="_l6EdMKk1EemxstQeqTvXDA" elementId="org.bonitasoft.studio.engine.command.buildDiagram" commandName="%buildDiagram">
       <parameters xmi:id="_ujg_QKk1EemxstQeqTvXDA" elementId="fileName" name="File name" optional="false"/>
       <parameters xmi:id="_y5TTwKk1EemxstQeqTvXDA" elementId="destinationPath" name="Destination path" optional="false"/>
+      <parameters xmi:id="_hbRzUMQ0EemHT9oN2qWIMw" elementId="process" name="Process UUID"/>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_ASVJYMilEeiXpul4PGGc1A" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">

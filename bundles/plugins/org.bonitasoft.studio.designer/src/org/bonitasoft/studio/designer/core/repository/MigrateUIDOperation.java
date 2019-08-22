@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.restlet.Context;
 import org.restlet.representation.EmptyRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -56,6 +57,7 @@ public class MigrateUIDOperation implements IRunnableWithProgress {
         } catch (MalformedURLException | URISyntaxException e1) {
             throw new InvocationTargetException(new MigrationException(e1));
         }
+        Context currentContext = Context.getCurrent();
         try {
             ClientResource clientResource = new ClientResource(uri);
             clientResource.setRetryOnError(true);
@@ -65,6 +67,8 @@ public class MigrateUIDOperation implements IRunnableWithProgress {
         } catch (ResourceException e) {
             throw new InvocationTargetException(new MigrationException(e),
                     "Failed to post on " + uri);
+        }finally {
+            Context.setCurrent(currentContext);
         }
     }
 

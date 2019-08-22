@@ -10,9 +10,11 @@ package org.bonitasoft.studio.engine.command;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -33,16 +35,18 @@ public class BuildDiagramHandler {
         private String fileName;
         private String destinationPath;
         private RepositoryAccessor repositoryAccessor;
+        private String processUUID;
 
-        BuildDiagramRunnable(RepositoryAccessor repositoryAccessor, String fileName, String destinationPath) {
+        BuildDiagramRunnable(RepositoryAccessor repositoryAccessor, String fileName, String destinationPath, String processUUID) {
             this.repositoryAccessor = repositoryAccessor;
             this.fileName = fileName;
             this.destinationPath = destinationPath;
+            this.processUUID = processUUID;
         }
 
         @Override
         public void run() {
-            List<AbstractProcess> processes = retrieveProcesses(repositoryAccessor, fileName);
+            List<AbstractProcess> processes = retrieveProcesses(repositoryAccessor, fileName, processUUID);
             ExportBarOperation exportBarOperation = getExportOperation();
             processes.forEach(exportBarOperation::addProcessToDeploy);
             exportBarOperation.setTargetFolder(destinationPath);
@@ -63,15 +67,23 @@ public class BuildDiagramHandler {
     @Execute
     public IStatus execute(RepositoryAccessor repositoryAccessor,
             @Named("fileName") String fileName,
-            @Named("destinationPath") String destinationPath) {
-        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName, destinationPath);
+            @Named("destinationPath") String destinationPath,
+            @Named("process") String processUUID) {
+        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName, destinationPath, processUUID);
         Display.getDefault().syncExec(runnable);
         return runnable.getStatus();
     }
 
-    private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName) {
-        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChild(fileName, true)
-                .getProcesses();
+    private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName, String processUUID) {
+       return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+                .getChild(fileName, true)
+                .getProcesses().stream().filter(pool -> {
+                    if(processUUID != null) {
+                        return Objects.equals(processUUID, ModelHelper.getEObjectID(pool));
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
     }
 
     protected ExportBarOperation getExportOperation() {

@@ -170,7 +170,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     public void registerListeners(final EObject input, final TransactionalEditingDomain domain) {
-        DiagramEventBroker.getInstance(domain).addNotificationListener(input, ProcessPackage.Literals.CONTAINER__ELEMENTS,
+        DiagramEventBroker.getInstance(domain).addNotificationListener(input,
+                ProcessPackage.Literals.CONTAINER__ELEMENTS,
                 poolListener);
         if (input instanceof MainProcess) {
             for (final EObject element : ((MainProcess) input).getElements()) {
@@ -185,7 +186,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     public void unregisterListeners(final EObject input, final TransactionalEditingDomain domain) {
-        DiagramEventBroker.getInstance(domain).removeNotificationListener(input, ProcessPackage.Literals.CONTAINER__ELEMENTS,
+        DiagramEventBroker.getInstance(domain).removeNotificationListener(input,
+                ProcessPackage.Literals.CONTAINER__ELEMENTS,
                 poolListener);
     }
 
@@ -210,13 +212,13 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
             diagram = getContent();
         }
         final List<AbstractProcess> allProcesses = ModelHelper.getAllProcesses(diagram);
-        final List<AbstractProcess> pools = new ArrayList<>();
+        final List<AbstractProcess> processes = new ArrayList<>();
         for (final AbstractProcess abstractProcess : allProcesses) {
             if (abstractProcess instanceof Pool) {
-                pools.add(abstractProcess);
+                processes.add(abstractProcess);
             }
         }
-        return pools;
+        return processes;
     }
 
     @Override
@@ -328,8 +330,9 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     @Override
     public Set<IRepositoryFileStore> getRelatedFileStore() {
         final Set<IRepositoryFileStore> result = new HashSet<>();
-        final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository().getRepositoryStore(
-                ProcessConfigurationRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository()
+                .getRepositoryStore(
+                        ProcessConfigurationRepositoryStore.class);
 
         for (final AbstractProcess process : getProcesses()) {
             final String uuid = toUUID().apply(process);
@@ -401,7 +404,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
 
     public void stopResourceListening() {
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(getEMFResource());
-        final BonitaResourceSetInfoDelegate resourceSetInfoDelegate = BonitaResourceSetInfoDelegate.adapt(editingDomain);
+        final BonitaResourceSetInfoDelegate resourceSetInfoDelegate = BonitaResourceSetInfoDelegate
+                .adapt(editingDomain);
         resourceSetInfoDelegate.stopResourceListening();
     }
 
@@ -436,6 +440,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("fileName", getName());
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
+        parameters.put("process", null);
         monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {

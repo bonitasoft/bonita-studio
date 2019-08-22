@@ -20,9 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,12 +29,12 @@ import org.eclipse.core.runtime.MultiStatus;
 
 public class DeployTenantResourcesOperation implements IRunnableWithStatus {
 
-    private Collection<IRepositoryFileStore> artifactsToDeploy;
+    private Collection<TenantArtifact> artifactsToDeploy;
     private MultiStatus status;
     private APISession apiSession;
     private Map<String, Object> deployOptions = new HashMap<String, Object>();
 
-    public DeployTenantResourcesOperation(Collection<IRepositoryFileStore> artifactsToDeploy, APISession apiSession, Map<String, Object> deployOptions) {
+    public DeployTenantResourcesOperation(Collection<TenantArtifact> artifactsToDeploy, APISession apiSession, Map<String, Object> deployOptions) {
         this.artifactsToDeploy = artifactsToDeploy;
         this.apiSession = apiSession;
         this.deployOptions = deployOptions;
@@ -44,8 +43,6 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         status = artifactsToDeploy.stream()
-                .filter(ITenantResource.class::isInstance)
-                .map(ITenantResource.class::cast)
                 .map(artifact -> artifact.deploy(apiSession, deployOptions, monitor))
                 .collect(StatusCollectors.toMultiStatus());
     }
