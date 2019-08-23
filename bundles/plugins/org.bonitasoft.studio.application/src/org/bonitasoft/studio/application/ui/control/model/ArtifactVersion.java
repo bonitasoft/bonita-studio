@@ -20,5 +20,7 @@ public interface ArtifactVersion extends Artifact, Comparable<ArtifactVersion>{
     String getVersion();
     
     VersionedArtifact getParent();
+
+    boolean isLatest();
     
 }

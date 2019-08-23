@@ -122,6 +122,7 @@ public class Messages extends NLS {
     public static String deployingApplicationArtifacts;
     public static String environment;
     public static String processes;
+    public static String selectLatestVersion;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

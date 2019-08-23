@@ -142,5 +142,10 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     public int compareTo(ArtifactVersion pv) {
         return new DefaultArtifactVersion(pv.getVersion()).compareTo(version);
     }
+
+    @Override
+    public boolean isLatest() {
+        return Objects.equals(getParent().getLatestVersion(), this);
+    }
     
 }

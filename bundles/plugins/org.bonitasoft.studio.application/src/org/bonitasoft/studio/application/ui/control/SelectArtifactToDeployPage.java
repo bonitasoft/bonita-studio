@@ -220,6 +220,12 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         new ButtonWidget.Builder()
+                .withLabel(Messages.selectLatestVersion)
+                .fill()
+                .onClick(e -> checkLatestElements())
+                .createIn(buttonComposite);
+
+        new ButtonWidget.Builder()
                 .withLabel(Messages.selectAll)
                 .fill()
                 .onClick(e -> checkAllElements())
@@ -282,7 +288,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private boolean isOrganizationRepositoryStore(Object element) {
-        if(element instanceof RepositoryStore) {
+        if (element instanceof RepositoryStore) {
             return ((RepositoryStore) element).getArtifacts().get(0) instanceof OrganizationArtifact;
         }
         return false;
@@ -556,7 +562,20 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void checkAllElements() {
         repositoryModel.getArtifacts().stream()
                 .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
-                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true )
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
+                        ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
+                .forEach(checkedElementsObservable::add);
+
+        //Only one organization can be selected at a time
+        uniqueOrganizationSelection(getDefaultOrganization());
+    }
+
+    private void checkLatestElements() {
+        checkedElementsObservable.clear();
+        repositoryModel.getArtifacts().stream()
+                .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
+                .filter(artifact -> VersionedArtifact.class.isInstance(artifact) ? ((VersionedArtifact) artifact).hasSingleVersion() : true) 
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ?((ArtifactVersion) artifact).isLatest() : true)
                 .forEach(checkedElementsObservable::add);
 
         //Only one organization can be selected at a time
@@ -567,8 +586,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         return checkedElementsObservable.stream()
                 .filter(Artifact.class::isInstance)
                 .map(Artifact.class::cast)
-                .map(artifact -> artifact instanceof VersionedArtifact && ((VersionedArtifact) artifact).hasSingleVersion()
-                        ? ((VersionedArtifact) artifact).getLatestVersion() : artifact)
+                .map(artifact -> artifact instanceof VersionedArtifact
+                        && ((VersionedArtifact) artifact).hasSingleVersion()
+                                ? ((VersionedArtifact) artifact).getLatestVersion() : artifact)
                 .collect(Collectors.toList());
     }
 
