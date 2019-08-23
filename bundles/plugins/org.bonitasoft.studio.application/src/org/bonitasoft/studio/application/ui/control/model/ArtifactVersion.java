@@ -14,12 +14,11 @@
  */
 package org.bonitasoft.studio.application.ui.control.model;
 
-import org.bonitasoft.studio.common.repository.model.IDisplayable;
 
-public interface Artifact extends IDisplayable {
+public interface ArtifactVersion extends Artifact, Comparable<ArtifactVersion>{
 
-    String getName();
+    String getVersion();
     
-    Object getParent();
+    VersionedArtifact getParent();
     
 }

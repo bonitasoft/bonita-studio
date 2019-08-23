@@ -29,11 +29,11 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
+import org.bonitasoft.studio.application.ui.control.model.ArtifactVersion;
 import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
-import org.bonitasoft.studio.application.ui.control.model.ProcessArtifact;
-import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
+import org.bonitasoft.studio.application.ui.control.model.VersionedArtifact;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
@@ -134,9 +134,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private String[] stringify(Set<Object> selectedElements) {
         return selectedElements.stream()
                 .map(elem -> {
-                    if (elem instanceof ProcessArtifact && ((ProcessArtifact) elem).getVersions().size() == 1) {
-                        return ((ProcessArtifact) elem).getLatestVersion().toString();
-                    } else if (elem instanceof Artifact && !(elem instanceof ProcessArtifact)) {
+                    if (elem instanceof VersionedArtifact && ((VersionedArtifact) elem).hasSingleVersion()) {
+                        return ((VersionedArtifact) elem).getLatestVersion().toString();
+                    } else if (elem instanceof Artifact && !(elem instanceof VersionedArtifact)) {
                         return elem.toString();
                     }
                     return null;
@@ -155,8 +155,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private Function<Object, Object> singleVersionProcess() {
         return object -> {
-            if (object instanceof ProcessVersion && ((ProcessVersion) object).getParent().getVersions().size() == 1) {
-                return ((ProcessVersion) object).getParent();
+            if (object instanceof ArtifactVersion && ((ArtifactVersion) object).getParent().hasSingleVersion()) {
+                return ((ArtifactVersion) object).getParent();
             }
             return object;
         };
@@ -243,8 +243,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-                if (e1 instanceof ProcessVersion && e2 instanceof ProcessVersion) {
-                    return ((ProcessVersion) e1).compareTo((ProcessVersion) e2);
+                if (e1 instanceof ArtifactVersion && e2 instanceof ArtifactVersion) {
+                    return ((ArtifactVersion) e1).compareTo((ArtifactVersion) e2);
                 }
                 if (e1 instanceof RepositoryStore && e2 instanceof RepositoryStore) {
                     return ((RepositoryStore) e1).compareTo((RepositoryStore) e2);
@@ -293,8 +293,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
             @Override
             public Boolean hasChildren(Object element) {
-                if (element instanceof ProcessArtifact) {
-                    return ((ProcessArtifact) element).getVersions().size() > 1;
+                if (element instanceof VersionedArtifact) {
+                    return !((VersionedArtifact) element).hasSingleVersion();
                 }
                 return element instanceof RepositoryStore || super.hasChildren(element);
             }
@@ -318,8 +318,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 if (target instanceof RepositoryStore) {
                     return new WritableList(((RepositoryStore) target).getArtifacts(), Artifact.class);
                 }
-                if (target instanceof ProcessArtifact) {
-                    return new WritableList(((ProcessArtifact) target).getVersions(), ProcessVersion.class);
+                if (target instanceof VersionedArtifact) {
+                    return new WritableList(((VersionedArtifact) target).getVersions(), VersionedArtifact.class);
                 }
                 return super.createObservable(target);
             }
@@ -556,7 +556,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void checkAllElements() {
         repositoryModel.getArtifacts().stream()
                 .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
-                .filter(artifact -> ProcessVersion.class.isInstance(artifact) ? ((ProcessVersion) artifact).getParent().getVersions().size() > 1 : true )
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true )
                 .forEach(checkedElementsObservable::add);
 
         //Only one organization can be selected at a time
@@ -567,8 +567,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         return checkedElementsObservable.stream()
                 .filter(Artifact.class::isInstance)
                 .map(Artifact.class::cast)
-                .map(artifact -> artifact instanceof ProcessArtifact && ((ProcessArtifact) artifact).getVersions().size() == 1
-                        ? ((ProcessArtifact) artifact).getLatestVersion() : artifact)
+                .map(artifact -> artifact instanceof VersionedArtifact && ((VersionedArtifact) artifact).hasSingleVersion()
+                        ? ((VersionedArtifact) artifact).getLatestVersion() : artifact)
                 .collect(Collectors.toList());
     }
 

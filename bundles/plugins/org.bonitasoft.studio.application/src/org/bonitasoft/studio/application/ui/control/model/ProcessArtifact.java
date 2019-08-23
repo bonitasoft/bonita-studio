@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2019 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.application.ui.control.model;
 
 import java.util.ArrayList;
@@ -12,14 +26,15 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public class ProcessArtifact extends Artifact {
+public class ProcessArtifact implements VersionedArtifact {
 
-    private List<ProcessVersion> processVerions = new ArrayList<>();
+    private List<ArtifactVersion> processVerions = new ArrayList<>();
     private DiagramFileStore fStore;
     private String name;
+    private RepositoryStore parent;
 
     public ProcessArtifact(RepositoryStore parent,String name, DiagramFileStore fStore) {
-        super(parent);
+        this.parent = parent;
         this.name = name;
         this.fStore = fStore;
     }
@@ -33,7 +48,8 @@ public class ProcessArtifact extends Artifact {
         Collections.sort(processVerions);
     }
 
-    public List<ProcessVersion> getVersions() {
+    @Override
+    public List<ArtifactVersion> getVersions() {
         return processVerions;
     }
 
@@ -52,7 +68,7 @@ public class ProcessArtifact extends Artifact {
     
     @Override
     public RepositoryStore getParent() {
-        return (RepositoryStore) super.getParent();
+        return parent;
     }
     
     @Override
@@ -74,7 +90,7 @@ public class ProcessArtifact extends Artifact {
         return new StyledString(getDisplayName());
     }
 
-    public ProcessVersion getLatestVersion() {
+    public ArtifactVersion getLatestVersion() {
         if(processVerions.isEmpty()) {
             throw new IllegalStateException(String.format("No version found for process %s", getName()));
         }
@@ -85,6 +101,9 @@ public class ProcessArtifact extends Artifact {
         return fStore;
     }
 
-
+    @Override
+    public boolean hasSingleVersion() {
+        return processVerions.size() == 1;
+    }
 
 }
