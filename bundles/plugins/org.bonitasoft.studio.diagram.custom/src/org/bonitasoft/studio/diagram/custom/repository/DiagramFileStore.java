@@ -132,6 +132,11 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         }
         return displayName;
     }
+    
+    @Override
+    public Object executeCommand(String command, Map<String, Object> parameters) {
+        return super.executeCommand(command, parameters);
+    }
 
     @Override
     protected URI getResourceURI() {

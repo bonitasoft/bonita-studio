@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2019 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.application.ui.control.model;
 
 import java.util.Arrays;
@@ -13,7 +27,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -22,19 +35,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
 
-public class ProcessVersion extends BuildableArtifact implements Comparable<ProcessVersion> {
+public class ProcessVersion extends BuildableArtifact implements ArtifactVersion {
 
     private DefaultArtifactVersion version;
     private ProcessArtifact process;
     private Pool model;
-    private ECommandService eCommandService;
-    private EHandlerService eHandlerService;
 
     public ProcessVersion(ProcessArtifact process, Pool model) {
         super(process, process.getFileStore());
@@ -66,7 +74,7 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
         parameters.put("process", ModelHelper.getEObjectID(getModel()));
         monitor.subTask(String.format(Messages.buildingProcess, getName()));
-        IStatus buildStatus = (IStatus) executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
+        IStatus buildStatus = (IStatus) getParent().getFileStore().executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
             throw new CoreException(parseStatus(buildStatus));
         }
@@ -84,22 +92,6 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
         return status;
     }
 
-    protected Object executeCommand(String command, Map<String, Object> parameters) {
-        initServices();
-        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-        if (eHandlerService.canExecute(parameterizedCommand)) {
-            return eHandlerService.executeHandler(parameterizedCommand);
-        }
-        throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
-    }
-
-    protected void initServices() {
-        if (eCommandService == null || eHandlerService == null) {
-            eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
-            eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
-        }
-    }
-
     private Repository getRepository() {
         return RepositoryManager.getInstance().getCurrentRepository();
     }
@@ -107,6 +99,11 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
     @Override
     public String getName() {
         return String.format("%s (%s)", process.getName(), version.toString());
+    }
+    
+    @Override
+    public String getVersion() {
+        return version.toString();
     }
 
     public Pool getModel() {
@@ -116,7 +113,7 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ProcessVersion) {
-            return Objects.equals(toString(), obj.toString());
+            return Objects.equals(getVersion(), ((ProcessVersion) obj).getVersion());
         }
         return super.equals(obj);
     }
@@ -128,7 +125,7 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
     
     @Override
     public String getDisplayName() {
-        return version.toString();
+        return getVersion();
     }
 
     @Override
@@ -138,12 +135,12 @@ public class ProcessVersion extends BuildableArtifact implements Comparable<Proc
 
     @Override
     public StyledString getStyledString() {
-        return new StyledString(version.toString());
+        return new StyledString(getVersion());
     }
 
     @Override
-    public int compareTo(ProcessVersion pv) {
-        return new DefaultArtifactVersion(pv.toString()).compareTo(version);
+    public int compareTo(ArtifactVersion pv) {
+        return new DefaultArtifactVersion(pv.getVersion()).compareTo(version);
     }
     
 }
