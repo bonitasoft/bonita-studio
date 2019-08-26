@@ -21,11 +21,13 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
+import org.bonitasoft.studio.application.ui.control.model.BusinessObjectModelArtifact;
 import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
 import org.bonitasoft.studio.application.ui.control.model.ProcessArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
@@ -67,6 +69,8 @@ public class RepositoryModelBuilder {
     private Artifact createArtifact(RepositoryStore parent, IRepositoryFileStore fStore) {
         if (fStore instanceof OrganizationFileStore) {
             return new OrganizationArtifact(parent, fStore);
+        } else if (fStore instanceof BusinessObjectModelFileStore) {
+            return new BusinessObjectModelArtifact(parent, fStore);
         } else if (fStore instanceof ITenantResource) {
             return new TenantArtifact(parent, fStore);
         } else if (fStore instanceof DiagramFileStore) {
