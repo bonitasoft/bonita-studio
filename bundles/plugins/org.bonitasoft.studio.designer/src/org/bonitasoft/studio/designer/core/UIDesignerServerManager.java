@@ -230,7 +230,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     protected List<String> buildCommand(Repository repository) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
         port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, -1);
-        if (port == -1 || !isPortAvailable(port)) {
+        if (port == -1 || isPortInUse(port)) {
             port = SocketUtil.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
         }
@@ -260,7 +260,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
 
-    private static boolean isPortAvailable(int port) {
+    private static boolean isPortInUse(int port) {
         try {
             return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port)
                     || org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
