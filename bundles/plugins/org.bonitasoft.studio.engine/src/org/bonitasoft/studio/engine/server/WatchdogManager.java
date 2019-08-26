@@ -87,7 +87,8 @@ public class WatchdogManager {
 
         private boolean portIsUsed() {
             try {
-                return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), WATCHDOG_PORT);
+                return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), WATCHDOG_PORT)
+                        || SocketUtil.isPortInUse(WATCHDOG_PORT);
             } catch (UnknownHostException e) {
                 return SocketUtil.isPortInUse(WATCHDOG_PORT);
             }
