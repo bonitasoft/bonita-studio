@@ -20,8 +20,8 @@ import java.nio.file.Files;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.result.ExecutionResult;
+import org.bonitasoft.engine.exception.ApplicationDeploymentException;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.DeployerException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
@@ -58,13 +58,13 @@ public class DeployProjectOperation implements IRunnableWithStatus {
             result.getAllStatus().stream()
                     .map(new EngineStatusMapper())
                     .forEach(status::add);
-            if(status.isOK() && status.getChildren().length == 0) {
+            if (status.isOK() && status.getChildren().length == 0) {
                 status.add(ValidationStatus.info("Application artifacts deployed successfully."));
             }
-        } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException | DeployerException
+        } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException | ApplicationDeploymentException
                 | IOException e) {
             status.add(new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, e.getMessage(), e));
-        }finally {
+        } finally {
             monitor.done();
         }
     }
