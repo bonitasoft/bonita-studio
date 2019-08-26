@@ -30,11 +30,11 @@ import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.ArtifactVersion;
+import org.bonitasoft.studio.application.ui.control.model.BusinessObjectModelArtifact;
 import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.VersionedArtifact;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
@@ -200,7 +200,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private void updateCleanDeployEnablement() {
         cleanDeployOption.setEnabled(
-                checkedElementsObservable.stream().anyMatch(BusinessObjectModelFileStore.class::isInstance));
+                checkedElementsObservable.stream().anyMatch(BusinessObjectModelArtifact.class::isInstance));
     }
 
     protected void mergeSets() {
