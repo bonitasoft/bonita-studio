@@ -575,6 +575,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         repositoryModel.getArtifacts().stream()
                 .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
                 .filter(artifact -> VersionedArtifact.class.isInstance(artifact) ? ((VersionedArtifact) artifact).hasSingleVersion() : true) 
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ?!((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
                 .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ?((ArtifactVersion) artifact).isLatest() : true)
                 .forEach(checkedElementsObservable::add);
 
