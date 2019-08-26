@@ -19,6 +19,7 @@
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
 		<watchdog.version>7.2.0</watchdog.version>
+		<image-overlay-plugin.version>1.0.8</image-overlay-plugin.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/4.10.1</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.exclusions>
@@ -53,7 +54,7 @@
 				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
 					<artifactId>image-overlay-plugin</artifactId>
-                    <version>1.0.8</version>
+					<version>${image-overlay-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

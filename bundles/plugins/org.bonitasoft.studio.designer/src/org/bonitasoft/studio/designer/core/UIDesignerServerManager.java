@@ -262,7 +262,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     private static boolean isPortAvailable(int port) {
         try {
-            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port);
+            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port)
+                    || org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
         } catch (UnknownHostException e) {
             return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
         }
