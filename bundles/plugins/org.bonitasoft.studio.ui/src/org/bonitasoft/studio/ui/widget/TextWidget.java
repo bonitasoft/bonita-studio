@@ -42,6 +42,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
@@ -324,10 +325,10 @@ public class TextWidget extends EditableControlWidget {
             proposalAdapter.setPropagateKeys(true);
             proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
             proposalAdapter.setAutoActivationDelay(0);
-            text.addListener(SWT.FocusIn, e -> fireControlSpaceEvent(proposalAdapter));
-            text.addListener(SWT.Modify, e -> {
+            text.addListener(SWT.FocusIn, e -> fireControlSpaceEvent(proposalAdapter,null));
+            text.addListener(SWT.KeyDown, e -> {
                 if (text.isFocusControl()) {
-                    fireControlSpaceEvent(proposalAdapter);
+                    fireControlSpaceEvent(proposalAdapter, e);
                 }
             });
         });
@@ -383,14 +384,15 @@ public class TextWidget extends EditableControlWidget {
         return textContainer;
     }
 
-    private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter) {
+    private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter, Event e) {
         text.getDisplay().asyncExec(() -> {
-            if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()
-                    && (text.getText() == null || text.getText().isEmpty())) {
-                final Event ctrlSpaceEvent = new Event();
-                ctrlSpaceEvent.keyCode = SWT.SPACE;
-                ctrlSpaceEvent.stateMask = SWT.MOD1;
-                text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent);
+            if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()) {
+                if((e == null && text.getText() == null || text.getText().isEmpty()) ||( e != null && e.doit)) {
+                    final Event ctrlSpaceEvent = new Event();
+                    ctrlSpaceEvent.keyCode = SWT.SPACE;
+                    ctrlSpaceEvent.stateMask = SWT.MOD1;
+                    text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent);
+                }
             }
         });
     }
