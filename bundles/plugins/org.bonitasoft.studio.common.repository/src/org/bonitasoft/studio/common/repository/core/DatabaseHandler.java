@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.FileLocator;
 
 public class DatabaseHandler {
 
-    private static final String BITRONIX_RESOURCES_PROPERTIES = "bitronix-resources.properties";
     public static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
     public static final String BITRONIX_ROOT = "btm.root";
@@ -55,8 +54,12 @@ public class DatabaseHandler {
     }
 
     public void removeEngineDatabase() throws IOException {
+        deleteH2DbFiles(getBonitaDBName());
+    }
+    
+    public String getBonitaDBName() throws IOException {
         final Properties databaseProperties = readDatabaseProperties();
-        deleteH2DbFiles(databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY));
+        return databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY);
     }
 
     public void removeBusinessDataDatabase() throws IOException {
