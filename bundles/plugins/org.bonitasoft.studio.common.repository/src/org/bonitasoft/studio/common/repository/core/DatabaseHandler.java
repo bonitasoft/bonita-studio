@@ -72,7 +72,7 @@ public class DatabaseHandler {
         if (workDir != null && workDir.exists()) {
             for (final File file : workDir.listFiles()) {
                 final String fileName = file.getName();
-                if (fileName.endsWith("h2.db") && fileName.startsWith(dbFileName)) {
+                if (fileName.endsWith(".db") && fileName.startsWith(dbFileName)) {
                     PlatformUtil.delete(file, null);
                     if (file.exists()) {
                         BonitaStudioLog.info(fileName + " failed to be deleted", CommonRepositoryPlugin.PLUGIN_ID);
