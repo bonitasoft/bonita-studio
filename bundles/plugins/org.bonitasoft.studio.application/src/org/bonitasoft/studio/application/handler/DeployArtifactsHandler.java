@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
@@ -172,8 +173,14 @@ public class DeployArtifactsHandler {
 
     private void openStatusDialog(Shell activeShell, IStatus status) {
         if (status instanceof MultiStatus) {
-            new MultiStatusDialog(activeShell, Messages.deployStatus, Messages.deployStatusMessage,
-                    new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status).open();
+            if(status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
+                MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus, Messages.deployStatusMessage,
+                        new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status);
+                multiStatusDialog.setLevel(IStatus.WARNING);
+                multiStatusDialog.open();
+            }else {
+                MessageDialog.openInformation(activeShell, Messages.deployStatus, Messages.deploySuccessMsg);
+            }
         } else {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
         }

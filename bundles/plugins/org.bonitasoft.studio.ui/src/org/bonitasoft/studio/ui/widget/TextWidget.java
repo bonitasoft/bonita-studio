@@ -29,7 +29,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -39,10 +38,8 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
@@ -52,7 +49,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -316,21 +312,15 @@ public class TextWidget extends EditableControlWidget {
 
         proposalProvider.ifPresent(provider -> {
             final TextContentAdapter controlContentAdapter = new TextContentAdapter();
-            final KeyStroke keyStroke = KeyStroke.getInstance(SWT.MOD1, SWT.SPACE);
-            final ContentProposalAdapter proposalAdapter = new ContentProposalAdapter(text,
+            final CustomContentProposalAdapter proposalAdapter = new CustomContentProposalAdapter(text,
                     controlContentAdapter,
                     provider,
-                    keyStroke,
+                    null,
                     null);
             proposalAdapter.setPropagateKeys(true);
             proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
             proposalAdapter.setAutoActivationDelay(0);
-            text.addListener(SWT.FocusIn, e -> fireControlSpaceEvent(proposalAdapter,null));
-            text.addListener(SWT.KeyDown, e -> {
-                if (text.isFocusControl()) {
-                    fireControlSpaceEvent(proposalAdapter, e);
-                }
-            });
+            text.addListener(SWT.FocusIn, e -> openProposalPopup(proposalAdapter));
         });
 
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
@@ -384,14 +374,11 @@ public class TextWidget extends EditableControlWidget {
         return textContainer;
     }
 
-    private void fireControlSpaceEvent(ContentProposalAdapter proposalAdapter, Event e) {
+    private void openProposalPopup(CustomContentProposalAdapter proposalAdapter) {
         text.getDisplay().asyncExec(() -> {
             if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()) {
-                if((e == null && text.getText() == null || text.getText().isEmpty()) ||( e != null && e.doit)) {
-                    final Event ctrlSpaceEvent = new Event();
-                    ctrlSpaceEvent.keyCode = SWT.SPACE;
-                    ctrlSpaceEvent.stateMask = SWT.MOD1;
-                    text.notifyListeners(SWT.KeyDown, ctrlSpaceEvent);
+                if(text.getText() == null || text.getText().isEmpty()) {
+                    proposalAdapter.openProposalPopup();
                 }
             }
         });
