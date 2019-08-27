@@ -47,6 +47,7 @@ import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
 import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
+import org.bonitasoft.studio.tests.engine.StudioShutdownIT;
 import org.bonitasoft.studio.tests.engine.TestJavaDoc;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
 import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
@@ -145,7 +146,8 @@ import org.junit.runners.Suite;
         UIDesignerWorkspaceIntegrationIT.class,
         CloseAllEditors.class,
         TestMessageRefactoring.class,
-        UIDArtifactCreationIT.class
+        UIDArtifactCreationIT.class,
+        StudioShutdownIT.class
 })
 public class IntegrationTestSuite {
 
