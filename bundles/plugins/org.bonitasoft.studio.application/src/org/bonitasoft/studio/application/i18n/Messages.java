@@ -124,6 +124,16 @@ public class Messages extends NLS {
     public static String processes;
     public static String selectLatestVersion;
 
+    public static String cannotResolveProcess;
+    public static String cannotEnableProcess;
+    public static String appDescriptorUnknownAppPage;
+    public static String appDescriptorUnknownPageToken;
+    public static String appDescriptorUnknownLayoutPage;
+    public static String appDescriptorUnknownTheme;
+
+    public static String deploySuccessMsg;
+
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

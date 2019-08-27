@@ -16,7 +16,10 @@ package org.bonitasoft.studio.ui.dialog;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,6 +30,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -37,6 +41,16 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     private MultiStatus status;
     private Predicate<IStatus> canFinish;
     private int finishId;
+    private int level = IStatus.OK;
+    private static final Map<Integer,Integer> STATUS_LEVEL = new HashMap<>();
+    
+   static {
+       STATUS_LEVEL.put(IStatus.CANCEL, 0);
+       STATUS_LEVEL.put(IStatus.ERROR, 1);
+       STATUS_LEVEL.put(IStatus.WARNING, 2);
+       STATUS_LEVEL.put(IStatus.INFO, 3);
+       STATUS_LEVEL.put(IStatus.OK, 4);
+   }
 
     public MultiStatusDialog(Shell parentShell, String dialogTitle,
             String dialogMessage,
@@ -118,18 +132,20 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             }
         };
     }
+    
+    @Override
+    protected ViewerComparator getComparator() {
+        return null;
+    }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.dialog.ProblemsDialog#getInput()
-     */
     @Override
     protected Collection<IStatus> getInput() {
         return Stream
                 .of(status.getChildren())
                 .map(this::getChildren)
                 .flatMap(Collection::stream)
-                .sorted((s1, s2) -> -Integer.valueOf(s1.getSeverity()).compareTo(Integer.valueOf(s2.getSeverity())))
+                .filter(s -> STATUS_LEVEL.get(s.getSeverity()) <= level)
+                .sorted(new StatusSeverityComparator())
                 .collect(Collectors.toList());
     }
 
@@ -138,9 +154,24 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             return Arrays.asList(status.getChildren()).stream()
                     .map(this::getChildren)
                     .flatMap(Collection::stream)
+                    .filter(s -> STATUS_LEVEL.get(s.getSeverity()) <= level)
+                    .sorted(new StatusSeverityComparator())
                     .collect(Collectors.toList());
         }
         return Arrays.asList(status);
+    }
+    
+    public void setLevel(int level) {
+        this.level = level;
+     }
+    
+    static class StatusSeverityComparator implements Comparator<IStatus> {
+
+        @Override
+        public int compare(IStatus s1, IStatus s2) {
+            return STATUS_LEVEL.get(s1.getSeverity()).compareTo(STATUS_LEVEL.get(s2.getSeverity()));
+        }
+        
     }
 
 }
