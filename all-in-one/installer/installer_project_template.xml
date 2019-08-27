@@ -493,20 +493,26 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
             <cliOptionName>prefix</cliOptionName>
             <mustBeWritable>yes</mustBeWritable>
             <mustExist>0</mustExist>
-             <validationActionList>
-        <throwError>
-            <text>${msg(not.enough.diskspace)}</text>
-            <ruleList>
-               <checkFreeDiskSpace>
-                  <logic>less</logic>
-                  <path>${installdir}</path>
-                  <!-- ${required_diskspace} is automatically calculated by
-                  InstallBuilder with all the files packed -->
-                  <size>${required_diskspace}</size>
-               </checkFreeDiskSpace>
-            </ruleList>
-        </throwError>
-     </validationActionList>
+            <validationActionList>
+           		 <throwError>
+		            <text>${msg(installdir.must.be.empty.folder)}</text>
+		            <ruleList>
+		             	<fileTest path="${installdir}" condition="is_not_empty"/>
+		            </ruleList>
+		        </throwError>
+		        <throwError>
+		            <text>${msg(not.enough.diskspace)}</text>
+		            <ruleList>
+		               <checkFreeDiskSpace>
+		                  <logic>less</logic>
+		                  <path>${installdir}</path>
+		                  <!-- ${required_diskspace} is automatically calculated by
+		                  InstallBuilder with all the files packed -->
+		                  <size>${required_diskspace}</size>
+		               </checkFreeDiskSpace>
+		            </ruleList>
+		        </throwError>
+	       </validationActionList>
         </directoryParameter>
     </parameterList>
     <preUninstallationActionList>
