@@ -132,6 +132,7 @@ public class Messages extends NLS {
 
     public static String deploySuccessMsg;
     public static String validateProcess;
+    public static String pagesAndLayouts;
 
 
     static {

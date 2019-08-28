@@ -22,6 +22,7 @@ import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.common.repository.model.IDisplayable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.StyledString;
@@ -50,7 +51,13 @@ public class RepositoryStore implements IDisplayable,Comparable<RepositoryStore>
 
     @Override
     public String getDisplayName() {
-        return store instanceof DiagramRepositoryStore ? Messages.processes : store.getDisplayName();
+        if(store instanceof DiagramRepositoryStore) {
+            return Messages.processes;
+        }
+        if(store instanceof WebPageRepositoryStore) {
+            return Messages.pagesAndLayouts;
+        }
+        return store.getDisplayName();
     }
 
     @Override
