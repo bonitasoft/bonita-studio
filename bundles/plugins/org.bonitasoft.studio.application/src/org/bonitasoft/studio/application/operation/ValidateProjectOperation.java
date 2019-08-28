@@ -24,23 +24,20 @@ import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
-import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
-import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
-import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
-import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
+import org.bonitasoft.studio.validation.common.operation.ProcessValidationOperation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 
 public class ValidateProjectOperation implements IRunnableWithStatus {
 
     private MultiStatus status;
-    private List<ProcessVersion> fileStoreToValidate;
+    private List<ProcessVersion> processToValidate;
 
     public ValidateProjectOperation(Collection<Artifact> artifactsToValidate) {
-        this.fileStoreToValidate = artifactsToValidate.stream()
+        this.processToValidate = artifactsToValidate.stream()
                 .filter(ProcessVersion.class::isInstance)
                 .map(ProcessVersion.class::cast)
                 .collect(Collectors.toList());
@@ -49,21 +46,19 @@ public class ValidateProjectOperation implements IRunnableWithStatus {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for (ProcessVersion pv : fileStoreToValidate) {
+        ProcessValidationOperation validationAction = new ProcessValidationOperation();
+        for (ProcessVersion pv : processToValidate) {
             if (monitor.isCanceled()) {
+                this.status.add(Status.CANCEL_STATUS);
                 break;
             }
-            RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
-                    new BatchValidationOperation(
-                            new OffscreenEditPartFactory(
-                                    org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                            new ValidationMarkerProvider()));
             validationAction.addProcess(pv.getModel());
-            validationAction.run(monitor);
-            if (!monitor.isCanceled()
-                    && Objects.equals(validationAction.getStatus().getSeverity(), ValidationStatus.ERROR)) {
-                status.add(new ProcessValidationStatus(pv.getModel(),validationAction.getStatus()));
-            }
+        }
+        validationAction.run(monitor);
+        if(monitor.isCanceled()) {
+            status.add(Status.CANCEL_STATUS);
+        }else if(Objects.equals(validationAction.getStatus().getSeverity(), ValidationStatus.ERROR)) {
+            status.addAll(validationAction.getStatus());
         }
     }
 

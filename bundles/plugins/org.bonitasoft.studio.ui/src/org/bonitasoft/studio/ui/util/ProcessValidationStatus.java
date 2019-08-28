@@ -42,7 +42,7 @@ public class ProcessValidationStatus extends Status {
             }
             return String.format("%s %s %s (%s)", issues, Messages.issuesFoundIn, process.getName(), process.getVersion());
         }
-        return  String.format("%s (%s)", process.getName(), process.getVersion());
+        return validationStatus.getSeverity() == IStatus.ERROR ?  String.format("%s %s %s (%s)", 1, Messages.issueFoundIn, process.getName(), process.getVersion()) : String.format("%s (%s)", process.getName(), process.getVersion());
     }
 
     protected int countIssues() {

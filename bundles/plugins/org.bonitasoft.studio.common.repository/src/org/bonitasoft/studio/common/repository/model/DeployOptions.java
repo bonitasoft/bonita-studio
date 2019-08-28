@@ -19,5 +19,6 @@ public interface DeployOptions {
 
     public static final String DEFAULT_USERNAME = "DEFAULT_USERNAME";
     public static final String CLEAN_BDM = "CLEAN_BDM";
+    public static final String RUN_VALIDATION = "RUN_VALIDATION";
     
 }

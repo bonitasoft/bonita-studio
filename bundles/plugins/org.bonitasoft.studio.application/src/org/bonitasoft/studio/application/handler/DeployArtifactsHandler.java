@@ -70,7 +70,7 @@ public class DeployArtifactsHandler {
             RepositoryAccessor repositoryAccessor, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
 
-        progressService.busyCursorWhile( monitor -> {
+        progressService.busyCursorWhile(monitor -> {
             repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);
         });
 
@@ -92,8 +92,17 @@ public class DeployArtifactsHandler {
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
         try {
+            if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
+                container.run(true, true,
+                        performArtifactsValidation(artifactsToDeploy, status));
+            }
+            if (status.getSeverity() == IStatus.CANCEL) {
+                return null;
+            } else if (!status.isOK()) {
+                return status;
+            }
             container.run(true, false,
-                    performFinish(repositoryAccessor,artifactsToDeploy, deployOptions, status));
+                    performFinish(repositoryAccessor, artifactsToDeploy, deployOptions, status));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
@@ -112,16 +121,11 @@ public class DeployArtifactsHandler {
             try {
                 APISession session = apiSessionOperation.getSession();
                 DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance).map(TenantArtifact.class::cast).collect(Collectors.toList()), session, deployOptions);
+                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
+                                .map(TenantArtifact.class::cast).collect(Collectors.toList()),
+                        session, deployOptions);
                 deployTenantResourcesOperation.run(monitor);
                 status.addAll(deployTenantResourcesOperation.getStatus());
-                if (shouldValidate()) {
-                    IStatus validationStatus = performArtifactsValidation(artifactsToDeploy, monitor);
-                    if (!validationStatus.isOK()) {
-                        status.addAll(validationStatus);
-                        return;
-                    }
-                }
                 IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
                 if (!buildStatus.isOK()) {
                     if (buildStatus instanceof MultiStatus) {
@@ -137,10 +141,6 @@ public class DeployArtifactsHandler {
                 apiSessionOperation.logout();
             }
         };
-    }
-
-    private boolean shouldValidate() {
-        return true;
     }
 
     private WizardBuilder<IStatus> createWizard(
@@ -168,17 +168,19 @@ public class DeployArtifactsHandler {
         HashMap<String, Object> options = new HashMap<String, Object>();
         options.put(DeployOptions.CLEAN_BDM, page.isCleanBDM());
         options.put(DeployOptions.DEFAULT_USERNAME, page.getDefaultUsername());
+        options.put(DeployOptions.RUN_VALIDATION, page.isValidate());
         return options;
     }
 
     private void openStatusDialog(Shell activeShell, IStatus status) {
         if (status instanceof MultiStatus) {
-            if(status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
-                MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus, Messages.deployStatusMessage,
+            if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
+                MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus,
+                        Messages.deployStatusMessage,
                         new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
                 multiStatusDialog.open();
-            }else {
+            } else {
                 MessageDialog.openInformation(activeShell, Messages.deployStatus, Messages.deploySuccessMsg);
             }
         } else {
@@ -204,12 +206,13 @@ public class DeployArtifactsHandler {
         return operation.getStatus();
     }
 
-    private IStatus performArtifactsValidation(Collection<Artifact> artifactsToDeploy,
-            IProgressMonitor monitor)
+    private IRunnableWithProgress performArtifactsValidation(Collection<Artifact> artifactsToDeploy, MultiStatus status)
             throws InvocationTargetException, InterruptedException {
-        ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
-        operation.run(monitor);
-        return operation.getStatus();
+        return monitor -> {
+            ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
+            operation.run(monitor);
+            status.add(operation.getStatus());
+        };
     }
 
 }

@@ -88,6 +88,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private static final String DEPLOY_DEFAULT_SELECTION = "deployDefaultSelection";
     private static final String CLEAN_BDM_DEFAULT_SELECTION = "cleanBDMDefaultSelection";
+    private static final String VALIDATE_DEFAULT_SELECTION = "RunValidation";
 
     private CheckboxRepositoryTreeViewer fileStoreViewer;
     protected IObservableSet<Object> checkedElementsObservable; // Bounded to the viewer -> doesn't contain filtered elements
@@ -104,6 +105,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private IEnvironmentProvider environmentProvider;
     private Set<Object> defaultSelectedElements;
     private RepositoryModel repositoryModel;
+    private Button validateProcessOption;
+    private boolean validate = true;
 
     public SelectArtifactToDeployPage(RepositoryModel repositoryModel, IEnvironmentProvider environmentProvider) {
         this.repositoryModel = repositoryModel;
@@ -116,6 +119,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         if (section != null && section.getArray(DEPLOY_DEFAULT_SELECTION) != null) {
             defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
+            validate = section.getBoolean(VALIDATE_DEFAULT_SELECTION);
         }
         environment = ConfigurationPlugin.getDefault().getPreferenceStore()
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
@@ -127,6 +131,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         IDialogSettings section = settings.addNewSection(repositoryModel.getName());
         section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
         section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
+        section.put(VALIDATE_DEFAULT_SELECTION, validate);
         ConfigurationPlugin.getDefault().getPreferenceStore()
                 .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, environment);
     }
@@ -168,10 +173,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         mainComposite.setLayout(GridLayoutFactory.swtDefaults()
                 .create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        //        Label warningDependencyLabel = new Label(mainComposite, SWT.WRAP);
-        //        warningDependencyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        //        warningDependencyLabel.setText(Messages.warningMissingDependency);
 
         Composite viewerAndButtonsComposite = new Composite(mainComposite, SWT.NONE);
         viewerAndButtonsComposite.setLayout(
@@ -434,7 +435,13 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
-
+        
+        validateProcessOption  = new Button(deployOptionGroup, SWT.CHECK);
+        validateProcessOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
+        validateProcessOption.setText(Messages.validateProcess);
+        
+        ctx.bindValue(WidgetProperties.selection().observe(validateProcessOption),
+                PojoProperties.value("validate").observe(this));
     }
 
     private Organization getSelectedOrganization() {
@@ -607,6 +614,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     public void setCleanBDM(boolean cleanBDM) {
         this.cleanBDM = cleanBDM;
+    }
+    
+    public boolean isValidate() {
+        return validate;
+    }
+
+    public void setValidate(boolean validate) {
+        this.validate = validate;
     }
 
     public String getEnvironment() {
