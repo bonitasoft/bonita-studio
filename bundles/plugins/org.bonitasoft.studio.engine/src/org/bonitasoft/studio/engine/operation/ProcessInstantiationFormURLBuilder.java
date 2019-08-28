@@ -16,27 +16,35 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class PortalURLBuilder extends AbstractBonitaURLBuilder {
 
-    private long profileId = -1;
+public class ProcessInstantiationFormURLBuilder extends AbstractProcessRelatedURLBuilder {
+
+    private static final String APPLI_PATH = "portal/resource"; //$NON-NLS-1$
+
+    private final long procDefId;
+
+    public ProcessInstantiationFormURLBuilder(final AbstractProcess process, final String configurationId, final long procDefId) {
+        super(process, configurationId);
+        this.procDefId = procDefId;
+    }
 
     @Override
-    protected String getRedirectURL(final String locale, final IProgressMonitor monitor)
-            throws UnsupportedEncodingException {
-        return profileId != -1 ? "portal/homepage?_pf=" + profileId + "&" + getLocaleParameter(locale) : "portal/homepage?" + getLocaleParameter(locale) ;
+    protected String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException {
+            return APPLI_PATH
+                    + "/process"
+                    + "/" + encodeForPathURL(process.getName())
+                    + "/" + encodeForPathURL(process.getVersion())
+                    + "/content/?id=" + procDefId
+                    + "&" + getLocaleParameter(locale)
+                    + "&mode=app";
     }
 
     @Override
     protected String getLocaleParameter(final String locale) {
-        return "_l=" + locale;
+        return "locale=" + locale;
     }
-    
-    public PortalURLBuilder withProfile(long profileId) {
-        this.profileId  = profileId;
-        return this;
-    }
-    
 
 }

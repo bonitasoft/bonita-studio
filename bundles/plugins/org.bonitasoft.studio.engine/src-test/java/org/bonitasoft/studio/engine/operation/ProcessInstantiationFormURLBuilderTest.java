@@ -36,9 +36,9 @@ import org.junit.Test;
  * @author Romain Bioteau
  *
  */
-public class ApplicationURLBuilderTest {
+public class ProcessInstantiationFormURLBuilderTest {
 
-    private ApplicationURLBuilder applicationURLBuilder;
+    private ProcessInstantiationFormURLBuilder applicationURLBuilder;
     private String loginURL;
 
     /**
@@ -49,7 +49,7 @@ public class ApplicationURLBuilderTest {
         final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
         process.setName("testPool with space /and slash");
         process.setVersion("1.0");
-        applicationURLBuilder = spy(new ApplicationURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, 12L));
+        applicationURLBuilder = spy(new ProcessInstantiationFormURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, 12L));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
         doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
         doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
@@ -58,7 +58,7 @@ public class ApplicationURLBuilderTest {
     }
 
     /**
-     * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
+     * Test method for {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
      */
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {
@@ -81,7 +81,7 @@ public class ApplicationURLBuilderTest {
     }
 
     /**
-     * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
+     * Test method for {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
      */
     @Test
     public void shouldToURL_RetursAValidURLForSpecifConf() throws Exception {

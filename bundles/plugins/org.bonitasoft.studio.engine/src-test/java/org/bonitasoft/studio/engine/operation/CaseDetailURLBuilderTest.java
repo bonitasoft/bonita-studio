@@ -60,7 +60,7 @@ public class CaseDetailURLBuilderTest {
     }
 
     /**
-     * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
+     * Test method for {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
      */
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {

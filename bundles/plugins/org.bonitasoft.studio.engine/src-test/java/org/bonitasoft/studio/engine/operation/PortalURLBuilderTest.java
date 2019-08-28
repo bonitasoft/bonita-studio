@@ -56,7 +56,7 @@ public class PortalURLBuilderTest {
 
     /**
      * Test method for
-     * {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}
+     * {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}
      * .
      */
     @Test
