@@ -17,7 +17,10 @@ package org.bonitasoft.studio.application.handler;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +29,10 @@ import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -33,17 +40,23 @@ import org.bonitasoft.studio.application.operation.BuildProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployTenantResourcesOperation;
 import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
+import org.bonitasoft.studio.application.ui.control.DeploySuccessDialog;
+import org.bonitasoft.studio.application.ui.control.DeployedAppContentProvider;
 import org.bonitasoft.studio.application.ui.control.RepositoryModelBuilder;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +66,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
@@ -181,10 +193,34 @@ public class DeployArtifactsHandler {
                 multiStatusDialog.setLevel(IStatus.WARNING);
                 multiStatusDialog.open();
             } else {
-                MessageDialog.openInformation(activeShell, Messages.deployStatus, Messages.deploySuccessMsg);
+                try {
+                    openSuccessDialog(activeShell, status);
+                } catch (LoginException | BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException e) {
+                    BonitaStudioLog.error(e);
+                   new BonitaErrorDialog(activeShell, Messages.deployErrorTitle, e.getMessage(), e).open();
+                }
             }
         } else {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
+        }
+    }
+
+    private void openSuccessDialog(Shell activeShell, IStatus status)
+            throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        DeployedAppContentProvider contentProvider = new DeployedAppContentProvider(status,
+                BOSEngineManager.getInstance().getApplicationAPI(session),
+                BOSEngineManager.getInstance().getProfileAPI(session),
+                BOSEngineManager.getInstance().getIdentityAPI(session));
+        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider)) {
+            try {
+                new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
+            } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        if(session != null) {
+            BOSEngineManager.getInstance().logoutDefaultTenant(session);
         }
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Copyright (C) 2016 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,37 +16,23 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-/**
- * @author Romain Bioteau
- */
-public class ApplicationURLBuilder extends AbstractProcessRelatedURLBuilder {
+public class ApplicationURLBuilder extends PortalURLBuilder {
 
-    private static final String APPLI_PATH = "portal/resource"; //$NON-NLS-1$
+    private final String appToken;
 
-    private final long procDefId;
-
-    public ApplicationURLBuilder(final AbstractProcess process, final String configurationId, final long procDefId) {
-        super(process, configurationId);
-        this.procDefId = procDefId;
+    public ApplicationURLBuilder(String appToken) {
+        this.appToken = appToken;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.engine.operation.PortalURLBuilder#getRedirectURL(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+     */
     @Override
-    protected String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException {
-            return APPLI_PATH
-                    + "/process"
-                    + "/" + encodeForPathURL(process.getName())
-                    + "/" + encodeForPathURL(process.getVersion())
-                    + "/content/?id=" + procDefId
-                    + "&" + getLocaleParameter(locale)
-                    + "&mode=app";
+    protected String getRedirectURL(String locale, IProgressMonitor monitor) throws UnsupportedEncodingException {
+        return String.format("apps/%s?%s", appToken, getLocaleParameter(locale));
     }
-
-    @Override
-    protected String getLocaleParameter(final String locale) {
-        return "locale=" + locale;
-    }
-
 }

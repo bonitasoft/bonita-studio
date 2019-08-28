@@ -30,7 +30,7 @@ public class DeployStatusMapper extends EngineStatusMapper {
         }
         return INSTANCE;
     }
-
+    
     @Override
     public String localizedMessage(Status status) {
         StatusContext context = status.getContext();
@@ -60,6 +60,8 @@ public class DeployStatusMapper extends EngineStatusMapper {
                 return String.format(Messages.appDescriptorUnknownTheme,
                         context.get(StatusContext.LIVING_APPLICATION_TOKEN_KEY),
                         context.get(StatusContext.LIVING_APPLICATION_INVALID_ELEMENT_NAME));
+            case LIVING_APP_DEPLOYMENT:
+                return (String) context.get(StatusContext.LIVING_APPLICATION_TOKEN_KEY);
             default:
                 return super.localizedMessage(status);
         }

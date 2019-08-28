@@ -22,13 +22,9 @@ import org.eclipse.core.runtime.Status;
 
 public class EngineStatusMapper implements Function<org.bonitasoft.engine.api.result.Status, Status> {
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.function.Function#apply(java.lang.Object)
-     */
     @Override
     public Status apply(org.bonitasoft.engine.api.result.Status engineStatus) {
-        return new Status(levelToSeverity(engineStatus), UIPlugin.PLUGIN_ID, localizedMessage(engineStatus));
+        return new Status(levelToSeverity(engineStatus), UIPlugin.PLUGIN_ID, engineStatus.getCode().ordinal(), localizedMessage(engineStatus), null);
     }
 
     protected String localizedMessage(org.bonitasoft.engine.api.result.Status engineStatus) {

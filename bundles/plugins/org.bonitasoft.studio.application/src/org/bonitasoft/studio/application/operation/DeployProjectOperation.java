@@ -17,8 +17,6 @@ package org.bonitasoft.studio.application.operation;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.result.ExecutionResult;
@@ -44,10 +42,6 @@ public class DeployProjectOperation implements IRunnableWithStatus {
     private MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, -1, null, null);
     private IPath archivePath;
     private APISession session;
-    private static final Set<StatusCode> FILTERED_STATUS_CODE = new HashSet<>();
-    static {
-        FILTERED_STATUS_CODE.add(StatusCode.LIVING_APP_DEPLOYMENT);
-    }
 
     public DeployProjectOperation(APISession session, IPath archivePath) {
         this.session = session;
@@ -62,7 +56,6 @@ public class DeployProjectOperation implements IRunnableWithStatus {
             ExecutionResult result = applicationAPI
                     .deployApplication(Files.readAllBytes(archivePath.toFile().toPath()));
             result.getAllStatus().stream()
-                    .filter(status -> !FILTERED_STATUS_CODE.contains(status.getCode()))
                     .filter(status -> !(status.getCode() == StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED && status.getContext().get(StatusContext.PROCESS_RESOLUTION_PROBLEM_DESCRIPTION_KEY) == null))
                     .map(DeployStatusMapper.instance())
                     .forEach(status::add);
