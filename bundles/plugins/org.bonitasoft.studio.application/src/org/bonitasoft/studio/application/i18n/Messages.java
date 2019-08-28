@@ -21,7 +21,6 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
-
     private static String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
     public static String openProcessWizardPage_title;
@@ -122,18 +121,16 @@ public class Messages extends NLS {
     public static String environment;
     public static String processes;
     public static String selectLatestVersion;
-
     public static String cannotResolveProcess;
     public static String cannotEnableProcess;
     public static String appDescriptorUnknownAppPage;
     public static String appDescriptorUnknownPageToken;
     public static String appDescriptorUnknownLayoutPage;
     public static String appDescriptorUnknownTheme;
-
     public static String deploySuccessMsg;
     public static String validateProcess;
+    public static String artifactCounter;
     public static String pagesAndLayouts;
-
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
