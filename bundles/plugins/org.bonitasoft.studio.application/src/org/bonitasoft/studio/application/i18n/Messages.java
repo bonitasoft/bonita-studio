@@ -105,7 +105,6 @@ public class Messages extends NLS {
     public static String bdmGenerationError;
     public static String selectArtifactToDeployTitle;
     public static String selectArtifactToDeploy;
-    public static String warningMissingDependency;
     public static String deploy;
     public static String selectAll;
     public static String selectNone;
@@ -132,6 +131,7 @@ public class Messages extends NLS {
     public static String appDescriptorUnknownTheme;
 
     public static String deploySuccessMsg;
+    public static String validateProcess;
 
 
     static {
