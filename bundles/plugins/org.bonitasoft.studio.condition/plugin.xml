@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.bonitasoft.org/studio/condition/ConditionModel" 
+       class = "org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage"
+       genModel = "org/bonitasoft/studio/condition/ConditionModel.genmodel" /> 
+	
+  </extension>
+  <extension
+        point="org.eclipse.xtext.extension_resourceServiceProvider">
+     <resourceServiceProvider
+           class="org.bonitasoft.studio.condition.resources.ProcResourceServiceProvider"
+           uriExtension="proc">
+     </resourceServiceProvider>
+  </extension>
+
+
+
+
+</plugin>

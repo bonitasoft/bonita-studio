@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.expression.expressionProvider" name="org.bonitasoft.studio.expression.expressionProvider" schema="schema/org.bonitasoft.studio.expression.expressionProvider.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.expressionFilter" name="org.bonitasoft.studio.expression.expressionFilter" schema="schema/org.bonitasoft.studio.expression.expressionFilter.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.operatorEditor" name="org.bonitasoft.studio.expression.operatorEditor" schema="schema/org.bonitasoft.studio.expression.operatorEditor.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.editor.expressionViewerToolbar" name="org.bonitasoft.studio.expression.editor.expressionViewerToolbar" schema="schema/org.bonitasoft.studio.expression.editor.expressionViewerToolbar.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.editor.caretDestroyer" name="org.bonitasoft.studio.expression.editor.caretDestroyer" schema="schema/org.bonitasoft.studio.expression.editor.caretDestroyer.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.proposalListener" name="org.bonitasoft.studio.expression.proposalListener" schema="schema/org.bonitasoft.studio.expression.proposalListener.exsd"/>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.constant.ConstantExpressionProvider">
+      </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.message.MessageIdExpressionProvider">
+      </expressionProvider>
+   </extension>
+      <extension
+         id="org.bonitasoft.studio.expression.editor.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+    <extension
+         point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
+      <proposalFilter
+            name="BonitaGroovyProposalFilter"
+            proposalFilter="org.bonitasoft.studio.expression.editor.pattern.contentAssist.GenericProposalFilter">
+         <appliesTo
+               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
+         </appliesTo>
+      </proposalFilter>
+   </extension>
+</plugin>
