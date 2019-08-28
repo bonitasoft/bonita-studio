@@ -107,6 +107,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private RepositoryModel repositoryModel;
     private Button validateProcessOption;
     private boolean validate = true;
+    private Label countArtifactLabel;
+    private boolean filtering = false;
 
     public SelectArtifactToDeployPage(RepositoryModel repositoryModel, IEnvironmentProvider environmentProvider) {
         this.repositoryModel = repositoryModel;
@@ -183,25 +185,39 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         createSearchAndCollapseComposite(ctx, viewerAndButtonsComposite);
         createSelectButtonComposite(viewerAndButtonsComposite);
         createViewer(ctx, viewerAndButtonsComposite);
+        createArtifactCounter(viewerAndButtonsComposite);
         createDeployOptions(ctx, viewerAndButtonsComposite);
 
         checkedElementsObservable = fileStoreViewer.checkedElementsObservable();
         defaultSelection();
         searchObservableValue.addValueChangeListener(e -> applySearch(e.diff.getNewValue()));
         checkedElementsObservable.addSetChangeListener(event -> {
-            updateCleanDeployEnablement();
-            updateUserProposals();
+            if (!filtering) {
+                mergeSets();
+                updateCleanDeployEnablement();
+                updateUserProposals();
+            }
         });
-
+        mergeSets();
         updateUserProposals();
         updateCleanDeployEnablement();
 
         return mainComposite;
     }
 
+    private void createArtifactCounter(Composite parent) {
+        countArtifactLabel = new Label(parent, SWT.NONE);
+        countArtifactLabel
+                .setLayoutData(GridDataFactory.fillDefaults().span(2, 1).align(SWT.END, SWT.END).indent(0, 5).create());
+    }
+
+    private void updateCount() {
+        countArtifactLabel.setText(String.format(Messages.artifactCounter, allCheckedElements.size()));
+    }
+
     private void updateCleanDeployEnablement() {
         cleanDeployOption.setEnabled(
-                checkedElementsObservable.stream().anyMatch(BusinessObjectModelArtifact.class::isInstance));
+                allCheckedElements.stream().anyMatch(BusinessObjectModelArtifact.class::isInstance));
     }
 
     protected void mergeSets() {
@@ -213,6 +229,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                         && !toFilter.contains(fileStore))
                 .collect(Collectors.toList());
         allCheckedElements.removeAll(toRemove);
+        updateCount();
     }
 
     private void createSelectButtonComposite(Composite parent) {
@@ -435,22 +452,24 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
-        
-        validateProcessOption  = new Button(deployOptionGroup, SWT.CHECK);
+
+        validateProcessOption = new Button(deployOptionGroup, SWT.CHECK);
         validateProcessOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         validateProcessOption.setText(Messages.validateProcess);
-        
+
         ctx.bindValue(WidgetProperties.selection().observe(validateProcessOption),
                 PojoProperties.value("validate").observe(this));
     }
 
     private Organization getSelectedOrganization() {
-        return checkedElementsObservable != null ? checkedElementsObservable.stream()
-                .filter(OrganizationArtifact.class::isInstance)
-                .map(OrganizationArtifact.class::cast)
-                .map(artifact -> artifact.getModel())
-                .findFirst()
-                .orElse(null) : null;
+        return allCheckedElements != null
+                ? allCheckedElements.stream()
+                        .filter(OrganizationArtifact.class::isInstance)
+                        .map(OrganizationArtifact.class::cast)
+                        .map(artifact -> artifact.getModel())
+                        .findFirst()
+                        .orElse(null)
+                : null;
     }
 
     private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite) {
@@ -539,6 +558,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private void applySearch(String searchValue) {
         Display.getDefault().asyncExec(() -> {
+            filtering = true;
             mergeSets();
             updateArtifactsToFilter(searchValue);
             fileStoreViewer.refresh();
@@ -546,13 +566,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             allCheckedElements.stream()
                     .filter(fileStore -> !toFilter.contains(fileStore))
                     .forEach(checkedElementsObservable::add);
+            filtering = false;
         });
     }
 
     protected void updateArtifactsToFilter(String searchValue) {
         toFilter.clear();
         repositoryModel.getArtifacts().stream()
-                .filter(artifact -> !artifact.getDisplayName().toLowerCase().contains(searchValue.toLowerCase()))
+                .filter(artifact -> !artifact.getName().toLowerCase().contains(searchValue.toLowerCase()))
                 .filter(artifact -> !Objects.equals(searchValue, artifact.getParent().toString()))
                 .forEach(toFilter::add);
     }
@@ -581,9 +602,12 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         checkedElementsObservable.clear();
         repositoryModel.getArtifacts().stream()
                 .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
-                .filter(artifact -> VersionedArtifact.class.isInstance(artifact) ? ((VersionedArtifact) artifact).hasSingleVersion() : true) 
-                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ?!((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
-                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ?((ArtifactVersion) artifact).isLatest() : true)
+                .filter(artifact -> VersionedArtifact.class.isInstance(artifact)
+                        ? ((VersionedArtifact) artifact).hasSingleVersion() : true)
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
+                        ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
+                .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ? ((ArtifactVersion) artifact).isLatest()
+                        : true)
                 .forEach(checkedElementsObservable::add);
 
         //Only one organization can be selected at a time
@@ -591,12 +615,13 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     public Collection<Artifact> getSelectedArtifacts() {
-        return checkedElementsObservable.stream()
+        return allCheckedElements.stream()
                 .filter(Artifact.class::isInstance)
                 .map(Artifact.class::cast)
                 .map(artifact -> artifact instanceof VersionedArtifact
                         && ((VersionedArtifact) artifact).hasSingleVersion()
-                                ? ((VersionedArtifact) artifact).getLatestVersion() : artifact)
+                                ? ((VersionedArtifact) artifact).getLatestVersion()
+                                : artifact)
                 .collect(Collectors.toList());
     }
 
@@ -615,7 +640,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     public void setCleanBDM(boolean cleanBDM) {
         this.cleanBDM = cleanBDM;
     }
-    
+
     public boolean isValidate() {
         return validate;
     }
