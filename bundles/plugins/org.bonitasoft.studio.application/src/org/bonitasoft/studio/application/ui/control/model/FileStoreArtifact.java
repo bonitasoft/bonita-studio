@@ -57,5 +57,9 @@ public class FileStoreArtifact implements Artifact {
     public Object getParent() {
         return parent;
     }
+    
+    public IRepositoryFileStore getFileStore(){
+        return fStore;
+    }
 
 }

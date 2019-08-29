@@ -43,9 +43,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -178,8 +175,9 @@ public class TextWidget extends EditableControlWidget {
                         modelObservable,
                         targetToModelStrategy,
                         modelToTargetStrategy);
-                validator.ifPresent(v -> control.bindValidator(ctx, delay.map(time -> control.observeText(time, SWT.Modify))
-                        .orElse(control.observeText(SWT.Modify)),
+                validator.ifPresent(v -> control.bindValidator(ctx,
+                        delay.map(time -> control.observeText(time, SWT.Modify))
+                                .orElse(control.observeText(SWT.Modify)),
                         modelObservable,
                         v));
             }
@@ -224,8 +222,8 @@ public class TextWidget extends EditableControlWidget {
 
     @Override
     protected int horizontalSpacing() {
-        if(labelAbove && transactionalEdit) {
-            return 1 ;
+        if (labelAbove && transactionalEdit) {
+            return 1;
         }
         return super.horizontalSpacing();
     }
@@ -279,10 +277,6 @@ public class TextWidget extends EditableControlWidget {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#selectedBorderColor(org.eclipse.swt.widgets.Control)
-     */
     @Override
     protected Color selectedBorderColor(Control container) {
         return editing ? editingColor : super.selectedBorderColor(container);
@@ -325,21 +319,6 @@ public class TextWidget extends EditableControlWidget {
 
         text.addListener(SWT.FocusIn, event -> redraw(textContainer));
         text.addListener(SWT.FocusOut, event -> redraw(textContainer));
-        text.addListener(SWT.Paint, event -> {
-            if (!text.isEnabled()) {
-                final GC gc = event.gc;
-
-                final String textString = text.getText();
-                final Rectangle bounds = text.getBounds();
-                final Point caretLocation = text.getCaretLocation();
-
-                gc.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-                gc.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
-                gc.fillRectangle(0, 0, bounds.width, bounds.height);
-                gc.drawText(textString, bounds.x + 1, caretLocation.y);
-            }
-
-        });
 
         if (transactionalEdit) {
             final ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
@@ -377,7 +356,7 @@ public class TextWidget extends EditableControlWidget {
     private void openProposalPopup(CustomContentProposalAdapter proposalAdapter) {
         text.getDisplay().asyncExec(() -> {
             if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()) {
-                if(text.getText() == null || text.getText().isEmpty()) {
+                if (text.getText() == null || text.getText().isEmpty()) {
                     proposalAdapter.openProposalPopup();
                 }
             }
@@ -394,7 +373,8 @@ public class TextWidget extends EditableControlWidget {
 
     protected void createEditItem(final ToolBar toolBar) {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
-        editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.ui.widget.textWidget.editButton");
+        editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.ui.widget.textWidget.editButton");
         editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
@@ -416,7 +396,8 @@ public class TextWidget extends EditableControlWidget {
         cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
 
         okButton = new ToolItem(toolBar, SWT.FLAT);
-        okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
+        okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
         okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));

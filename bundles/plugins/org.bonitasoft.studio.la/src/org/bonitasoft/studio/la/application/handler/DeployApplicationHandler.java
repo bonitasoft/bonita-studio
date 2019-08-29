@@ -14,20 +14,25 @@
  */
 package org.bonitasoft.studio.la.application.handler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Named;
 
-import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.studio.application.handler.DeployArtifactsHandler;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.la.application.core.DependencyResolver;
 import org.bonitasoft.studio.la.application.core.DeployApplicationAction;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 public class DeployApplicationHandler {
 
@@ -35,33 +40,37 @@ public class DeployApplicationHandler {
 
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor, Shell shell,
-            @org.eclipse.e4.core.di.annotations.Optional @Named(APPLICATION_TO_DEPLOY_PARAMETER) String application) {
-        deploy(repositoryAccessor, shell, new DeployApplicationAction(repositoryAccessor), application);
+            @org.eclipse.e4.core.di.annotations.Optional @Named(APPLICATION_TO_DEPLOY_PARAMETER) String application, 
+            DependencyResolver<ApplicationFileStore> dependencyResolver) {
+        deploy(repositoryAccessor, shell, new DeployApplicationAction(repositoryAccessor), application, dependencyResolver);
     }
 
     protected void deploy(RepositoryAccessor repositoryAccessor, Shell shell, DeployApplicationAction action,
-            String application) {
-        Optional<ApplicationNodeContainer> applicationToDeploy = findApplicationToDeploy(repositoryAccessor, application);
-        if (applicationToDeploy.isPresent()) {
-            action.deployApplicationNodeContainer(shell, applicationToDeploy.get(),
-                    new String[] { IDialogConstants.OK_LABEL });
+            String application, DependencyResolver<ApplicationFileStore> dependencyResolver) {
+        Optional<ApplicationFileStore> applicationFileStore = findApplicationToDeploy(repositoryAccessor,
+                application);
+        if (applicationFileStore.isPresent()) {
+            DeployArtifactsHandler deployArtifactsHandler = new DeployArtifactsHandler();
+            List<IRepositoryFileStore> defaultSelection = new ArrayList<>();
+            ApplicationFileStore fileStore = applicationFileStore.get();
+            defaultSelection.add(fileStore);
+            defaultSelection.addAll(dependencyResolver.findDependencies(fileStore));
+            deployArtifactsHandler.setDefaultSelection(defaultSelection);
+            try {
+                deployArtifactsHandler.deploy(shell, repositoryAccessor, PlatformUI.getWorkbench().getProgressService());
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
         } else {
             action.selectAndDeploy(shell);
         }
     }
 
-    protected Optional<ApplicationNodeContainer> findApplicationToDeploy(RepositoryAccessor repositoryAccessor,
+    protected Optional<ApplicationFileStore> findApplicationToDeploy(RepositoryAccessor repositoryAccessor,
             String application) {
-        if (application != null) {
-            ApplicationFileStore fileStore = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
-                    .getChild(application, true);
-            try {
-                return fileStore == null
-                        ? Optional.empty()
-                        : Optional.of(fileStore.getContent());
-            } catch (ReadFileStoreException e) {
-                throw new RuntimeException(e);
-            }
+        if(application != null) {
+            return Optional.of(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
+                    .getChild(application, true)); 
         }
         return Optional.empty();
     }

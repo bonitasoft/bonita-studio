@@ -23,7 +23,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,7 @@ import org.bonitasoft.studio.application.ui.control.RepositoryModelBuilder;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
+import org.bonitasoft.studio.application.ui.control.model.FileStoreArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -53,6 +56,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
@@ -76,6 +80,7 @@ public class DeployArtifactsHandler {
 
     private BuildProjectOperation buildOperation;
     private RepositoryModel repositoryModel;
+    private List<IRepositoryFileStore> defaultSelection;
 
     @Execute
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
@@ -88,6 +93,12 @@ public class DeployArtifactsHandler {
 
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
                 new EnvironmentProviderFactory().getEnvironmentProvider());
+        if(defaultSelection != null) {
+            page.setDefaultSelectedElements(defaultSelection.stream()
+                    .map(fStore -> asArtifact(fStore))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet()));
+        }
         Optional<IStatus> result = createWizard(newWizard(), page,
                 repositoryAccessor,
                 Messages.selectArtifactToDeployTitle,
@@ -96,6 +107,19 @@ public class DeployArtifactsHandler {
         if (result.isPresent()) {
             openStatusDialog(activeShell, result.get());
         }
+    }
+    
+    private Artifact asArtifact(IRepositoryFileStore fStore) {
+        return repositoryModel.getArtifacts().stream()
+                .filter(FileStoreArtifact.class::isInstance)
+                .map(FileStoreArtifact.class::cast)
+                .filter(artifact -> Objects.equals(artifact.getFileStore().getResource(),fStore.getResource()))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public void setDefaultSelection(List<IRepositoryFileStore> defaultSelection) {
+        this.defaultSelection = defaultSelection;
     }
 
     protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
