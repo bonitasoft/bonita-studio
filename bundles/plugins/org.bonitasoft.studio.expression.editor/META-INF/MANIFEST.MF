@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Expression Editor Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.expression.editor;singleton:=true
-Bundle-Version: 7.9.3.qualifier
+Bundle-Version: 7.9.3
 Bundle-Activator: org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Export-Package: org.bonitasoft.studio.expression.editor,
