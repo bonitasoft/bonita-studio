@@ -57,9 +57,12 @@ public class LivingApplicationProjectExplorerBot extends ProjectExplorerBot {
 
     public void deployApplication(String application) {
         clickOnContextualMenu(getApplicationTreeItem(application), "Deploy");
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.la.i18n.Messages.deployDoneTitle));
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.application.i18n.Messages.selectArtifactToDeployTitle));
         SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.button(org.bonitasoft.studio.application.i18n.Messages.deploy).click();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.application.i18n.Messages.deployStatus));
+        activeShell = bot.activeShell();
+        bot.button(IDialogConstants.CLOSE_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 

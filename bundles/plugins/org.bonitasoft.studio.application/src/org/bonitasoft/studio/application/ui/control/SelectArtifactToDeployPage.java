@@ -119,12 +119,19 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     public void loadSettings(IDialogSettings settings) {
         IDialogSettings section = settings.getSection(repositoryModel.getName());
         if (section != null && section.getArray(DEPLOY_DEFAULT_SELECTION) != null) {
-            defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
+            if(defaultSelectedElements == null || defaultSelectedElements.isEmpty()) {
+                defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
+            }
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
             validate = section.getBoolean(VALIDATE_DEFAULT_SELECTION);
         }
         environment = ConfigurationPlugin.getDefault().getPreferenceStore()
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+    }
+    
+    
+    public void setDefaultSelectedElements(Set<Object> defaultSelectedElements) {
+        this.defaultSelectedElements = defaultSelectedElements;
     }
 
     @Override
