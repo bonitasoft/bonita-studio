@@ -14,19 +14,23 @@
  */
 package org.bonitasoft.studio.importer.bos.status;
 
+import java.util.HashMap;
+
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.handler.DefaultImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialog;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Romain Bioteau
- */
+
 public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandler {
 
     private final DiagramRepositoryStore store;
@@ -48,9 +52,20 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
                 importStatus instanceof BosArchiveImportStatus
                         && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
         final int result = messageDialog.open();
-        if (importStatus instanceof BosArchiveImportStatus && result == IDialogConstants.OPEN_ID) {
-            openDiagrams((BosArchiveImportStatus) importStatus);
+        if (importStatus instanceof BosArchiveImportStatus) {
+            if (result == IDialogConstants.OPEN_ID) {
+                openDiagrams((BosArchiveImportStatus) importStatus);
+            } else if (result == IDialogConstants.PROCEED_ID) {
+                executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
+            }
         }
+    }
+
+    private void executeCommand(String command) {
+        ECommandService eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
+        EHandlerService eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
+        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, new HashMap<>());
+        eHandlerService.executeHandler(parameterizedCommand);
     }
 
     protected void openDiagrams(final BosArchiveImportStatus bosArchiveStatus) {

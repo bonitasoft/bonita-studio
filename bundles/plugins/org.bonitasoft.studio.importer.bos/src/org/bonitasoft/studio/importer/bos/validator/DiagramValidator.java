@@ -47,7 +47,7 @@ public class DiagramValidator implements BosImporterStatusProvider {
                                 new ValidationMarkerProvider()));
                 validationAction.addProcess(process);
                 validationAction.run(monitor);
-                if (validationAction.getStatus() != null && validationAction.getStatus().isOK()) {
+                if (validationAction.getStatus() != null && !validationAction.getStatus().isOK()) {
                     statusBuilder.addStatus(process, validationAction.getStatus());
                 }
             } catch (final ReadFileStoreException | InvocationTargetException | InterruptedException e) {

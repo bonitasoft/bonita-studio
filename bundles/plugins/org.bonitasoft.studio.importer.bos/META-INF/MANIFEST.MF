@@ -46,7 +46,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.designer,
  org.eclipse.jdt.launching,
  org.eclipse.core.databinding.property;bundle-version="1.6.100",
- org.bonitasoft.studio.businessobject
+ org.bonitasoft.studio.businessobject,
+ org.eclipse.e4.core.commands
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
