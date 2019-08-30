@@ -40,22 +40,24 @@ public class HideEmptyRepository extends ViewerFilter {
             if (store != null) {
                 try {
                     IFolder resource = store.getResource();
-                    IResource[] members = resource.members();
-                    if (store instanceof WebWidgetRepositoryStore) {
-                        return Stream.of(members)
-                                .filter(r -> !r.getName().startsWith("."))
-                                .anyMatch(r -> !r.getName().startsWith("pb"));
+                    if (resource.exists()) {
+                        IResource[] members = resource.members();
+                        if (store instanceof WebWidgetRepositoryStore) {
+                            return Stream.of(members)
+                                    .filter(r -> !r.getName().startsWith("."))
+                                    .anyMatch(r -> !r.getName().startsWith("pb"));
 
+                        }
+                        if (store instanceof WebPageRepositoryStore) {
+                            return Stream.of(members)
+                                    .anyMatch(r -> !r.getName().startsWith("."));
+                        }
+                        if (store instanceof WebFragmentRepositoryStore) {
+                            return Stream.of(members)
+                                    .anyMatch(r -> !r.getName().startsWith("."));
+                        }
+                        return members.length > 0;
                     }
-                    if (store instanceof WebPageRepositoryStore) {
-                        return Stream.of(members)
-                                .anyMatch(r -> !r.getName().startsWith("."));
-                    }
-                    if (store instanceof WebFragmentRepositoryStore) {
-                        return Stream.of(members)
-                                .anyMatch(r -> !r.getName().startsWith("."));
-                    }
-                    return members.length > 0;
                 } catch (CoreException e) {
                     BonitaStudioLog.error(e);
                 }

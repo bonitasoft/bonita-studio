@@ -41,7 +41,9 @@ import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
@@ -71,7 +73,7 @@ import com.google.common.io.Files;
  * @author Romain Bioteau
  */
 public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
-        extends AbstractRepositoryStore<AbstractBDMFileStore> {
+        extends AbstractRepositoryStore<AbstractBDMFileStore> implements IBonitaProjectListener {
 
     private static final String STORE_NAME = "bdm";
 
@@ -89,6 +91,12 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     public BusinessObjectModelConverter getConverter() {
         return converter;
+    }
+
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        super.createRepositoryStore(repository);
+        repository.addProjectListener(this);
     }
 
     @Override
@@ -145,7 +153,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         } else {
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
-
         generateJar(fileStore);
         if (isDeployable()) {
             deploy((BusinessObjectModelFileStore) fileStore);
@@ -153,11 +160,13 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         return fileStore;
     }
 
-    protected void generateJar(F fileStore) {
+    protected IStatus generateJar(F fileStore) {
         try {
             new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+            return Status.OK_STATUS;
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
+            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to generate jar from BDM.", e);
         }
     }
 
@@ -293,6 +302,28 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     @Override
     public F getChild(String fileName, boolean force) {
         return (F) super.getChild(fileName, force);
+    }
+
+    @Override
+    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+        Job job = new Job(Messages.generatingJarFromBDMModel) {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+                if (fStore != null) {
+                    return generateJar(fStore);
+                }
+                return Status.OK_STATUS;
+            }
+
+        };
+        job.schedule();
+    }
+
+    @Override
+    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+        //Nothing to do
     }
 
 }

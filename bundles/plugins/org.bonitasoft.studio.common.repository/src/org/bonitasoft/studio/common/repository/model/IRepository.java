@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.eclipse.core.resources.IProject;
@@ -86,4 +87,5 @@ public interface IRepository extends IFileStoreChangeListener {
 
     DatabaseHandler getDatabaseHandler();
 
+    void addProjectListener(IBonitaProjectListener listener);
 }
