@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class BusinessObjectModelRepositoryStoreTest {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
         doReturn(true).when(storeUnderTest).isDeployable();
         doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
-        doNothing().when(storeUnderTest).generateJar(businessObjectFileStore);
+        doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);
 
@@ -98,7 +99,7 @@ public class BusinessObjectModelRepositoryStoreTest {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
         doReturn(false).when(storeUnderTest).isDeployable();
         doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
-        doNothing().when(storeUnderTest).generateJar(businessObjectFileStore);
+        doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);
 

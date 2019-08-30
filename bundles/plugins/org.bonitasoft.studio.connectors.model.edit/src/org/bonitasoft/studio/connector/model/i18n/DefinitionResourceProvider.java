@@ -159,7 +159,8 @@ public class DefinitionResourceProvider {
         if (resourceBundle != null) {
             return resourceBundle;
         }
-        final IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()), true);
+        final IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()),
+                true);
         if (fileStore == null) {
             return null;
         }
@@ -427,15 +428,18 @@ public class DefinitionResourceProvider {
         }
         final String defId = URI.decode(def.eResource().getURI().trimFileExtension().lastSegment());
         try {
-            for (final IResource r : store.getResource().members()) {
-                if (r.getFileExtension() != null
-                        && r.getFileExtension().equals("properties")) {
-                    final String resourceName = r.getName();
-                    if (resourceName.contains(defId)) {
-                        final String baseName = resourceName.substring(0,
-                                defId.length());
-                        if (baseName.equals(defId)) {
-                            result.add(((IFile) r).getLocation().toFile());
+            IFolder resource = store.getResource();
+            if (resource.exists()) {
+                for (final IResource r : resource.members()) {
+                    if (r.getFileExtension() != null
+                            && r.getFileExtension().equals("properties")) {
+                        final String resourceName = r.getName();
+                        if (resourceName.contains(defId)) {
+                            final String baseName = resourceName.substring(0,
+                                    defId.length());
+                            if (baseName.equals(defId)) {
+                                result.add(((IFile) r).getLocation().toFile());
+                            }
                         }
                     }
                 }

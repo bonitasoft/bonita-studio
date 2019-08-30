@@ -92,6 +92,9 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
 	 * java.lang.String, org.w3c.dom.Element)
 	 */
 	public void createContent(String id, Element parent) {
+	    if(!RepositoryManager.getInstance().hasActiveRepository() || !RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+	        return;
+	    }
 		DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
 				.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 		int nbProc = Integer.parseInt(id.split(",")[0]);
