@@ -53,7 +53,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class FormMappingBarResourceProviderTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     private BusinessArchiveBuilder builder;
@@ -76,7 +76,8 @@ public class FormMappingBarResourceProviderTest {
     public void setUp() throws Exception {
         formMappingBarResourceProvider = spy(
                 new FormMappingBarResourceProvider(customPageBarResourceFactory, preferenceStore));
-        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(false);
+        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true))
+                .thenReturn(false);
         doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
     }
 
@@ -90,17 +91,21 @@ public class FormMappingBarResourceProviderTest {
     public void should_add_formMapping_resource_in_bar() throws Exception {
         //Given
         final Pool aPoolAndTaskWithFormMappings = aPoolAndTaskWithAllTypeOfFormMappings();
-        final FormMappingModel formMappingModel = formMappingBarResourceProvider.newFormMappingModel(builder, aPoolAndTaskWithFormMappings);
+        final FormMappingModel formMappingModel = formMappingBarResourceProvider.newFormMappingModel(builder,
+                aPoolAndTaskWithFormMappings);
 
         //When
-        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithFormMappings, aConfiguration()
-                .build());
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithFormMappings,
+                aConfiguration()
+                        .build());
 
         //Then
         verify(builder).setFormMappings(formMappingModel);
         assertThat(formMappingModel.getFormMappings()).hasSize(2);
         assertThat(formMappingModel.getFormMappings()).extracting("target", "form", "type", "taskname")
-                .contains(tuple(FormMappingTarget.URL, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW, null),
+                .contains(
+                        tuple(FormMappingTarget.URL, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW,
+                                null),
                         tuple(FormMappingTarget.INTERNAL, "custompage_StepForm", FormMappingType.TASK, "Step1"));
     }
 
@@ -127,10 +132,12 @@ public class FormMappingBarResourceProviderTest {
     public void should_add_form_custom_page_as_a_bar_resource() throws Exception {
         //Given
         doReturn("step-form-id").when(formMappingBarResourceProvider).resolveUUID("step-form-id");
-        doReturn(taskFormCustomPage).when(customPageBarResourceFactory).newBarResource("custompage_StepForm", "step-form-id");
+        doReturn(taskFormCustomPage).when(customPageBarResourceFactory).newBarResource("custompage_StepForm",
+                "step-form-id");
 
         //When
-        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithAllTypeOfFormMappings(), aConfiguration()
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithAllTypeOfFormMappings(),
+                aConfiguration()
                         .build());
 
         //Then
@@ -141,27 +148,47 @@ public class FormMappingBarResourceProviderTest {
     public void should_not_add_form_custom_page_if_target_form_is_empty() throws Exception {
         //When
         doReturn("").when(formMappingBarResourceProvider).resolveUUID("");
-        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(), aConfiguration()
-                .build());
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolWithEmptyFormMappings(),
+                aConfiguration()
+                        .build());
 
         //Then
         verify(builder, never()).addExternalResource(any(BarResource.class));
     }
 
     @Test
-    public void should_create_a_mapping_for_empty_internal_overview() throws Exception {
-        final FormMappingModel formMappingModel = formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyOverviewInternalFormMappings());
+    public void should_throw_InternalFormNotFoundExceptionn_if_target_form_is_not_empty_but_not_resolved()
+            throws Exception {
+        //Given 
+        doReturn(null).when(formMappingBarResourceProvider).resolveUUID("step-form-id");
 
-        assertThat(formMappingModel.getFormMappings()).hasSize(1);
-        assertThat(formMappingModel.getFormMappings().get(0)).isEqualToComparingFieldByField(
-                new FormMappingDefinition("custompage_caseoverview", FormMappingType.PROCESS_OVERVIEW, FormMappingTarget.INTERNAL));
+        //Expect
+        expectedException.expect(InternalFormNotFoundException.class);
+
+        //When
+        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithAllTypeOfFormMappings(),
+                aConfiguration()
+                        .build());
     }
 
     @Test
-    public void should_throw_an_InternalFormNotFoundExecption_when_creating_an_internal_mapping_without_custom_page_and_mapping_is_forced() throws Exception {
-        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true)).thenReturn(true);
+    public void should_create_a_mapping_for_empty_internal_overview() throws Exception {
+        final FormMappingModel formMappingModel = formMappingBarResourceProvider.newFormMappingModel(builder,
+                aPoolWithEmptyOverviewInternalFormMappings());
 
-        thrown.expect(InternalFormNotFoundException.class);
+        assertThat(formMappingModel.getFormMappings()).hasSize(1);
+        assertThat(formMappingModel.getFormMappings().get(0)).isEqualToComparingFieldByField(
+                new FormMappingDefinition("custompage_caseoverview", FormMappingType.PROCESS_OVERVIEW,
+                        FormMappingTarget.INTERNAL));
+    }
+
+    @Test
+    public void should_throw_an_InternalFormNotFoundExecption_when_creating_an_internal_mapping_without_custom_page_and_mapping_is_forced()
+            throws Exception {
+        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true))
+                .thenReturn(true);
+
+        expectedException.expect(InternalFormNotFoundException.class);
 
         formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyFormMappings());
     }
@@ -171,11 +198,14 @@ public class FormMappingBarResourceProviderTest {
                 .withName("Pool1")
                 .withVersion("1.0")
                 .havingOverviewFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL("http://www.bonitasoft.com"))
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL)
+                                .withURL("http://www.bonitasoft.com"))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
-                                aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))),
-                        aTask().withName("Step2").havingFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.NONE)))
+                                aFormMapping().havingTargetForm(
+                                        anExpression().withName("StepForm").withContent("step-form-id"))),
+                        aTask().withName("Step2").havingFormMapping(
+                                aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.NONE)))
                 .build();
     }
 
@@ -201,11 +231,13 @@ public class FormMappingBarResourceProviderTest {
 
     private Pool aPoolWithInvalidFormMapping() {
         return aPool().withName("Pool2").withVersion("2.0")
-                .havingOverviewFormMapping(aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL(""))
+                .havingOverviewFormMapping(
+                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL(""))
                 .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent(null)))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
-                                aFormMapping().havingTargetForm(anExpression().withName("Step1").withContent("step-form-id"))))
+                                aFormMapping().havingTargetForm(
+                                        anExpression().withName("Step1").withContent("step-form-id"))))
                 .build();
     }
 
