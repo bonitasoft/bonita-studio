@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<applications xmlns="http://documentation.bonitasoft.com/application-xml-schema/1.0">
+    <application token="testExplorerApplication" version="1.0" profile="User" state="ACTIVATED" layout="custompage_defaultlayout" theme="custompage_bootstrapdefaulttheme">
+        <displayName>My App</displayName>
+        <applicationPages/>
+        <applicationMenus/>
+    </application>
+</applications>

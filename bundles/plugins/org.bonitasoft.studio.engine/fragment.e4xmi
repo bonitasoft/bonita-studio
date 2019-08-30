@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_7vURMMikEeiXpul4PGGc1A">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_8iKqcMikEeiXpul4PGGc1A" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_BoZkcMilEeiXpul4PGGc1A" elementId="org.bonitasoft.studio.engine.deploy.page.command" commandName="%deployPage">
+      <parameters xmi:id="_XP_X8MilEeiXpul4PGGc1A" elementId="name" name="Page file name" optional="false"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_l6EdMKk1EemxstQeqTvXDA" elementId="org.bonitasoft.studio.engine.command.buildDiagram" commandName="%buildDiagram">
+      <parameters xmi:id="_ujg_QKk1EemxstQeqTvXDA" elementId="fileName" name="File name" optional="false"/>
+      <parameters xmi:id="_y5TTwKk1EemxstQeqTvXDA" elementId="destinationPath" name="Destination path" optional="false"/>
+      <parameters xmi:id="_hbRzUMQ0EemHT9oN2qWIMw" elementId="process" name="Process UUID"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_ASVJYMilEeiXpul4PGGc1A" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_HqpawMilEeiXpul4PGGc1A" elementId="org.bonitasoft.studio.engine.deploy.page.handler" contributionURI="bundleclass://org.bonitasoft.studio.engine/org.bonitasoft.studio.engine.command.DeployPageHandler" command="_BoZkcMilEeiXpul4PGGc1A"/>
+    <elements xsi:type="commands:Handler" xmi:id="_10XWsKk1EemxstQeqTvXDA" elementId="org.bonitasoft.studio.engine.handler.buildDiagram" contributionURI="bundleclass://org.bonitasoft.studio.engine/org.bonitasoft.studio.engine.command.BuildDiagramHandler" command="_l6EdMKk1EemxstQeqTvXDA"/>
+  </fragments>
+</fragment:ModelFragments>

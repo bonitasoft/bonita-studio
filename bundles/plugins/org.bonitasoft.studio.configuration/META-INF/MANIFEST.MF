@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Configuration Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.configuration;singleton:=true
+Bundle-Localization: plugin
+Bundle-Version: 7.10.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.configuration.ConfigurationPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.eclipse.emf.edit;bundle-version="2.7.1",
+ org.eclipse.emf.edit.ui;bundle-version="2.7.0",
+ org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.5.0",
+ org.bonitasoft.studio.pics;bundle-version="1.0.0",
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.eclipse.core.databinding;bundle-version="1.4.0",
+ org.eclipse.core.databinding.beans;bundle-version="1.2.100",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
+ org.eclipse.emf.databinding;bundle-version="1.2.0",
+ org.bonitasoft.studio.preferences;bundle-version="1.0.0",
+ org.bonitasoft.studio.dependencies;bundle-version="1.0.0",
+ org.bonitasoft.studio.connectors.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.configuration,
+ org.bonitasoft.studio.configuration.extension,
+ org.bonitasoft.studio.configuration.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework",
+ org.bonitasoft.studio.configuration.preferences,
+ org.bonitasoft.studio.configuration.ui.handler
