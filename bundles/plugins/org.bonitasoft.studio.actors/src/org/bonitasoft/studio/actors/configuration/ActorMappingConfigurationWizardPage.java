@@ -84,7 +84,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     private Button roleButton;
     private Button membershipButton;
     private Button userButton;
-    private Optional<Organization> deployedOrganization;
+    private Optional<Organization> deployedOrganization = Optional.empty();
 
     public ActorMappingConfigurationWizardPage() {
         super(ActorMappingConfigurationWizardPage.class.getName());
