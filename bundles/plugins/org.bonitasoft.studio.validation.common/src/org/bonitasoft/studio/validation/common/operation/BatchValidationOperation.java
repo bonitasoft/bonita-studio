@@ -180,8 +180,6 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         String fileName = target.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
         addStatusForMarkerType(target, result, fileName, ProcessMarkerNavigationProvider.MARKER_TYPE);
-        addStatusForMarkerType(target, result, fileName,
-                org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.MARKER_TYPE);
         fileProcessed.add(target);
     }
 

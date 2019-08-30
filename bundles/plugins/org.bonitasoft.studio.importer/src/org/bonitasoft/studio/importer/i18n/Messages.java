@@ -47,5 +47,6 @@ public class Messages extends NLS {
     public static String importStatusMsg;
     public static String copyToClipboard;
     public static String invalidFilePath;
+    public static String deploy;
 
 }

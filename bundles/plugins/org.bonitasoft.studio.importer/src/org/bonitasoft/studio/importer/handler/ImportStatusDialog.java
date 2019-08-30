@@ -17,6 +17,9 @@ package org.bonitasoft.studio.importer.handler;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -53,25 +56,30 @@ public class ImportStatusDialog extends MessageDialog {
     public ImportStatusDialog(final Shell parentShell, final IStatus importStatus, String message, final boolean canOpen) {
         super(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, null,
                 message,
-                NONE,
-                getLabels(canOpen), 0);
+                importStatus.isOK() ? MessageDialog.INFORMATION : NONE,
+                getLabels(canOpen,importStatus), 0);
         this.importStatus = importStatus;
     }
+    
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.Dialog#getInitialSize()
-     */
     @Override
     protected Point getInitialSize() {
         return getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
     }
 
-    protected static String[] getLabels(final boolean canOpen) {
-        if (canOpen) {
-            return new String[] { Messages.seeDetails, IDialogConstants.OK_LABEL, Messages.copyToClipboard };
+    protected static String[] getLabels(final boolean canOpen, IStatus status) {
+        List<String> buttons =new ArrayList<>();
+        if(canOpen) {
+            buttons.add(Messages.seeDetails);
+        } 
+        if(status.getSeverity() != IStatus.ERROR) {
+            buttons.add(Messages.deploy);
         }
-        return new String[] { IDialogConstants.OK_LABEL, Messages.copyToClipboard };
+        buttons.add(IDialogConstants.OK_LABEL);
+        if(!status.isOK()) {
+            buttons.add( Messages.copyToClipboard);
+        }
+        return buttons.toArray(new String[] {});
     }
 
     @Override
@@ -83,11 +91,6 @@ public class ImportStatusDialog extends MessageDialog {
         problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, 10).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
         problemsViewer.setComparator(new ViewerComparator() {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-             */
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
                 return Integer.compare(((IStatus) e2).getSeverity(), ((IStatus) e1).getSeverity());
@@ -95,19 +98,11 @@ public class ImportStatusDialog extends MessageDialog {
         });
         problemsViewer.setLabelProvider(new LabelProvider() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-             */
             @Override
             public String getText(Object element) {
                 return ((IStatus) element).getMessage();
             }
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-             */
             @Override
             public Image getImage(Object element) {
                 switch (((IStatus) element).getSeverity()) {
@@ -155,6 +150,9 @@ public class ImportStatusDialog extends MessageDialog {
     protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
         if (Messages.seeDetails.equals(label)) {
             return super.createButton(parent, IDialogConstants.OPEN_ID, label, defaultButton);
+        }
+        if (Messages.deploy.equals(label)) {
+            return super.createButton(parent, IDialogConstants.PROCEED_ID, label, defaultButton);
         }
         if (Messages.copyToClipboard.equals(label)) {
             final Button copyButton = super.createButton(parent, IDialogConstants.NO_ID, label, defaultButton);

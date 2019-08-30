@@ -49,10 +49,7 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
         } else {
             switch (importStatus.getSeverity()) {
                 case IStatus.OK:
-                    MessageDialog.openInformation(parentShell,
-                            org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
-                            customSuccessMessage
-                                    .orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
+                    openImportStatus(parentShell, customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
                     break;
                 case IStatus.INFO:
                     openImportStatus(parentShell, customSuccessMessage
