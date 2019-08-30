@@ -24,10 +24,6 @@ public class InternalFormNotFoundException extends FormMappingException {
         super(formMapping);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Throwable#getMessage()
-     */
     @Override
     public String getMessage() {
         return NLS.bind(Messages.internalFormMappingUndefined, containerName());

@@ -86,8 +86,13 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         if (shouldAddFormMapping(formMapping)) {
             final FormMappingDefinition mappingDefinition = newFormMappingDefinition(formMapping);
             formMappingModel.addFormMapping(mappingDefinition);
-            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL && !isNullOrEmpty(formId(formMapping))) {
-                builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formId(formMapping)));
+            if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL) {
+                String formId = formId(formMapping);
+                if(isNullOrEmpty(formId) && !isNullOrEmpty(formMapping.getTargetForm().getContent())) {
+                   throw new InternalFormNotFoundException(formMapping);
+                }else if(!isNullOrEmpty(formId)) {
+                    builder.addExternalResource(customPageBarResourceFactory.newBarResource(mappingDefinition.getForm(), formId));
+                }
             }
         }
     }
