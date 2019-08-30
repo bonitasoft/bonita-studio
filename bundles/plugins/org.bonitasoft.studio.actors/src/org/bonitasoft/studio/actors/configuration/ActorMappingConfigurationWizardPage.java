@@ -98,9 +98,10 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     public void createControl(final Composite parent) {
         deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()), true))
+                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()),
+                        true))
                 .map(OrganizationFileStore::getContent);
-        
+
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5, 2).create());
@@ -348,23 +349,32 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
         return mapping.getGroups().getGroup().stream().anyMatch(this::isUnknownGroup)
                 || mapping.getRoles().getRole().stream().anyMatch(this::isUnknownRole)
                 || mapping.getMemberships().getMembership().stream()
-                        .anyMatch(membership -> isUnknownGroup(membership.getGroup()) || isUnknownRole(membership.getRole()))
+                        .anyMatch(membership -> isUnknownGroup(membership.getGroup())
+                                || isUnknownRole(membership.getRole()))
                 || mapping.getUsers().getUser().stream().anyMatch(this::isUnknownUser);
     }
 
     private boolean isUnknownGroup(String group) {
-        return !deployedOrganization.isPresent() || deployedOrganization.get().getGroups().getGroup().stream()
-                .map(this::getGroupPath).noneMatch(group::equals);
+        return group == null ||
+                !deployedOrganization.isPresent() ||
+                deployedOrganization.get().getGroups() == null ||
+                deployedOrganization.get().getGroups().getGroup().stream()
+                        .map(this::getGroupPath).noneMatch(group::equals);
     }
 
     private boolean isUnknownRole(String role) {
-        return !deployedOrganization.isPresent()
-                || deployedOrganization.get().getRoles().getRole().stream().map(Role::getName).noneMatch(role::equals);
+        return role == null ||
+                !deployedOrganization.isPresent() ||
+                deployedOrganization.get().getRoles() == null ||
+                deployedOrganization.get().getRoles().getRole().stream().map(Role::getName).noneMatch(role::equals);
     }
 
     private boolean isUnknownUser(String user) {
-        return !deployedOrganization.isPresent()
-                || deployedOrganization.get().getUsers().getUser().stream().map(User::getUserName).noneMatch(user::equals);
+        return user == null ||
+                !deployedOrganization.isPresent() ||
+                deployedOrganization.get().getUsers() == null ||
+                deployedOrganization.get().getUsers().getUser().stream().map(User::getUserName)
+                        .noneMatch(user::equals);
     }
 
     private String getGroupPath(Group group) {
