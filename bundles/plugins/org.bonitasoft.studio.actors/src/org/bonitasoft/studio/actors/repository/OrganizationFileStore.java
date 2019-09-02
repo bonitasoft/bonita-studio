@@ -34,7 +34,6 @@ import org.bonitasoft.studio.actors.operation.CleanPublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.styler.ActiveOrganizationStyler;
-import org.bonitasoft.studio.actors.ui.control.DeployOrganizationControlSupplier;
 import org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -245,7 +244,8 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     public boolean isActiveOrganization() {
-        return Objects.equals(activeOrganizationProvider.getActiveOrganization(), getContent().getName());
+        Organization organization = getContent();
+        return organization != null && Objects.equals(activeOrganizationProvider.getActiveOrganization(), organization.getName());
     }
 
     @Override
