@@ -133,6 +133,10 @@ public class Messages extends NLS {
     public static String youCanOpenApp;
     public static String artifactCounter;
     public static String pagesAndLayouts;
+    public static String deployCancel;
+    public static String saveOpenedEditorsTitle;
+    public static String saveOpenedEditors;
+    public static String savingEditors;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

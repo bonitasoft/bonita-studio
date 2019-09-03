@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,9 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
+import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -70,9 +73,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -94,7 +100,7 @@ public class DeployArtifactsHandler {
 
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
                 new EnvironmentProviderFactory().getEnvironmentProvider());
-        if(defaultSelection != null) {
+        if (defaultSelection != null) {
             page.setDefaultSelectedElements(defaultSelection.stream()
                     .map(fStore -> asArtifact(fStore))
                     .filter(Objects::nonNull)
@@ -109,16 +115,16 @@ public class DeployArtifactsHandler {
             openStatusDialog(activeShell, result.get());
         }
     }
-    
+
     private Artifact asArtifact(IRepositoryFileStore fStore) {
         return repositoryModel.getArtifacts().stream()
                 .filter(FileStoreArtifact.class::isInstance)
                 .map(FileStoreArtifact.class::cast)
-                .filter(artifact -> Objects.equals(artifact.getFileStore().getResource(),fStore.getResource()))
+                .filter(artifact -> Objects.equals(artifact.getFileStore().getResource(), fStore.getResource()))
                 .findFirst()
                 .orElse(null);
     }
-    
+
     public void setDefaultSelection(List<IRepositoryFileStore> defaultSelection) {
         this.defaultSelection = defaultSelection;
     }
@@ -128,6 +134,9 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
+        if (!checkDirtyState()) {
+            return ValidationStatus.cancel(Messages.deployCancel);
+        }
         try {
             if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
                 container.run(true, true,
@@ -146,6 +155,57 @@ public class DeployArtifactsHandler {
                     e.getCause() != null ? e.getCause() : e);
         }
         return status;
+    }
+
+    private boolean checkDirtyState() {
+        if (PlatformUI.isWorkbenchRunning()
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+            List<IEditorPart> dirtyEditors = Arrays
+                    .asList(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
+                    .stream()
+                    .map(ref -> ref.getEditor(false))
+                    .filter(IEditorPart::isDirty)
+                    .collect(Collectors.toList());
+            if (!dirtyEditors.isEmpty()) {
+                SaveStrategy strategy = saveDirtyEditors();
+                if (Objects.equals(strategy, SaveStrategy.CANCEL)) {
+                    return false;
+                } else if (Objects.equals(strategy, SaveStrategy.SAVE)) {
+                    try {
+                        PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                            monitor.beginTask(Messages.savingEditors, dirtyEditors.size());
+                            dirtyEditors.forEach(editor -> {
+                                editor.doSave(monitor);
+                                monitor.worked(1);
+                            });
+                            monitor.done();
+                        });
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        throw new RuntimeException("An error occured while saving editors", e);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private SaveStrategy saveDirtyEditors() {
+        int choice = SaveBeforeDeployDialog.open(Messages.saveOpenedEditorsTitle,
+                Messages.saveOpenedEditors,
+                IDialogConstants.CANCEL_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.YES_LABEL);
+        switch (choice) {
+            case 0:
+                return SaveStrategy.CANCEL;
+            case 1:
+                return SaveStrategy.DONT_SAVE;
+            default:
+                return SaveStrategy.SAVE;
+        }
+    }
+
+    enum SaveStrategy {
+        SAVE, DONT_SAVE, CANCEL
     }
 
     private IRunnableWithProgress performFinish(RepositoryAccessor repositoryAccessor,
@@ -202,7 +262,7 @@ public class DeployArtifactsHandler {
     }
 
     private Map<String, Object> buildOptions(SelectArtifactToDeployPage page) {
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put(DeployOptions.CLEAN_BDM, page.isCleanBDM());
         options.put(DeployOptions.DEFAULT_USERNAME, page.getDefaultUsername());
         options.put(DeployOptions.RUN_VALIDATION, page.isValidate());
@@ -222,9 +282,11 @@ public class DeployArtifactsHandler {
                     openSuccessDialog(activeShell, status);
                 } catch (LoginException | BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException e) {
                     BonitaStudioLog.error(e);
-                   new BonitaErrorDialog(activeShell, Messages.deployErrorTitle, e.getMessage(), e).open();
+                    new BonitaErrorDialog(activeShell, Messages.deployErrorTitle, e.getMessage(), e).open();
                 }
             }
+        } else if (status.getSeverity() == IStatus.CANCEL) {
+            MessageDialog.openInformation(activeShell, IDialogConstants.CANCEL_LABEL, status.getMessage());
         } else {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
         }
@@ -237,14 +299,15 @@ public class DeployArtifactsHandler {
                 BOSEngineManager.getInstance().getApplicationAPI(session),
                 BOSEngineManager.getInstance().getProfileAPI(session),
                 BOSEngineManager.getInstance().getIdentityAPI(session));
-        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider, WorkbenchPlugin.getDefault().getDialogSettings())) {
+        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider,
+                WorkbenchPlugin.getDefault().getDialogSettings())) {
             try {
                 new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
             } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
                 BonitaStudioLog.error(e);
             }
         }
-        if(session != null) {
+        if (session != null) {
             BOSEngineManager.getInstance().logoutDefaultTenant(session);
         }
     }
