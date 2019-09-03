@@ -44,8 +44,8 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     private ProcessArtifact process;
     private Pool model;
 
-    public ProcessVersion(ProcessArtifact process, Pool model) {
-        super(process, process.getFileStore());
+    public ProcessVersion(ProcessArtifact process, Pool model, DiagramFileStore fStore) {
+        super(process, fStore);
         this.process = process;
         this.model = model;
         this.version = new DefaultArtifactVersion(model.getVersion());
@@ -70,11 +70,11 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
             processFolder.create(true, true, new NullProgressMonitor());
         }
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("fileName", getParent().getFileStore().getName());
+        parameters.put("fileName", getFileStore().getName());
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
         parameters.put("process", ModelHelper.getEObjectID(getModel()));
         monitor.subTask(String.format(Messages.buildingProcess, getName()));
-        IStatus buildStatus = (IStatus) getParent().getFileStore().executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
+        IStatus buildStatus = (IStatus) ((DiagramFileStore)getFileStore()).executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
             throw new CoreException(parseStatus(buildStatus));
         }

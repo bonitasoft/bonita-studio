@@ -42,6 +42,7 @@ import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration
 import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
+import org.bonitasoft.studio.tests.deploy.DeployWizardIT;
 import org.bonitasoft.studio.tests.diagram.ConvertActivityTypeWithBoundariesIT;
 import org.bonitasoft.studio.tests.diagram.CopyPasteTests;
 import org.bonitasoft.studio.tests.diagram.DeleteCommandTest;
@@ -155,6 +156,7 @@ import org.junit.runners.Suite;
         BPMNConnectorExportImportTest.class,
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
+        DeployWizardIT.class,
         OrganizationCreationTest.class
 })
 public class SWTBotTestSuite {

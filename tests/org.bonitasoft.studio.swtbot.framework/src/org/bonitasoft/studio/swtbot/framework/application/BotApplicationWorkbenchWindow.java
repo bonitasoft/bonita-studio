@@ -199,4 +199,9 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.shell(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle).activate().setFocus();
         return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
     }
+    
+    public BotDeployDialog openDeploy() {
+        bot.menu("File").menu("Deploy...").click();
+        return new BotDeployDialog(bot);
+    }
 }

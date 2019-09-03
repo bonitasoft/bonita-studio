@@ -170,7 +170,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             }
             throw new InvocationTargetException(e);
         } finally {
-
             if (tenantManagementAPI != null && tenantManagementAPI.isPaused()) {
                 try {
                     tenantManagementAPI.resume();

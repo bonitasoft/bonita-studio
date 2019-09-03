@@ -44,6 +44,16 @@ public class WebWidgetFileStore extends InFolderJSONFileStore implements WebReso
         }
         return super.canBeExported();
     }
+    
+    @Override
+    public boolean canBeDeleted() {
+        try {
+            return getBooleanAttribute("custom");
+        } catch (JSONException | ReadFileStoreException e) {
+            BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
+        }
+        return super.canBeDeleted();
+    }
 
     @Override
     public Image getIcon() {

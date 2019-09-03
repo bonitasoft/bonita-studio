@@ -33,7 +33,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
-@SuppressWarnings("restriction")
 public class DefineBdmWizardBot extends BotWizardDialog {
 
     public DefineBdmWizardBot(SWTGefBot bot, String dialogTitle) {
