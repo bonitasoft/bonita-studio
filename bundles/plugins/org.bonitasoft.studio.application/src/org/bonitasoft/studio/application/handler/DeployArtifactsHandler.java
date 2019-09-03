@@ -73,6 +73,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -236,7 +237,7 @@ public class DeployArtifactsHandler {
                 BOSEngineManager.getInstance().getApplicationAPI(session),
                 BOSEngineManager.getInstance().getProfileAPI(session),
                 BOSEngineManager.getInstance().getIdentityAPI(session));
-        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider)) {
+        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider, WorkbenchPlugin.getDefault().getDialogSettings())) {
             try {
                 new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
             } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
