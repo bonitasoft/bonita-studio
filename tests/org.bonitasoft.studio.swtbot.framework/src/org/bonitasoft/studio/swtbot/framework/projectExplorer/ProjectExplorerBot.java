@@ -38,7 +38,6 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-@SuppressWarnings("restriction")
 public class ProjectExplorerBot extends BotBase {
 
     protected String projectName;

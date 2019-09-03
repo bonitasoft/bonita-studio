@@ -125,8 +125,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
             validate = section.getBoolean(VALIDATE_DEFAULT_SELECTION);
         }
-        environment = ConfigurationPlugin.getDefault().getPreferenceStore()
-                .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+        String activeEnvironment = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+        environment = environmentProvider.getEnvironment().contains(activeEnvironment) ? activeEnvironment : ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
     }
     
     

@@ -17,7 +17,6 @@ package org.bonitasoft.studio.swtbot.framework.connector;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
-@SuppressWarnings("restriction")
 public class ConnectorDefinitionWizardBot extends BotWizardDialog {
 
     public ConnectorDefinitionWizardBot(SWTGefBot bot, String dialogTitle) {

@@ -21,8 +21,8 @@ import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchiveControlSupplier
 import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -73,9 +73,8 @@ public class ImportBosHandler {
         } catch (final InvocationTargetException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        operation.openFilesToOpen();
-        PlatformUtil.openIntroIfNoOtherEditorOpen();
-        activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation.getStatus(),
+
+        activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation,
                 repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class), activeShell,
                 repositoryAccessor.getCurrentRepository().getName()));
     }
@@ -85,9 +84,12 @@ public class ImportBosHandler {
         return new ImportBosArchiveOperation(archive, progressManager, model, repositoryAccessor);
     }
 
-    protected void openEndImportDialog(IStatus status, DiagramRepositoryStore store, Shell activeShell,
+    protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store, Shell activeShell,
             String repositoryName) {
-        new BosImportStatusDialogHandler(status, store).open(activeShell);
+       if(new BosImportStatusDialogHandler(operation.getStatus(), store).open(activeShell) != IDialogConstants.PROCEED_ID) {
+           operation.openFilesToOpen();
+           PlatformUtil.openIntroIfNoOtherEditorOpen();
+       }
     }
 
     protected Repository getTargetRepository(RepositoryAccessor repositoryAccessor) {

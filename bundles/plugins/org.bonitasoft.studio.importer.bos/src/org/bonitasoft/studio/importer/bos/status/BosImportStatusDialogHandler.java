@@ -47,7 +47,7 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
     }
 
     @Override
-    protected void openImportStatus(final Shell parentShell, String message) {
+    protected int openImportStatus(final Shell parentShell, String message) {
         final ImportStatusDialog messageDialog = new ImportStatusDialog(parentShell, importStatus, message,
                 importStatus instanceof BosArchiveImportStatus
                         && !((BosArchiveImportStatus) importStatus).getProcessesWithErrors().isEmpty());
@@ -59,6 +59,7 @@ public class BosImportStatusDialogHandler extends DefaultImportStatusDialogHandl
                 executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
             }
         }
+        return result;
     }
 
     private void executeCommand(String command) {

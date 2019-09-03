@@ -21,6 +21,7 @@ import java.net.URL;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 // import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
+import org.bonitasoft.studio.swtbot.framework.application.BotDeployDialog;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
@@ -73,6 +74,18 @@ public class BotImportBOSDialog extends BotWizardDialog {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
+    }
+    
+    public BotDeployDialog importAndDeploy() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 10000);
+        bot.button(Messages.importButtonLabel).click();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
+        bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
+        final SWTBotShell activeShell = bot.activeShell();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
+        bot.button(org.bonitasoft.studio.importer.i18n.Messages.deploy).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+        return new BotDeployDialog(bot);
     }
 
     private String toAbsoluteFilePath(URL bosURLInClasspath) throws IOException {

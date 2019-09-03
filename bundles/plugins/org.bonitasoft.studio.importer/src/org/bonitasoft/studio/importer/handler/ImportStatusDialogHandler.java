@@ -16,11 +16,8 @@ package org.bonitasoft.studio.importer.handler;
 
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * @author Romain Bioteau
- */
 public interface ImportStatusDialogHandler {
 
-    void open(final Shell parentShell);
+    int open(final Shell parentShell);
 
 }

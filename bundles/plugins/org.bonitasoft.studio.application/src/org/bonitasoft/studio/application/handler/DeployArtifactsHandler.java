@@ -274,7 +274,7 @@ public class DeployArtifactsHandler {
             if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
                 MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus,
                         Messages.deployStatusMessage,
-                        new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status);
+                        new String[] { IDialogConstants.CLOSE_LABEL }, (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
                 multiStatusDialog.open();
             } else {

@@ -19,7 +19,6 @@ import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationW
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-@SuppressWarnings("restriction")
 public class ConnectorImplementationProjectExplorerBot extends ProjectExplorerBot {
 
     public ConnectorImplementationProjectExplorerBot(SWTGefBot bot) {

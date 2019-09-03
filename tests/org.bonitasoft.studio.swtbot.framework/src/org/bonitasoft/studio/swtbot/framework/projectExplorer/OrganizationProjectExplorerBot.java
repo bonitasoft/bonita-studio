@@ -26,7 +26,6 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-@SuppressWarnings("restriction")
 public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
     private static final String ORGA_EXT = ".organization";

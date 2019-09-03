@@ -29,22 +29,20 @@ import org.eclipse.swt.graphics.Image;
 public class ProcessArtifact implements VersionedArtifact {
 
     private List<ArtifactVersion> processVerions = new ArrayList<>();
-    private DiagramFileStore fStore;
     private String name;
     private RepositoryStore parent;
 
-    public ProcessArtifact(RepositoryStore parent,String name, DiagramFileStore fStore) {
+    public ProcessArtifact(RepositoryStore parent, String name) {
         this.parent = parent;
         this.name = name;
-        this.fStore = fStore;
     }
 
     public String getName() {
         return name;
     }
 
-    public void addVersion(Pool process) {
-        processVerions.add(new ProcessVersion(this, process));
+    public void addVersion(Pool process, DiagramFileStore fStore) {
+        processVerions.add(new ProcessVersion(this, process, fStore));
         Collections.sort(processVerions);
     }
 
@@ -95,10 +93,6 @@ public class ProcessArtifact implements VersionedArtifact {
             throw new IllegalStateException(String.format("No version found for process %s", getName()));
         }
         return processVerions.get(0);
-    }
-
-    public DiagramFileStore getFileStore() {
-        return fStore;
     }
 
     @Override

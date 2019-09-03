@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.swtbot.framework.rule;
 
-import static org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions.activeWelcomePage;
-
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

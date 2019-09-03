@@ -17,6 +17,7 @@ package org.bonitasoft.studio.importer.handler;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -41,30 +42,28 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
     }
 
     @Override
-    public void open(final Shell parentShell) {
+    public int open(final Shell parentShell) {
         if (importStatus.getSeverity() == IStatus.WARNING
                 && (importStatus.getChildren() == null || importStatus.getChildren().length == 0)) {
             MessageDialog.openWarning(parentShell, org.bonitasoft.studio.importer.i18n.Messages.importResultTitle,
                     importStatus.getMessage());
+            return IDialogConstants.CLOSE_ID;
         } else {
             switch (importStatus.getSeverity()) {
                 case IStatus.OK:
-                    openImportStatus(parentShell, customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
-                    break;
+                    return openImportStatus(parentShell, customSuccessMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
                 case IStatus.INFO:
-                    openImportStatus(parentShell, customSuccessMessage
+                    return openImportStatus(parentShell, customSuccessMessage
                             .orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
-                    break;
                 default:
-                    openImportStatus(parentShell,
+                    return openImportStatus(parentShell,
                             customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg));
-                    break;
             }
         }
     }
 
-    protected void openImportStatus(Shell parentShell, String message) {
-        new ImportStatusDialog(parentShell, importStatus, message, false).open();
+    protected int openImportStatus(Shell parentShell, String message) {
+       return new ImportStatusDialog(parentShell, importStatus, message, false).open();
     }
 
 }
