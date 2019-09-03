@@ -14,19 +14,14 @@
  */
 package org.bonitasoft.studio.ui.wizard;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.bonitasoft.studio.ui.databinding.NoMessageWizardPageSupport;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 public class WizardPageBuilder {
 

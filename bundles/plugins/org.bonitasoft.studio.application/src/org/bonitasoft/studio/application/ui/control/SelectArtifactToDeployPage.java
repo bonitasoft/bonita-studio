@@ -137,7 +137,10 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     @Override
     public void saveSettings(IDialogSettings settings) {
         mergeSets();
-        IDialogSettings section = settings.addNewSection(repositoryModel.getName());
+        IDialogSettings section =   settings.getSection(repositoryModel.getName());
+        if(section == null) {
+            section = settings.addNewSection(repositoryModel.getName());
+        }
         section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
         section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
         section.put(VALIDATE_DEFAULT_SELECTION, validate);
