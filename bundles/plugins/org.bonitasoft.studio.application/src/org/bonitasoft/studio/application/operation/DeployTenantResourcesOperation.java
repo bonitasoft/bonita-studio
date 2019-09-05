@@ -43,6 +43,7 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         status = artifactsToDeploy.stream()
+                .sorted()
                 .map(artifact -> artifact.deploy(apiSession, deployOptions, monitor))
                 .collect(StatusCollectors.toMultiStatus());
     }

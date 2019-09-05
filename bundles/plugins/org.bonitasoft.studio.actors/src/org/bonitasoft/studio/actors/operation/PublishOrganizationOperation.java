@@ -45,6 +45,7 @@ import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -72,7 +73,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
         this.session = session;
     }
     
-    public PublishOrganizationOperation doNotAllProfileToUsers() {
+    public PublishOrganizationOperation doNotApplyAllProfileToUsers() {
         shouldApplyAllProfileToUser = false;
         return this;
     }
@@ -99,6 +100,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
             importOrganization(identityAPI);
+            new ActiveOrganizationProvider().saveActiveOrganization(organization.getName());
             if (shouldApplyAllProfileToUsers()) {
                 applyAllProfileToUsers(identityAPI, BOSEngineManager.getInstance().getProfileAPI(session));
             }

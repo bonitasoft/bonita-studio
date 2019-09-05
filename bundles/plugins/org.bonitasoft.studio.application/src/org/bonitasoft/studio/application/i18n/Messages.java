@@ -137,6 +137,7 @@ public class Messages extends NLS {
     public static String saveOpenedEditorsTitle;
     public static String saveOpenedEditors;
     public static String savingEditors;
+    public static String deploySuccessButNoAppToOpenMsg;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

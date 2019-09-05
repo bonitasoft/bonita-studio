@@ -56,6 +56,7 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
@@ -299,13 +300,17 @@ public class DeployArtifactsHandler {
                 BOSEngineManager.getInstance().getApplicationAPI(session),
                 BOSEngineManager.getInstance().getProfileAPI(session),
                 BOSEngineManager.getInstance().getIdentityAPI(session));
-        if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider,
-                WorkbenchPlugin.getDefault().getDialogSettings())) {
-            try {
-                new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
-            } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
-                BonitaStudioLog.error(e);
+        if (contentProvider.getItems().length > 0) {
+            if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider,
+                    WorkbenchPlugin.getDefault().getDialogSettings())) {
+                try {
+                    new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
+                } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
+        } else {
+            MessageDialog.openWarning(activeShell, Messages.deployStatus, String.format(Messages.deploySuccessButNoAppToOpenMsg, new ActiveOrganizationProvider().getDefaultUser()));
         }
         if (session != null) {
             BOSEngineManager.getInstance().logoutDefaultTenant(session);
