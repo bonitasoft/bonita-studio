@@ -187,6 +187,8 @@ public class Messages extends NLS {
 
     public static String missingRestAPIStatus;
 
+    public static String debugCustomPageMode;
+
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }

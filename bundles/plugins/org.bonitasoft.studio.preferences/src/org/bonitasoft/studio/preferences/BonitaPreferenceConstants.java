@@ -166,5 +166,6 @@ public interface BonitaPreferenceConstants {
     
     public static final String UID_PORT = "uid.port";
     public static final String UID_JVM_OPTS = "uid.jvmOpts";
+    public static final String CUSTOM_PAGE_DEBUG = "custom.page.debug";
 
 }

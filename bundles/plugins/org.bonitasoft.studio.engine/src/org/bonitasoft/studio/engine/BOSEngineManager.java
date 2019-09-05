@@ -63,6 +63,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class BOSEngineManager {
 
     public static final String CUSTOM_PERMISSIONS_MAPPING_PROPERTIES = "custom-permissions-mapping.properties";
+    
+    public static final String CONSOLE_CONFIG_PROPERTIES = "console-config.properties";
 
     private static final String POSTSTARTUP_CONTIBUTION_ID = "org.bonitasoft.studio.engine.postEngineAction";
 
