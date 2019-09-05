@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target includeMode="feature" name="mirrored">
 <locations>
 	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<repository location="http://repositories.rd.lan/p2/4.10.1"/>
+		<repository location="http://update-site.bonitasoft.com/p2/4.10"/>
 		<unit id="com.google.inject" version="3.0.0.v201605172100"/>
 		<unit id="com.google.protobuf" version="2.4.0.v201105131100"/>
 		<unit id="com.google.guava" version="15.0.0.v201403281430"/>
