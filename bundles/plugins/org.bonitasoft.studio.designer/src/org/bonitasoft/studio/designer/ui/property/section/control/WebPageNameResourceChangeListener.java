@@ -69,7 +69,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
         return delta -> {
             String name = delta.getResource().getName();
             WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-            if (delta.getKind() == IResourceDelta.ADDED
+            if (( delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
                     && repositoryStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
                     && delta.getResource() instanceof IFolder
                     && delta.getResource().isSynchronized(IResource.DEPTH_INFINITE)
