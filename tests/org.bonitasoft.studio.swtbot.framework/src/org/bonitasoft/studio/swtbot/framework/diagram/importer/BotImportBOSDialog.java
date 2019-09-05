@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-// import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.application.BotDeployDialog;
 import org.eclipse.core.runtime.FileLocator;

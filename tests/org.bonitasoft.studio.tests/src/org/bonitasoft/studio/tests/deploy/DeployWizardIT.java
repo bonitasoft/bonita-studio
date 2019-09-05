@@ -30,6 +30,7 @@ import org.bonitasoft.engine.page.PageNotFoundException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -62,7 +63,8 @@ public class DeployWizardIT {
         new UndeployProcessOperation(BOSEngineManager.getInstance())
                 .undeployAll().run(Repository.NULL_PROGRESS_MONITOR);
         Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        currentRepository.getAllStores().stream().flatMap(store -> store.getChildren().stream())
+        currentRepository.getAllStores().stream().filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
+                .flatMap(store -> store.getChildren().stream())
                 .filter(fStore -> fStore.canBeDeleted()).forEach(IRepositoryFileStore::delete);
     }
 

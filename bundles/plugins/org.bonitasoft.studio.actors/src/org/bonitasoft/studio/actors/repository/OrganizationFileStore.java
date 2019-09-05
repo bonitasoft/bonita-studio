@@ -256,7 +256,7 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
                 ? new UpdateOrganizationOperation(organization)
                 : new CleanPublishOrganizationOperation(organization);
         if(!PlatformUtil.isACommunityBonitaProduct()) {
-            operation.doNotAllProfileToUsers();
+            operation.doNotApplyAllProfileToUsers();
         }
         operation.setSession(session);
         try {

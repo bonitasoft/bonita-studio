@@ -17,12 +17,13 @@ package org.bonitasoft.studio.application.ui.control.model;
 import java.util.Map;
 
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
-public class TenantArtifact extends FileStoreArtifact implements ITenantResource {
+public class TenantArtifact extends FileStoreArtifact implements ITenantResource, Comparable<TenantArtifact> {
 
     public TenantArtifact(RepositoryStore parent, IRepositoryFileStore fStore) {
         super(parent, fStore);
@@ -31,6 +32,11 @@ public class TenantArtifact extends FileStoreArtifact implements ITenantResource
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         return ((ITenantResource)fStore).deploy(session, options, monitor);
+    }
+
+    @Override
+    public int compareTo(TenantArtifact artifact) {
+        return Integer.compare(ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) getParent()).getName()), ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) artifact.getParent()).getName()));
     }
     
 }

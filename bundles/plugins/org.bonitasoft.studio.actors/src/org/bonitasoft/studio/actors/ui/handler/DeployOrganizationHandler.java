@@ -138,7 +138,6 @@ public class DeployOrganizationHandler {
                     try {
                         final Parameterization p = new Parameterization(cmd.getParameter("artifact"), fileStore.getName());
                         handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }), null);
-                        activeOrganizationProvider.saveActiveOrganization(fileStore.getDisplayName());
                         AbstractFileStore.refreshExplorerView();
                     } catch (final Exception e) {
                         throw new InvocationTargetException(e);

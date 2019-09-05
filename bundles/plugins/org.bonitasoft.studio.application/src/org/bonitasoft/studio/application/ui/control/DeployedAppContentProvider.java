@@ -57,7 +57,7 @@ public class DeployedAppContentProvider {
         this.selection = applications.stream()
                 .findFirst()
                 .map(ApplicationItem::toString)
-                .orElseThrow(() -> new IllegalStateException("No application found."));
+                .orElse(null);
     }
 
     private Collection<? extends ApplicationItem> portalApplications(ProfileAPI profileAPI, UserAPI userAPI) {
