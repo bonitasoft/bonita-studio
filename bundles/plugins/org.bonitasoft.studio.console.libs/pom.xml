@@ -297,22 +297,6 @@
 							</replacements>
 						</configuration>
 					</execution>
-					<execution>
-						<id>Enable web debug mode</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-						<configuration>
-							<file>${console.config.file}</file>
-							<replacements>
-								<replacement>
-									<token>custom.page.debug                       false</token>
-									<value>custom.page.debug                       true</value>
-								</replacement>
-							</replacements>
-						</configuration>
-					</execution>
                     <execution>
                         <id>Configure session cookie path</id>
                         <phase>prepare-package</phase>

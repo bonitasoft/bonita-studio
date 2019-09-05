@@ -20,7 +20,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -65,6 +64,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         store.setDefault(SHOW_LEGACY_6X_MODE, false);
         store.setDefault(UID_JVM_OPTS, "-Xmx256m");
+        store.setDefault(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG, false);
         getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
 
         initDefaultDebugPreferences();
