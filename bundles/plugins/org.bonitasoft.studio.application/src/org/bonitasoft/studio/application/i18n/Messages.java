@@ -117,7 +117,6 @@ public class Messages extends NLS {
     public static String cleanBDMDatabase;
     public static String deployOptions;
     public static String DeployButtonLabel;
-    public static String deployingApplicationArtifacts;
     public static String environment;
     public static String processes;
     public static String selectLatestVersion;
@@ -138,6 +137,8 @@ public class Messages extends NLS {
     public static String saveOpenedEditors;
     public static String savingEditors;
     public static String deploySuccessButNoAppToOpenMsg;
+    public static String deploying;
+    public static String deployStatusWithUnresolvedProcessesMessage;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -199,7 +199,7 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     @Override
-    public void deploy() {
+    public void deployInUI() {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(DeployOrganizationHandler.DEPLOY_ORGA_PARAMETER_NAME, getName());
         executeCommand(DEPLOY_ORGA_CMD, parameters);

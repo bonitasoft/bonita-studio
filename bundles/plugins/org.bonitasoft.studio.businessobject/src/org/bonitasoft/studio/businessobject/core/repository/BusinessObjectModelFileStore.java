@@ -224,7 +224,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     }
 
     @Override
-    public void deploy() {
+    public void deployInUI() {
         GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
         DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this);
         try {

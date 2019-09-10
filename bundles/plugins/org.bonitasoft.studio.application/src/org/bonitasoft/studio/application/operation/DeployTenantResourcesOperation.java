@@ -20,12 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 
 public class DeployTenantResourcesOperation implements IRunnableWithStatus {
 
@@ -44,7 +47,9 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         status = artifactsToDeploy.stream()
                 .sorted()
-                .map(artifact -> artifact.deploy(apiSession, deployOptions, monitor))
+                .peek(artifact -> monitor.setTaskName(String.format(Messages.deploying, artifact.getDisplayName())))
+                .map(artifact ->  !monitor.isCanceled() ? artifact.deploy(apiSession, deployOptions, Repository.NULL_PROGRESS_MONITOR) : Status.CANCEL_STATUS)
+                .peek(status -> monitor.worked(1))
                 .collect(StatusCollectors.toMultiStatus());
     }
 

@@ -120,7 +120,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
             return "page";
         }
     }
-    
+
     @Override
     public String getDisplayName() {
         try {
@@ -136,7 +136,8 @@ public class WebPageFileStore extends InFolderJSONFileStore
             return getStringAttribute(DESCRIPTION_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
             BonitaStudioLog.error(
-                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), DESCRIPTION_KEY),
+                    String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(),
+                            DESCRIPTION_KEY),
                     UIDesignerPlugin.PLUGIN_ID);
             return "";
         }
@@ -159,10 +160,19 @@ public class WebPageFileStore extends InFolderJSONFileStore
     }
 
     @Override
-    public void deploy() {
+    public void deployInUI() {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", getName());
+        parameters.put("disablePopup", Boolean.FALSE.toString());
         executeCommand(DEPLOY_PAGE_COMMAND, parameters);
+    }
+
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        options.put("name", getName());
+        options.put("disablePopup", Boolean.TRUE.toString());
+        Object result = executeCommand(DEPLOY_PAGE_COMMAND, options);
+        return result instanceof IStatus ? (IStatus) result : ValidationStatus.ok();
     }
 
     @Override

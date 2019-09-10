@@ -14,57 +14,40 @@
  */
 package org.bonitasoft.studio.application.operation;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
+import java.util.Collection;
+import java.util.HashMap;
 
-import org.bonitasoft.engine.api.ApplicationAPI;
-import org.bonitasoft.engine.api.result.ExecutionResult;
-import org.bonitasoft.engine.api.result.StatusCode;
-import org.bonitasoft.engine.api.result.StatusContext;
-import org.bonitasoft.engine.exception.ApplicationDeploymentException;
-import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.ServerAPIException;
-import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.FileStoreArtifact;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.eclipse.core.runtime.IPath;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
 public class DeployProjectOperation implements IRunnableWithStatus {
 
-    private MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, -1, null, null);
-    private IPath archivePath;
+    private IStatus status;
     private APISession session;
+    private Collection<FileStoreArtifact> artifactsToDeploy;
 
-    public DeployProjectOperation(APISession session, IPath archivePath) {
+    public DeployProjectOperation(APISession session, Collection<FileStoreArtifact> artifactsToDeploy) {
         this.session = session;
-        this.archivePath = archivePath;
+        this.artifactsToDeploy = artifactsToDeploy;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.deployingApplicationArtifacts, IProgressMonitor.UNKNOWN);
-        try {
-            ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(session);
-            ExecutionResult result = applicationAPI
-                    .deployApplication(Files.readAllBytes(archivePath.toFile().toPath()));
-            result.getAllStatus().stream()
-                    .filter(status -> !(status.getCode() == StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED && status.getContext().get(StatusContext.PROCESS_RESOLUTION_PROBLEM_DESCRIPTION_KEY) == null))
-                    .map(DeployStatusMapper.instance())
-                    .forEach(status::add);
-        } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException | ApplicationDeploymentException
-                | IOException e) {
-            status.add(new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, e.getMessage(), e));
-        } finally {
-            monitor.done();
-        }
+        status = artifactsToDeploy.stream()
+                .peek(artifact -> monitor.setTaskName(String.format(Messages.deploying, artifact.getName())))
+                .map(artifact -> !monitor.isCanceled()
+                        ? artifact.deploy(session, new HashMap<>(), Repository.NULL_PROGRESS_MONITOR)
+                        : Status.CANCEL_STATUS)
+                .peek(artifact -> monitor.worked(1))
+                .collect(StatusCollectors.toMultiStatus());
     }
 
     @Override

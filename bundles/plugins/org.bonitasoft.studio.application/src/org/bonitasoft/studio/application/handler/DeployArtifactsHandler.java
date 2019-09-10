@@ -21,17 +21,22 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
@@ -39,7 +44,6 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.BuildProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployProjectOperation;
 import org.bonitasoft.studio.application.operation.DeployTenantResourcesOperation;
 import org.bonitasoft.studio.application.operation.ValidateProjectOperation;
@@ -48,9 +52,9 @@ import org.bonitasoft.studio.application.ui.control.DeployedAppContentProvider;
 import org.bonitasoft.studio.application.ui.control.RepositoryModelBuilder;
 import org.bonitasoft.studio.application.ui.control.SelectArtifactToDeployPage;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
-import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
 import org.bonitasoft.studio.application.ui.control.model.FileStoreArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
+import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -86,9 +90,19 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 public class DeployArtifactsHandler {
 
-    private BuildProjectOperation buildOperation;
     private RepositoryModel repositoryModel;
     private List<IRepositoryFileStore> defaultSelection;
+    private final static List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
+    static {
+        REPO_STORE_DEPLOY_ORDER.add("organizations");
+        REPO_STORE_DEPLOY_ORDER.add("profiles");
+        REPO_STORE_DEPLOY_ORDER.add("bdm");
+        REPO_STORE_DEPLOY_ORDER.add("diagrams");
+        REPO_STORE_DEPLOY_ORDER.add("restAPIExtensions");
+        REPO_STORE_DEPLOY_ORDER.add("web_page");
+        REPO_STORE_DEPLOY_ORDER.add("themes");
+        REPO_STORE_DEPLOY_ORDER.add("applications");
+    }
 
     @Execute
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
@@ -139,23 +153,14 @@ public class DeployArtifactsHandler {
             return ValidationStatus.cancel(Messages.deployCancel);
         }
         try {
-            if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
-                container.run(true, true,
-                        performArtifactsValidation(artifactsToDeploy, status));
-            }
-            if (status.getSeverity() == IStatus.CANCEL) {
-                return null;
-            } else if (!status.isOK()) {
-                return status;
-            }
-            container.run(true, false,
+            container.run(true, true,
                     performFinish(repositoryAccessor, artifactsToDeploy, deployOptions, status));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
                     e.getCause() != null ? e.getCause() : e);
         }
-        return status;
+        return status.getSeverity() == IStatus.CANCEL ? null : status;
     }
 
     private boolean checkDirtyState() {
@@ -214,6 +219,16 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             MultiStatus status) {
         return monitor -> {
+            if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
+                ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
+                operation.run(monitor);
+                status.add(operation.getStatus());
+            }
+            if (status.getSeverity() == IStatus.CANCEL) {
+                return;
+            } else if (!status.isOK()) {
+                return;
+            }
             GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
             apiSessionOperation.run(monitor);
             try {
@@ -222,20 +237,12 @@ public class DeployArtifactsHandler {
                         artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
                                 .map(TenantArtifact.class::cast).collect(Collectors.toList()),
                         session, deployOptions);
+                monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
                 deployTenantResourcesOperation.run(monitor);
                 status.addAll(deployTenantResourcesOperation.getStatus());
-                IStatus buildStatus = performBuild(repositoryAccessor, artifactsToDeploy, monitor);
-                if (!buildStatus.isOK()) {
-                    if (buildStatus instanceof MultiStatus) {
-                        status.addAll(buildStatus);
-                    } else {
-                        status.add(buildStatus);
-                    }
-                    return;
-                }
-                IStatus deployStatus = performDeploy(session, monitor);
-                status.addAll(deployStatus);
+                status.addAll(deploy(artifactsToDeploy, session, monitor));
             } finally {
+                monitor.done();
                 apiSessionOperation.logout();
             }
         };
@@ -274,7 +281,7 @@ public class DeployArtifactsHandler {
         if (status instanceof MultiStatus) {
             if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
                 MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus,
-                        Messages.deployStatusMessage,
+                        errorMessageFromStatus(status),
                         new String[] { IDialogConstants.CLOSE_LABEL }, (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
                 multiStatusDialog.open();
@@ -291,6 +298,13 @@ public class DeployArtifactsHandler {
         } else {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
         }
+    }
+
+    private String errorMessageFromStatus(IStatus status) {
+        if(Stream.of(status.getChildren()).anyMatch(s -> Objects.equals(s.getCode(), StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal()))){
+            return Messages.deployStatusWithUnresolvedProcessesMessage;
+        }
+        return Messages.deployStatusMessage;
     }
 
     private void openSuccessDialog(Shell activeShell, IStatus status)
@@ -310,38 +324,45 @@ public class DeployArtifactsHandler {
                 }
             }
         } else {
-            MessageDialog.openWarning(activeShell, Messages.deployStatus, String.format(Messages.deploySuccessButNoAppToOpenMsg, new ActiveOrganizationProvider().getDefaultUser()));
+            MessageDialog.openWarning(activeShell, Messages.deployStatus, String.format(
+                    Messages.deploySuccessButNoAppToOpenMsg, new ActiveOrganizationProvider().getDefaultUser()));
         }
         if (session != null) {
             BOSEngineManager.getInstance().logoutDefaultTenant(session);
         }
     }
 
-    private IStatus performBuild(RepositoryAccessor repositoryAccessor,
-            Collection<Artifact> artifactsToDeploy, IProgressMonitor monitor)
+    private IStatus deploy(Collection<Artifact> artifactsToDeploy, APISession session, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        buildOperation = new BuildProjectOperation(repositoryAccessor, artifactsToDeploy.stream()
-                .filter(BuildableArtifact.class::isInstance)
-                .map(BuildableArtifact.class::cast)
+        DeployProjectOperation operation = new DeployProjectOperation(session, artifactsToDeploy.stream()
+                .filter(notTenantArtifact())
+                .filter(FileStoreArtifact.class::isInstance)
+                .map(FileStoreArtifact.class::cast)
+                .sorted(artifactComparator())
                 .collect(Collectors.toList()));
-        buildOperation.run(monitor);
-        return buildOperation.getStatus();
-    }
-
-    private IStatus performDeploy(APISession session, IProgressMonitor monitor)
-            throws InterruptedException, InvocationTargetException {
-        DeployProjectOperation operation = new DeployProjectOperation(session, buildOperation.getArchiveFilePath());
         operation.run(monitor);
         return operation.getStatus();
     }
 
-    private IRunnableWithProgress performArtifactsValidation(Collection<Artifact> artifactsToDeploy, MultiStatus status)
-            throws InvocationTargetException, InterruptedException {
-        return monitor -> {
-            ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
-            operation.run(monitor);
-            status.add(operation.getStatus());
-        };
+    private Comparator<? super FileStoreArtifact> artifactComparator() {
+        return (a1, a2) -> Integer.compare(REPO_STORE_DEPLOY_ORDER.indexOf(getStoreName(a1)),
+                REPO_STORE_DEPLOY_ORDER.indexOf(getStoreName(a2)));
+    }
+
+    private String getStoreName(FileStoreArtifact artifact) {
+        Object parent = artifact.getParent();
+        while (parent != null && !(parent instanceof RepositoryStore)) {
+            if (parent instanceof Artifact) {
+                parent = ((Artifact) parent).getParent();
+            } else {
+                parent = null;
+            }
+        }
+        return parent instanceof RepositoryStore ? ((RepositoryStore) parent).getResource().getName() : null;
+    }
+
+    private Predicate<? super Artifact> notTenantArtifact() {
+        return artifact -> !(artifact instanceof TenantArtifact);
     }
 
 }

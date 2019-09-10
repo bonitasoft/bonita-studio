@@ -8,6 +8,7 @@
     <elements xsi:type="commands:Command" xmi:id="_g4OJ8ApAEeekfeZYiUbzLg" elementId="org.bonitasoft.studio.la.import.command" commandName="%importApplication"/>
     <elements xsi:type="commands:Command" xmi:id="_pL3WsPnPEea-3Os5NcIV0g" elementId="org.bonitasoft.studio.la.deploy.command" commandName="%deployApplication">
       <parameters xmi:id="_tvi1sMI4EeiSmOxE9tpWmw" elementId="application" name="Application to deploy"/>
+      <parameters xmi:id="_zHPbgNOaEem78Y9qP5rRVg" elementId="useWizard" name="useWizard"/>
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_kyZscPyMEeicTeF1RHOGZw" elementId="org.bonitasoft.studio.la.findOpenedEditor.command" commandName="findOpenedEditor">
       <parameters xmi:id="_oYJrIPyMEeicTeF1RHOGZw" elementId="fileStore" name="File store" optional="false"/>

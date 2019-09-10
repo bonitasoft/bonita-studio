@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.application.ui.control.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
@@ -28,7 +30,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public class RepositoryStore implements IDisplayable,Comparable<RepositoryStore> {
+public class RepositoryStore implements IDisplayable, Comparable<RepositoryStore> {
 
     List<Artifact> artifacts = new ArrayList<>();
     private IRepositoryStore<? extends IRepositoryFileStore> store;

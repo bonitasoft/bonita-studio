@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.application.ui.control.model;
 
 
-public interface ArtifactVersion extends Artifact, Comparable<ArtifactVersion>{
+public interface ArtifactVersion extends Artifact, Comparable<ArtifactVersion> {
 
     String getVersion();
     

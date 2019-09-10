@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
@@ -254,7 +255,9 @@ public class DeployProcessOperation {
         try {
             processApi.enableProcess(processDefinitionId);
         } catch (final ProcessEnablementException e) {
-            return disablePopup ? new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
+            return disablePopup ? new Status(IStatus.ERROR,
+                    EnginePlugin.PLUGIN_ID,
+                    StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal(),
                     String.format("Failed to enable process '%s (%s)'", process.getName(), process.getVersion()), e)
                     : handleProcessEnablementException(process, monitor, processApi, processDefinitionId, e);
         } finally {

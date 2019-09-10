@@ -21,31 +21,81 @@ import java.util.Optional;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.platform.LoginException;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.handler.DeployArtifactsHandler;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.core.DependencyResolver;
 import org.bonitasoft.studio.la.application.core.DeployApplicationAction;
+import org.bonitasoft.studio.la.application.core.DeployApplicationDescriptorOperation;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class DeployApplicationHandler {
 
     public static final String APPLICATION_TO_DEPLOY_PARAMETER = "application";
+    public static final String DEPLOY_WIZARD_PARAMETER = "useWizard";
 
     @Execute
-    public void execute(RepositoryAccessor repositoryAccessor, Shell shell,
+    public IStatus execute(RepositoryAccessor repositoryAccessor, 
+            @Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
             @org.eclipse.e4.core.di.annotations.Optional @Named(APPLICATION_TO_DEPLOY_PARAMETER) String application, 
+            @org.eclipse.e4.core.di.annotations.Optional @Named(DEPLOY_WIZARD_PARAMETER) String useWizard,
             DependencyResolver<ApplicationFileStore> dependencyResolver) {
-        deploy(repositoryAccessor, shell, new DeployApplicationAction(repositoryAccessor), application, dependencyResolver);
+       return useWizard == null || Boolean.valueOf(useWizard) ? 
+               openDeployWizard(repositoryAccessor, shell, new DeployApplicationAction(repositoryAccessor), application, dependencyResolver) : 
+               deploy(repositoryAccessor, application);
+    }
+    
+    protected IStatus deploy(RepositoryAccessor repositoryAccessor, String application) {
+        Optional<ApplicationFileStore> applicationFileStore = findApplicationToDeploy(repositoryAccessor,
+                application);
+        if (applicationFileStore.isPresent()) {
+            APISession apiSession = null;
+            try {
+                apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+                DeployApplicationDescriptorOperation deployAppDescriptorOperation = getDeployAppDescriptorOperation(apiSession, repositoryAccessor, applicationFileStore);
+                deployAppDescriptorOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                return deployAppDescriptorOperation.getStatus();
+            } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException
+                    | ReadFileStoreException | InvocationTargetException | InterruptedException | LoginException e) {
+               BonitaStudioLog.error(e);
+               return new Status(IStatus.ERROR, LivingApplicationPlugin.PLUGIN_ID, e.getMessage(),e);
+            }finally {
+                if(apiSession != null) {
+                    BOSEngineManager.getInstance().logoutDefaultTenant(apiSession);
+                }
+            }
+        } 
+        return new Status(IStatus.ERROR, LivingApplicationPlugin.PLUGIN_ID, String.format("Application '%s' not found.",application));
     }
 
-    protected void deploy(RepositoryAccessor repositoryAccessor, Shell shell, DeployApplicationAction action,
+    protected DeployApplicationDescriptorOperation getDeployAppDescriptorOperation(APISession apiSession, RepositoryAccessor repositoryAccessor,
+            Optional<ApplicationFileStore> applicationFileStore)
+            throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, ReadFileStoreException {
+       return new DeployApplicationDescriptorOperation(BOSEngineManager.getInstance().getApplicationAPI(apiSession),
+                applicationFileStore.get().getContent(),
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getConverter());
+    }
+
+    protected IStatus openDeployWizard(RepositoryAccessor repositoryAccessor, Shell shell, DeployApplicationAction action,
             String application, DependencyResolver<ApplicationFileStore> dependencyResolver) {
         Optional<ApplicationFileStore> applicationFileStore = findApplicationToDeploy(repositoryAccessor,
                 application);
@@ -64,6 +114,7 @@ public class DeployApplicationHandler {
         } else {
             action.selectAndDeploy(shell);
         }
+        return ValidationStatus.ok();
     }
 
     protected Optional<ApplicationFileStore> findApplicationToDeploy(RepositoryAccessor repositoryAccessor,

@@ -19,15 +19,6 @@
                  optional="true">
            </commandParameter>
       </command>
-        <command
-              id="org.bonitasoft.studio.engine.deployDiagramCommand"
-              name="%deployDiagram">
-           <commandParameter
-                 id="diagram"
-                 name="diagram"
-                 optional="false">
-           </commandParameter>
-        </command>
       <command
             defaultHandler="org.bonitasoft.studio.engine.command.RestartServerCommand"
             id="org.bonitasoft.studio.engine.resetServerCommand"
@@ -172,15 +163,6 @@
      <handler
            class="org.bonitasoft.studio.engine.command.RunProcessCommand"
            commandId="org.bonitasoft.studio.engine.runCommand">
-        <activeWhen>
-           <reference
-                 definitionId="isABonitaProduct">
-           </reference>
-        </activeWhen>
-     </handler>
-     <handler
-           class="org.bonitasoft.studio.engine.command.DeployDiagramHandler"
-           commandId="org.bonitasoft.studio.engine.deployDiagramCommand">
         <activeWhen>
            <reference
                  definitionId="isABonitaProduct">

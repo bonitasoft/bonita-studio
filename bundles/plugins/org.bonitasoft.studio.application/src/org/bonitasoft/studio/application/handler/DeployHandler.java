@@ -47,7 +47,7 @@ public class DeployHandler extends AbstractHandler {
                             return; // cancel
                         }
                     }
-                    deployable.deploy();
+                    deployable.deployInUI();
                 });
         return null;
     }

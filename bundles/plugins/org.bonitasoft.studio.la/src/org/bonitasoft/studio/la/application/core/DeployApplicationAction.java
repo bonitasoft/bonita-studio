@@ -122,7 +122,7 @@ public class DeployApplicationAction {
             final APISession apiSession = apiSessionOperation.execute();
             final ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(apiSession);
             final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            final DeployApplicationDescriptorRunnable deployOperation = getDeployOperation(apiSession, applicationAPI,
+            final DeployApplicationDescriptorOperation deployOperation = getDeployOperation(apiSession, applicationAPI,
                     applicationNodeContainer);
             progressService.run(true, false, deployOperation);
             return openStatusDialog(shell, deployOperation, onFinishButtons);
@@ -135,7 +135,7 @@ public class DeployApplicationAction {
         }
     }
 
-    protected int openStatusDialog(Shell shell, final DeployApplicationDescriptorRunnable deployOperation,
+    protected int openStatusDialog(Shell shell, final DeployApplicationDescriptorOperation deployOperation,
             String[] onFinishButtons) {
         MultiStatus status = deployOperation.getStatus() instanceof MultiStatus ? (MultiStatus) deployOperation.getStatus()
                 : new MultiStatus(LivingApplicationPlugin.PLUGIN_ID, 0, new IStatus[] { deployOperation.getStatus() }, "",
@@ -144,11 +144,11 @@ public class DeployApplicationAction {
                 onFinishButtons, status).open();
     }
 
-    protected DeployApplicationDescriptorRunnable getDeployOperation(APISession apiSession,
+    protected DeployApplicationDescriptorOperation getDeployOperation(APISession apiSession,
             final ApplicationAPI applicationAPI, final ApplicationNodeContainer applicationDescriptor)
             throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        return new DeployApplicationDescriptorRunnable(applicationAPI, applicationDescriptor,
-                RepositoryManager.getInstance() .getRepositoryStore(ApplicationRepositoryStore.class).getConverter());
+        return new DeployApplicationDescriptorOperation(applicationAPI, applicationDescriptor,
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getConverter());
     }
 
 }
