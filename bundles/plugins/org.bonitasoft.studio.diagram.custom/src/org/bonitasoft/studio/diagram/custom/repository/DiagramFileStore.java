@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -415,10 +416,21 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     @Override
-    public void deploy() {
+    public void deployInUI() {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("diagram", getName());
+        parameters.put("fileName", getName());
+        parameters.put("disablePopup", Boolean.FALSE.toString());
+        parameters.put("validateDiagram", Boolean.TRUE.toString());
         executeCommand(DEPLOY_DIAGRAM_COMMAND, parameters);
+    }
+    
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        options.put("fileName", getName());
+        options.put("disablePopup", Boolean.TRUE.toString());
+        options.put("validateDiagram", Boolean.FALSE.toString());
+        Object result = executeCommand(DEPLOY_DIAGRAM_COMMAND, options);
+        return result instanceof IStatus ? (IStatus) result : ValidationStatus.ok();
     }
 
     @Override

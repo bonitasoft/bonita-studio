@@ -16,12 +16,19 @@ package org.bonitasoft.studio.engine.command;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import javax.inject.Named;
+
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -31,58 +38,78 @@ import org.bonitasoft.studio.validation.common.operation.BatchValidationOperatio
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-public class DeployDiagramHandler extends AbstractHandler {
+public class DeployDiagramHandler {
 
-    private RepositoryAccessor repositoryAccessor;
+    public static final String PROCESS_UUID_PARAMETER = "process";
+    public static final String DISABLE_POPUP_PARAMETER = "disablePopup";
+    public static final String VALIDATE_DIAGRAM_PARAMETER = "validateDiagram";
+    public static final String FILENAME_PARAMETER = "fileName";
 
-    public DeployDiagramHandler() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-    }
-
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+    @Execute
+    public IStatus execute(RepositoryAccessor repositoryAccessor,
+            @Named(FILENAME_PARAMETER) String fileName,
+            @Optional @Named(DISABLE_POPUP_PARAMETER) String disablePopup,
+            @Optional @Named(VALIDATE_DIAGRAM_PARAMETER) String validateDiagram,
+            @Optional @Named(PROCESS_UUID_PARAMETER) String processUUID) {
+        boolean shouldDisablePopup = shouldDisablePopup(disablePopup);
         String configurationId = retrieveDefaultConfiguration();
-        DiagramFileStore diagramFileStore = retrieveDiagram(event);
-        List<AbstractProcess> processes = diagramFileStore.getProcesses();
-        if (validateDiagram(processes).isOK()) {
+        DiagramFileStore diagramFileStore = retrieveDiagram(repositoryAccessor, fileName);
+        List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses().stream().filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process))).collect(Collectors.toList()) : diagramFileStore.getProcesses();
+        IStatus validationStatus = ValidationStatus.ok();
+        if (validateDiagram == null || Boolean.valueOf(validateDiagram)) {
+            validationStatus = validateDiagram(processes);
+        }
+        if (validationStatus.isOK()) {
             DeployProcessOperation deployOperation = createDeployProcessOperation();
             deployOperation.setConfigurationId(configurationId);
-            deployOperation.setDisablePopup(false);
+            deployOperation.setDisablePopup(shouldDisablePopup);
             processes.forEach(deployOperation::addProcessToDeploy);
-            Job deployJob = new Job(String.format(Messages.deployingProcessesFrom, diagramFileStore.getName())) {
-
-                @Override
-                protected IStatus run(IProgressMonitor monitor) {
-                    deployOperation.run(monitor);
-                    return deployOperation.getStatus();
-                }
-            };
-            deployJob.addJobChangeListener(new JobChangeAdapter() {
-
-                @Override
-                public void done(IJobChangeEvent event) {
-                    Display.getDefault().syncExec(() -> displayDeployResult(deployOperation));
-                }
-            });
-            deployJob.setUser(true);
-            deployJob.schedule();
+            if (!shouldDisablePopup) {
+                runInJob(diagramFileStore, deployOperation);
+            }else {
+                deployOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                return deployOperation.getStatus();
+            }
         }
-        return null;
+        return Status.OK_STATUS;
+    }
+
+    private void runInJob(DiagramFileStore diagramFileStore, DeployProcessOperation deployOperation) {
+        Job deployJob = new Job(String.format(Messages.deployingProcessesFrom, diagramFileStore.getName())) {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                deployOperation.run(monitor);
+                return deployOperation.getStatus();
+            }
+        };
+        deployJob.addJobChangeListener(new JobChangeAdapter() {
+
+            @Override
+            public void done(IJobChangeEvent event) {
+                Display.getDefault().syncExec(() -> displayDeployResult(deployOperation));
+            }
+        });
+        deployJob.setUser(true);
+        deployJob.schedule();
+    }
+
+    private boolean shouldDisablePopup(String disablePopup) {
+        return disablePopup == null || Boolean.valueOf(disablePopup);
     }
 
     private void displayDeployResult(DeployProcessOperation deployOperation) {
@@ -104,7 +131,7 @@ public class DeployDiagramHandler extends AbstractHandler {
         return new DeployProcessOperation();
     }
 
-    private IStatus validateDiagram(List<AbstractProcess> processes) throws ExecutionException {
+    private IStatus validateDiagram(List<AbstractProcess> processes) {
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
             RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
@@ -116,7 +143,7 @@ public class DeployDiagramHandler extends AbstractHandler {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, validationOperation);
             } catch (InvocationTargetException | InterruptedException e) {
-                throw new ExecutionException("An error occured during validation", e);
+                return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
             }
             return validationOperation.displayConfirmationDialog()
                     ? ValidationStatus.ok()
@@ -130,8 +157,7 @@ public class DeployDiagramHandler extends AbstractHandler {
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
     }
 
-    protected DiagramFileStore retrieveDiagram(ExecutionEvent event) {
-        String diagramFileStoreName = event.getParameter("diagram");
+    protected DiagramFileStore retrieveDiagram(RepositoryAccessor repositoryAccessor, String diagramFileStoreName) {
         DiagramFileStore diagramFileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(diagramFileStoreName, true);
         if (diagramFileStore == null) {

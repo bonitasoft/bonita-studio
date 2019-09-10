@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
+import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.business.application.ApplicationImportPolicy;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
@@ -37,14 +38,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.xml.sax.SAXException;
 
-public class DeployApplicationDescriptorRunnable implements IRunnableWithProgress {
+public class DeployApplicationDescriptorOperation implements IRunnableWithProgress {
 
     protected final ApplicationAPI applicationAPI;
     protected final ApplicationNodeContainer applicationNodeContainer;
     protected MultiStatus status = new MultiStatus(LivingApplicationPlugin.PLUGIN_ID, 0, "", null);
     protected final ApplicationNodeContainerConverter converter;
 
-    public DeployApplicationDescriptorRunnable(ApplicationAPI applicationAPI,
+    public DeployApplicationDescriptorOperation(ApplicationAPI applicationAPI,
             ApplicationNodeContainer applicationNodeContainer,
             ApplicationNodeContainerConverter converter) {
         this.applicationAPI = requireNonNull(applicationAPI);
@@ -69,10 +70,10 @@ public class DeployApplicationDescriptorRunnable implements IRunnableWithProgres
             if (status.isMultiStatus()) {
                 final MultiStatus mStatus = status;
                 applicationNodeContainer.getApplications().stream()
-                        .map(ApplicationNode::getDisplayName)
+                        .map(ApplicationNode::getToken)
                         .map(name -> new Status(IStatus.OK, LivingApplicationPlugin.PLUGIN_ID,
-                                String.format(Messages.applicationDescriptorDeployed,
-                                        name)))
+                                StatusCode.LIVING_APP_DEPLOYMENT.ordinal(),
+                                name, null))
                         .forEach(mStatus::add);
             }
         } catch (AlreadyExistsException | ImportException | IOException | JAXBException | SAXException e) {

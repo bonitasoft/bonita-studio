@@ -14,7 +14,14 @@
  */
 package org.bonitasoft.studio.application.ui.control.model;
 
+import java.util.Map;
+
+import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
@@ -60,6 +67,13 @@ public class FileStoreArtifact implements Artifact {
     
     public IRepositoryFileStore getFileStore(){
         return fStore;
+    }
+    
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        if(fStore instanceof IDeployable) {
+            return ((IDeployable)fStore).deploy(session, options, monitor);
+        }
+       return ValidationStatus.error(String.format("%s is not deployable.", fStore.getDisplayName()));
     }
 
 }

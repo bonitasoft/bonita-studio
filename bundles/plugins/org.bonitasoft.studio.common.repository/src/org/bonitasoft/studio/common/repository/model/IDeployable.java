@@ -14,12 +14,26 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
+import java.util.Map;
+
 import org.bonitasoft.engine.session.APISession;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 public interface IDeployable {
 
-    public void deploy();
+    /**
+     * Shortcut method that must run a deploy and is responsible to display the result in the UI
+     */
+    public void deployInUI();
+    
+    /**
+     * Deploy and return the status of the deployment
+     * @param session engine active session
+     * @param options deployment options
+     * @param monitor
+     * @return status of the deployment
+     */
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor);
 
 }

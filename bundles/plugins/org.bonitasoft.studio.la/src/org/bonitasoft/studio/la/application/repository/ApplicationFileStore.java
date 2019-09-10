@@ -19,24 +19,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
-import org.bonitasoft.engine.business.application.ApplicationMenu;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
-import org.bonitasoft.engine.business.application.xml.ApplicationMenuNode;
-import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
-import org.bonitasoft.engine.business.application.xml.ApplicationPageNode;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -46,17 +38,19 @@ import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.la.application.handler.DeployApplicationHandler;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -75,7 +69,6 @@ import com.google.common.io.ByteStreams;
 
 public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IBuildable, IRenamable {
 
-    public static final String APPLICATION_TO_DEPLOY_PARAMETER_NAME = "application";
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
     public ApplicationFileStore(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
@@ -186,9 +179,10 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
     }
 
     @Override
-    public void deploy() {
+    public void deployInUI() {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(APPLICATION_TO_DEPLOY_PARAMETER_NAME, getName());
+        parameters.put(DeployApplicationHandler.APPLICATION_TO_DEPLOY_PARAMETER, getName());
+        parameters.put(DeployApplicationHandler.DEPLOY_WIZARD_PARAMETER, Boolean.TRUE.toString());
         executeCommand(DEPLOY_COMMAND, parameters);
     }
 
@@ -228,6 +222,14 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
             applicationFolder.create(true, true, new NullProgressMonitor());
         }
         getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false, new NullProgressMonitor());
+    }
+
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        options.put(DeployApplicationHandler.APPLICATION_TO_DEPLOY_PARAMETER, getName());
+        options.put(DeployApplicationHandler.DEPLOY_WIZARD_PARAMETER, Boolean.FALSE.toString());
+        Object status = executeCommand(DEPLOY_COMMAND, options);
+        return status instanceof IStatus ? (IStatus) status : ValidationStatus.ok();
     }
 
 }

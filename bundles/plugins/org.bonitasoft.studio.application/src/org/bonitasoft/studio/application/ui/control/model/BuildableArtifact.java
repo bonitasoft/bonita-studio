@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class BuildableArtifact extends FileStoreArtifact implements IBuildable {
+public class BuildableArtifact extends FileStoreArtifact implements IBuildable{
 
     public BuildableArtifact(Object parent, IRepositoryFileStore fStore) {
         super(parent, fStore);

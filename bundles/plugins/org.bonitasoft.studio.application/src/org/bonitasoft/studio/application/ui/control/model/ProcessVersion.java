@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -78,6 +79,12 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
             throw new CoreException(parseStatus(buildStatus));
         }
+    }
+    
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        options.put("process", ModelHelper.getEObjectID(getModel()));
+        return super.deploy(session, options, monitor);
     }
     
     private IStatus parseStatus(IStatus status) {

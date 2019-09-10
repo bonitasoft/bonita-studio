@@ -25,6 +25,7 @@ import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployPageRunnable;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -45,8 +47,10 @@ import org.eclipse.ui.PlatformUI;
 public class DeployPageHandler {
 
     @Execute
-    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor,
-            @Named("name") String pageName) {
+    public IStatus execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+            RepositoryAccessor repositoryAccessor,
+            @Named("name") String pageName,
+            @Named("disablePopup") String disablePopup) {
         GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         try {
             APISession apiSession = apiSessionOperation.execute();
@@ -58,8 +62,13 @@ public class DeployPageHandler {
                         new HttpClientFactory(),
                         new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE),
                         fStore.get());
-                PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
-                displayDeploymentResult(activeShell, operation);
+                if(disablePopup == null || !Boolean.valueOf(disablePopup)) {
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+                    displayDeploymentResult(activeShell, operation);
+                }else {
+                    operation.run(Repository.NULL_PROGRESS_MONITOR);
+                    return operation.getStatus();
+                }
             } else {
                 throw new IllegalArgumentException(String.format("The page %s doesn't exist", pageName));
             }
@@ -70,6 +79,7 @@ public class DeployPageHandler {
         } finally {
             apiSessionOperation.logout();
         }
+        return ValidationStatus.ok();
     }
 
     private void displayDeploymentResult(Shell activeShell, IRunnableWithStatus operation) {
