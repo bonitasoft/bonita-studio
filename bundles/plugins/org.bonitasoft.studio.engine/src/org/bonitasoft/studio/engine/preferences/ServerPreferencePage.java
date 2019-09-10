@@ -46,6 +46,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -53,6 +56,14 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -96,6 +107,11 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 BooleanFieldEditor.SEPARATE_LABEL,
                 getFieldEditorParent());
         addField(debugCustomPage);
+        Control descriptionControl = debugCustomPage.getDescriptionControl(getFieldEditorParent());
+        ControlDecoration debugHintControlDecorator = new ControlDecoration(descriptionControl, SWT.RIGHT);
+        debugHintControlDecorator.setDescriptionText(Messages.debugCustomPageModeHint);
+        debugHintControlDecorator.setMarginWidth(3);
+        debugHintControlDecorator.setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
 
         getContributedEditors().put(lazyEditor, EnginePlugin.getDefault().getPreferenceStore());
         port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel,

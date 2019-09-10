@@ -182,12 +182,10 @@ public class Messages extends NLS {
     public static String deployingProcessesFrom;
     public static String restartServerMsg;
     public static String dropEngineDatabase;
-
     public static String uidExtraParams;
-
     public static String missingRestAPIStatus;
-
     public static String debugCustomPageMode;
+    public static String debugCustomPageModeHint;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
