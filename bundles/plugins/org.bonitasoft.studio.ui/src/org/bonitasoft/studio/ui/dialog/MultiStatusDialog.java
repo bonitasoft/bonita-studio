@@ -41,16 +41,16 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     private MultiStatus status;
     private Predicate<IStatus> canFinish;
     private int finishId;
-    private int level = IStatus.OK;
-    private static final Map<Integer,Integer> STATUS_LEVEL = new HashMap<>();
-    
-   static {
-       STATUS_LEVEL.put(IStatus.CANCEL, 0);
-       STATUS_LEVEL.put(IStatus.ERROR, 1);
-       STATUS_LEVEL.put(IStatus.WARNING, 2);
-       STATUS_LEVEL.put(IStatus.INFO, 3);
-       STATUS_LEVEL.put(IStatus.OK, 4);
-   }
+    private int level = STATUS_LEVEL.get(IStatus.OK);
+    private static final Map<Integer, Integer> STATUS_LEVEL = new HashMap<>();
+
+    static {
+        STATUS_LEVEL.put(IStatus.CANCEL, 0);
+        STATUS_LEVEL.put(IStatus.ERROR, 1);
+        STATUS_LEVEL.put(IStatus.WARNING, 2);
+        STATUS_LEVEL.put(IStatus.INFO, 3);
+        STATUS_LEVEL.put(IStatus.OK, 4);
+    }
 
     public MultiStatusDialog(Shell parentShell, String dialogTitle,
             String dialogMessage,
@@ -132,7 +132,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             }
         };
     }
-    
+
     @Override
     protected ViewerComparator getComparator() {
         return null;
@@ -160,18 +160,18 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         }
         return Arrays.asList(status);
     }
-    
+
     public void setLevel(int level) {
         this.level = level;
-     }
-    
+    }
+
     static class StatusSeverityComparator implements Comparator<IStatus> {
 
         @Override
         public int compare(IStatus s1, IStatus s2) {
             return STATUS_LEVEL.get(s1.getSeverity()).compareTo(STATUS_LEVEL.get(s2.getSeverity()));
         }
-        
+
     }
 
 }
