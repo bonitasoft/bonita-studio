@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration.i18n;
 
@@ -20,12 +18,10 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";
-
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
@@ -35,7 +31,7 @@ public class Messages extends NLS {
     public static String configurationWizardDesc;
     public static String otherProcesses;
     public static String selectProcessToConfigureTitle;
-    public static String selectProcessToConfigureDesc ;
+    public static String selectProcessToConfigureDesc;
     public static String mustSelectProcessError;
     public static String mustSelectExportError;
     public static String exportWizardPageTitle;
@@ -71,13 +67,17 @@ public class Messages extends NLS {
     public static String applicationDependenciesConfigurationDescription;
     public static String displayAdvancedConfiguration;
     public static String configurationTitle;
-	public static String authenticatedUser;
-	public static String anonymousUser;
-	public static String anonymousUserMessage;
-	public static String anonymousUserNameMissingMessage;
-	public static String synchronizingConfiguration;
-	public static String exportFailedTitle;
+    public static String authenticatedUser;
+    public static String anonymousUser;
+    public static String anonymousUserMessage;
+    public static String anonymousUserNameMissingMessage;
+    public static String synchronizingConfiguration;
+    public static String exportFailedTitle;
     public static String javaDependencies;
     public static String javaDependenciesConfigurationDescription;
+    public static String defaultUser;
+    public static String customUser;
+    public static String defaultUserMessage;
+    public static String unknownUser;
 
 }
