@@ -74,11 +74,6 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         this.finishId = finishId;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String,
-     * boolean)
-     */
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         Button button = super.createButton(parent, id, label, defaultButton);
@@ -105,10 +100,6 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.dialog.ProblemsDialog#getTypedLabelProvider()
-     */
     @Override
     protected TypedLabelProvider<IStatus> getTypedLabelProvider() {
         return new TypedLabelProvider<IStatus>() {

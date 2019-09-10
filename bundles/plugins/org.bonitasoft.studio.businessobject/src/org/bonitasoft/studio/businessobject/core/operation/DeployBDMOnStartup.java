@@ -23,15 +23,8 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
-/**
- * @author Romain Bioteau
- */
 public class DeployBDMOnStartup implements IEngineAction {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.IEngineAction#run(org.bonitasoft.engine.session.APISession)
-     */
     @Override
     public void run(APISession session) throws Exception {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
@@ -45,10 +38,6 @@ public class DeployBDMOnStartup implements IEngineAction {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.IEngineAction#shouldRun()
-     */
     @Override
     public boolean shouldRun() {
         Bundle bundle = Platform.getBundle("org.bonitasoft.studio.bdm.access.control");

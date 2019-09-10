@@ -42,10 +42,6 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         super(parentShell, dialogTitle, null, dialogMessage, dialogImageType, dialogButtonLabels, 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected Control createCustomArea(Composite parent) {
         Collection<T> input = getInput();
@@ -55,12 +51,12 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         }
         TableViewer problemsViewer = new TableViewer(parent,
                 SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
-        problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(350, 100).create());
+        problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(600, 100).create());
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
         problemsViewer.setComparator(getComparator());
 
         TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1, true));
+        layout.addColumnData(new ColumnWeightData(1, false));
         problemsViewer.getTable().setLayout(layout);
 
         tableViewerColumn = new TableViewerColumn(problemsViewer, SWT.NONE);
@@ -80,14 +76,6 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
 
     protected ViewerComparator getComparator() {
         return new ViewerComparator();
-    }
-
-    @Override
-    public void create() {
-        super.create();
-        if(tableViewerColumn != null) {
-            tableViewerColumn.getColumn().pack();
-        }
     }
 
     protected abstract TypedLabelProvider<T> getTypedLabelProvider();

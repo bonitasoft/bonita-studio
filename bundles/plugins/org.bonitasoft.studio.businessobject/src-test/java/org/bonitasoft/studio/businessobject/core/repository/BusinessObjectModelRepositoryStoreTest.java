@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -82,28 +81,14 @@ public class BusinessObjectModelRepositoryStoreTest {
     }
 
     @Test
-    public void import_should_deploy_when_not_in_headless() {
+    public void import_should_generate_jar() {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
-        doReturn(true).when(storeUnderTest).isDeployable();
         doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
         doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);
 
         verify(storeUnderTest).generateJar(businessObjectFileStore);
-        verify(storeUnderTest).deploy(businessObjectFileStore);
     }
 
-    @Test
-    public void import_should_not_deploy_when_in_headless() {
-        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
-        doReturn(false).when(storeUnderTest).isDeployable();
-        doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
-        doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
-
-        storeUnderTest.doImportInputStream("test", inputStream);
-
-        verify(storeUnderTest).generateJar(businessObjectFileStore);
-        verify(storeUnderTest, never()).deploy(businessObjectFileStore);
-    }
 }
