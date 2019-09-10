@@ -139,6 +139,7 @@ public class Messages extends NLS {
     public static String deploySuccessButNoAppToOpenMsg;
     public static String deploying;
     public static String deployStatusWithUnresolvedProcessesMessage;
+    public static String validateHint;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
