@@ -40,7 +40,6 @@ import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -154,9 +153,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
         generateJar(fileStore);
-        if (isDeployable()) {
-            deploy((BusinessObjectModelFileStore) fileStore);
-        }
         return fileStore;
     }
 
@@ -210,10 +206,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
                 return Status.OK_STATUS;
             }
         }.schedule();
-    }
-
-    protected boolean isDeployable() {
-        return !PlatformUtil.isHeadless();
     }
 
     public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
