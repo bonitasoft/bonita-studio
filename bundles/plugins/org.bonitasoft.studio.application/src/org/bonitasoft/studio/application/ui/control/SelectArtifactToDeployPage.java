@@ -61,9 +61,12 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -459,14 +462,22 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
+        
+      
 
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
 
         validateProcessOption = new Button(deployOptionGroup, SWT.CHECK);
-        validateProcessOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
+        validateProcessOption.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         validateProcessOption.setText(Messages.validateProcess);
-
+        
+        ControlDecoration controlDecoration = new ControlDecoration(validateProcessOption, SWT.RIGHT);
+        controlDecoration.setDescriptionText(Messages.validateHint);
+        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        controlDecoration.show();
+     
         ctx.bindValue(WidgetProperties.selection().observe(validateProcessOption),
                 PojoProperties.value("validate").observe(this));
     }
