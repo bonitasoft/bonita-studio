@@ -6,10 +6,16 @@
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_tLmfcJbPEeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.organization.manage" commandName="%manageOrganization_Label"/>
     <elements xsi:type="commands:Command" xmi:id="_bOsOIJb0Eeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.actors.import" commandName="%import_Label"/>
+    <elements xsi:type="commands:Command" xmi:id="_EYrk8M73Eemf1pwUW4a0zQ" elementId="org.bonitasoft.studio.actors.command.userPassword" commandName="%findUserPassword">
+      <parameters xmi:id="_JZYesM73Eemf1pwUW4a0zQ" elementId="userName" name="User name" optional="false"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_mL-AkM-4Eemf1pwUW4a0zQ" elementId="org.bonitasoft.studio.actors.command.getUsers" commandName="%getUsers"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_9OWy0JPZEeefAocV7_rPmw" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_AM0IAJPaEeefAocV7_rPmw" elementId="org.bonitasoft.studio.organization.publish.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.DeployOrganizationHandler" command="_3qAZcJPZEeefAocV7_rPmw"/>
     <elements xsi:type="commands:Handler" xmi:id="_uqPnsJbPEeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.organization.manage.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.ManageOrganizationHandler" command="_tLmfcJbPEeew-Jqtlwxc8Q"/>
     <elements xsi:type="commands:Handler" xmi:id="_cpyTIJb0Eeew-Jqtlwxc8Q" elementId="org.bonitasoft.studio.actors.import.handler" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.ImportOrganizationHandler" command="_bOsOIJb0Eeew-Jqtlwxc8Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_N_j_oM73Eemf1pwUW4a0zQ" elementId="org.bonitasoft.studio.actors.handler.userPassword" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.FindUserPasswordHandler" command="_EYrk8M73Eemf1pwUW4a0zQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_v9YQQM-4Eemf1pwUW4a0zQ" elementId="org.bonitasoft.studio.actors.handler.getUsers" contributionURI="bundleclass://org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.ui.handler.GetAllUsersHandler" command="_mL-AkM-4Eemf1pwUW4a0zQ"/>
   </fragments>
 </fragment:ModelFragments>

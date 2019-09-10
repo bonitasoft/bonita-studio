@@ -19,7 +19,9 @@ import static java.util.Objects.requireNonNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.CommandAPI;
@@ -42,11 +44,13 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -88,11 +92,16 @@ public class BOSEngineManager {
 
     public static final String SECURITY_CONFIG_PROPERTIES = "security-config.properties";
 
+    private static final String FIND_USER_PASSWORD_COMMAND = "org.bonitasoft.studio.actors.command.userPassword";
+
     private static BOSEngineManager INSTANCE;
 
     private boolean isRunning = false;
 
     private IProgressMonitor monitor;
+
+    private ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected BOSEngineManager(final IProgressMonitor monitor) {
         if (monitor == null) {
@@ -351,21 +360,32 @@ public class BOSEngineManager {
             final IProgressMonitor monitor) throws Exception {
         final Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
         APISession session;
+        String username = configuration.getUsername();
+        String password = retrieveUserPasswordFromActiveOrga(username)
+                .orElseThrow(() -> new Exception(
+                        String.format("Enable to retrieve the password of %s in the active organization.",
+                                username)));
         try {
-            session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(),
+            session = BOSEngineManager.getInstance().loginTenant(username, password,
                     monitor);
         } catch (final Exception e1) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
+                    new String[] { username + ":" + password, process.getName(),
                             process.getVersion() }),
                     e1);
         }
         if (session == null) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { configuration.getUsername() + ":" + configuration.getPassword(), process.getName(),
+                    new String[] { username + ":" + password, process.getName(),
                             process.getVersion() }));
         }
         return session;
+    }
+
+    private Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("userName", user);
+        return (Optional<String>) commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
     }
 
     public byte[] getTenantConfigResourceContent(String resourceName, IProgressMonitor monitor)

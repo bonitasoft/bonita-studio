@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -37,15 +38,12 @@ import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
@@ -72,10 +70,8 @@ public abstract class AbstractFileStore
     protected final IRepositoryStore<? extends IRepositoryFileStore> store;
     private IWorkbenchPart activePart;
     private Map<String, Object> parameters;
-
-    protected ECommandService eCommandService;
-    protected EHandlerService eHandlerService;
     private RepositoryAccessor repositoryAccessor;
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     public AbstractFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         name = fileName;
@@ -429,21 +425,8 @@ public abstract class AbstractFileStore
         return parameters;
     }
 
-    @SuppressWarnings("restriction")
     protected Object executeCommand(String command, Map<String, Object> parameters) {
-        initServices();
-        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-        if (eHandlerService.canExecute(parameterizedCommand)) {
-            return eHandlerService.executeHandler(parameterizedCommand);
-        }
-        throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
-    }
-
-    protected void initServices() {
-        if (eCommandService == null || eHandlerService == null) {
-            eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
-            eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
-        }
+        return commandExecutor.executeCommand(command, parameters);
     }
 
     public RepositoryAccessor getRepositoryAccessor() {

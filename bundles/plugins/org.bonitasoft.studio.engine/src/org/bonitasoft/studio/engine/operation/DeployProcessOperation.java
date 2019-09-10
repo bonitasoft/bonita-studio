@@ -289,6 +289,7 @@ public class DeployProcessOperation {
     protected IStatus undeploy(final List<AbstractProcess> processes, final IProgressMonitor monitor) throws Exception {
         final UndeployProcessOperation undeployProcessOperation = new UndeployProcessOperation(
                 BOSEngineManager.getInstance());
+        undeployProcessOperation.setConfigurationId(configurationId);
         for (final AbstractProcess process : processes) {
             undeployProcessOperation.addProcessToUndeploy(process);
         }
