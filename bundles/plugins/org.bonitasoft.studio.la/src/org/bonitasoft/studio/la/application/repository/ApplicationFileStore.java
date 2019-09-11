@@ -37,8 +37,11 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.handler.DeployApplicationHandler;
+import org.bonitasoft.studio.la.validator.ApplicationHomepageValidator;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
@@ -51,7 +54,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.graphics.Image;
@@ -67,7 +72,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IBuildable, IRenamable {
+public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IBuildable, IRenamable, IValidable {
 
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
@@ -75,10 +80,6 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
         super(fileName, parentStore);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
     public ApplicationNodeContainer getContent() throws ReadFileStoreException {
         try (InputStream inputStream = getResource().getContents()) {
@@ -214,14 +215,19 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+    public IStatus build(IPath buildPath, IProgressMonitor monitor) {
         IPath applicationFolderPath = buildPath.append("application");
         IFolder applicationFolder = getRepository().getProject()
                 .getFolder(applicationFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!applicationFolder.exists()) {
-            applicationFolder.create(true, true, new NullProgressMonitor());
+            try {
+                applicationFolder.create(true, true, new NullProgressMonitor());
+                getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false, new NullProgressMonitor());
+            } catch (CoreException e) {
+                return e.getStatus();
+            }
         }
-        getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false, new NullProgressMonitor());
+        return Status.OK_STATUS;
     }
 
     @Override
@@ -232,4 +238,17 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
         return status instanceof IStatus ? (IStatus) status : ValidationStatus.ok();
     }
 
+    @Override
+    public IStatus validate(IProgressMonitor monitor) {
+        MultiStatus status = new MultiStatus(LivingApplicationPlugin.PLUGIN_ID, 0, "", null);
+        ApplicationHomepageValidator validator = new ApplicationHomepageValidator();
+        try {
+            getContent().getApplications().stream()
+                    .map(validator::validate)
+                    .forEach(status::add);
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return status;
+    }
 }

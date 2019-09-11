@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.la.ui.validator;
+package org.bonitasoft.studio.la.validator;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -14,6 +14,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.validator.ApplicationTokenUnicityValidator;
 import org.junit.Test;
 
 public class ApplicationTokenUnicityValidatorTest {

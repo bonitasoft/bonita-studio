@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
+import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
@@ -33,11 +34,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 public class BuildProjectOperation implements IRunnableWithStatus {
 
-    private IStatus status;
+    private MultiStatus status;
     private RepositoryAccessor repositoryAccessor;
     private Collection<IBuildable> artifactsToBuild;
     private IPath archiveFilePath;
@@ -46,7 +48,7 @@ public class BuildProjectOperation implements IRunnableWithStatus {
             Collection<IBuildable> artifactsToBuild) {
         this.repositoryAccessor = repositoryAccessor;
         this.artifactsToBuild = artifactsToBuild;
-        status = ValidationStatus.ok();
+        status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, "", null);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class BuildProjectOperation implements IRunnableWithStatus {
             buildPath = createBuildDestination(monitor);
             archiveFilePath = buildProject(buildPath, monitor);
         } catch (CoreException e) {
-            status = ValidationStatus.error("An error occured while building project", e);
+            status.add(ValidationStatus.error("An error occured while building project", e));
             BonitaStudioLog.error(e);
         }
     }
@@ -77,39 +79,41 @@ public class BuildProjectOperation implements IRunnableWithStatus {
     private IPath buildProject(IPath buildPath, IProgressMonitor monitor) {
         monitor.beginTask(Messages.build, artifactsToBuild.size() + 1);
         for (IBuildable buildable : artifactsToBuild) {
-                try {
-                    buildable.build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()),monitor);
-                    monitor.worked(1);
-                } catch (CoreException e) {
-                    String buildErrorMessage = String.format(Messages.buildError, buildable.getName());
-                    status = ValidationStatus.error(String.format("%s %s", buildErrorMessage, Messages.buildErrorHelp), e);
-                    BonitaStudioLog.error(e);
-                    return buildPath;
-                }
+            addToStatus(buildable
+                    .build(buildPath.append(repositoryAccessor.getCurrentRepository().getName()), monitor));
+            monitor.worked(1);
         }
         String archiveFileName = String.format("%s_%s.zip", repositoryAccessor.getCurrentRepository().getName(),
                 System.currentTimeMillis());
         IPath archiveFilePath = buildPath.append(archiveFileName);
-        if (status.isOK()) {
-            monitor.subTask(String.format(Messages.creatingArchive, archiveFileName));
-            createZip(buildPath, archiveFileName, archiveFilePath);
-            monitor.done();
-        }
+        monitor.subTask(String.format(Messages.creatingArchive, archiveFileName));
+        createZip(buildPath, archiveFileName, archiveFilePath);
+        monitor.done();
         return archiveFilePath;
+    }
+
+    private void addToStatus(IStatus validationStatus) {
+        if (validationStatus instanceof MultiStatus) {
+            status.addAll(validationStatus);
+        } else {
+            status.add(validationStatus);
+        }
     }
 
     private void createZip(IPath buildPath, String archiveFileName, IPath archiveFilePath) {
         IProject project = repositoryAccessor.getCurrentRepository().getProject();
         IFolder sourceFolder = project.getFolder(
-                buildPath.append(repositoryAccessor.getCurrentRepository().getName()).makeRelativeTo(project.getLocation()));
+                buildPath.append(repositoryAccessor.getCurrentRepository().getName())
+                        .makeRelativeTo(project.getLocation()));
         IFile zipFile = project.getFile(archiveFilePath.makeRelativeTo(project.getLocation()));
         try {
             ZipUtil.zip(sourceFolder.getRawLocation().toFile().toPath(), zipFile.getRawLocation().toFile().toPath());
             project.getFolder(buildPath.makeRelativeTo(project.getFullPath())).refreshLocal(IResource.DEPTH_INFINITE,
                     new NullProgressMonitor());
         } catch (IOException | CoreException e) {
-            status = ValidationStatus.error(String.format("An error occured while creating archive %s.", archiveFileName),
-                    e);
+            status.add(ValidationStatus.error(
+                    String.format("An error occured while creating archive %s.", archiveFileName),
+                    e));
         }
     }
 

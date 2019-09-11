@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.la.ui.validator;
+package org.bonitasoft.studio.la.validator;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -7,6 +7,7 @@ import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
+import org.bonitasoft.studio.la.validator.ImportFileStoreConflictsValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

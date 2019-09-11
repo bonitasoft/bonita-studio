@@ -16,19 +16,19 @@ package org.bonitasoft.studio.application.ui.control.model;
 
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
-public class BuildableArtifact extends FileStoreArtifact implements IBuildable{
+public class BuildableArtifact extends FileStoreArtifact implements IBuildable {
 
     public BuildableArtifact(Object parent, IRepositoryFileStore fStore) {
         super(parent, fStore);
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
-        ((IBuildable) fStore).build(buildPath, monitor);
+    public IStatus build(IPath buildPath, IProgressMonitor monitor) {
+        return ((IBuildable) fStore).build(buildPath, monitor);
     }
 
     @Override

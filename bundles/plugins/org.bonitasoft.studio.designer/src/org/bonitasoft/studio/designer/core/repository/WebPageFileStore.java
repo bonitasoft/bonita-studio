@@ -181,12 +181,16 @@ public class WebPageFileStore extends InFolderJSONFileStore
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+    public IStatus build(IPath buildPath, IProgressMonitor monitor) {
         IPath webPageFolderPath = buildPath.append("webPage");
         IFolder webPageFolder = getRepository().getProject()
                 .getFolder(webPageFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!webPageFolder.exists()) {
-            webPageFolder.create(true, true, new NullProgressMonitor());
+            try {
+                webPageFolder.create(true, true, new NullProgressMonitor());
+            } catch (CoreException e) {
+                return e.getStatus();
+            }
         }
         monitor.subTask(String.format(Messages.buildingWebPage, getName()));
         try (InputStream inputStream = ByteSource.wrap(customPageBarResourceFactory.export(getId()))
@@ -194,9 +198,11 @@ public class WebPageFileStore extends InFolderJSONFileStore
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());
         } catch (IOException e) {
-            throw new CoreException(
-                    ValidationStatus.error(String.format("An error occured while building %s", getName()), e));
+             return ValidationStatus.error(String.format("An error occured while building %s", getName()), e);
+        }catch (CoreException e) {
+            return e.getStatus();
         }
+        return ValidationStatus.ok();
     }
 
     @Override
