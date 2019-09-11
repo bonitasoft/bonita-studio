@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
@@ -63,12 +64,16 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+    public IStatus build(IPath buildPath, IProgressMonitor monitor) {
         IPath processFolderPath = buildPath.append("process");
         IFolder processFolder = getRepository().getProject()
                 .getFolder(processFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!processFolder.exists()) {
-            processFolder.create(true, true, new NullProgressMonitor());
+            try {
+                processFolder.create(true, true, new NullProgressMonitor());
+            } catch (CoreException e) {
+                return e.getStatus();
+            }
         }
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("fileName", getFileStore().getName());
@@ -77,8 +82,9 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
         monitor.subTask(String.format(Messages.buildingProcess, getName()));
         IStatus buildStatus = (IStatus) ((DiagramFileStore)getFileStore()).executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
-            throw new CoreException(parseStatus(buildStatus));
+            return parseStatus(buildStatus);
         }
+        return Status.OK_STATUS;
     }
     
     @Override

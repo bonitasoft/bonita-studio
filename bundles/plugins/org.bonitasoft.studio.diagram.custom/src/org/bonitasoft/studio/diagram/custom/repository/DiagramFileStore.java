@@ -446,12 +446,16 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     @Override
-    public void build(IPath buildPath, IProgressMonitor monitor) throws CoreException {
+    public IStatus build(IPath buildPath, IProgressMonitor monitor) {
         IPath processFolderPath = buildPath.append("process");
         IFolder processFolder = getRepository().getProject()
                 .getFolder(processFolderPath.makeRelativeTo(getRepository().getProject().getLocation()));
         if (!processFolder.exists()) {
-            processFolder.create(true, true, new NullProgressMonitor());
+            try {
+                processFolder.create(true, true, new NullProgressMonitor());
+            } catch (CoreException e) {
+               return e.getStatus();
+            }
         }
 
         Map<String, Object> parameters = new HashMap<>();
@@ -460,9 +464,10 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         parameters.put("process", null);
         monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
-        if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
-            throw new CoreException(parseStatus(buildStatus));
+        if (Objects.equals(buildStatus.getSeverity(), IStatus.ERROR)) {
+           return parseStatus(buildStatus);
         }
+        return ValidationStatus.ok();
     }
 
     // We only want to log error status

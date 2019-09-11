@@ -171,6 +171,7 @@ public class DeployArtifactsHandler {
                     .asList(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
                     .stream()
                     .map(ref -> ref.getEditor(false))
+                    .filter(editorPart -> editorPart != null)
                     .filter(IEditorPart::isDirty)
                     .collect(Collectors.toList());
             if (!dirtyEditors.isEmpty()) {
@@ -239,13 +240,21 @@ public class DeployArtifactsHandler {
                         session, deployOptions);
                 monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
                 deployTenantResourcesOperation.run(monitor);
-                status.addAll(deployTenantResourcesOperation.getStatus());
-                status.addAll(deploy(artifactsToDeploy, session, monitor));
+                addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
+                addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
             } finally {
                 monitor.done();
                 apiSessionOperation.logout();
             }
         };
+    }
+
+    private void addToMultiStatus(IStatus status, MultiStatus multiStatus) {
+        if (status instanceof MultiStatus) {
+            multiStatus.addAll(status);
+        } else {
+            multiStatus.add(status);
+        }
     }
 
     private WizardBuilder<IStatus> createWizard(
@@ -301,7 +310,8 @@ public class DeployArtifactsHandler {
     }
 
     private String errorMessageFromStatus(IStatus status) {
-        if(Stream.of(status.getChildren()).anyMatch(s -> Objects.equals(s.getCode(), StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal()))){
+        if (Stream.of(status.getChildren()).anyMatch(
+                s -> Objects.equals(s.getCode(), StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal()))) {
             return Messages.deployStatusWithUnresolvedProcessesMessage;
         }
         return Messages.deployStatusMessage;

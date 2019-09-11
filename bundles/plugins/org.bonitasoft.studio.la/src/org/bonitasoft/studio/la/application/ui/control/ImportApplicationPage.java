@@ -19,7 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationXMLContentValidator;
-import org.bonitasoft.studio.la.ui.validator.ImportFileStoreConflictsValidator;
+import org.bonitasoft.studio.la.validator.ImportFileStoreConflictsValidator;
 import org.bonitasoft.studio.ui.page.AbstractImportPage;
 import org.eclipse.core.databinding.validation.IValidator;
 

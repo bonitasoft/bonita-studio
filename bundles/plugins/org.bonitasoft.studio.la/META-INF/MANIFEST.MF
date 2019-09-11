@@ -57,4 +57,4 @@ Export-Package: org.bonitasoft.studio.la,
  org.bonitasoft.studio.la.application.ui.control,
  org.bonitasoft.studio.la.application.ui.validator,
  org.bonitasoft.studio.la.i18n,
- org.bonitasoft.studio.la.ui.validator
+ org.bonitasoft.studio.la.validator

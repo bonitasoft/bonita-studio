@@ -14,12 +14,11 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
-public interface IBuildable {
+public interface IValidable {
 
-    IStatus build(IPath buildPath, IProgressMonitor monitor);
+    IStatus validate(IProgressMonitor monitor);
 
 }

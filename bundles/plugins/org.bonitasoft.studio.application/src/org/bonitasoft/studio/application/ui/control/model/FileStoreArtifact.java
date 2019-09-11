@@ -19,13 +19,14 @@ import java.util.Map;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public class FileStoreArtifact implements Artifact {
+public class FileStoreArtifact implements Artifact, IValidable {
 
     protected IRepositoryFileStore fStore;
     private Object parent;
@@ -49,12 +50,12 @@ public class FileStoreArtifact implements Artifact {
     public StyledString getStyledString() {
         return fStore.getStyledString();
     }
-    
+
     @Override
     public String getName() {
         return fStore.getName();
     }
-    
+
     @Override
     public String toString() {
         return fStore.getResource().getLocation().toString();
@@ -64,16 +65,24 @@ public class FileStoreArtifact implements Artifact {
     public Object getParent() {
         return parent;
     }
-    
-    public IRepositoryFileStore getFileStore(){
+
+    public IRepositoryFileStore getFileStore() {
         return fStore;
     }
-    
+
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
-        if(fStore instanceof IDeployable) {
-            return ((IDeployable)fStore).deploy(session, options, monitor);
+        if (fStore instanceof IDeployable) {
+            return ((IDeployable) fStore).deploy(session, options, monitor);
         }
-       return ValidationStatus.error(String.format("%s is not deployable.", fStore.getDisplayName()));
+        return ValidationStatus.error(String.format("%s is not deployable.", fStore.getDisplayName()));
+    }
+
+    @Override
+    public IStatus validate(IProgressMonitor monitor) {
+        if (fStore instanceof IValidable) {
+            return ((IValidable) fStore).validate(monitor);
+        }
+        return ValidationStatus.ok();
     }
 
 }

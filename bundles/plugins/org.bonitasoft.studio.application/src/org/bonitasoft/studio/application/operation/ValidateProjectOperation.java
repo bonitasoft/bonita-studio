@@ -24,6 +24,7 @@ import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.validation.common.operation.ProcessValidationOperation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,32 +34,37 @@ import org.eclipse.core.runtime.Status;
 
 public class ValidateProjectOperation implements IRunnableWithStatus {
 
-    private MultiStatus status;
-    private List<ProcessVersion> processToValidate;
+    private MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, "", null);
+    private Collection<Artifact> artifactsToValidate;
 
     public ValidateProjectOperation(Collection<Artifact> artifactsToValidate) {
-        this.processToValidate = artifactsToValidate.stream()
-                .filter(ProcessVersion.class::isInstance)
-                .map(ProcessVersion.class::cast)
-                .collect(Collectors.toList());
-        this.status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, "", null);
+        this.artifactsToValidate = artifactsToValidate;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        ProcessValidationOperation validationAction = new ProcessValidationOperation();
-        for (ProcessVersion pv : processToValidate) {
-            if (monitor.isCanceled()) {
-                this.status.add(Status.CANCEL_STATUS);
-                break;
-            }
-            validationAction.addProcess(pv.getModel());
-        }
-        validationAction.run(monitor);
-        if(monitor.isCanceled()) {
+        ProcessValidationOperation validationProcessOperation = new ProcessValidationOperation();
+        artifactsToValidate.stream()
+                .filter(ProcessVersion.class::isInstance)
+                .map(ProcessVersion.class::cast)
+                .forEach(pv -> validationProcessOperation.addProcess(pv.getModel()));
+        validationProcessOperation.run(monitor);
+        if (monitor.isCanceled()) {
             status.add(Status.CANCEL_STATUS);
-        }else if(Objects.equals(validationAction.getStatus().getSeverity(), ValidationStatus.ERROR)) {
-            status.addAll(validationAction.getStatus());
+        } else if (Objects.equals(validationProcessOperation.getStatus().getSeverity(), ValidationStatus.ERROR)) {
+            status.addAll(validationProcessOperation.getStatus());
+        }
+        List<IValidable> validables = artifactsToValidate.stream()
+                .filter(IValidable.class::isInstance)
+                .map(IValidable.class::cast)
+                .collect(Collectors.toList());
+        for(IValidable validable : validables) {
+            if(!monitor.isCanceled()) {
+                status.add(validable.validate(monitor));
+            }
+        }
+        if (monitor.isCanceled()) {
+            status.add(Status.CANCEL_STATUS);
         }
     }
 
