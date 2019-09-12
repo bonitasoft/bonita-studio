@@ -79,7 +79,6 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -88,6 +87,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
@@ -110,7 +110,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
     private Composite datTimeInTimezoneFieldContent;
     private IDiffLogger diffLogger;
 
-    public AttributesTabItemControl(final CTabFolder parent, final DataBindingContext ctx,
+    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel businessObjectModel,
@@ -124,8 +124,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
-        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
 
         Composite attributeEditionComposite = new Composite(this, SWT.None);
         attributeEditionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -367,10 +366,12 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
-                final BusinessObject bo = (BusinessObject) event.diff.getNewValue();
-                if (bo != null) {
-                    eagerDecorator.setDescriptionText(
-                            Messages.bind(Messages.alwaysLoadHint, NamingUtils.getSimpleName(bo.getQualifiedName())));
+                if (event.diff.getNewValue() instanceof BusinessObject) {
+                    final BusinessObject bo = (BusinessObject) event.diff.getNewValue();
+                    if (bo != null) {
+                        eagerDecorator.setDescriptionText(
+                                Messages.bind(Messages.alwaysLoadHint, NamingUtils.getSimpleName(bo.getQualifiedName())));
+                    }
                 }
             }
         });
@@ -397,7 +398,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public Object convert(final Object fromObject) {
-                return fromObject != null;
+                return fromObject instanceof BusinessObject;
             }
         });
 
@@ -411,7 +412,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         featuresTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
                         .create());
-        featuresTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
+        featuresTableViewer.getTable().setEnabled(viewerObservableValue.getValue() instanceof BusinessObject);
         featuresTableViewer.getTable().setLinesVisible(true);
         featuresTableViewer.getTable().setHeaderVisible(true);
         featuresTableViewer.setContentProvider(new ObservableListContentProvider());

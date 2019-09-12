@@ -47,12 +47,12 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
@@ -66,7 +66,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
     private final BusinessObjectModel bom;
 
-    public UniqueConstraintTabItemControl(final CTabFolder parent, final DataBindingContext ctx,
+    public UniqueConstraintTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel bom) {
@@ -78,8 +78,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
-        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
@@ -92,7 +91,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         constraintsTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        constraintsTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
+        constraintsTableViewer.getTable().setEnabled(viewerObservableValue.getValue() instanceof BusinessObject);
         constraintsTableViewer.getTable().setLinesVisible(true);
         constraintsTableViewer.getTable().setHeaderVisible(true);
         constraintsTableViewer.setContentProvider(new ObservableListContentProvider());
@@ -107,7 +106,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
             @Override
             public Object convert(final Object fromObject) {
-                return fromObject != null;
+                return fromObject instanceof BusinessObject;
             }
         });
         ctx.bindValue(SWTObservables.observeEnabled(constraintsTableViewer.getTable()), viewerObservableValue, null,

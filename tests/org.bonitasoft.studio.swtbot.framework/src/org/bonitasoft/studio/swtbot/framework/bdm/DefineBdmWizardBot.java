@@ -19,18 +19,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.ui.wizard.BusinessDataModelWizardPage;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
+import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
 public class DefineBdmWizardBot extends BotWizardDialog {
@@ -39,36 +47,60 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         super(bot, dialogTitle);
     }
 
-    public DefineBdmWizardBot withPackage(String packageName) {
-        bot.textWithLabel(Messages.packageName).setText(packageName);
+    public DefineBdmWizardBot addPackage(String packageName, String businessObject) {
+        bot.buttonInGroup(Messages.addPackage, Messages.listOfBusinessObjects).click();
+        renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, packageName);
+        return renameBusinessObject(packageName, BusinessDataModelWizardPage.DEFAULT_BUSINESS_OBJECT_NAME, businessObject);
+    }
+
+    public DefineBdmWizardBot renamePackage(String oldName, String newName) {
+        bot.waitUntil(treeItemAvailable(getBusinessObjectTree(), oldName));
+        getBusinessObjectTree().getTreeItem(oldName).click();
+        SWTBotText text = bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR);
+        text.typeText(newName);
+        text.pressShortcut(Keystrokes.CR);
         return this;
     }
 
-    public DefineBdmWizardBot addBusinessObject(String name) {
-        bot.buttonInGroup(Messages.add, Messages.listOfBusinessObjects).click();
-        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR).typeText(name);
+    public DefineBdmWizardBot renameBusinessObject(String packageName, String oldName, String newName) {
+        SWTBotTree businessObjectTree = getBusinessObjectTree();
+        bot.waitUntil(treeItemAvailable(businessObjectTree, packageName));
+        SWTBotTreeItem packageItem = businessObjectTree.getTreeItem(packageName);
+        packageItem.expand();
+        bot.waitUntil(nodeAvailable(packageItem, oldName));
+        packageItem.getNode(oldName).click();
+        SWTBotText text = bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR);
+        text.typeText(newName);
+        text.pressShortcut(Keystrokes.CR);
         return this;
     }
 
-    public DefineBdmWizardBot addAttribute(String businessObject, String attribute, String type) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.attributes).activate();
+    public DefineBdmWizardBot addBusinessObject(String packageName, String name) {
+        selectPackage(packageName);
+        bot.buttonInGroup(Messages.addBusinessObject, Messages.listOfBusinessObjects).click();
+        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR).setText(name);
+        return this;
+    }
+
+    public DefineBdmWizardBot addAttribute(String packageName, String businessObject, String attribute, String type) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.attributes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).typeText(attribute);
-        setType(businessObject, attribute, type);
+        setType(packageName, businessObject, attribute, type);
         return this;
     }
 
-    public DefineBdmWizardBot renameAttribute(String businessObject, String oldAttributeName, String newAttributeName) {
-        SWTBotTable attributeTable = getAttributeTable(businessObject);
+    public DefineBdmWizardBot renameAttribute(String packageName, String businessObject, String oldAttributeName,
+            String newAttributeName) {
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         attributeTable.getTableItem(oldAttributeName).click();
-        selectText();
         bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).typeText(newAttributeName);
         return this;
     }
 
-    public DefineBdmWizardBot setType(String businessObject, String attribute, String type) {
-        SWTBotTable attributeTable = getAttributeTable(businessObject);
+    public DefineBdmWizardBot setType(String packageName, String businessObject, String attribute, String type) {
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         SWTBotShell activeShell = bot.activeShell();
 
         attributeTable.getTableItem(attribute).click(1);
@@ -93,47 +125,59 @@ public class DefineBdmWizardBot extends BotWizardDialog {
     /**
      * The attribute type has to be a String!
      */
-    public DefineBdmWizardBot setAttributeLength(String businessObject, String attribute, String length) {
-        SWTBotTable attributeTable = getAttributeTable(businessObject);
+    public DefineBdmWizardBot setAttributeLength(String packageName, String businessObject, String attribute,
+            String length) {
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         attributeTable.select(attribute);
         bot.ccomboBoxInGroup(Messages.bind(Messages.detailsFor, attribute)).setText(length);
         return this;
     }
 
-    public DefineBdmWizardBot setMandatory(String businessObject, String attribute) {
-        getAttributeTable(businessObject).getTableItem(attribute).click(3);
+    public DefineBdmWizardBot setMandatory(String packageName, String businessObject, String attribute) {
+        getAttributeTable(packageName, businessObject).getTableItem(attribute).click(3);
         return this;
     }
 
-    public DefineBdmWizardBot setMultiple(String businessObject, String attribute) {
-        getAttributeTable(businessObject).getTableItem(attribute).click(2);
+    public DefineBdmWizardBot setMultiple(String packageName, String businessObject, String attribute) {
+        getAttributeTable(packageName, businessObject).getTableItem(attribute).click(2);
         return this;
     }
 
     /**
      * The attribute type has to be an other business object!
      */
-    public DefineBdmWizardBot setRelationType(String businessObject, String attribute,
+    public DefineBdmWizardBot setRelationType(String packageName, String businessObject, String attribute,
             final String relationType) {
-        SWTBotTable attributeTable = getAttributeTable(businessObject);
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         attributeTable.select(attribute);
         bot.comboBoxInGroup(Messages.bind(Messages.detailsFor, attribute)).setSelection(relationType);
         return this;
     }
 
-    public DefineBdmWizardBot addConstraint(String businessObject, String constraintName, String... selectFields) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.constraints).activate();
+    public DefineBdmWizardBot addConstraint(String packageName, String businessObject, String constraintName,
+            String... selectFields) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.constraints).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         bot.textWithId(SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR).typeText(constraintName);
-        editConstraint(businessObject, constraintName, selectFields);
+        editConstraint(packageName, businessObject, constraintName, selectFields);
         return this;
     }
 
-    public DefineBdmWizardBot editConstraint(String businessObject, String constraintName, String... selectFields) {
+    public DefineBdmWizardBot editConstraint(String packageName, String businessObject, String constraintName,
+            String... selectFields) {
         SWTBotShell activeShell = bot.activeShell();
-        SWTBotTable constraintsTable = getConstraintsTable(businessObject);
+        SWTBotTable constraintsTable = getConstraintsTable(packageName, businessObject);
         constraintsTable.getTableItem(constraintName).click(1);
+        bot.waitUntilWidgetAppears(new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        bot.button("...");
+                        return true;
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                }).create());
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.selectUniqueConstraintFieldsTitle));
         Arrays.asList(selectFields).forEach(field -> bot.table().getTableItem(field).check());
@@ -142,17 +186,18 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         return this;
     }
 
-    public DefineBdmWizardBot addIndex(String businessObject, String indexName, String... selectFields) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.indexes).activate();
+    public DefineBdmWizardBot addIndex(String packageName, String businessObject, String indexName, String... selectFields) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.indexes).activate();
         bot.buttonInGroup(Messages.add, businessObject).click();
         bot.textWithId(SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR).typeText(indexName);
-        editIndex(businessObject, indexName, selectFields);
+        editIndex(packageName, businessObject, indexName, selectFields);
         return this;
     }
 
-    public DefineBdmWizardBot editIndex(String businessObject, String indexName, String... selectFields) {
-        SWTBotTable indexesTable = getIndexesTable(businessObject);
+    public DefineBdmWizardBot editIndex(String packageName, String businessObject, String indexName,
+            String... selectFields) {
+        SWTBotTable indexesTable = getIndexesTable(packageName, businessObject);
         indexesTable.getTableItem(indexName).click(1);
         SWTBotShell activeShell = bot.activeShell();
         bot.button("...").click();
@@ -166,13 +211,14 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         return this;
     }
 
-    public DefineBdmWizardBot addCustomQuery(String businessObject,
+    public DefineBdmWizardBot addCustomQuery(String packageName,
+            String businessObject,
             String queryName,
             String content,
             Map<String, String> queryParam,
             String returnType,
             int index) {
-        SWTBotTable customQueriesTable = getCustomQueriesTable(businessObject);
+        SWTBotTable customQueriesTable = getCustomQueriesTable(packageName, businessObject);
         bot.buttonInGroup(Messages.add, businessObject).click();
 
         bot.textWithId(SWTBOT_ID_QUERY_NAME_TEXTEDITOR).typeText(queryName);
@@ -219,32 +265,70 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         bot.button(IDialogConstants.OK_LABEL).click();
     }
 
-    private SWTBotTable getBusinessObjectTable() {
-        return bot.tableInGroup(Messages.listOfBusinessObjects);
+    private SWTBotTree getBusinessObjectTree() {
+        return bot.treeInGroup(Messages.listOfBusinessObjects);
     }
 
-    private SWTBotTable getAttributeTable(String businessObject) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.attributes).activate();
+    private void selectBusinessObject(String packageName, String businessObject) {
+        SWTBotTreeItem packageItem = getBusinessObjectTree().getTreeItem(packageName);
+        packageItem.expand();
+        packageItem.getNode(businessObject).select();
+    }
+
+    private void selectPackage(String packageName) {
+        getBusinessObjectTree().getTreeItem(packageName).select();
+    }
+
+    private SWTBotTable getAttributeTable(String packageName, String businessObject) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.attributes).activate();
         return bot.tableInGroup(businessObject);
     }
 
-    private SWTBotTable getConstraintsTable(String businessObject) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.constraints).activate();
+    private SWTBotTable getConstraintsTable(String packageName, String businessObject) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.constraints).activate();
         return bot.tableInGroup(businessObject);
     }
 
-    private SWTBotTable getIndexesTable(String businessObject) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.indexes).activate();
+    private SWTBotTable getIndexesTable(String packageName, String businessObject) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.indexes).activate();
         return bot.tableInGroup(businessObject);
     }
 
-    private SWTBotTable getCustomQueriesTable(String businessObject) {
-        getBusinessObjectTable().select(businessObject);
-        bot.cTabItem(Messages.queries).activate();
+    private SWTBotTable getCustomQueriesTable(String packageName, String businessObject) {
+        selectBusinessObject(packageName, businessObject);
+        bot.tabItem(Messages.queries).activate();
         bot.radio(Messages.customQueriesOption).click();
         return bot.tableInGroup(businessObject);
+    }
+
+    public ICondition nodeAvailable(SWTBotTreeItem item, String node) {
+        return new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        item.getNode(node);
+                        return true;
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                })
+                .withFailureMessage(() -> String.format("The node %s of '%s' isn't available", node, item))
+                .create();
+    }
+
+    public ICondition treeItemAvailable(SWTBotTree tree, String item) {
+        return new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        tree.getTreeItem(item);
+                        return true;
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                })
+                .withFailureMessage(() -> String.format("The node %s isn't available", item))
+                .create();
     }
 }
