@@ -55,13 +55,13 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
@@ -81,7 +81,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
     private static final String CUSTOM = "custom";
 
-    public QueriesTabItemControl(CTabFolder parent, DataBindingContext ctx,
+    public QueriesTabItemControl(TabFolder parent, DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue, IObservableList fieldsList) {
         super(parent, SWT.NONE);
         this.fieldsList = fieldsList;
@@ -91,8 +91,12 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public void handleValueChange(ValueChangeEvent event) {
-                final BusinessObject selectedBo = (BusinessObject) event.diff.getNewValue();
-                updateDefaultQueries(selectedBo);
+                if (event.diff.getNewValue() instanceof BusinessObject) {
+                    final BusinessObject selectedBo = (BusinessObject) event.diff.getNewValue();
+                    updateDefaultQueries(selectedBo);
+                } else {
+                    defaultQueriesList.clear();
+                }
             }
 
         });
@@ -101,9 +105,11 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 final Widget item = e.item;
-                if (item instanceof TabItem && Messages.queries.equals(((TabItem) item).getText())) {
-                    final BusinessObject selectedBo = (BusinessObject) viewerObservableValue.getValue();
-                    updateDefaultQueries(selectedBo);
+                Object value = viewerObservableValue.getValue();
+                if (value instanceof BusinessObject
+                        && item instanceof TabItem
+                        && Messages.queries.equals(((TabItem) item).getText())) {
+                    updateDefaultQueries((BusinessObject) value);
                 }
             }
         });
@@ -111,8 +117,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
 
     protected void createControl(DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 0).create());
-        setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
-        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
 
         final Composite radioComposite = new Composite(this, SWT.NONE);
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(2, 1).create());
@@ -257,7 +262,7 @@ public class QueriesTabItemControl extends AbstractTabItemControl {
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         queriesTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        queriesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
+        queriesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() instanceof BusinessObject);
         queriesTableViewer.getTable().setLinesVisible(true);
         queriesTableViewer.getTable().setHeaderVisible(true);
         queriesTableViewer.setContentProvider(new ObservableListContentProvider());

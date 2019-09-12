@@ -26,7 +26,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.widgets.TabFolder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,12 +54,9 @@ public class UniqueConstraintTabItemControlTest {
     @Rule
     public RealmWithDisplay realm = new RealmWithDisplay();
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        final CTabFolder tabFolder = new CTabFolder(realm.createComposite(), SWT.NONE);
+        TabFolder tabFolder = new TabFolder(realm.createComposite(), SWT.NONE);
         bom = new BusinessObjectModel();
         when(viewerObservableValue.getValue()).thenReturn("");
         ctx = new DataBindingContext(Realm.getDefault());

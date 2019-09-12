@@ -32,7 +32,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@SuppressWarnings("unchecked")
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ProjectExplorerBdmIT {
 
@@ -72,11 +71,15 @@ public class ProjectExplorerBdmIT {
     }
 
     private void createBdmIfRequired() {
-        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml", true) == null) {
-            new ProjectExplorerBot(bot).newBdm().addBusinessObject("ProjectExplorerBo1")
-                    .addAttribute("ProjectExplorerBo1", "name", FieldType.STRING.toString()).deploy();
+        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml",
+                true) == null) {
+            String packageName = "explorer.test";
+            String businessObject = "ProjectExplorerBo1";
+            new ProjectExplorerBot(bot).newBdm()
+                    .addPackage(packageName, businessObject)
+                    .addAttribute(packageName, businessObject, "name", FieldType.STRING.toString()).deploy();
             assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                    .getBusinessObjectByQualifiedName("com.company.model.ProjectExplorerBo1")).isPresent();
+                    .getBusinessObjectByQualifiedName("explorer.test.ProjectExplorerBo1")).isPresent();
         }
     }
 

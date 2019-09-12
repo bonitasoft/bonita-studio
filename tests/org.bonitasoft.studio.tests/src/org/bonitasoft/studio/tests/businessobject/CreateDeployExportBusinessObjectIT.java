@@ -89,29 +89,31 @@ public class CreateDeployExportBusinessObjectIT {
         BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
 
         DefineBdmWizardBot bdmWizardBot = workBenchBot.defineBDM();
-        bdmWizardBot.withPackage("org.model.test")
-                .addBusinessObject("Employee")
-                .addAttribute("Employee", "firstName", FieldType.STRING.name())
-                .setAttributeLength("Employee", "firstName", "25")
-                .setMandatory("Employee", "firstName")
-                .addAttribute("Employee", "lastaNme", FieldType.STRING.name())
-                .addAttribute("Employee", "birthDate", DateTypeLabels.DATE_ONLY)
-                .addAttribute("Employee", "age", FieldType.INTEGER.name())
-                .addAttribute("Employee", "married", FieldType.BOOLEAN.name())
-                .addAttribute("Employee", "resume", FieldType.TEXT.name())
-                .addAttribute("Employee", "salary", FieldType.DOUBLE.name())
-                .addAttribute("Employee", "skills", FieldType.STRING.name())
-                .setMultiple("Employee", "skills")
-                .addAttribute("Employee", "manager", "Employee")
-                .setRelationType("Employee", "manager", "Aggregation");
+        String packageName = "org.model.test";
+        String employeeBo = "Employee";
+        bdmWizardBot.addPackage(packageName, employeeBo)
+                .addAttribute(packageName, employeeBo, "firstName", FieldType.STRING.name())
+                .setAttributeLength(packageName, employeeBo, "firstName", "25")
+                .setMandatory(packageName, employeeBo, "firstName")
+                .addAttribute(packageName, employeeBo, "lastaNme", FieldType.STRING.name())
+                .addAttribute(packageName, employeeBo, "birthDate", DateTypeLabels.DATE_ONLY)
+                .addAttribute(packageName, employeeBo, "age", FieldType.INTEGER.name())
+                .addAttribute(packageName, employeeBo, "married", FieldType.BOOLEAN.name())
+                .addAttribute(packageName, employeeBo, "resume", FieldType.TEXT.name())
+                .addAttribute(packageName, employeeBo, "salary", FieldType.DOUBLE.name())
+                .addAttribute(packageName, employeeBo, "skills", FieldType.STRING.name())
+                .setMultiple(packageName, employeeBo, "skills")
+                .addAttribute(packageName, employeeBo, "manager", employeeBo)
+                .setRelationType(packageName, employeeBo, "manager", "Aggregation");
 
-        bdmWizardBot.addConstraint("Employee", "FIRSTLASTNAMEUNIQUE", "firstName -- STRING", "lastaNme -- STRING");
-        bdmWizardBot.addIndex("Employee", "NAMEINDEX", "firstName -- STRING", "lastaNme -- STRING");
+        bdmWizardBot.addConstraint(packageName, employeeBo, "FIRSTLASTNAMEUNIQUE", "firstName -- STRING",
+                "lastaNme -- STRING");
+        bdmWizardBot.addIndex(packageName, employeeBo, "NAMEINDEX", "firstName -- STRING", "lastaNme -- STRING");
 
         bdmWizardBot.deploy();
 
         bdmWizardBot = workBenchBot.defineBDM();
-        bdmWizardBot.renameAttribute("Employee", "lastaNme", "lastName");
+        bdmWizardBot.renameAttribute(packageName, employeeBo, "lastaNme", "lastName");
 
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -119,12 +121,13 @@ public class CreateDeployExportBusinessObjectIT {
         bot.waitUntil(Conditions.shellIsActive(Messages.modelValidationFailedTitle));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
         activeShell.setFocus();
-        bdmWizardBot.editConstraint("Employee", "FIRSTLASTNAMEUNIQUE", "firstName -- STRING", "lastName -- STRING");
-        bdmWizardBot.editIndex("Employee", "NAMEINDEX", "lastName -- STRING");
+        bdmWizardBot.editConstraint(packageName, employeeBo, "FIRSTLASTNAMEUNIQUE", "firstName -- STRING",
+                "lastName -- STRING");
+        bdmWizardBot.editIndex(packageName, employeeBo, "NAMEINDEX", "lastName -- STRING");
 
         final Map<String, String> queryParam = new HashMap<>();
         queryParam.put("maxSalary", Double.class.getName());
-        bdmWizardBot.addCustomQuery("Employee",
+        bdmWizardBot.addCustomQuery(packageName, employeeBo,
                 "findByMaxSalary",
                 "SELECT e FROM Employee e WHERE e.salary < :maxSalary",
                 queryParam,

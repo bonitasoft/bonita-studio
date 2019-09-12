@@ -49,6 +49,7 @@ public class ManageBusinessObjectHandler implements Runnable {
         final ManageBusinessDataModelWizard newBusinessDataModelWizard = createWizard();
         final CustomWizardDialog dialog = createWizardDialog(newBusinessDataModelWizard, IDialogConstants.FINISH_LABEL,
                 shell);
+        dialog.setPageSize(1400, 800);
         if (dialog.open() == IDialogConstants.OK_ID) {
             return IDialogConstants.OK_ID;
         }

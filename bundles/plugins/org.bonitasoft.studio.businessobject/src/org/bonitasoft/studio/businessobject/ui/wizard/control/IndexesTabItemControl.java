@@ -46,12 +46,12 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
@@ -65,7 +65,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
 
     private final BusinessObjectModel bom;
 
-    public IndexesTabItemControl(final CTabFolder parent, final DataBindingContext ctx,
+    public IndexesTabItemControl(final TabFolder parent, final DataBindingContext ctx,
             final IViewerObservableValue viewerObservableValue,
             final IObservableList fieldsList,
             final BusinessObjectModel bom) {
@@ -77,8 +77,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
 
     protected void createControl(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue) {
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
-        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
         final Composite buttonsComposite = new Composite(this, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 20).create());
@@ -91,7 +90,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         indexesTableViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        indexesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() != null);
+        indexesTableViewer.getTable().setEnabled(viewerObservableValue.getValue() instanceof BusinessObject);
         indexesTableViewer.getTable().setLinesVisible(true);
         indexesTableViewer.getTable().setHeaderVisible(true);
         indexesTableViewer.setContentProvider(new ObservableListContentProvider());
@@ -106,7 +105,7 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
 
             @Override
             public Object convert(final Object fromObject) {
-                return fromObject != null;
+                return fromObject instanceof BusinessObject;
             }
         });
         ctx.bindValue(SWTObservables.observeEnabled(indexesTableViewer.getTable()), viewerObservableValue, null,

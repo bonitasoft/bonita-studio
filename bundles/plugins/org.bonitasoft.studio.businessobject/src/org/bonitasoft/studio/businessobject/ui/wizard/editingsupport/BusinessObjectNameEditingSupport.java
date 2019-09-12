@@ -14,31 +14,40 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
+import org.bonitasoft.studio.businessobject.helper.PackageHelper;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectNameCellEditorValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -46,39 +55,31 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupport {
 
-    private final DataBindingContext dbc;
-
-    private final IObservableValue packageNameObservableValue;
-
-    private final BusinessObjectModel businessObjectModel;
-
-    private final IViewerObservableValue businessObjectObservableValue;
-
-    private final CellEditor cellEditor;
-
-    private final IObservableValue panelTextObservable;
-
     private IDiffLogger diffLogger;
+    private IViewerObservableValue selectionObservable;
+    private CellEditor cellEditor;
+    private DataBindingContext ctx;
+    private BusinessObjectModel businessObjectModel;
+    private PackageHelper packageHelper;
+    private TreeViewer viewer;
+    private ISWTObservableValue editionGroupTextObservable;
 
     /**
      * @param viewer
      * @param dbc
      */
     public BusinessObjectNameEditingSupport(BusinessObjectModel businessObjectModel,
-            IViewerObservableValue businessObjectObservableValue,
-            IObservableValue packageNameObservableValue,
-            IObservableValue panelTextObservable,
-            ColumnViewer viewer,
-            DataBindingContext dbc,
+            IViewerObservableValue selectionObservable, TreeViewer viewer,
+            DataBindingContext ctx,
             IDiffLogger diffLogger) {
-        super(viewer, dbc);
-        this.dbc = dbc;
+        super(viewer, ctx);
+        this.ctx = ctx;
+        this.viewer = viewer;
         this.diffLogger = diffLogger;
-        this.packageNameObservableValue = packageNameObservableValue;
         this.businessObjectModel = businessObjectModel;
-        this.panelTextObservable = panelTextObservable;
-        this.businessObjectObservableValue = businessObjectObservableValue;
+        this.selectionObservable = selectionObservable;
         this.cellEditor = createCellEditor();
+        this.packageHelper = new PackageHelper();
     }
 
     private CellEditor createCellEditor() {
@@ -96,68 +97,130 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
 
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, ViewerCell cell) {
-        final IObservableValue observeValue = PojoObservables.observeValue(element, "qualifiedName");
-        observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
-        observeValue.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(ValueChangeEvent event) {
-                final BusinessObject businessObject = (BusinessObject) businessObjectObservableValue.getValue();
-                final String oldName = (String) event.diff.getOldValue();
-                final String newName = (String) event.diff.getNewValue();
+        if (element instanceof BusinessObject) {
+            IObservableValue qualifiedNameObservable = PojoProperties.value("qualifiedName").observe(element);
+            qualifiedNameObservable.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
+            qualifiedNameObservable.addValueChangeListener(e -> {
+                BusinessObject businessObject = (BusinessObject) selectionObservable.getValue();
+                String oldName = (String) e.diff.getOldValue();
+                String newName = (String) e.diff.getNewValue();
                 diffLogger.boRenamed(oldName, newName);
-                for (final Query q : businessObject.getQueries()) {
+                for (Query q : businessObject.getQueries()) {
                     if (q.getReturnType().equals(oldName)) {
                         q.setReturnType(newName);
                     }
                 }
-
-            }
+                editionGroupTextObservable.setValue(NamingUtils.getSimpleName(newName));
+            });
+            return qualifiedNameObservable;
+        }
+        IObservableValue<String> packageNameObservable = new WritableValue<>();
+        packageNameObservable.setValue(element.toString());
+        packageNameObservable.addValueChangeListener(e -> {
+            String oldPackageName = e.diff.getOldValue();
+            String newPackageName = e.diff.getNewValue();
+            updatePackageName(oldPackageName, newPackageName);
         });
-        observeValue.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(ValueChangeEvent event) {
-                panelTextObservable.setValue(NamingUtils.getSimpleName((String) event.diff.getNewValue()));
-            }
-        });
-        return observeValue;
+        return packageNameObservable; // TODO package -> ya sans doute juste besoin de creer une writable value, de mettre un value change dessus et de faire la logique dans le value change ici.
     }
 
     @Override
     protected IObservableValue doCreateCellEditorObservable(CellEditor cellEditor) {
-        return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
+        return WidgetProperties.text(SWT.Modify).observe(cellEditor.getControl());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#createBinding(org.eclipse.core.databinding.observable.value.IObservableValue,
-     * org.eclipse.core.databinding.observable.value.IObservableValue)
-     */
     @Override
     protected Binding createBinding(IObservableValue target, IObservableValue model) {
-        final UpdateValueStrategy targetToModel = new UpdateValueStrategy(UpdateValueStrategy.POLICY_CONVERT);
-        final BusinessObject value = (BusinessObject) businessObjectObservableValue.getValue();
-        targetToModel.setAfterGetValidator(new BusinessObjectNameCellEditorValidator(businessObjectModel, value));
-        targetToModel.setConverter(new Converter(String.class, String.class) {
+        return isBusinessObject()
+                ? createBindingForBusinessObjectEdition(target, model)
+                : createBindingForPackageObjectEdition(target, model);
+    }
 
-            @Override
-            public Object convert(Object fromObject) {
-                return fromObject != null ? packageNameObservableValue.getValue() + "." + fromObject.toString() : null;
-            }
-        });
-        final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-        modelToTarget.setConverter(new Converter(String.class, String.class) {
+    private Binding createBindingForPackageObjectEdition(IObservableValue target, IObservableValue model) {
+        UpdateValueStrategy targetToModel = UpdateStrategyFactory.convertUpdateValueStrategy().create();
+        targetToModel.setAfterGetValidator(
+                new BusinessObjectNameCellEditorValidator(businessObjectModel, selectionObservable));
+        UpdateValueStrategy modelToTarget = UpdateStrategyFactory.updateValueStrategy().create();
+        return ctx.bindValue(target, model, targetToModel, modelToTarget);
+    }
 
-            @Override
-            public Object convert(Object fromObject) {
-                if (fromObject != null) {
-                    return NamingUtils.getSimpleName(fromObject.toString());
-                }
-                return null;
+    private Binding createBindingForBusinessObjectEdition(IObservableValue target, IObservableValue model) {
+        UpdateValueStrategy targetToModel = UpdateStrategyFactory.convertUpdateValueStrategy()
+                .withConverter(ConverterBuilder.<String, String> newConverter()
+                        .fromType(String.class)
+                        .toType(String.class)
+                        .withConvertFunction(this::toNewQualifiedName)
+                        .create())
+                .create();
+        targetToModel
+                .setAfterGetValidator(new BusinessObjectNameCellEditorValidator(businessObjectModel, selectionObservable));
+        UpdateValueStrategy modelToTarget = UpdateStrategyFactory.updateValueStrategy()
+                .withConverter(ConverterBuilder.<String, String> newConverter()
+                        .fromType(String.class)
+                        .toType(String.class)
+                        .withConvertFunction(this::toSimpleName)
+                        .create())
+                .create();
+        return ctx.bindValue(target, model, targetToModel, modelToTarget);
+    }
+
+    private String toNewQualifiedName(String newSimpleName) {
+        BusinessObject bo = (BusinessObject) selectionObservable.getValue();
+        String packageName = packageHelper.getPackageName(bo);
+        String newQualifiedName = String.format("%s.%s", packageName, newSimpleName);
+        return newQualifiedName;
+    }
+
+    private String toSimpleName(String qualifiedName) {
+        return NamingUtils.getSimpleName(qualifiedName);
+    }
+
+    private boolean isBusinessObject() {
+        return selectionObservable.getValue() instanceof BusinessObject;
+    }
+
+    private void updatePackageName(String oldPackageName, String newPackageName) {
+        if (!Objects.equals(oldPackageName, newPackageName)) {
+            if (!packageHelper.packageAlreadyExists(businessObjectModel, newPackageName)
+                    || confirmMergePackage(oldPackageName, newPackageName)) {
+                List<BusinessObject> businessObjects = packageHelper.getAllBusinessObjects(businessObjectModel,
+                        oldPackageName);
+                businessObjects.stream()
+                        .forEach(bo -> {
+                            String oldQualifiedName = bo.getQualifiedName();
+                            String newQualifiedName = String.format("%s.%s", newPackageName, bo.getSimpleName());
+                            updateBusinessObjectName(bo, oldQualifiedName, newQualifiedName);
+                        });
+                Display.getDefault().asyncExec(() -> {
+                    List<Object> elementsToExpend = new ArrayList();
+                    for (Object o : viewer.getExpandedElements()) {
+                        Object toExpend = Objects.equals(o, oldPackageName) ? newPackageName : o;
+                        elementsToExpend.add(toExpend);
+                    }
+                    viewer.refresh();
+                    selectionObservable.setValue(newPackageName);
+                    viewer.setExpandedElements(elementsToExpend.toArray());
+                });
             }
-        });
-        return dbc.bindValue(target, model, targetToModel, modelToTarget);
+        }
+    }
+
+    private boolean confirmMergePackage(String package1, String package2) {
+        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                Messages.mergePackageConfirmTitle,
+                String.format(Messages.mergePackageConfirm, package1, package2));
+    }
+
+    private void updateBusinessObjectName(BusinessObject element, String oldQualifiedName, String newQualifiedName) {
+        element.setQualifiedName(newQualifiedName);
+        diffLogger.boRenamed(oldQualifiedName, newQualifiedName);
+        element.getQueries().stream()
+                .filter(query -> Objects.equals(query.getReturnType(), oldQualifiedName))
+                .forEach(query -> query.setReturnType(newQualifiedName));
+    }
+
+    public void setEditionGroupTextObservable(ISWTObservableValue editionGroupTextObservable) {
+        this.editionGroupTextObservable = editionGroupTextObservable;
     }
 
 }

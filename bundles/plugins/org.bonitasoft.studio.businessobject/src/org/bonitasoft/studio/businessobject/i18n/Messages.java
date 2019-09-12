@@ -384,6 +384,12 @@ public class Messages extends NLS {
     public static String cleanDeployTitle;
     public static String cleanDeployMsg;
     public static String businessDataModelDeployed;
+    public static String addBusinessObject;
+    public static String addPackage;
+    public static String deletePackageConfirmTitle;
+    public static String deletePackageConfirm;
+    public static String mergePackageConfirmTitle;
+    public static String mergePackageConfirm;
 
     private Messages() {
     }
