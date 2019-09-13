@@ -16,7 +16,6 @@ package org.bonitasoft.studio.la.application.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +25,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.business.application.xml.ApplicationPageNode;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.model.DependencyResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
@@ -68,12 +68,10 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
                     .map(customPage -> webStore.findByPageId(customPage).orElse(null))
                     .filter(Objects::nonNull)
                     .forEach(result::add);
-           
-            return result;
         } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(e);
         }
-        return Collections.emptyList();
+        return result;
     }
 
 }
