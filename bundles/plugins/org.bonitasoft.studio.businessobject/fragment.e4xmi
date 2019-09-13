@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_QHAmsGhGEea_RMV0DBK5kg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Zz2fcGhGEea_RMV0DBK5kg" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_giWXwGhGEea_RMV0DBK5kg" elementId="org.bonitasoft.studio.businessobject.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.OpenH2ConsoleHandler" command="_2hZB8GhGEea_RMV0DBK5kg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_dpWN0KHYEeerK5yUOIlozQ" elementId="org.bonitasoft.studio.businessobject.manage.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler" command="_ZCQG4KHYEeerK5yUOIlozQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_tBuGAKHYEeerK5yUOIlozQ" elementId="org.bonitasoft.studio.businessobject.export.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.ExportBusinessDataModelHandler" command="_o86MwKHYEeerK5yUOIlozQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_iFu4wJYsEeisnZADhWJEZA" elementId="org.bonitasoft.studio.businessobject.import.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.ImportBusinessDataModelHandler" command="_ZfyWoJYsEeisnZADhWJEZA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_97_PME8OEemrzvHvLv5I3g" elementId="org.bonitasoft.studio.businessobject.cleanDeploy.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler" command="_yr-TgE8OEemrzvHvLv5I3g"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_08KwkGhGEea_RMV0DBK5kg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_2hZB8GhGEea_RMV0DBK5kg" elementId="org.bonitasoft.studio.businessobject.openH2Console" commandName="%openH2Console"/>
+    <elements xsi:type="commands:Command" xmi:id="_ZCQG4KHYEeerK5yUOIlozQ" elementId="org.bonitasoft.studio.businessobject.manage" commandName="%manageBusinessObjects"/>
+    <elements xsi:type="commands:Command" xmi:id="_o86MwKHYEeerK5yUOIlozQ" elementId="org.bonitasoft.studio.businessobject.exportCommand" commandName="%Export"/>
+    <elements xsi:type="commands:Command" xmi:id="_ZfyWoJYsEeisnZADhWJEZA" elementId="org.bonitasoft.studio.businessobject.importCommand" commandName="%import"/>
+    <elements xsi:type="commands:Command" xmi:id="_yr-TgE8OEemrzvHvLv5I3g" elementId="org.bonitasoft.studio.businessobject.cleanDeployCommand" commandName="%cleanDeploy"/>
+  </fragments>
+</fragment:ModelFragments>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_H5K40KiaEemxstQeqTvXDA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_KLgu4KiaEemxstQeqTvXDA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_yyuWEK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.command.deployArtifacts" commandName="%deployArtifacts" description="Deploy a subpart of the project"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_NR20wKiaEemxstQeqTvXDA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_6p_NQK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.handler.deployArtifacts" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.DeployArtifactsHandler" command="_yyuWEK0kEem8O8pWB8c8Fg"/>
+  </fragments>
+</fragment:ModelFragments>
