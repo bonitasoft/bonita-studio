@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -48,16 +49,7 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
             WebPageRepositoryStore webStore = fStore.getRepository().getRepositoryStore(WebPageRepositoryStore.class);
             ApplicationNodeContainer applicationNodeContainer = fStore.getContent();
             //Application Pages
-            applicationNodeContainer
-                    .getApplications()
-                    .stream()
-                    .map(ApplicationNode::getApplicationPages)
-                    .flatMap(Collection::stream)
-                    .map(ApplicationPageNode::getCustomPage)
-                    .distinct()
-                    .map(customPage -> webStore.findByPageId(customPage).orElse(null))
-                    .filter(Objects::nonNull)
-                    .forEach(result::add);
+            result.addAll(findPageDependencies(webStore, applicationNodeContainer));
             
             //Layout
             applicationNodeContainer
@@ -72,6 +64,20 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
             BonitaStudioLog.error(e);
         }
         return result;
+    }
+
+    protected List<IRepositoryFileStore> findPageDependencies(WebPageRepositoryStore webStore,
+            ApplicationNodeContainer applicationNodeContainer) {
+       return applicationNodeContainer
+                .getApplications()
+                .stream()
+                .map(ApplicationNode::getApplicationPages)
+                .flatMap(Collection::stream)
+                .map(ApplicationPageNode::getCustomPage)
+                .distinct()
+                .map(customPage -> webStore.findByPageId(customPage).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 }

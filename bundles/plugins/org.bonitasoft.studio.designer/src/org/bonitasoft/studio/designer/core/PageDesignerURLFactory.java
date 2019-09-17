@@ -92,6 +92,10 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public URL exportPage(final String pageId) throws MalformedURLException {
         return new URL(baseURL() + "/export/page/" + pageId);
     }
+    
+    public URL resources(final String pageId) throws MalformedURLException {
+        return new URL(String.format("%s/rest/pages/%s/resources", baseURL(), pageId));
+    }
 
     public URL migrate() throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration");

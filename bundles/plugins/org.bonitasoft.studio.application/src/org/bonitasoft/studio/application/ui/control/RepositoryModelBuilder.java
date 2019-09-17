@@ -43,6 +43,7 @@ public class RepositoryModelBuilder {
 
     public RepositoryModel create(RepositoryAccessor repositoryAccessor) {
         Repository currentRepository = repositoryAccessor.getCurrentRepository();
+        currentRepository.getAllStores();
         List<RepositoryStore> stores = createStore(currentRepository);
         return new RepositoryModel(currentRepository.getName(), stores);
     }
