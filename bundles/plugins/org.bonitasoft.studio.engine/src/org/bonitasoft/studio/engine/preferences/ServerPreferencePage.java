@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
@@ -27,6 +28,7 @@ import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.platform.PlatformLoginException;
 import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.SessionNotFoundException;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -35,6 +37,7 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -47,7 +50,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
@@ -57,19 +59,16 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 public class ServerPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
+    private static final String ACM_CONTRIBUTOR_ID = "Acm";
     private Integer newPort = new Integer(-1);
     private IntegerFieldEditor port;
     private IntegerFieldEditor xmxOption;
@@ -111,7 +110,10 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         ControlDecoration debugHintControlDecorator = new ControlDecoration(descriptionControl, SWT.RIGHT);
         debugHintControlDecorator.setDescriptionText(Messages.debugCustomPageModeHint);
         debugHintControlDecorator.setMarginWidth(3);
-        debugHintControlDecorator.setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        debugHintControlDecorator.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+
+        createPreferenceEditorContributions(ACM_CONTRIBUTOR_ID);
 
         getContributedEditors().put(lazyEditor, EnginePlugin.getDefault().getPreferenceStore());
         port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel,
@@ -153,6 +155,20 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
         final boolean ok = super.performOk();
         boolean needRestartEngineServer = false;
+
+        if (getContributions().stream().anyMatch(field -> field.shouldRestart())) {
+            needRestartEngineServer = true;
+        }
+
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false, new GetApiSessionOperation());
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.cannotStartTomcatTitle,
+                    Messages.cannotStartTomcatMessage, e).open();
+            return false;
+        }
+
         Properties consoleProperties = readConsoleConfigProperties();
         Boolean currentCustomPageDebug = Boolean
                 .valueOf(consoleProperties.getProperty(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG));
@@ -193,7 +209,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
             newuidExtraParams = null;
         }
         IPreferenceStore store = getPreferenceStore();
-        if(store instanceof IPersistentPreferenceStore) {
+        if (store instanceof IPersistentPreferenceStore) {
             try {
                 ((IPersistentPreferenceStore) store).save();
             } catch (IOException e) {

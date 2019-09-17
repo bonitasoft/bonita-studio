@@ -149,7 +149,7 @@
       </expressionProvider>
    </extension>
    <extension
-         point="org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution">
+         point="org.bonitasoft.studio.preferences.preferenceFieldEditorContribution">
       <fieldEditor
             class="org.bonitasoft.studio.businessobject.ui.preference.DropBusinessDataDBFieldEditorContribution">
       </fieldEditor>

@@ -18,7 +18,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +49,6 @@ import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -100,7 +98,6 @@ public class BOSEngineManager {
 
     private IProgressMonitor monitor;
 
-    private ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
     private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected BOSEngineManager(final IProgressMonitor monitor) {
@@ -117,21 +114,6 @@ public class BOSEngineManager {
 
     public static synchronized BOSEngineManager getInstance(final IProgressMonitor monitor) {
         if (INSTANCE == null) {
-            // Setting useCaches to false avoids a memory leak of URLJarFile
-            // instances
-            // It's a workaround for a Sun bug (see bug id 4167874 - fixed in
-            // jdk 1.7). Otherwise,
-            // URLJarFiles will never be garbage collected.
-            // o.a.g.deployment.util.DeploymentUtil.readAll()
-            // causes URLJarFiles to be created
-            try {
-                // Protocol/file shouldn't matter.
-                // As long as we don't get an input/output stream, no operations
-                // should occur...
-                new URL("http://a").openConnection().setDefaultUseCaches(false); //$NON-NLS-1$
-            } catch (final IOException ioe) {
-                // Can't Log this. Should we send to STDOUT/STDERR?
-            }
             INSTANCE = createInstance(monitor);
         }
         return INSTANCE;
@@ -385,7 +367,8 @@ public class BOSEngineManager {
     private Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("userName", user);
-        return (Optional<String>) commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
+        Object result = commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
+        return result instanceof Optional ? (Optional<String>) result : Optional.empty();
     }
 
     public byte[] getTenantConfigResourceContent(String resourceName, IProgressMonitor monitor)

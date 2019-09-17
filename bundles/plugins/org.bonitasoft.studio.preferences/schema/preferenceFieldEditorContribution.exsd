@@ -3,7 +3,7 @@
 <schema targetNamespace="org.bonitasoft.studio.preferences" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.bonitasoft.studio.preferences" id="prefrenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences"/>
+         <meta.schema plugin="org.bonitasoft.studio.preferences" id="preferenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.preferences.extension.IPrefrenceFieldEditorContribution"/>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution"/>
                </appinfo>
             </annotation>
          </attribute>
