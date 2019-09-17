@@ -21,19 +21,17 @@ import java.util.List;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
 
-/**
- * @author Romain Bioteau
- *
- */
+
 public interface IPreferenceFieldEditorContribution {
 
-	public List<FieldEditor> createFieldEditors(Composite parent) ;
+	 List<FieldEditor> createFieldEditors(Composite parent) ;
 	
-	public void init(IWorkbench workbench) ;
+	 boolean performOk() ;
 	
-	public boolean performOk() ;
+	 default boolean shouldRestart() {
+	     return false;
+	 }
 	
-	public boolean appliesTo(String categoryName) ;
+	 boolean appliesTo(String categoryName) ;
 }

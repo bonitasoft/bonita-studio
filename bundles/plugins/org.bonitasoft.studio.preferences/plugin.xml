@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-  <extension-point id="prefrenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/prefrenceFieldEditorContribution.exsd"/>
+  <extension-point id="preferenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/preferenceFieldEditorContribution.exsd"/>
   <extension-point id="preferenceInitializerExtension" name="Preference Initializer Extension" schema="schema/preferenceInitializerExtension.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">

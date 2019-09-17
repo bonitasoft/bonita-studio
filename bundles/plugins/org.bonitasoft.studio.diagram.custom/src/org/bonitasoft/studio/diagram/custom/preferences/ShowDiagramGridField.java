@@ -26,7 +26,6 @@ import java.util.List;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
-import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -34,16 +33,12 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Romain Bioteau
@@ -145,13 +140,6 @@ private class DoubleFieldEditor extends StringFieldEditor {
 	// Conversion from inch to centimeter
 	private static final double INCH2CM = 2.54;
 	
-	private String RULER_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerGroup_label;
-	private String SHOW_RULERS_LABEL = DiagramUIMessages.GridRulerPreferencePage_showRulers_label;
-	private String RULER_UNITS_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_label;
-	private String RULER_UNITS_IN_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_inch_label;
-	private String RULER_UNITS_CM_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_cm_label;
-	private String RULER_UNITS_PIXEL_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_pixel_label;
-
 	private String GRID_GROUP_LABEL = Messages.GridRulerPreferencePage_gridGroup_label;
 	private String SHOW_GRID_LABEL = Messages.GridRulerPreferencePage_showGrid_label;
 	private String SNAP_TO_GRID_LABEL = Messages.GridRulerPreferencePage_snapToGrid_label;
@@ -160,11 +148,6 @@ private class DoubleFieldEditor extends StringFieldEditor {
     private String GRID_SPACING_LABEL_CM = Messages.GridRulerPreferencePage_gridSpacing_label_cm;
     private String GRID_SPACING_LABEL_PIXELS = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_pixels;
     
-	
-	// Ruler Field Editors
-	private BooleanFieldEditor showRulers = null;
-    private ComboFieldEditor rulerUnits;
-
     // Grid Field Editors
     private BooleanFieldEditor showGrid = null;
 	private BooleanFieldEditor snapToGrid = null;
@@ -285,55 +268,6 @@ private class DoubleFieldEditor extends StringFieldEditor {
 		return ProcessDiagramEditorPlugin.getInstance().getPreferenceStore();
 	}
 
-
-	private void addRulerFields( Composite parent ) {
-
-		// Create a Group to hold the ruler fields
-    	Group group = new Group(parent, SWT.NONE);
-		group.setText(RULER_GROUP_LABEL);
- 
-		GridLayout gridLayout = new GridLayout(2, false);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalSpan = 2;
-        
-        // Add the fields to the group
-		showRulers = new BooleanFieldEditor(
-			IPreferenceConstants.PREF_SHOW_RULERS,
-			SHOW_RULERS_LABEL, group);
-		showRulers.setPreferenceStore(getPreferenceStore()) ;
-		editors.add(showRulers);
-
-    	rulerUnits = new ComboFieldEditor(
-    		IPreferenceConstants.PREF_RULER_UNITS,
-        	RULER_UNITS_LABEL,
-			group,
-			ComboFieldEditor.INT_TYPE,
-			false,
-			0,
-			0,
-			true);
-    	rulerUnits.setPreferenceStore(getPreferenceStore()) ;
-    	editors.add(rulerUnits);
-    	
-    	Combo rulerUnitsCombo;
-    	rulerUnitsCombo = rulerUnits.getComboControl();
-    	rulerUnitsCombo.add(RULER_UNITS_IN_LABEL);
-    	rulerUnitsCombo.add(RULER_UNITS_CM_LABEL);
-    	rulerUnitsCombo.add(RULER_UNITS_PIXEL_LABEL);
-    	
-    	rulerUnitsCombo.addSelectionListener( new SelectionListener() {
-    		public void widgetDefaultSelected(SelectionEvent e){
-    			//do nothing
-    			}
-    		public void widgetSelected(SelectionEvent e){
-    			updateUnits();
-    		}
-    	});
-    	
-		group.setLayoutData(gridData);
-		group.setLayout(gridLayout);
-	}
 	
 	private void addGridFields( Composite parent ) {
 		
@@ -410,10 +344,6 @@ private class DoubleFieldEditor extends StringFieldEditor {
 	
 	public boolean performOk() {
 		return true;
-	}
-
-	public void init(IWorkbench workbench) {
-
 	}
 
 	public List<FieldEditor> createFieldEditors(Composite parent) {

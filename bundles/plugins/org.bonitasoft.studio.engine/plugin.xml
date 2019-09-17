@@ -183,4 +183,11 @@
            class="org.bonitasoft.studio.engine.contribution.BonitaProjectListenerProvider">
      </projectListenerProvider>
   </extension>
+  <extension
+        point="org.eclipse.ui.keywords">
+     <keyword
+           id="org.bonitasoft.studio.preferences.keywordReference.server"
+           label="%serverKeywords">
+     </keyword>
+  </extension>
 </plugin>

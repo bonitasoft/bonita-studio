@@ -822,7 +822,7 @@
       </layoutProvider>
    </extension>
    <extension
-         point="org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution">
+         point="org.bonitasoft.studio.preferences.preferenceFieldEditorContribution">
       <fieldEditor
             class="org.bonitasoft.studio.diagram.custom.preferences.ShowDiagramGridField">
       </fieldEditor>

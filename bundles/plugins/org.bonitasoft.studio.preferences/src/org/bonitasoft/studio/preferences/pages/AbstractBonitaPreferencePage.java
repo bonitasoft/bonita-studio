@@ -45,7 +45,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public abstract class AbstractBonitaPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    private static final String FIELD_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution";
+    private static final String FIELD_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.preferences.preferenceFieldEditorContribution";
     private final List<IPreferenceFieldEditorContribution> contributions = new ArrayList<IPreferenceFieldEditorContribution>();
     private final Map<FieldEditor, IPreferenceStore> contributedEditors = new HashMap<FieldEditor, IPreferenceStore>();
 
@@ -124,16 +124,9 @@ public abstract class AbstractBonitaPreferencePage extends FieldEditorPreference
         return contributedEditors;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-     */
     @Override
     public void init(final IWorkbench workbench) {
-        for (final IPreferenceFieldEditorContribution contrib : getContributions()) {
-            contrib.init(workbench);
-        }
+        
     }
 
     @Override

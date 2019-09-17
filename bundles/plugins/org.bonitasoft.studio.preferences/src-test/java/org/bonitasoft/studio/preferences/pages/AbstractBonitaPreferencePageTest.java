@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -33,42 +33,17 @@ import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContrib
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-
-/**
- * @author Romain Bioteau
- *
- */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class AbstractBonitaPreferencePageTest {
 
     @Mock
     private AbstractBonitaPreferencePage preferencePage;
     @Mock
-    private IWorkbench workbench;
-    @Mock
     private FieldEditor aFieldEditor;
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void should_createPreferenceEditorContributions_call_createFieldEditors_for_matching_ids() throws Exception {
@@ -88,16 +63,6 @@ public class AbstractBonitaPreferencePageTest {
         preferencePage.createPreferenceEditorContributions("myContribId2");
 
         verify(contributions.get(0), never()).createFieldEditors(any(Composite.class));
-    }
-
-    @Test
-    public void should_init_initialize_all_contributions() throws Exception {
-        final List<IPreferenceFieldEditorContribution> contributions = listOfContribWithIds("myContribId");
-        when(preferencePage.getContributions()).thenReturn(contributions);
-        doCallRealMethod().when(preferencePage).init(workbench);
-        preferencePage.init(workbench);
-
-        verify(contributions.get(0)).init(workbench);
     }
 
     @Test

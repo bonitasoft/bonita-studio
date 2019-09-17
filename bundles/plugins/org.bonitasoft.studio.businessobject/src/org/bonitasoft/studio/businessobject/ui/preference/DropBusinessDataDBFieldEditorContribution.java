@@ -26,7 +26,6 @@ import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContrib
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
 
 
 public class DropBusinessDataDBFieldEditorContribution implements IPreferenceFieldEditorContribution {
@@ -42,12 +41,6 @@ public class DropBusinessDataDBFieldEditorContribution implements IPreferenceFie
         editors.add(dropOnExitFieldEditor);
 
         return editors;
-    }
-
-  
-    @Override
-    public void init(final IWorkbench workbench) {
-
     }
 
   
