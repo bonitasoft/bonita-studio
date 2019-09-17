@@ -64,10 +64,6 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     private TreeViewer viewer;
     private ISWTObservableValue editionGroupTextObservable;
 
-    /**
-     * @param viewer
-     * @param dbc
-     */
     public BusinessObjectNameEditingSupport(BusinessObjectModel businessObjectModel,
             IViewerObservableValue selectionObservable, TreeViewer viewer,
             DataBindingContext ctx,
